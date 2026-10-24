@@ -16,6 +16,9 @@ Status: implemented in staging branch. DO NOT publish before image assets are co
 ## Required asset paths — source of truth
 Follow **f1/ANOMALY_REVIEW_V08.md** for the newest story and ending rules, **f1/PROPOSAL_V08_COMPLAINT_CHAIN.md** for ordinary complaints, and **f1/SPEC_V08_NONIMAGE.md** only for the provisional asset naming baseline. There are currently **21 provisional JPEG image names** referenced in f1/index.html: 8 existing base images and 13 new construction/improvement/ending scenes. None are committed to GitHub yet. Use the exact paths in the spec and preserve the common camera framing. Do not generate more images or change state mapping without resolving it in the F1 design chat first.
 
+## Current design priority
+The weekday/Day 6/Day 7/Day 8 scenario is described by **f1/WEEKDAY_HORROR_V08.md** (supersedes older anomaly timing). Image inventory remains provisional and no assets should be generated before the complete story design review. Confirm an anomaly-free N1 route before release.
+
 ## Acceptance / publication checklist
 1. Commit all 21 approved scene JPEG files to f1/assets/ on this staging branch, using the filename contract in f1/SPEC_V08_NONIMAGE.md.
 2. Verify all 21 scene assets render without 404 errors; in particular, opening game at width 320px and 390px, also tablet and desktop widths.
