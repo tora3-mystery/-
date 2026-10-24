@@ -58,6 +58,10 @@ function recordSideEffects(id,before,appearDay){
 function pickMainConcern(){
   const newEvents=(s.issueEvents||[]).filter(ev=>ev.appearDay===s.day&&s.vals[ev.metric]>=3)
     .sort((a,b)=>(s.vals[b.metric]*10+b.delta)-(s.vals[a.metric]*10+a.delta));
+  const extreme=s.vals.findIndex((v,i)=>v===5&&!newEvents.some(ev=>ev.metric===i));
+  if(extreme>=0){const other=newEvents.slice(0,2).map(ev=>labels[ev.metric]+' '+s.vals[ev.metric]+'/5').join('、');
+    return {i:extreme,t:'「'+issueBase[extreme]+'」',sub:labels[extreme]+'は危険水準 5/5。'+(other?'別に新着の苦情：'+other:'優先対応が必要です。'),tag:'緊急'};
+  }
   if(newEvents.length){
     const ev=newEvents[0],origin=options.find(a=>a.id===ev.actionId);
     const rest=newEvents.slice(1,3).map(e=>labels[e.metric]+' '+s.vals[e.metric]+'/5');
