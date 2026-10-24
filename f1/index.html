@@ -80,7 +80,7 @@ function customerMessage(issue){
  const prior=(s.customerDiary||[]).at(-1);
  const complaints=(s.customerDiary||[]).filter(x=>x.metric>=0).length;
  const currentSerious=issue.i>=0&&s.vals[issue.i]>=4;
- const prefix=prior?(currentSerious&&complaints>=3?'「もう'+(complaints+1)+'日目の連絡です。昨日は'+(labels[prior.metric]||'別の問題')+'、今日は、':prior.metric===issue.i&&issue.i>=0?'「昨日も同じ件で連絡しました。まだ、':issue.i>=0?'「昨日は'+(labels[prior.metric]||'お店')+'のことで困りました。今日は、':'「昨日はありがとうございました。でも今日は、'):'';
+ const prefix=prior?(currentSerious&&complaints>=3?'「これで'+(complaints+1)+'回目の相談です。昨日は'+(labels[prior.metric]||'別の問題')+'、今日は、':prior.metric===issue.i&&issue.i>=0?'「昨日も同じ件で連絡しました。まだ、':issue.i>=0&&prior.metric<0?'「昨日はようやく買い物できたのに、今日は、':issue.i>=0?'「昨日は'+(labels[prior.metric]||'お店')+'のことで困りました。今日は、':'「昨日はありがとうございました。でも今日は、'):'';
  const raw=issue.t||'';
  if(issue.i<0)return '「今日は久しぶりに、落ち着いて買い物ができました。ありがとうございます。」';
  if(!prior)return '「'+raw.replace(/^「|」$/g,'')+'」';
