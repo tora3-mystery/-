@@ -1,4 +1,7 @@
 # F1「改善しすぎる店」｜経営ルール新・設計正本（集客力×クレーム）
+
+> **設計更新（2026-10-25 JST）**：次版の経営ルール・施策・画像枚数は [ECONOMY_V08_DESIGN.md](ECONOMY_V08_DESIGN.md)、[ACTIONS_V09_REVIEW.md](ACTIONS_V09_REVIEW.md)、[SCENE_BUCKETS_V09.md](SCENE_BUCKETS_V09.md) を参照してください。**本書の旧資金モデル・21枚画像契約は従来版の履歴であり、v0.9の制作指示として使わないでください。** f1/index.html はまだ旧ロジックで動作しています。
+
 更新：2026-10-25 JST  
 状態：**企画検討段階・非画像の独立概念モデル試算済み・f1/index.html未変更／main未公開**。
 
