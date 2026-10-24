@@ -88,7 +88,7 @@
       "effectAfterDays": 1,
       "complaintDelta": [
         -1,
-        -1,
+        0,
         0,
         0
       ],
@@ -428,7 +428,7 @@
       "effectAfterDays": 1,
       "complaintDelta": [
         -1,
-        -1,
+        0,
         0,
         0
       ],
@@ -488,7 +488,7 @@
       "effectAfterDays": 1,
       "complaintDelta": [
         0,
-        -1,
+        0,
         0,
         -1
       ],
@@ -660,5 +660,16 @@
       "story": "名物フェアで当日集客+2。翌日通路と品切れと騒音",
       "visualCue": "festival-corner"
     }
-  ]
+  ],
+  "weeklyEndingThresholds": {
+    "N1": {
+      "minimumRevenue": 560,
+      "maximumComplaintCount": 3
+    },
+    "N2": {
+      "minimumRevenue": 480,
+      "minimumComplaintCount": 4
+    },
+    "status": "temporary; redesign after browser trial"
+  }
 }
