@@ -1,5 +1,8 @@
 # F1 v0.8 — staged release handoff
 
+> **設計更新（2026-10-25 JST）**：次版の経営ルール・施策・画像枚数は [ECONOMY_V08_DESIGN.md](ECONOMY_V08_DESIGN.md)、[ACTIONS_V09_REVIEW.md](ACTIONS_V09_REVIEW.md)、[SCENE_BUCKETS_V09.md](SCENE_BUCKETS_V09.md) を参照してください。**本書の旧資金モデル・21枚画像契約は従来版の履歴であり、v0.9の制作指示として使わないでください。** f1/index.html はまだ旧ロジックで動作しています。
+
+
 Status: implemented in staging branch. DO NOT publish before image assets are committed and browser QA passes. Root listing and shared resources are owned by the master project chat, not this project.
 
 ## Scope (already implemented in f1/index.html)
