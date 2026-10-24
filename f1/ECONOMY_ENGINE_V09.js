@@ -51,8 +51,8 @@ function f1TakeAction(s,catalog,id){
   if(updated.day===7){
     f1ApplyPending(updated,8);
     const complaints=f1TotalComplaints(updated);
-    if(updated.totalSales>=510&&complaints<=3) updated.ending="normal_success";
-    else if(updated.totalSales>=470&&complaints>=4) updated.ending="normal_customer";
+    if(updated.totalSales>=560&&complaints<=3) updated.ending="normal_success";
+    else if(updated.totalSales>=480&&complaints>=4) updated.ending="normal_customer";
     else updated.ending="normal_strain";
     return updated;
   }
