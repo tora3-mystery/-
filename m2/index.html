@@ -29,7 +29,7 @@ button{touch-action:manipulation}h1,h2,h3,p{margin-top:0}h1{font-size:clamp(25px
 @media(max-width:350px){.cast{grid-template-columns:1fr}.ver{font-size:10px}.tabs button{font-size:11px}.clocksub{font-size:10px}}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;animation:none!important}}
 </style></head><body><div class="wrap">
-<header class="head"><div class="brand"><div class="logo">M2<br>MAIL</div><div><b>送信予定まで、あと6分</b><div class="tiny muted">CASE 01｜土曜朝の最終連絡</div></div></div><div class="ver"><strong>α0.5.1</strong><br>更新 2026.10.25 05:53 JST</div></header>
+<header class="head"><div class="brand"><div class="logo">M2<br>MAIL</div><div><b>送信予定まで、あと6分</b><div class="tiny muted">CASE 01｜土曜朝の最終連絡</div></div></div><div class="ver"><strong>α0.5.1</strong><br>更新 2026.10.25 05:58 JST</div></header>
 <section id="intro" class="intro">
   <div class="card">
     <div class="pill">STORY / 09:00 送信予定</div>
@@ -104,7 +104,7 @@ function mails(c){
  if(s&&s.reply){
   a.unshift({id:"reply",from:"配車センター｜運行会社",at:"土 08:55",title:s.reply==="refused"?"【要対応】行先変更を承認できません":"【承認完了】送迎車の行先変更",tag:"新着返信",to:"あなた",cc:"青木",bcc:"",body:s.reply==="refused"?"運行会社 配車センターです。\n\nご依頼の車両は登録運行区間外への変更が認められていないため、新会場への行先変更を承認できません。現時点で当該車両は旧会場行きのままです。\n\n青木様からお預かりした代替車の仮枠が有効ですので、期限までに対応画面で確定手続きをお願いします。申し訳ございませんが「変更を申請した」段階では乗車案内を変更しないでください。":"運行会社 配車センターです。\n\nご依頼の行先変更を承認しました。運行管理表の目的地を新会場に変更し、乗務員へ指示しました。追加手配は必要ありません。\n\nこちらの返信をもって、"+c.vehicle+"の行先は「"+c.next+"」で確定です。",attach:null,hist:[quote("あなた｜リーダー","土 08:54以降","旧会場"+c.old+"行きの送迎車について、新会場"+c.next+"への変更可否をご確認ください。承認または拒否の回答をお願いします。",null,{sent:true,to:"運行会社",cc:"青木"}),quote("青木｜送迎担当","土 08:23","予約の行先は旧会場のままです。規定に応じて会社の最終回答を確認してください。",null,{to:"あなた、小野",cc:"佐藤"}),rootMail()]});
  }
- return a;
+ return a.filter(mayRead);
 }
 function alive(){if(!s||s.done)return false;if(Date.now()>=s.deadline){finish("timeout");return false}return true}
 function timer(){if(!s||s.done)return;var left=Math.max(0,Math.ceil((s.deadline-Date.now())/1000));$("clock").textContent=String(Math.floor(left/60)).padStart(2,"0")+":"+String(left%60).padStart(2,"0");$("clock").classList.toggle("danger",left<=60);if(left<=0)finish("timeout")}
