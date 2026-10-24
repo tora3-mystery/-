@@ -3,7 +3,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#13263b">
-<title>M2｜送信予定まで、あと6分｜α0.5</title>
+<title>M2｜送信予定まで、あと6分｜α0.5.1</title>
 <style>
 :root{--bg:#0e1b2a;--panel:#1a2c40;--panel2:#243b53;--line:#42576b;--ink:#f2f5f7;--muted:#bdcbd7;--accent:#f4c384;--ok:#9be0cb;--bad:#ffaaa3}
 *{box-sizing:border-box}body{margin:0;background:linear-gradient(145deg,#101d2e,#142c3f);color:var(--ink);font:14px/1.67 system-ui,-apple-system,"Hiragino Kaku Gothic ProN",Meiryo,sans-serif}
@@ -29,7 +29,7 @@ button{touch-action:manipulation}h1,h2,h3,p{margin-top:0}h1{font-size:clamp(25px
 @media(max-width:350px){.cast{grid-template-columns:1fr}.ver{font-size:10px}.tabs button{font-size:11px}.clocksub{font-size:10px}}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;animation:none!important}}
 </style></head><body><div class="wrap">
-<header class="head"><div class="brand"><div class="logo">M2<br>MAIL</div><div><b>送信予定まで、あと6分</b><div class="tiny muted">CASE 01｜土曜朝の最終連絡</div></div></div><div class="ver"><strong>α0.5</strong><br>更新 2026.10.24 22:54 JST</div></header>
+<header class="head"><div class="brand"><div class="logo">M2<br>MAIL</div><div><b>送信予定まで、あと6分</b><div class="tiny muted">CASE 01｜土曜朝の最終連絡</div></div></div><div class="ver"><strong>α0.5.1</strong><br>更新 2026.10.25 05:53 JST</div></header>
 <section id="intro" class="intro">
   <div class="card">
     <div class="pill">STORY / 09:00 送信予定</div>
@@ -45,10 +45,10 @@ button{touch-action:manipulation}h1,h2,h3,p{margin-top:0}h1{font-size:clamp(25px
     <h2>関係者（プレイ中も確認可能）</h2>
     <div class="cast" id="introCast"></div>
     <details><summary>操作方法を見る（タイマーはまだ動きません）</summary>
-      <p>「受信箱」で最新メールを選び、「本文」の下にある<strong>「以前の返信・引用を表示」</strong>を押すと、古い経緯を1通ずつ遡れます。別の人へ返信・BCCされたメールは受信箱で別の枝として並びます。</p>
-      <p>添付は<strong>各枝の最新メールにある「添付を開く」</strong>から確認します。引用中の過去ファイルは開けません。「対応」画面でメールを修正し、送迎変更を申請します。変更は運行会社の返信を読んで初めて確定します。</p>
+      <p>「受信箱」で最新メールを選び、「本文」の下にある<strong>「以前の返信・引用を表示」</strong>を押すと、古い経緯を1通ずつ遡れます。あなたに届いた返信・CC・BCCだけが受信箱に並びます。宛先に入っていない途中のメールは閲覧できません。</p>
+      <p>添付は各メールから確認します。<strong>自分に届いた古いメールの添付も開けます</strong>が、受信していないメールとその添付は開けません。「対応」画面でメールを修正し、送迎変更を申請します。変更は運行会社の返信を読んで初めて確定します。</p>
     </details>
-    <p><strong>基本操作：</strong>受信箱の最新メールをタップ → 下部の「以前の返信・引用を表示」で遡る → 最新メールに付いた添付を開く → 「対応・送信」で内容を直します。送迎変更は申請だけでなく、返信の確認が必要です。</p><p class="fine">タイマーは「業務開始」後に起動。現実時間360秒、資料を読んでいる間も進みます。時間切れ時には、その時点の案内が自動送信されます。実際のメール送信・外部通信・個人情報取得はありません。</p>
+    <p><strong>基本操作：</strong>受信箱の最新メールをタップ → 下部の「以前の返信・引用を表示」で遡る → 自分が受信したメールの添付を開く → 「対応・送信」で内容を直します。送迎変更は申請だけでなく、返信の確認が必要です。</p><p class="fine">タイマーは「業務開始」後に起動。現実時間360秒、資料を読んでいる間も進みます。時間切れ時には、その時点の案内が自動送信されます。実際のメール送信・外部通信・個人情報取得はありません。</p>
     <div class="startrow"><button id="start" class="btn primary block">業務開始｜08:54（残り6分）</button></div>
   </div>
 </section>
@@ -57,7 +57,7 @@ button{touch-action:manipulation}h1,h2,h3,p{margin-top:0}h1{font-size:clamp(25px
   <div class="objectives"><div class="objective" id="objMail"><strong>① 案内メール</strong>　内容・添付・宛先を確定</div><div class="objective" id="objBus"><strong>② 送迎車</strong>　会社の返信で行先確定</div></div><div id="notice" class="newnote hidden" role="status"></div>
   <nav class="tabs" aria-label="画面切替"><button data-tab="inbox" class="active">① 受信箱</button><button data-tab="reading">② メール本文</button><button data-tab="actions">③ 対応・送信</button></nav>
   <div class="workspace">
-    <section class="pane shown" data-page="inbox"><div class="panehead">最新メール <span id="count" class="pill"></span></div><div id="inbox"></div><div class="inboxnote">同じ元メールから別々に返信が続いています。最新本文の下にある引用を開くと過去を遡れます。</div></section>
+    <section class="pane shown" data-page="inbox"><div class="panehead">最新メール <span id="count" class="pill"></span></div><div id="inbox"></div><div class="inboxnote">同じ元メールから返信が枝分かれしています。自分に届いたメールだけを開けます。本文下から過去の受信メールを遡れます。</div></section>
     <section class="pane shown" data-page="reading"><div class="panehead"><span id="readhead">メール本文</span><button id="peopleBtn" class="btn small">関係者</button></div><div class="panebody" id="reader"></div></section>
     <section class="pane shown" data-page="actions"><div class="panehead">あなたの対応 <span class="pill">送信期限 09:00</span></div><div class="panebody" id="work"></div></section>
   </div>
@@ -70,14 +70,14 @@ button{touch-action:manipulation}h1,h2,h3,p{margin-top:0}h1{font-size:clamp(25px
   <div id="audit" class="fine"></div>
   <div style="display:flex;flex-wrap:wrap;gap:9px;margin-top:18px"><button class="btn primary" id="againSame">同じ条件で再挑戦</button><button class="btn" id="againDifferent">別条件で再挑戦</button></div>
 </div></section>
-<footer class="footer">M2 α0.5｜短編Webゲーム・初見検証版｜外部サービスへの送信・個人データの収集なし。実在の会社・展示会とは関係ありません。</footer>
+<footer class="footer">M2 α0.5.1｜短編Webゲーム・初見検証版｜外部サービスへの送信・個人データの収集なし。実在の会社・展示会とは関係ありません。</footer>
 </div>
 <script>
 (function(){
 "use strict";
 var $=function(id){return document.getElementById(id)};
 var esc=function(v){return String(v).replace(/[&<>"']/g,function(ch){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]})};
-var people=[["あなた","プロジェクトリーダー／最終判断"],["小野","後輩／昨夜の引継ぎ"],["佐藤","会場・施設調整"],["山中","実演・イベント進行"],["星野","配布資料・承認"],["青木","送迎・運行会社との窓口"],["田村","部長／プロジェクト統括"]];
+var people=[["あなた","プロジェクトリーダー／最終判断"],["小野","後輩／昨夜の引継ぎ"],["佐藤","会場・施設調整"],["山中","実演・イベント進行"],["星野","配布資料・承認"],["青木","送迎・運行会社との窓口"],["田村","部長／プロジェクト統括"],["栗原","経理・原価資料の管理"]];
 var scenarios=[
  {id:"01-A",old:"東展示棟 A館",next:"西展示棟 B館",room:"B-3",event:"partial",vehicle:"定期シャトルバス",flex:false,reason:"定期便は事前登録ルートのみ運行可能"},
  {id:"01-B",old:"本館 2階",next:"別館 4階",room:"第2会議室",event:"all",vehicle:"貸切送迎車",flex:true,reason:"貸切車は出発前の行先変更が可能"},
@@ -88,20 +88,21 @@ function clone(o){return JSON.parse(JSON.stringify(o))}
 function shuffle(a){var x=a.slice();for(var i=x.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=x[i];x[i]=x[j];x[j]=t}return x}
 function cast(){return people.map(function(p){return '<div class="person"><b>'+esc(p[0])+'</b>'+esc(p[1])+'</div>'}).join("")}
 $("introCast").innerHTML=cast();
-function rootMail(){return {who:"あなた｜プロジェクトリーダー",when:"金 16:05",text:"件名：【体験会】最終確認と土曜日のご案内について\n\n関係者各位\n\n土曜10時開始の法人顧客向け新製品体験会について、金曜夕方時点の進行表と案内を共有します。参加者は取引先32名です。会場、実演の可否、配布資料の社外承認、送迎の手配がすべて揃った段階で最終案内を送信してください。\n\n私は今夜どうしても外せない予定があり、以降の現場調整は小野さん中心でお願いします。最終判断が必要なら私にも連絡ください。よろしくお願いします。",file:"案内_金曜夕方版.pdf"}}
-function quote(who,when,text,file){return {who:who,when:when,text:text,file:file||""}}
+function rootMail(){return {who:"あなた｜プロジェクトリーダー",when:"金 16:05",text:"件名：【体験会】最終確認と土曜日のご案内について\n\n関係者各位\n\n土曜10時開始の法人顧客向け新製品体験会について、金曜夕方時点の進行表と案内を共有します。参加者は取引先32名です。会場、実演の可否、配布資料の社外承認、送迎の手配がすべて揃った段階で最終案内を送信してください。\n\n私は今夜どうしても外せない予定があり、以降の現場調整は小野さん中心でお願いします。最終判断が必要なら私にも連絡ください。よろしくお願いします。",file:"案内_金曜夕方版.pdf",role:"old",sent:true,to:"小野、佐藤、山中、星野、青木",cc:"田村"}}
+function quote(who,when,text,file,options){return Object.assign({who:who,when:when,text:text,file:file||"",to:"",cc:"",bcc:"",sent:false,role:null},options||{})}
+function mayRead(q){return q.sent===true||[q.to,q.cc,q.bcc].some(function(v){return String(v||"").includes("あなた")})}
 function mails(c){
  var p=c.event==="partial",eventLatest=p?"展示は予定どおり実施しますが、電源容量の不足が解消せず、実演ステージは中止が正式決定です。受付には展示のみの案内を掲示します。":"昨日夜の時点で実演中止を検討していましたが、予備電源の手配が完了しました。展示・実演とも実施で最終決定です。";
  var a=[
-  {id:"junior",from:"小野｜後輩",at:"土 08:49",title:"【至急】9時の案内メール、確認をお願いします",tag:"引継ぎ",to:"あなた（リーダー）",cc:"青木、星野",bcc:"",body:"先輩、何度も電話してすみません。金曜日に引き継いだ案内を9時に予約送信したままなのですが、朝の変更連絡を全部反映できていないと思います。\n\nいま登録されている本文は昨日の東西館などの旧情報をもとにしたもので、添付も私が暫定的に入れたファイルです。宛先は社内も含む一斉グループになっています。\n\n会場変更の連絡は佐藤さん、実演は山中さん、資料承認は星野さん、送迎は青木さんに届いています。それぞれ別の返信で話が進んでしまいました。先輩、9時までに修正できますか。\n\n本当にすみません。操作で分からないことがあれば、メール下の引用履歴を遡ってください。",attach:"old",hist:[quote("小野｜後輩","金 23:12","佐藤さんの金曜の情報を元に、参加案内を暫定登録しました。送迎は旧会場で予約されています。明朝の確認事項が残っています。","案内_暫定添付.pdf"),rootMail()]},
-  {id:"finance",from:"経理・管理部｜栗原",at:"土 08:46",title:"Re: 【体験会】案内原価の確認（社内のみ）",tag:"BCC分岐",to:"星野（制作担当）",cc:"",bcc:"あなた（リーダー）",body:"星野さん\n\n原価確認用の改訂版をお送りします。会場や展示内容の反映は済んでいるため、見た目だけなら一番新しい版ですが、巻末にはブース原価、仕入条件、取引先別単価、利益率を記載しています。\n\nこれは社内で価格設定を最終判断するための管理資料です。社外に配布する案内としては絶対に使わないでください。\n\nなお、この返信は取引先向けの配信リストには含めず、リーダーにだけBCCで共有しています。別枝の制作承認の返信とは混同しないようお願いします。",attach:"secret",hist:[quote("栗原｜経理・管理部","金 21:32","今回の案内は制作版と原価管理版を混在させないようにしてください。会計用の別紙はお客様に配れません。"),rootMail()]},
-  {id:"document",from:"星野｜配布資料",at:"土 08:43",title:"Re: 【体験会】社外配布資料の承認について",tag:"資料分岐",to:"小野、あなた",cc:"佐藤、山中",bcc:"",body:"各位\n\n今朝の会場変更と実演可否の確定内容を反映した案内が完成しました。社外公開承認も管理番号P-071として取得済みです。\n\nファイル名は作業時の都合で仮のままですが、最新版かどうかは名前ではなく、本文の会場・プログラムと、最後の配布承認欄を見て判断してください。\n\n取引先に送る際はこの返信の添付を使用してください。金曜夜に添付したものは差し替え前の版で、過去メールの引用からは参照できません。社内用の原価別紙が付いたメールも別途あるはずです。",attach:"safe",hist:[quote("星野｜配布資料","金 22:27","暫定のPDFを共有します。施設変更が入った場合は差し替えます。まだ社外配布承認は出ていません。","案内_旧版.pdf"),rootMail()]},
-  {id:"event",from:"山中｜実演責任者",at:"土 08:39",title:"Re: 【体験会】実演プログラムの最終判断",tag:"催事分岐",to:"小野、あなた",cc:"佐藤",bcc:"",body:"関係各位\n\n会場変更後の技術確認が完了しました。"+eventLatest+"\n\n昨日夜の運営メモには別の案が残っていますが、判断はこのメールで確定としてください。新会場は「"+c.next+"」、実施エリアは「"+c.room+"」です。\n\n送信する案内の開催内容が現場掲示と食い違わないよう、案内制作側にも同内容を共有しています。現場向けの運営表を本メールに添付します。",attach:"program",hist:[quote("山中｜実演責任者","金 21:51",p?"実演ステージはまだ実施できる見込みです。ただし新会場での電源チェックが必要です。":"一度は実演を中止する方向でしたが、電源の追加調達を検討しています。","ステージ進行表_検討版.pdf"),rootMail()]},
-  {id:"venue",from:"佐藤｜会場担当",at:"土 08:32",title:"Re: 【体験会】会場変更の最終連絡",tag:"会場分岐",to:"小野、あなた",cc:"山中、青木",bcc:"",body:"おはようございます。\n\n施設管理者から正式に承認を受領したため、開催会場は「"+c.old+"」から「"+c.next+"」へ変更・確定しました。受付は「"+c.room+"」です。\n\n昨夜まで案内されていた旧会場は、施設の設備トラブルにより本日使用できません。取引先32名への案内は必ず新会場に差し替えてください。\n\n運営表だけでは変更が送迎会社に反映されません。青木さんから別途、送迎の手配状況をご確認ください。施設配置図は本メールの添付にあります。",attach:"map",hist:[quote("佐藤｜会場担当","土 07:32","昨夜の搬入後、旧会場の設備トラブルが判明しました。代替会場の使用可否を確認中です。まだ案内を確定しないでください。"),quote("小野｜後輩","金 21:18","金曜時点の会場は"+c.old+"で理解しました。案内メールと送迎予約にも反映します。"),rootMail()]},
-  {id:"bus",from:"青木｜送迎担当",at:"土 08:23",title:"Re: 【体験会】送迎車の運行登録について",tag:"送迎分岐",to:"あなた、小野",cc:"佐藤",bcc:"",body:"運行会社との最終確認について共有します。\n\n現在の「"+c.vehicle+"」は「"+c.old+"」行きで登録されています。会場が変更された場合、社内の案内メールを直しても車両の目的地は変わりません。\n\nこの車両は「"+c.reason+"」という条件です。必要なら対応画面から運行会社へ行先変更を申請してください。ただし、申請は承認ではありません。必ず運行会社の返信を開いて確定可否を確認してください。\n\n変更できなければ別便の確保が必要です。代替車の仮枠は9時まで押さえています。",attach:null,hist:[quote("青木｜送迎担当","金 21:48","送迎の当初予約を"+c.old+"行きで登録しました。使用車両は"+c.vehicle+"です。変更の可否は便種別により異なります。"),rootMail()]}
+  {id:"junior",from:"小野｜後輩",at:"土 08:49",title:"【至急】9時の案内メール、確認をお願いします",tag:"引継ぎ",to:"あなた（リーダー）",cc:"青木、星野",bcc:"",body:"先輩、何度も電話してすみません。金曜日に引き継いだ案内を9時に予約送信したままなのですが、朝の変更連絡を全部反映できていないと思います。\n\nいま登録されている本文は昨日の東西館などの旧情報をもとにしたもので、添付も私が暫定的に入れたファイルです。宛先は社内も含む一斉グループになっています。\n\n会場変更の連絡は佐藤さん、実演は山中さん、資料承認は星野さん、送迎は青木さんに届いています。それぞれ別の返信で話が進んでしまいました。先輩、9時までに修正できますか。\n\n本当にすみません。操作で分からないことがあれば、メール下の引用履歴を遡ってください。",attach:"old",hist:[quote("小野｜後輩","金 23:12","佐藤さんの金曜の情報を元に、参加案内を暫定登録しました。送迎は旧会場で予約されています。明朝の確認事項が残っています。","案内_暫定添付.pdf",{to:"星野、青木",role:"old"}),rootMail()]},
+  {id:"finance",from:"経理・管理部｜栗原",at:"土 08:46",title:"Re: 【体験会】案内原価の確認（社内のみ）",tag:"BCC分岐",to:"星野（制作担当）",cc:"",bcc:"あなた（リーダー）",body:"星野さん\n\n原価確認用の改訂版をお送りします。会場や展示内容の反映は済んでいるため、見た目だけなら一番新しい版ですが、巻末にはブース原価、仕入条件、取引先別単価、利益率を記載しています。\n\nこれは社内で価格設定を最終判断するための管理資料です。社外に配布する案内としては絶対に使わないでください。\n\nなお、この返信は取引先向けの配信リストには含めず、リーダーにだけBCCで共有しています。別枝の制作承認の返信とは混同しないようお願いします。",attach:"secret",hist:[quote("栗原｜経理・管理部","金 21:32","今回の案内は制作版と原価管理版を混在させないようにしてください。会計用の別紙はお客様に配れません。",null,{to:"星野"}),rootMail()]},
+  {id:"document",from:"星野｜配布資料",at:"土 08:43",title:"Re: 【体験会】社外配布資料の承認について",tag:"資料分岐",to:"小野、あなた",cc:"佐藤、山中",bcc:"",body:"各位\n\n今朝の会場変更と実演可否の確定内容を反映した案内が完成しました。社外公開承認も管理番号P-071として取得済みです。\n\nファイル名は作業時の都合で仮のままですが、最新版かどうかは名前ではなく、本文の会場・プログラムと、最後の配布承認欄を見て判断してください。\n\n取引先に送る際はこの返信の添付を使用してください。金曜夜に添付したものは差し替え前の版です。金曜夜に受信した元メールの添付と比較すれば変更点を確認できます。社内用の原価別紙が付いたメールも別途あるはずです。",attach:"safe",hist:[quote("星野｜配布資料","金 22:27","暫定のPDFを共有します。施設変更が入った場合は差し替えます。まだ社外配布承認は出ていません。","案内_旧版.pdf",{to:"小野",cc:"あなた",role:"old"}),rootMail()]},
+  {id:"event",from:"山中｜実演責任者",at:"土 08:39",title:"Re: 【体験会】実演プログラムの最終判断",tag:"催事分岐",to:"小野、あなた",cc:"佐藤",bcc:"",body:"関係各位\n\n会場変更後の技術確認が完了しました。"+eventLatest+"\n\n昨日夜の運営メモには別の案が残っていますが、判断はこのメールで確定としてください。新会場は「"+c.next+"」、実施エリアは「"+c.room+"」です。\n\n送信する案内の開催内容が現場掲示と食い違わないよう、案内制作側にも同内容を共有しています。現場向けの運営表を本メールに添付します。",attach:"program",hist:[quote("山中｜実演責任者","金 21:51",p?"実演ステージはまだ実施できる見込みです。ただし新会場での電源チェックが必要です。":"一度は実演を中止する方向でしたが、電源の追加調達を検討しています。","ステージ進行表_検討版.pdf",{to:"小野",cc:"佐藤",role:"program"}),rootMail()]},
+  {id:"venue",from:"佐藤｜会場担当",at:"土 08:32",title:"Re: 【体験会】会場変更の最終連絡",tag:"会場分岐",to:"小野、あなた",cc:"山中、青木",bcc:"",body:"おはようございます。\n\n施設管理者から正式に承認を受領したため、開催会場は「"+c.old+"」から「"+c.next+"」へ変更・確定しました。受付は「"+c.room+"」です。\n\n昨夜まで案内されていた旧会場は、施設の設備トラブルにより本日使用できません。取引先32名への案内は必ず新会場に差し替えてください。\n\n運営表だけでは変更が送迎会社に反映されません。青木さんから別途、送迎の手配状況をご確認ください。施設配置図は本メールの添付にあります。",attach:"map",hist:[quote("佐藤｜会場担当","土 07:32","昨夜の搬入後、旧会場の設備トラブルが判明しました。代替会場の使用可否を確認中です。まだ案内を確定しないでください。",null,{to:"小野",cc:"山中"}),quote("小野｜後輩","金 21:18","金曜時点の会場は"+c.old+"で理解しました。案内メールと送迎予約にも反映します。",null,{to:"佐藤",cc:"青木"}),rootMail()]},
+  {id:"bus",from:"青木｜送迎担当",at:"土 08:23",title:"Re: 【体験会】送迎車の運行登録について",tag:"送迎分岐",to:"あなた、小野",cc:"佐藤",bcc:"",body:"運行会社との最終確認について共有します。\n\n現在の「"+c.vehicle+"」は「"+c.old+"」行きで登録されています。会場が変更された場合、社内の案内メールを直しても車両の目的地は変わりません。\n\nこの車両は「"+c.reason+"」という条件です。必要なら対応画面から運行会社へ行先変更を申請してください。ただし、申請は承認ではありません。必ず運行会社の返信を開いて確定可否を確認してください。\n\n変更できなければ別便の確保が必要です。代替車の仮枠は9時まで押さえています。",attach:null,hist:[quote("青木｜送迎担当","金 21:48","送迎の当初予約を"+c.old+"行きで登録しました。使用車両は"+c.vehicle+"です。変更の可否は便種別により異なります。",null,{to:"小野",cc:"あなた"}),rootMail()]}
  ];
  if(s&&s.reply){
-  a.unshift({id:"reply",from:"配車センター｜運行会社",at:"土 08:55",title:s.reply==="refused"?"【要対応】行先変更を承認できません":"【承認完了】送迎車の行先変更",tag:"新着返信",to:"あなた",cc:"青木",bcc:"",body:s.reply==="refused"?"運行会社 配車センターです。\n\nご依頼の車両は登録運行区間外への変更が認められていないため、新会場への行先変更を承認できません。現時点で当該車両は旧会場行きのままです。\n\n青木様からお預かりした代替車の仮枠が有効ですので、期限までに対応画面で確定手続きをお願いします。申し訳ございませんが「変更を申請した」段階では乗車案内を変更しないでください。":"運行会社 配車センターです。\n\nご依頼の行先変更を承認しました。運行管理表の目的地を新会場に変更し、乗務員へ指示しました。追加手配は必要ありません。\n\nこちらの返信をもって、"+c.vehicle+"の行先は「"+c.next+"」で確定です。",attach:null,hist:[quote("あなた｜リーダー","土 08:54以降","旧会場"+c.old+"行きの送迎車について、新会場"+c.next+"への変更可否をご確認ください。承認または拒否の回答をお願いします。"),quote("青木｜送迎担当","土 08:23","予約の行先は旧会場のままです。規定に応じて会社の最終回答を確認してください。"),rootMail()]});
+  a.unshift({id:"reply",from:"配車センター｜運行会社",at:"土 08:55",title:s.reply==="refused"?"【要対応】行先変更を承認できません":"【承認完了】送迎車の行先変更",tag:"新着返信",to:"あなた",cc:"青木",bcc:"",body:s.reply==="refused"?"運行会社 配車センターです。\n\nご依頼の車両は登録運行区間外への変更が認められていないため、新会場への行先変更を承認できません。現時点で当該車両は旧会場行きのままです。\n\n青木様からお預かりした代替車の仮枠が有効ですので、期限までに対応画面で確定手続きをお願いします。申し訳ございませんが「変更を申請した」段階では乗車案内を変更しないでください。":"運行会社 配車センターです。\n\nご依頼の行先変更を承認しました。運行管理表の目的地を新会場に変更し、乗務員へ指示しました。追加手配は必要ありません。\n\nこちらの返信をもって、"+c.vehicle+"の行先は「"+c.next+"」で確定です。",attach:null,hist:[quote("あなた｜リーダー","土 08:54以降","旧会場"+c.old+"行きの送迎車について、新会場"+c.next+"への変更可否をご確認ください。承認または拒否の回答をお願いします。",null,{sent:true,to:"運行会社",cc:"青木"}),quote("青木｜送迎担当","土 08:23","予約の行先は旧会場のままです。規定に応じて会社の最終回答を確認してください。",null,{to:"あなた、小野",cc:"佐藤"}),rootMail()]});
  }
  return a;
 }
@@ -116,17 +117,24 @@ function renderReader(){if(peopleVisible){$("readhead").textContent="関係者�
  $("readhead").textContent=m.tag;
  var meta='<div class="mailmeta"><span class="key">差出人</span><b>'+esc(m.from)+'</b><span class="key">日時</span><span>'+esc(m.at)+'</span><span class="key">宛先</span><span>'+esc(m.to)+'</span><span class="key">CC</span><span>'+esc(m.cc||"なし")+'</span>'+(m.bcc?'<span class="key">BCC</span><span>'+esc(m.bcc)+'（あなただけが確認可能）</span>':"")+'</div>';
  var html='<h2 class="mailtitle">'+esc(m.title)+'</h2>'+meta+'<div class="letter">'+esc(m.body)+'</div>';
- if(m.attach)html+='<div class="attachment"><div class="fileicon">PDF</div><div class="details"><b>'+esc(labelFile(m.attach))+'</b><div class="tiny">この枝の最新メールに添付</div></div><button id="openAttach" class="btn small primary">開く</button></div>';
- html+='<div class="quotearea"><div class="tiny muted">このメールには過去の返信が引用されています。</div>';
- var depth=s.quoted[m.id]||0;
- for(var i=0;i<depth&&i<m.hist.length;i++){var q=m.hist[i];html+='<div class="quoted"><div class="qhead">'+esc(q.who)+'　'+esc(q.when)+'</div><div class="qbody">'+esc(q.text)+'</div>'+(q.file?'<div class="oldfile">📎 '+esc(q.file)+'（引用内の旧版は開けません）</div>':"")+'</div>'}
- if(depth<m.hist.length)html+='<button id="expandQuote" class="quoteButton">↳ '+(depth===0?"以前の返信・引用を表示":"さらに前の引用を表示")+'（残り'+(m.hist.length-depth)+'通）</button>';
+ if(m.attach)html+='<div class="attachment"><div class="fileicon">PDF</div><div class="details"><b>'+esc(labelFile(m.attach))+'</b><div class="tiny">このメールに添付</div></div><button id="openAttach" class="btn small primary">開く</button></div>';
+ html+='<div class="quotearea"><div class="tiny muted">この枝で自分が送受信した過去メールを遡れます。宛先に含まれていなかった途中のメールは表示されません。</div>';
+ var history=m.hist.filter(mayRead),depth=s.quoted[m.id]||0;
+ for(var i=0;i<depth&&i<history.length;i++){
+   var q=history[i],dest=q.sent?"送信済み → "+(q.to||"関係者"):(q.bcc?"BCC: "+q.bcc:q.cc?"CC: "+q.cc:"宛先: "+q.to);
+   html+='<div class="quoted"><div class="qhead">'+esc(q.who)+'　'+esc(q.when)+'</div><div class="tiny muted">'+esc(dest)+'</div><div class="qbody">'+esc(q.text)+'</div>';
+   if(q.file&&q.role)html+='<div class="attachment"><div class="fileicon">PDF</div><div class="details"><b>'+esc(q.file)+'</b><div class="tiny">この過去メールの添付</div></div><button class="btn small" data-old-file="'+i+'">開く</button></div>';
+   else if(q.file)html+='<div class="oldfile">📎 '+esc(q.file)+'</div>';
+   html+='</div>';
+ }
+ if(depth<history.length)html+='<button id="expandQuote" class="quoteButton">↳ '+(depth===0?"以前の受信メール・引用を表示":"さらに前の受信メールを表示")+'（残り'+(history.length-depth)+'通）</button>';
  html+='</div>';$("reader").innerHTML=html;
  var b=$("openAttach");if(b)b.onclick=function(){openDoc(m.attach)};
+ document.querySelectorAll("[data-old-file]").forEach(function(b){b.onclick=function(){if(!alive())return;var q=m.hist.filter(mayRead)[Number(b.dataset.oldFile)];if(q&&q.role&&mayRead(q))openDoc(q.role,q.file)}});
  var e=$("expandQuote");if(e)e.onclick=function(){if(!alive())return;s.quoted[m.id]=(s.quoted[m.id]||0)+1;s.quotesRead++;renderReader()};
 }
 function openMail(id){if(!alive())return;if(!mails(s.c).some(function(m){return m.id===id}))return;opened=id;s.read.add(id);s.navs++;peopleVisible=false;if(id==="reply"&&s.route==="awaiting"){s.route=s.reply==="approved"?"confirmed":"rejected"}renderInbox();renderReader();renderWork();updateObjectives();switchPage("reading")}
-function openDoc(role){if(!alive())return;s.docOpened++;s.seen.add(role);var c=s.c;var body='<div class="docmast"><b>株式会社 架空テクノロジーズ</b><span>土曜朝・確認用資料</span></div>',title="",lines=[],stamp="",box="",cls="";
+function openDoc(role,fileName){if(!alive())return;s.docOpened++;s.seen.add(role);var c=s.c;var body='<div class="docmast"><b>株式会社 架空テクノロジーズ</b><span>土曜朝・確認用資料</span></div>',title="",lines=[],stamp="",box="",cls="";
  if(role==="old"){title="新製品体験会｜ご案内";lines=[["日時","土曜日 10:00〜12:00"],["会場",c.old],["開催内容","展示・実演とも実施"],["受付","旧会場 正面入口"]];box="金曜夜の暫定版。土曜の修正未反映。";cls="conf"}
  if(role==="safe"){title="新製品体験会｜ご案内";lines=[["日時","土曜日 10:00〜12:00"],["会場",c.next],["開催内容",c.event==="partial"?"展示のみ実施・実演中止":"展示・実演とも実施"],["受付",c.room]];box="管理番号 P-071 ／ 最終承認：土曜08:42 ／ 配布対象：取引先";stamp="社外配布承認済"}
  if(role==="secret"){title="新製品体験会｜管理用案内";lines=[["日時","土曜日 10:00〜12:00"],["会場",c.next],["開催内容",c.event==="partial"?"展示のみ実施・実演中止":"展示・実演とも実施"],["資料区分","社内限定／原価別紙あり"]];box="別紙：原価・仕入条件・取引先別単価・利益率。社外への開示禁止。";cls="conf";stamp="社内限定"}
@@ -136,7 +144,7 @@ function openDoc(role){if(!alive())return;s.docOpened++;s.seen.add(role);var c=s
  if(role==="map")body+='<div class="venueplan"><div>旧会場<br>使用不可</div><div class="target">'+esc(c.next)+'<br>受付 '+esc(c.room)+'</div><div>搬入ゲート<br>西側入口</div></div>';
  if(role==="secret")body+='<div class="docline"><div class="dkey">非公開別紙</div><b>会場費 2,400,000円 ／ 原価率 37.8% ／ 個別単価表</b></div>';
  body+='<div class="docbox '+cls+'">'+esc(box)+'</div>'+(stamp?'<div class="docstamp">'+esc(stamp)+'</div>':"")+'<div class="docbottom">資料閲覧 1 / 1　｜　このメールの最新版</div>';
- $("readhead").textContent="添付プレビュー";$("reader").innerHTML='<button id="docBack" class="btn ghost small back">← メールに戻る</button><h3>📎 '+esc(labelFile(role))+'</h3><div class="previewdoc">'+body+'</div><p class="footnote">画像的なレイアウトで内容・承認欄を照合してください。過去の引用に付いたファイルは開けません。</p>';
+ $("readhead").textContent="添付プレビュー";$("reader").innerHTML='<button id="docBack" class="btn ghost small back">← メールに戻る</button><h3>📎 '+esc(fileName||labelFile(role))+'</h3><div class="previewdoc">'+body+'</div><p class="footnote">画像的なレイアウトで内容・承認欄を照合してください。自分が受信・送信した過去のメールの添付も開いて比較できます。</p>';
  $("docBack").onclick=function(){renderReader()};renderWork();switchPage("reading")
 }
 function makeSelect(id,options,value){return '<select id="'+id+'">'+options.map(function(o){return '<option value="'+esc(o[0])+'" '+(value===o[0]?"selected":"")+'>'+esc(o[1])+'</option>'}).join("")+'</select>'}
