@@ -14,7 +14,7 @@ Status: implemented in staging branch. DO NOT publish before image assets are co
 - All 7 endings observed in a 75-run simulated strategy sweep
 
 ## Required asset paths — source of truth
-Follow **f1/SPEC_V08_NONIMAGE.md**. There are exactly **21 JPEG images** referenced in f1/index.html: 8 existing base images and 13 new construction/improvement/ending scenes. None are committed to GitHub yet. Use the exact paths in the spec and preserve the common camera framing. Do not generate more images or change state mapping without resolving it in the F1 design chat first.
+Follow **f1/ANOMALY_REVIEW_V08.md** for the newest story and ending rules, **f1/PROPOSAL_V08_COMPLAINT_CHAIN.md** for ordinary complaints, and **f1/SPEC_V08_NONIMAGE.md** only for the provisional asset naming baseline. There are currently **21 provisional JPEG image names** referenced in f1/index.html: 8 existing base images and 13 new construction/improvement/ending scenes. None are committed to GitHub yet. Use the exact paths in the spec and preserve the common camera framing. Do not generate more images or change state mapping without resolving it in the F1 design chat first.
 
 ## Acceptance / publication checklist
 1. Commit all 21 approved scene JPEG files to f1/assets/ on this staging branch, using the filename contract in f1/SPEC_V08_NONIMAGE.md.
@@ -29,6 +29,6 @@ Follow **f1/SPEC_V08_NONIMAGE.md**. There are exactly **21 JPEG images** referen
 10. DO NOT modify repository root index.html, cross-game shared files/settings, d3/, m2/ or any unrelated repositories without explicit user authorization.
 
 ## Known constraints
-- The 21 photos represent defined states and endings; not every possible combination of improvements is rendered. The game uses state labels to represent additional changes.
+- The currently proposed 21 photos represent defined states and endings; not every possible combination of improvements is rendered. The game uses state labels to represent additional changes.
 - Browser-based UI QA is still pending. Automated JS simulation is not a substitute for screenshot/review.
 - Current normal ending criteria and X1–X4 naming are defined in f1/SPEC_V08_NONIMAGE.md. These replace the mismatched v0.7 labels. Do not alter them without user approval.
