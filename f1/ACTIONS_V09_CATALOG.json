@@ -662,14 +662,14 @@
     }
   ],
   "weeklyEndingThresholds": {
-    "N1": {
-      "minimumRevenue": 560,
-      "maximumComplaintCount": 3
+    "normalSuccess": {
+      "minSales": 560,
+      "maxComplaints": 3
     },
-    "N2": {
-      "minimumRevenue": 480,
-      "minimumComplaintCount": 4
+    "normalCustomer": {
+      "minSales": 480,
+      "minComplaints": 4
     },
-    "status": "temporary; redesign after browser trial"
+    "status": "provisional"
   }
 }
