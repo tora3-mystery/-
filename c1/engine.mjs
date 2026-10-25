@@ -1,9 +1,16 @@
 /** C1 gameplay logic. Pure and dependency-free: also imported by tests. */
-export const VERSION = '0.4.1';
-export const UPDATED_JST = '2026-10-25 18:00 JST';
+export const VERSION = '0.5.0';
+export const UPDATED_JST = '2026-10-25 19:35 JST';
 export const LIMITS = Object.freeze({ cp: 20, progress: 22, growth: 6 });
 export const DAYS = ['月曜日', '火曜日', '水曜日', '木曜日', '金曜日'];
 export const SPEED_HARASSMENTS = Object.freeze(['即レスハラ','遅レスハラ']);
+export const DIRECTIVES = Object.freeze([
+  {time:'09:00', title:'初週の育成と即戦力化', demand:'歓迎・指導は丁寧に。ただし資料も初日から進めること。進捗3以上、習熟2以上を報告。', progress:3, growth:2, remark:'挨拶だけで終わる初日など論外だぞ。'},
+  {time:'09:00', title:'生産性向上の即日報告', demand:'AIは積極活用。ミスはゼロ。昨日まで含め進捗9以上、習熟3以上に。', progress:9, growth:3, remark:'AIに任せたのに遅い、という説明は受け付けない。'},
+  {time:'09:00', title:'自主性と進捗管理を両立', demand:'手取り足取りは禁止。ただし進捗15以上、習熟4以上を必達。', progress:15, growth:4, remark:'放置と自律支援の区別くらい、課長なら分かるだろう。'},
+  {time:'09:00', title:'会議ゼロ・品質最大化', demand:'残業はゼロ。明日の役員報告に向け、進捗20以上・習熟5以上。', progress:20, growth:5, remark:'間に合わないなら工夫して。もちろん長時間労働は禁止。'},
+  {time:'09:00', title:'本日17時、役員説明', demand:'進捗22以上・習熟6以上で着地。コンプラ20点は即呼び出し。言い訳は認めない。', progress:22, growth:6, remark:'成功するまでが育成。成功しなかったら指導方法を見直そう。'}
+]);
 const pick = (xs, rng) => xs[Math.min(xs.length - 1, Math.floor(rng() * xs.length))];
 const names = {
   '男性': [['青木','悠真'], ['佐藤','陸'], ['高橋','一樹'], ['小林','湊'], ['山本','直哉'], ['森','拓海']],
@@ -55,7 +62,7 @@ export function createRun(profile) {
   return {
     version:VERSION, profile,profileAccepted:false,index:0, cp:0, progress:0, growth:0, logs:[],
     flags:{checkAgreed:false,aiUnverified:false,aiVerified:false,presentationPrepped:false},
-    phase:'scene',pending:null,ending:null,
+    phase:'briefing',pending:null,ending:null,bossReports:[],
   };
 }
 export function fitAdjustment(choice, profile) {
@@ -63,7 +70,7 @@ export function fitAdjustment(choice, profile) {
   const [key,value] = choice.fit.split(':');
   return profile[key] === value ? -1 : 1;
 }
-export function calculate(run, event, choice, replySeconds = null) {
+export function calculate(run, event, choice, replyTiming = null) {
   if (!run || !event || !choice) throw new Error('判定情報が不足しています');
   if (run.phase !== 'scene') throw new Error('この場面はすでに処理済みです');
   if (event.id !== run.currentId && run.currentId !== undefined) throw new Error('イベントの不整合');
@@ -83,12 +90,14 @@ export function calculate(run, event, choice, replySeconds = null) {
     else if(run.flags.aiVerified) {deltaP++;extraReason='火曜に出典を検証していたため、追加依頼への対応が早かった。';}
   }
   if(event.id==='D3-1') {
-    if(!Number.isFinite(replySeconds) || replySeconds < 0) throw new Error('返信時間を選択してください');
-    if(replySeconds<=2) {speedName='即レスハラ';speedReason='2秒以内の返信が、同じ即応速度を求める社内圧力と認定された。';}
-    else if(replySeconds>20) {speedName='遅レスハラ';speedReason='返信まで20秒超の経過が、相談を後回しにしたとの社内認定につながった。';}
-    if(speedName && speedName!==choice.harassment){speedCp=1;deltaCp+=speedCp;}
+    const mode=typeof replyTiming==='number'?(replyTiming<=2?'instant':replyTiming>20?'late':'normal'):replyTiming;
+    if(!['instant','normal','late'].includes(mode)) throw new Error('返信タイミングを選択してください');
+    if(mode==='instant') {speedName='即レスハラ';speedReason='通知から数秒で返信したため、常時即応を求める空気を生むと社内認定された。';}
+    else if(mode==='late') {speedName='遅レスハラ';speedReason='業務時間内の問い合わせを翌朝まで保留し、相談機会を遅らせたと社内認定された。';}
+    if(speedName && speedName!==choice.harassment.replace(/疑義$/,'')){speedCp=2;deltaCp+=speedCp;}
   }
-  const effectiveName=baseCp===0 && !choice.harassment.endsWith('疑義') ? `${choice.harassment}疑義` : choice.harassment;
+  const baseName=choice.harassment.replace(/疑義$/,'');
+  const effectiveName=baseCp===0?`${baseName}疑義`:baseName;
   const next=structuredClone(run);
   next.cp+=deltaCp;
   next.progress=Math.max(0,next.progress+deltaP);
@@ -101,7 +110,7 @@ export function calculate(run, event, choice, replySeconds = null) {
   if(event.id==='D4-3' && ['A','C','E'].includes(choice.id)) next.flags.presentationPrepped=true;
   const log={id:event.id,day:event.day,title:event.title,choiceId:choice.id,choiceText:choice.text,
     name:effectiveName,rawName:choice.harassment,reason:choice.reason,baseCp,speedCp,speedReason,deltaCp,deltaP,deltaS,
-    speedName,replySeconds,eventIndex:run.index,extraReason,fitAdjustment:adjustment};
+    speedName,replyTiming,eventIndex:run.index,extraReason,fitAdjustment:adjustment,time:event.time||'',};
   next.logs.push(log);
   next.pending=log;
   next.phase='result';
@@ -109,10 +118,33 @@ export function calculate(run, event, choice, replySeconds = null) {
   if(done) next.ending=resolveEnding(next);
   return next;
 }
-export function advance(run) {
-  if(run.phase!=='result') throw new Error('結果画面からのみ進行できます');
+export function beginDay(run) {
+  if(run.phase!=='briefing') throw new Error('部長指令画面からのみ開始できます');
+  const next=structuredClone(run);next.phase='scene';return next;
+}
+export function settleDirective(run) {
+  const day=Math.floor(run.index/3);
+  if(day>=4 || run.index%3!==2) throw new Error('日次査定の時刻ではありません');
+  const demand=DIRECTIVES[day];
+  const missing=[];
+  if(run.progress<demand.progress) missing.push('進捗');
+  if(run.growth<demand.growth) missing.push('育成');
+  const penalty=missing.length; // 資料や育成報告の再作成が発生
   const next=structuredClone(run);
-  if(next.ending) next.phase='ending';
+  next.progress=Math.max(0,next.progress-penalty);
+  next.bossReports??=[];
+  next.bossReports.push({day,met:missing.length===0,missing,penalty,progress:run.progress,growth:run.growth});
+  next.phase='dayReview';
+  return next;
+}
+export function advance(run) {
+  if(!['result','dayReview'].includes(run.phase))throw new Error('この画面から先へ進めません');
+  if(run.phase==='dayReview'){
+    const next=structuredClone(run);next.index++;next.phase='briefing';next.pending=null;return next;
+  }
+  if(run.phase==='result' && !run.ending && run.index%3===2)return settleDirective(run);
+  const next=structuredClone(run);
+  if(next.ending)next.phase='ending';
   else {next.index++;next.phase='scene';}
   next.pending=null;
   return next;
@@ -139,7 +171,7 @@ export function resolveEnding(run) {
   return 'E09';
 }
 export function isValidSave(save, events) {
-  return !!save && ['0.4.0',VERSION].includes(save.version) && Number.isInteger(save.index) && save.index>=0 && save.index<events.length
-   && ['scene','result','ending'].includes(save.phase) && Array.isArray(save.logs) && typeof save.profile?.name==='string'
+  return !!save && ['0.4.0','0.4.1',VERSION].includes(save.version) && Number.isInteger(save.index) && save.index>=0 && save.index<events.length
+   && ['briefing','scene','result','dayReview','ending'].includes(save.phase) && Array.isArray(save.logs) && typeof save.profile?.name==='string'
    && save.flags && typeof save.cp==='number';
 }

@@ -1,35 +1,27 @@
-# C1 適切にご対応ください。 v0.4.1
+# C1 適切にご対応ください。 v0.5.0
 
-- Public URL: https://tora3-mystery.github.io/short-ui-games/c1/
-- Scope: All C1 assets are under `c1/` only. Root `index.html` is maintained by ARG master.
-- Updated (JST): 2026-10-25 18:00
-- Static HTML/CSS/JavaScript, no server/API dependencies, no external images, no AI decision API.
+- 公開URL: https://tora3-mystery.github.io/short-ui-games/c1/
+- 更新: 2026-10-25 19:35 JST
+- 対象範囲: `c1/` のみ。ルート `index.html` や他作品は変更しない。
 
-## Mechanics
+## v0.5.0の主な変更
 
-- 5 workdays × 3 scenarios × 6 responses = 15 events / 90 actions.
-- Player gauges: compliance (20 is instant loss); progress >=22 and growth >=6 for ordinary completion.
-- Harassment names and internal fictional recognition reasons are shown after each response, with a 0-point suspicion category.
-- Employee randomized profile includes age, assignment history, career goals, skill, preference for checking, delivery medium, feedback style. Gender does **not** affect outcomes.
-- Wednesday chat event has explicit-start real elapsed time mode and deterministic accessible time-selection mode.
-- Persistence: localStorage save/resume, harassment collection, 16 endings; no external transfer.
-- Result text share and client-side PNG card export.
+1. 認定演出を「認 定 ！」スタンプ、紙吹雪、コンボ、効果音のファンファーレに変更（動きを減らすOS設定に対応）。
+2. 各イベントに DAY・曜日・時刻を明示。部長指令と若手社員イベントを別の配色・囲みで表示。
+3. `+Npt` を `+N コンプラ違反pt` に変更し、残りポイントとゲームオーバーまでの距離を可視化。
+4. 実時間計測は廃止。チャット返信タイミングを3択から選ぶ方式に変更。
+5. 15イベント×6択の判定を調整。疑義を減らし、通常対応にもコンプラ認定を増加。
+6. 毎朝部長指令を表示。進捗と習熟のノルマ未達で、終業時に追加報告・進捗ペナルティが生じる。
+7. 新人特性に応じた判定を増やし、プロフィールを読んだ攻略に寄せる。
 
-## Files
+## 条件
 
-`index.html` entry; `style.css`; `app.mjs` UI; `engine.mjs` pure rule engine; `events.json` scenario data.
+- 5営業日、15イベント、各6択、16エンディング。
+- コンプラ違反20ptに到達でゲームオーバー。
+- 5日目終了時に業務進捗22以上かつ新人習熟6以上でクリア。
+- AI判定API・外部バックエンドなし。セーブ・図鑑は端末内保存。
+- v0.4.0 / v0.4.1の途中セーブを継続可能にする移行処理あり。
 
-## Verification
+## QA
 
-Automated engine/UI QA evidence is produced locally before publication. GitHub commit confirmation and public Pages HTTP check are separately reported.
-
-## Important disclaimer
-
-Fictional satire on organizational classification and management tensions. Not a legal definition of harassment or workplace training material.
-## v0.4.1 audit fixes
-
-- Merge base and timing recognition without duplicate category; keep the two explanations separate.
-- Register timing-only harassment in archive (including 遅レスハラ); count unique classifications consistently.
-- Preserve pre-profile confirmation state on resume, including legacy v0.4.0 saves.
-- Modal focus is trapped, Escape/backdrop closes the modal and returns focus to its launcher.
-- Events metadata is consistent with the game version.
+監査スクリプト・ブラウザの通し操作・セーブ互換・スマートフォン画面を再確認して公開する。検証の範囲は公開時の報告を参照。

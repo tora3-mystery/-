@@ -1,11 +1,12 @@
 {
-  "version": "0.4.1",
+  "version": "0.5.0",
   "date": "2026-10-25 JST",
-  "status": "public_playtest",
+  "status": "playtest v0.5.0",
   "thresholds": {
     "cp_gameover": 20,
     "p_win": 22,
-    "s_win": 6
+    "s_win": 6,
+    "cp": 20
   },
   "events": [
     {
@@ -20,20 +21,20 @@
           "text": "「大きな期待をしているよ」",
           "harassment": "期待ハラ",
           "reason": "期待の大きさが心理的負担と判定。",
-          "cp": 2,
+          "cp": 3,
           "progress": 1,
           "growth": 0,
-          "fit": null
+          "fit": "career:management"
         },
         {
           "id": "B",
           "text": "「最初は何も期待していないから安心して」",
           "harassment": "無期待ハラ",
           "reason": "成長可能性を否定したとの認定。",
-          "cp": 2,
+          "cp": 3,
           "progress": 0,
           "growth": 0,
-          "fit": null
+          "fit": "career:expert"
         },
         {
           "id": "C",
@@ -58,9 +59,9 @@
         {
           "id": "E",
           "text": "「まず今週の目標を一緒に決めよう」",
-          "harassment": "目標設定ハラ疑義",
+          "harassment": "目標設定ハラ",
           "reason": "目標の設定自体は疑義に留まり、今回は認定なし。",
-          "cp": 0,
+          "cp": 1,
           "progress": 1,
           "growth": 1,
           "fit": null
@@ -76,7 +77,10 @@
           "fit": null
         }
       ],
-      "note": ""
+      "note": "",
+      "time": "09:20",
+      "actor": "employee",
+      "timeLabel": "月曜日 09:20"
     },
     {
       "id": "D1-2",
@@ -113,7 +117,7 @@
           "cp": 1,
           "progress": 3,
           "growth": 0,
-          "fit": null
+          "fit": "check:guided"
         },
         {
           "id": "D",
@@ -128,12 +132,12 @@
         {
           "id": "E",
           "text": "「確認時刻を一緒に決めてから任せる」",
-          "harassment": "確認予定ハラ疑義",
+          "harassment": "確認予定ハラ",
           "reason": "事前合意があるため正式認定には至らない。",
-          "cp": 0,
+          "cp": 1,
           "progress": 1,
           "growth": 1,
-          "fit": null
+          "fit": "check:guided"
         },
         {
           "id": "F",
@@ -146,7 +150,10 @@
           "fit": null
         }
       ],
-      "note": "E選択でcheck_agreedフラグを立てる。"
+      "note": "E選択でcheck_agreedフラグを立てる。",
+      "time": "10:40",
+      "actor": "employee",
+      "timeLabel": "月曜日 10:40"
     },
     {
       "id": "D1-3",
@@ -160,10 +167,10 @@
           "text": "「よかったら二人で食べに行く？」",
           "harassment": "ランチハラ",
           "reason": "上司の勧誘を断りづらいと感じさせる。",
-          "cp": 1,
+          "cp": 2,
           "progress": 0,
           "growth": 1,
-          "fit": null
+          "fit": "feedback:immediate"
         },
         {
           "id": "B",
@@ -193,7 +200,7 @@
           "cp": 1,
           "progress": 0,
           "growth": 1,
-          "fit": null
+          "fit": "check:guided"
         },
         {
           "id": "E",
@@ -203,7 +210,7 @@
           "cp": 1,
           "progress": 0,
           "growth": 0,
-          "fit": null
+          "fit": "medium:written"
         },
         {
           "id": "F",
@@ -216,7 +223,10 @@
           "fit": null
         }
       ],
-      "note": ""
+      "note": "",
+      "time": "12:00",
+      "actor": "employee",
+      "timeLabel": "月曜日 12:00"
     },
     {
       "id": "D2-1",
@@ -253,7 +263,7 @@
           "cp": 2,
           "progress": 2,
           "growth": 0,
-          "fit": null
+          "fit": "check:autonomous"
         },
         {
           "id": "D",
@@ -263,30 +273,33 @@
           "cp": 1,
           "progress": 2,
           "growth": 0,
-          "fit": null
+          "fit": "medium:written"
         },
         {
           "id": "E",
           "text": "「詰まった箇所を聞き、そこだけ一緒に確認」",
-          "harassment": "質問限定ハラ疑義",
+          "harassment": "質問限定ハラ",
           "reason": "自律性と支援を両立したため疑義止まり。",
-          "cp": 0,
+          "cp": 1,
           "progress": 1,
           "growth": 1,
-          "fit": null
+          "fit": "medium:spoken"
         },
         {
           "id": "F",
           "text": "「午後にまとめて質問して」",
           "harassment": "質問留保ハラ",
           "reason": "本人が今困っている点を先送りした。",
-          "cp": 1,
+          "cp": 2,
           "progress": 2,
           "growth": 0,
           "fit": "feedback:batched"
         }
       ],
-      "note": ""
+      "note": "",
+      "time": "09:40",
+      "actor": "employee",
+      "timeLabel": "火曜日 09:40"
     },
     {
       "id": "D2-2",
@@ -310,7 +323,7 @@
           "text": "「AIの資料は危ない、全部禁止」",
           "harassment": "AI禁止ハラ",
           "reason": "合理的な活用機会も一律に排除した。",
-          "cp": 2,
+          "cp": 3,
           "progress": 1,
           "growth": 0,
           "fit": null
@@ -320,20 +333,20 @@
           "text": "「私が全部作り直しておくよ」",
           "harassment": "巻取りハラ",
           "reason": "AIの検証方法を学ぶ機会を奪った。",
-          "cp": 1,
+          "cp": 2,
           "progress": 3,
           "growth": 0,
-          "fit": null
+          "fit": "strength:analysis"
         },
         {
           "id": "D",
           "text": "「未確認箇所の検証を分担しよう」",
-          "harassment": "検証分担ハラ疑義",
+          "harassment": "検証分担ハラ",
           "reason": "検証責任が明確なため不認定。",
-          "cp": 0,
+          "cp": 1,
           "progress": 1,
           "growth": 1,
-          "fit": null
+          "fit": "strength:analysis"
         },
         {
           "id": "E",
@@ -353,10 +366,13 @@
           "cp": 1,
           "progress": 1,
           "growth": 1,
-          "fit": null
+          "fit": "career:management"
         }
       ],
-      "note": "A/E選択でai_unverifiedフラグを立てる。D選択でai_verifiedフラグを立てる。"
+      "note": "A/E選択でai_unverifiedフラグを立てる。D選択でai_verifiedフラグを立てる。",
+      "time": "13:20",
+      "actor": "employee",
+      "timeLabel": "火曜日 13:20"
     },
     {
       "id": "D2-3",
@@ -403,7 +419,7 @@
           "cp": 0,
           "progress": 1,
           "growth": 1,
-          "fit": null
+          "fit": "check:guided"
         },
         {
           "id": "E",
@@ -413,7 +429,7 @@
           "cp": 1,
           "progress": 3,
           "growth": 0,
-          "fit": null
+          "fit": "check:autonomous"
         },
         {
           "id": "F",
@@ -423,10 +439,13 @@
           "cp": 1,
           "progress": 2,
           "growth": 0,
-          "fit": null
+          "fit": "medium:written"
         }
       ],
-      "note": "D1-2でcheck_agreedならD選択の進捗+1。"
+      "note": "D1-2でcheck_agreedならD選択の進捗+1。",
+      "time": "16:00",
+      "actor": "employee",
+      "timeLabel": "火曜日 16:00"
     },
     {
       "id": "D3-1",
@@ -443,7 +462,7 @@
           "cp": 0,
           "progress": 1,
           "growth": 1,
-          "fit": null
+          "fit": "feedback:batched"
         },
         {
           "id": "B",
@@ -473,30 +492,33 @@
           "cp": 1,
           "progress": 1,
           "growth": 0,
-          "fit": null
+          "fit": "medium:written"
         },
         {
           "id": "E",
           "text": "「1時間後なら見られます」",
-          "harassment": "確認予告ハラ疑義",
+          "harassment": "確認予告ハラ",
           "reason": "確認時刻が明示されており正式認定なし。",
-          "cp": 0,
+          "cp": 1,
           "progress": 1,
           "growth": 1,
-          "fit": null
+          "fit": "feedback:batched"
         },
         {
           "id": "F",
           "text": "「既読をつけずに、あとで考える」",
           "harassment": "未読ハラ",
           "reason": "閲覧状況を隠したまま支援を保留。",
-          "cp": 1,
+          "cp": 2,
           "progress": 2,
           "growth": 0,
           "fit": null
         }
       ],
-      "note": "任意の返信で実時間が2秒以下なら+1（速度疑義）、20秒超なら+1。時間操作を用意。どちらも単独で最大+1。"
+      "note": "任意の返信で実時間が2秒以下なら+1（速度疑義）、20秒超なら+1。時間操作を用意。どちらも単独で最大+1。",
+      "time": "13:10",
+      "actor": "employee",
+      "timeLabel": "水曜日 13:10"
     },
     {
       "id": "D3-2",
@@ -533,7 +555,7 @@
           "cp": 2,
           "progress": 2,
           "growth": 0,
-          "fit": null
+          "fit": "feedback:batched"
         },
         {
           "id": "D",
@@ -553,7 +575,7 @@
           "cp": 0,
           "progress": 1,
           "growth": 2,
-          "fit": null
+          "fit": "feedback:immediate"
         },
         {
           "id": "F",
@@ -566,7 +588,10 @@
           "fit": null
         }
       ],
-      "note": ""
+      "note": "",
+      "time": "14:20",
+      "actor": "employee",
+      "timeLabel": "水曜日 14:20"
     },
     {
       "id": "D3-3",
@@ -590,7 +615,7 @@
           "text": "「10枚はこちらで夜中に作る」",
           "harassment": "過剰自己犠牲ハラ",
           "reason": "無理な巻取りで部下に不適切な働き方を示す。",
-          "cp": 2,
+          "cp": 3,
           "progress": 3,
           "growth": 0,
           "fit": null
@@ -603,17 +628,17 @@
           "cp": 0,
           "progress": 1,
           "growth": 1,
-          "fit": null
+          "fit": "career:management"
         },
         {
           "id": "D",
           "text": "「新人に任せる箇所だけ明確に決める」",
-          "harassment": "分担限定ハラ疑義",
+          "harassment": "分担限定ハラ",
           "reason": "能力に応じて役割を調整し不認定。",
-          "cp": 0,
+          "cp": 1,
           "progress": 2,
           "growth": 1,
-          "fit": null
+          "fit": "career:expert"
         },
         {
           "id": "E",
@@ -636,7 +661,10 @@
           "fit": null
         }
       ],
-      "note": ""
+      "note": "",
+      "time": "16:45",
+      "actor": "boss",
+      "timeLabel": "水曜日 16:45"
     },
     {
       "id": "D4-1",
@@ -663,7 +691,7 @@
           "cp": 2,
           "progress": 1,
           "growth": 0,
-          "fit": null
+          "fit": "career:management"
         },
         {
           "id": "C",
@@ -698,15 +726,18 @@
         {
           "id": "F",
           "text": "「参加は自由とし、希望者に店情報だけ共有」",
-          "harassment": "任意参加ハラ疑義",
+          "harassment": "任意参加ハラ",
           "reason": "不参加が評価に影響しないことを明示し不認定。",
-          "cp": 0,
+          "cp": 1,
           "progress": 0,
           "growth": 1,
-          "fit": null
+          "fit": "check:autonomous"
         }
       ],
-      "note": ""
+      "note": "",
+      "time": "10:00",
+      "actor": "boss",
+      "timeLabel": "木曜日 10:00"
     },
     {
       "id": "D4-2",
@@ -763,7 +794,7 @@
           "cp": 0,
           "progress": 1,
           "growth": 2,
-          "fit": null
+          "fit": "feedback:immediate"
         },
         {
           "id": "F",
@@ -773,10 +804,13 @@
           "cp": 2,
           "progress": 2,
           "growth": 0,
-          "fit": null
+          "fit": "feedback:batched"
         }
       ],
-      "note": ""
+      "note": "",
+      "time": "14:30",
+      "actor": "employee",
+      "timeLabel": "木曜日 14:30"
     },
     {
       "id": "D4-3",
@@ -800,10 +834,10 @@
           "text": "「発表は全部こちらで引き取る」",
           "harassment": "登壇機会剥奪ハラ",
           "reason": "発表経験の獲得機会を奪った。",
-          "cp": 1,
+          "cp": 2,
           "progress": 3,
           "growth": 0,
-          "fit": null
+          "fit": "strength:analysis"
         },
         {
           "id": "C",
@@ -813,7 +847,7 @@
           "cp": 0,
           "progress": 1,
           "growth": 2,
-          "fit": null
+          "fit": "strength:presentation"
         },
         {
           "id": "D",
@@ -846,7 +880,10 @@
           "fit": null
         }
       ],
-      "note": "A/C/E選択ならpresentation_preppedフラグを立てる。"
+      "note": "A/C/E選択ならpresentation_preppedフラグを立てる。",
+      "time": "16:10",
+      "actor": "employee",
+      "timeLabel": "木曜日 16:10"
     },
     {
       "id": "D5-1",
@@ -883,7 +920,7 @@
           "cp": 0,
           "progress": 2,
           "growth": 1,
-          "fit": null
+          "fit": "strength:analysis"
         },
         {
           "id": "D",
@@ -898,12 +935,12 @@
         {
           "id": "E",
           "text": "「部長へ不足データを説明し提出範囲を交渉」",
-          "harassment": "納期調整ハラ疑義",
+          "harassment": "納期調整ハラ",
           "reason": "不足情報を隠さず優先度を調整。",
-          "cp": 0,
+          "cp": 1,
           "progress": 1,
           "growth": 1,
-          "fit": null
+          "fit": "career:management"
         },
         {
           "id": "F",
@@ -916,7 +953,10 @@
           "fit": null
         }
       ],
-      "note": "ai_unverifiedなら進捗-2（差し戻し。D2からの既知リスク）。ai_verifiedなら進捗+1。未検証選択は既存フラグより優先。"
+      "note": "ai_unverifiedなら進捗-2（差し戻し。D2からの既知リスク）。ai_verifiedなら進捗+1。未検証選択は既存フラグより優先。",
+      "time": "09:30",
+      "actor": "boss",
+      "timeLabel": "金曜日 09:30"
     },
     {
       "id": "D5-2",
@@ -943,7 +983,7 @@
           "cp": 2,
           "progress": 3,
           "growth": 0,
-          "fit": null
+          "fit": "check:autonomous"
         },
         {
           "id": "C",
@@ -953,7 +993,7 @@
           "cp": 0,
           "progress": 2,
           "growth": 1,
-          "fit": null
+          "fit": "medium:written"
         },
         {
           "id": "D",
@@ -986,7 +1026,10 @@
           "fit": null
         }
       ],
-      "note": ""
+      "note": "",
+      "time": "15:30",
+      "actor": "employee",
+      "timeLabel": "金曜日 15:30"
     },
     {
       "id": "D5-3",
@@ -1023,7 +1066,7 @@
           "cp": 0,
           "progress": 1,
           "growth": 1,
-          "fit": null
+          "fit": "career:management"
         },
         {
           "id": "D",
@@ -1056,7 +1099,10 @@
           "fit": null
         }
       ],
-      "note": ""
+      "note": "",
+      "time": "17:00",
+      "actor": "boss",
+      "timeLabel": "金曜日 17:00"
     }
   ],
   "endings": [
@@ -1141,5 +1187,5 @@
       "rule": "成功、最終報告でハラ指摘ハラを選んだ"
     }
   ],
-  "updated_jst": "2026-10-25 18:00 JST"
+  "updated_jst": "2026-10-25 19:35 JST"
 }
