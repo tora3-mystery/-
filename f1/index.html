@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#244f46"><title>改善しすぎる店｜7日間の店長代理 v0.10</title><style>
+<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#244f46"><title>改善しすぎる店｜7日間の店長代理 v0.11</title><style>
 :root{--bg:#f2f4ec;--ink:#243735;--muted:#627470;--line:#d8e1d7;--deep:#244f46;--surface:#fffdfa;--accent:#f0b967}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,'Hiragino Kaku Gothic ProN','Noto Sans JP',Meiryo,sans-serif;line-height:1.55;transition:background .5s,color .5s}button{font:inherit;cursor:pointer}button:disabled{opacity:.42;cursor:not-allowed}button:focus-visible,summary:focus-visible{outline:3px solid #ba7730;outline-offset:3px}.container{max-width:980px;margin:auto;padding:14px 14px 80px}.mast{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:9px}.brand{display:flex;align-items:center;gap:9px;font-size:14px;font-weight:800;color:#315d50}.brand-icon{font-size:24px}.tiny{font-size:12px;color:var(--muted)}.overline{font-size:11px;font-weight:850;letter-spacing:.08em;color:#648274}.head{margin:4px 0;font-size:clamp(24px,4vw,37px);line-height:1.3;letter-spacing:-.04em}.box{background:var(--surface);border:1px solid var(--line);border-radius:15px;padding:16px;box-shadow:0 4px 18px #2245340a}.widebtn{display:block;width:100%;text-align:center;background:#285f4f;color:#fff;border:none;border-radius:10px;padding:13px 15px;font-size:15px;font-weight:800}.widebtn:hover:not(:disabled){filter:brightness(1.12)}.button-quiet{background:none;border:1px solid #aebfb4;border-radius:9px;color:#36594f;padding:8px 12px;font-weight:700;font-size:12px}.version-top{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin:3px 0 13px;font-size:11px;color:#536b61;padding-bottom:10px;border-bottom:1px solid #d6ded4}.version-top b{background:#285f4f;color:#fff;border-radius:5px;padding:2px 7px}.metrics{position:sticky;top:0;z-index:5;background:#f2f4ecf2;backdrop-filter:blur(7px);border-bottom:1px solid #d6e0d7;display:grid;grid-template-columns:repeat(3,1fr);gap:7px;padding:8px 0;margin-bottom:14px}.stat{background:#fff;border:1px solid #dde3d9;border-radius:9px;padding:7px 8px;text-align:center}.stat label{font-size:10px;display:block;color:#61746e;font-weight:700}.stat strong{font-size:19px;line-height:1.3;font-variant-numeric:tabular-nums;white-space:nowrap}.stat small{font-size:10px;color:#637972}.cash-low{color:#b4423f}.anomaly-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:-5px 0 14px;padding:10px;border:1px solid #9a7776;border-radius:12px;background:#efe7e1}.anomaly-grid .stat{background:#f7f1eb;border-color:#ccb5ad}.two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;align-items:start}.issue-card{background:#fff7ec;border-color:#eccfaa}.issue-body{font-weight:700;font-size:17px;margin:12px 0 8px}.issue-meta{display:flex;justify-content:space-between;gap:7px;align-items:center;font-size:11px;color:#7d684b}.pill{display:inline-block;border-radius:99px;background:#e8efe8;color:#346154;padding:3px 9px;font-weight:800;font-size:11px}.pill.urgent{background:#fce7cc;color:#a3532c}.issue-tail{font-size:12px;color:#795f47;margin:8px 0 0}.help{font-size:12px;color:#6b7b70;margin:7px 0 0}.news{background:#f1f6f2;border:1px solid #d7e4d9;border-radius:9px;padding:9px 11px;font-size:12px;margin:9px 0}.news.odd{background:#eee4e1;border-color:#c5a9a5;color:#66484e}.actions-head{display:flex;justify-content:space-between;align-items:center;gap:8px;margin:0 0 8px}.actions-head h2{font-size:16px;margin:0}.context{font-size:12px;color:#567468}.day-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.action{display:flex;flex-direction:column;gap:4px;padding:12px;text-align:left;border-radius:11px;border:1px solid #cbdad0;background:#fff;min-height:116px;transition:border-color .15s,transform .15s}.action:hover:not(:disabled){border-color:#318367;transform:translateY(-1px)}.action b{font-size:13px;line-height:1.4}.action small{font-size:11px;color:#5d7168;line-height:1.45}.action .cost{color:#ad5736;font-size:11px;font-weight:800}.action.odd-action{border-style:dashed;border-color:#9b7379;background:#faf2ef}.action.odd-action .cost{color:#884b53}.detail{margin-top:14px}.detail summary{font-weight:750;padding:3px;cursor:pointer;font-size:13px}.money-note{font-size:11px;color:#526c5b;margin:8px 0}.meterrow{display:grid;grid-template-columns:68px 1fr 27px;align-items:center;gap:8px;margin:9px 0;font-size:12px}.bar{height:9px;border-radius:10px;background:#dfe6dd;overflow:hidden}.fill{height:100%;border-radius:10px;background:#76aa85}.fill.high{background:#c77b56}.task{font-size:12px;border-left:3px solid #77aa93;background:#f0f5ee;padding:8px 10px;margin:7px 0}.focus{max-width:620px;margin:22px auto}.focus p{font-size:14px}.guidebox{background:#eaf1e8;border:1px solid #cddfd1;padding:12px;border-radius:12px;margin:12px 0}.guidebox b{font-size:13px}.guidebox p{font-size:12px;margin:3px 0}.start-visual{font-size:42px;margin:10px 0}.journal{margin:12px 0 0;padding:0;list-style:none}.journal li{border-bottom:1px dashed #d5ddd5;padding:6px 0;font-size:12px;color:#576a64}.veil{position:fixed;inset:0;background:#142f2ca6;display:flex;align-items:center;justify-content:center;padding:15px;z-index:20}.dialog{background:#fffcf4;color:#253735;border-radius:18px;padding:22px;width:min(510px,100%);box-shadow:0 22px 80px #0c242a5c;max-height:90vh;overflow:auto}.dialog h2{font-size:23px;margin:5px 0 12px}.dialog .report{background:#eff5ef;border:1px solid #dceadd;padding:11px;border-radius:10px;margin:14px 0}.report p{font-size:13px;margin:4px 0}.scenario{background:#fff3e4;border:1px solid #dab998;color:#7b4d35;border-radius:9px;padding:9px 11px;margin-top:8px}.outcome{padding:14px;border-radius:11px;background:#f2f6ed;border:1px solid #d9e3d7}.score{font-size:23px;font-weight:850}.stamps{display:flex;flex-wrap:wrap;gap:5px;margin-top:9px}.stamp{border:1px solid #bdd0c1;border-radius:6px;font-size:11px;padding:3px 7px;color:#426b51}.final-choice{max-width:650px;margin:25px auto;background:#221f24;border:1px solid #81545d;color:#eee4dc}.final-choice .head{color:#f4e4dd}.final-choice .guidebox{background:#302b31;border-color:#5f5258;color:#e6d9d2}.final-actions{display:grid;gap:9px;margin-top:15px}.final-actions button{min-height:58px}.final-actions .hidden-route{background:#513d50}.footer{text-align:center;margin-top:24px;font-size:11px;color:#708278}.gameonly{display:none}.hidden{display:none!important}
 body.odd-1{--bg:#e9ece5;--surface:#f9f8ed;--line:#c7d0c5}body.odd-1 .issue-card{background:#f4f2e7;border-color:#c4b49d}body.odd-1 #brandIcon{filter:grayscale(.7)}body.odd-2{--bg:#dfe1d9;--surface:#f0ede6;--line:#b7beb4;--ink:#353d39;--muted:#6c706a}body.odd-2 .mast{border-bottom:2px double #9fa89a;padding-bottom:5px}body.odd-2 .action{background:#f7f2ed;border-color:#b8a5a0}body.odd-2 .news.odd{background:#d9ceca}body.odd-3{--bg:#11171b;--surface:#22272a;--line:#4b5155;--ink:#eee6dd;--muted:#beb5ad;color:var(--ink)}body.odd-3 .metrics{background:#11171bee;border-bottom-color:#60686c}body.odd-3 .stat{background:#20292b;border-color:#48575a}body.odd-3 .stat label,body.odd-3 .stat small,body.odd-3 .stat strong{color:#ded6ca}body.odd-3 .version-top,body.odd-3 .brand,body.odd-3 .overline,body.odd-3 .help,body.odd-3 .tiny,body.odd-3 .issue-meta,body.odd-3 .issue-tail,body.odd-3 .context,body.odd-3 .footer,body.odd-3 .money-note{color:#c9bdb5}body.odd-3 .version-top b{background:#693d45}body.odd-3 .issue-card{background:#30252a;border-color:#86555d}body.odd-3 .action{background:#282d31;border-color:#5d6266;color:#f0e5dd}body.odd-3 .action small,body.odd-3 .action .cost{color:#d6c2ba}body.odd-3 .odd-action{background:#35262c;border-color:#a45a68}body.odd-3 .guidebox,body.odd-3 .outcome,body.odd-3 .task{background:#292f32;border-color:#585a5c;color:#e6dcd5}body.odd-3 .bar{background:#495155}body.odd-3 .journal li{color:#c9bbb5;border-color:#52565a}body.odd-3 .veil{background:#07090bed}body.odd-3 .dialog{background:#25262b;color:#e7ddd7;border:1px solid #7f555e}body.odd-3 .dialog .report{background:#313135;border-color:#56565c}body.odd-3 .button-quiet{color:#ded7ce;border-color:#787577}body.odd-3 .widebtn{background:#75434b}body.odd-3 .anomaly-grid{background:#2d2529;border-color:#8c5961}body.odd-3 .anomaly-grid .stat{background:#282d30;border-color:#66585c}@media(max-width:700px){.two{grid-template-columns:1fr}.container{padding:10px 12px 50px}.box{padding:13px}.stat{padding:6px 3px}.stat strong{font-size:17px}.issue-body{font-size:16px}.action{padding:10px;min-height:110px}.anomaly-grid{grid-template-columns:1fr 1fr}.anomaly-grid .stat:last-child{grid-column:1/-1}}@media(max-width:380px){.day-actions{grid-template-columns:1fr}.action{min-height:78px}}@media(prefers-reduced-motion:reduce){body{transition:none}}
 
@@ -37,7 +37,62 @@ body.odd-3 .choice-icon{background:#3a4445}
 body.odd-3 .operations-board{background:#22272a}
 body.odd-3 .idle-action{background:#333a3b;border-color:#67716f;color:#eee}
 @media(max-width:550px){.metrics{grid-template-columns:repeat(2,minmax(0,1fr));gap:5px}.metrics .stat{padding:4px}.metrics .stat strong{font-size:15px}.operations-board{padding:9px}.operational-meters{gap:0 8px}.operations-board .meterrow{grid-template-columns:48px minmax(0,1fr) 24px;font-size:10px;gap:5px}.operations-board .money-note{font-size:11px}}
-</style></head><body><main class="container"><header class="mast"><div class="brand"><span class="brand-icon" id="brandIcon">🛒</span><span id="brandName">まるまるスーパー<br><small class="tiny">お客様改善センター / 研修ゲーム</small></span></div><div class="header-actions"><button id="help" class="button-quiet hidden">遊び方</button><button id="restart" class="button-quiet hidden">最初から</button></div></header><div class="version-top"><b>F1 v0.10</b><span>2026-10-26 01:28 JST更新</span></div>
+
+/* F1 v0.11: daily opening reveal, inspired by C1's result emphasis.
+   Motion is decorative only: no flashing, no sudden sounds, no forced wait. */
+.opening-curtain{z-index:25;background:#15272ce8;backdrop-filter:blur(10px)}
+.opening-card{--reveal-ink:#173b32;--reveal-accent:#19795d;--reveal-paper:#f4faee;position:relative;width:min(560px,100%);max-height:92dvh;overflow:auto;overscroll-behavior:contain;color:var(--reveal-ink);background:radial-gradient(circle at 50% 5%,#fffde1 0%,var(--reveal-paper) 75%);border:3px solid #e5c272;border-radius:20px;box-shadow:0 20px 80px #0007;padding:19px 22px 22px;text-align:center;animation:f1-opening-pop .62s cubic-bezier(.22,1.25,.27,1) both}
+.opening-card.good{--reveal-accent:#15835b}
+.opening-card.bad{--reveal-accent:#b46538;--reveal-paper:#f7f1e8;border-color:#cba791}
+.opening-card.steady{--reveal-accent:#4a786d;border-color:#a9c6b7}
+.opening-card.uncanny{--reveal-ink:#ecded7;--reveal-accent:#dd91a1;--reveal-paper:#22262c;color:#ecded7;background:radial-gradient(circle at 50% -10%,#57404a 0%,#24282e 55%,#151e26 100%);border-color:#82616b;box-shadow:0 18px 90px #05090bec;animation:f1-uncanny-reveal 1.4s ease-out both}
+.opening-kicker{position:relative;z-index:1;font-size:10px;font-weight:850;letter-spacing:.18em;color:var(--reveal-accent);margin-bottom:7px}
+.opening-progress{position:relative;z-index:1;display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px;margin:10px 0 12px}
+.opening-progress span{height:7px;border-radius:10px;background:#cbd6ce}
+.opening-progress span.done{background:#5ca68a}
+.opening-progress span.now{background:#e6ac46;box-shadow:0 0 0 2px #fff6d2;animation:f1-day-pulse .7s ease-out both}
+.opening-card.uncanny .opening-progress span{background:#4a444e}
+.opening-card.uncanny .opening-progress span.done{background:#a07481}
+.opening-card.uncanny .opening-progress span.now{background:#cc8c9d;box-shadow:0 0 0 2px #503744}
+.opening-day{position:relative;z-index:1;margin:0;font-weight:950;font-size:clamp(42px,11vw,67px);letter-spacing:-.045em;line-height:1.1;animation:f1-number-slam .55s .08s cubic-bezier(.18,1.4,.29,1) both}
+.opening-day small{font-size:14px;letter-spacing:.04em;font-weight:800;color:var(--reveal-accent)}
+.opening-title{position:relative;z-index:1;font-weight:900;font-size:clamp(19px,5vw,27px);line-height:1.3;margin:7px 0 5px}
+.opening-subtitle{position:relative;z-index:1;margin:4px auto 12px;font-size:12px;line-height:1.65;color:#5c7063;max-width:440px}
+.opening-card.uncanny .opening-subtitle{color:#cbb8b8}
+.opening-score{position:relative;z-index:1;margin:10px auto;padding:12px 10px;border-radius:14px;background:#fff;border:1px solid #dedfbe;max-width:440px;animation:f1-number-slam .5s .17s cubic-bezier(.18,1.4,.29,1) both}
+.opening-card.uncanny .opening-score{background:#2d2931;border-color:#805666}
+.opening-score .score-label{font-size:11px;color:#526959;font-weight:850;letter-spacing:.05em}
+.opening-card.uncanny .opening-score .score-label{color:#c4b0b9}
+.opening-score strong{display:block;color:var(--reveal-accent);font-size:clamp(32px,9vw,53px);font-variant-numeric:tabular-nums;font-weight:950;letter-spacing:-.04em;line-height:1.2}
+.opening-score small{display:block;font-size:12px;font-weight:800;color:#506b58}
+.opening-card.uncanny .opening-score small{color:#d1bec8}
+.opening-photo{position:relative;z-index:1;display:block;width:100%;height:clamp(100px,23vh,170px);object-fit:cover;object-position:center;border:1px solid #b5c5b8;border-radius:11px;background:#283632;margin:10px 0}
+.opening-card.uncanny .opening-photo{filter:saturate(.7);border-color:#8c6a79}
+.opening-changes{position:relative;z-index:1;display:flex;gap:5px;flex-wrap:wrap;justify-content:center;margin:10px 0}
+.opening-changes span{font-size:11px;font-weight:800;border:1px solid #bdd4c4;border-radius:7px;padding:5px 8px;background:#e7f1e8;color:#35624c}
+.opening-changes span.worse{background:#f7e6d6;border-color:#e7bb99;color:#9e5031}
+.opening-changes span.neutral{background:#e8ebe8;border-color:#cbd4ce;color:#54695e}
+.opening-card.uncanny .opening-changes span{background:#382d36;border-color:#765562;color:#efd6e0}
+.opening-caption{position:relative;z-index:1;font-size:11px;color:#677a6c;margin:7px 0 14px}
+.opening-card.uncanny .opening-caption{color:#ceb9c1}
+.opening-go{position:relative;z-index:1;font-weight:900;background:#24604e;box-shadow:0 5px 0 #123c31;transition:transform .15s,box-shadow .15s}
+.opening-go:active{transform:translateY(3px);box-shadow:0 2px 0 #123c31}
+.opening-card.uncanny .opening-go{background:#75505f;box-shadow:0 5px 0 #412e3e}
+.opening-card.uncanny .opening-go:active{box-shadow:0 2px 0 #412e3e}
+.opening-sparks{pointer-events:none;position:absolute;inset:0;overflow:hidden;border-radius:17px}
+.opening-sparks i{position:absolute;top:-20px;left:var(--x);width:8px;height:16px;border-radius:2px;background:var(--c);animation:f1-spark-fall 1.3s var(--delay) ease-out both;opacity:0}
+.opening-card:not(.good) .opening-sparks{display:none}
+.opening-card.uncanny::after{content:'';position:absolute;inset:0;pointer-events:none;opacity:.18;background:repeating-linear-gradient(to bottom,transparent 0 25px,#efd0da18 26px,#efd0da18 27px,transparent 28px 40px);animation:f1-page-drift 5s linear infinite}
+.opening-card.uncanny .opening-day{letter-spacing:-.06em;text-shadow:1px 1px 0 #7e5267}
+@keyframes f1-opening-pop{0%{transform:translateY(16px) scale(.92);opacity:.15}70%{transform:translateY(-3px) scale(1.01);opacity:1}100%{transform:none;opacity:1}}
+@keyframes f1-number-slam{0%{transform:translateY(-15px) scale(1.18);opacity:0}70%{transform:translateY(2px) scale(.98);opacity:1}100%{transform:none;opacity:1}}
+@keyframes f1-spark-fall{0%{transform:translateY(-15px) rotate(0deg);opacity:0}18%{opacity:1}100%{transform:translateY(245px) rotate(220deg);opacity:0}}
+@keyframes f1-uncanny-reveal{0%{transform:translateY(9px);opacity:0;filter:grayscale(1)}100%{transform:none;opacity:1;filter:grayscale(0)}}
+@keyframes f1-page-drift{0%{transform:translateY(-32px)}100%{transform:translateY(0)}}
+@keyframes f1-day-pulse{0%{transform:scaleX(.3)}70%{transform:scaleX(1.08)}100%{transform:scaleX(1)}}
+@media(max-width:440px){.opening-card{padding:13px 13px 18px;border-radius:15px}.opening-kicker{margin-bottom:2px}.opening-progress{margin:7px 0 9px}.opening-photo{height:120px;margin:9px 0}.opening-score{padding:8px}.opening-changes{margin:8px 0}.opening-caption{margin-bottom:9px}}
+@media(prefers-reduced-motion:reduce){.opening-card,.opening-day,.opening-score,.opening-sparks i,.opening-progress span.now,.opening-card.uncanny::after{animation:none!important;transform:none!important}.opening-sparks{display:none!important}}
+</style></head><body><main class="container"><header class="mast"><div class="brand"><span class="brand-icon" id="brandIcon">🛒</span><span id="brandName">まるまるスーパー<br><small class="tiny">お客様改善センター / 研修ゲーム</small></span></div><div class="header-actions"><button id="help" class="button-quiet hidden">遊び方</button><button id="restart" class="button-quiet hidden">最初から</button></div></header><div class="version-top"><b>F1 v0.11</b><span>2026-10-26 02:07 JST更新</span></div>
 <section id="intro" class="focus box"><div class="overline">月曜日 08:45｜店舗運営本部</div><h1 class="head">改善しすぎる店</h1><div class="intro-note"><b>【業務連絡】店長代理の任命について</b>レジの行列を解消すると通路が狭くなり、品切れを減らすと売場が騒がしくなる。改善の報告は毎日届くのに、苦情だけがなくなりません。店長が一週間不在となるため、本日から7営業日の店舗運営をあなたに任せます。</div><p><strong>本部からの指示は、売上を維持すること。お客様の声への対応は店長代理に一任されます。</strong><br><span class="tiny">※本部の評価指標は売上のみです。</span></p><div class="intro-grid"><div><small>集客力</small><b>7/10</b><small>来店したい理由</small></div><div><small>未解決クレーム</small><b>5件</b><small>レジ・通路・品切れ・騒音</small></div><div><small>日売上見込み</small><b>50万円</b><small>現状のまま営業した場合</small></div></div><h2 style="font-size:17px">仕事は2つだけ</h2><ol class="intro-jobs"><li>毎日、お客様の声を確認する。</li><li>毎日、6つの改善策か「何も対策しない」を選ぶ。</li></ol><div class="guidebox"><b>基本ルール</b><p>施策の効果は翌営業日の開店時に反映されます。7日目の選択は最終集計に反映されますが、その日の売上は変わりません。売上0で閉店、40万円未満が2営業日続くと店長交代です。</p></div><details class="box detail"><summary>操作ガイドを見る（営業はまだ始まりません）</summary><ol class="intro-jobs"><li>投稿内容を読み、店長回答は翌営業日以降に確認します。</li><li>施策カードの翌営業日の集客力・苦情増減を見て1案を選びます。</li><li>営業日報を確認し、「翌営業日へ」で進みます。</li><li>選択した施策は、その日の売上には影響しません。</li><li>日売上（万円）＝max(0,30＋集客力×10－未解決クレーム×10)。</li><li>進行はこの端末のブラウザに自動保存されます。</li></ol></details><p class="tiny">1プレイ約5〜8分／通信・ログイン不要</p><div class="intro-actions"><button class="widebtn" id="start">7日間の店長代理を始める</button><button class="widebtn hidden" id="resume">続きから再開</button><button class="button-quiet hidden" id="startOver">保存記録を消して最初から始める</button><button class="button-quiet hidden" id="backToGame">営業に戻る</button></div></section>
 <div id="game" class="gameonly"><div class="metrics"><div class="stat"><label>営業日</label><strong id="day">1/7</strong></div><div class="stat"><label>集客力</label><strong id="cash">7</strong><small>/10</small></div><div class="stat"><label>日売上見込</label><strong id="total">50万円</strong></div><div class="stat"><label>累計売上</label><strong id="revenueTotal">0万円</strong></div></div><section class="operations-board" aria-label="売上とお客様の声"><div id="moneyDetail" class="money-note"></div><div id="meters" class="operational-meters"></div></section><div id="oddMetrics" class="anomaly-grid hidden"><div class="stat"><label>閉店後売上</label><strong id="afterSales">0</strong><small>万円</small></div><div class="stat"><label>未退店客数</label><strong id="remainingCustomers">0</strong><small>名</small></div><div class="stat"><label>閉店許可</label><strong id="closePermit">許可</strong></div></div><div id="oddEvidenceBoard" class="evidence-board hidden" aria-label="内部照合記録"><b>内部照合記録</b><p>受領した記録は、開くと内容を確認できます。</p><div id="oddEvidenceList"></div></div><figure class="store-scene" id="storeScene"><img id="storeImage" alt="スーパーの現在の店内状況を示す画像" src="./assets/store-queue.jpg"><div class="scene-status" id="sceneStatus">営業中の売場</div><div class="scene-markers" id="sceneMarkers"></div><figcaption id="sceneCaption">店内の状態は選んだ施策によって変わります。</figcaption></figure><div class="actions-head"><div><div class="overline" id="dateLabel">DAY 01 / 07</div><h1 class="head" style="font-size:23px">本日の改善判断</h1></div><span class="pill">本日あと1件</span></div><div class="two"><section class="box issue-card"><div class="issue-meta"><span>📮 お客様の声・店長回答一覧</span><span id="issueTag" class="pill urgent">要対応</span></div><div id="issuePerson" class="hidden"></div><div id="issueText" class="hidden"></div><p id="issueReason" class="issue-tail"></p><div id="complaintSummary" class="complaint-summary" aria-live="polite"></div><div id="complaintBoard" class="complaint-board"></div><details id="complaintExtra" class="complaint-extra hidden"><summary id="complaintExtraLabel">ほかのご意見を見る</summary><div id="complaintExtraBody" class="complaint-board"></div></details><details id="complaintArchive" class="complaint-extra"><summary id="complaintArchiveLabel">以前のご意見と店長回答</summary><div id="complaintArchiveBody" class="complaint-board"></div></details><div class="news" id="newNotice"></div><div id="hqBulletin" class="hq-bulletin" aria-live="polite"></div><div class="help" id="pendingMini"></div></section><section class="box"><div class="actions-head"><h2>今日できる対応</h2><span id="choiceCount" class="context">7案から1つ</span></div><div id="actions" class="day-actions"></div><p class="help">選ぶと当日の営業を終えます。施策の効果は翌営業日に反映されます。同じ施策は何度も繰り返すと効きにくくなります。</p></section></div><details class="box detail" id="breakdown"><summary>詳しく見る：施策・運営履歴</summary><div id="tasks"></div><div class="guidebox"><b>通常経営の判定</b><p>売上0で閉店、40万円未満が2営業日続くと店長交代。本部が確認するのは売上です。7日目の施策の効果は最終集計で確認されます。</p></div><div class="overline">最近の動き</div><ul id="history" class="journal"></ul></details></div>
 <section id="finalChoice" class="focus box final-choice hidden" aria-live="polite"><div class="overline">DAY 07 / CLOSING REJECTED</div><h1 class="head">まだ、閉店できません。</h1><p id="finalLead"></p><div class="guidebox"><b>0番レジ 最終処理</b><p>閉店後売上は帳簿上の記録であり、実際の来店客と一致しません。閉店許可には未退店客の照合が必要です。</p><p id="receiptClue"></p></div><div class="evidence-board" id="finalEvidenceBoard"><b>閉店処理時点の照合記録</b><div id="finalEvidenceList"></div></div><div class="final-actions"><button class="widebtn" id="stop0">0番レジを停止する</button><button class="widebtn" id="continue8">営業を継続する</button><button class="widebtn hidden-route" id="checkCustomer">店内に残る客を確認する</button></div><div class="guidebox hidden" id="inferArea" role="group" aria-labelledby="inferTitle"><b id="inferTitle">照合した記録から、最後の客を推理する</b><p>閲覧した記録に基づいて判断してください。確認していない資料は自動で補完されません。</p><label for="inferWho">残っているのは誰？</label><select id="inferWho"><option value="">選んでください</option><option value="clerk">レジ担当者</option><option value="self">未来の自分</option><option value="visitor">通常のお客様</option></select><label for="inferWhat">何を返品したい？</label><select id="inferWhat"><option value="">選んでください</option><option value="receipt">0番のレシート</option><option value="yesterday">昨日</option><option value="sales">閉店後の売上</option></select><button id="inferSubmit" class="widebtn" type="button">照合結果を確定する</button><p id="inferFeedback" role="status" aria-live="polite"></p></div></section>
@@ -52,7 +107,7 @@ body.odd-3 .idle-action{background:#333a3b;border-color:#67716f;color:#eee}
   <button id="day8Book" class="widebtn" type="button">未処理売上を確定する</button>
  </div>
 </section>
-<section id="ending" class="focus box hidden" aria-live="polite"></section><div id="overlay" class="veil hidden" role="dialog" aria-modal="true" aria-labelledby="dialogTitle"><div class="dialog"><div id="dialogLabel" class="overline">DAY RESULT</div><h2 id="dialogTitle">営業結果</h2><p id="dialogText"></p><img id="buildProgress" class="ending-photo hidden" alt="設備の工事中の店内" loading="lazy"><div id="dailyReport" class="report"></div><button id="next" class="widebtn">翌営業日へ</button><button id="undo" class="button-quiet" style="width:100%;margin-top:8px">この日の施策を選び直す</button></div></div><footer class="footer">フィクションの短編Webゲーム F1 v0.10｜進行状況は端末内だけに保存。実在の企業・商品・個人とは無関係です。</footer></main>
+<section id="ending" class="focus box hidden" aria-live="polite"></section><div id="overlay" class="veil hidden" role="dialog" aria-modal="true" aria-labelledby="dialogTitle"><div class="dialog"><div id="dialogLabel" class="overline">DAY RESULT</div><h2 id="dialogTitle">営業結果</h2><p id="dialogText"></p><img id="buildProgress" class="ending-photo hidden" alt="設備の工事中の店内" loading="lazy"><div id="dailyReport" class="report"></div><button id="next" class="widebtn">翌営業日へ</button><button id="undo" class="button-quiet" style="width:100%;margin-top:8px">この日の施策を選び直す</button></div></div><div id="dayTransition" class="veil opening-curtain hidden" role="dialog" aria-modal="true" aria-labelledby="transitionTitle" aria-describedby="transitionSubtitle"><section class="opening-card steady" id="transitionCard"><div class="opening-sparks" aria-hidden="true"><i style="--x:8%;--delay:0s;--c:#f2c36c"></i><i style="--x:19%;--delay:.12s;--c:#74be9c"></i><i style="--x:32%;--delay:.03s;--c:#f4d88a"></i><i style="--x:44%;--delay:.17s;--c:#e9ae5b"></i><i style="--x:57%;--delay:.1s;--c:#86cdb2"></i><i style="--x:69%;--delay:.23s;--c:#ffe1a0"></i><i style="--x:80%;--delay:.05s;--c:#f6b984"></i><i style="--x:92%;--delay:.18s;--c:#a8d6ba"></i></div><div class="opening-kicker" id="transitionKicker">まるまるスーパー　開店準備</div><div class="opening-progress" id="transitionProgress" aria-hidden="true"></div><h2 class="opening-day" id="transitionTitle">DAY 02 <small>/ 07</small></h2><div class="opening-title" id="transitionHeadline">開店準備が整いました！</div><p class="opening-subtitle" id="transitionSubtitle">昨日の施策が売場に反映されました。</p><div class="opening-score"><div class="score-label" id="transitionScoreLabel">日売上見込みの変化</div><strong id="transitionScore">＋10万円</strong><small id="transitionTotal">新しい日売上見込み：60万円</small></div><img class="opening-photo" id="transitionImage" alt="翌営業日のスーパーの店内写真" loading="eager"><div class="opening-changes" id="transitionChanges" aria-label="施策による変化"></div><p class="opening-caption" id="transitionCaption">昨日の選択が売場に反映されています。</p><button id="transitionContinue" class="widebtn opening-go" type="button">今日の営業を始める</button></section></div><footer class="footer">フィクションの短編Webゲーム F1 v0.11｜進行状況は端末内だけに保存。実在の企業・商品・個人とは無関係です。</footer></main>
 <script>
 (()=>{'use strict';
 const $=id=>document.getElementById(id),initialMoney=120,labels=['レジ待ち','通路','品切れ','店内騒音'],clamp=v=>Math.min(5,Math.max(0,v)),fmt=n=>(n>=0?'+':'')+n+'万円';
@@ -595,8 +650,79 @@ function v09CompleteJobs(day){
   s.history.unshift('DAY '+day+' 開店前：「'+j.name+'」の施策が反映されました。');
  }
 }
+
+// DAY TRANSITION / visual feedback on already-committed next-day changes.
+// The underlying game state is advanced once by advance(); this is presentation only.
+function v11Snapshot(){return {day:s.day,odd:s.odd,attraction:s.attraction,vals:[...s.vals],sales:v09Sales(),afterSales:s.afterSales,remaining:s.remaining,permit:s.permit}}
+function v11OpenTransition(before){
+ const after=v11Snapshot(), level=after.odd, day=after.day, masked=seventhDayNormal();
+ const strange=level>0&&!masked;
+ const salesDelta=after.sales-before.sales,oddDelta=after.afterSales-before.afterSales;
+ const card=$('transitionCard');
+ const style=strange?'uncanny':salesDelta>0?'good':salesDelta<0?'bad':'steady';
+ card.className='opening-card '+style;
+ $('transitionKicker').textContent=strange?'店舗管理システム ／ 記録照合中':'まるまるスーパー ／ 開店準備完了';
+ $('transitionTitle').innerHTML='DAY '+String(day).padStart(2,'0')+' <small>/ 07</small>';
+ $('transitionProgress').replaceChildren();
+ for(let n=1;n<=7;n++){
+  const tick=document.createElement('span');
+  tick.className=n<day?'done':n===day?'now':'';
+  $('transitionProgress').append(tick);
+ }
+ if(strange){
+  const messages={1:['未処理の売上を検出しました','店内にいないお客様の取引が記録されています。'],2:['防犯映像と売上が一致しません','閉店後に、レジだけが会計を続けています。'],3:['0番レジの営業が続いています','閉店許可の処理が完了しません。']};
+  const msg=messages[Math.min(3,level)];
+  $('transitionHeadline').textContent=msg[0];$('transitionSubtitle').textContent=msg[1];
+  $('transitionScoreLabel').textContent='閉店後の記録された売上';
+  $('transitionScore').textContent=(oddDelta>0?'＋'+oddDelta+'万円':after.afterSales+'万円');
+  $('transitionTotal').textContent='未退店客 '+after.remaining+'名 ／ 閉店許可：'+after.permit;
+  $('transitionCaption').textContent='昨日までの記録と、一部の数値が一致しません。';
+ }else if(masked){
+  $('transitionHeadline').textContent='営業データを復元しました';
+  $('transitionSubtitle').textContent='前日の閉店記録は正常に処理されました。';
+  $('transitionScoreLabel').textContent='本日の日売上見込み';
+  $('transitionScore').textContent=after.sales+'万円';
+  $('transitionTotal').textContent='システム判定：正常';
+  $('transitionCaption').textContent='昨日の売場との違いは報告されていません。';
+ }else{
+  $('transitionHeadline').textContent=salesDelta>0?'売上見込み、上方修正！':salesDelta<0?'新たな課題が見つかりました':'本日も、営業スタート！';
+  $('transitionSubtitle').textContent=salesDelta>0?'昨日の判断が数字になって返ってきました。':salesDelta<0?'改善の一方で、別の負担が生まれています。':'昨日の判断が売場に反映されました。';
+  $('transitionScoreLabel').textContent='日売上見込みの変化';
+  $('transitionScore').textContent=(salesDelta>0?'＋':salesDelta<0?'−':'±')+Math.abs(salesDelta)+'万円';
+  $('transitionTotal').textContent='本日の日売上見込み：'+after.sales+'万円';
+  $('transitionCaption').textContent='今日の売場を確認し、次の改善策を決めてください。';
+ }
+ const changes=[];
+ if(masked)changes.push({text:'業務状態：正常',tone:'neutral'});
+ else if(strange){
+  changes.push({text:'閉店後売上 '+after.afterSales+'万円',tone:'worse'});
+  changes.push({text:'未退店客 '+after.remaining+'名',tone:'worse'});
+  changes.push({text:'閉店許可：'+after.permit,tone:'worse'});
+ }else{
+  const attr=after.attraction-before.attraction;
+  if(attr)changes.push({text:'集客力 '+(attr>0?'＋':'−')+Math.abs(attr),tone:attr>0?'better':'worse'});
+  for(let i=0;i<4;i++){
+   const d=after.vals[i]-before.vals[i];
+   if(d)changes.push({text:labels[i]+' '+(d>0?'＋':'−')+Math.abs(d)+'件',tone:d<0?'better':'worse'});
+  }
+  if(!changes.length)changes.push({text:'苦情・集客力の変化なし',tone:'neutral'});
+ }
+ $('transitionChanges').replaceChildren();
+ for(const change of changes){
+  const chip=document.createElement('span');
+  chip.className=change.tone==='worse'?'worse':change.tone==='neutral'?'neutral':'';
+  chip.textContent=change.text;$('transitionChanges').append(chip);
+ }
+ v09AttachFallback($('transitionImage'),sceneForState().file);
+ $('transitionImage').alt='DAY '+day+'の売場写真';
+ $('transitionContinue').textContent=strange?'記録を確認して営業を始める':'DAY '+String(day).padStart(2,'0')+'の営業を始める';
+ $('dayTransition').classList.remove('hidden');
+ $('transitionContinue').focus();
+}
+function v11CloseTransition(){$('dayTransition').classList.add('hidden');scrollTo(0,0)}
 function advance(){
  if($('overlay').classList.contains('hidden'))return;
+ const openingBefore=v11Snapshot();
  $('overlay').classList.add('hidden');s.needsAdvance=false;
  if(s.finish){persist();renderEnd();return}
  if(s.day===7){
@@ -605,6 +731,7 @@ function advance(){
   persist();return;
  }
  s.day++;v09CompleteJobs(s.day);reconcileComplaints();persist();render();scrollTo(0,0);
+ v11OpenTransition(openingBefore);
 }
 function normalEnding(){
  const total=v09Count();s.ending=s.revenue>=560&&total<=3?'normal_success':
@@ -661,14 +788,15 @@ function renderEnd(){
  $('ending').append(label,head,photo,desc,tab,again);scrollTo(0,0);
 }
 
-function restart(){s=fresh();rollback=null;persist();$('intro').classList.add('hidden');$('overlay').classList.add('hidden');$('breakdown').open=false;render();scrollTo(0,0)}
+function restart(){$('dayTransition').classList.add('hidden');s=fresh();rollback=null;persist();$('intro').classList.add('hidden');$('overlay').classList.add('hidden');$('breakdown').open=false;render();scrollTo(0,0)}
 function showLanding(saved,review=false){
- $('intro').classList.remove('hidden');$('game').classList.add('hidden');$('finalChoice').classList.add('hidden');$('day8Panel').classList.add('hidden');$('ending').classList.add('hidden');$('overlay').classList.add('hidden');$('help').classList.add('hidden');$('restart').classList.add('hidden');
+ $('dayTransition').classList.add('hidden');$('intro').classList.remove('hidden');$('game').classList.add('hidden');$('finalChoice').classList.add('hidden');$('day8Panel').classList.add('hidden');$('ending').classList.add('hidden');$('overlay').classList.add('hidden');$('help').classList.add('hidden');$('restart').classList.add('hidden');
  $('start').classList.toggle('hidden',saved||review);$('resume').classList.toggle('hidden',!saved||review);$('startOver').classList.toggle('hidden',!saved||review);$('backToGame').classList.toggle('hidden',!review);
  if(saved&&!review)$('resume').textContent='続きから再開（DAY '+String(Math.min(8,s.day)).padStart(2,'0')+'）';
  scrollTo(0,0)
 }
 function resumeCurrent(){
+ $('dayTransition').classList.add('hidden');
  if(s.finish){renderEnd();return}
  if(s.day8Active){renderDay8();return}
  if(s.needsAdvance){
@@ -686,6 +814,6 @@ function resumeCurrent(){
  if(s.day===7&&s.days.length===7){if(s.odd)renderFinalChoice();else{normalEnding();persist();renderEnd()}return}
  render()
 }
-$('start').onclick=restart;$('resume').onclick=resumeCurrent;$('backToGame').onclick=resumeCurrent;$('help').onclick=()=>showLanding(true,true);$('startOver').onclick=()=>{if(confirm('保存された7日間の記録を消して最初から始めますか？'))restart()};$('restart').onclick=()=>{if(confirm('7日間の記録を消して最初から始めますか？'))restart()};$('next').onclick=advance;$('undo').onclick=()=>{if(!rollback)return;s=JSON.parse(rollback);rollback=null;$('overlay').classList.add('hidden');persist();render()};$('stop0').onclick=()=>finalDecision('stop');$('continue8').onclick=()=>finalDecision('day8');$('day8Close').onclick=()=>finishDay8('close');$('day8Book').onclick=()=>finishDay8('book');$('checkCustomer').onclick=startInference;$('inferSubmit').onclick=()=>{if(!$('inferWho').value||!$('inferWhat').value)return;resolveInference()};window.__F1_DEBUG__={getState:()=>JSON.parse(JSON.stringify(s)),availableIds:()=>available().map(a=>a.id),sceneFallback:file=>v09FallbackSVG(file),setState:x=>{s={...fresh(),...x};persist();render()},play,advance,finalDecision,finishDay8,startInference,resolveInference,restart,resumeCurrent,showLanding};const savedGame=load();showLanding(savedGame,false);
+$('transitionContinue').onclick=v11CloseTransition;$('start').onclick=restart;$('resume').onclick=resumeCurrent;$('backToGame').onclick=resumeCurrent;$('help').onclick=()=>showLanding(true,true);$('startOver').onclick=()=>{if(confirm('保存された7日間の記録を消して最初から始めますか？'))restart()};$('restart').onclick=()=>{if(confirm('7日間の記録を消して最初から始めますか？'))restart()};$('next').onclick=advance;$('undo').onclick=()=>{if(!rollback)return;s=JSON.parse(rollback);rollback=null;$('overlay').classList.add('hidden');persist();render()};$('stop0').onclick=()=>finalDecision('stop');$('continue8').onclick=()=>finalDecision('day8');$('day8Close').onclick=()=>finishDay8('close');$('day8Book').onclick=()=>finishDay8('book');$('checkCustomer').onclick=startInference;$('inferSubmit').onclick=()=>{if(!$('inferWho').value||!$('inferWhat').value)return;resolveInference()};window.__F1_DEBUG__={getState:()=>JSON.parse(JSON.stringify(s)),transitionSnapshot:v11Snapshot,closeTransition:v11CloseTransition,availableIds:()=>available().map(a=>a.id),sceneFallback:file=>v09FallbackSVG(file),setState:x=>{s={...fresh(),...x};persist();render()},play,advance,finalDecision,finishDay8,startInference,resolveInference,restart,resumeCurrent,showLanding};const savedGame=load();showLanding(savedGame,false);
 })();
 </script></body></html>
