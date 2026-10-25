@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0b1520">
+<meta name="description" content="3回の語句交換で、省庁の残業をゼロにする因果改変パズル。スマホ対応の短編ブラウザゲームです。">
+<title>M1｜残業ゼロ、成果ゼロ — 因果観察室</title>
+<style>
+:root{--bg:#0b1520;--paper:#142434;--paper2:#1b3144;--line:#365267;--txt:#edf3f5;--muted:#b2c8d3;--aqua:#a8e8df;--amber:#f4ca88;--danger:#ffb3a7;--good:#9ee3bc}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(circle at 65% -5%,#203b4b 0,transparent 40%),var(--bg);color:var(--txt);font:15px/1.8 -apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif}
+button{font:inherit;cursor:pointer}button:disabled{opacity:.4;cursor:not-allowed}a{color:var(--aqua)}p{margin:0 0 .9em}.container{max-width:1120px;margin:auto;padding:22px 16px 84px}
+.top{display:flex;justify-content:space-between;gap:15px;align-items:center;margin-bottom:24px}.back{font-size:13px;text-decoration:none}.tiny{font-size:11px;letter-spacing:.14em;color:var(--muted)}.version{font:11px/1.5 ui-monospace,SFMono-Regular,monospace;color:var(--amber);border:1px solid var(--line);padding:5px 8px;border-radius:6px}
+.hero{border-top:1px solid var(--line);padding:27px 0 18px}.hero h1{line-height:1.3;letter-spacing:.04em;font-size:clamp(30px,6.2vw,52px);margin:9px 0 14px}.hero p{color:var(--muted);max-width:740px}.eyebrow{color:var(--aqua);font-size:12px;letter-spacing:.18em}.tagline{color:var(--txt)!important;font-weight:700;font-size:clamp(15px,3vw,20px)}
+.grid{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(290px,.8fr);gap:24px;align-items:start}.sectiontitle{font-size:17px;margin:0 0 12px;display:flex;align-items:center;gap:9px}.sectiontitle span{font-size:11px;letter-spacing:.1em;color:var(--muted);font-weight:normal}
+.paper{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:19px;margin-bottom:15px}.paper h2{margin:0 0 8px;font-size:16px}.paper p:last-child{margin-bottom:0}
+.stat{background:linear-gradient(115deg,#203d48,#192c42);border:1px solid #4d7182;border-radius:15px;padding:20px;margin-bottom:15px}.statrow{display:flex;align-items:end;justify-content:space-between;gap:12px}.statnumber{font-size:clamp(40px,7vw,58px);font-weight:800;letter-spacing:-.04em;line-height:1.1}.statlabel{color:var(--muted);font-size:12px}.ministats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:15px}.ministats>div{background:#0e2431;border-radius:9px;padding:9px}.ministats strong{display:block;font-size:16px}.good{color:var(--good)}.bad{color:var(--danger)}
+.badge{display:inline-block;border-radius:5px;font-size:11px;font-weight:700;letter-spacing:.04em;padding:2px 7px;color:var(--muted);background:#254052}
+#documents{display:flex;flex-direction:column;gap:12px}.doc{border:1px solid var(--line);background:var(--paper);border-radius:12px;overflow:hidden}.doc summary{cursor:pointer;list-style:none;padding:16px 17px;position:relative}.doc summary::-webkit-details-marker{display:none}.doc summary:after{content:"＋";position:absolute;top:15px;right:15px;color:var(--muted);font-size:18px}.doc[open] summary:after{content:"−"}
+.dochead{display:flex;align-items:flex-start;gap:12px;padding-right:28px}.docnum{display:inline-flex;align-items:center;justify-content:center;background:#254354;color:var(--aqua);border:1px solid var(--line);border-radius:7px;width:34px;height:32px;flex:0 0 auto;font-weight:800;font-size:13px}.dochead strong{display:block;font-size:15px}.dochead small{display:block;color:var(--muted);font-size:11px;margin-top:2px}.docflag{color:var(--amber);font-size:11px;border-bottom:1px dotted currentColor;margin:10px 0 0 47px;display:inline-block}.doc.fixed .docflag{color:var(--muted)}.doc.generated{border-color:#967646;animation:appear .45s ease}
+.abstract{font-size:12px;color:var(--muted);margin:7px 0 0 47px;line-height:1.65}.doc .body{background:#eae9df;color:#17262d;border-top:1px solid #d0d2cf;padding:20px 21px;font-size:14px;line-height:2.15;box-shadow:inset 0 6px 12px #00000010}.doc .body p{margin:0 0 14px;white-space:pre-wrap}.doc .body p:last-child{margin-bottom:0}.slot{display:inline;border:1px solid #607d88;border-radius:4px;background:#d9eef0;color:#153745;padding:2px 4px;margin:0 1px;line-height:inherit;box-decoration-break:clone;-webkit-box-decoration-break:clone;font-weight:750;text-decoration:none;transition:background .15s,border-color .15s}.slot:hover,.slot:focus-visible{background:#f4d19a;border-color:#9b6530;outline:2px solid #bb8547;outline-offset:2px}.slot.selected{background:#fde2ad;border:2px solid #c48640}.fixed .body{background:#e3e4e0}
+.side{position:sticky;top:14px}.side .paper{padding:17px}.breakrow{display:flex;justify-content:space-between;align-items:baseline;gap:12px;border-bottom:1px dotted var(--line);padding:5px 0;color:var(--muted);font-size:12px}.breakrow b{color:var(--txt);white-space:nowrap}.breakrow:last-child{border:0}.control{display:flex;gap:9px;flex-wrap:wrap;margin-top:13px}.btn{background:var(--aqua);color:#13333b;border:1px solid transparent;border-radius:8px;padding:10px 14px;font-weight:800;line-height:1.35}.btn.secondary{background:#253d4e;color:var(--txt);border-color:var(--line)}.btn.outline{background:transparent;color:var(--aqua);border-color:#658c94}.btn:hover:not(:disabled){filter:brightness(1.09)}.instruction{font-size:13px;color:var(--muted);line-height:1.8}
+.selectbar{background:#182f3d;border:1px solid #3b6871;border-radius:10px;padding:13px;font-size:12px;min-height:58px}.selectionline{display:flex;gap:9px;flex-wrap:wrap;align-items:center}.selectionline b{font-size:14px;color:var(--amber)}.selectionline button{background:none;border:0;color:var(--aqua);text-decoration:underline;font-size:12px}
+.preview{border-color:#85bfb8;background:#152d39}.previewdoc{border:1px solid var(--line);border-radius:8px;padding:12px;margin:10px 0;font-size:12px}.previewdoc strong{display:block;color:var(--amber);font-size:12px}.previewdoc p{padding:7px 0;margin:0}.previewdoc .before{color:var(--muted);text-decoration:line-through;text-decoration-color:#748a94}.previewdoc .after{color:var(--txt);font-weight:700;border-top:1px dotted var(--line)}.ending{border:1px solid #4b7971;background:#1b3a42;border-radius:15px;padding:22px;margin-top:22px}.ending.bad{border-color:#ac6b63;background:#442a30;color:var(--txt)}.ending.warn{border-color:#9c7c4e;background:#3c342c;color:var(--txt)}.ending h2{font-size:24px;margin:5px 0 13px}.ending p{color:var(--txt)}.ending .stats{font-size:12px;color:var(--muted);margin:12px 0}.hint{font-size:12px;color:var(--muted)}#messages p{font-size:12px;border-left:2px solid var(--amber);padding-left:9px;margin:7px 0;color:var(--muted)}
+.footer{border-top:1px solid var(--line);margin-top:35px;padding-top:18px;font-size:12px;color:var(--muted)}
+[hidden]{display:none!important}@keyframes appear{from{opacity:.45;transform:translateY(-8px)}to{opacity:1;transform:none}}
+@media(max-width:820px){.grid{grid-template-columns:1fr}.side{position:static;order:-1}.container{padding:15px 12px 65px}.statnumber{font-size:38px}.doc .body{padding:18px 15px}.doc summary{padding:14px 12px}.doc summary:after{right:12px}.hero{padding-top:15px}.hero h1{font-size:34px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{animation-duration:.01ms!important;transition:none!important}}
+</style>
+<script defer src="./game.js?v=alpha01"></script>
+</head>
+<body>
+<div class="container">
+<header class="top"><a class="back" href="../">← 短編Webゲーム実験室へ</a><span class="version" id="version">α0.1 / 更新 2026/10/25 12:10 JST</span></header>
+<section class="hero"><div class="eyebrow">N国・因果観察室　案件 M1 / 試遊版</div><h1>残業ゼロ、<br>成果ゼロ</h1><p class="tagline">過去の言葉を、3回だけ交換してください。</p><p>働き方改革推進部の残業をゼロにせよ。ただし、国会に説明する政策成果と、部署の存在は維持すること。記録中の囲まれた語句は、別の記録の語句と入れ替えられます。両方の歴史が変わります。</p></section>
+<div class="grid">
+<main>
+<h2 class="sectiontitle">記録の一覧 <span>詳細を開いて交換箇所を探す</span></h2>
+<div id="documents"></div>
+<section class="paper" style="margin-top:19px"><h2>因果観察室からの業務説明</h2><p class="instruction">枠で囲まれた語句を1か所選び、次に別の語句を選ぶと、交換後の文章を無料でプレビューできます。同じ文書内での交換も可能です。意味を解釈できない交換は確定できません。</p><p class="instruction">外部から届いた文書は変更できません。業務の追加・消滅に伴い、記録そのものも増減します。やり直しにペナルティはありません。</p></section>
+<section id="ending" class="ending" hidden><div class="eyebrow">結果報告書</div><h2 id="endingTitle"></h2><p id="endingBody"></p><div class="stats" id="endingStats"></div><button class="btn" id="again" type="button">別の歴史を試す</button></section>
+</main>
+<aside class="side">
+<section class="stat">
+<div class="statlabel">働き方改革推進部｜残業見込み</div>
+<div class="statrow"><div class="statnumber" id="overtime">220分</div><span class="badge">交換残り <b id="moves">3/3</b></span></div>
+<div class="ministats"><div><div class="statlabel">政策成果</div><strong id="policyState" class="good">維持</strong></div><div><div class="statlabel">対象部署</div><strong id="orgState" class="good">存続</strong></div><div><div class="statlabel">記録</div><strong id="docsCount">5件</strong></div></div>
+</section>
+<section class="paper"><h2>交換端末</h2><div id="selection" class="selectbar"></div><div class="control"><button class="btn secondary" id="undo" type="button" disabled>1手戻す</button><button class="btn secondary" id="restart" type="button">最初から</button><button class="btn outline" id="finish" type="button" disabled>現在の結末を見る</button></div><p class="hint" style="margin-top:12px">確定は最大3回。プレビュー・巻き戻しは無制限。</p></section>
+<section id="previewPanel" class="paper preview" hidden><h2 id="previewTitle">交換プレビュー</h2><p class="instruction" id="previewText"></p><div id="previewLines"></div><div class="control"><button class="btn" id="apply" type="button">この交換を確定</button><button class="btn secondary" id="closePreview" type="button">別の語句を選ぶ</button></div></section>
+<section class="paper"><h2>因果更新履歴</h2><p class="instruction" id="activity">文書を調べてください。</p><div id="messages"></div></section>
+<section class="paper"><h2>残業の内訳</h2><div id="breakdown"></div><div class="breakrow"><span>対象外の業務による残業</span><b id="otherTime">0分</b></div></section>
+<section class="paper"><button class="btn outline" type="button" id="howto">遊び方・注意事項を表示</button><div id="help" hidden style="margin-top:12px"><p class="instruction">これはα版です。交換結果は事前に定義したルールによって計算します。交換できない文書と、文章として意味が通らない交換があります。</p><p class="instruction">最低100社の回答・明朝10時の国会提出は変わりません。残業を消すだけでは成功とは限りません。</p></div></section>
+</aside>
+</div>
+<footer class="footer">M1 α0.1（初回プレイテスト）｜フィクション。外部通信・入力の送信なし。データは画面内で処理します。制作：短編Webゲーム実験室</footer>
+</div>
+</body></html>
