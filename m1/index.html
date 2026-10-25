@@ -35,12 +35,60 @@ button{font:inherit;cursor:pointer}button:disabled{opacity:.4;cursor:not-allowed
 .demo{border:1px solid var(--line);background:#263d4b;border-radius:8px;padding:11px 14px;margin-top:10px;font-size:13px}.mini-slot{display:inline-block;color:#1a343a;background:#d3e8e9;border:1px solid #85a5a8;padding:0 6px;border-radius:5px;font-weight:800}.intro-start{width:100%;font-size:17px;padding:16px;margin:23px 0 10px}.intro-foot{font-size:12px;color:var(--muted)}
 .compact-hero{border-top:1px solid var(--line);padding:15px 0 22px;display:flex;gap:15px;justify-content:space-between;align-items:center}.compact-hero h1{font-size:clamp(23px,5vw,34px);margin:3px 0}.compact-hero p{font-size:12px;color:var(--muted);margin:0}
 @media(max-width:620px){.objectives{grid-template-columns:1fr}.intro-lead{font-size:15px}.case-note{padding:15px}.compact-hero{align-items:flex-start;flex-direction:column}}
+
+/* The fixed government order stays available throughout the investigation. */
+.mission-ref{background:#182a38;border:1px solid #758b91;border-radius:12px;margin:0 0 15px;overflow:hidden}
+.mission-ref summary{cursor:pointer;list-style:none;display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:13px 15px;font-size:13px;font-weight:750}
+.mission-ref summary::-webkit-details-marker{display:none}
+.mission-ref summary::before{content:"▣";color:var(--amber)}
+.mission-ref[open] summary{border-bottom:1px solid var(--line)}
+.mission-ref .mission-body{padding:14px 16px;color:#e9f0ee;font-size:13px;line-height:1.8}
+.mission-ref .mission-body p:last-child{margin-bottom:0}
+.mission-ref .mission-fixed{font-size:10px;color:var(--amber);border:1px solid #8c8065;border-radius:4px;padding:1px 5px}
+.cinema-overlay{position:fixed;inset:0;z-index:95;background:rgba(4,11,18,.95);display:flex;justify-content:center;align-items:flex-start;padding:clamp(12px,4vh,38px) 12px;overflow-y:auto;overscroll-behavior:contain}
+.cinema-card{background:#1b3040;border:1px solid #557181;border-radius:16px;width:min(790px,100%);padding:clamp(16px,3vw,28px);box-shadow:0 15px 65px #0009;margin:auto}
+.cinema-card h2{font-size:clamp(23px,5vw,32px);line-height:1.4;margin:7px 0 15px}
+.cinema-kicker{letter-spacing:.18em;font-size:11px;color:var(--aqua);font-weight:750}
+.impact-flow{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:center;background:#0d202c;border-radius:12px;padding:15px;margin:14px 0}
+.impact-flow .impact-value{font-size:clamp(27px,7vw,43px);font-weight:900;line-height:1.25}
+.impact-flow small{font-size:11px;color:var(--muted);display:block}
+.impact-flow .impact-next{color:var(--aqua);font-size:24px}
+.impact-flow .impact-value.new{color:var(--aqua)}
+.impact-desc{font-size:13px;color:var(--muted);margin-top:5px}
+.impact-cardgroup{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+.impact-edit{background:#263d4d;border:1px solid var(--line);border-radius:10px;padding:12px}
+.impact-edit span{font-size:11px;color:var(--muted)}.impact-edit p{font-size:13px;line-height:1.65;margin:6px 0 0}
+.impact-edit del{color:#9cb2bf}.impact-edit strong{color:var(--amber)}
+.cinema-heading{font-size:14px;font-weight:750;margin:23px 0 8px;color:#f2eee6}
+.impact-change{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:10px;align-items:center;border-bottom:1px solid #365162;padding:10px 2px;font-size:13px}
+.impact-change>b{font-size:13px;white-space:nowrap}.impact-change>small{font-size:11px;color:var(--amber)}
+.impact-event{border-left:4px solid #bca16a;padding:11px 13px;margin:9px 0;background:#293947;border-radius:3px 8px 8px 3px}
+.impact-event strong{font-size:12px;color:var(--amber)}.impact-event p{font-size:14px;margin:4px 0}.impact-event small{font-size:12px;color:var(--muted)}
+.removed-event{border-color:#75b9a3;background:#213b3c}.removed-event strong{color:var(--good)}
+.neutral-event{border-color:#6b8492}.neutral-event strong{color:var(--muted)}
+.overlay-buttons{display:flex;gap:10px;flex-wrap:wrap;margin-top:23px}.overlay-buttons .btn{min-height:44px}.overlay-buttons .btn:first-child{flex:1}
+.result-sheet{border-top:5px solid #bba16b}.result-sheet.good{border-top-color:#92dcb6}.result-sheet.bad{border-top-color:#f2aaa1}
+.result-status{display:inline-block;border:1px solid #bda475;color:#f6d6a4;border-radius:6px;padding:4px 9px;font-size:12px;font-weight:800}
+.result-sheet.good .result-status{color:var(--good);border-color:#6ab591}
+.result-sheet.bad .result-status{color:var(--danger);border-color:#ba716c}
+.result-intro{font-size:14px;line-height:1.8}
+.result-goal{background:#243947;border-radius:8px;border:1px solid #526c7b;display:flex;justify-content:space-between;gap:10px;padding:12px;margin:8px 0;font-size:14px}
+.result-goal strong{font-size:13px}.result-goal.ok{border-left:4px solid #9bdcb4}.result-goal.ng{border-left:4px solid #e7a69a}
+.result-sheet .result-stats{background:#102532;border-radius:9px;padding:12px;margin:17px 0;font-size:12px;color:var(--muted);line-height:1.85}
+.result-postscript{border-top:1px dashed #6c8490;padding-top:14px;color:var(--muted);font-size:13px;line-height:1.8}
+@media(max-width:620px){
+.impact-cardgroup{grid-template-columns:1fr}
+.impact-change{grid-template-columns:1fr auto;row-gap:1px}.impact-change>small{grid-column:1 / -1}
+.cinema-overlay{padding:7px}.cinema-card{padding:15px;border-radius:11px}
+.overlay-buttons{flex-direction:column}.overlay-buttons .btn{width:100%}
+}
+
 </style>
-<script defer src="./game.js?v=alpha02"></script>
+<script defer src="./game.js?v=alpha03"></script>
 </head>
 <body>
 <div class="container">
-<header class="top"><a class="back" href="../">← 短編Webゲーム実験室へ</a><span class="version" id="version">α0.2 / 更新 2026/10/25 12:52 JST</span></header>
+<header class="top"><a class="back" href="../">← 短編Webゲーム実験室へ</a><span class="version" id="version">α0.3 / 更新 2026/10/26 01:17 JST</span></header>
 <section class="intro" id="intro">
 <div class="eyebrow">PROLOGUE｜因果観察室・新人職員</div>
 <h1>残業ゼロ、<br>成果ゼロ</h1>
@@ -71,10 +119,56 @@ button{font:inherit;cursor:pointer}button:disabled{opacity:.4;cursor:not-allowed
 <section class="compact-hero"><div><div class="eyebrow">N国・因果観察室 / CASE M1</div><h1>残業ゼロ、成果ゼロ</h1><p>語句を3回交換して、歴史を修正する。</p></div><button class="btn outline" type="button" id="viewBriefing">指令01・操作説明を再確認</button></section>
 <div class="grid">
 <main>
+<details class="mission-ref" id="missionRef">
+ <summary>案件指令 01｜国会からの質問通告 <span class="mission-fixed">外部文書・交換不可</span></summary>
+ <div class="mission-body">
+  <p><strong>明日午前10時</strong>の国会で、政策成果と担当部署自身の勤務実態を説明する。</p>
+  <p>政策効果の根拠には<strong>100社以上の確認可能な回答</strong>が必要。過去12か月以内の調査結果も、企業・調査時期が確認できれば利用可能。</p>
+  <p>確認方法・担当者・決裁手順は省内で決めてよい。<strong>この通告の条件は歴史修正の対象外。</strong></p>
+ </div>
+</details>
 <h2 class="sectiontitle">記録の一覧 <span>最初は4件。交換で増減する。</span></h2>
 <div id="documents"></div>
 <section class="paper" style="margin-top:19px"><p class="instruction">枠を2か所選ぶとプレビューできます。新しい仕事が届いたら、原因の文書を調べてみてください。</p></section>
-<section id="ending" class="ending" hidden><div class="eyebrow">結果報告書</div><h2 id="endingTitle"></h2><p id="endingBody"></p><div class="stats" id="endingStats"></div><button class="btn" id="again" type="button">別の歴史を試す</button></section>
+<section id="ending" class="cinema-overlay" role="dialog" aria-modal="true" aria-labelledby="endingTitle" hidden>
+<div id="endingSheet" class="cinema-card result-sheet">
+ <div class="cinema-kicker">CASE M1｜最終報告書</div>
+ <p style="margin:11px 0"><span class="result-status" id="endingStatus">任務結果</span></p>
+ <h2 id="endingTitle"></h2>
+ <p class="result-intro" id="endingBody"></p>
+ <h3 class="cinema-heading">指令に対する判定</h3>
+ <div id="endingGoals"></div>
+ <div class="result-stats" id="endingStats"></div>
+ <p class="result-postscript" id="endingPostscript"></p>
+ <div class="overlay-buttons">
+  <button class="btn" id="again" type="button">最初から再挑戦</button>
+  <button class="btn secondary" id="endingUndo" type="button">1手戻して試す</button>
+  <button class="btn outline" id="resultBack" type="button">記録を確認</button>
+ </div>
+</div>
+</section>
+<section id="impactScreen" class="cinema-overlay" role="dialog" aria-modal="true" aria-labelledby="impactTitle" hidden>
+ <div class="cinema-card">
+  <div class="cinema-kicker">因果観察室｜歴史変化の報告</div>
+  <h2 id="impactTitle">歴史修正が確定しました</h2>
+  <div class="impact-flow">
+   <div><small>修正前の残業</small><div id="impactBefore" class="impact-value">220分</div></div>
+   <div class="impact-next">→</div>
+   <div><small>修正後の残業</small><div id="impactAfter" class="impact-value new">125分</div></div>
+  </div>
+  <p class="impact-desc" id="impactSummary"></p>
+  <h3 class="cinema-heading">書き換えた記録</h3>
+  <div id="impactExchange" class="impact-cardgroup"></div>
+  <h3 class="cinema-heading">仕事に起きた変化</h3>
+  <div id="impactChanges"></div>
+  <h3 class="cinema-heading">届いた・消えた記録</h3>
+  <div id="impactDocuments"></div>
+  <div class="overlay-buttons">
+   <button class="btn" id="impactContinue" type="button">更新された記録を調べる</button>
+   <button class="btn secondary" id="impactBack" type="button">先に記録へ戻る</button>
+  </div>
+ </div>
+</section>
 </main>
 <aside class="side">
 <section class="stat">
@@ -82,7 +176,7 @@ button{font:inherit;cursor:pointer}button:disabled{opacity:.4;cursor:not-allowed
 <div class="statrow"><div class="statnumber" id="overtime">220分</div><span class="badge">交換残り <b id="moves">3/3</b></span></div>
 <div class="ministats"><div><div class="statlabel">政策成果</div><strong id="policyState" class="good">維持</strong></div><div><div class="statlabel">対象部署</div><strong id="orgState" class="good">存続</strong></div><div><div class="statlabel">記録</div><strong id="docsCount">4件</strong></div></div>
 </section>
-<section class="paper"><h2>交換端末</h2><div id="selection" class="selectbar"></div><div class="control"><button class="btn secondary" id="undo" type="button" disabled>1手戻す</button><button class="btn secondary" id="restart" type="button">最初から</button><button class="btn outline" id="finish" type="button" disabled>現在の結末を見る</button></div><p class="hint" style="margin-top:12px">確定は最大3回。プレビュー・巻き戻しは無制限。</p></section>
+<section class="paper"><h2>交換端末</h2><div id="selection" class="selectbar"></div><div class="control"><button class="btn secondary" id="undo" type="button" disabled>1手戻す</button><button class="btn secondary" id="restart" type="button">最初から</button><button class="btn outline" id="finish" type="button" disabled>現在の結末を見る</button></div><p class="hint" style="margin-top:12px">確定は最大3回。各交換のあと、因果変化の報告を確認できます。</p></section>
 <section id="previewPanel" class="paper preview" hidden><h2 id="previewTitle">交換プレビュー</h2><p class="instruction" id="previewText"></p><div id="previewLines"></div><div class="control"><button class="btn" id="apply" type="button">この交換を確定</button><button class="btn secondary" id="closePreview" type="button">別の語句を選ぶ</button></div></section>
 <section class="paper"><h2>因果更新履歴</h2><p class="instruction" id="activity">文書を調べてください。</p><div id="messages"></div></section>
 <section class="paper"><h2>残業の内訳</h2><div id="breakdown"></div><div class="breakrow"><span>対象外の業務による残業</span><b id="otherTime">0分</b></div></section>
@@ -90,6 +184,6 @@ button{font:inherit;cursor:pointer}button:disabled{opacity:.4;cursor:not-allowed
 </aside>
 </div>
 </section>
-<footer class="footer">M1 α0.2（チュートリアル改訂版）｜フィクション。外部通信・入力の送信なし。データは画面内で処理します。制作：短編Webゲーム実験室</footer>
+<footer class="footer">M1 α0.3（因果演出・結末画面改訂版）｜フィクション。外部通信・入力の送信なし。データは画面内で処理します。制作：短編Webゲーム実験室</footer>
 </div>
 </body></html>
