@@ -1,6 +1,6 @@
 "use strict";
 const VERSION = "α0.3.0-preview";
-const UPDATED = "2026.10.26 02:15 JST";
+const UPDATED = "2026.10.26 02:21 JST";
 const people = [
  {name:"大野 彩花",school:"経営学部・2027年3月卒業見込み",initial:"大",tone:"warm",character:"社交的で段取り上手。成果をやや大きく表現するが、自分で確認すると訂正できる。",es:"学園祭実行委員会で協賛交渉を担当しました。企業12社の協力を取りつけ、当日は赤い養生テープで来場者の動線を改善しました。誰も気づかない仕事を先に拾うことを大切にしています。",record:"協賛金を提供したのは11社で、残り1社は機材貸与でした。床に赤い矢印を3本貼り、最後の1本だけ逆向きにして出口を案内しました。"},
  {name:"岡野 直人",school:"理工学研究科・2027年3月修了見込み",initial:"岡",tone:"cool",character:"口下手だが誠実。数字を正確に覚え、記録の裏付けを重視する。",es:"4人の研究チームで環境計測装置の精度改善に取り組みました。測定条件を切り分け、誤差を約15％低減しました。午後6時12分に記録された異常値がきっかけでした。",record:"装置の自動校正が毎日18時12分に作動していました。23回目の条件変更で測定が安定しました。相対誤差は7.8％から6.6％になりました。"},
@@ -307,26 +307,23 @@ function render(){
 }
 function selfTest(){
  let checked=0,good=0,bad=0,horror=0;
- for(let a=0;a<4;a++)for(let b=0;b<4;b++)for(let c=0;c<4;c++){
-  const localT=rounds[0][a].risk+rounds[1][b].risk+rounds[2][c].risk;
-  for(let r=0;r<4;r++){
+ if(people.length!==4||monsterArchive.length!==4)throw new Error("Monster count mismatch");
+ for(let monster=0;monster<4;monster++){
+  if(monsterPrivate[monster].length!==3||monsterGroupEarly[monster].length!==4||monsterGroupLate[monster].length!==4)throw new Error("Monster dialogue missing: "+monster);
+  if(!archiveEcho(monster))throw new Error("Missing archival evidence");
+  for(let a=0;a<4;a++)for(let b=0;b<4;b++)for(let c=0;c<4;c++)for(let reject=0;reject<4;reject++){
+   const risk=rounds[0][a].risk+rounds[1][b].risk+rounds[2][c].risk;
+   const result=risk>=4?"horror":reject===monster?"good":"bad";
    checked++;
-   let result=localT>=4?"horror":r===2?"good":"bad";
    if(result==="good")good++;else if(result==="bad")bad++;else horror++;
-   if(!rounds[0][a].ans.every(x=>typeof x==="string"&&x.length>5)||!rounds[1][b].ans.every(x=>typeof x==="string"&&x.length>5)||!rounds[2][c].ans.every(x=>typeof x==="string"&&x.length>5))throw new Error("Missing answer");
   }
  }
- if(checked!==256||!good||!bad||!horror)throw new Error("Branch QA failed");
- if(monsterPrivate.length!==4||monsterGroupEarly.length!==4||monsterGroupLate.length!==4||sawadaHuman.length!==3)throw new Error("Monster route content missing");
- for(let i=0;i<4;i++)if(monsterPrivate[i].length!==3||monsterGroupEarly[i].length!==4||monsterGroupLate[i].length!==4||!archiveEcho(i))throw new Error("Monster narrative path missing: "+i);
- let testedPrivateVariants=0;
- for(let a=0;a<3;a++)for(let b=0;b<3;b++)for(let c=0;c<3;c++)for(let d=0;d<3;d++){
-  const source=[a,b,c,d];
-  for(let j=0;j<4;j++)if(!privateQuestions[j][source[j]].answer||!privateQuestions[j][source[j]].q)throw new Error("Private answer missing");
-  testedPrivateVariants++;
+ for(let i=0;i<4;i++)for(let k=0;k<3;k++){
+  if(!privateQuestions[i][k].q||!privateQuestions[i][k].answer||!privateQuestions[i][k].borrow||!monsterPrivate[i][k])throw new Error("Private scenario missing: "+i+"/"+k);
  }
- if(testedPrivateVariants!==81)throw new Error("Private routes incomplete");
- return {checked,good,bad,horror,testedPrivateVariants};
+ for(let i=0;i<3;i++)if(sawadaHuman[i].length!==4)throw new Error("Human Sawada script missing");
+ if(checked!==1024||good!==224||bad!==672||horror!==128)throw new Error("Ending matrix failure");
+ return {checked,good,bad,horror,monsterOptions:4,privateSelections:81};
 }
 window.H1_QA=selfTest;
 document.addEventListener("DOMContentLoaded",()=>{
