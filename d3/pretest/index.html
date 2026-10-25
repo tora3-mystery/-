@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#0c1b28"><title>順番にお読みください｜CASE 0047 遊園地版 v0.7-PT3 チュートリアル版</title>
+<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#0c1b28"><title>順番にお読みください｜CASE 0047 遊園地版 v0.7-PT4 観測推理版</title>
 <style>
 :root{--bg:#09151e;--surface:#152b39;--surface2:#1c3747;--line:#4d7084;--ink:#ecf6f7;--sub:#b0c9d5;--muted:#7fa1b3;--gold:#e4ba72;--green:#84d5b9;--bad:#efa09a}
 *{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 25% -4%,#193b55,var(--bg) 48%);color:var(--ink);font:14px/1.55 system-ui,-apple-system,"Hiragino Kaku Gothic ProN",Meiryo,sans-serif}button{font:inherit;cursor:pointer;color:inherit}button:focus-visible{outline:3px solid #ffd48e;outline-offset:3px}button:disabled{opacity:.35;cursor:not-allowed}h1,h2,h3,p{margin:0}h1{font-size:clamp(24px,4.5vw,36px);line-height:1.3}h2{font-size:18px}a{color:var(--gold)}main{max-width:1120px;margin:auto;padding:16px 13px 70px}.mast{display:flex;justify-content:space-between;gap:12px;align-items:center;border-bottom:1px solid #476072;padding-bottom:12px}.logo{font-weight:900;letter-spacing:.03em;display:flex;flex-wrap:wrap;gap:5px;align-items:center}.kicker{font-size:11px;color:var(--gold);letter-spacing:.14em}.v{font-size:11px;color:var(--muted)}.pill{border:1px solid #6b94aa;border-radius:50px;color:#d4e8f2;padding:3px 9px;font-size:11px}.intro,.panel{background:var(--surface);border:1px solid var(--line);border-radius:14px}.intro{margin-top:18px;padding:22px;display:grid;gap:16px}.intro p{color:var(--sub)}.dossier{background:#e9e2cf;color:#26323b;border-left:6px solid #ba965d;padding:17px;border-radius:8px}.dossier strong{font-size:17px}.dossier p{color:#29343b}.button{border:1px solid #dcb174;border-radius:9px;padding:10px 16px;background:#e4ba72;color:#15232d;font-weight:900}.button.secondary{background:#21445b;border-color:#648da3;color:var(--ink)}.button.ghost{background:transparent;border-color:#618297;color:#d7e8ef}.button.compact{padding:6px 10px;font-size:12px}.button.danger{background:#5f3540;border-color:#ab777a;color:#ffe7e4}.button:active{transform:translateY(1px)}.hidden{display:none!important}.bar{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}.game{display:grid;gap:13px;margin-top:13px}.panel{padding:15px}.mission{background:linear-gradient(90deg,#224258,#183241);border:1px solid #688393;border-radius:12px;padding:13px 16px;display:grid;gap:5px}.mission p{color:var(--sub);font-size:13px}.grid-two{display:grid;grid-template-columns:1fr 1fr;gap:12px}.sceneCard{background:#0a1e2a;border:1px solid #476576;border-radius:12px;overflow:hidden}.sceneHeader{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:9px 11px;font-size:12px;color:#c3d9e3;background:#173040}.scenePhoto{width:100%;aspect-ratio:16/9;display:block;background:#183242}.sceneFooter{padding:9px 11px;color:#d9e8ef;font-size:12px;min-height:66px}.sceneFooter strong{display:block;font-size:13px}.columns{display:grid;grid-template-columns:1fr 1fr;gap:13px;align-items:start}.sectiontitle{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}.sectiontitle small{color:var(--sub)}.records{display:grid;grid-template-columns:1fr 1fr;gap:8px}.record{background:#1b384a;border:1px solid #567b8c;border-radius:10px;padding:8px;min-width:0;display:grid;gap:6px}.record.selected{border-color:#e4ba72;background:#254356}.recordtop{display:flex;align-items:center;justify-content:space-between;gap:4px}.tag{font-size:11px;padding:2px 6px;border-radius:4px;background:#28485a;color:#d1e1eb}.record.selected .tag{background:#705b39;color:#ffeacb}.snapshot{display:block;aspect-ratio:16/9;background:#152631;border:1px solid #526a77;border-radius:5px;overflow:hidden;width:100%}.snapshot svg{display:block;width:100%;height:100%}.recordname{font-size:12px;font-weight:800;min-height:2.8em;line-height:1.35}.recordops{display:flex;justify-content:space-between;gap:4px}.recordops .button{flex:1;padding:6px 4px}.slots{display:grid;gap:7px}.slot{border:1px solid #5f8498;border-radius:9px;padding:8px;background:#1c394b;display:flex;align-items:center;gap:8px}.slot.placeholder{border-style:dashed;color:var(--muted);background:#152b39}.slotNum{font-size:11px;background:#102534;border-radius:5px;width:23px;height:27px;display:grid;place-items:center;color:#c9d9e1;flex-shrink:0}.slotname{font-size:13px;font-weight:800;flex:1;min-width:0}.slotbuttons{display:flex;gap:4px}.iconBtn{background:#315269;border:1px solid #6d8ca0;border-radius:6px;min-width:32px;min-height:30px;font-size:16px}.slot .mini{display:block;color:#a3bdcb;font-size:10px;font-weight:400}.summary{border-top:1px solid #426379;padding-top:12px;margin-top:13px}.resultBlock{border:1px solid #4f7885;background:#0d2531;border-radius:10px;padding:12px;display:grid;gap:5px}.resultBlock h3{font-size:16px}.resultBlock p{color:#d4e2e9;font-size:12px}.status{display:flex;align-items:center;gap:7px;color:var(--gold);font-size:11px;font-weight:800;letter-spacing:.08em}.status:before{content:"";width:7px;height:7px;background:var(--gold);border-radius:100%}.status.good{color:var(--green)}.status.good:before{background:var(--green)}.stage{margin-top:10px;display:grid;gap:7px}.legend{font-size:11px;color:#b3c9d3}.history{display:flex;flex-wrap:wrap;gap:5px}.chip{font-size:11px;border:1px solid #507287;color:#d7e8ee;background:#1b394d;border-radius:6px;padding:3px 7px}.callout{font-size:12px;background:#233d4e;border-left:3px solid #cb9b61;padding:9px 11px;border-radius:4px;color:#d5e3e9}.modal{position:fixed;inset:0;background:#030b10d9;display:grid;place-items:center;z-index:30;padding:13px}.dialog{width:min(720px,100%);max-height:92vh;overflow:auto;background:#1b3546;border:1px solid #64859b;border-radius:13px;padding:17px;display:grid;gap:12px}.dialog .snapshot{aspect-ratio:16/9}.details{color:#cfe2ec;font-size:13px}.details strong{color:#fff}.footer{margin-top:17px;text-align:center;color:#8ca9b9;font-size:11px}kbd{display:inline-block;border:1px solid #678295;border-radius:4px;padding:0 4px;background:#20394a}.resultActions{display:flex;gap:8px;flex-wrap:wrap}.notice{color:#f0d9a2}.endScreen{background:#172f40;border:1px solid #b8995e;border-radius:14px;padding:19px;display:grid;gap:12px}.endScreen h2{font-size:26px}.replacePanel{padding:10px;background:#284251;border:1px solid #82a3b0;border-radius:8px;display:grid;gap:8px}.replacePanel .choices{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px}.replacePanel .choices button{border-radius:7px;background:#2b5368;border:1px solid #98b5c7;padding:9px 2px;min-height:42px;font-weight:900}.replacePanel small{color:#f1d7a5}.refbox{border:1px solid #6c8d9d;border-radius:9px;padding:9px;color:#d5e4ec;font-size:12px;background:#162f40}.sr{position:absolute;width:1px;height:1px;clip:rect(0,0,0,0);overflow:hidden}
@@ -59,7 +59,7 @@
 body.outcomeOpen{overflow:hidden}
 @media(max-width:480px){.resultDialog{padding:13px;gap:9px}.resultDialog .resultPhoto{aspect-ratio:4/3}.resultDialog .resultActions .button{min-width:0;width:100%}}
 </style></head><body><main>
-<header class="mast"><div><div class="kicker">N国 因果観察室・CASE 0047</div><div class="logo">順番にお読みください <span class="pill">遊園地版・プレテスト</span></div></div><div class="v" style="flex-shrink:0;text-align:right">v0.7-PT3<br>2026-10-25 13:04 JST</div></header>
+<header class="mast"><div><div class="kicker">N国 因果観察室・CASE 0047</div><div class="logo">順番にお読みください <span class="pill">遊園地版・プレテスト</span></div></div><div class="v" style="flex-shrink:0;text-align:right">v0.7-PT4<br>2026-10-25 13:11 JST</div></header>
 <section class="intro" id="intro" aria-label="因果観察室・任務説明">
 <div class="onboardStep" id="storyStep">
   <div class="introHead"><span class="pill">PROLOGUE｜2030年・N国</span><span class="introStepCount">任務説明 1 / 2</span></div>
@@ -85,7 +85,7 @@ body.outcomeOpen{overflow:hidden}
     <div class="introStepCard"><span class="stepNum">04</span><strong>2030年を観測する</strong><p>「この因果を確定・観測」を押すと、4年後の風景が変化します。結果を見て何度でも再編集できます。</p></div>
   </div>
   <div class="introNote"><strong>復元の判断：</strong> 左の「本来の2030年」と、あなたが作った「現在の2030年」を見比べてください。正しい歴史に戻ると任務完了です。</div>
-  <details><summary>操作に迷ったら｜追加ガイド（任意）</summary><p>ゲーム開始時には既に4枚が仮配置されています。初期状態は正解とは限りません。まず各写真を拡大し、採用する記録を選び直してください。「確定・観測」しても即座にゲームオーバーにはならず、結果を確かめて編集し直せます。</p></details>
+  <details><summary>操作に迷ったら｜追加ガイド（任意）</summary><p>ゲーム開始時には既に4枚が仮配置されています。初期の4枚も敵国が編集した記録です。採用済みの写真を信用しすぎず、6枚すべてを確認してください。「確定・観測」しても即座にゲームオーバーにはならず、結果を確かめて編集し直せます。</p></details>
   <div class="introActions"><button class="button ghost" id="backStory" type="button">← 設定に戻る</button><button class="button primaryAction" id="start" type="button">任務を開始する →</button><button class="button secondary hidden" id="backGame" type="button">調査画面へ戻る</button></div>
   <p class="legend">開始前に写真や説明を確認できます。操作ガイドはゲーム中にも開き直せます。</p>
 </div>
@@ -95,7 +95,7 @@ body.outcomeOpen{overflow:hidden}
 <div class="columns"><section class="panel"><div class="sectiontitle"><h2>候補写真</h2><small>6件／選択4件</small></div><div class="records" id="records"></div><p class="legend" style="margin-top:9px">4枚選択済みでも、未採用カードの「入替」を押すと入れ替える対象を選べます。<br>「拡大」で車両番号、部品、背景の違いを調べてください。写真の記号A〜Fは順序を示しません。</p></section>
 <section class="panel"><div class="sectiontitle"><h2>因果編集ボード</h2><small id="selectionCount">4/4</small></div><div class="slots" id="slots"></div><div id="replacePanel" class="replacePanel hidden" aria-live="polite"></div><div class="stage"><button class="button" id="simulate">この因果を確定・観測</button><button class="button ghost" id="reset">敵国改変時の配置に戻す</button></div><div class="summary"><div class="resultBlock" aria-live="polite"><div id="status" class="status">記録待機</div><h3 id="result-head">2030年の定点写真を観測</h3><p id="result-text">記録を並べ直すと、観測結果がここに表示されます。</p><div id="result-extra" class="legend"></div></div></div><div class="summary"><strong>因果観察ログ</strong><div id="history" class="history" style="margin-top:7px"><span class="legend">まだ観測記録はありません</span></div></div></section></div>
 <div class="endScreen hidden" id="end"><div class="kicker">CASE 0047｜復元確認</div><h2>基準履歴と一致しました。</h2><p>2026年に不具合を発見し、適切な1号車の修理と確認走行を終えて一般公開。2030年の巨大テーマパークと従業員たちの姿が戻りました。</p><div class="refbox">N国因果観察室／記録照合：一致／任務評価：完了</div><div class="resultActions"><button class="button secondary" id="keepPlaying">ほかの歴史も観測する</button><button class="button ghost" id="restart">最初から調査する</button></div></div>
-</section><div class="footer">D3 / v0.7-PT3 Pretest · 2026-10-25 13:04 JST · <a href="https://tora3-mystery.github.io/short-ui-games/d3/">公開版v0.6へ戻る</a></div></main>
+</section><div class="footer">D3 / v0.7-PT4 Pretest · 2026-10-25 13:11 JST · <a href="https://tora3-mystery.github.io/short-ui-games/d3/">公開版v0.6へ戻る</a></div></main>
 <div class="resultOverlay hidden" id="resultOverlay" role="dialog" aria-modal="true" aria-labelledby="overlayTitle" aria-describedby="overlayText">
  <div class="resultDialog" id="resultDialog">
   <div class="introHead"><span class="pill">N国 因果観察室｜2030年の観測</span><span class="introStepCount" id="overlayAttempt"></span></div>
@@ -104,6 +104,7 @@ body.outcomeOpen{overflow:hidden}
   <div class="resultPhoto" id="overlayPhoto"></div>
   <p id="overlayText"></p>
   <div class="resultSummary" id="overlayEvidence"></div>
+  <details id="aiAnalysis" class="recordHint hidden"><summary>観測AIの補助解析（任意）</summary><p id="aiAnalysisText"></p><p class="legend">因果観察室の事前生成・監修済みコメントです。リアルタイムAI通信は行いません。</p></details>
   <div class="resultActions">
     <button class="button primaryAction" id="overlayBack" type="button">因果を再編集する</button>
     <button class="button secondary" id="overlayObserve" type="button">2030年の写真を詳しく見る</button>
@@ -123,7 +124,7 @@ const DATA={
  E:{name:'整備記録',meta:'2026年｜整備写真資料・撮影時刻不確定',observations:['整備士と、分解された車体が写っている。','同じような構図の整備写真がもう一枚ある。'],hint:'写真の車体に付いている2桁の番号を確認してください。今回の記録は同じ1台を追う必要があります。'},
  F:{name:'整備記録',meta:'2026年｜整備写真資料・撮影時刻不確定',observations:['整備士と、分解された車体が写っている。','同じような構図の整備写真がもう一枚ある。'],hint:'2枚の整備記録は本当に同じ車両でしょうか？ 車体の番号と、外された部品を観察してください。'}
 };
-const ALL=Object.keys(DATA);const INITIAL=['C','E','A','D'];let selected=[...INITIAL];let attempts=0;let lastResult=null;let lastFocus=null;let history=[];let pendingReplacement=null;
+const ALL=Object.keys(DATA);const INITIAL=['B','D','E','A'];let selected=[...INITIAL];let attempts=0;let lastResult=null;let lastFocus=null;let history=[];let pendingReplacement=null;
 function pos(id,o){return o.indexOf(id)}
 function before(a,b,o){return pos(a,o)!==-1&&pos(b,o)!==-1&&pos(a,o)<pos(b,o)}
 function classify(o){if(o.length!==4||new Set(o).size!==4||o.some(x=>!DATA[x]))return {world:'pending',cause:'incomplete',head:'4件選択してください',text:'4枚を揃えてください。',evidence:'未確定'};
@@ -206,6 +207,33 @@ function updateSelection(){render();if(!pendingReplacement)$('replacePanel').cla
 function showModal(id){lastFocus=document.activeElement;$('modalTitle').textContent=id+'｜'+DATA[id].name;$('modalPhoto').innerHTML=photoAsset(id);$('modalPhoto').onclick=()=>{$('modalPhoto').classList.toggle('zoomed')};$('modalPhoto').classList.remove('zoomed');$('modalBody').innerHTML='<strong>'+DATA[id].meta+'</strong><ul>'+DATA[id].observations.map(x=>'<li>'+x+'</li>').join('')+'</ul><details class="recordHint"><summary>調査メモ（ヒント）を読む</summary><p>'+DATA[id].hint+'</p></details>';$('modal').classList.remove('hidden');$('closeModal').focus()}
 function closeModal(){$('modal').classList.add('hidden');if(lastFocus&&lastFocus.isConnected)lastFocus.focus()}
 function showFuture(result){$('future').innerHTML=sceneAsset(result.world,result.cause);const el=$('future');el.classList.remove('observation-flash');void el.offsetWidth;el.classList.add('observation-flash');const code={success:'復元',small:'縮小',park:'消失',vacant:'閉園'};const name={success:'巨大テーマパークへ成長',small:'小さな遊園地のまま',park:'市民公園へ転用',vacant:'重大事故後の更地'};$('future-code').textContent=code[result.world]||'未判定';$('future-title').textContent=name[result.world]||'未判定';$('future-sub').textContent=result.head;}
+// Text drafted with AI assistance, curated offline and selected solely by deterministic causal state.
+// No network, provider API or runtime model inference. Avoid exposing individual record IDs in wrong endings.
+const OBSERVATION_COPY={
+ restored:'2030年の定点写真が、保護されていた基準履歴と一致した。人々の姿、施設の規模、公開後の記録がすべて戻っている。',
+ unopened:'古い観覧車は回り続けている。一方、新しい乗り場には来園者の列が一度も記録されていない。',
+ 'incomplete-review':'整備棟の記録は残っているのに、新しい乗り場を使った客の姿だけが歴史に結び付かない。',
+ 'cancelled-repair':'新施設の建設予定地にはベンチと植樹が並ぶ。開発計画が途中から途切れている。',
+ 'cancelled-test':'園内には開発中止の痕跡が残る。準備の一部は進んだが、完成に向かった記録が連続していない。',
+ 'cancelled-no-test':'この場所が遊園地だったことを示すものはほとんどない。開発を支える記録の一部が欠けている。',
+ 'fault-stop':'新アトラクションのポスターだけが残り、入場ゲートは閉じている。開業に先立つ出来事に、解消されない矛盾がある。',
+ 'not-retested':'新型車両は残っている。それでも一般客が乗る場面に歴史は進まなかった。作業と運行の間に空白がある。',
+ 'test-block':'試走らしい写真は残るが、開業した未来にはつながらなかった。実際に何を確認したのか、もう一度調べたい。',
+ 'wrong-car':'開園後の記録が突然途切れた。修理したはずの青い車両と、公開日に写る車両には、説明できない食い違いがある。',
+ 'unsafe-opening':'祝賀の写真の後に残るのは、閉鎖された門と事故調査の記録。華やかな公開が、安全を保証するわけではなかった。'
+};
+const AI_ANALYSIS_HINT={
+ unopened:'写真の印象ではなく、写っている人の行動を確認してください。祝賀の場面と実際の運行は同じ出来事でしょうか。',
+ 'incomplete-review':'この歴史では作業と来園者の行動がつながっていません。最後に成立させたい出来事は何でしょうか。',
+ 'cancelled-repair':'停止した計画に戻るため、似た整備写真が本当に同じ対象を写しているか比較してください。',
+ 'cancelled-test':'同じライトの色が写っていても、前後関係まで同じとは限りません。装置の外見に変化はありませんか。',
+ 'cancelled-no-test':'写真を役割で分けると、走っている実物・整備中の実物・演出用の展示が混じっています。',
+ 'fault-stop':'似た色の照明に注意を奪われず、車両の構造部分や作業の対象を追ってみてください。',
+ 'not-retested':'修理が行われたことと、安全に運行できることは同じ意味ではありません。',
+ 'test-block':'走行している写真があっても、安全が確かめられたとは限りません。前に何があったのか確認してください。',
+ 'wrong-car':'青い車両は一台とは限りません。外観が似ていても、同じ物を追っているかを確かめてください。',
+ 'unsafe-opening':'乗客が写った写真を最後に置くだけでは十分ではありません。そこへ至るまでの変化を確認してください。'
+};
 const OUTCOME_TEXT={
  success:{tag:'MISSION COMPLETE｜正史復元',title:'任務完了。2030年を取り戻した。',note:'N国 因果観察室／CASE 0047／基準履歴と一致。'},
  small:{tag:'ENDING 01｜小さな遊園地',title:'2030年：残された遊園地',note:'この未来は基準履歴と一致していません。並べ替えは何度でもやり直せます。'},
@@ -217,8 +245,12 @@ function showOutcome(r){
  $('resultDialog').classList.toggle('successEnding',r.world==='success');
  $('overlayTag').textContent=cfg.tag;
  $('overlayTitle').textContent=cfg.title;
- $('overlayText').textContent=r.text;
+ $('overlayText').textContent=OBSERVATION_COPY[r.cause]||r.text;
  $('overlayEvidence').textContent=cfg.note+' ｜ '+r.head;
+ const canAssist=attempts>=2&&r.world!=='success'&&Boolean(AI_ANALYSIS_HINT[r.cause]);
+ $('aiAnalysis').classList.toggle('hidden',!canAssist);
+ $('aiAnalysis').open=false;
+ $('aiAnalysisText').textContent=canAssist?AI_ANALYSIS_HINT[r.cause]:'';
  $('overlayAttempt').textContent='観測 '+attempts+' 回目';
  $('overlayPhoto').innerHTML=sceneAsset(r.world,r.cause);
  $('overlayBack').textContent=r.world==='success'?'ほかの歴史も試す':'写真を見直して再編集';
@@ -233,14 +265,14 @@ function closeOutcome(target){
  if(target==='future')$('future').scrollIntoView({behavior:'smooth',block:'center'});
  else if(target==='records')$('records').scrollIntoView({behavior:'smooth',block:'start'});
 }
-function simulate(){if(selected.length!==4)return;const r=classify(selected);attempts++;lastResult=r;showFuture(r);$('attempts').textContent=`観測 ${attempts} 回`;$('status').textContent=r.world==='success'?'基準履歴と一致':'因果不一致を検出';$('status').className='status'+(r.world==='success'?' good':'');$('result-head').textContent=r.head;$('result-text').textContent=r.text;$('result-extra').textContent=r.evidence;history.unshift(`${attempts}. ${selected.join('→')}：${{success:'繁栄',small:'小規模',park:'市民公園',vacant:'更地'}[r.world]}`);history=history.slice(0,6);$('history').innerHTML=history.map(x=>`<span class="chip">${x}</span>`).join('');if(r.world==='success')$('end').classList.remove('hidden');else $('end').classList.add('hidden');showOutcome(r)}
-function reset(){selected=[...INITIAL];pendingReplacement=null;$('replacePanel').classList.add('hidden');showFuture(classify(INITIAL));render();$('end').classList.add('hidden');$('status').textContent='初期配置に戻しました';$('status').className='status';$('result-head').textContent='敵国改変時の歴史';$('result-text').textContent='初期配置では開園に至らず、2030年は小さな遊園地に留まっています。';$('result-extra').textContent=''}
+function simulate(){if(selected.length!==4)return;const r=classify(selected);attempts++;lastResult=r;showFuture(r);$('attempts').textContent=`観測 ${attempts} 回`;$('status').textContent=r.world==='success'?'基準履歴と一致':'因果不一致を検出';$('status').className='status'+(r.world==='success'?' good':'');$('result-head').textContent=r.head;$('result-text').textContent=OBSERVATION_COPY[r.cause]||r.text;$('result-extra').textContent=r.world==='success'?r.evidence:'2026年の記録を見直し、観測写真との差を確認してください。';history.unshift(`${attempts}. ${selected.join('→')}：${{success:'繁栄',small:'小規模',park:'市民公園',vacant:'更地'}[r.world]}`);history=history.slice(0,6);$('history').innerHTML=history.map(x=>`<span class="chip">${x}</span>`).join('');if(r.world==='success')$('end').classList.remove('hidden');else $('end').classList.add('hidden');showOutcome(r)}
+function reset(){selected=[...INITIAL];pendingReplacement=null;$('replacePanel').classList.add('hidden');showFuture(classify(INITIAL));render();$('end').classList.add('hidden');$('status').textContent='初期配置に戻しました';$('status').className='status';$('result-head').textContent='敵国改変時の歴史';$('result-text').textContent='初期配置では2030年の繁栄を取り戻せていません。6枚すべてを確かめてください。';$('result-extra').textContent=''}
 let tutorialStarted=false;
 $('toGuide').onclick=()=>{$('storyStep').classList.add('hidden');$('guideStep').classList.remove('hidden');$('intro').scrollIntoView({behavior:'smooth',block:'start'})};
 $('backStory').onclick=()=>{$('guideStep').classList.add('hidden');$('storyStep').classList.remove('hidden');$('intro').scrollIntoView({behavior:'smooth',block:'start'})};
 $('showGuide').onclick=()=>{$('game').classList.add('hidden');$('intro').classList.remove('hidden');$('storyStep').classList.add('hidden');$('guideStep').classList.remove('hidden');$('backGame').classList.toggle('hidden',!tutorialStarted);$('intro').scrollIntoView({behavior:'smooth',block:'start'})};
 $('backGame').onclick=()=>{$('intro').classList.add('hidden');$('game').classList.remove('hidden');$('game').scrollIntoView({behavior:'smooth',block:'start'})};
-$('start').onclick=()=>{tutorialStarted=true;$('intro').classList.add('hidden');$('game').classList.remove('hidden');$('game').scrollIntoView({behavior:'smooth',block:'start'});render();$('reference').innerHTML=sceneAsset('success','restored');const r=classify(INITIAL);showFuture(r);$('result-head').textContent='敵国改変時の歴史';$('result-text').textContent='初期配置の因果は破綻しています。6枚の写真を確認し、正しい4枚を並べてください。';$('status').textContent='異常な歴史を観測中'};
+$('start').onclick=()=>{tutorialStarted=true;$('intro').classList.add('hidden');$('game').classList.remove('hidden');$('game').scrollIntoView({behavior:'smooth',block:'start'});render();$('reference').innerHTML=sceneAsset('success','restored');const r=classify(INITIAL);showFuture(r);$('result-head').textContent='敵国改変時の歴史';$('result-text').textContent='初期配置には不要な記録が混じっています。6枚すべての写真を比較してください。';$('status').textContent='異常な歴史を観測中'};
 $('overlayBack').onclick=()=>closeOutcome('records');$('overlayObserve').onclick=()=>closeOutcome('future');$('resultOverlay').addEventListener('click',e=>{if(e.target===$('resultOverlay'))closeOutcome('records')});document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('resultOverlay').classList.contains('hidden'))closeOutcome('records')});
 $('simulate').onclick=simulate;$('reset').onclick=reset;$('closeModal').onclick=closeModal;$('modal').addEventListener('click',e=>{if(e.target===$('modal'))closeModal()});document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('modal').classList.contains('hidden'))closeModal()});$('keepPlaying').onclick=()=>{$('end').classList.add('hidden');$('records').scrollIntoView({behavior:'smooth',block:'start'})};$('restart').onclick=()=>{reset();attempts=0;history=[];$('history').innerHTML='<span class="legend">まだ観測記録はありません</span>';$('attempts').textContent='観測 0 回';$('game').scrollIntoView({behavior:'smooth'})};
 window.D3_QA={classify,sceneSvg,all:ALL,initial:INITIAL,correct:['D','F','C','A']};
