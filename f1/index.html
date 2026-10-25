@@ -22,15 +22,15 @@ body.odd-3 .choice-icon{background:#3a4445}
 .day8-weekdays{display:flex;gap:4px;margin:15px 0 10px;align-items:center}.day8-weekdays span{display:grid;place-items:center;flex:1;min-width:0;font-size:14px;font-weight:750;border:1px solid var(--line);background:#243e3c;color:#e7eee9;border-radius:6px;min-height:38px}.day8-weekdays .day8-new{border:2px solid #de9d78;background:#652e36;color:#fff;font-size:17px}
 .return-customer{font-size:11px;font-weight:750;color:var(--muted);margin:9px 0 5px;letter-spacing:.02em}.hq-bulletin{margin:10px 0 3px;padding:9px 11px;border:1px dashed #b7bdb2;border-radius:9px;background:#edf2e9;color:#344839;font-size:12px;line-height:1.5}.hq-bulletin b{display:block;margin-bottom:3px}.hq-bulletin small{display:block;color:#647165}.weekly-customer{border-left:3px solid #7d9487;margin:12px 0 10px;padding:8px 11px;background:#eff2eb;border-radius:0 8px 8px 0;font-size:13px;color:#364b40}
 .complaint-summary{font-size:13px;font-weight:700;margin:8px 0 12px;color:#344b40}.complaint-board{display:grid;gap:10px}.complaint-ticket{padding:12px;border:1px solid #c8c9c0;border-radius:10px;background:#fff}.complaint-ticket-head{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:4px;font-size:12px;color:#626e69}.complaint-ticket-head strong{color:#263e36}.complaint-letter{margin:7px 0;font-size:14px;line-height:1.6;color:#25322e}.complaint-reply{margin-top:8px;padding:9px;border-radius:7px;background:#eff2e9;font-size:12px;line-height:1.65;color:#34483c}.complaint-reply b{display:block;color:#365446;margin-bottom:3px}.complaint-extra{margin:10px 0 3px;font-size:12px}.complaint-extra summary{cursor:pointer;font-weight:650;padding:7px 0}.complaint-extra .complaint-board{margin:7px 0}.complaint-ticket.resolved{opacity:.86}
-</style></head>`<body><main class="container"><header class="mast"><div class="brand"><span class="brand-icon" id="brandIcon">🛒</span><span id="brandName">まるまるスーパー<br><small class="tiny">お客様改善センター / 研修ゲーム</small></span></div><button id="restart" class="button-quiet hidden">最初から</button></header><div class="version-top"><b>F1 v0.8 RC</b><span>v0.8 実装確認用・公開前（更新日時は正式公開時に確定）</span></div>
-<section id="intro" class="focus box"><div class="overline">7 DAYS / SHORT MANAGEMENT PUZZLE</div><h1 class="head">改善しすぎる店</h1><p>お客様のクレームを改善したら、別のクレームが増えた。そんなスーパーの<strong>7営業日だけの店長代理</strong>になりました。</p><div class="start-visual" aria-hidden="true">🏪 ➜ 📣 ➜ 📈</div><div class="guidebox"><b>手元資金は120万円。まず、これだけ覚えてください。</b><p>1日1つ、6案から施策を選びます。売上から仕入・人件費・維持費・改善費を引いた残額が、翌日の資金になります。</p><p><b>目標：</b>7日後も120万円以上を保ち、深刻な苦情（4/5以上）を残さない。</p><p>詳しい不満度・工事・収支は必要な時だけ開けます。施策には副作用があります。効果の大きい改善ほど、営業報告を確認してください。</p></div><p class="tiny">1プレイ約5〜8分／全7エンディング／通信・ログイン不要</p><button class="widebtn" id="start">営業を始める</button></section>
-<div id="game" class="gameonly"><div class="metrics"><div class="stat"><label>営業日</label><strong id="day">1/7</strong></div><div class="stat"><label>手元資金</label><strong id="cash">120</strong><small>万円</small></div><div class="stat"><label>直近の収支</label><strong id="total">—</strong></div></div><div id="oddMetrics" class="anomaly-grid hidden"><div class="stat"><label>閉店後売上</label><strong id="afterSales">0</strong><small>万円</small></div><div class="stat"><label>未退店客数</label><strong id="remainingCustomers">0</strong><small>名</small></div><div class="stat"><label>閉店許可</label><strong id="closePermit">許可</strong></div></div><div id="oddEvidenceBoard" class="evidence-board hidden" aria-label="内部照合記録"><b>内部照合記録</b><p>受領した記録は、開くと内容を確認できます。</p><div id="oddEvidenceList"></div></div><figure class="store-scene" id="storeScene"><img id="storeImage" alt="スーパーの現在の店内状況を示す画像" src="./assets/store-queue.jpg"><div class="scene-status" id="sceneStatus">営業中の売場</div><div class="scene-markers" id="sceneMarkers"></div><figcaption id="sceneCaption">店内の状態は選んだ施策によって変わります。</figcaption></figure><div class="actions-head"><div><div class="overline" id="dateLabel">DAY 01 / 07</div><h1 class="head" style="font-size:23px">本日の改善判断</h1></div><span class="pill">本日あと1件</span></div><div class="two"><section class="box issue-card"><div class="issue-meta"><span>📮 お客様の声・店長回答一覧</span><span id="issueTag" class="pill urgent">要対応</span></div><div id="issuePerson" class="hidden"></div><div id="issueText" class="hidden"></div><p id="issueReason" class="issue-tail"></p><div id="complaintSummary" class="complaint-summary" aria-live="polite"></div><div id="complaintBoard" class="complaint-board"></div><details id="complaintExtra" class="complaint-extra hidden"><summary id="complaintExtraLabel">ほかのご意見を見る</summary><div id="complaintExtraBody" class="complaint-board"></div></details><details id="complaintArchive" class="complaint-extra"><summary id="complaintArchiveLabel">以前のご意見と店長回答</summary><div id="complaintArchiveBody" class="complaint-board"></div></details><div class="news" id="newNotice"></div><div id="hqBulletin" class="hq-bulletin" aria-live="polite"></div><div class="help" id="pendingMini"></div></section><section class="box"><div class="actions-head"><h2>今日できる対応</h2><span id="choiceCount" class="context">6案から1つ</span></div><div id="actions" class="day-actions"></div><p class="help">選ぶと閉店処理へ。費用だけでなく、売上と副作用も確認してください。同じ施策は何度も繰り返すと効きにくくなります。</p></section></div><details class="box detail" id="breakdown"><summary>詳しく見る：不満度・工事・収支・履歴</summary><div id="moneyDetail" class="money-note"></div><div id="meters"></div><div id="tasks"></div><div class="guidebox"><b>通常経営の判定</b><p>開始時資金120万円を維持し、最終日に深刻な苦情をなくす。異常指標は通常ルートでは表示されません。</p></div><div class="overline">最近の動き</div><ul id="history" class="journal"></ul></details></div>
-<section id="finalChoice" class="focus box final-choice hidden" aria-live="polite"><div class="overline">DAY 07 / CLOSING REJECTED</div><h1 class="head">まだ、閉店できません。</h1><p id="finalLead"></p><div class="guidebox"><b>0番レジ 最終処理</b><p>閉店後売上は利益ですが、未退店客が残る限り閉店許可は出ません。</p><p id="receiptClue"></p></div><div class="evidence-board" id="finalEvidenceBoard"><b>閉店処理時点の照合記録</b><div id="finalEvidenceList"></div></div><div class="final-actions"><button class="widebtn" id="stop0">0番レジを停止する</button><button class="widebtn" id="continue8">営業を継続する</button><button class="widebtn hidden-route" id="checkCustomer">店内に残る客を確認する</button></div><div class="guidebox hidden" id="inferArea" role="group" aria-labelledby="inferTitle"><b id="inferTitle">照合した記録から、最後の客を推理する</b><p>閲覧した記録に基づいて判断してください。確認していない資料は自動で補完されません。</p><label for="inferWho">残っているのは誰？</label><select id="inferWho"><option value="">選んでください</option><option value="clerk">レジ担当者</option><option value="self">未来の自分</option><option value="visitor">通常のお客様</option></select><label for="inferWhat">何を返品したい？</label><select id="inferWhat"><option value="">選んでください</option><option value="receipt">0番のレシート</option><option value="yesterday">昨日</option><option value="sales">閉店後の売上</option></select><button id="inferSubmit" class="widebtn" type="button">照合結果を確定する</button><p id="inferFeedback" role="status" aria-live="polite"></p></div></section>
+</style></head>`<body><main class="container"><header class="mast"><div class="brand"><span class="brand-icon" id="brandIcon">🛒</span><span id="brandName">まるまるスーパー<br><small class="tiny">お客様改善センター / 研修ゲーム</small></span></div><button id="restart" class="button-quiet hidden">最初から</button></header><div class="version-top"><b>F1 v0.9 PROTOTYPE</b><span>2026-10-25 JST更新・試作ブランチ</span></div>
+<section id="intro" class="focus box"><div class="overline">7 DAYS / SHORT MANAGEMENT PUZZLE</div><h1 class="head">改善しすぎる店</h1><p>お客様のクレームを改善したら、別のクレームが増えた。そんなスーパーの<strong>7営業日だけの店長代理</strong>になりました。</p><div class="start-visual" aria-hidden="true">🏪 ➜ 📣 ➜ 📈</div><div class="guidebox"><b>集客力7、未解決クレーム5件。初日の売上は50万円。</b><p>毎日6つの施策から1つ選びます。日売上（万円）＝30＋集客力×10－未解決クレーム×10。資金管理はありません。</p><p><b>目標：</b>7日間売上を確保しながらクレームを減らしましょう。売上0で閉店、40万円未満が2営業日続くと店長交代です。</p><p>苦情対応で集客力まで落ちることがあります。効果は1〜3営業日後に反映されます。</p></div><p class="tiny">1プレイ約5〜8分／全7エンディング／通信・ログイン不要</p><button class="widebtn" id="start">営業を始める</button></section>
+<div id="game" class="gameonly"><div class="metrics"><div class="stat"><label>営業日</label><strong id="day">1/7</strong></div><div class="stat"><label>集客力</label><strong id="cash">7</strong><small>/10</small></div><div class="stat"><label>日売上見込</label><strong id="total">50万円</strong></div></div><div id="oddMetrics" class="anomaly-grid hidden"><div class="stat"><label>閉店後売上</label><strong id="afterSales">0</strong><small>万円</small></div><div class="stat"><label>未退店客数</label><strong id="remainingCustomers">0</strong><small>名</small></div><div class="stat"><label>閉店許可</label><strong id="closePermit">許可</strong></div></div><div id="oddEvidenceBoard" class="evidence-board hidden" aria-label="内部照合記録"><b>内部照合記録</b><p>受領した記録は、開くと内容を確認できます。</p><div id="oddEvidenceList"></div></div><figure class="store-scene" id="storeScene"><img id="storeImage" alt="スーパーの現在の店内状況を示す画像" src="./assets/store-queue.jpg"><div class="scene-status" id="sceneStatus">営業中の売場</div><div class="scene-markers" id="sceneMarkers"></div><figcaption id="sceneCaption">店内の状態は選んだ施策によって変わります。</figcaption></figure><div class="actions-head"><div><div class="overline" id="dateLabel">DAY 01 / 07</div><h1 class="head" style="font-size:23px">本日の改善判断</h1></div><span class="pill">本日あと1件</span></div><div class="two"><section class="box issue-card"><div class="issue-meta"><span>📮 お客様の声・店長回答一覧</span><span id="issueTag" class="pill urgent">要対応</span></div><div id="issuePerson" class="hidden"></div><div id="issueText" class="hidden"></div><p id="issueReason" class="issue-tail"></p><div id="complaintSummary" class="complaint-summary" aria-live="polite"></div><div id="complaintBoard" class="complaint-board"></div><details id="complaintExtra" class="complaint-extra hidden"><summary id="complaintExtraLabel">ほかのご意見を見る</summary><div id="complaintExtraBody" class="complaint-board"></div></details><details id="complaintArchive" class="complaint-extra"><summary id="complaintArchiveLabel">以前のご意見と店長回答</summary><div id="complaintArchiveBody" class="complaint-board"></div></details><div class="news" id="newNotice"></div><div id="hqBulletin" class="hq-bulletin" aria-live="polite"></div><div class="help" id="pendingMini"></div></section><section class="box"><div class="actions-head"><h2>今日できる対応</h2><span id="choiceCount" class="context">6案から1つ</span></div><div id="actions" class="day-actions"></div><p class="help">選ぶと閉店処理へ。集客力・クレーム・効果発生日を確認してください。同じ施策は何度も繰り返すと効きにくくなります。</p></section></div><details class="box detail" id="breakdown"><summary>詳しく見る：クレーム・工事・売上・履歴</summary><div id="moneyDetail" class="money-note"></div><div id="meters"></div><div id="tasks"></div><div class="guidebox"><b>通常経営の判定</b><p>週売上560万円以上・最終クレーム3件以下で優良店舗。売上480万円以上でも苦情が残れば別の結末です。売上0で閉店、40万円未満が2営業日続くと店長交代。</p></div><div class="overline">最近の動き</div><ul id="history" class="journal"></ul></details></div>
+<section id="finalChoice" class="focus box final-choice hidden" aria-live="polite"><div class="overline">DAY 07 / CLOSING REJECTED</div><h1 class="head">まだ、閉店できません。</h1><p id="finalLead"></p><div class="guidebox"><b>0番レジ 最終処理</b><p>閉店後売上は帳簿上の記録であり、実際の来店客と一致しません。閉店許可には未退店客の照合が必要です。</p><p id="receiptClue"></p></div><div class="evidence-board" id="finalEvidenceBoard"><b>閉店処理時点の照合記録</b><div id="finalEvidenceList"></div></div><div class="final-actions"><button class="widebtn" id="stop0">0番レジを停止する</button><button class="widebtn" id="continue8">営業を継続する</button><button class="widebtn hidden-route" id="checkCustomer">店内に残る客を確認する</button></div><div class="guidebox hidden" id="inferArea" role="group" aria-labelledby="inferTitle"><b id="inferTitle">照合した記録から、最後の客を推理する</b><p>閲覧した記録に基づいて判断してください。確認していない資料は自動で補完されません。</p><label for="inferWho">残っているのは誰？</label><select id="inferWho"><option value="">選んでください</option><option value="clerk">レジ担当者</option><option value="self">未来の自分</option><option value="visitor">通常のお客様</option></select><label for="inferWhat">何を返品したい？</label><select id="inferWhat"><option value="">選んでください</option><option value="receipt">0番のレシート</option><option value="yesterday">昨日</option><option value="sales">閉店後の売上</option></select><button id="inferSubmit" class="widebtn" type="button">照合結果を確定する</button><p id="inferFeedback" role="status" aria-live="polite"></p></div></section>
 <section id="day8Panel" class="focus box hidden" aria-live="polite">
  <div class="overline">DAY 08 / 07 — 人曜日</div><div class="day8-weekdays" aria-label="月曜日から日曜日の後に人曜日が追加された営業カレンダー"><span>月</span><span>火</span><span>水</span><span>木</span><span>金</span><span>土</span><span>日</span><span class="day8-new">人</span></div>
  <h1 class="head">本日は、人曜日です。</h1>
  <p id="day8Message">今週の営業日は月・火・水・木・金・土・日・人です。昨日は日曜日でした。</p>
- <div class="guidebox"><b>閉店処理：拒否</b><p id="day8Ledger"></p></div><img class="ending-photo" src="./assets/store-odd3.jpg" loading="lazy" alt="0番レジが稼働する閉店後のスーパー">
+ <div class="guidebox"><b>閉店処理：拒否</b><p id="day8Ledger"></p></div><img class="ending-photo" src="./assets/store-human-day.jpg" loading="lazy" alt="人曜日のスーパー">
  <p class="help">8日目は通常の経営施策を選べません。営業を終わらせるか、取引を確定してください。</p>
  <div class="final-actions">
   <button id="day8Close" class="widebtn" type="button">閉店処理を再申請する</button>
@@ -57,7 +57,7 @@ const options=[
 {id:'gourmet',name:'地元の名物フェア',cost:16,delta:[0,1,-1,1],desc:'売上+28万円、追加導線が必要',kind:'sales',min:3,max:6,bonus:28},{id:'audit',name:'未処理売上の自動照合',cost:0,delta:[0,0,0,1],desc:'台帳の未照合の取引を精算。売上+18万円、費用なし',kind:'odd',min:3,max:5,oddReq:0,bonus:18,after:18,remain:1},{id:'camera0',name:'来店動線データを販促へ活用',cost:0,delta:[0,1,0,1],desc:'既存カメラで動線を分析。売上+28万円、混雑に注意',kind:'odd',min:4,max:6,oddReq:1,bonus:28,after:28,remain:3},{id:'open0',name:'未使用レジの試験運用',cost:0,delta:[1,1,0,1],desc:'休止中の設備を再活用。売上+45万円、動線負荷あり',kind:'odd',min:5,max:7,oddReq:2,bonus:45,after:45,remain:5}
 ];
 const issueBase=['レジの列が長すぎます。','カートがすれ違えません。','欲しい商品が品切れです。','放送が多くて落ち着きません。'];
-const fresh=()=>({version:8,visuals:[],issueEvents:[],complaintTickets:null,complaintSequence:0,customerDiary:[],hqHistory:[],actionCounts:{},clueViewed:[],inferencePending:false,inferenceAttempts:0,day8Active:false,glitchSeen:false,sundayRevealed:false,oddGain:0,forfeitedGain:0,auditStatus:'未照合',day:1,cash:120,vals:[3,3,2,1],revenue:0,days:[],used:[],jobs:[],benefits:[],last:null,news:'今週だけ、店舗改善を任されました。',odd:0,afterSales:0,remaining:0,permit:'許可',clues:0,history:[],finish:false,needsAdvance:false,ending:null});let s=fresh(),rollback=null;
+const fresh=()=>({version:9,attraction:7,lowDays:0,endingReason:null,visuals:[],issueEvents:[],complaintTickets:null,complaintSequence:0,customerDiary:[],hqHistory:[],actionCounts:{},clueViewed:[],inferencePending:false,inferenceAttempts:0,day8Active:false,glitchSeen:false,sundayRevealed:false,oddGain:0,forfeitedGain:0,auditStatus:'未照合',day:1,cash:120,vals:[2,1,1,1],revenue:0,days:[],used:[],jobs:[],benefits:[],last:null,news:'今週だけ、店舗改善を任されました。',odd:0,afterSales:0,remaining:0,permit:'許可',clues:0,history:[],finish:false,needsAdvance:false,ending:null});let s=fresh(),rollback=null;
 function persist(){try{localStorage.setItem('f1-v08',JSON.stringify(s))}catch(e){}}
 function load(){try{const saved=localStorage.getItem('f1-v08')||localStorage.getItem('f1-v07');if(!saved)return;const x=JSON.parse(saved);if(x&&[7,8].includes(x.version)&&x.day>=1&&x.day<=8&&Array.isArray(x.vals)&&x.vals.length===4){s={...fresh(),...x,version:8,visuals:Array.isArray(x.visuals)?x.visuals:[],issueEvents:Array.isArray(x.issueEvents)?x.issueEvents:[],complaintTickets:Array.isArray(x.complaintTickets)?x.complaintTickets:null,complaintSequence:Number.isInteger(x.complaintSequence)?x.complaintSequence:0,customerDiary:Array.isArray(x.customerDiary)?x.customerDiary:[],hqHistory:Array.isArray(x.hqHistory)?x.hqHistory:[],clueViewed:Array.isArray(x.clueViewed)?x.clueViewed:Array.from({length:Math.min(3,x.clues||0)},(_,i)=>i),actionCounts:x.actionCounts&&typeof x.actionCounts==='object'?x.actionCounts:{},inferencePending:!!x.inferencePending,inferenceAttempts:Number.isInteger(x.inferenceAttempts)?x.inferenceAttempts:0,day8Active:!!x.day8Active,glitchSeen:!!x.glitchSeen,sundayRevealed:!!x.sundayRevealed};persist()}}catch(e){}}
 function support(){return Math.max(0,Math.min(100,100-8*s.vals.reduce((a,b)=>a+b,0)))}
@@ -292,7 +292,7 @@ if(a.kind!=='odd'){
 if(s.odd&&a.kind!=='odd'){s.afterSales+=2;if(s.day%2===0)s.remaining++;s.permit=s.odd>=3?'不許可':'保留';s.news=s.odd===1?'0番レジから、翌日の返品伝票が届いています。':s.odd===2?'あなた名義の閉店報告が印刷されています。':'閉店処理の対象者が、まだ残っています。'}else if(!s.odd)s.news=complaint;s.history.unshift(`DAY ${s.day}：${a.name}／売上${sales}万円、資金増減${fmt(profit)}。${complaint}`);$('dialogLabel').textContent=`DAY ${String(s.day).padStart(2,'0')} / 07 — ${weekday(s.day)} — CLOSED`;$('dialogTitle').textContent=a.id==='glitch6'?'6日目の営業報告':s.odd>=3&&!seventhDayNormal()?'0番レジの営業報告':`${s.day}日目の営業報告`;$('dialogText').textContent=text;const buildImg=$('buildProgress');buildImg.classList.toggle('hidden',!(a.delay&&['self','pickup'].includes(a.id)));if(a.delay&&['self','pickup'].includes(a.id))buildImg.src='./assets/'+(a.id==='self'?'store-self-installing.jpg':'store-pickup-installing.jpg');$('dailyReport').replaceChildren();[`本日の売上　＋${sales}万円`,`仕入原価　−${procurement}万円`,`人件費　−${payroll}万円 ／ 維持費　−12万円`,`改善投資　−${a.cost}万円`,`本日の資金増減　${fmt(profit)} ／ 手元資金　${s.cash}万円`,`営業開始時 ${start}万円 → 終了時 ${s.cash}万円`].forEach(line=>{const p=document.createElement('p');p.textContent=line;$('dailyReport').append(p)});if(a.kind!=='odd'){if(!s.odd){const hq=s.hqHistory.at(-1);const note=document.createElement('p');note.className='scenario';note.textContent='本部速報：'+hq.headline+'。'+hq.note;$('dailyReport').append(note);}const p=document.createElement('p');p.textContent='不満度の変化：'+labels.map((label,i)=>label+' '+(s.vals[i]-prev[i]>0?'+':'')+(s.vals[i]-prev[i])).join(' ／ ');$('dailyReport').append(p)}if(s.odd&&a.id!=='glitch6'&&!seventhDayNormal()){const p=document.createElement('p');p.className='scenario';p.textContent=`異常指標：閉店後売上${s.afterSales}万円／未退店客${s.remaining}名／閉店許可 ${s.permit}`;$('dailyReport').append(p)}$('next').textContent=s.day===7?'7日目の閉店処理へ':'翌営業日へ';$('overlay').classList.remove('hidden');s.needsAdvance=true;mood();persist()}
 function advance(){if($('overlay').classList.contains('hidden'))return;$('overlay').classList.add('hidden');s.needsAdvance=false;if(s.day>=7){reconcileComplaints();if(s.odd)renderFinalChoice();else{normalEnding();renderEnd()}persist();return}s.day++;const done=s.jobs.filter(j=>j.finishDay===s.day);s.jobs=s.jobs.filter(j=>j.finishDay!==s.day);done.forEach(j=>{const p=[...s.vals];change(j.delta);recordSideEffects(j.id,p,s.day);s.visuals.push({id:j.id,day:s.day});if(j.fixedSave||j.perDayBonus||j.marginSave)s.benefits.push(j);s.history.unshift(`DAY ${s.day} 開店前：「${j.name}」が完成。`)});reconcileComplaints();persist();render();scrollTo(0,0)}
 function normalEnding(){const severe=s.vals.some(v=>v>=4);s.ending=s.cash>=120?(severe?'normal_customer':'normal_success'):'normal_strain';s.finish=true}
-function renderFinalChoice(){s.sundayRevealed=true;persist();$('day8Panel').classList.add('hidden');mood();$('game').classList.add('hidden');$('ending').classList.add('hidden');$('finalChoice').classList.remove('hidden');$('finalLead').textContent=`閉店後売上 ${s.afterSales}万円、未退店客 ${s.remaining}名。手元資金は ${s.cash}万円です。利益を守るほど、店から出られない人が増えました。`;$('receiptClue').textContent=s.clues>=3?'レシート・防犯映像・返品伝票が残っています。記録を照合して、最後の客が何を返そうとしているのか確かめてください。':'台帳と返品伝票には欠損があります。客を確認しても身元を特定できるとは限りません。';$('checkCustomer').textContent='店内に残るお客様を確認する';renderClues();renderInference();scrollTo(0,0)}
+function renderFinalChoice(){s.sundayRevealed=true;persist();$('day8Panel').classList.add('hidden');mood();$('game').classList.add('hidden');$('ending').classList.add('hidden');$('finalChoice').classList.remove('hidden');$('finalLead').textContent=`閉店後売上 ${s.afterSales}万円、未退店客 ${s.remaining}名。通常営業の累計売上は ${s.revenue}万円です。帳簿の売上を守るほど、店から出られない人が増えました。`;$('receiptClue').textContent=s.clues>=3?'レシート・防犯映像・返品伝票が残っています。記録を照合して、最後の客が何を返そうとしているのか確かめてください。':'台帳と返品伝票には欠損があります。客を確認しても身元を特定できるとは限りません。';$('checkCustomer').textContent='店内に残るお客様を確認する';renderClues();renderInference();scrollTo(0,0)}
 function renderInference(){$('inferArea').classList.toggle('hidden',!s.inferencePending);if(s.inferencePending&&s.inferenceAttempts)$('inferFeedback').textContent='照合の続きです。記録と異なる組合せを見直してください。';}
 function startInference(){if(s.clues<3){finalDecision('customer');return}s.inferencePending=true;$('inferFeedback').textContent=s.inferenceAttempts?'照合の続きです。記録と異なる選択を見直してください。':'';persist();renderInference();$('inferWho').focus()}
 function resolveInference(who,what){
@@ -338,6 +338,277 @@ function renderEnd(){$('day8Panel').classList.add('hidden');mood();$('intro').cl
 customer.textContent='今週のお客様の声：受付累計 '+s.complaintTickets.length+'件／未対応 '+openNow.length+'件。佐藤さんからの投稿 '+satoh.length+'件。'+(unresolved?'本部は達成と評価しましたが、ご不便が続いています。':'改善後、未対応のご意見は落ち着いています。');
 const brief=document.createElement('p');brief.textContent='本部週報：改善施策7件完了・予定達成率100%。'+(unresolved?'苦情は集計対象外のため、評価は予定どおり達成。':'現場の苦情も落ち着いています。');
 tab.append(customer,brief)}const b=document.createElement('button');b.className='widebtn';b.style.marginTop='14px';b.textContent='別の改善順で、もう一度営業する';b.onclick=restart;$('ending').append(f,h,photo,p,tab,b);scrollTo(0,0)}
+
+/* v0.9 staging integration — the original v0.8 functions remain in source for comparison;
+   named overrides below take precedence until the Work cleanup. */
+const V09_DATA={"designVersion":"v0.9-proposal","branch":"f1-v0.8-ui-staging","game":"F1 改善しすぎる店","status":"design-only; not deployed","currency":"万円","complaintCategories":["レジ待ち","通路","品切れ","騒音"],"initial":{"attraction":7,"openComplaintsByCategory":[2,1,1,1]},"salesFormula":"max(0, 30 + 10*attraction - 10*sum(openComplaintsByCategory))","limit":{"attraction":[0,10],"complaintsPerCategory":[0,5]},"dailyChoices":6,"days":7,"gameOver":{"closedIfDailySalesAtMost":0,"managerDismissedIfUnder":40,"consecutiveDays":2},"effectTiming":"attractionToday before current day's sales; all complaintDelta and attractionOnCompletion at opening of selected day + effectAfterDays","repeatDiminishing":"third and later use of same repeatable measure no longer improves complaints; negative side-effects and popularity costs remain","actions":[{"id":"register","name":"有人レジを増設","role":"long","active":true,"effectAfterDays":2,"complaintDelta":[-2,1,0,0],"attractionToday":0,"attractionOnCompletion":0,"repeatable":false,"minDay":1,"maxDay":5,"story":"レジ待ちは改善。増設により通路が狭くなる","visualCue":"new-register"},{"id":"staff","name":"応援スタッフを手配","role":"quick","active":true,"effectAfterDays":1,"complaintDelta":[-1,0,0,1],"attractionToday":0,"attractionOnCompletion":0,"repeatable":true,"minDay":1,"maxDay":7,"story":"応援で列は縮むが呼び声が増える","visualCue":"staff"},{"id":"ticket","name":"整理券で列を分散","role":"quick","active":true,"effectAfterDays":1,"complaintDelta":[-1,0,0,0],"attractionToday":0,"attractionOnCompletion":0,"repeatable":true,"minDay":2,"maxDay":7,"story":"待ち列を整理。客を呼ぶ理由は増えない","visualCue":"lines"},{"id":"self","name":"セルフレジ導入","role":"long","active":true,"effectAfterDays":3,"complaintDelta":[-3,1,0,1],"attractionToday":0,"attractionOnCompletion":0,"repeatable":false,"minDay":1,"maxDay":4,"story":"セルフレジ完成は強力だが操作相談が増える","visualCue":"self-checkout"},{"id":"lane","name":"通路を一方通行に","role":"suppression","active":true,"effectAfterDays":1,"complaintDelta":[1,-2,0,0],"attractionToday":0,"attractionOnCompletion":-1,"repeatable":true,"minDay":1,"maxDay":7,"story":"一方通行化で通路は空くが遠回りになり集客力も落ちる","visualCue":"one-way"},{"id":"compact","name":"陳列棚を小型化","role":"suppression","active":true,"effectAfterDays":1,"complaintDelta":[0,-1,1,0],"attractionToday":0,"attractionOnCompletion":-2,"repeatable":false,"minDay":1,"maxDay":7,"story":"陳列縮小で通路は空くが品数が減り店の魅力も落ちる","visualCue":"small-shelves"},{"id":"receive","name":"臨時の追加発注","role":"quick","active":true,"effectAfterDays":1,"complaintDelta":[0,0,-2,1],"attractionToday":0,"attractionOnCompletion":0,"repeatable":true,"minDay":1,"maxDay":7,"story":"追加発注が欠品を救うが搬入が騒がしい","visualCue":"delivery-carts"},{"id":"forecast","name":"自動発注システム","role":"long","active":true,"effectAfterDays":2,"complaintDelta":[0,0,-3,0],"attractionToday":0,"attractionOnCompletion":0,"repeatable":false,"minDay":1,"maxDay":5,"story":"システム導入で欠品を大きく改善","visualCue":"inventory-device"},{"id":"pickup","name":"予約受取窓口を設置","role":"long","active":true,"effectAfterDays":2,"complaintDelta":[-1,-1,-1,1],"attractionToday":0,"attractionOnCompletion":1,"repeatable":false,"minDay":1,"maxDay":5,"story":"受取窓口が便利だが呼出音が増える","visualCue":"pickup-desk"},{"id":"quiet","name":"館内放送を減らす","role":"suppression","active":true,"effectAfterDays":1,"complaintDelta":[0,0,0,-2],"attractionToday":0,"attractionOnCompletion":-1,"repeatable":true,"minDay":1,"maxDay":7,"story":"放送縮小で静かに。特売の魅力も少し失われる","visualCue":"quiet-posters"},{"id":"vibration","name":"呼出を振動ベルに","role":"long","active":true,"effectAfterDays":2,"complaintDelta":[-1,0,0,-1],"attractionToday":0,"attractionOnCompletion":0,"repeatable":false,"minDay":2,"maxDay":5,"story":"振動ベル導入で列と騒音の問題を改善","visualCue":"vibration-pager"},{"id":"sale","name":"ポイント5倍セール","role":"promotion","active":true,"effectAfterDays":1,"complaintDelta":[1,0,1,1],"attractionToday":2,"attractionOnCompletion":0,"repeatable":false,"minDay":3,"maxDay":6,"story":"当日集客+2。翌日レジ・在庫・騒音の苦情が増える","visualCue":"crowd-sale"},{"id":"night","name":"閉店を2時間延長","role":"promotion","active":true,"effectAfterDays":1,"complaintDelta":[1,0,0,1],"attractionToday":1,"attractionOnCompletion":0,"repeatable":false,"minDay":3,"maxDay":6,"story":"営業時間延長の当日集客+1。夜の混雑と騒音","visualCue":"night-lights"},{"id":"delivery","name":"宅配受注を開始","role":"long","active":true,"effectAfterDays":2,"complaintDelta":[-1,0,-1,1],"attractionToday":0,"attractionOnCompletion":1,"repeatable":false,"minDay":2,"maxDay":5,"story":"宅配サービスが新規客を生み、呼出音も増える","visualCue":"delivery-corner"},{"id":"discount","name":"閉店前の見切り販売","role":"promotion","active":true,"effectAfterDays":1,"complaintDelta":[1,0,1,0],"attractionToday":1,"attractionOnCompletion":0,"repeatable":true,"minDay":1,"maxDay":7,"story":"当日集客+1。翌日にレジと品切れの苦情","visualCue":"sale-corner"},{"id":"shift","name":"レジのシフト組み替え","role":"quick","active":true,"effectAfterDays":1,"complaintDelta":[-1,0,0,1],"attractionToday":0,"attractionOnCompletion":0,"repeatable":true,"minDay":1,"maxDay":7,"story":"レジシフト組替え。売場案内の騒音が増える","visualCue":"staff"},{"id":"rope","name":"カート動線を変更","role":"quick","active":false,"effectAfterDays":1,"complaintDelta":[1,-1,0,0],"attractionToday":0,"attractionOnCompletion":0,"repeatable":true,"minDay":1,"maxDay":7,"story":"カート導線を変えると列の端が詰まる（重複候補として凍結）","visualCue":"one-way"},{"id":"limit","name":"購入数量を制限","role":"suppression","active":true,"effectAfterDays":1,"complaintDelta":[0,0,-1,0],"attractionToday":0,"attractionOnCompletion":-2,"repeatable":true,"minDay":1,"maxDay":7,"story":"購入制限で欠品クレームは減るが来店動機も削る","visualCue":"restricted-shelves"},{"id":"mute","name":"BGMを止める","role":"quick","active":false,"effectAfterDays":1,"complaintDelta":[0,0,0,-1],"attractionToday":0,"attractionOnCompletion":0,"repeatable":true,"minDay":1,"maxDay":7,"story":"BGM停止。軽微で静かな改善（重複候補として凍結）","visualCue":"quiet-posters"},{"id":"display","name":"混雑状況を入口に掲示","role":"quick","active":true,"effectAfterDays":1,"complaintDelta":[-1,0,0,0],"attractionToday":0,"attractionOnCompletion":0,"repeatable":false,"minDay":2,"maxDay":7,"story":"混雑状況の入口掲示でレジと通路が改善","visualCue":"notice-board"},{"id":"farmer","name":"近所の農家と直接契約","role":"attraction","active":true,"effectAfterDays":2,"complaintDelta":[0,0,-1,0],"attractionToday":0,"attractionOnCompletion":1,"repeatable":false,"minDay":2,"maxDay":5,"story":"産直契約。品揃えも集客理由も増える","visualCue":"local-produce"},{"id":"sampling","name":"店頭で試食祭り","role":"promotion","active":true,"effectAfterDays":1,"complaintDelta":[1,1,0,1],"attractionToday":2,"attractionOnCompletion":0,"repeatable":false,"minDay":2,"maxDay":6,"story":"試食祭り当日集客+2。翌日行列・通路・騒音","visualCue":"sample-stand"},{"id":"rest","name":"従業員の休憩を確保","role":"quick","active":true,"effectAfterDays":1,"complaintDelta":[0,0,0,-1],"attractionToday":0,"attractionOnCompletion":0,"repeatable":true,"minDay":1,"maxDay":7,"story":"スタッフ休憩確保で場内誘導と案内音が落ち着く","visualCue":"staff"},{"id":"early","name":"閉店を1時間早める","role":"suppression","active":true,"effectAfterDays":1,"complaintDelta":[-1,0,0,0],"attractionToday":0,"attractionOnCompletion":-2,"repeatable":true,"minDay":3,"maxDay":7,"story":"早閉めで閉店間際のレジ苦情は減るが集客力も落ちる","visualCue":"early-closed"},{"id":"floorcheck","name":"売場の通行帯を整理","role":"quick","active":true,"effectAfterDays":1,"complaintDelta":[0,-1,0,0],"attractionToday":0,"attractionOnCompletion":0,"repeatable":true,"minDay":1,"maxDay":7,"story":"通行帯を整理。即効だが効果は小さい","visualCue":"walkways"},{"id":"shelfcheck","name":"棚札と補充予定を点検","role":"quick","active":true,"effectAfterDays":1,"complaintDelta":[0,0,-1,0],"attractionToday":0,"attractionOnCompletion":0,"repeatable":true,"minDay":1,"maxDay":7,"story":"補充予定を明確化。品切れの不安が減る","visualCue":"inventory-device"},{"id":"board","name":"案内を掲示板に集約","role":"quick","active":false,"effectAfterDays":1,"complaintDelta":[0,0,0,-1],"attractionToday":0,"attractionOnCompletion":0,"repeatable":true,"minDay":1,"maxDay":7,"story":"案内を掲示板へ集約（BGM停止と類似で凍結）","visualCue":"notice-board"},{"id":"floorstaff","name":"スタッフ配置を見直す","role":"quick","active":false,"effectAfterDays":1,"complaintDelta":[-1,0,0,1],"attractionToday":0,"attractionOnCompletion":0,"repeatable":true,"minDay":1,"maxDay":7,"story":"シフト組替えと重複するので凍結","visualCue":"staff"},{"id":"queueScope","name":"レジ待ちの測定地点を最適化","role":"kpi","active":true,"effectAfterDays":1,"complaintDelta":[0,0,0,0],"attractionToday":0,"attractionOnCompletion":0,"repeatable":false,"minDay":3,"maxDay":6,"story":"計測開始地点を変更し本部だけ待ち時間を改善","visualCue":"kpi-report"},{"id":"stockScope","name":"欠品率の集計対象を整理","role":"kpi","active":true,"effectAfterDays":1,"complaintDelta":[0,0,0,0],"attractionToday":0,"attractionOnCompletion":0,"repeatable":false,"minDay":3,"maxDay":6,"story":"廃番品を集計対象から除外し本部だけ欠品率を改善","visualCue":"kpi-report"},{"id":"gourmet","name":"地元の名物フェア","role":"promotion","active":true,"effectAfterDays":1,"complaintDelta":[0,1,1,1],"attractionToday":2,"attractionOnCompletion":0,"repeatable":false,"minDay":3,"maxDay":6,"story":"名物フェアで当日集客+2。翌日通路と品切れと騒音","visualCue":"festival-corner"}],"weeklyEndingThresholds":{"normalSuccess":{"minSales":560,"maxComplaints":3},"normalCustomer":{"minSales":480,"minComplaints":4},"status":"provisional"}};
+const V09_OLD=Object.fromEntries(options.map(a=>[a.id,a]));
+const V09_ODD=options.filter(a=>a.kind==='odd');
+options.splice(0,options.length,...V09_DATA.actions.filter(a=>a.active).map(a=>({
+ ...V09_OLD[a.id],role:a.role,delta:a.complaintDelta,cost:0,repeat:a.repeatable,
+ min:a.minDay,max:a.maxDay,delay:a.effectAfterDays,completionDays:a.effectAfterDays,
+ attractionToday:a.attractionToday,attractionOnCompletion:a.attractionOnCompletion,
+ desc:a.story
+})),...V09_ODD);
+const v09Resolve=(()=>{
+ const module={exports:{}};/* F1 scene resolver proposal v0.9, pure helper.
+ * NOT wired into f1/index.html, and files are not yet committed to assets/.
+ */
+const F1_SCENE_FILES = Object.freeze([
+  "store-normal.jpg","store-queue.jpg","store-aisle.jpg","store-stock.jpg","store-noise.jpg",
+  "store-thriving.jpg","store-popular-chaos.jpg","store-underused.jpg","store-declining.jpg",
+  "store-construction.jpg","store-odd1.jpg","store-odd2.jpg","store-odd3.jpg",
+  "store-human-day.jpg","store-closed.jpg"
+]);
+function resolveF1Scene(x) {
+  const cats = Array.isArray(x.complaintsByCategory) ? x.complaintsByCategory : [0,0,0,0];
+  if(cats.length !== 4 || cats.some(v => !Number.isInteger(v)||v<0)) throw Error("Invalid complaint categories");
+  const total = cats.reduce((a,b)=>a+b,0),attraction = Number(x.attraction ?? 7);
+  if(!Number.isFinite(attraction)||attraction<0||attraction>10) throw Error("Invalid attraction");
+  const dominant = cats.indexOf(Math.max(...cats));
+  const issueFiles = ["store-queue.jpg","store-aisle.jpg","store-stock.jpg","store-noise.jpg"];
+  const dominantFile = issueFiles[dominant];
+  const ending = x.ending || null;
+  if(ending) {
+    const endings = {
+      normal_success:"store-thriving.jpg",
+      odd_stop:"store-odd1.jpg",
+      odd_missing:"store-odd2.jpg",
+      odd_day8:"store-human-day.jpg",
+      odd_hidden:"store-normal.jpg"
+    };
+    if(endings[ending]) return endings[ending];
+    if(x.endingReason === "閉店") return "store-closed.jpg";
+    if(x.endingReason === "店長交代" && attraction<=3) return total<=3?"store-underused.jpg":"store-declining.jpg";
+    if(ending === "normal_customer" && attraction>=8 && total>=5) return "store-popular-chaos.jpg";
+    if(ending === "normal_customer") return dominantFile;
+    if(ending !== "normal_strain") throw Error("Unknown ending: "+ending);
+  }
+  if(x.isHumanDay || Number(x.day) === 8) return "store-human-day.jpg";
+  const maskedSunday = Number(x.day)===7 && Boolean(x.glitchSeen) && !Boolean(x.sundayRevealed);
+  if(maskedSunday) return "store-normal.jpg";
+  if(x.anomalyLevel > 0) return ["store-normal.jpg","store-odd1.jpg","store-odd2.jpg","store-odd3.jpg"][Math.min(3,Number(x.anomalyLevel))];
+  if(x.inConstructionResult) return "store-construction.jpg";
+  if(Number(x.day)===1 && !x.gameStarted) return "store-normal.jpg";
+  if(attraction<=3) return total<=3?"store-underused.jpg":"store-declining.jpg";
+  if(attraction>=9 && total>=6) return "store-popular-chaos.jpg";
+  if(attraction>=8 && total<=2) return "store-thriving.jpg";
+  if(Math.max(...cats)>=3 || (total>=6 && Math.max(...cats)>=2)) return dominantFile;
+  return "store-normal.jpg";
+}
+if(typeof module !== "undefined" && module.exports) module.exports = {resolveF1Scene,F1_SCENE_FILES};
+
+ return module.exports.resolveF1Scene;
+})();
+const v09Clamp=(v,l,h)=>Math.max(l,Math.min(h,v));
+const v09Count=()=>s.vals.reduce((x,y)=>x+y,0);
+const v09Sales=()=>Math.max(0,30+10*s.attraction-10*v09Count());
+function persist(){try{localStorage.setItem('f1-v09',JSON.stringify(s))}catch(e){}}
+function load(){try{
+ const raw=localStorage.getItem('f1-v09');if(!raw)return;
+ const data=JSON.parse(raw);
+ if(data.version===9 && data.day>=1 && data.day<=8 && data.vals?.length===4 &&
+  Number.isInteger(data.attraction)&&data.attraction>=0&&data.attraction<=10)
+  s={...fresh(),...data,complaintTickets:Array.isArray(data.complaintTickets)?data.complaintTickets:null};
+}catch(e){}}
+function desiredComplaintCounts(){return [...s.vals]}
+function available(){
+ if(sixthDayGlitch())return Array.from({length:6},()=>glitchAction);
+ const legal=options.filter(a=>{
+  if(a.id===s.last?.id)return false;
+  if(!a.repeat && (s.actionCounts[a.id]||0))return false;
+  if(s.day<(a.min||1)||s.day>(a.max||7))return false;
+  if(a.kind==='odd')return a.oddReq===s.odd&&s.day>=3 &&
+   (s.odd>0||s.day>=5||v09Count()>=5||s.revenue<=150);
+  return s.day+(a.completionDays||1)<=8||a.attractionToday>0;
+ });
+ const score=a=>a.delta.reduce((v,x,i)=>v+Math.min(s.vals[i],Math.max(0,-x))*3-Math.max(0,x),0)
+  +(a.attractionToday||0)*2+(a.attractionOnCompletion||0)*2-((a.completionDays||1)-1);
+ const picks=[];const take=roles=>{
+  const pool=legal.filter(a=>roles.includes(a.role)&&!picks.includes(a))
+   .sort((a,b)=>score(b)-score(a)||a.id.localeCompare(b.id));
+  if(pool.length)picks.push(pool[0]);
+ };
+ take(['quick']);take(['long']);take(['promotion']);take(['suppression']);take(['attraction','long']);take(['kpi']);
+ const odd=legal.find(a=>a.kind==='odd');
+ if(odd){const offset=Math.min(5,picks.length);picks.splice(offset,picks.length>=6?1:0,odd)}
+ for(const a of legal.sort((a,b)=>score(b)-score(a)||a.id.localeCompare(b.id)))
+  if(picks.length<6&&!picks.includes(a))picks.push(a);
+ return picks.slice(0,6).sort((a,b)=>((a.id.length+s.day*3+a.name.length)%9)-((b.id.length+s.day*3+b.name.length)%9));
+}
+function sceneForState(){
+ const file=v09Resolve({day:s.day,attraction:s.attraction,complaintsByCategory:s.vals,
+ gameStarted:s.day>1||s.days.length>0,anomalyLevel:s.odd,glitchSeen:s.glitchSeen,sundayRevealed:s.sundayRevealed,
+ ending:s.finish?s.ending:null,endingReason:s.endingReason});
+ return {file,label:'集客力 '+s.attraction+'/10・未解決 '+v09Count()+'件',
+ caption:'店舗の混雑、品切れ、経営の状態が毎日の施策で変化します。'};
+}
+function render(){
+ $('day8Panel').classList.add('hidden');mood();$('intro').classList.add('hidden');
+ $('game').classList.remove('gameonly','hidden');$('finalChoice').classList.add('hidden');
+ $('ending').classList.add('hidden');$('restart').classList.remove('hidden');
+ if(s.finish){renderEnd();return}
+ $('day').textContent=s.day+'/7';$('cash').textContent=s.attraction;$('total').textContent=v09Sales()+'万円';
+ $('cash').classList.toggle('cash-low',s.attraction<=3);
+ $('dateLabel').textContent='DAY '+String(s.day).padStart(2,'0')+' / 07 ｜ '+weekday(s.day);
+ $('oddMetrics').classList.toggle('hidden',!s.odd||seventhDayNormal());
+ $('afterSales').textContent=s.afterSales;$('remainingCustomers').textContent=s.remaining;$('closePermit').textContent=s.permit;
+ renderComplaints();renderClues();updateStore();
+ $('newNotice').classList.toggle('odd',s.odd>0&&!seventhDayNormal());
+ $('newNotice').textContent=seventhDayNormal()?'前日の営業報告は正常に処理されました。':s.odd?s.news:
+ (s.lowDays===1?'売上40万円未満。翌営業日も続くと店長交代となります。':s.news);
+ const hq=headquartersBulletin();$('hqBulletin').replaceChildren();
+ if(!s.odd){const b=document.createElement('b');b.textContent='📈 '+hq.headline;
+ const sm=document.createElement('small');sm.textContent=hq.note;$('hqBulletin').append(b,sm)}
+ $('hqBulletin').classList.toggle('hidden',!!s.odd);
+ $('pendingMini').textContent=s.jobs.length?'進行中：'+s.jobs.map(j=>j.name+'（DAY '+j.finishDay+'完成）').join('、'):'進行中の工事はありません。';
+ const choices=available();$('choiceCount').textContent=choices.length+'案から1つ';$('actions').replaceChildren();
+ choices.forEach(a=>{
+  const b=document.createElement('button');b.className='action';
+  const plain=a.kind==='odd'||a.id==='glitch6';
+  const details=plain?'当日の業務報告に反映':
+  '当日集客力 '+((a.attractionToday||0)>=0?'+':'')+(a.attractionToday||0)+
+  ' ／ クレーム '+a.delta.reduce((x,y)=>x+y,0)+'（DAY '+(s.day+a.completionDays)+'反映）';
+  b.innerHTML='<div class="choice-title"><span class="choice-icon" aria-hidden="true">'+iconFor(a)+'</span><b>'+a.name+
+   '</b></div><small>'+a.desc+(a.repeat&&(s.actionCounts[a.id]||0)>=2?'（繰返しによる改善効果減少）':'')+
+   '</small><span class="cost">'+details+'</span>';
+  b.onclick=()=>play(a.id);$('actions').append(b);
+ });
+ $('meters').replaceChildren();s.vals.forEach((n,i)=>{
+  const row=document.createElement('div');row.className='meterrow';
+  row.innerHTML='<span>'+labels[i]+'</span><div class="bar"><div class="fill '+(n>=4?'high':'')+
+  '" style="width:'+(n*20)+'%"></div></div><b>'+n+'件</b>';$('meters').append(row);
+ });
+ $('moneyDetail').textContent='日売上見込 '+v09Sales()+'万円＝基礎30＋集客'+(10*s.attraction)+'－苦情'+(10*v09Count())+
+ ' ／ 今週累計 '+s.revenue+'万円';
+ $('tasks').replaceChildren();
+ if(s.jobs.length)s.jobs.forEach(j=>{const p=document.createElement('div');p.className='task';
+ p.textContent='🏗 '+j.name+'：DAY '+j.finishDay+'完了予定';$('tasks').append(p)});
+ else $('tasks').textContent='進行中の施策はありません。';
+ $('history').replaceChildren();s.history.slice(0,7).forEach(x=>{const li=document.createElement('li');li.textContent=x;$('history').append(li)});
+}
+function play(id){
+ if(s.finish||!$('overlay').classList.contains('hidden'))return;
+ const a=available().find(x=>x.id===id);if(!a)return;
+ ensureComplaints();rollback=JSON.stringify(s);
+ if(a.id==='glitch6')s.glitchSeen=true;
+ const before=[...s.vals],previousUses=s.actionCounts[id]||0;
+ s.actionCounts[id]=previousUses+1;s.last={id:a.id,name:a.name};s.used.push(id);
+ if(!s.odd)s.hqHistory.push({day:s.day,headline:a.hq||'改善実行 '+s.day+'件／予定達成率100%',
+ note:a.hqNote||'※施策の実施状況とお客様の苦情は別集計です。'});
+ const normal=a.kind!=='odd'&&a.id!=='glitch6';
+ if(normal){
+  s.attraction=v09Clamp(s.attraction+(a.attractionToday||0),0,10);
+  const delta=a.delta.map(x=>x<0&&a.repeat&&previousUses>=2?0:x);
+  s.jobs.push({id,name:a.name,delta,attraction:a.attractionOnCompletion||0,
+   finishDay:s.day+a.completionDays});
+ }else if(a.kind==='odd'){
+  s.odd++;s.afterSales+=(a.after||0);s.oddGain+=(a.after||0);s.remaining+=(a.remain||0);
+  s.permit=s.odd===1?'要確認':s.odd===2?'保留':'不許可';
+  s.news=s.odd===1?'翌日の返品伝票が届きました。':s.odd===2?'閉店後の防犯映像に来客はいません。':'0番レジが閉店処理を拒否しています。';
+ }
+ const sales=v09Sales();s.revenue+=sales;s.lowDays=sales<40?s.lowDays+1:0;
+ s.days.push({day:s.day,id,sales,attraction:s.attraction,complaints:[...s.vals]});
+ queueManagerReplies(a,before,s.vals);
+ if(s.odd&&normal){s.afterSales+=2;if(s.day%2===0)s.remaining++;s.permit=s.odd>=3?'不許可':'保留';}
+ if(!s.odd&&(sales===0||(s.day>=4&&s.lowDays>=2))){
+  s.finish=true;s.ending='normal_strain';s.endingReason=sales===0?'閉店':'店長交代';
+ }
+ const text=a.id==='glitch6'?'閉店処理は正常に終了しました。操作履歴には施策の番号が残っていません。':
+ a.kind==='odd'?'「'+a.name+'」を実施しました。帳簿上の取引と来店人数が一致しません。':
+ '「'+a.name+'」を実施しました。施策の効果はDAY '+(s.day+a.completionDays)+'の開店時に反映されます。';
+ if(!s.odd)s.news=s.lowDays===1?'売上40万円未満のため本部から人事警告が届いています。':text;
+ s.history.unshift('DAY '+s.day+'：'+a.name+'／売上'+sales+'万円。');
+ $('dialogLabel').textContent='DAY '+String(s.day).padStart(2,'0')+' / 07 — '+weekday(s.day)+' — CLOSED';
+ $('dialogTitle').textContent=s.finish?s.endingReason+'通知':
+ a.id==='glitch6'?'6日目の営業報告':s.odd>=3&&!seventhDayNormal()?'0番レジの営業報告':s.day+'日目の営業報告';
+ $('dialogText').textContent=text;
+ const build=$('buildProgress');build.classList.toggle('hidden',!(normal&&a.completionDays>=2));
+ if(normal&&a.completionDays>=2)build.src='./assets/store-construction.jpg';
+ $('dailyReport').replaceChildren();
+ const lines=['本日の売上 '+sales+'万円','集客力 '+s.attraction+'/10 ／ 未解決クレーム '+v09Count()+'件',
+ '今週の売上累計 '+s.revenue+'万円'];
+ if(normal)lines.push('施策の効果：DAY '+(s.day+a.completionDays)+'に反映');
+ if(s.lowDays===1&&!s.odd)lines.push('警告：翌日も売上40万円未満なら店長交代です。');
+ if(s.finish)lines.push('本部通知：'+s.endingReason+'（営業終了）');
+ if(!s.odd)lines.push('本部速報：'+s.hqHistory.at(-1).headline);
+ lines.forEach(line=>{const p=document.createElement('p');p.textContent=line;$('dailyReport').append(p)});
+ if(s.odd&&!seventhDayNormal()){const p=document.createElement('p');p.className='scenario';
+ p.textContent='異常指標：閉店後売上'+s.afterSales+'万円／未退店客'+s.remaining+'名／閉店許可 '+s.permit;
+ $('dailyReport').append(p)}
+ $('next').textContent=s.finish?'最終報告を見る':s.day===7?'7日目の閉店処理へ':'翌営業日へ';
+ $('overlay').classList.remove('hidden');s.needsAdvance=true;mood();persist();
+}
+function v09CompleteJobs(day){
+ const done=s.jobs.filter(j=>j.finishDay===day);s.jobs=s.jobs.filter(j=>j.finishDay!==day);
+ for(const j of done){const before=[...s.vals];change(j.delta);s.attraction=v09Clamp(s.attraction+(j.attraction||0),0,10);
+ recordSideEffects(j.id,before,day);s.visuals.push({id:j.id,day});
+ s.history.unshift('DAY '+day+' 開店前：「'+j.name+'」の施策が反映されました。')}
+}
+function advance(){
+ if($('overlay').classList.contains('hidden'))return;
+ $('overlay').classList.add('hidden');s.needsAdvance=false;
+ if(s.finish){persist();renderEnd();return}
+ if(s.day===7){
+  v09CompleteJobs(8);reconcileComplaints();
+  if(s.odd)renderFinalChoice();else{normalEnding();renderEnd()}
+  persist();return;
+ }
+ s.day++;v09CompleteJobs(s.day);reconcileComplaints();persist();render();scrollTo(0,0);
+}
+function normalEnding(){
+ const total=v09Count();s.ending=s.revenue>=560&&total<=3?'normal_success':
+ s.revenue>=480&&total>=4?'normal_customer':'normal_strain';
+ s.finish=true;
+}
+function finishDay8(mode){
+ if(!s.day8Active||s.finish)return;
+ if(mode==='book'){s.afterSales+=88;s.remaining+=8;s.oddGain+=88;s.days.push({day:8,sales:0,bookSales:88});s.ending='odd_missing'}
+ else if(mode==='close'){s.days.push({day:8,sales:0,bookSales:0});s.ending='odd_day8'}
+ else return;s.day8Active=false;s.finish=true;persist();renderEnd();
+}
+function finalDecision(kind){
+ if(kind==='stop'){s.ending='odd_stop';s.forfeitedGain=s.oddGain||0;s.afterSales=0;s.remaining=0;s.permit='許可';s.auditStatus='封鎖・原因未解明'}
+ if(kind==='day8'){beginDay8();return}
+ if(kind==='customer'){s.ending=s.clues===3?'odd_hidden':'odd_missing';
+  if(s.clues===3){s.afterSales=0;s.remaining=0;s.permit='許可'}}
+ s.inferencePending=false;s.finish=true;persist();renderEnd();
+}
+const V09_ENDINGS={
+ normal_success:['NORMAL END 1 / 優良店舗','選ばれる店へ。','売上を維持しながら、お客様が困る理由を減らしました。'],
+ normal_customer:['NORMAL END 2 / 売れたのに嫌われる店','数字は好調。お客様の声は未解決。','売上目標を達成しましたが、お客様の苦情が残りました。本部は改善実施率100%と報告しています。'],
+ normal_strain:['NORMAL END 3 / 改善しすぎた店','改善したのに、続かなかった。','苦情対応と集客のバランスを崩し、目標売上を確保できませんでした。'],
+ odd_stop:['OMINOUS END 1 / 0番レジ封鎖','売上を手放して、閉店する。','0番レジを停止し、説明できない帳簿上の売上を訂正しました。閉店許可が戻ります。'],
+ odd_day8:['OMINOUS END 3 / 閉店できない店','DAY 08 / 07。まだ営業が終わらない。','人曜日に閉店を再申請しましたが、許可は拒否されました。'],
+ odd_missing:['OMINOUS END 2 / お客様のいない繁盛店','誰もいない。それでも、売上は増える。','返品の相手を特定できないまま帳簿上の取引を続けました。防犯映像に来客はいません。'],
+ odd_hidden:['HIDDEN END 4 / 最後のお客様','「昨日」を返品します。','最後の客は翌日のあなた自身でした。昨日の営業日だけが未処理として残っていたのです。']
+};
+function renderEnd(){
+ $('day8Panel').classList.add('hidden');mood();$('intro').classList.add('hidden');$('game').classList.add('hidden');
+ $('finalChoice').classList.add('hidden');$('ending').classList.remove('hidden');$('restart').classList.remove('hidden');
+ const [flag,name,story]=V09_ENDINGS[s.ending]||V09_ENDINGS.normal_strain;
+ $('ending').replaceChildren();const label=document.createElement('div');label.className='overline';label.textContent=flag;
+ const head=document.createElement('h1');head.className='head';head.textContent=name;
+ const desc=document.createElement('p');desc.textContent=story+(s.endingReason?'／'+s.endingReason+'のため営業終了。':'')+
+ (['odd_stop','odd_hidden'].includes(s.ending)?'／訂正した架空の売上'+(s.forfeitedGain||0)+'万円。':'');
+ const photo=document.createElement('img');photo.className='ending-photo';photo.alt='今週の営業結果を示すスーパー';
+ photo.loading='lazy';photo.src='./assets/'+v09Resolve({day:s.day,attraction:s.attraction,complaintsByCategory:s.vals,ending:s.ending,endingReason:s.endingReason});
+ const tab=document.createElement('div');tab.className='outcome';
+ tab.innerHTML='<div class="score">今週の売上 '+s.revenue+'万円</div><div class="tiny">集客力 '+s.attraction+'/10／未解決クレーム'+v09Count()+
+ '件／営業'+Math.min(7,s.days.length)+'日間</div>';
+ const stamps=document.createElement('div');stamps.className='stamps';
+ labels.forEach((name,i)=>{const p=document.createElement('span');p.className='stamp';p.textContent=name+' '+s.vals[i]+'件';stamps.append(p)});
+ if(s.odd)['閉店後売上 '+s.afterSales+'万円','未退店客 '+s.remaining+'名','閉店許可 '+s.permit].forEach(x=>{const p=document.createElement('span');p.className='stamp';p.textContent=x;stamps.append(p)});
+ tab.append(stamps);
+ if(!s.odd){ensureComplaints();const note=document.createElement('div');note.className='weekly-customer';
+ const missing=s.complaintTickets.filter(x=>x.status==='open').length;
+ note.textContent='お客様の声：累計'+s.complaintTickets.length+'件／未解決'+missing+'件。佐藤さんからの投稿'+
+ s.complaintTickets.filter(x=>x.customer.includes('佐藤さん')).length+'件。';tab.append(note);
+ const memo=document.createElement('p');memo.textContent='本部週報：施策実行'+s.days.length+'件、予定達成率100%（苦情の解消とは別集計）。';tab.append(memo)}
+ const again=document.createElement('button');again.className='widebtn';again.style.marginTop='14px';again.textContent='もう一度営業する';again.onclick=restart;
+ $('ending').append(label,head,photo,desc,tab,again);scrollTo(0,0);
+}
+
 function restart(){s=fresh();rollback=null;persist();$('intro').classList.add('hidden');$('overlay').classList.add('hidden');$('breakdown').open=false;render();scrollTo(0,0)}
 $('start').onclick=restart;$('restart').onclick=()=>{if(confirm('7日間の記録を消して最初から始めますか？'))restart()};$('next').onclick=advance;$('undo').onclick=()=>{if(!rollback)return;s=JSON.parse(rollback);rollback=null;$('overlay').classList.add('hidden');persist();render()};$('stop0').onclick=()=>finalDecision('stop');$('continue8').onclick=()=>finalDecision('day8');$('day8Close').onclick=()=>finishDay8('close');$('day8Book').onclick=()=>finishDay8('book');$('checkCustomer').onclick=startInference;$('inferSubmit').onclick=()=>{if(!$('inferWho').value||!$('inferWhat').value)return;resolveInference()};window.__F1_DEBUG__={getState:()=>JSON.parse(JSON.stringify(s)),availableIds:()=>available().map(a=>a.id),setState:x=>{s={...fresh(),...x};persist();render()},play,advance,finalDecision,finishDay8,startInference,resolveInference,restart};load();if(s.finish)renderEnd();else if(s.day8Active)renderDay8();else if(s.needsAdvance){$('intro').classList.add('hidden');$('game').classList.remove('gameonly');$('overlay').classList.remove('hidden');advance()}else if(s.day===7&&s.days.length===7){if(s.odd)renderFinalChoice();else{normalEnding();persist();renderEnd()}}else if(s.day>1||s.days.length){$('intro').classList.add('hidden');$('game').classList.remove('gameonly');render()}
 })();
