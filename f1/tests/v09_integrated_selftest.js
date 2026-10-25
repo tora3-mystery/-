@@ -123,5 +123,20 @@ for(const [name,route,end,action] of oddRoutes){
  assert.equal(env.api.getState().ending,end,name+' ending');
  assert.equal(env.api.getState().finish,true,name+' completion');
 }
+// All fifteen missing-image fallbacks must yield valid, distinguishable inline SVG URLs.
+const sceneNames=['normal','queue','aisle','stock','noise','thriving','popular-chaos','underused','declining',
+ 'construction','odd1','odd2','odd3','human-day','closed'];
+const illustrations=new Set();
+for(const name of sceneNames){
+ const uri=env.api.sceneFallback('store-'+name+'.jpg');
+ assert(uri.startsWith('data:image/svg+xml;charset=utf-8,'),'scene '+name+' must be SVG data URI');
+ const svg=decodeURIComponent(uri.slice(uri.indexOf(',')+1));
+ assert(svg.startsWith('<svg xmlns="http://www.w3.org/2000/svg"'),'scene '+name+' svg root');
+ assert(svg.includes('viewBox="0 0 1100 619"'),'scene '+name+' standard resolution');
+ assert(svg.includes('試作イラスト'),'scene '+name+' provisional asset disclosure');
+ illustrations.add(svg);
+}
+assert.equal(illustrations.size,15,'each scene has distinct fallback artwork');
+
 console.log('PASS F1 v0.9 integrated DOM-mock routes: 3 normal + 2 early losses + 4 anomaly endings; save-resume and Saturday sixfold controls.');
 console.log('NOT TESTED: actual browsers, visual responsive layout, real image bytes/load, GitHub Pages deployment.');
