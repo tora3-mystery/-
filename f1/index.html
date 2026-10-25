@@ -170,12 +170,14 @@ function ensureComplaints(){
 }
 function issueReply(ticket,action,before,after){
  const metric=ticket.metric,name=action.name;
- if(action.kind==='kpi')return 'ご意見ありがとうございます。本日は「'+name+'」を実施しました。計測・集計方法を変更したため、実際の売場の状況は従来どおりです。';
- const delta=after[metric]-before[metric];
- if(action.delay)return 'ご指摘を受け、「'+name+'」に着手しました。工事・システムの反映は後日となります。ご不便をおかけします。';
- if(delta<0)return 'ご意見ありがとうございます。「'+name+'」を実施しました。引き続き、店内の状況を確認します。';
- if(delta>0)return 'ご意見ありがとうございます。「'+name+'」に伴う新たなご不便について、状況を確認しております。';
- return 'ご意見ありがとうございます。「'+name+'」を実施しました。ご指摘の件は引き続き検討しております。';
+ if(action.role==='kpi'||action.kind==='kpi')return 'ご投稿ありがとうございます。「'+name+'」により本部報告の集計条件を変更しました。ただし実際の売場と、今回ご指摘の問題はまだ変わっていません。';
+ if(action.kind==='odd')return 'ご投稿ありがとうございます。店舗の記録を照合しています。通常の売場改善とは別の処理として、本部へ確認中です。';
+ const delta=action.delta?.[metric]||0;
+ const when='DAY '+(s.day+(action.completionDays||1));
+ if(delta<0)return 'ご指摘の件を改善するため「'+name+'」を選択しました。反映予定は'+when+'の開店時です。実際に使いやすくなったか、改めてご確認ください。';
+ if(delta>0)return '「'+name+'」を開始しましたが、ご指摘の箇所に別の負担が生じるおそれがあります。'+when+'の売場を確認します。';
+ if((action.attractionToday||0)>0)return '「'+name+'」で来店客が増える見込みです。ただし、ご指摘の問題を直接改善する施策ではありません。';
+ return '「'+name+'」を実行しましたが、ご指摘の内容は改善対象に含まれていません。引き続き確認します。';
 }
 function queueManagerReplies(action,before,after){
  ensureComplaints();
@@ -298,7 +300,7 @@ function startInference(){if(s.clues<3){finalDecision('customer');return}s.infer
 function resolveInference(who,what){
  const whoVal=who||$('inferWho').value,whatVal=what||$('inferWhat').value;
  if(s.clues>=3&&whoVal==='self'&&whatVal==='yesterday'){
-   s.inferencePending=false;s.ending='odd_hidden';s.forfeitedGain=s.oddGain||0;s.cash-=s.forfeitedGain;s.afterSales=0;s.remaining=0;s.permit='許可';s.auditStatus='復旧・原因照合済み';s.finish=true;persist();renderEnd();return
+   s.inferencePending=false;s.ending='odd_hidden';s.forfeitedGain=s.oddGain||0;/* 架空売上は実売上に加算していない */s.afterSales=0;s.remaining=0;s.permit='許可';s.auditStatus='復旧・原因照合済み';s.finish=true;persist();renderEnd();return
  }
  s.inferenceAttempts=(s.inferenceAttempts||0)+1;
  if(s.inferenceAttempts===1){s.inferencePending=true;$('inferFeedback').textContent='照合不一致：返品申請者と品目の組合せを確認してください。あと1回、再照合できます。';persist();return}
@@ -466,9 +468,12 @@ function render(){
  choices.forEach(a=>{
   const b=document.createElement('button');b.className='action';
   const plain=a.kind==='odd'||a.id==='glitch6';
+  const affected=a.delta.map((x,i)=>x?labels[i]+(x>0?'+':'')+x:'').filter(Boolean).join('・')||'変化なし';
+  const completed=(a.attractionOnCompletion||0);
   const details=plain?'当日の業務報告に反映':
-  '当日集客力 '+((a.attractionToday||0)>=0?'+':'')+(a.attractionToday||0)+
-  ' ／ クレーム '+a.delta.reduce((x,y)=>x+y,0)+'（DAY '+(s.day+a.completionDays)+'反映）';
+  '集客力：当日 '+((a.attractionToday||0)>=0?'+':'')+(a.attractionToday||0)+
+  '／完成時 '+(completed>=0?'+':'')+completed+
+  ' ｜ 苦情：'+affected+' ｜ DAY '+(s.day+a.completionDays)+'反映';
   b.innerHTML='<div class="choice-title"><span class="choice-icon" aria-hidden="true">'+iconFor(a)+'</span><b>'+a.name+
    '</b></div><small>'+a.desc+(a.repeat&&(s.actionCounts[a.id]||0)>=2?'（繰返しによる改善効果減少）':'')+
    '</small><span class="cost">'+details+'</span>';
