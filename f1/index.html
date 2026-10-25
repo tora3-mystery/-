@@ -22,10 +22,11 @@ body.odd-3 .choice-icon{background:#3a4445}
 .day8-weekdays{display:flex;gap:4px;margin:15px 0 10px;align-items:center}.day8-weekdays span{display:grid;place-items:center;flex:1;min-width:0;font-size:14px;font-weight:750;border:1px solid var(--line);background:#243e3c;color:#e7eee9;border-radius:6px;min-height:38px}.day8-weekdays .day8-new{border:2px solid #de9d78;background:#652e36;color:#fff;font-size:17px}
 .return-customer{font-size:11px;font-weight:750;color:var(--muted);margin:9px 0 5px;letter-spacing:.02em}.hq-bulletin{margin:10px 0 3px;padding:9px 11px;border:1px dashed #b7bdb2;border-radius:9px;background:#edf2e9;color:#344839;font-size:12px;line-height:1.5}.hq-bulletin b{display:block;margin-bottom:3px}.hq-bulletin small{display:block;color:#647165}.weekly-customer{border-left:3px solid #7d9487;margin:12px 0 10px;padding:8px 11px;background:#eff2eb;border-radius:0 8px 8px 0;font-size:13px;color:#364b40}
 .complaint-summary{font-size:13px;font-weight:700;margin:8px 0 12px;color:#344b40}.complaint-board{display:grid;gap:10px}.complaint-ticket{padding:12px;border:1px solid #c8c9c0;border-radius:10px;background:#fff}.complaint-ticket-head{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:4px;font-size:12px;color:#626e69}.complaint-ticket-head strong{color:#263e36}.complaint-letter{margin:7px 0;font-size:14px;line-height:1.6;color:#25322e}.complaint-reply{margin-top:8px;padding:9px;border-radius:7px;background:#eff2e9;font-size:12px;line-height:1.65;color:#34483c}.complaint-reply b{display:block;color:#365446;margin-bottom:3px}.complaint-extra{margin:10px 0 3px;font-size:12px}.complaint-extra summary{cursor:pointer;font-weight:650;padding:7px 0}.complaint-extra .complaint-board{margin:7px 0}.complaint-ticket.resolved{opacity:.86}
+.intro-note{border-left:4px solid #315d50;background:#eef3eb;padding:12px 14px;border-radius:0 10px 10px 0;margin:13px 0}.intro-note b{display:block;margin-bottom:5px}.intro-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:12px 0}.intro-grid div{border:1px solid var(--line);border-radius:9px;padding:9px;text-align:center;background:#fff}.intro-grid b{display:block;font-size:18px}.intro-grid small{font-size:10px;color:var(--muted)}.intro-jobs{padding-left:20px;font-size:13px}.intro-actions{display:grid;gap:8px;margin-top:13px}.header-actions{display:flex;gap:7px;flex-wrap:wrap;justify-content:flex-end}@media(max-width:380px){.intro-grid{grid-template-columns:1fr}.intro-grid div{text-align:left}.header-actions{max-width:150px}}
 .store-scene.scene-fallback figcaption{background:#435359;color:#fff4d4}
 .store-scene.scene-fallback::before{content:'試作画像';position:absolute;right:12px;top:14px;z-index:2;background:#f1cf88;color:#2b3a38;font-size:11px;font-weight:700;padding:4px 7px;border-radius:5px}
-</style></head><body><main class="container"><header class="mast"><div class="brand"><span class="brand-icon" id="brandIcon">🛒</span><span id="brandName">まるまるスーパー<br><small class="tiny">お客様改善センター / 研修ゲーム</small></span></div><button id="restart" class="button-quiet hidden">最初から</button></header><div class="version-top"><b>F1 v0.9 PROTOTYPE</b><span>2026-10-25 12:48 JST更新・最終監査候補</span></div>
-<section id="intro" class="focus box"><div class="overline">7 DAYS / SHORT MANAGEMENT PUZZLE</div><h1 class="head">改善しすぎる店</h1><p>お客様のクレームを改善したら、別のクレームが増えた。そんなスーパーの<strong>7営業日だけの店長代理</strong>になりました。</p><div class="start-visual" aria-hidden="true">🏪 ➜ 📣 ➜ 📈</div><div class="guidebox"><b>集客力7、未解決クレーム5件。初日の売上は50万円。</b><p>毎日6つの施策から1つ選びます。日売上（万円）＝30＋集客力×10－未解決クレーム×10。資金管理はありません。</p><p><b>目標：</b>7日間売上を確保しながらクレームを減らしましょう。売上0で閉店、40万円未満が2営業日続くと店長交代です。</p><p>苦情対応で集客力まで落ちることがあります。効果は1〜3営業日後に反映されます。</p></div><p class="tiny">1プレイ約5〜8分／通常3・早期2・不穏4到達結果／通信・ログイン不要</p><button class="widebtn" id="start">営業を始める</button></section>
+</style></head><body><main class="container"><header class="mast"><div class="brand"><span class="brand-icon" id="brandIcon">🛒</span><span id="brandName">まるまるスーパー<br><small class="tiny">お客様改善センター / 研修ゲーム</small></span></div><div class="header-actions"><button id="help" class="button-quiet hidden">遊び方</button><button id="restart" class="button-quiet hidden">最初から</button></div></header><div class="version-top"><b>F1 v0.9 PROTOTYPE</b><span>2026-10-25 13:01 JST更新・最終監査候補</span></div>
+<section id="intro" class="focus box"><div class="overline">月曜日 08:45｜店舗運営本部</div><h1 class="head">改善しすぎる店</h1><div class="intro-note"><b>【業務連絡】店長代理の任命について</b>レジの行列を解消すると通路が狭くなり、品切れを減らすと売場が騒がしくなる。改善の報告は毎日届くのに、苦情だけがなくなりません。店長が一週間不在となるため、本日から7営業日の店舗運営をあなたに任せます。</div><p><strong>本部からの指示は、売上を維持し、お客様の声に対応すること。</strong><br><span class="tiny">※本部は改善施策の実施状況を評価します。売場の状況とは別集計です。</span></p><div class="intro-grid"><div><small>集客力</small><b>7/10</b><small>来店したい理由</small></div><div><small>未解決クレーム</small><b>5件</b><small>レジ・通路・品切れ・騒音</small></div><div><small>日売上見込み</small><b>50万円</b><small>現状のまま営業した場合</small></div></div><h2 style="font-size:17px">仕事は2つだけ</h2><ol class="intro-jobs"><li>毎日、お客様の声を確認する。</li><li>毎日6案から1つ、改善策を選ぶ。</li></ol><div class="guidebox"><b>基本ルール</b><p>施策は1〜3営業日後に反映されることがあります。売上0で閉店、40万円未満が2営業日続くと店長交代です。</p></div><details class="box detail"><summary>操作ガイドを見る（営業はまだ始まりません）</summary><ol class="intro-jobs"><li>投稿内容を読み、店長回答は翌営業日以降に確認します。</li><li>施策カードの当日集客力・反映日・苦情増減を見て1案を選びます。</li><li>営業日報を確認し、「翌営業日へ」で進みます。</li><li>工事や制度変更は完成前でも別の施策を選べます。</li><li>日売上（万円）＝max(0,30＋集客力×10－未解決クレーム×10)。</li><li>進行はこの端末のブラウザに自動保存されます。</li></ol></details><p class="tiny">1プレイ約5〜8分／通常3・早期2・不穏4到達結果／通信・ログイン不要</p><div class="intro-actions"><button class="widebtn" id="start">7日間の店長代理を始める</button><button class="widebtn hidden" id="resume">続きから再開</button><button class="button-quiet hidden" id="startOver">保存記録を消して最初から始める</button><button class="button-quiet hidden" id="backToGame">営業に戻る</button></div></section>
 <div id="game" class="gameonly"><div class="metrics"><div class="stat"><label>営業日</label><strong id="day">1/7</strong></div><div class="stat"><label>集客力</label><strong id="cash">7</strong><small>/10</small></div><div class="stat"><label>日売上見込</label><strong id="total">50万円</strong></div></div><div id="oddMetrics" class="anomaly-grid hidden"><div class="stat"><label>閉店後売上</label><strong id="afterSales">0</strong><small>万円</small></div><div class="stat"><label>未退店客数</label><strong id="remainingCustomers">0</strong><small>名</small></div><div class="stat"><label>閉店許可</label><strong id="closePermit">許可</strong></div></div><div id="oddEvidenceBoard" class="evidence-board hidden" aria-label="内部照合記録"><b>内部照合記録</b><p>受領した記録は、開くと内容を確認できます。</p><div id="oddEvidenceList"></div></div><figure class="store-scene" id="storeScene"><img id="storeImage" alt="スーパーの現在の店内状況を示す画像" src="./assets/store-queue.jpg"><div class="scene-status" id="sceneStatus">営業中の売場</div><div class="scene-markers" id="sceneMarkers"></div><figcaption id="sceneCaption">店内の状態は選んだ施策によって変わります。</figcaption></figure><div class="actions-head"><div><div class="overline" id="dateLabel">DAY 01 / 07</div><h1 class="head" style="font-size:23px">本日の改善判断</h1></div><span class="pill">本日あと1件</span></div><div class="two"><section class="box issue-card"><div class="issue-meta"><span>📮 お客様の声・店長回答一覧</span><span id="issueTag" class="pill urgent">要対応</span></div><div id="issuePerson" class="hidden"></div><div id="issueText" class="hidden"></div><p id="issueReason" class="issue-tail"></p><div id="complaintSummary" class="complaint-summary" aria-live="polite"></div><div id="complaintBoard" class="complaint-board"></div><details id="complaintExtra" class="complaint-extra hidden"><summary id="complaintExtraLabel">ほかのご意見を見る</summary><div id="complaintExtraBody" class="complaint-board"></div></details><details id="complaintArchive" class="complaint-extra"><summary id="complaintArchiveLabel">以前のご意見と店長回答</summary><div id="complaintArchiveBody" class="complaint-board"></div></details><div class="news" id="newNotice"></div><div id="hqBulletin" class="hq-bulletin" aria-live="polite"></div><div class="help" id="pendingMini"></div></section><section class="box"><div class="actions-head"><h2>今日できる対応</h2><span id="choiceCount" class="context">6案から1つ</span></div><div id="actions" class="day-actions"></div><p class="help">選ぶと閉店処理へ。集客力・クレーム・効果発生日を確認してください。同じ施策は何度も繰り返すと効きにくくなります。</p></section></div><details class="box detail" id="breakdown"><summary>詳しく見る：クレーム・工事・売上・履歴</summary><div id="moneyDetail" class="money-note"></div><div id="meters"></div><div id="tasks"></div><div class="guidebox"><b>通常経営の判定</b><p>週売上560万円以上・最終クレーム3件以下で優良店舗。売上480万円以上でも苦情が残れば別の結末です。売上0で閉店、40万円未満が2営業日続くと店長交代。</p></div><div class="overline">最近の動き</div><ul id="history" class="journal"></ul></details></div>
 <section id="finalChoice" class="focus box final-choice hidden" aria-live="polite"><div class="overline">DAY 07 / CLOSING REJECTED</div><h1 class="head">まだ、閉店できません。</h1><p id="finalLead"></p><div class="guidebox"><b>0番レジ 最終処理</b><p>閉店後売上は帳簿上の記録であり、実際の来店客と一致しません。閉店許可には未退店客の照合が必要です。</p><p id="receiptClue"></p></div><div class="evidence-board" id="finalEvidenceBoard"><b>閉店処理時点の照合記録</b><div id="finalEvidenceList"></div></div><div class="final-actions"><button class="widebtn" id="stop0">0番レジを停止する</button><button class="widebtn" id="continue8">営業を継続する</button><button class="widebtn hidden-route" id="checkCustomer">店内に残る客を確認する</button></div><div class="guidebox hidden" id="inferArea" role="group" aria-labelledby="inferTitle"><b id="inferTitle">照合した記録から、最後の客を推理する</b><p>閲覧した記録に基づいて判断してください。確認していない資料は自動で補完されません。</p><label for="inferWho">残っているのは誰？</label><select id="inferWho"><option value="">選んでください</option><option value="clerk">レジ担当者</option><option value="self">未来の自分</option><option value="visitor">通常のお客様</option></select><label for="inferWhat">何を返品したい？</label><select id="inferWhat"><option value="">選んでください</option><option value="receipt">0番のレシート</option><option value="yesterday">昨日</option><option value="sales">閉店後の売上</option></select><button id="inferSubmit" class="widebtn" type="button">照合結果を確定する</button><p id="inferFeedback" role="status" aria-live="polite"></p></div></section>
 <section id="day8Panel" class="focus box hidden" aria-live="polite">
@@ -346,7 +347,7 @@ function iconFor(a){
   return special[a.id]||({queue:'🧾',aisle:'🛒',stock:'📦',noise:'🔉',sales:'🏷️',finance:'📊',staff:'👥',mix:'🧰'})[a.kind]||'📋';
 }
 function change(delta){s.vals=s.vals.map((v,i)=>clamp(v+delta[i]))}
-function renderFinalChoice(){s.sundayRevealed=true;persist();$('day8Panel').classList.add('hidden');mood();$('game').classList.add('hidden');$('ending').classList.add('hidden');$('finalChoice').classList.remove('hidden');$('finalLead').textContent=`閉店後売上 ${s.afterSales}万円、未退店客 ${s.remaining}名。通常営業の累計売上は ${s.revenue}万円です。帳簿の売上を守るほど、店から出られない人が増えました。`;$('receiptClue').textContent=s.clues>=3?'レシート・防犯映像・返品伝票が残っています。記録を照合して、最後の客が何を返そうとしているのか確かめてください。':'台帳と返品伝票には欠損があります。客を確認しても身元を特定できるとは限りません。';$('checkCustomer').textContent='店内に残るお客様を確認する';renderClues();renderInference();scrollTo(0,0)}
+function renderFinalChoice(){s.sundayRevealed=true;persist();$('day8Panel').classList.add('hidden');mood();$('game').classList.add('hidden');$('ending').classList.add('hidden');$('finalChoice').classList.remove('hidden');$('restart').classList.remove('hidden');$('help').classList.remove('hidden');$('finalLead').textContent=`閉店後売上 ${s.afterSales}万円、未退店客 ${s.remaining}名。通常営業の累計売上は ${s.revenue}万円です。帳簿の売上を守るほど、店から出られない人が増えました。`;$('receiptClue').textContent=s.clues>=3?'レシート・防犯映像・返品伝票が残っています。記録を照合して、最後の客が何を返そうとしているのか確かめてください。':'台帳と返品伝票には欠損があります。客を確認しても身元を特定できるとは限りません。';$('checkCustomer').textContent='店内に残るお客様を確認する';renderClues();renderInference();scrollTo(0,0)}
 function renderInference(){$('inferArea').classList.toggle('hidden',!s.inferencePending);if(s.inferencePending&&s.inferenceAttempts)$('inferFeedback').textContent='照合の続きです。記録と異なる組合せを見直してください。';}
 function startInference(){if(s.clues<3){finalDecision('customer');return}s.inferencePending=true;$('inferFeedback').textContent=s.inferenceAttempts?'照合の続きです。記録と異なる選択を見直してください。':'';persist();renderInference();$('inferWho').focus()}
 function resolveInference(who,what){
@@ -365,7 +366,7 @@ function beginDay8(){
 }
 function renderDay8(){
  $('game').classList.add('hidden');$('finalChoice').classList.add('hidden');$('ending').classList.add('hidden');$('intro').classList.remove('active');$('intro').classList.add('hidden');
- $('day8Panel').classList.remove('hidden');$('restart').classList.remove('hidden');
+ $('day8Panel').classList.remove('hidden');$('restart').classList.remove('hidden');$('help').classList.remove('hidden');
  mood();v09AttachFallback($('day8Image'),'store-human-day.jpg');$('day8Ledger').textContent='閉店後売上 '+s.afterSales+'万円／未退店客 '+s.remaining+'名／承認可能な閉店日：未設定。';
  scrollTo(0,0)
 }
@@ -435,12 +436,12 @@ const v09Count=()=>s.vals.reduce((x,y)=>x+y,0);
 const v09Sales=()=>Math.max(0,30+10*s.attraction-10*v09Count());
 function persist(){try{localStorage.setItem('f1-v09',JSON.stringify(s))}catch(e){}}
 function load(){try{
- const raw=localStorage.getItem('f1-v09');if(!raw)return;
+ const raw=localStorage.getItem('f1-v09');if(!raw)return false;
  const data=JSON.parse(raw);
  if(data.version===9 && data.day>=1 && data.day<=8 && data.vals?.length===4 &&
   Number.isInteger(data.attraction)&&data.attraction>=0&&data.attraction<=10)
-  s={...fresh(),...data,complaintTickets:Array.isArray(data.complaintTickets)?data.complaintTickets:null};
-}catch(e){}}
+  {s={...fresh(),...data,complaintTickets:Array.isArray(data.complaintTickets)?data.complaintTickets:null};return true}
+}catch(e){}return false}
 function desiredComplaintCounts(){return [...s.vals]}
 function available(){
  if(sixthDayGlitch())return Array.from({length:6},()=>glitchAction);
@@ -476,7 +477,7 @@ function sceneForState(){
 function render(){
  $('day8Panel').classList.add('hidden');mood();$('intro').classList.add('hidden');
  $('game').classList.remove('gameonly','hidden');$('finalChoice').classList.add('hidden');
- $('ending').classList.add('hidden');$('restart').classList.remove('hidden');
+ $('ending').classList.add('hidden');$('restart').classList.remove('hidden');$('help').classList.remove('hidden');
  if(s.finish){renderEnd();return}
  $('day').textContent=s.day+'/7';$('cash').textContent=s.attraction;$('total').textContent=v09Sales()+'万円';
  $('cash').classList.toggle('cash-low',s.attraction<=3);
@@ -618,7 +619,7 @@ const V09_ENDINGS={
 };
 function renderEnd(){
  $('day8Panel').classList.add('hidden');mood();$('intro').classList.add('hidden');$('game').classList.add('hidden');
- $('finalChoice').classList.add('hidden');$('ending').classList.remove('hidden');$('restart').classList.remove('hidden');
+ $('finalChoice').classList.add('hidden');$('ending').classList.remove('hidden');$('restart').classList.remove('hidden');$('help').classList.remove('hidden');
  const [flag,name,story]=V09_ENDINGS[s.ending]||V09_ENDINGS.normal_strain;
  $('ending').replaceChildren();const label=document.createElement('div');label.className='overline';label.textContent=flag;
  const head=document.createElement('h1');head.className='head';head.textContent=name;
@@ -645,7 +646,16 @@ function renderEnd(){
 }
 
 function restart(){s=fresh();rollback=null;persist();$('intro').classList.add('hidden');$('overlay').classList.add('hidden');$('breakdown').open=false;render();scrollTo(0,0)}
-$('start').onclick=restart;$('restart').onclick=()=>{if(confirm('7日間の記録を消して最初から始めますか？'))restart()};$('next').onclick=advance;$('undo').onclick=()=>{if(!rollback)return;s=JSON.parse(rollback);rollback=null;$('overlay').classList.add('hidden');persist();render()};$('stop0').onclick=()=>finalDecision('stop');$('continue8').onclick=()=>finalDecision('day8');$('day8Close').onclick=()=>finishDay8('close');$('day8Book').onclick=()=>finishDay8('book');$('checkCustomer').onclick=startInference;$('inferSubmit').onclick=()=>{if(!$('inferWho').value||!$('inferWhat').value)return;resolveInference()};window.__F1_DEBUG__={getState:()=>JSON.parse(JSON.stringify(s)),availableIds:()=>available().map(a=>a.id),sceneFallback:file=>v09FallbackSVG(file),setState:x=>{s={...fresh(),...x};persist();render()},play,advance,finalDecision,finishDay8,startInference,resolveInference,restart};load();if(s.finish)renderEnd();else if(s.day8Active)renderDay8();else if(s.needsAdvance){
+function showLanding(saved,review=false){
+ $('intro').classList.remove('hidden');$('game').classList.add('hidden');$('finalChoice').classList.add('hidden');$('day8Panel').classList.add('hidden');$('ending').classList.add('hidden');$('overlay').classList.add('hidden');$('help').classList.add('hidden');$('restart').classList.add('hidden');
+ $('start').classList.toggle('hidden',saved||review);$('resume').classList.toggle('hidden',!saved||review);$('startOver').classList.toggle('hidden',!saved||review);$('backToGame').classList.toggle('hidden',!review);
+ if(saved&&!review)$('resume').textContent='続きから再開（DAY '+String(Math.min(8,s.day)).padStart(2,'0')+'）';
+ scrollTo(0,0)
+}
+function resumeCurrent(){
+ if(s.finish){renderEnd();return}
+ if(s.day8Active){renderDay8();return}
+ if(s.needsAdvance){
  render();
  const report=s.days.at(-1);
  $('dialogLabel').textContent='DAY '+String(s.day).padStart(2,'0')+' / 07 — '+weekday(s.day)+' — CLOSED';
@@ -655,7 +665,11 @@ $('start').onclick=restart;$('restart').onclick=()=>{if(confirm('7日間の記�
  ['本日の売上 '+(report?.sales??0)+'万円','集客力 '+s.attraction+'/10／未解決クレーム '+v09Count()+'件',
   '今週の売上累計 '+s.revenue+'万円'].forEach(line=>{const p=document.createElement('p');p.textContent=line;$('dailyReport').append(p)});
  $('next').textContent=s.day===7?'7日目の閉店処理へ':'翌営業日へ';
- $('overlay').classList.remove('hidden');
-}else if(s.day===7&&s.days.length===7){if(s.odd)renderFinalChoice();else{normalEnding();persist();renderEnd()}}else if(s.day>1||s.days.length){$('intro').classList.add('hidden');$('game').classList.remove('gameonly');render()}
+ $('overlay').classList.remove('hidden');return
+ }
+ if(s.day===7&&s.days.length===7){if(s.odd)renderFinalChoice();else{normalEnding();persist();renderEnd()}return}
+ render()
+}
+$('start').onclick=restart;$('resume').onclick=resumeCurrent;$('backToGame').onclick=resumeCurrent;$('help').onclick=()=>showLanding(true,true);$('startOver').onclick=()=>{if(confirm('保存された7日間の記録を消して最初から始めますか？'))restart()};$('restart').onclick=()=>{if(confirm('7日間の記録を消して最初から始めますか？'))restart()};$('next').onclick=advance;$('undo').onclick=()=>{if(!rollback)return;s=JSON.parse(rollback);rollback=null;$('overlay').classList.add('hidden');persist();render()};$('stop0').onclick=()=>finalDecision('stop');$('continue8').onclick=()=>finalDecision('day8');$('day8Close').onclick=()=>finishDay8('close');$('day8Book').onclick=()=>finishDay8('book');$('checkCustomer').onclick=startInference;$('inferSubmit').onclick=()=>{if(!$('inferWho').value||!$('inferWhat').value)return;resolveInference()};window.__F1_DEBUG__={getState:()=>JSON.parse(JSON.stringify(s)),availableIds:()=>available().map(a=>a.id),sceneFallback:file=>v09FallbackSVG(file),setState:x=>{s={...fresh(),...x};persist();render()},play,advance,finalDecision,finishDay8,startInference,resolveInference,restart,resumeCurrent,showLanding};const savedGame=load();showLanding(savedGame,false);
 })();
 </script></body></html>

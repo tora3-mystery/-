@@ -55,6 +55,10 @@ def run_test(screenshots):
                     errors=[]
                     page.on("pageerror",lambda error: errors.append(str(error)))
                     page.goto(address,wait_until="domcontentloaded")
+                    assert page.locator("#intro").is_visible(),f"{width}px: prologue not shown"
+                    assert not page.locator("#game").is_visible(),f"{width}px: game shown before start"
+                    assert "仕事は2つだけ" in page.locator("#intro").inner_text(),f"{width}px: onboarding missing"
+                    if screenshots: page.screenshot(path=str(shots/f"f1-prologue-{width}.png"),full_page=True)
                     page.locator("#start").click()
                     assert page.locator("#actions .action").count()==6, f"{width}px: first day not 6 choices"
                     assert page.locator("#cash").inner_text().strip()=="7", f"{width}px: attraction not shown"
@@ -77,11 +81,20 @@ def run_test(screenshots):
                     page.locator("#actions .action").first.click()
                     assert page.locator("#overlay").is_visible()
                     page.reload(wait_until="domcontentloaded")
-                    assert page.locator("#overlay").is_visible(),f"{width}px: daily report lost on reload"
+                    assert page.locator("#intro").is_visible(),f"{width}px: saved game must return to landing"
+                    assert page.locator("#resume").is_visible(),f"{width}px: resume control missing"
+                    assert not page.locator("#overlay").is_visible(),f"{width}px: report shown before resume"
+                    page.locator("#resume").click()
+                    assert page.locator("#overlay").is_visible(),f"{width}px: daily report lost after resume"
                     assert "1/7" in page.locator("#day").inner_text()
                     page.locator("#next").click()
                     assert "2/7" in page.locator("#day").inner_text(),f"{width}px: next day"
                     assert page.locator("#complaintSummary").inner_text()
+                    before=page.evaluate("()=>window.__F1_DEBUG__.getState()")
+                    page.locator("#help").click()
+                    assert page.locator("#backToGame").is_visible(),f"{width}px: return-from-guide missing"
+                    page.locator("#backToGame").click()
+                    assert page.evaluate("()=>window.__F1_DEBUG__.getState()")==before,f"{width}px: guide changed saved state"
                     assert not errors, f"{width}px JS exceptions: {errors}"
                     context.close()
                     total+=1
