@@ -225,9 +225,23 @@ function showImpact(before,after,a,b,added,removed){
  qs("#impactDocuments").innerHTML=eventLines.join("")||'<div class="impact-event neutral-event"><strong>文書の増減はありません</strong><p>書き換えられた記録に基づき、仕事の割当や作業時間が更新されました。</p></div>';
  qs("#impactBefore").textContent=before.total+"分";
  qs("#impactAfter").textContent=after.total+"分";
- qs("#impactSummary").textContent=after.org?
-  (after.total===0?"改革推進部の残業は0分。政策成果と部署の存続も確認してください。":after.total<before.total?"残業が減りました。ただし、必要な仕事が消えたとは限りません。":"残業が増えた、または変わりません。新しく発生した仕事も確認してください。"):
-  "部署そのものが設置されなかった歴史になりました。残業だけは0分です。";
+ const narrative=[];
+ if(before.org&&!after.org){
+  narrative.push("改革推進部が設置されなかった歴史になりました。部署の仕事と関連記録が消えましたが、国会からの要求は残っています。");
+ }else{
+  if(before.phone>after.phone&&after.source==="archive")narrative.push("国会用の数字は保存資料から入手することになり、夜間の電話確認が不要になりました。");
+  else if(after.phone>before.phone)narrative.push("国会向けの電話確認が増え、夜間の作業が追加されました。");
+  if(!before.extra06&&after.extra06)narrative.push("一方、保存した数字を人が再入力するため、資料室から一致確認の依頼が新たに届きました。");
+  if(before.verify>after.verify&&after.machine)narrative.push("数字の確認が機械照合に変わり、手作業での確認が不要になりました。");
+  if(before.extra06&&!after.extra06)narrative.push("再入力に伴う確認依頼も不要になり、その文書が現行の歴史から消えました。");
+  if(before.approval>after.approval)narrative.push("最終承認の待ち時間が短縮されました。");
+  if(after.urgent>before.urgent)narrative.push("国会が要求する100社分の根拠が不足し、緊急の追加確認が発生しました。");
+  if(after.deadline>before.deadline)narrative.push("省内の提出期限は変わりましたが、国会の日程は変わりません。遅延理由書が新たに必要です。");
+  if(after.secondary>before.secondary)narrative.push("交換先の業務にも時間外勤務が発生しています。");
+ }
+ if(!narrative.length)narrative.push("2つの記録が書き換わりました。業務の内訳と、新しく生じた影響を確認してください。");
+ narrative.push("対象部署の残業："+before.total+"分 → "+after.total+"分。");
+ qs("#impactSummary").textContent=narrative.join("\n");
  qs("#impactContinue").textContent=moves===3?"最終結果を確認する":"更新された記録を調べる";
  qs("#impactScreen").hidden=false;
  qs("#impactContinue").focus?.();
