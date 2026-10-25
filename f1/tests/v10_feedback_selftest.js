@@ -176,6 +176,12 @@ const before3=env.api.getState().attraction;
 env.api.play('open0');assert.equal(env.api.getState().attraction,Math.min(10,before3+1),'third contract gives gain');
 env.api.advance();
 assert.deepEqual(env.api.availableIds(),Array(6).fill('glitch6'),'contract compels identical Saturday choices');
+assert(!env.get('contractWarning').classList.contains('hidden'),'dangerous contract has visible warning on Saturday');
+assert(env.get('contractWarning').textContent.includes('帰宅できない人'),'contract warning states human price');
+env.api.play('glitch6');env.api.advance();
+assert.equal(env.api.getState().day,7,'the contract reaches Sunday');
+assert(env.get('contractWarning').classList.contains('hidden'),'Sunday mask conceals contract temporarily');
+
 assert(html.includes('complaint-ticket.resolved{opacity:.69;filter:grayscale(.8)'), 'resolved complaint uses subdued styling');
 assert(html.includes('苦情（－改善／＋悪化）'), 'customer complaint effect has readable sign legend');
 assert(html.includes('契約を破棄し、今後の利益を手放す'), 'final contract exit option explicitly labeled');
