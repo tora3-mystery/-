@@ -556,6 +556,17 @@ function renderEnd(){
 }
 
 function restart(){s=fresh();rollback=null;persist();$('intro').classList.add('hidden');$('overlay').classList.add('hidden');$('breakdown').open=false;render();scrollTo(0,0)}
-$('start').onclick=restart;$('restart').onclick=()=>{if(confirm('7日間の記録を消して最初から始めますか？'))restart()};$('next').onclick=advance;$('undo').onclick=()=>{if(!rollback)return;s=JSON.parse(rollback);rollback=null;$('overlay').classList.add('hidden');persist();render()};$('stop0').onclick=()=>finalDecision('stop');$('continue8').onclick=()=>finalDecision('day8');$('day8Close').onclick=()=>finishDay8('close');$('day8Book').onclick=()=>finishDay8('book');$('checkCustomer').onclick=startInference;$('inferSubmit').onclick=()=>{if(!$('inferWho').value||!$('inferWhat').value)return;resolveInference()};window.__F1_DEBUG__={getState:()=>JSON.parse(JSON.stringify(s)),availableIds:()=>available().map(a=>a.id),setState:x=>{s={...fresh(),...x};persist();render()},play,advance,finalDecision,finishDay8,startInference,resolveInference,restart};load();if(s.finish)renderEnd();else if(s.day8Active)renderDay8();else if(s.needsAdvance){$('intro').classList.add('hidden');$('game').classList.remove('gameonly');$('overlay').classList.remove('hidden');advance()}else if(s.day===7&&s.days.length===7){if(s.odd)renderFinalChoice();else{normalEnding();persist();renderEnd()}}else if(s.day>1||s.days.length){$('intro').classList.add('hidden');$('game').classList.remove('gameonly');render()}
+$('start').onclick=restart;$('restart').onclick=()=>{if(confirm('7日間の記録を消して最初から始めますか？'))restart()};$('next').onclick=advance;$('undo').onclick=()=>{if(!rollback)return;s=JSON.parse(rollback);rollback=null;$('overlay').classList.add('hidden');persist();render()};$('stop0').onclick=()=>finalDecision('stop');$('continue8').onclick=()=>finalDecision('day8');$('day8Close').onclick=()=>finishDay8('close');$('day8Book').onclick=()=>finishDay8('book');$('checkCustomer').onclick=startInference;$('inferSubmit').onclick=()=>{if(!$('inferWho').value||!$('inferWhat').value)return;resolveInference()};window.__F1_DEBUG__={getState:()=>JSON.parse(JSON.stringify(s)),availableIds:()=>available().map(a=>a.id),setState:x=>{s={...fresh(),...x};persist();render()},play,advance,finalDecision,finishDay8,startInference,resolveInference,restart};load();if(s.finish)renderEnd();else if(s.day8Active)renderDay8();else if(s.needsAdvance){
+ render();
+ const report=s.days.at(-1);
+ $('dialogLabel').textContent='DAY '+String(s.day).padStart(2,'0')+' / 07 — '+weekday(s.day)+' — CLOSED';
+ $('dialogTitle').textContent=s.day+'日目の営業報告（再表示）';
+ $('dialogText').textContent='前回の営業判断：'+(s.last?.name||'本日の対応')+'。この日報の確認後、翌営業日へ進んでください。';
+ $('dailyReport').replaceChildren();
+ ['本日の売上 '+(report?.sales??0)+'万円','集客力 '+s.attraction+'/10／未解決クレーム '+v09Count()+'件',
+  '今週の売上累計 '+s.revenue+'万円'].forEach(line=>{const p=document.createElement('p');p.textContent=line;$('dailyReport').append(p)});
+ $('next').textContent=s.day===7?'7日目の閉店処理へ':'翌営業日へ';
+ $('overlay').classList.remove('hidden');
+}else if(s.day===7&&s.days.length===7){if(s.odd)renderFinalChoice();else{normalEnding();persist();renderEnd()}}else if(s.day>1||s.days.length){$('intro').classList.add('hidden');$('game').classList.remove('gameonly');render()}
 })();
 </script></body></html>
