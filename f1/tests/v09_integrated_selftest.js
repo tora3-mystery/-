@@ -78,6 +78,19 @@ for(const [name,route,end,reason] of normal){
 assert.equal(JSON.parse(memory.get('f1-v09')).version,9);
 const restored=boot().api.getState();
 assert.equal(restored.ending,env.api.getState().ending,'saved state restores');
+const freshRun=env.api.restart();
+assert.equal(env.api.getState().complaintTickets.length,5,'opening five distinct complaints');
+const firstChoice=env.api.availableIds().includes('floorcheck')?'floorcheck':env.api.availableIds()[0];
+env.api.play(firstChoice);
+assert.equal(env.api.getState().needsAdvance,true,'daily report must await explicit next');
+const pendingResume=boot();
+assert.equal(pendingResume.api.getState().day,1,'refresh does not silently advance');
+assert.equal(pendingResume.get('overlay').classList.contains('hidden'),false,'reloaded daily report is shown');
+assert(pendingResume.get('dialogTitle').textContent.includes('再表示'),'restored day report title');
+pendingResume.api.advance();
+assert.equal(pendingResume.api.getState().day,2,'explicit next click advances after refresh');
+assert(pendingResume.api.getState().complaintTickets.filter(x=>x.replies?.some(r=>r.visibleFrom===2)).length>0,
+ 'manager answers appear the following morning');
 const oddRoutes=[
  ['X1',['register','delivery','audit','camera0','open0','glitch6','display'],'odd_stop','stop'],
  ['X2',['floorcheck','display','quiet','delivery','audit','camera0','discount'],'odd_missing','missing'],
@@ -89,8 +102,13 @@ for(const [name,route,end,action] of oddRoutes){
  assert.equal(state.finish,false,name+' final choice remains open');
  assert(state.odd>=2,name+' entered anomaly');
  if(state.glitchSeen){
-  // inspect Saturday scene evidence via recorded route (sixfold exact ID occurs once on day 6)
   assert.equal(route[5],'glitch6',name+' Saturday sixfold anomaly');
+  // The sixth day must have six identical controls, not merely one special choice.
+  const copy={...state,day:6,glitchSeen:false,finish:false};
+  env.api.setState(copy);
+  assert.deepEqual(env.api.availableIds(),Array(6).fill('glitch6'),name+' six duplicate buttons');
+  env.api.setState(state);
+  assert.equal(env.api.getState().day,7,name+' seventh day returns');
  }
  if(action==='stop')env.api.finalDecision('stop');
  else if(action==='missing')env.api.finalDecision('customer');
@@ -105,5 +123,5 @@ for(const [name,route,end,action] of oddRoutes){
  assert.equal(env.api.getState().ending,end,name+' ending');
  assert.equal(env.api.getState().finish,true,name+' completion');
 }
-console.log('PASS F1 v0.9 integrated DOM-mock routes: 3 normal + 2 early losses + 4 anomaly endings.');
+console.log('PASS F1 v0.9 integrated DOM-mock routes: 3 normal + 2 early losses + 4 anomaly endings; save-resume and Saturday sixfold controls.');
 console.log('NOT TESTED: actual browsers, visual responsive layout, real image bytes/load, GitHub Pages deployment.');
