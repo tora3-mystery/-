@@ -38,12 +38,12 @@ export const ENDING_META = {
 };
 const PHOTO_BANK = Object.freeze({
   '男性': [
-    'https://cdn.pixabay.com/photo/2024/03/20/03/45/ai-generated-8644544_640.png',
-    'https://cdn.pixabay.com/photo/2025/02/07/06/42/ai-generated-9389099_640.jpg'
+    'https://cdn.pixabay.com/photo/2024/03/20/03/45/ai-generated-8644544_1280.png',
+    'https://cdn.pixabay.com/photo/2025/02/07/06/42/ai-generated-9389099_1280.jpg'
   ],
   '女性': [
-    'https://cdn.pixabay.com/photo/2024/11/24/10/49/ai-generated-9220634_640.jpg',
-    'https://cdn.pixabay.com/photo/2024/08/06/15/29/ai-generated-8949601_640.jpg'
+    'https://cdn.pixabay.com/photo/2024/11/24/10/49/ai-generated-9220634_1280.jpg',
+    'https://cdn.pixabay.com/photo/2024/08/06/15/29/ai-generated-8949601_1280.jpg'
   ]
 });
 const CAMPUS_BACKGROUNDS = [
