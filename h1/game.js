@@ -172,18 +172,22 @@ const shortcuts=[
  [{round:0,idx:2,label:"改善活動での役割"},{round:1,idx:2,label:"返品対応の工夫"},{round:2,idx:0,label:"反対意見への対応"}]
 ];
 function docMarkup(){
- let tabs='<div class="tabs-doc"><button data-tab="es" class="'+(state.tab==="es"?'on':'')+'">ES</button><button data-tab="record" class="'+(state.tab==="record"?'on':'')+'">一次面接</button><button data-tab="archive" class="'+(state.tab==="archive"?'on':'')+'">過年度</button></div>';
+ const tabs='<div class="tabs-doc"><button data-tab="es" class="'+(state.tab==="es"?'on':'')+'">ES</button><button data-tab="record" class="'+(state.tab==="record"?'on':'')+'">個人面接</button><button data-tab="archive" class="'+(state.tab==="archive"?'on':'')+'">過年度</button></div>';
  if(state.tab==="archive"){
   return tabs+'<div class="paper"><h3>過年度・選考記録</h3><p class="subtle">社内限定。過去の応募者の抜粋記録です。</p>'+archive.map(x=>'<details class="old"><summary>'+x.year+'年度｜'+esc(x.name)+'｜'+x.result+'</summary><p>'+esc(x.body)+'</p><p class="subtle">面接官所見：'+esc(x.note)+'</p></details>').join('')+'</div>';
  }
- let p=people[state.person];
- let profiles='<div class="people-nav">'+people.map((p,i)=>'<button data-person="'+i+'" class="'+(state.person===i?'on':'')+'">'+String(i+1).padStart(2,"0")+' '+p.name.split(" ")[0]+'</button>').join('')+'</div>';
+ const p=people[state.person];
+ const profiles='<div class="people-nav">'+people.map((person,i)=>'<button data-person="'+i+'" class="'+(state.person===i?'on':'')+'">'+String(i+1).padStart(2,"0")+' '+person.name.split(" ")[0]+'</button>').join('')+'</div>';
  if(state.tab==="es"){
+  const current=state.phase==="private"&&!state.privateShown&&state.person===state.privateIndex;
+  const privateHints=current?'<div class="es-hints"><b>このESから個人面接の質問を選ぶ</b>'+privateQuestions[state.privateIndex].map((q,i)=>'<button data-private-option="'+i+'" type="button">'+esc(q.term)+' → 質問へ</button>').join("")+'</div>':'';
   const hints=shortcuts[state.person].filter(x=>state.phase==="game"&&!state.shown&&x.round===state.round);
-  const hintHtml=hints.length?'<div class="es-hints"><b>この記述から質問を作る</b>'+hints.map(x=>'<button data-shortcut="'+x.idx+'" type="button">'+esc(x.label)+' → 質問プレビューへ</button>').join("")+'</div>':'<p class="subtle tiny">過去の経験や役割を、他の応募者の回答とも照合してください。</p>';
-  return tabs+profiles+'<div class="paper"><div class="applicant"><div class="avatar">'+face(state.person,false)+'</div><div><h3>'+esc(p.name)+'</h3><p class="subtle">'+esc(p.school)+'</p><p class="small">'+esc(p.character)+'</p></div></div><div class="line"></div><h4>学生時代に力を入れたこと</h4><p>'+esc(p.es)+'</p>'+hintHtml+'</div>';
+  const groupHints=hints.length?'<div class="es-hints"><b>この記述から共通質問を作る</b>'+hints.map(x=>'<button data-shortcut="'+x.idx+'" type="button">'+esc(x.label)+' → 質問へ</button>').join("")+'</div>':'';
+  return tabs+profiles+'<div class="paper"><div class="applicant"><div class="avatar">'+face(state.person,false)+'</div><div><h3>'+esc(p.name)+'</h3><p class="subtle">'+esc(p.school)+'</p><p class="small">'+esc(p.character)+'</p></div></div><div class="line"></div><h4>学生時代に力を入れたこと</h4><p>'+esc(p.es)+'</p>'+privateHints+groupHints+'</div>';
  }
- return tabs+profiles+'<div class="paper"><h3>'+esc(p.name)+'｜一次面接文字起こし</h3><p class="subtle">採用管理システムによる自動文字起こし・個別面接／非公開</p><blockquote>'+esc(p.record)+'</blockquote><p class="tiny subtle">この記録は当日の候補者全員には配布されていません。</p></div>';
+ const entry=privateEntry(state.person);
+ const transcript=entry?'<blockquote><b>面接官：</b>'+esc(privateQuestions[state.person][entry.option].q)+'</blockquote><blockquote><b>'+esc(p.name)+'：</b>'+esc(entry.answer)+'</blockquote>':'<p>本日の個人面接はまだ実施されていません。面接終了後に記録が保存されます。</p>';
+ return tabs+profiles+'<div class="paper"><h3>'+esc(p.name)+'｜本日の個人面接</h3><p class="subtle">採用管理システムの自動文字起こし／他の応募者には非公開</p>'+transcript+'</div>';
 }
 function renderDocs(){
  const panel=el("docs");
@@ -192,6 +196,7 @@ function renderDocs(){
  panel.querySelectorAll("[data-tab]").forEach(b=>b.addEventListener("click",()=>chooseTab(b.dataset.tab)));
  panel.querySelectorAll("[data-person]").forEach(b=>b.addEventListener("click",()=>selectPerson(Number(b.dataset.person))));
  panel.querySelectorAll("[data-shortcut]").forEach(b=>b.addEventListener("click",()=>{const idx=Number(b.dataset.shortcut);state.a=Math.floor(idx/2);state.b=idx%2;render();}));
+ panel.querySelectorAll("[data-private-option]").forEach(b=>b.addEventListener("click",()=>{state.privatePick=Number(b.dataset.privateOption);render();}));
 }
 function renderIntro(){
  el("main").innerHTML='<section class="opening"><p class="eyebrow">CONFIDENTIAL｜人事部より</p><h1>本日の最終面接について</h1><p>4名の最終候補者から、<strong>1名を不採用</strong>としてください。</p><p>ただし、社内調査により<strong>1名は人間ではない存在</strong>である可能性が極めて高いと判明しました。</p><p>過去の事例では、この存在は<strong>他の学生の非公開面接記録を学習し、自分の経験として語る</strong>と報告されています。</p><p class="warning">正体を疑っていることを悟られないでください。通常どおり面接を実施し、静かに1名を見送ってください。</p>'+
@@ -235,7 +240,7 @@ function showQuestion(){
  let pack=rounds[state.round][state.a*2+state.b];
  el("preview-q").textContent=pack.q;
 }
-function getRecords(){return state.asked.map((entry,i)=>'<details class="rec"><summary>質問 '+(i+1)+'｜'+esc(rounds[entry.round][entry.idx].q)+'</summary>'+people.map((p,j)=>'<p><b>'+p.name+'：</b>'+esc(rounds[entry.round][entry.idx].ans[j])+'</p>').join('')+'</details>').join("");}
+function getRecords(){return state.asked.map((entry,i)=>'<details class="rec"><summary>質問 '+(i+1)+'｜'+esc(rounds[entry.round][entry.idx].q)+'</summary>'+people.map((p,j)=>'<p><b>'+p.name+'：</b>'+esc(entry.answers[j])+'</p>').join('')+'</details>').join("");}
 function renderGame(){
  el("docs-wrap").hidden=false;el("bottom-mobile").hidden=false;
  let r=state.round;
@@ -246,7 +251,7 @@ function renderGame(){
   body+='<div class="panel"><h2>全員に尋ねる質問を作成</h2><p class="subtle">2つの語句を組み合わせます。全員が同じ質問に回答します。</p>'+questionOptions()+'<div class="preview"><span>質問プレビュー</span><strong id="preview-q">'+esc(q.q)+'</strong></div><button id="ask" class="btn primary wide">この質問を4名全員にする</button></div>';
  } else {
   const entry=state.asked[state.asked.length-1], pack=rounds[entry.round][entry.idx];
-  body+='<div class="panel"><p class="eyebrow">面接官からの質問</p><h2>'+esc(pack.q)+'</h2></div><div class="replies">'+people.map((p,i)=>'<article class="reply"><div class="who"><div class="avatar mini">'+face(i,false)+'</div><b>'+p.name+'</b></div><p>'+esc(pack.ans[i])+'</p></article>').join('')+'</div><div class="notice">'+esc(mood())+'</div><button id="continue" class="btn primary wide">'+(r===2?'面接を終え、最終判定へ':'次の共通質問へ進む')+'</button>';
+  body+='<div class="panel"><p class="eyebrow">面接官からの質問</p><h2>'+esc(pack.q)+'</h2></div><div class="replies">'+people.map((p,i)=>'<article class="reply"><div class="who"><div class="avatar mini">'+face(i,false)+'</div><b>'+p.name+'</b></div><p>'+esc(entry.answers[i])+'</p></article>').join('')+'</div><div class="notice">'+esc(mood())+'</div><button id="continue" class="btn primary wide">'+(r===2?'面接を終え、最終判定へ':'次の共通質問へ進む')+'</button>';
  }
  if(state.asked.length){
   body+='<div class="panel records"><h2>これまでの回答を見直す</h2>'+getRecords()+'</div>';
@@ -255,7 +260,7 @@ function renderGame(){
  if(!state.shown){
   el("axis-a").onchange=e=>{state.a=Number(e.target.value);showQuestion();};
   el("axis-b").onchange=e=>{state.b=Number(e.target.value);showQuestion();};
-  el("ask").onclick=()=>{const idx=state.a*2+state.b;state.asked.push({round:r,idx});state.shown=true;render();};
+  el("ask").onclick=()=>{const idx=state.a*2+state.b;state.asked.push({round:r,idx,answers:people.map((_,i)=>groupAnswer(r,idx,i))});state.shown=true;render();};
  }else{
   el("continue").onclick=()=>{if(state.round===2){state.phase="decision";}else{state.round++;state.a=0;state.b=0;state.shown=false;}render();};
  }
@@ -285,7 +290,7 @@ function renderEnding(){
   scene='<div class="ending-horror"><div class="avatar">'+face(2,true)+'</div><div class="horror-chair">面接官席<br>担当者：澤田 千尋</div></div>';
  }
  el("main").innerHTML='<section class="ending panel '+result+'">'+header+scene+text+'<div class="recap"><strong>今回の選考</strong><p>不採用：'+people[state.reject].name+' ／ 質問3問 ／ 面接室：'+(tension()>=4?'異常':tension()>=2?'重い空気':'平穏')+'</p><details><summary>質問履歴と回答を確認</summary>'+getRecords()+'</details></div><button id="again" class="btn primary wide">別の質問で再プレイする</button></section>';
- el("again").onclick=()=>{Object.assign(state,{phase:"intro",round:0,a:0,b:0,shown:false,asked:[],tab:"es",person:0,archive:false,recordsOpen:true,reject:-1});render();};
+ el("again").onclick=()=>{Object.assign(state,{phase:"intro",privateIndex:0,privatePick:0,privateShown:false,privateAnswers:[null,null,null,null],round:0,a:0,b:0,shown:false,asked:[],tab:"es",person:0,archive:false,recordsOpen:true,reject:-1});render();};
 }
 function render(){
  head();
@@ -309,7 +314,14 @@ function selfTest(){
   }
  }
  if(checked!==256||!good||!bad||!horror)throw new Error("Branch QA failed");
- return {checked,good,bad,horror};
+ let testedPrivateVariants=0;
+ for(let a=0;a<3;a++)for(let b=0;b<3;b++)for(let c=0;c<3;c++)for(let d=0;d<3;d++){
+  const source=[a,b,c,d];
+  for(let j=0;j<4;j++)if(!privateQuestions[j][source[j]].answer||!privateQuestions[j][source[j]].q)throw new Error("Private answer missing");
+  testedPrivateVariants++;
+ }
+ if(testedPrivateVariants!==81)throw new Error("Private routes incomplete");
+ return {checked,good,bad,horror,testedPrivateVariants};
 }
 window.H1_QA=selfTest;
 document.addEventListener("DOMContentLoaded",()=>{
