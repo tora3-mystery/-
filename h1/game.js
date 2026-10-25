@@ -123,10 +123,17 @@ function head(){
  let step=state.phase==="intro"?0:state.phase==="game"?1:state.phase==="decision"?2:3;
  el("header-state").textContent=["PROLOGUE","GROUP INTERVIEW","FINAL DECISION","RESULT"][step];
  el("version").textContent=VERSION+"｜更新 "+UPDATED;
- el("progress").innerHTML=[1,2,3].map((n,i)=>'<span class="'+(i<step?'done':i===step?'on':'')+'">'+["面接","判定","結果"][i]+'</span>').join("");
+ let progressStep=state.phase==="intro"||state.phase==="game"?0:state.phase==="decision"?1:2;
+ el("progress").innerHTML=[1,2,3].map((n,i)=>'<span class="'+(i<progressStep?'done':i===progressStep?'on':'')+'">'+["面接","判定","結果"][i]+'</span>').join("");
 }
 function chooseTab(x){state.tab=x;renderDocs();}
 function selectPerson(i){state.person=i;state.tab="es";renderDocs();}
+const shortcuts=[
+ [{round:0,idx:2,label:"協賛活動・リーダー経験"},{round:1,idx:0,label:"赤い養生テープ"},{round:2,idx:0,label:"成果の評価"}],
+ [{round:0,idx:3,label:"実験時の失敗"},{round:1,idx:1,label:"測定条件の記録"},{round:2,idx:2,label:"経験の裏付け"}],
+ [{round:0,idx:0,label:"最後の一人"},{round:1,idx:2,label:"学習支援の役割分担"},{round:2,idx:1,label:"自分の努力の評価"}],
+ [{round:0,idx:2,label:"改善活動での役割"},{round:1,idx:2,label:"返品対応の工夫"},{round:2,idx:0,label:"反対意見への対応"}]
+];
 function docMarkup(){
  let tabs='<div class="tabs-doc"><button data-tab="es" class="'+(state.tab==="es"?'on':'')+'">ES</button><button data-tab="record" class="'+(state.tab==="record"?'on':'')+'">一次面接</button><button data-tab="archive" class="'+(state.tab==="archive"?'on':'')+'">過年度</button></div>';
  if(state.tab==="archive"){
@@ -135,7 +142,9 @@ function docMarkup(){
  let p=people[state.person];
  let profiles='<div class="people-nav">'+people.map((p,i)=>'<button data-person="'+i+'" class="'+(state.person===i?'on':'')+'">'+String(i+1).padStart(2,"0")+' '+p.name.split(" ")[0]+'</button>').join('')+'</div>';
  if(state.tab==="es"){
-  return tabs+profiles+'<div class="paper"><div class="applicant"><div class="avatar">'+face(state.person,false)+'</div><div><h3>'+esc(p.name)+'</h3><p class="subtle">'+esc(p.school)+'</p><p class="small">'+esc(p.character)+'</p></div></div><div class="line"></div><h4>学生時代に力を入れたこと</h4><p>'+esc(p.es)+'</p><p class="subtle tiny">ES内の気になる経験は、グループ面接の質問候補と照合してください。</p></div>';
+  const hints=shortcuts[state.person].filter(x=>state.phase==="game"&&!state.shown&&x.round===state.round);
+  const hintHtml=hints.length?'<div class="es-hints"><b>この記述から質問を作る</b>'+hints.map(x=>'<button data-shortcut="'+x.idx+'" type="button">'+esc(x.label)+' → 質問プレビューへ</button>').join("")+'</div>':'<p class="subtle tiny">過去の経験や役割を、他の応募者の回答とも照合してください。</p>';
+  return tabs+profiles+'<div class="paper"><div class="applicant"><div class="avatar">'+face(state.person,false)+'</div><div><h3>'+esc(p.name)+'</h3><p class="subtle">'+esc(p.school)+'</p><p class="small">'+esc(p.character)+'</p></div></div><div class="line"></div><h4>学生時代に力を入れたこと</h4><p>'+esc(p.es)+'</p>'+hintHtml+'</div>';
  }
  return tabs+profiles+'<div class="paper"><h3>'+esc(p.name)+'｜一次面接文字起こし</h3><p class="subtle">採用管理システムによる自動文字起こし・個別面接／非公開</p><blockquote>'+esc(p.record)+'</blockquote><p class="tiny subtle">この記録は当日の候補者全員には配布されていません。</p></div>';
 }
@@ -145,6 +154,7 @@ function renderDocs(){
  panel.innerHTML=docMarkup();
  panel.querySelectorAll("[data-tab]").forEach(b=>b.addEventListener("click",()=>chooseTab(b.dataset.tab)));
  panel.querySelectorAll("[data-person]").forEach(b=>b.addEventListener("click",()=>selectPerson(Number(b.dataset.person))));
+ panel.querySelectorAll("[data-shortcut]").forEach(b=>b.addEventListener("click",()=>{const idx=Number(b.dataset.shortcut);state.a=Math.floor(idx/2);state.b=idx%2;render();}));
 }
 function renderIntro(){
  el("main").innerHTML='<section class="opening"><p class="eyebrow">CONFIDENTIAL｜人事部より</p><h1>本日の最終面接について</h1><p>4名の最終候補者から、<strong>1名を不採用</strong>としてください。</p><p>ただし、社内調査により<strong>1名は人間ではない存在</strong>である可能性が極めて高いと判明しました。</p><p>過去の事例では、この存在は<strong>他の学生の非公開面接記録を学習し、自分の経験として語る</strong>と報告されています。</p><p class="warning">正体を疑っていることを悟られないでください。通常どおり面接を実施し、静かに1名を見送ってください。</p>'+
