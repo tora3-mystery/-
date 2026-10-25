@@ -1,6 +1,6 @@
 "use strict";
-const VERSION = "α0.2.0";
-const UPDATED = "2026.10.26 02:00 JST";
+const VERSION = "α0.3.0-preview";
+const UPDATED = "2026.10.26 02:15 JST";
 const people = [
  {name:"大野 彩花",school:"経営学部・2027年3月卒業見込み",initial:"大",tone:"warm",character:"社交的で段取り上手。成果をやや大きく表現するが、自分で確認すると訂正できる。",es:"学園祭実行委員会で協賛交渉を担当しました。企業12社の協力を取りつけ、当日は赤い養生テープで来場者の動線を改善しました。誰も気づかない仕事を先に拾うことを大切にしています。",record:"協賛金を提供したのは11社で、残り1社は機材貸与でした。床に赤い矢印を3本貼り、最後の1本だけ逆向きにして出口を案内しました。"},
  {name:"岡野 直人",school:"理工学研究科・2027年3月修了見込み",initial:"岡",tone:"cool",character:"口下手だが誠実。数字を正確に覚え、記録の裏付けを重視する。",es:"4人の研究チームで環境計測装置の精度改善に取り組みました。測定条件を切り分け、誤差を約15％低減しました。午後6時12分に記録された異常値がきっかけでした。",record:"装置の自動校正が毎日18時12分に作動していました。23回目の条件変更で測定が安定しました。相対誤差は7.8％から6.6％になりました。"},
@@ -117,25 +117,28 @@ const privateQuestions=[
  ]
 ];
 function privateEntry(i){return state.privateAnswers[i];}
-function groupAnswer(round,idx,person){
- if(person!==2||round!==1)return rounds[round][idx].ans[person];
- const source=idx===0?0:idx===1?1:idx===2?3:-1;
- if(source>=0){
-  const entry=privateEntry(source);
-  const lead=idx===0?"「予定が変わったときの工夫として、":idx===1?"「そのときに残した記録ですが、":"「担当が混乱したときは、";
-  return lead+privateQuestions[source][entry.option].borrow+"」";
- }
- const bits=[0,1,3].map(i=>privateQuestions[i][privateEntry(i).option].borrow);
- return "「自分の経験です。"+bits.slice(0,2).join(" それから、")+"……なぜ、ほかの方の話だと思うんですか？」";
+function privateAnswer(i,opt){
+ return i===state.monsterIndex?monsterPrivate[i][opt]:privateQuestions[i][opt].answer;
 }
-
-const state={phase:"intro",privateIndex:0,privatePick:0,privateShown:false,privateAnswers:[null,null,null,null],round:0,a:0,b:0,shown:false,asked:[],tab:"es",person:0,archive:false,recordsOpen:true,reject:-1};
-const archive=[
- {year:"2018",name:"古谷 真奈",result:"最終面接・不採用",body:"「出口の灯りは、最後の一人のために残すものだと思っていました」",note:"本人の努力は認められるが、具体的成果の説明が弱い。"},
- {year:"2019",name:"坂本 智也",result:"二次面接・不採用",body:"「失敗した回数より、原因を記録する方が大事だと思います」",note:"実績の説明が曖昧。"},
- {year:"2021",name:"岸田 友香",result:"最終面接・不採用",body:"「評価はうれしいですが、次に何を直すか考えたいです」",note:"社風との適合が課題。"},
- {year:"2023",name:"石井 勇人",result:"一次面接・不採用",body:"「委員会の代表はしていません。裏方の方が得意です」",note:"応募書類の提出不足。"}
-];
+function groupAnswer(round,idx,person){
+ if(person!==state.monsterIndex){
+  if(person===2)return sawadaHuman[round][idx];
+  return rounds[round][idx].ans[person];
+ }
+ if(round===0)return "「"+monsterGroupEarly[person][idx]+"」";
+ if(round===2)return "「"+monsterGroupLate[person][idx]+"」";
+ const others=[0,1,2,3].filter(i=>i!==state.monsterIndex);
+ const source=others[idx===3?0:idx],entry=privateEntry(source);
+ if(!entry)throw Error("Missing transcript for candidate "+source);
+ const quote=privateQuestions[source][entry.option].borrow;
+ if(idx===0)return "「予定が変わったときは、"+quote+" 私が考えた方法です」";
+ if(idx===1)return "「記録には、"+quote+" 私は今も覚えています」";
+ if(idx===2)return "「役割を整理するために、"+quote+" 私がやりました」";
+ const second=others[1],e2=privateEntry(second);
+ return "「自分の案です。"+quote+" それに、"+privateQuestions[second][e2.option].borrow+" ……なぜ他人の経験だと思うのですか？」";
+}
+const state={monsterIndex:drawMonster(),phase:"intro",privateIndex:0,privatePick:0,privateShown:false,privateAnswers:[null,null,null,null],round:0,a:0,b:0,shown:false,asked:[],tab:"es",person:0,archive:false,recordsOpen:true,reject:-1};
+const archive=monsterArchive.map(x=>({year:x.year,name:x.name,result:"最終面接・不採用",body:x.body,note:x.note}));
 function el(id){return document.getElementById(id);}
 function esc(x){return String(x).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
 function face(i,distort){
@@ -154,7 +157,7 @@ function face(i,distort){
 function tension(){return state.asked.reduce((s,x)=>s+rounds[x.round][x.idx].risk,0);}
 function mood(){
  const t=tension();
- return t>=4?'会議室が静まり返る。澤田は動かず、こちらの指先だけを見ている。':t>=2?'空気が重い。澤田の笑顔が消えないまま、返答までの間が長くなった。':state.round>0?'一瞬、会話が途切れた。ほかの応募者が姿勢を直す。':'4人は少し緊張しながらも、落ち着いて話を聞いている。';
+ return t>=4?'会議室が静まり返る。ひとりだけこちらの指先を見ている。':t>=2?'空気が重い。ひとりが笑顔のまま、こちらを見つめている。':state.round>0?'一瞬、会話が途切れた。ほかの応募者が姿勢を直す。':'4人は少し緊張しながらも、落ち着いて話を聞いている。';
 }
 function head(){
  const step={intro:0,private:1,game:2,decision:3,ending:4}[state.phase]??0;
@@ -199,7 +202,7 @@ function renderDocs(){
  panel.querySelectorAll("[data-private-option]").forEach(b=>b.addEventListener("click",()=>{state.privatePick=Number(b.dataset.privateOption);render();}));
 }
 function renderIntro(){
- el("main").innerHTML='<section class="opening"><p class="eyebrow">CONFIDENTIAL｜人事部より</p><h1>本日の最終面接について</h1><p>4名の最終候補者から、<strong>1名を不採用</strong>としてください。</p><p>ただし、社内調査により<strong>1名は人間ではない存在</strong>である可能性が極めて高いと判明しました。</p><p>過去の事例では、この存在は<strong>他の学生の非公開面接記録を学習し、自分の経験として語る</strong>と報告されています。</p><p class="warning">正体を疑っていることを悟られないでください。通常どおり面接を実施し、静かに1名を見送ってください。</p>'+
+ el("main").innerHTML='<section class="opening"><p class="eyebrow">CONFIDENTIAL｜人事部より</p><h1>本日の最終面接について</h1><p>4名の最終候補者から、<strong>1名を不採用</strong>としてください。</p><p>ただし、社内調査により<strong>1名は人間ではない存在</strong>である可能性が極めて高いと判明しました。</p><p>過去の事例では、この存在は<strong>他の学生の非公開面接記録を学習し、自分の経験として語る</strong>と報告されています。どの応募者が異形になるかは、プレイごとに変わります。</p><p class="warning">正体を疑っていることを悟られないでください。通常どおり面接を実施し、静かに1名を見送ってください。</p>'+
  '<div class="guide"><h2>あなたが行うこと</h2><ol><li>4名を順番に個人面接し、ESから各1問を選ぶ</li><li>自動文字起こしされた4人の回答を資料として確認する</li><li>全員同席のグループ面接で共通質問を3問選ぶ</li><li>回答の出所・時系列・過去記録との重複を調べる</li><li>面接終了後、別室で不採用者を1人選ぶ</li></ol><p>質問の仕方によっては、会議室の空気が変わります。通常の深掘りは問題ありませんが、異形に正体への疑いを悟らせる質問の連続は危険です。</p><p class="tiny subtle">選考結果は後日通知。音声・個人情報の送信はありません。架空の会社・人物によるフィクションです。</p></div>'+
  '<button class="btn primary wide" id="start">選考資料を確認して面接を始める</button></section>';
  el("docs-wrap").hidden=true;el("bottom-mobile").hidden=true;
@@ -222,7 +225,7 @@ function renderPrivate(){
  el("main").innerHTML=html;
  if(!state.privateShown){
   el("main").querySelectorAll('input[name="private-q"]').forEach(input=>input.onchange=()=>{state.privatePick=Number(input.value);render();});
-  el("ask-private").onclick=()=>{state.privateAnswers[i]={person:i,option:state.privatePick,answer:privateQuestions[i][state.privatePick].answer};state.privateShown=true;render();};
+  el("ask-private").onclick=()=>{state.privateAnswers[i]={person:i,option:state.privatePick,answer:privateAnswer(i,state.privatePick)};state.privateShown=true;render();};
  }else{
   el("next-private").onclick=()=>{
    if(i===3){state.phase="game";state.person=0;state.tab="record";}
@@ -246,7 +249,7 @@ function renderGame(){
  let r=state.round;
  let q=rounds[r][state.a*2+state.b];
  let body='<section class="gamehead"><div><p class="eyebrow">GROUP INTERVIEW｜最終選考</p><h1>共通質問 '+(r+1)+' / 3</h1></div><span class="small status">'+(state.shown?'文字起こし保存済':'面接進行中')+'</span></section>';
- body+='<div class="room '+(tension()>=4?'high':tension()>=2?'medium':'')+'"><div class="room-inner">'+people.map((p,i)=>'<div class="seat"><div class="avatar smallavatar">'+face(i,i===2&&tension()>=4)+'</div><b>'+p.name+'</b><span>候補者 0'+(i+1)+'</span></div>').join('')+'</div><p class="atmosphere"><span>面接室の様子</span>'+esc(mood())+'</p></div>';
+ body+='<div class="room '+(tension()>=4?'high':tension()>=2?'medium':'')+'"><div class="room-inner">'+people.map((p,i)=>'<div class="seat"><div class="avatar smallavatar">'+face(i,i===state.monsterIndex&&tension()>=4)+'</div><b>'+p.name+'</b><span>候補者 0'+(i+1)+'</span></div>').join('')+'</div><p class="atmosphere"><span>面接室の様子</span>'+esc(mood())+'</p></div>';
  if(!state.shown){
   body+='<div class="panel"><h2>全員に尋ねる質問を作成</h2><p class="subtle">2つの語句を組み合わせます。全員が同じ質問に回答します。</p>'+questionOptions()+'<div class="preview"><span>質問プレビュー</span><strong id="preview-q">'+esc(q.q)+'</strong></div><button id="ask" class="btn primary wide">この質問を4名全員にする</button></div>';
  } else {
@@ -271,26 +274,26 @@ function renderDecision(){
  el("main").querySelectorAll('input[name="reject"]').forEach(x=>x.onchange=()=>{state.reject=Number(x.value);el("submit").disabled=false;});
  el("submit").onclick=()=>{if(state.reject<0)return;state.phase="ending";render();};
 }
-function outcome(){if(tension()>=4)return "horror";return state.reject===2?"good":"bad";}
+function outcome(){if(tension()>=4)return "horror";return state.reject===state.monsterIndex?"good":"bad";}
 function renderEnding(){
  el("docs-wrap").hidden=true;el("bottom-mobile").hidden=true;
  const result=outcome();
  let header="",text="",scene="";
  if(result==="good"){
   header='<p class="eyebrow good">GOOD END｜選考終了</p><h1>採用予定者、3名。</h1>';
-  text='<p>不採用：澤田 千尋。</p><p>翌週、人事部から連絡が届いた。</p><blockquote>「今回の最終選考について、異常な入社手続きは確認されませんでした。ご対応ありがとうございました」</blockquote><p>3人の内定者は、少しぎこちなく笑っている。</p><p><strong>あなたは会社を守った。</strong></p>';
-  scene='<div class="ending-portraits">'+[0,1,3].map(i=>'<div class="avatar">'+face(i,false)+'</div>').join('')+'</div>';
+  text='<p>不採用：'+people[state.monsterIndex].name+'。</p><p>翌週、人事部から連絡が届いた。</p><blockquote>「今回の最終選考について、異常な入社手続きは確認されませんでした。ご対応ありがとうございました」</blockquote><p>3人の内定者は、少しぎこちなく笑っている。</p><p><strong>あなたは会社を守った。</strong></p>';
+  scene='<div class="ending-portraits">'+[0,1,2,3].filter(i=>i!==state.monsterIndex).map(i=>'<div class="avatar">'+face(i,false)+'</div>').join('')+'</div>';
  }else if(result==="bad"){
   header='<p class="eyebrow bad">BAD END｜入社手続き完了</p><h1>新入社員、3名。</h1>';
-  text='<p>2027年4月。社内報に、入社式の集合写真が載った。</p><p>写真の中央で、澤田千尋が笑っている。面接のときより、ずっと自然だ。</p><p>隣の社員も、その隣の社員も、同じ角度で笑っている。</p><p><strong>会社に入れてはならない存在を、採用してしまった。</strong></p>';
-  scene='<div class="ending-portraits ominous">'+[0,2,1].map(i=>'<div class="avatar">'+face(i,false)+'</div>').join('')+'</div>';
+  text='<p>2027年4月。社内報に、入社式の集合写真が載った。</p><p>写真の中央で、'+people[state.monsterIndex].name+'が笑っている。面接のときより、ずっと自然だ。</p><p>隣の社員も、その隣の社員も、同じ角度で笑っている。</p><p><strong>会社に入れてはならない存在を、採用してしまった。</strong></p>';
+  scene='<div class="ending-portraits ominous">'+[0,1,2,3].filter(i=>i!==state.reject).map(i=>'<div class="avatar">'+face(i,false)+'</div>').join('')+'</div>';
  }else{
   header='<p class="eyebrow bad">HORROR END｜面接を続けてください</p><h1>まだ、終わっていません。</h1>';
-  text='<p>採用管理システムに通知が現れた。</p><blockquote>「面接が終了していません」</blockquote><p>面接官の席に澤田が座っている。腕がテーブルの端まで、あり得ない長さで伸びていた。</p><p>「では、これまでのご経験について、もう少し詳しく教えてください」</p><p><strong>次の応募者：あなた</strong></p>';
-  scene='<div class="ending-horror"><div class="avatar">'+face(2,true)+'</div><div class="horror-chair">面接官席<br>担当者：澤田 千尋</div></div>';
+  text='<p>採用管理システムに通知が現れた。</p><blockquote>「面接が終了していません」</blockquote><p>面接官の席に'+people[state.monsterIndex].name+'が座っている。腕がテーブルの端まで、あり得ない長さで伸びていた。</p><p>「では、これまでのご経験について、もう少し詳しく教えてください」</p><p><strong>次の応募者：あなた</strong></p>';
+  scene='<div class="ending-horror"><div class="avatar">'+face(state.monsterIndex,true)+'</div><div class="horror-chair">面接官席<br>担当者：'+people[state.monsterIndex].name+'</div></div>';
  }
  el("main").innerHTML='<section class="ending panel '+result+'">'+header+scene+text+'<div class="recap"><strong>今回の選考</strong><p>不採用：'+people[state.reject].name+' ／ 質問3問 ／ 面接室：'+(tension()>=4?'異常':tension()>=2?'重い空気':'平穏')+'</p><details><summary>質問履歴と回答を確認</summary>'+getRecords()+'</details></div><button id="again" class="btn primary wide">別の質問で再プレイする</button></section>';
- el("again").onclick=()=>{Object.assign(state,{phase:"intro",privateIndex:0,privatePick:0,privateShown:false,privateAnswers:[null,null,null,null],round:0,a:0,b:0,shown:false,asked:[],tab:"es",person:0,archive:false,recordsOpen:true,reject:-1});render();};
+ el("again").onclick=()=>{Object.assign(state,{monsterIndex:drawMonster(),phase:"intro",privateIndex:0,privatePick:0,privateShown:false,privateAnswers:[null,null,null,null],round:0,a:0,b:0,shown:false,asked:[],tab:"es",person:0,archive:false,recordsOpen:true,reject:-1});render();};
 }
 function render(){
  head();
@@ -314,6 +317,8 @@ function selfTest(){
   }
  }
  if(checked!==256||!good||!bad||!horror)throw new Error("Branch QA failed");
+ if(monsterPrivate.length!==4||monsterGroupEarly.length!==4||monsterGroupLate.length!==4||sawadaHuman.length!==3)throw new Error("Monster route content missing");
+ for(let i=0;i<4;i++)if(monsterPrivate[i].length!==3||monsterGroupEarly[i].length!==4||monsterGroupLate[i].length!==4||!archiveEcho(i))throw new Error("Monster narrative path missing: "+i);
  let testedPrivateVariants=0;
  for(let a=0;a<3;a++)for(let b=0;b<3;b++)for(let c=0;c<3;c++)for(let d=0;d<3;d++){
   const source=[a,b,c,d];
