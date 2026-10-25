@@ -1,6 +1,6 @@
 "use strict";
 (function(){
-const VERSION="α0.1", UPDATED="2026/10/25 12:18 JST";
+const VERSION="α0.2", UPDATED="2026/10/25 12:52 JST";
 const INIT={
  n02:"120",s02:"新たに電話で確かめる",t02:"今夜",
  n03:"20",s03:"保存済みの回答から取り出す",t03:"来月末",a03:"担当部長",
@@ -9,54 +9,32 @@ const INIT={
  m06:"紙で確認する",n07:"80",m08:"文書で説明する"
 };
 const DOCS=[
-{id:"01",title:"国会からの質問通告",meta:"前日 15:00｜N国・国会事務局",summary:"翌朝10時までに100社以上の根拠と部署の勤務実態を説明。省内からは変更不可。",fixed:true,paras:[
-"労働環境省 御中",
-"明日の委員会では、働き方改革政策の実施状況について質疑を行います。政策実施前後の変化について、少なくとも100社分の確認可能な回答をもとに説明してください。",
-"過去12か月以内の調査結果であれば、対象企業と調査時期を明示して利用できます。新しい調査が必須というわけではありません。",
-"また、働き方改革を推進する担当部署自身の勤務実態についても確認する予定です。資料は明日午前10時までに提出してください。",
-"省内の人員配置、確認手順、決裁方式については、当事務局から指定するものではありません。"]},
-{id:"02",title:"国会対応に係る確認のお願い",meta:"前日 19:42｜改革推進部・森係長",summary:"国会資料用に120社の回答を至急確認する。作業開始は20時以降。",paras:[
-"改革推進部各位",
-"お疲れさまです。森です。先ほど官房から、明日の国会説明に使う資料について再確認の依頼が来ました。",
-"対象は全国[[n02]]社です。回答の取り違えがあると問題になりますので、情報の確認方法は[[s02]]こととします。",
-"数字の最終確認と承認は、先般の組織運営会議で決まった手順に従ってください。前回の国会対応では数字の誤りを指摘されたため、確認を省略することは認めません。",
-"取りまとめの期限は[[t02]]です。通常業務が立て込んでおり、作業を始められるのは20時以降になる見込みです。",
-"遅い時間の依頼となり恐縮ですが、ご対応よろしくお願いいたします。　森"]},
-{id:"03",title:"企業調査資料の保管状況",meta:"1週間前更新｜資料管理室",summary:"8か月前の120社分の調査が保存されている。広報記事にも利用。",paras:[
-"昨年度の働き方改革に関する企業調査について、保管状況を報告する。",
-"調査では全国120社から回答を得た。政策実施前後の変化も確認できる。回答原本、対象企業、調査時期は保存されており、国会資料への再利用も可能である。",
-"広報室から依頼されている[[n03]]社分の企業紹介記事については、情報の確認方法を[[s03]]こととした。",
-"この記事の提出期限は[[t03]]であり、通常業務の範囲で作成できる見込みである。",
-"なお、国会向けの資料などに再利用する場合は、数字の転記ミスがないことを確認すること。広報記事は[[a03]]の確認を経て掲載する。"]},
-{id:"04",title:"事務処理の自動化に関する報告",meta:"2週間前｜庶務課",summary:"経費精算の数字の確認が自動化された。他部署でも利用可能。",paras:[
-"各位。先月から運用を開始した事務処理システムについて、利用状況を報告します。",
-"経費精算の数字と申請内容を確認する際は、現在[[m04]]方法を採用しています。保存されたデータ同士を比較できるため、職員が数字を一つずつ読み上げる必要はありません。",
-"先週は[[n04]]件の申請に利用し、作業時間の短縮を確認しました。企業調査の一覧など、元の電子データが残っていれば他部署でも利用可能です。",
-"次の点検期限は[[t04]]です。システム停止を伴う作業は予定していません。",
-"なお、提案されていた旧データ管理方式の全面廃止については、当面[[r04]]することとなりました。旧方式との併用が可能な状態を維持します。"]},
-{id:"05",title:"組織運営会議・議事要旨",meta:"8か月前｜大臣官房",summary:"改革推進部の設置と、国会資料の確認・承認手順を決定。",paras:[
-"本日の会議では、働き方改革政策の推進体制と、国会向け資料の品質管理について審議した。",
-"まず、政策実施状況を継続的に把握するため、働き方改革推進部の設置申請を[[r05]]した。",
-"過去の国会対応で数字の誤りが指摘されたため、国会提出資料の数字は原則として[[m05]]方法を採用する。従来の目視確認には回答2社につき1分程度を要する。",
-"また、資料の最終承認には[[a05]]の確認を必要とする。全員の確認待ちには平均40分かかる。",
-"ただし、保管済み資料の再利用にあたり、機械で必要な精度を確保できれば、自動照合を利用してもよい。",
-"以上の手順は、働き方改革推進部の設置後に適用する。"]},
-{id:"06",title:"保存済み調査の転記について",meta:"因果更新により発生｜資料管理室・長谷川",summary:"保存済み回答を再入力したため、数字の一致確認が追加された。",generated:true,paras:[
-"森係長。お疲れさまです。資料管理室の長谷川です。国会資料に昨年度の調査結果を利用する件、承知しました。",
-"ただし、現在の手順では保存済みの数字を提出用の表へ再入力することになります。再入力後には、元の表との一致を[[m06]]必要があります。",
-"確認結果を別紙で報告してください。所要時間は25分を想定しています。",
-"なお、元のデータを機械で照合できる場合、再入力と別紙作成は必要ありません。"]},
-{id:"07",title:"国会答弁の数字が足りません",meta:"因果更新により発生｜大臣官房・高橋",summary:"国会に必要な100社分に達せず、緊急の追加確認を指示。",generated:true,paras:[
-"森係長。お疲れさまです。",
-"提出予定の資料について、調査対象が不足しています。国会から求められているのは最低100社です。",
-"追加の[[n07]]社分について、至急連絡先を確認し、回答を取りまとめてください。急な追加作業なので、1社あたり3分を見込んでいます。",
-"なお、人数の記載だけを修正しても回答を入手したことにはなりません。確認対象を減らした理由についても別途ご説明ください。"]},
-{id:"08",title:"提出期限変更に伴う対応",meta:"因果更新により発生｜大臣官房・高橋",summary:"省内の完成予定が国会開催後となり、理由書の作成を指示。",generated:true,paras:[
-"森係長。お疲れさまです。",
-"国会説明資料の完成予定日が委員会開催日より後になっていることを確認しました。",
-"念のため申し上げますが、国会の開催日は変更されておりません。",
-"至急、明日の委員会に提出できない理由を[[m08]]ようお願いいたします。作業時間は45分を想定しています。",
-"なお、この説明によって本来の国会資料の提出義務が免除されるわけではありません。"]}
+{id:"02",title:"国会対応に係る確認のお願い",meta:"前日 19:42｜改革推進部・森係長",summary:"120社の回答を至急確認。作業開始は20時以降。",paras:[
+"改革推進部各位。森です。明朝の国会説明に向け、確認をお願いします。",
+"対象は全国[[n02]]社。情報は[[s02]]こととします。前回の国会では数字を誤ったため、最終確認は省内規程どおり行ってください。",
+"提出は[[t02]]。通常業務のため着手は20時以降です。急な依頼で恐縮ですが、よろしくお願いします。"]},
+{id:"03",title:"企業調査資料の保管状況",meta:"1週間前更新｜資料管理室",summary:"8か月前の120社分の回答が保管されている。広報にも利用中。",paras:[
+"資料室の保管簿。8か月前、120社の回答を電子化。企業名・調査日・政策実施前後の数字も残っており、国会資料への再利用が可能。",
+"広報室向けの[[n03]]社分の紹介記事は、情報を[[s03]]こととした。提出は[[t03]]。通常勤務内で対応できる見込み。",
+"記事の掲載には[[a03]]の確認を受ける。"]},
+{id:"04",title:"事務処理の自動化に関する報告",meta:"2週間前｜庶務課",summary:"経費精算の照合を自動化。他部署でも利用可能。",paras:[
+"庶務課より。申請書の数字は、現在[[m04]]方法で確認しています。元の電子データがあれば企業調査にも転用可能です。",
+"先週は[[n04]]件に使用。次の点検は[[t04]]。システム停止の予定はありません。",
+"旧データ管理方式の全面廃止は当面[[r04]]することとしました。"]},
+{id:"05",title:"組織運営会議・議事要旨",meta:"8か月前｜大臣官房",summary:"改革推進部の設置と、資料の確認・承認手順を決定。",paras:[
+"組織運営会議。政策を継続的に管理するため、改革推進部の設置を[[r05]]した。",
+"前回の国会で数字を誤ったため、国会資料は原則[[m05]]方法で確認する。手作業なら2社につき1分を要する。",
+"最終承認には[[a05]]の確認を求める。全員確認の待ち時間は平均40分。",
+"ただし、保存済みの数字を機械で正確に照合できれば、機械の利用を認める。"]},
+{id:"06",title:"保存済み調査の転記について",meta:"因果更新により発生｜資料管理室・長谷川",summary:"再入力による数字の一致確認が追加された。",generated:true,paras:[
+"森係長。保存済みの回答を再利用する件、承知しました。ただし、数字を書き写す場合は、原本との一致を[[m06]]必要があります。",
+"結果を別紙で提出してください（25分）。機械照合ならこの別紙は不要です。"]},
+{id:"07",title:"国会答弁の数字が足りません",meta:"因果更新により発生｜大臣官房・高橋",summary:"100社分に達せず、緊急の追加確認が指示された。",generated:true,paras:[
+"森係長。国会の条件は100社以上ですが、確認予定が不足しています。追加の[[n07]]社分を至急確保してください（1社3分）。",
+"記載人数を変えるだけでは回答は増えません。変更理由も別途ご説明ください。"]},
+{id:"08",title:"提出期限変更に伴う対応",meta:"因果更新により発生｜大臣官房・高橋",summary:"国会開催後への期限変更で、理由書の作成を指示。",generated:true,paras:[
+"森係長。資料の提出予定が国会開催日の後になっています。なお、国会の開催日は変更されていません。",
+"提出できない理由を[[m08]]ようお願いします（45分）。これで提出義務が免除されるわけではありません。"]}
 ];
 const DOC_BY_ID=Object.fromEntries(DOCS.map(d=>[d.id,d]));
 const labels={
@@ -76,9 +54,10 @@ const METHODS=[
 ];
 const qs=s=>document.querySelector(s);
 const qsa=s=>Array.from(document.querySelectorAll(s));
-let state={values:{...INIT},history:[],first:null,second:null,notice:"",expanded:new Set(["01","02"]),ended:false};
+let state={values:{...INIT},history:[],first:null,second:null,notice:"",expanded:new Set(["02"]),ended:false};
+let started=false;
 function esc(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
-function eligible(id,r){return id==="01"||id==="03"||id==="04"||id==="05"||(id==="02"&&r.org)||(id==="06"&&r.extra06)||(id==="07"&&r.extra07)||(id==="08"&&r.extra08);}
+function eligible(id,r){return id==="03"||id==="04"||id==="05"||(id==="02"&&r.org)||(id==="06"&&r.extra06)||(id==="07"&&r.extra07)||(id==="08"&&r.extra08);}
 function rules(v){
  const org=v.r05==="承認",count=Math.max(0,Number(v.n02)||0),remaining=Math.max(0,100-count);
  const source=v.s02==="新たに電話で確かめる"?"phone":v.s02==="保存済みの回答から取り出す"?"archive":"unknown";
@@ -196,13 +175,19 @@ function preview(a,b){
  qs("#previewLines").innerHTML=[{old:oldA,newer:newA},{old:oldB,newer:newB}].map(d=>'<div class="previewdoc"><strong>'+esc(d.old.doc.title)+'</strong><p class="before">'+d.old.line+'</p><p class="after">'+d.newer.line+'</p></div>').join("");
  qs("#apply").disabled=!!invalid||state.history.length>=3;
  qs("#apply").textContent=state.history.length>=3?"3回使用済み：巻き戻してください":"この交換を確定";
+ if(invalid){
+  // An invalid attempt ends the entire two-item selection.
+  state.first=null;state.second=null;
+  state.notice="交換エラー："+invalid+" 選択をすべて解除しました。";
+  render();
+ }
  qs("#previewPanel").hidden=false;
  qs("#previewPanel").scrollIntoView({behavior:"smooth",block:"nearest"});
 }
 function updateSelection(key){
  if(state.ended)return;
  if(state.history.length>=3){state.notice="確定できる交換は3回までです。巻き戻すか、結末を確認してください。";render();return;}
- if(!state.first){state.first=key;render();return;}
+ if(!state.first){qs("#previewPanel").hidden=true;state.first=key;state.second=null;render();return;}
  if(state.first===key){state.first=null;render();return;}
  preview(state.first,key);
 }
@@ -234,7 +219,7 @@ function undo(){
  qs("#previewPanel").hidden=true;render();
 }
 function restart(){
- state={values:{...INIT},history:[],first:null,second:null,notice:"最初の歴史へ戻しました。",expanded:new Set(["01","02"]),ended:false};
+ state={values:{...INIT},history:[],first:null,second:null,notice:"最初の歴史へ戻しました。",expanded:new Set(["02"]),ended:false};
  qs("#previewPanel").hidden=true;render();window.scrollTo({top:0,behavior:"smooth"});
 }
 function showEnding(){
@@ -252,7 +237,19 @@ function showEnding(){
  qs("#endingStats").textContent="使用した交換 "+moves+"/3｜対象部署の残業 "+r.total+"分｜他業務の残業 "+r.secondary+"分｜文書 "+r.active.length+"件";
  qs("#ending").scrollIntoView({behavior:"smooth",block:"start"});
 }
+function showGame(){
+ started=true;
+ qs("#intro").hidden=true;qs("#game").hidden=false;
+ qs("#startGame").textContent="調査画面に戻る";
+ window.scrollTo({top:0,behavior:"smooth"});
+}
+function showBriefing(){
+ qs("#game").hidden=true;qs("#intro").hidden=false;
+ window.scrollTo({top:0,behavior:"smooth"});
+}
 function init(){
+ qs("#startGame").addEventListener("click",showGame);
+ qs("#viewBriefing").addEventListener("click",showBriefing);
  qs("#documents").addEventListener("click",event=>{
   const btn=event.target.closest("button[data-slot]");if(!btn)return;
   event.preventDefault();event.stopPropagation();updateSelection(btn.dataset.slot);
