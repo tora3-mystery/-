@@ -1,0 +1,191 @@
+{
+  "document": "F1 v0.9 art assets provenance & upload gate",
+  "lastReviewedJST": "2026-10-25",
+  "releaseStatus": "NOT PUBLISHED",
+  "targetDirectory": "f1/assets/",
+  "actualBinaryOnGitHub": false,
+  "fallback": "Embedded labeled 15-state SVG illustrations activate if JPEG missing; not final photographed assets",
+  "assets": [
+    {
+      "file": "store-normal.jpg",
+      "source": "existing photographed master in F1 handoff ZIP",
+      "expectedDimensions": [
+        1100,
+        619
+      ],
+      "expectedBytes": 146708,
+      "expectedSha256": "102ec75f8f2632cd93824dd9bb5302a7061b92fb0bad3308b857c99e4264c20f",
+      "approvedForFinal": true,
+      "uploadedToGitHub": false
+    },
+    {
+      "file": "store-queue.jpg",
+      "source": "existing photographed master in F1 handoff ZIP",
+      "expectedDimensions": [
+        1100,
+        619
+      ],
+      "expectedBytes": 145669,
+      "expectedSha256": "c96307bcfb416659775a347ac336b43a6cc86faaef86c499b11c09eaecaa5a12",
+      "approvedForFinal": true,
+      "uploadedToGitHub": false
+    },
+    {
+      "file": "store-aisle.jpg",
+      "source": "existing photographed master in F1 handoff ZIP",
+      "expectedDimensions": [
+        1100,
+        619
+      ],
+      "expectedBytes": 163164,
+      "expectedSha256": "0d718952b16dc3850dc52ed600012bb556f59f6fc66e28f70718512b8e3dbcce",
+      "approvedForFinal": true,
+      "uploadedToGitHub": false
+    },
+    {
+      "file": "store-stock.jpg",
+      "source": "existing photographed master in F1 handoff ZIP",
+      "expectedDimensions": [
+        1100,
+        619
+      ],
+      "expectedBytes": 139306,
+      "expectedSha256": "4fba66514dbf44af86301cfc9c753bda7e9da92674872b78c009573b7ac0f082",
+      "approvedForFinal": true,
+      "uploadedToGitHub": false
+    },
+    {
+      "file": "store-noise.jpg",
+      "source": "existing photographed master in F1 handoff ZIP",
+      "expectedDimensions": [
+        1100,
+        619
+      ],
+      "expectedBytes": 183926,
+      "expectedSha256": "ca8021fda2f58a6dbac5b86cdd495c75b6eddd3e5a340071ec6841bc844cd992",
+      "approvedForFinal": true,
+      "uploadedToGitHub": false
+    },
+    {
+      "file": "store-thriving.jpg",
+      "source": "new photographed master REQUIRED",
+      "expectedDimensions": [
+        1100,
+        619
+      ],
+      "expectedBytes": null,
+      "expectedSha256": null,
+      "approvedForFinal": false,
+      "uploadedToGitHub": false
+    },
+    {
+      "file": "store-popular-chaos.jpg",
+      "source": "new photographed master REQUIRED",
+      "expectedDimensions": [
+        1100,
+        619
+      ],
+      "expectedBytes": null,
+      "expectedSha256": null,
+      "approvedForFinal": false,
+      "uploadedToGitHub": false
+    },
+    {
+      "file": "store-underused.jpg",
+      "source": "new photographed master REQUIRED",
+      "expectedDimensions": [
+        1100,
+        619
+      ],
+      "expectedBytes": null,
+      "expectedSha256": null,
+      "approvedForFinal": false,
+      "uploadedToGitHub": false
+    },
+    {
+      "file": "store-declining.jpg",
+      "source": "new photographed master REQUIRED",
+      "expectedDimensions": [
+        1100,
+        619
+      ],
+      "expectedBytes": null,
+      "expectedSha256": null,
+      "approvedForFinal": false,
+      "uploadedToGitHub": false
+    },
+    {
+      "file": "store-construction.jpg",
+      "source": "new photographed master REQUIRED",
+      "expectedDimensions": [
+        1100,
+        619
+      ],
+      "expectedBytes": null,
+      "expectedSha256": null,
+      "approvedForFinal": false,
+      "uploadedToGitHub": false
+    },
+    {
+      "file": "store-odd1.jpg",
+      "source": "existing photographed master in F1 handoff ZIP",
+      "expectedDimensions": [
+        1100,
+        619
+      ],
+      "expectedBytes": 118968,
+      "expectedSha256": "2ac2d5ccce6d889f1dea80746882eb696e0c86da313028d20f48000239fd9065",
+      "approvedForFinal": true,
+      "uploadedToGitHub": false
+    },
+    {
+      "file": "store-odd2.jpg",
+      "source": "existing photographed master in F1 handoff ZIP",
+      "expectedDimensions": [
+        1100,
+        619
+      ],
+      "expectedBytes": 128269,
+      "expectedSha256": "4bd0894deb2d6befda03115dbdd987f83a41e73e3f3dfc9d77ba8bba3fb911e3",
+      "approvedForFinal": true,
+      "uploadedToGitHub": false
+    },
+    {
+      "file": "store-odd3.jpg",
+      "source": "existing photographed master in F1 handoff ZIP",
+      "expectedDimensions": [
+        1100,
+        619
+      ],
+      "expectedBytes": 121879,
+      "expectedSha256": "28cc4c70988e4e9248ac5b9465b570e281be1db0949c9a25d67f57e3b9ac830a",
+      "approvedForFinal": true,
+      "uploadedToGitHub": false
+    },
+    {
+      "file": "store-human-day.jpg",
+      "source": "new photographed master REQUIRED",
+      "expectedDimensions": [
+        1100,
+        619
+      ],
+      "expectedBytes": null,
+      "expectedSha256": null,
+      "approvedForFinal": false,
+      "uploadedToGitHub": false
+    },
+    {
+      "file": "store-closed.jpg",
+      "source": "new photographed master REQUIRED",
+      "expectedDimensions": [
+        1100,
+        619
+      ],
+      "expectedBytes": null,
+      "expectedSha256": null,
+      "approvedForFinal": false,
+      "uploadedToGitHub": false
+    }
+  ],
+  "validation": "Compare SHA-256 for original 8 photos. Never commit 300x170 crop previews as master. Recheck all 15 image URLs after upload."
+}
