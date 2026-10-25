@@ -1,0 +1,109 @@
+/* Run: node f1/tests/v09_integrated_selftest.js
+ * Self-contained DOM mock regression for the integrated staged F1/index.html.
+ * This does not replace browser visual QA or image-file verification.
+ */
+'use strict';
+const assert=require('node:assert/strict');
+const fs=require('node:fs');
+const path=require('node:path');
+const html=fs.readFileSync(path.join(__dirname,'..','index.html'),'utf8');
+const match=html.match(/<script>([\s\S]*?)<\/script>/);
+assert(match,'F1 must contain an inline game script');
+const source=match[1];
+class ClassList {
+ constructor(initial=[]){this.values=new Set(initial)}
+ add(...values){values.forEach(x=>this.values.add(x))}
+ remove(...values){values.forEach(x=>this.values.delete(x))}
+ contains(x){return this.values.has(x)}
+ toggle(x,on){(on===undefined?!this.contains(x):on)?this.add(x):this.remove(x)}
+}
+class Element {
+ constructor(initial=[]){this.classList=new ClassList(initial);this.children=[];this.style={};
+ this.attributes={};this.textContent='';this.innerHTML='';this.value='';this.hidden=false;this.disabled=false;this.src='';this.open=false}
+ append(...x){this.children.push(...x)}
+ appendChild(x){this.children.push(x)}
+ replaceChildren(...x){this.children=x}
+ setAttribute(k,v){this.attributes[k]=v}
+ getAttribute(k){return this.attributes[k]??null}
+ focus(){}
+}
+const memory=new Map();
+const localStorage={getItem:k=>memory.get(k)??null,setItem:(k,v)=>memory.set(k,v)};
+function boot(){
+ const nodes=new Map();
+ const get=id=>{if(!nodes.has(id))nodes.set(id,new Element(
+ ['overlay','finalChoice','ending','day8Panel','oddEvidenceBoard','inferArea'].includes(id)?['hidden']:
+ id==='game'?['gameonly']:[]));return nodes.get(id)};
+ const document={body:new Element(),getElementById:get,createElement:()=>new Element(),addEventListener(){}};
+ const window={};
+ new Function('window','document','localStorage','confirm','scrollTo',source)(
+ window,document,localStorage,()=>true,()=>{});
+ return {api:window.__F1_DEBUG__,get};
+}
+let env=boot();
+function playRoute(route,name){
+ env.api.restart();
+ const history=[];
+ for(const [index,id] of route.entries()){
+  const s=env.api.getState(),offered=env.api.availableIds();
+  assert.equal(offered.length,6,name+' day '+(index+1)+' six options');
+  assert(offered.includes(id),name+' day '+(index+1)+' has '+id);
+  const before=s.revenue;
+  env.api.play(id);
+  const after=env.api.getState();
+  assert.equal(after.revenue-before,after.days.at(-1).sales,name+' day '+(index+1)+' accounting');
+  env.api.advance();
+  const advanced=env.api.getState();
+  assert.equal(advanced.complaintTickets.filter(x=>x.status==='open').length,
+   advanced.vals.reduce((a,b)=>a+b,0),name+' complaint ledger');
+  history.push({day:index+1,id,after});
+  if(advanced.finish)break;
+ }
+ return {state:env.api.getState(),history};
+}
+const normal=[
+ ['N1',['pickup','delivery','vibration','forecast','register','rest','floorcheck'],'normal_success'],
+ ['N2',['pickup','vibration','farmer','rest','display','gourmet','discount'],'normal_customer'],
+ ['N3',['pickup','quiet','display','quiet','floorcheck','quiet','floorcheck'],'normal_strain'],
+ ['Zero-sales closure',['discount','sampling','gourmet','sale'],'normal_strain','閉店'],
+ ['Manager dismissal',['quiet','lane','early','limit','early'],'normal_strain','店長交代']
+];
+for(const [name,route,end,reason] of normal){
+ const {state,history}=playRoute(route,name);
+ assert.equal(state.ending,end,name+' ending');
+ if(reason)assert.equal(state.endingReason,reason,name+' reason');
+ assert.equal(state.finish,true,name+' completion');
+ if(reason==='閉店')assert.equal(history.at(-1).after.days.at(-1).sales,0);
+}
+assert.equal(JSON.parse(memory.get('f1-v09')).version,9);
+const restored=boot().api.getState();
+assert.equal(restored.ending,env.api.getState().ending,'saved state restores');
+const oddRoutes=[
+ ['X1',['register','delivery','audit','camera0','open0','glitch6','display'],'odd_stop','stop'],
+ ['X2',['floorcheck','display','quiet','delivery','audit','camera0','discount'],'odd_missing','missing'],
+ ['X3',['discount','receive','audit','camera0','open0','glitch6','ticket'],'odd_day8','close'],
+ ['X4',['quiet','delivery','audit','camera0','open0','glitch6','ticket'],'odd_hidden','infer']
+];
+for(const [name,route,end,action] of oddRoutes){
+ const {state}=playRoute(route,name);
+ assert.equal(state.finish,false,name+' final choice remains open');
+ assert(state.odd>=2,name+' entered anomaly');
+ if(state.glitchSeen){
+  // inspect Saturday scene evidence via recorded route (sixfold exact ID occurs once on day 6)
+  assert.equal(route[5],'glitch6',name+' Saturday sixfold anomaly');
+ }
+ if(action==='stop')env.api.finalDecision('stop');
+ else if(action==='missing')env.api.finalDecision('customer');
+ else if(action==='close'){
+  env.api.finalDecision('day8');assert.equal(env.api.getState().day8Active,true);
+  env.api.finishDay8('close');
+ }else{
+  for(const item of env.get('finalEvidenceList').children)item.children[0].onclick();
+  assert.equal(env.api.getState().clues,3,'all evidence manually read');
+  env.api.startInference();env.api.resolveInference('self','yesterday');
+ }
+ assert.equal(env.api.getState().ending,end,name+' ending');
+ assert.equal(env.api.getState().finish,true,name+' completion');
+}
+console.log('PASS F1 v0.9 integrated DOM-mock routes: 3 normal + 2 early losses + 4 anomaly endings.');
+console.log('NOT TESTED: actual browsers, visual responsive layout, real image bytes/load, GitHub Pages deployment.');
