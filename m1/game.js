@@ -1,6 +1,6 @@
 "use strict";
 (function(){
-const VERSION="α0.2", UPDATED="2026/10/25 12:52 JST";
+const VERSION="α0.3", UPDATED="2026/10/26 01:17 JST";
 const INIT={
  n02:"120",s02:"新たに電話で確かめる",t02:"今夜",
  n03:"20",s03:"保存済みの回答から取り出す",t03:"来月末",a03:"担当部長",
@@ -191,6 +191,50 @@ function updateSelection(key){
  if(state.first===key){state.first=null;render();return;}
  preview(state.first,key);
 }
+
+function showImpact(before,after,a,b,added,removed){
+ const moves=state.history.length;
+ qs("#impactTitle").textContent="第"+moves+"回｜歴史修正が確定しました";
+ const changedDocs=[a,b].map(key=>{
+  const doc=findDocOf(key);
+  const old=state.history[moves-1].values[key], now=state.values[key];
+  return '<div class="impact-edit"><span>'+esc(doc.title)+'</span><p><del>'+esc(old)+'</del> → <strong>'+esc(now)+'</strong></p></div>';
+ });
+ qs("#impactExchange").innerHTML=changedDocs.join("");
+ const deltas=[
+  ["国会用の電話確認",before.phone,after.phone],
+  ["数字の照合",before.verify,after.verify],
+  ["再入力による追加確認",before.extra,after.extra],
+  ["回答不足の緊急確認",before.urgent,after.urgent],
+  ["最終承認待ち",before.approval,after.approval],
+  ["提出遅延の説明",before.deadline,after.deadline],
+  ["ほかの業務の残業",before.secondary,after.secondary]
+ ].filter(item=>item[1]!==item[2]);
+ if(before.org!==after.org){
+  deltas.unshift(["改革推進部の存在",before.org?"存続":"不在",after.org?"存続":"不在"]);
+ }
+ qs("#impactChanges").innerHTML=deltas.length?deltas.map(([name,old,now])=>{
+  const numeric=typeof old==="number";
+  const diff=numeric?now-old:0;
+  const side=numeric?(diff<0?"（"+Math.abs(diff)+"分減少）":diff>0?"（"+diff+"分増加）":""):"";
+  return '<div class="impact-change"><span>'+esc(name)+'</span><b>'+esc(numeric?old+"分":old)+' → '+esc(numeric?now+"分":now)+'</b><small>'+esc(side)+'</small></div>';
+ }).join(""):'<p class="subtle">現在の残業時間には変化がありません。別の記録への影響を調べてください。</p>';
+ const eventLines=[];
+ added.forEach(d=>eventLines.push('<div class="impact-event generated-event"><strong>新しい文書が届いた</strong><p>'+esc(d.title)+'</p><small>'+esc(d.summary)+'</small></div>'));
+ removed.forEach(d=>eventLines.push('<div class="impact-event removed-event"><strong>発生しなかった文書</strong><p>'+esc(d.title)+'</p><small>原因となる仕事が消えたため、現行の記録から消滅しました。</small></div>'));
+ qs("#impactDocuments").innerHTML=eventLines.join("")||'<div class="impact-event neutral-event"><strong>文書の増減はありません</strong><p>書き換えられた記録に基づき、仕事の割当や作業時間が更新されました。</p></div>';
+ qs("#impactBefore").textContent=before.total+"分";
+ qs("#impactAfter").textContent=after.total+"分";
+ qs("#impactSummary").textContent=after.org?
+  (after.total===0?"改革推進部の残業は0分。政策成果と部署の存続も確認してください。":after.total<before.total?"残業が減りました。ただし、必要な仕事が消えたとは限りません。":"残業が増えた、または変わりません。新しく発生した仕事も確認してください。"):
+  "部署そのものが設置されなかった歴史になりました。残業だけは0分です。";
+ qs("#impactContinue").textContent=moves===3?"最終結果を確認する":"更新された記録を調べる";
+ qs("#impactScreen").hidden=false;
+ qs("#impactContinue").focus?.();
+}
+function dismissImpact(){
+ qs("#impactScreen").hidden=true;
+}
 function applySwap(){
  if(!state.first||!state.second||state.history.length>=3)return;
  const a=state.first,b=state.second;
@@ -201,41 +245,75 @@ function applySwap(){
  if(a!=="n07"&&b!=="n07")state.values.n07=String(Math.max(0,100-(Number(state.values.n02)||0)));
  const after=rules(state.values);
  const oldIds=new Set(before.active.map(d=>d.id)),newIds=new Set(after.active.map(d=>d.id));
- const added=after.active.filter(d=>!oldIds.has(d.id)).map(d=>d.title);
- const removed=before.active.filter(d=>!newIds.has(d.id)).map(d=>d.title);
+ const added=after.active.filter(d=>!oldIds.has(d.id));
+ const removed=before.active.filter(d=>!newIds.has(d.id));
  const delta=after.total-before.total;
- state.notice="第"+state.history.length+"交換："+labels[a]+" ⇔ "+labels[b]+"。残業 "+(delta>=0?"+":"")+delta+"分。"
- +(added.length?"　新規：「"+added.join("」「")+"」。":"")
- +(removed.length?"　消滅：「"+removed.join("」「")+"」。":"");
+ state.notice="第"+state.history.length+"回の歴史修正。残業 "+(delta>=0?"+":"")+delta+"分。"+
+ (added.length?"　新しい文書："+added.map(d=>d.title).join("、")+"。":"")+
+ (removed.length?"　消えた文書："+removed.map(d=>d.title).join("、")+"。":"");
  state.first=null;state.second=null;qs("#previewPanel").hidden=true;
- if(added.length)state.expanded.add(after.active.find(d=>!oldIds.has(d.id)).id);
+ added.forEach(d=>state.expanded.add(d.id));
  render();
- if(state.history.length===3)setTimeout(showEnding,700);
+ showImpact(before,after,a,b,added,removed);
 }
 function undo(){
  if(!state.history.length)return;
  const item=state.history.pop();state.values={...item.values};state.first=null;state.second=null;
  state.ended=false;state.notice="交換を1手巻き戻しました。過去の文書と残業を再計算しました。";
- qs("#previewPanel").hidden=true;render();
+ qs("#previewPanel").hidden=true;
+ qs("#impactScreen").hidden=true;qs("#ending").hidden=true;
+ render();
 }
 function restart(){
  state={values:{...INIT},history:[],first:null,second:null,notice:"最初の歴史へ戻しました。",expanded:new Set(["02"]),ended:false};
- qs("#previewPanel").hidden=true;render();window.scrollTo({top:0,behavior:"smooth"});
+ qs("#previewPanel").hidden=true;qs("#impactScreen").hidden=true;qs("#ending").hidden=true;
+ render();window.scrollTo({top:0,behavior:"smooth"});
 }
+
 function showEnding(){
- const r=rules(state.values), moves=state.history.length;
- let heading,story,kind;
- if(!r.org){heading="部署が存在しないため、残業ゼロ";kind="bad";story="改革推進部の設置は承認されなかったことになりました。残業は0分、政策成果も成立していません。国会事務局からは「説明する部署がない理由」の説明を求められています。";}
- else if(r.clean){heading="真の改革：政策も部署も維持";kind="good";story="必要な数字を確保し、残業を増やさずに国会へ提出できました。ただし、因果観察室の歴史修正担当者は45分残業しています。本件は集計対象外です。";}
- else if(r.completed){heading="指標上の改革：対象部署は残業ゼロ";kind="warn";story="改革推進部の残業は消えましたが、別業務の残業が残っています。集計対象を変えるだけでも、成果指標は100%改善するようです。";}
- else if(!r.policy){heading="残業の数字より大切なもの";kind="bad";story="残業の有無にかかわらず、国会へ提出できる有効な資料・期限・確認体制が確保されていません。「残業を減らしました」という説明だけでは国会を通過できません。";}
- else{heading="改革はまだ道半ば";kind="warn";story="国会資料の品質と部署の存続は守られましたが、残業が残っています。もう一度別の過去を作ることができます。";}
- state.ended=true;qs("#ending").hidden=false;
- qs("#ending").className="ending "+kind;
+ dismissImpact();
+ const r=rules(state.values),moves=state.history.length;
+ let heading,story,kind,status;
+ if(!r.org){
+  heading="部署がなくなった";kind="bad";status="任務失敗";
+  story="過去の議事録から改革推進部の設置が消えました。残業は0分になりましたが、政策を説明する担当部署も存在しません。";
+ }else if(r.clean){
+  heading="残業ゼロ。政策は継続。";kind="good";status="任務達成";
+  story="必要な調査結果を確保し、提出に間に合う確認方法へ変更できました。国会では改革の成果が報告されます。";
+ }else if(r.completed){
+  heading="残業は消えた。しかし……";kind="warn";status="対象部署のみ達成";
+  story="改革推進部の残業は0分になりましたが、ほかの業務で時間外勤務が発生しています。数字上の成功と、実態は異なるようです。";
+ }else if(!r.policy){
+  heading="国会に説明できない";kind="bad";status="任務失敗";
+  story="回答数や提出期限、数字の確認方法が国会の要求を満たせません。残業をなくすだけでは改革の成果になりません。";
+ }else{
+  heading="残業が残った";kind="warn";status="任務未達";
+  story="部署は存続し、政策の根拠も維持しました。しかし改革推進部には、まだ"+r.total+"分の残業が残っています。";
+ }
+ const goals=[
+  ["残業0分",r.total===0,r.total===0?"達成":r.total+"分 残存"],
+  ["国会への説明",r.policy,r.policy?"条件を維持":"条件未達"],
+  ["部署の存続",r.org,r.org?"存続":"不在"]
+ ];
+ state.ended=true;
+ qs("#ending").hidden=false;
+ qs("#ending").className="cinema-overlay";
+ qs("#endingSheet").className="cinema-card result-sheet "+kind;
+ qs("#endingStatus").textContent=status;
  qs("#endingTitle").textContent=heading;
  qs("#endingBody").textContent=story;
- qs("#endingStats").textContent="使用した交換 "+moves+"/3｜対象部署の残業 "+r.total+"分｜他業務の残業 "+r.secondary+"分｜文書 "+r.active.length+"件";
- qs("#ending").scrollIntoView({behavior:"smooth",block:"start"});
+ qs("#endingGoals").innerHTML=goals.map(([title,ok,explain])=>'<div class="result-goal '+(ok?"ok":"ng")+'"><span>'+(ok?"✓":"×")+' '+esc(title)+'</span><strong>'+esc(explain)+'</strong></div>').join("");
+ qs("#endingStats").textContent="交換 "+moves+"/3回｜対象部署 "+r.total+"分｜他業務 "+r.secondary+"分｜文書 "+r.active.length+"件";
+ qs("#endingPostscript").textContent=r.clean?
+  "後日談：因果観察室の歴史修正担当者は45分残業しました。なお、当室は今回の集計対象ではありません。":
+  r.completed?"本部報告には『改革推進部の時間外勤務削減率 100%』と記載されました。":"別の語句を交換すれば、違う歴史になったかもしれません。";
+ qs("#endingUndo").disabled=moves===0;
+ qs("#again").focus?.();
+}
+function dismissEnding(){
+ state.ended=false;
+ qs("#ending").hidden=true;
+ render();
 }
 function showGame(){
  started=true;
@@ -255,6 +333,11 @@ function init(){
   event.preventDefault();event.stopPropagation();updateSelection(btn.dataset.slot);
  });
  qs("#apply").addEventListener("click",applySwap);
+ qs("#impactContinue").addEventListener("click",()=>{if(state.history.length===3)showEnding();else dismissImpact();});
+ qs("#impactBack").addEventListener("click",dismissImpact);
+ qs("#resultBack").addEventListener("click",dismissEnding);
+ qs("#endingUndo").addEventListener("click",()=>{undo();});
+
  qs("#closePreview").addEventListener("click",()=>{qs("#previewPanel").hidden=true;state.first=null;state.second=null;render();});
  qs("#undo").addEventListener("click",undo);
  qs("#restart").addEventListener("click",restart);
