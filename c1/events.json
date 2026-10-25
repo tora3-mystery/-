@@ -1,7 +1,7 @@
 {
-  "version": "0.5.1",
+  "version": "0.5.2",
   "date": "2026-10-25 JST",
-  "status": "playtest v0.5.1",
+  "status": "playtest v0.5.2",
   "thresholds": {
     "cp_gameover": 20,
     "p_win": 22,
@@ -80,7 +80,79 @@
       "note": "",
       "time": "09:20",
       "actor": "employee",
-      "timeLabel": "月曜日 09:20"
+      "timeLabel": "月曜日 09:20",
+      "alternates": [
+        {
+          "variantId": "B",
+          "title": "配属初日の挨拶チャット",
+          "scene": "部長が部署の全体チャットに「新人を歓迎しよう」と投稿。本人はまだ入室していない。あなたが最初の返信を書く。",
+          "time": "09:20",
+          "actor": "employee",
+          "cue": "配属時の歓迎なので、本人の気持ちを決めつけすぎない。",
+          "choices": [
+            {
+              "id": "A",
+              "text": "「期待の大型新人です！」と全体に紹介",
+              "harassment": "大型新人ハラ",
+              "reason": "本人が説明していない期待値を全員に宣言した。",
+              "cp": 3,
+              "progress": 1,
+              "growth": 0,
+              "fit": null
+            },
+            {
+              "id": "B",
+              "text": "「まずは皆さん、拍手で迎えよう」",
+              "harassment": "拍手強要ハラ",
+              "reason": "歓迎への反応を周囲に求める空気を作った。",
+              "cp": 3,
+              "progress": 0,
+              "growth": 0,
+              "fit": null
+            },
+            {
+              "id": "C",
+              "text": "「よろしくお願いします。配属後に本人から一言もらいます」",
+              "harassment": "挨拶順番ハラ",
+              "reason": "発言の順番を勝手に指定されたと分類された。",
+              "cp": 1,
+              "progress": 1,
+              "growth": 0,
+              "fit": null
+            },
+            {
+              "id": "D",
+              "text": "「本人が来てから、希望を聞いて紹介します」",
+              "harassment": "紹介保留ハラ疑義",
+              "reason": "本人の同意を確認するための保留で正式認定はなかった。",
+              "cp": 1,
+              "progress": 1,
+              "growth": 1,
+              "fit": null
+            },
+            {
+              "id": "E",
+              "text": "「とりあえず全員に自己紹介を依頼しよう」",
+              "harassment": "自己紹介連鎖ハラ",
+              "reason": "歓迎を名目に全員へ説明負荷を広げた。",
+              "cp": 1,
+              "progress": 1,
+              "growth": 1,
+              "fit": null
+            },
+            {
+              "id": "F",
+              "text": "何も書かず、いつも通り業務を始める",
+              "harassment": "歓迎沈黙ハラ",
+              "reason": "新人への歓迎の機会を作らなかった。",
+              "cp": 1,
+              "progress": 0,
+              "growth": 1,
+              "fit": null
+            }
+          ]
+        }
+      ]
     },
     {
       "id": "D1-2",
@@ -226,7 +298,79 @@
       "note": "",
       "time": "12:00",
       "actor": "employee",
-      "timeLabel": "月曜日 12:00"
+      "timeLabel": "月曜日 12:00",
+      "alternates": [
+        {
+          "variantId": "B",
+          "title": "社員食堂の謎ルール",
+          "scene": "新人が「食堂って席は自由ですか？」と質問。部長からは「部署の親睦も大事に」とだけ連絡が来た。",
+          "time": "12:05",
+          "actor": "employee",
+          "cue": "聞かれているのは席のルール。昼食への参加希望はまだ聞いていない。",
+          "choices": [
+            {
+              "id": "A",
+              "text": "「今日は私の隣の席に座りなよ」",
+              "harassment": "座席指定ハラ",
+              "reason": "食事の居場所を上司が決めてしまった。",
+              "cp": 2,
+              "progress": 0,
+              "growth": 1,
+              "fit": null
+            },
+            {
+              "id": "B",
+              "text": "「課の全員で同じテーブルにしよう」",
+              "harassment": "一体感ハラ",
+              "reason": "親睦を理由に一律の行動を求めた。",
+              "cp": 2,
+              "progress": 0,
+              "growth": 1,
+              "fit": null
+            },
+            {
+              "id": "C",
+              "text": "「好きなところで食べて。私はいつもここ」",
+              "harassment": "席選択ハラ疑義",
+              "reason": "座席の利用方法を案内しただけで、参加の強制はなかった。",
+              "cp": 1,
+              "progress": 0,
+              "growth": 0,
+              "fit": null
+            },
+            {
+              "id": "D",
+              "text": "「食堂の席選び、相談に乗ろうか？」",
+              "harassment": "選択補助ハラ",
+              "reason": "必要以上の介入と社内分類された。",
+              "cp": 1,
+              "progress": 0,
+              "growth": 1,
+              "fit": null
+            },
+            {
+              "id": "E",
+              "text": "「食事中に午後の仕事の相談もしよう」",
+              "harassment": "食事業務ハラ",
+              "reason": "休憩時間に業務相談を持ち込んだ。",
+              "cp": 1,
+              "progress": 0,
+              "growth": 0,
+              "fit": null
+            },
+            {
+              "id": "F",
+              "text": "「食堂より外の店を教えるね」",
+              "harassment": "食堂軽視ハラ",
+              "reason": "求められていない場所の推奨をしたとされた。",
+              "cp": 0,
+              "progress": 0,
+              "growth": 1,
+              "fit": null
+            }
+          ]
+        }
+      ]
     },
     {
       "id": "D2-1",
@@ -299,7 +443,79 @@
       "note": "",
       "time": "09:40",
       "actor": "employee",
-      "timeLabel": "火曜日 09:40"
+      "timeLabel": "火曜日 09:40",
+      "alternates": [
+        {
+          "variantId": "B",
+          "title": "共有フォルダが深すぎる",
+          "scene": "新人が「最新版がどれか分からないです」。共有フォルダには「最終」「最終2」「最終_本当」が並んでいる。部長は説明時間の削減を指示。",
+          "time": "09:45",
+          "actor": "employee",
+          "cue": "版管理の問題が起きている。前日までの相談スタイルも参考になる。",
+          "choices": [
+            {
+              "id": "A",
+              "text": "歴代フォルダを全部開いて説明する",
+              "harassment": "フォルダ解説ハラ",
+              "reason": "経緯の説明が長すぎた。",
+              "cp": 2,
+              "progress": 1,
+              "growth": 1,
+              "fit": null
+            },
+            {
+              "id": "B",
+              "text": "「最終_本当でいいと思うよ」と伝える",
+              "harassment": "根拠不足ハラ",
+              "reason": "確認前に名前だけで判断させた。",
+              "cp": 1,
+              "progress": 1,
+              "growth": 1,
+              "fit": null
+            },
+            {
+              "id": "C",
+              "text": "「自分で探して。勉強になるから」",
+              "harassment": "探索丸投げハラ",
+              "reason": "版の判断を新人一人に委ねた。",
+              "cp": 2,
+              "progress": 2,
+              "growth": 0,
+              "fit": null
+            },
+            {
+              "id": "D",
+              "text": "正本を1つ決め、使い方を短く文書化する",
+              "harassment": "書面整備ハラ疑義",
+              "reason": "参照先の明確化により正式認定は回避した。",
+              "cp": 1,
+              "progress": 2,
+              "growth": 0,
+              "fit": null
+            },
+            {
+              "id": "E",
+              "text": "フォルダをすべて削除して作り直す",
+              "harassment": "履歴消去ハラ",
+              "reason": "必要な過去資料まで失われた。",
+              "cp": 1,
+              "progress": 1,
+              "growth": 1,
+              "fit": null
+            },
+            {
+              "id": "F",
+              "text": "部長に30分会議を設定する",
+              "harassment": "会議召集ハラ",
+              "reason": "即時に解消できる問題で会議負荷を生んだ。",
+              "cp": 2,
+              "progress": 2,
+              "growth": 0,
+              "fit": null
+            }
+          ]
+        }
+      ]
     },
     {
       "id": "D2-2",
@@ -591,7 +807,79 @@
       "note": "",
       "time": "14:20",
       "actor": "employee",
-      "timeLabel": "水曜日 14:20"
+      "timeLabel": "水曜日 14:20",
+      "alternates": [
+        {
+          "variantId": "B",
+          "title": "数字の単位が一桁違った",
+          "scene": "新人が「万円と千円を取り違えました」と申告。数字は社内共有済みだが、外部送信前に気づいた。",
+          "time": "14:15",
+          "actor": "employee",
+          "cue": "ミスは外部送信前に発覚した。本人は修正に協力すると言っている。",
+          "choices": [
+            {
+              "id": "A",
+              "text": "その場で一緒に誤差の出所を確認する",
+              "harassment": "共同確認ハラ疑義",
+              "reason": "影響範囲を本人と確認し、過剰な追及はなかった。",
+              "cp": 1,
+              "progress": 1,
+              "growth": 1,
+              "fit": null
+            },
+            {
+              "id": "B",
+              "text": "自分で全資料を直してしまう",
+              "harassment": "巻取りハラ",
+              "reason": "新人の修正機会を管理職が引き取った。",
+              "cp": 1,
+              "progress": 1,
+              "growth": 1,
+              "fit": null
+            },
+            {
+              "id": "C",
+              "text": "本人にだけ、修正版の全ページを作らせる",
+              "harassment": "全件修正ハラ",
+              "reason": "ミスの規模を超えて単独で対応させた。",
+              "cp": 2,
+              "progress": 2,
+              "growth": 0,
+              "fit": null
+            },
+            {
+              "id": "D",
+              "text": "チーム全体に「誰のミスか」を共有する",
+              "harassment": "公開指摘ハラ",
+              "reason": "原因追究より個人の特定が優先された。",
+              "cp": 1,
+              "progress": 3,
+              "growth": 0,
+              "fit": null
+            },
+            {
+              "id": "E",
+              "text": "「誰でもあるよ」と何も修正しない",
+              "harassment": "楽観放置ハラ",
+              "reason": "具体的な修正を先送りした。",
+              "cp": 0,
+              "progress": 1,
+              "growth": 2,
+              "fit": null
+            },
+            {
+              "id": "F",
+              "text": "部長にだけ報告して本人には伝えない",
+              "harassment": "秘密報告ハラ",
+              "reason": "修正担当本人を改善過程から外した。",
+              "cp": 3,
+              "progress": 2,
+              "growth": 0,
+              "fit": null
+            }
+          ]
+        }
+      ]
     },
     {
       "id": "D3-3",
@@ -664,7 +952,79 @@
       "note": "",
       "time": "16:45",
       "actor": "boss",
-      "timeLabel": "水曜日 16:45"
+      "timeLabel": "水曜日 16:45",
+      "alternates": [
+        {
+          "variantId": "B",
+          "title": "部長の『会議はゼロで』指令",
+          "scene": "部長「明日までに他部署の見解を集めろ。でも会議は絶対に増やすな」。他部署の担当者は午後から外出予定。",
+          "time": "16:45",
+          "actor": "boss",
+          "cue": "部長の禁止事項と情報収集の両立が求められる。",
+          "choices": [
+            {
+              "id": "A",
+              "text": "新人に各部署への電話を全部任せる",
+              "harassment": "電話突撃ハラ",
+              "reason": "突然の電話確認を新人に集中させた。",
+              "cp": 3,
+              "progress": 3,
+              "growth": 0,
+              "fit": null
+            },
+            {
+              "id": "B",
+              "text": "30分の合同会議を設定する",
+              "harassment": "会議指令違反ハラ",
+              "reason": "部長の明示した会議禁止を破った。",
+              "cp": 3,
+              "progress": 3,
+              "growth": 0,
+              "fit": null
+            },
+            {
+              "id": "C",
+              "text": "各部署に文書で必要論点だけ照会する",
+              "harassment": "文章照会ハラ疑義",
+              "reason": "範囲を絞った照会で負担を抑えた。",
+              "cp": 0,
+              "progress": 1,
+              "growth": 1,
+              "fit": null
+            },
+            {
+              "id": "D",
+              "text": "「部長案件なので」と全員に催促を送る",
+              "harassment": "権威催促ハラ",
+              "reason": "部長の権威を使って早期回答を迫った。",
+              "cp": 1,
+              "progress": 2,
+              "growth": 1,
+              "fit": null
+            },
+            {
+              "id": "E",
+              "text": "新人と手分けして確認先を整理する",
+              "harassment": "分担調整ハラ",
+              "reason": "分担調整まで制度上の配慮対象にされた。",
+              "cp": 3,
+              "progress": 3,
+              "growth": 0,
+              "fit": null
+            },
+            {
+              "id": "F",
+              "text": "確認を諦めて昨日の見解を流用する",
+              "harassment": "確認省略ハラ",
+              "reason": "新しい論点の見解がないまま資料に反映した。",
+              "cp": 1,
+              "progress": 0,
+              "growth": 0,
+              "fit": null
+            }
+          ]
+        }
+      ]
     },
     {
       "id": "D4-1",
@@ -737,7 +1097,79 @@
       "note": "",
       "time": "10:00",
       "actor": "boss",
-      "timeLabel": "木曜日 10:00"
+      "timeLabel": "木曜日 10:00",
+      "alternates": [
+        {
+          "variantId": "B",
+          "title": "部長の歓迎ランチ補助制度",
+          "scene": "部長「今夜の飲み会が難しいなら昼に集まればいい。交流実績は必ず報告」。新人からは参加希望の連絡はない。",
+          "time": "10:00",
+          "actor": "boss",
+          "cue": "制度の実績と本人の希望は別問題。",
+          "choices": [
+            {
+              "id": "A",
+              "text": "全員参加の昼食会を予定に入れる",
+              "harassment": "予定強制ハラ",
+              "reason": "休憩時間の参加を事実上の必須とした。",
+              "cp": 1,
+              "progress": 0,
+              "growth": 1,
+              "fit": null
+            },
+            {
+              "id": "B",
+              "text": "新人に会場選びをすべて任せる",
+              "harassment": "幹事丸投げハラ",
+              "reason": "配属直後の社員に負担を集中させた。",
+              "cp": 2,
+              "progress": 1,
+              "growth": 0,
+              "fit": null
+            },
+            {
+              "id": "C",
+              "text": "お店と費用だけ周知して参加は任意にする",
+              "harassment": "任意誘導ハラ疑義",
+              "reason": "参加を強要せず、本人が選べる状態を作った。",
+              "cp": 1,
+              "progress": 0,
+              "growth": 1,
+              "fit": null
+            },
+            {
+              "id": "D",
+              "text": "参加しない理由を一人ずつ聞く",
+              "harassment": "理由聴取ハラ",
+              "reason": "私的な事情の説明を求めた。",
+              "cp": 3,
+              "progress": 2,
+              "growth": 0,
+              "fit": null
+            },
+            {
+              "id": "E",
+              "text": "部長には参加予定人数を多めに報告する",
+              "harassment": "実績水増しハラ",
+              "reason": "実態より多い数字を報告した。",
+              "cp": 1,
+              "progress": 0,
+              "growth": 0,
+              "fit": null
+            },
+            {
+              "id": "F",
+              "text": "食事はやめて通常の業務面談に替える",
+              "harassment": "業務混同ハラ",
+              "reason": "交流の目的を人事面談に変更した。",
+              "cp": 1,
+              "progress": 0,
+              "growth": 1,
+              "fit": null
+            }
+          ]
+        }
+      ]
     },
     {
       "id": "D4-2",
@@ -810,7 +1242,79 @@
       "note": "",
       "time": "14:30",
       "actor": "employee",
-      "timeLabel": "木曜日 14:30"
+      "timeLabel": "木曜日 14:30",
+      "alternates": [
+        {
+          "variantId": "B",
+          "title": "社内表彰の推薦文",
+          "scene": "新人が資料の改善案を出した。部長は「褒めて育てろ。ただし調子に乗らせるな」と指示。社内表彰の推薦締切は今日。",
+          "time": "14:30",
+          "actor": "employee",
+          "cue": "本人の貢献内容に即したフィードバックが必要。",
+          "choices": [
+            {
+              "id": "A",
+              "text": "「天才すぎる」と全社に推薦する",
+              "harassment": "全社過大称賛ハラ",
+              "reason": "実績以上の期待を全社に広めた。",
+              "cp": 2,
+              "progress": 2,
+              "growth": 0,
+              "fit": null
+            },
+            {
+              "id": "B",
+              "text": "具体的な改善点を挙げ本人の希望を確認する",
+              "harassment": "事前確認ハラ疑義",
+              "reason": "本人の意向と事実を確認する対応だった。",
+              "cp": 1,
+              "progress": 1,
+              "growth": 1,
+              "fit": null
+            },
+            {
+              "id": "C",
+              "text": "部長名義で表彰推薦だけ提出する",
+              "harassment": "功績横取りハラ",
+              "reason": "本人の貢献が見えなくなった。",
+              "cp": 1,
+              "progress": 1,
+              "growth": 1,
+              "fit": null
+            },
+            {
+              "id": "D",
+              "text": "推薦せずに普通の仕事として処理する",
+              "harassment": "無評価ハラ",
+              "reason": "成果を認める機会を失った。",
+              "cp": 2,
+              "progress": 2,
+              "growth": 0,
+              "fit": null
+            },
+            {
+              "id": "E",
+              "text": "新人に自分の推薦文を書かせる",
+              "harassment": "自薦強制ハラ",
+              "reason": "自分を褒める文章を本人に求めた。",
+              "cp": 0,
+              "progress": 1,
+              "growth": 2,
+              "fit": null
+            },
+            {
+              "id": "F",
+              "text": "推薦するかを部長に全て委ねる",
+              "harassment": "決定回避ハラ",
+              "reason": "判断の責任を他者へ移した。",
+              "cp": 2,
+              "progress": 2,
+              "growth": 0,
+              "fit": null
+            }
+          ]
+        }
+      ]
     },
     {
       "id": "D4-3",
@@ -1029,7 +1533,79 @@
       "note": "",
       "time": "15:30",
       "actor": "employee",
-      "timeLabel": "金曜日 15:30"
+      "timeLabel": "金曜日 15:30",
+      "alternates": [
+        {
+          "variantId": "B",
+          "title": "修正履歴が消せません",
+          "scene": "役員報告の直前、資料に大量のコメント履歴が残っている。新人「このまま送って大丈夫でしょうか？」と相談。",
+          "time": "15:30",
+          "actor": "employee",
+          "cue": "内容確認が終わっていても、共有前の履歴整理が必要。",
+          "choices": [
+            {
+              "id": "A",
+              "text": "全コメントを一つずつ読み上げて確認する",
+              "harassment": "逐語確認ハラ",
+              "reason": "説明と確認の量が過剰になった。",
+              "cp": 2,
+              "progress": 1,
+              "growth": 0,
+              "fit": null
+            },
+            {
+              "id": "B",
+              "text": "「自分で全部判断して消して」と頼む",
+              "harassment": "履歴処理丸投げハラ",
+              "reason": "判断と責任を新人だけに預けた。",
+              "cp": 2,
+              "progress": 3,
+              "growth": 0,
+              "fit": null
+            },
+            {
+              "id": "C",
+              "text": "内容を確認して、共有用コピーだけ整理する",
+              "harassment": "提出整備ハラ疑義",
+              "reason": "原本を残しつつ共有範囲を整理した。",
+              "cp": 0,
+              "progress": 2,
+              "growth": 1,
+              "fit": null
+            },
+            {
+              "id": "D",
+              "text": "何も変えずにそのまま提出する",
+              "harassment": "情報露出ハラ",
+              "reason": "内部コメントが不要に共有される状態を放置した。",
+              "cp": 1,
+              "progress": 1,
+              "growth": 0,
+              "fit": null
+            },
+            {
+              "id": "E",
+              "text": "直前の作業だから、と新人を資料から外す",
+              "harassment": "最終工程排除ハラ",
+              "reason": "完成に必要な経験機会を奪った。",
+              "cp": 1,
+              "progress": 1,
+              "growth": 1,
+              "fit": null
+            },
+            {
+              "id": "F",
+              "text": "役員に「新人のミスで」と予告を入れる",
+              "harassment": "責任転嫁ハラ",
+              "reason": "本人の落ち度として先回りの説明をした。",
+              "cp": 1,
+              "progress": 2,
+              "growth": 0,
+              "fit": null
+            }
+          ]
+        }
+      ]
     },
     {
       "id": "D5-3",
@@ -1187,5 +1763,5 @@
       "rule": "成功、最終報告でハラ指摘ハラを選んだ"
     }
   ],
-  "updated_jst": "2026-10-26 00:38 JST"
+  "updated_jst": "2026-10-26 01:10 JST"
 }

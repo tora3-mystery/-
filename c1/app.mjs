@@ -19,9 +19,11 @@ let muted=load(PREF_KEY,false);
 let clockSelected='normal';
 let toast='';
 const displayDay=()=>Math.floor((run?.index??0)/3);
-const displayTime=()=>events[run.index]?.time||'09:00';
+const displayTime=()=>activeEvent()?.time||'09:00';
 const cpRemaining=()=>Math.max(0,LIMITS.cp-run.cp);
 const bossBadge=(e)=>e.actor==='boss';
+// Save-level eventPlan chooses the optional alternative. Legacy saves retain their original events.
+function activeEvent(){if(!run)return null;const e=events[run.index];return e?.alternates?.[run.eventPlan?.[run.index]-1] ? {...e,...e.alternates[run.eventPlan[run.index]-1],id:e.id,day:e.day} : e;}
 
 function save(){if(run)persist(SAVE_KEY,run);}
 function storeRecords(){persist(RECORD_KEY,records);}
@@ -59,17 +61,25 @@ function intro(){
     <div class="actions">${canResume?'<button class="primary" data-action="resume">続きから再開</button>':''}<button class="${canResume?'secondary':'primary'}" data-action="start">${canResume?'最初から始める':'配属社員を確認して始める'}</button></div>
     </div><div class="toolrow spaced"><button class="quiet" data-action="show-archive">これまでのハラ図鑑 (${Object.keys(records.names).length}件)</button><button class="quiet" data-action="show-endings">エンディング収集 (${Object.keys(records.endings).length}/16)</button><button class="quiet" data-action="toggle-sound">効果音：${muted?'OFF':'ON'}</button></div>`;
 }
-function profileCard(p){return `<div class="employee"><div class="portrait" role="img" aria-label="社員を表すアイコン">${esc(p.avatar)}</div><div><div class="tiny">本日配属・人材プロフィール</div><div class="employee-name">${esc(p.name)}</div><div class="employee-sub">${esc(p.gender)}・${esc(p.age)}歳 / 入社${p.grade}年目<br>${esc(p.previous)} → ${esc(p.department)}</div></div></div>
-  <div class="profile-grid"><div class="info"><b>希望するキャリア</b>${esc(p.ambition)}</div><div class="info"><b>強み・経験</b>${esc(p.skill)}</div></div>
-  <div class="list-header">本人からのメッセージ</div>${p.speech.map(s=>`<div class="quote">「${esc(s)}」</div>`).join('')}`;}
+function profileCard(p){
+ const fallback=esc(p.avatar||'🧑‍💼');
+ const portrait=p.photo ? `<div class="portrait face-photo" role="img" aria-label="架空の社員の合成顔写真"><span class="portrait-fallback">${fallback}</span><img src="${esc(p.photo)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>` : `<div class="portrait" role="img" aria-label="社員アイコン">${fallback}</div>`;
+ const education=p.university&&p.faculty?`<div class="info"><b>出身大学・学部</b>${esc(p.university)} ${esc(p.faculty)}</div>`:'';
+ const club=p.club?`<div class="info"><b>サークル・学生生活</b>${esc(p.club)}<div class="tiny">${esc(p.studentMemory||'')}</div></div>`:'';
+ const temperament=p.temperament?`<div class="info"><b>本人の自己紹介より</b><strong>${esc(p.temperament)}</strong><div class="tiny">${esc(p.temperamentText||'')}</div></div>`:'';
+ return `<div class="employee">${portrait}<div><div class="tiny">本日配属・人材プロフィール</div><div class="employee-name">${esc(p.name)}</div><div class="employee-sub">${esc(p.gender)}・${esc(p.age)}歳 / 入社${p.grade}年目<br>${esc(p.previous)} → ${esc(p.department)}</div></div></div>
+ <div class="profile-grid">${education}${club}${temperament}<div class="info"><b>希望するキャリア</b>${esc(p.ambition)}</div><div class="info"><b>強み・経験</b>${esc(p.skill)}</div></div>
+ <div class="list-header">本人からのメッセージ</div>${p.speech.map(s=>`<div class="quote">「${esc(s)}」</div>`).join('')}
+ <p class="tiny">顔写真は架空社員の合成素材。大学・サークルは人物像の参考情報であり、コンプラ判定の隠しパラメータではありません。</p>`;
+}
 function profileScreen(){return `<div class="eyebrow">DAY 01 / 配属通知</div><h1 class="h2">今週の配属社員</h1><p class="lead">人材基本情報を確認してください。希望や得意分野は、今週の指導に影響します。</p><section class="paper">${profileCard(run.profile)}<div class="actions"><button class="primary" data-action="begin">この社員を受け入れる</button><button class="quiet" data-action="reroll">別の社員を表示する</button></div></section>`;}
 function directiveCompact(){const d=DIRECTIVES[displayDay()];return `<aside class="boss-mini"><span class="boss-stamp">部長指令｜当日の縛り</span><strong>進捗 ${d.progress} 以上・習熟 ${d.growth} 以上</strong><span>未達なら追加報告が発生し、進捗が減少</span></aside>`;}
 function briefingScreen(){const i=displayDay(),d=DIRECTIVES[i];return `<div class="eyebrow">部長室からの通達 / 2030</div><div class="daytime large"><span class="day-pill">DAY ${i+1} / 5</span><strong>${DAYS[i]}　${d.time}</strong></div><section class="boss-directive"><div class="boss-crest">部長指令 <span>読了必須</span></div><h2>${esc(d.title)}</h2><p>「${esc(d.demand)}」</p><div class="boss-orders"><div><small>この日の終業までに</small><strong>業務進捗 ${d.progress} 以上</strong></div><div><small>加えて</small><strong>新人の習熟 ${d.growth} 以上</strong></div></div><p class="boss-remark">部長：「${esc(d.remark)}」</p><p class="small">両方の目標を外すと追加確認が発生し、仕事の進捗が減ります。部長の評価と新人への対応は別の問題です。</p></section><div class="actions"><button class="primary" data-action="begin-day">指令を確認して業務開始</button></div>`;}
 function dayReviewScreen(){const i=displayDay(),r=run.bossReports?.at(-1),d=DIRECTIVES[i];if(!r)return '<p>日次査定を確認できませんでした。</p>';return `<div class="eyebrow">終業報告 / 部長からの返信</div><div class="daytime large"><span class="day-pill">DAY ${i+1} / 5</span><strong>${DAYS[i]}　18:00</strong></div><section class="boss-directive ${r.met?'boss-pass':'boss-fail'}"><div class="boss-crest">部長査定 <span>${r.met?'ノルマ達成':'追加業務発生'}</span></div><h2>${r.met?'「まあ、今日のところはいいだろう」':'「この数字で帰るつもりか？」'}</h2><p>提出した数字：進捗 ${r.progress} / 目標 ${d.progress}、習熟 ${r.growth} / 目標 ${d.growth}</p>${r.met?'<p>本日の部長指令はクリア。次の日の指示はさらに厳しくなります。</p>':`<p>未達の項目：${r.missing.map(esc).join('・')}。不足資料の再作成が発生しました。</p><div class="score-boost boss-penalty">業務進捗 −${r.penalty}</div>`}</section><div class="actions"><button class="primary" data-action="next">翌営業日の部長指令を確認</button><button class="secondary" data-action="show-notes">対応履歴を確認</button></div>`;}
-function scene(){const e=events[run.index];const dayIndex=displayDay();const isBoss=bossBadge(e);
+function scene(){const e=activeEvent();const dayIndex=displayDay();const isBoss=bossBadge(e);
 return `<div class="panelhead"><span class="eyebrow">2030年度 人材育成支援システム</span><span class="tag">自動保存</span></div>${statusBar()}${scorePanel()}${directiveCompact()}${topActions()}
 <section class="event-unit ${isBoss?'event-boss':'event-employee'}"><div class="event-type"><span>${isBoss?'⚠ 部長案件':'● 若手社員との対応'}</span><span>${DAYS[dayIndex]} ${esc(e.time||'')}</span></div>
-<div class="scene-header"><div class="scene-index">CASE ${run.index%3+1}　${esc(e.id)}</div><div class="scene-title">${esc(e.title)}</div><div class="scene-description">${esc(e.scene)}</div><div class="cue">判断材料：${esc(e.cue)}</div></div></section>
+<div class="scene-header"><div class="scene-index">CASE ${run.index%3+1}　${esc(e.id)}</div><div class="scene-title">${esc(e.title)}</div><div class="scene-description">${esc(e.scene)}</div>${run.index<3?`<div class="cue">配属初日の確認メモ：${esc(e.cue)}</div>`:`<details class="context-note"><summary>必要なら背景メモを確認する</summary><p>${esc(e.cue)}</p></details>`}</div></section>
 <section class="paper spaced"><div class="panelhead"><strong class="small">あなたはどう対応しますか？</strong><span class="tiny">6つから1つ選択</span></div>${e.id==='D3-1'?clockWidget():''}<div class="choices">${e.choices.map(c=>`<button class="choice" data-choice="${c.id}"><span class="letter">${c.id}</span><span>${esc(c.text)}</span></button>`).join('')}</div></section><p class="privacy">※選択後は戻せません。コンプラ違反ポイントが20に到達すると部長室に呼び出されます。</p>`;}
 function clockWidget(){const choices=[['instant','通知から数秒で返信'],['normal','15分ほどで返信'],['late','翌朝まで保留']];return `<div class="clockbox"><strong class="small">社内チャット｜返信するタイミングを指定</strong><p class="clock-warning">実時間の計測はありません。先に返信タイミングを選び、続けて返信内容を選択してください。</p><div class="clockmode">${choices.map(([value,label])=>`<button data-time="${value}" class="quiet ${clockSelected===value?'selected':''}" aria-pressed="${clockSelected===value}">${label}</button>`).join('')}</div></div>`;}
 function resultScreen(){const log=run.pending;if(!log)return '<p class="error">表示できる判定がありません。</p>';
@@ -109,7 +119,7 @@ function showModal(type){
   const p=run?.profile;
   let title='',body='';
   if(type==='profile'){title='配属社員プロフィール';body=p?profileCard(p):'<div class="empty">まだ社員が配属されていません。</div>';}
-  if(type==='guide'){title='操作説明';body=`<div class="info">5営業日×各3業務＝全15イベントで、6つの対応から1つずつ選びます。正式認定が3回連続するごとにコンプラ・コンボで追加+1pt（疑義はリセット）。コンプラ違反20ptで即敗北。金曜までに業務22以上・習熟6以上でクリア。毎朝の部長指令の数値ノルマを未達にすると、追加報告が発生し、業務進捗が減少します。選択後の結果画面で「○○ハラ」の種類と点数が表示されます。</div><p class="small">チャット返信イベントでは、実時間を測らず返信タイミングを選べます。プロフィールと業務メモはいつでも参照できます。</p><p class="privacy">スコア、名前、イベントはゲーム内のフィクションであり、現実の法的判断ではありません。</p>`;}
+  if(type==='guide'){title='操作説明';body=`<div class="info">5営業日×各3業務＝全15イベント（8枠にシナリオ差分あり）で、6つの対応から1つずつ選びます。正式認定が3回連続するごとにコンプラ・コンボで追加+1pt（疑義はリセット）。コンプラ違反20ptで即敗北。金曜までに業務22以上・習熟6以上でクリア。毎朝の部長指令の数値ノルマを未達にすると、追加報告が発生し、業務進捗が減少します。選択後の結果画面で「○○ハラ」の種類と点数が表示されます。</div><p class="small">チャット返信イベントでは、実時間を測らず返信タイミングを選べます。プロフィールと業務メモはいつでも参照できます。</p><p class="privacy">スコア、名前、イベントはゲーム内のフィクションであり、現実の法的判断ではありません。</p>`;}
   if(type==='notes'){title='業務メモ';body=run?`${run.logs.length?`<div class="timeline">${run.logs.map(l=>`<div class="history-row"><strong>${esc(l.id)}｜${esc(l.title)}　コンプラ違反+${l.deltaCp}pt</strong>${esc(l.choiceText)}<br><span class="muted">${esc(l.name)}　${esc(l.reason)}</span></div>`).join('')}</div>`:'<div class="empty">対応履歴はありません。</div>'}<hr class="sectionline"><div class="info"><b>これまでの引継ぎ事項</b>${run.flags.checkAgreed?'✓ 確認時間を合意済み<br>':'・確認時刻は未合意<br>'}${run.flags.aiVerified?'✓ AIの資料は出典検証済み<br>':run.flags.aiUnverified?'！AIの出典に未確認部分がある<br>':'・AIの出典は未確認リスクが明示されていない<br>'}${run.flags.presentationPrepped?'✓ 発表担当の準備を進めた':'・発表担当の練習は未確認'}</div>`:'<div class="empty">まだ業務履歴はありません。</div>';}
   if(type==='archive'){title='ハラ図鑑';const names=[...new Set([...events.flatMap(e=>e.choices.map(c=>c.harassment.replace(/疑義$/,''))),...SPEED_HARASSMENTS,...Object.keys(records.names)])].sort((a,b)=>Number(!!records.names[b])-Number(!!records.names[a]));const found=names.filter(n=>records.names[n]).length;body=`<p class="small muted">発見 ${found} / ${names.length} 分類。認定・疑義を含めて記録。発見済みを先頭に表示します。</p><div class="timeline">${names.map(n=>{const info=records.names[n];return `<div class="history-row"><strong>${info?'✦ '+esc(n):'？？？ 未発見'}</strong>${info?`認定・疑義を含む遭遇回数：${info.count}回`:'未発見の分類'}</div>`;}).join('')}</div>`;}
   if(type==='endings'){title='エンディングコレクション';body=`<p class="small muted">${Object.keys(records.endings).length}/16 種を解放</p><div class="timeline">${Object.entries(ENDING_META).map(([id,d])=>`<div class="history-row"><strong>${records.endings[id]?`${id}｜${esc(d[0])}`:`${id}｜？？？`}</strong>${records.endings[id]?esc(d[1]):'未達成のエンディング'}</div>`).join('')}</div>`;}
@@ -159,7 +169,7 @@ app.addEventListener('click', async ev=>{
   const target=ev.target.closest('[data-action],[data-choice],[data-time]');
   if(!target){if(ev.target.id==='overlay')closeModal();return;}
   if(target.dataset.time){clockSelected=target.dataset.time;render(false);return;}
-  if(target.dataset.choice){if(!run||run.phase!=='scene')return;const e=events[run.index];const timing=e.id==='D3-1'?clockSelected:null;
+  if(target.dataset.choice){if(!run||run.phase!=='scene')return;const e=activeEvent();const timing=e.id==='D3-1'?clockSelected:null;
     try{run=calculate(run,e,e.choices.find(c=>c.id===target.dataset.choice),timing);const last=run.pending;const category=last.name.replace(/疑義$/,'');records.names[category]??={count:0};records.names[category].count++;
     if(last.speedCp>0&&last.speedName!==last.name.replace(/疑義$/,'')){records.names[last.speedName]??={count:0};records.names[last.speedName].count++;}
     storeRecords();save();finishRunOnce();resetClock();tone(last.deltaCp===0,last.deltaCp,last.comboStreak??0);render();}catch(err){toast=err.message;render(false);}return;}
@@ -190,6 +200,6 @@ document.addEventListener('keydown',ev=>{
   }
 });
 
-(async()=>{try{const response=await fetch('./events.json?v=0.5.1',{cache:'no-store'});if(!response.ok)throw new Error(`HTTP ${response.status}`);const json=await response.json();events=json.events;
+(async()=>{try{const response=await fetch('./events.json?v=0.5.2',{cache:'no-store'});if(!response.ok)throw new Error(`HTTP ${response.status}`);const json=await response.json();events=json.events;
   if(!Array.isArray(events)||events.length!==15||events.some(e=>e.choices.length!==6))throw new Error('イベント定義が不正です');
   render();}catch(err){app.innerHTML=`<div class="error"><strong>ゲームデータを読み込めませんでした。</strong><p>${esc(err.message)}</p><p>ネットワーク接続を確認してページを再読み込みしてください。</p></div>`;}})();

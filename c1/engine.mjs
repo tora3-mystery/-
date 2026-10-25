@@ -1,6 +1,6 @@
 /** C1 gameplay logic. Pure and dependency-free: also imported by tests. */
-export const VERSION = '0.5.1';
-export const UPDATED_JST = '2026-10-26 00:38 JST';
+export const VERSION = '0.5.2';
+export const UPDATED_JST = '2026-10-26 01:10 JST';
 export const LIMITS = Object.freeze({ cp: 20, progress: 22, growth: 6 });
 export const DAYS = ['月曜日', '火曜日', '水曜日', '木曜日', '金曜日'];
 export const SPEED_HARASSMENTS = Object.freeze(['即レスハラ','遅レスハラ']);
@@ -36,8 +36,45 @@ export const ENDING_META = {
   E15: ['新人が役員席で話した日','新人の説明に役員が頷く。部長はなぜか自分の手柄にした。','S'],
   E16: ['コンプラ室への推薦状','「分類が多すぎませんか？」その一言を、人事部は新規分類の参考にした。','?'],
 };
+const PHOTO_BANK = Object.freeze({
+  '男性': [
+    'https://cdn.pixabay.com/photo/2024/03/20/03/45/ai-generated-8644544_640.png',
+    'https://cdn.pixabay.com/photo/2025/02/07/06/42/ai-generated-9389099_640.jpg'
+  ],
+  '女性': [
+    'https://cdn.pixabay.com/photo/2024/11/24/10/49/ai-generated-9220634_640.jpg',
+    'https://cdn.pixabay.com/photo/2024/08/06/15/29/ai-generated-8949601_640.jpg'
+  ]
+});
+const CAMPUS_BACKGROUNDS = [
+  ['東都大学','経済学部'],['南星学院大学','社会学部'],['青葉大学','情報学部'],
+  ['東央工科大学','理工学部'],['北辰大学','法学部'],['桜都大学','文学部'],
+  ['星丘大学','商学部'],['新都大学','心理学部']
+];
+const CLUBS = [
+ ['ボードゲーム研究会','企画書より先にルールの矛盾を探してしまう癖があります。'],
+ ['軽音サークル','大勢の前では緊張しますが、練習は好きでした。'],
+ ['学園祭実行委員','関係者に何度も確認を取って進める役回りでした。'],
+ ['写真部','細かな違いに気づくのが好きです。'],
+ ['バスケットボールサークル','チームで役割を決めて動くのが好きでした。'],
+ ['放送研究会','説明することは好きですが、急に指名されると焦ります。'],
+ ['料理研究会','みんなで作業を分担するのが得意でした。'],
+ ['無所属','授業の後はアルバイトに集中していました。']
+];
+const TEMPERAMENTS = [
+ ['慎重派','念のための確認が多いと言われることがあります。'],
+ ['行動派','考えるより先に手を動かしてしまうことがあります。'],
+ ['マイペース','集中すると周囲が見えなくなることがあります。'],
+ ['社交派','つい雑談から入ってしまうタイプです。'],
+ ['計画派','締切より前に手順を決めておくと安心します。'],
+ ['職人気質','一つの資料を細かく直しすぎてしまうことがあります。']
+];
 export function createProfile(rng = Math.random) {
   const gender = pick(['男性','女性'],rng);
+  const [university, faculty] = pick(CAMPUS_BACKGROUNDS,rng);
+  const [club,studentMemory] = pick(CLUBS,rng);
+  const [temperament,temperamentText] = pick(TEMPERAMENTS,rng);
+  const photo=pick(PHOTO_BANK[gender],rng);
   const surname = pick(surnames,rng);
   const given = pick(givenNames[gender],rng);
   const check = pick(['guided','autonomous'],rng);
@@ -55,6 +92,7 @@ export function createProfile(rng = Math.random) {
   return {
     name: `${surname} ${given}`,gender,grade,age:22+grade-1,
     previous, department:'営業企画部',
+    university,faculty,club,studentMemory,temperament,temperamentText,photo,
     check,medium,feedback,strength,career,
     speech:[checks[check],mediums[medium],feedbacks[feedback]],
     ambition:careers[career],skill:strengths[strength],
@@ -66,6 +104,9 @@ export function createRun(profile) {
     version:VERSION, profile,profileAccepted:false,index:0, cp:0, progress:0, growth:0, logs:[],
     flags:{checkAgreed:false,aiUnverified:false,aiVerified:false,presentationPrepped:false},
     phase:'briefing',pending:null,ending:null,bossReports:[],
+    // Each playthrough chooses the authored alternate scene in roughly half of eligible slots.
+    // Stored in the save so that reloading never rerolls an ongoing scenario.
+    eventPlan:Array.from({length:15},()=>Math.random()<0.5?0:1),
   };
 }
 export function fitAdjustment(choice, profile) {
@@ -191,7 +232,7 @@ export function resolveEnding(run) {
   return 'E09';
 }
 export function isValidSave(save, events) {
-  return !!save && ['0.4.0','0.4.1','0.5.0',VERSION].includes(save.version) && Number.isInteger(save.index) && save.index>=0 && save.index<events.length
+  return !!save && ['0.4.0','0.4.1','0.5.0','0.5.1',VERSION].includes(save.version) && Number.isInteger(save.index) && save.index>=0 && save.index<events.length
    && ['briefing','scene','result','dayReview','ending'].includes(save.phase) && Array.isArray(save.logs) && typeof save.profile?.name==='string'
    && save.flags && typeof save.cp==='number';
 }

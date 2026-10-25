@@ -33,3 +33,13 @@
 .combo-bonus small{display:block;font-size:11px;font-weight:600;margin-top:3px}
 .combo-ready{background:#fff1d7;animation:none}
 @media(max-width:380px){.week-progress{gap:4px}.week-day{padding:6px 4px 7px}.week-day-label{flex-direction:column;gap:0}.week-step{height:13px}.week-legend{gap:8px}}
+
+/* v0.5.2 profile-photo and non-spoiler contextual details */
+.portrait.face-photo{position:relative;overflow:hidden}
+.portrait.face-photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 30%;border-radius:inherit}
+.portrait-fallback{display:grid;place-items:center;width:100%;height:100%}
+.profile-grid .info .tiny{display:block;margin-top:4px;line-height:1.55}
+.context-note{margin-top:13px;padding:10px 13px;background:#f5f7f8;border:1px solid #dce4e9;border-radius:9px;color:#627585;font-size:12px}
+.context-note summary{cursor:pointer;font-weight:700}
+.context-note p{line-height:1.75;margin:9px 0 2px}
+@media(max-width:450px){.portrait.face-photo{flex-basis:88px;height:112px}.profile-grid{grid-template-columns:1fr 1fr}.employee-name{font-size:20px}}
