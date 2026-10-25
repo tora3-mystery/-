@@ -1,6 +1,6 @@
 "use strict";
 (function(){
-const VERSION="α0.1", UPDATED="2026/10/25 12:10 JST";
+const VERSION="α0.1", UPDATED="2026/10/25 12:18 JST";
 const INIT={
  n02:"120",s02:"新たに電話で確かめる",t02:"今夜",
  n03:"20",s03:"保存済みの回答から取り出す",t03:"来月末",a03:"担当部長",
