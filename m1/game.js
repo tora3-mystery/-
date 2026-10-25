@@ -38,7 +38,7 @@ const DOCS=[
 "本日の会議では、働き方改革政策の推進体制と、国会向け資料の品質管理について審議した。",
 "まず、政策実施状況を継続的に把握するため、働き方改革推進部の設置申請を[[r05]]した。",
 "過去の国会対応で数字の誤りが指摘されたため、国会提出資料の数字は原則として[[m05]]方法を採用する。従来の目視確認には回答2社につき1分程度を要する。",
-"また、資料の最終承認には関係者[[a05]]の確認を必要とする。全員の確認待ちには平均40分かかる。",
+"また、資料の最終承認には[[a05]]の確認を必要とする。全員の確認待ちには平均40分かかる。",
 "ただし、保管済み資料の再利用にあたり、機械で必要な精度を確保できれば、自動照合を利用してもよい。",
 "以上の手順は、働き方改革推進部の設置後に適用する。"]},
 {id:"06",title:"保存済み調査の転記について",meta:"因果更新により発生｜資料管理室・長谷川",summary:"保存済み回答を再入力したため、数字の一致確認が追加された。",generated:true,paras:[
@@ -213,6 +213,7 @@ function applySwap(){
  const before=rules(state.values);
  state.history.push({values:{...state.values},pair:[a,b]});
  const tmp=state.values[a];state.values[a]=state.values[b];state.values[b]=tmp;
+ if(a!=="n07"&&b!=="n07")state.values.n07=String(Math.max(0,100-(Number(state.values.n02)||0)));
  const after=rules(state.values);
  const oldIds=new Set(before.active.map(d=>d.id)),newIds=new Set(after.active.map(d=>d.id));
  const added=after.active.filter(d=>!oldIds.has(d.id)).map(d=>d.title);
