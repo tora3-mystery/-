@@ -1,7 +1,7 @@
 {
-  "version": "0.5.0",
+  "version": "0.5.1",
   "date": "2026-10-25 JST",
-  "status": "playtest v0.5.0",
+  "status": "playtest v0.5.1",
   "thresholds": {
     "cp_gameover": 20,
     "p_win": 22,
@@ -1187,5 +1187,5 @@
       "rule": "成功、最終報告でハラ指摘ハラを選んだ"
     }
   ],
-  "updated_jst": "2026-10-25 19:35 JST"
+  "updated_jst": "2026-10-26 00:38 JST"
 }

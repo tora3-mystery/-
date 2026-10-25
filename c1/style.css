@@ -9,3 +9,27 @@
 @keyframes award-pop{0%{transform:scale(.87);opacity:.2}70%{transform:scale(1.025)}100%{transform:scale(1);opacity:1}}@keyframes slam{0%{transform:translateY(-22px) scale(1.2);opacity:0}75%{transform:translateY(2px) scale(.97)}100%{transform:translateY(0) scale(1);opacity:1}}@keyframes counter-punch{0%{transform:scale(.45);opacity:0}65%{transform:scale(1.14)}100%{transform:scale(1);opacity:1}}@keyframes spin-star{0%{transform:rotate(-80deg) scale(.1)}100%{transform:rotate(0) scale(1)}}@keyframes fall{0%{opacity:0;transform:translateY(-20px) rotate(0)}12%{opacity:1}100%{opacity:0;transform:translateY(330px) rotate(270deg)}}
 @media(max-width:650px){.daytime{font-size:13px}.daytime strong{font-size:16px}.boss-orders{grid-template-columns:1fr}.boss-directive{padding:19px 15px}.event-unit .scene-header{padding:5px 13px 14px}.result-card.hit{padding:23px 12px}}
 @media(prefers-reduced-motion:reduce){.result-confetti{display:none!important}.result-card.hit,.result-card .reveal-word,.result-card.hit .result-symbol,.result-card.hit .score-boost,.combo{animation:none!important}}
+
+/* v0.5.1 — five clear days, three response slots per day */
+.progress-label{gap:8px;align-items:center;margin-top:17px;font-size:12px}
+.progress-label strong{color:#284d68;font-weight:900}
+.progress-label span{font-variant-numeric:tabular-nums;font-weight:850;white-space:nowrap}
+.week-progress{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;margin-top:8px}
+.week-day{min-width:0;padding:7px 6px 9px;border:1px solid #d9e4ec;border-radius:9px;background:#fff}
+.week-day-label{display:flex;align-items:baseline;justify-content:space-between;gap:2px;margin-bottom:7px;color:#456478}
+.week-day-label span{font-size:9px;font-weight:750;white-space:nowrap}
+.week-day-label strong{font-size:11px;white-space:nowrap}
+.week-steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:3px}
+.week-step{display:block;height:12px;border-radius:3px;border:1px solid #d9e1e8;background:#e8edf1}
+.week-step.done{background:#327aa7;border-color:#327aa7}
+.week-step.current{background:#ffdd94;border:2px solid #ad661e;box-shadow:0 0 0 1px #ffe5a2}
+.week-legend{display:flex;gap:13px;justify-content:flex-end;margin:6px 0 12px;color:#657b8c;font-size:10px}
+.week-legend span{display:inline-flex;align-items:center;gap:4px}
+.week-legend i{display:inline-block;width:11px;height:9px;border-radius:2px;background:#e8edf1;border:1px solid #d9e1e8}
+.week-legend i.done{background:#327aa7;border-color:#327aa7}
+.week-legend i.current{background:#ffdd94;border:2px solid #ad661e}
+.combo-bonus{border:2px solid #fbab38;box-shadow:0 3px 12px #ecb24f48}
+.combo-bonus strong{font-size:20px}
+.combo-bonus small{display:block;font-size:11px;font-weight:600;margin-top:3px}
+.combo-ready{background:#fff1d7;animation:none}
+@media(max-width:380px){.week-progress{gap:4px}.week-day{padding:6px 4px 7px}.week-day-label{flex-direction:column;gap:0}.week-step{height:13px}.week-legend{gap:8px}}

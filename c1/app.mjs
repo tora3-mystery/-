@@ -28,7 +28,23 @@ function storeRecords(){persist(RECORD_KEY,records);}
 function restoreSaved(saved){const migrated=structuredClone(saved);migrated.version=VERSION;migrated.profileAccepted=migrated.profileAccepted??(migrated.logs.length>0||migrated.index>0);migrated.bossReports??=[];return migrated;}
 function stat(label,value,cap,kind){return `<div class="stat ${kind}"><div class="statline"><span>${label}</span><span>${Math.min(value,cap)}/${cap}</span></div><div class="statnum mono">${value}<small style="font-size:11px;font-weight:500;color:#778a96"> / ${cap}</small></div><div class="bar"><i style="width:${Math.min(100,Math.round(100*value/cap))}%"></i></div></div>`;}
 function scorePanel(){return `<div class="stats">${stat('コンプラ違反ポイント',run.cp,LIMITS.cp,'cp')}${stat('業務進捗',run.progress,LIMITS.progress,'progress')}${stat('新人の習熟',run.growth,LIMITS.growth,'growth')}</div>`;}
-function statusBar(){return `<div class="daytime"><span class="day-pill">DAY ${displayDay()+1} / 5</span><strong>${DAYS[displayDay()]}　${displayTime()}</strong><span class="time-extra">業務 ${run.index%3+1} / 3</span></div><div class="progress-label"><span>5営業日間の育成記録</span><span>${DAYS[Math.floor(run.index/3)]}　${run.index%3+1} / 3</span></div><div class="progressline">${DAYS.map((_,i)=>`<i class="${Math.floor(run.index/3)>=i?'active':''}"></i>`).join('')}</div>`;}
+function statusBar(){
+  const completed=run.logs.length;
+  const days=['月','火','水','木','金'];
+  const groups=days.map((day,d)=>{
+    const steps=[0,1,2].map(k=>{
+      const n=d*3+k,done=n<completed,current=n===run.index&&!done;
+      const status=done?'done':current?'current':'future';
+      const title=day+'曜 業務'+(k+1)+(done?'：完了':current?'：現在':'：未着手');
+      return '<span class="week-step '+status+'" title="'+title+'" aria-hidden="true"></span>';
+    }).join('');
+    return '<div class="week-day" aria-label="'+day+'曜日の3業務"><div class="week-day-label"><span>DAY '+(d+1)+'</span><strong>'+day+'曜</strong></div><div class="week-steps">'+steps+'</div></div>';
+  }).join('');
+  return '<div class="daytime"><span class="day-pill">DAY '+(displayDay()+1)+' / 5</span><strong>'+DAYS[displayDay()]+'　'+displayTime()+'</strong><span class="time-extra">業務 '+(run.index%3+1)+' / 3</span></div>'
+  +'<div class="progress-label"><strong>5日間 × 3業務 = 全15業務</strong><span>完了 '+completed+' / 15</span></div>'
+  +'<div class="week-progress" role="img" aria-label="全15業務のうち'+completed+'業務完了。現在'+DAYS[displayDay()]+'の'+(run.index%3+1)+'番目の業務。">'+groups+'</div>'
+  +'<div class="week-legend"><span><i class="done"></i>完了</span><span><i class="current"></i>現在</span><span><i class="future"></i>未着手</span></div>';
+}
 function topActions(){return `<div class="toolrow"><button class="quiet" data-action="show-profile">社員プロフィール</button><button class="quiet" data-action="show-notes">業務メモ</button><button class="quiet" data-action="show-archive">ハラ図鑑</button><button class="quiet" data-action="show-guide">操作説明</button></div>`;}
 function intro(){
   const saved=load(SAVE_KEY,null);const canResume=isValidSave(saved,events);
@@ -38,7 +54,7 @@ function intro(){
     <div class="paper spaced"><div class="panelhead"><b>管理職向け 業務指示</b><span class="tag">重要</span></div>
     <div class="quote">「新人には積極的に声をかけるように。指導は丁寧に。過干渉は厳禁。資料の遅延も認めません」<br><span class="tiny">— 営業本部 部長</span></div>
     <div class="rules"><div class="rule"><span>コンプラ違反</span><b>20 pt</b><span>到達で即呼び出し</span></div><div class="rule"><span>業務進捗</span><b>22 以上</b><span>金曜の達成条件</span></div><div class="rule"><span>新人の習熟</span><b>6 以上</b><span>金曜の達成条件</span></div></div>
-    <p class="small" style="line-height:1.9">各場面で<strong>6つの対応</strong>から1つ選択。判定直後に新たな「○○ハラ」が派手に発表されます。<strong>認定でコンプラ違反ポイントが加算</strong>。部長指令のノルマを逃すと、翌日の作業が増えて進捗が下がります。<strong>疑義は原則0pt</strong>です。</p>
+    <p class="small" style="line-height:1.9">各場面で<strong>6つの対応</strong>から1つ選択。判定直後に新たな「○○ハラ」が派手に発表されます。<strong>認定でコンプラ違反ポイントが加算</strong>。部長指令のノルマを逃すと、翌日の作業が増えて進捗が下がります。<strong>疑義は原則0pt</strong>です。正式認定が<strong>3回連続するごとにコンプラ・コンボで+1pt</strong>。</p>
     <p class="privacy">架空の社内分類を風刺する作品です。現実の被害やハラスメント認定を扱う研修ではありません。記録はこの端末にのみ保存され、外部に送信されません。</p>
     <div class="actions">${canResume?'<button class="primary" data-action="resume">続きから再開</button>':''}<button class="${canResume?'secondary':'primary'}" data-action="start">${canResume?'最初から始める':'配属社員を確認して始める'}</button></div>
     </div><div class="toolrow spaced"><button class="quiet" data-action="show-archive">これまでのハラ図鑑 (${Object.keys(records.names).length}件)</button><button class="quiet" data-action="show-endings">エンディング収集 (${Object.keys(records.endings).length}/16)</button><button class="quiet" data-action="toggle-sound">効果音：${muted?'OFF':'ON'}</button></div>`;
@@ -62,8 +78,8 @@ const name=speedPrimary?log.speedName:log.name;
 const keyName=log.name.replace(/疑義$/,'');
 const newLabels=[keyName,...(log.speedCp>0?[log.speedName]:[])].filter(n=>records.names[n]?.count===1);
 const heat=run.cp>=LIMITS.cp?'alert':run.cp>=15?'danger':run.cp>=10?'warning':'normal';
-const chain=run.logs.slice(-4).reverse().findIndex(x=>x.deltaCp===0);
-const combo=log.deltaCp>0?chain===-1?Math.min(4,run.logs.length):chain:0;
+const combo=log.comboStreak??0;
+const comboCp=log.comboCp??0;
 return `<div class="eyebrow">DAY ${displayDay()+1}｜${DAYS[displayDay()]} ${displayTime()}　社内ハラスメント認定システム</div>
 <section class="result-card ${safe?'safe':'hit'} ${heat}" aria-label="${esc(name)}の判定結果"><div class="result-confetti" aria-hidden="true">${Array.from({length:14},(_,i)=>`<i style="--k:${i};--x:${(i*37)%99}%;--d:${i%5*0.12}s"></i>`).join('')}</div>
 <div class="result-symbol">${safe?'★':'⚡'}</div><div class="reveal-kicker">${safe?'社内審査：疑義レベル':'H A R A S S M E N T 　D E T E C T E D'}</div>
@@ -74,7 +90,7 @@ ${log.speedCp>0&&!speedPrimary?`<div class="extra-hit"><b>追撃！ ${esc(log.sp
 ${log.extraReason?`<p class="small">${esc(log.extraReason)}</p>`:''}
 <div class="score-title">${safe?'今回は加点なし':'コンプラ違反ポイント 加算'}</div><div class="score-boost ${safe?'safe':''}">+${log.deltaCp}<small> コンプラ違反pt</small></div>
 <div class="limit-proximity">累積コンプラ違反 <strong>${run.cp} / ${LIMITS.cp} pt</strong>　｜　${cpRemaining()===0?'部長室へ直行':`あと ${cpRemaining()} pt でゲームオーバー`}</div>
-${combo>=2?`<div class="combo">🔥 ${combo}連続認定！ コンプラ・コンボ発生</div>`:''}
+${comboCp>0?`<div class="combo combo-bonus">🔥 ${combo}連続正式認定！ コンプラ・コンボ <strong>+${comboCp}pt</strong><small>（通常認定 +${log.deltaCp-comboCp}pt ／ コンボ +${comboCp}pt）</small></div>`:combo===2||combo%3===2?`<div class="combo combo-ready">⚡ ${combo}連続認定。次も正式認定ならコンボ +1pt！</div>`:''}
 <div class="result-stats"><span>業務進捗 ${log.deltaP>=0?'+':''}${log.deltaP}</span><span>新人の習熟 ${log.deltaS>=0?'+':''}${log.deltaS}</span><span>コンプラ残り ${cpRemaining()}pt</span></div>
 ${newLabels.length?`<div class="collection">✦ 図鑑に新規発見：${newLabels.map(esc).join('・')}</div>`:''}</section>
 <div class="actions"><button class="primary" data-action="next">${run.ending?(run.cp>=LIMITS.cp?'部長室に向かう':'最終評価を確認する'):(run.index%3===2?'終業・部長査定へ':'次の業務へ進む')}</button><button class="secondary" data-action="show-notes">これまでの対応を確認</button></div>`;}
@@ -93,7 +109,7 @@ function showModal(type){
   const p=run?.profile;
   let title='',body='';
   if(type==='profile'){title='配属社員プロフィール';body=p?profileCard(p):'<div class="empty">まだ社員が配属されていません。</div>';}
-  if(type==='guide'){title='操作説明';body=`<div class="info">5営業日・15イベントで、6つの対応から1つずつ選びます。コンプラ違反20ptで即敗北。金曜までに業務22以上・習熟6以上でクリア。毎朝の部長指令の数値ノルマを未達にすると、追加報告が発生し、業務進捗が減少します。選択後の結果画面で「○○ハラ」の種類と点数が表示されます。</div><p class="small">チャット返信イベントでは、実時間を測らず返信タイミングを選べます。プロフィールと業務メモはいつでも参照できます。</p><p class="privacy">スコア、名前、イベントはゲーム内のフィクションであり、現実の法的判断ではありません。</p>`;}
+  if(type==='guide'){title='操作説明';body=`<div class="info">5営業日×各3業務＝全15イベントで、6つの対応から1つずつ選びます。正式認定が3回連続するごとにコンプラ・コンボで追加+1pt（疑義はリセット）。コンプラ違反20ptで即敗北。金曜までに業務22以上・習熟6以上でクリア。毎朝の部長指令の数値ノルマを未達にすると、追加報告が発生し、業務進捗が減少します。選択後の結果画面で「○○ハラ」の種類と点数が表示されます。</div><p class="small">チャット返信イベントでは、実時間を測らず返信タイミングを選べます。プロフィールと業務メモはいつでも参照できます。</p><p class="privacy">スコア、名前、イベントはゲーム内のフィクションであり、現実の法的判断ではありません。</p>`;}
   if(type==='notes'){title='業務メモ';body=run?`${run.logs.length?`<div class="timeline">${run.logs.map(l=>`<div class="history-row"><strong>${esc(l.id)}｜${esc(l.title)}　コンプラ違反+${l.deltaCp}pt</strong>${esc(l.choiceText)}<br><span class="muted">${esc(l.name)}　${esc(l.reason)}</span></div>`).join('')}</div>`:'<div class="empty">対応履歴はありません。</div>'}<hr class="sectionline"><div class="info"><b>これまでの引継ぎ事項</b>${run.flags.checkAgreed?'✓ 確認時間を合意済み<br>':'・確認時刻は未合意<br>'}${run.flags.aiVerified?'✓ AIの資料は出典検証済み<br>':run.flags.aiUnverified?'！AIの出典に未確認部分がある<br>':'・AIの出典は未確認リスクが明示されていない<br>'}${run.flags.presentationPrepped?'✓ 発表担当の準備を進めた':'・発表担当の練習は未確認'}</div>`:'<div class="empty">まだ業務履歴はありません。</div>';}
   if(type==='archive'){title='ハラ図鑑';const names=[...new Set([...events.flatMap(e=>e.choices.map(c=>c.harassment.replace(/疑義$/,''))),...SPEED_HARASSMENTS,...Object.keys(records.names)])].sort((a,b)=>Number(!!records.names[b])-Number(!!records.names[a]));const found=names.filter(n=>records.names[n]).length;body=`<p class="small muted">発見 ${found} / ${names.length} 分類。認定・疑義を含めて記録。発見済みを先頭に表示します。</p><div class="timeline">${names.map(n=>{const info=records.names[n];return `<div class="history-row"><strong>${info?'✦ '+esc(n):'？？？ 未発見'}</strong>${info?`認定・疑義を含む遭遇回数：${info.count}回`:'未発見の分類'}</div>`;}).join('')}</div>`;}
   if(type==='endings'){title='エンディングコレクション';body=`<p class="small muted">${Object.keys(records.endings).length}/16 種を解放</p><div class="timeline">${Object.entries(ENDING_META).map(([id,d])=>`<div class="history-row"><strong>${records.endings[id]?`${id}｜${esc(d[0])}`:`${id}｜？？？`}</strong>${records.endings[id]?esc(d[1]):'未達成のエンディング'}</div>`).join('')}</div>`;}
@@ -120,7 +136,7 @@ function render(scroll=true){
 function resetClock(){clockSelected='normal';}
 function tone(safe,points=0,combo=0){if(muted)return;try{const ctx=new (window.AudioContext||window.webkitAudioContext)();let t=ctx.currentTime;
  const notes=safe?[[740,0,.09],[900,.13,.13]]:[[523,0,.10],[659,.10,.10],[784,.21,.12],[1046,.34,.20],[1318,.51,.15]];
- if(!safe&&combo>=2)notes.push([1568,.68,.21]);
+ if(!safe&&combo>=3&&combo%3===0)notes.push([1568,.68,.21],[1760,.83,.17]);
  for(const [freq,offset,len] of notes){const o=ctx.createOscillator(),g=ctx.createGain();o.type=safe?'sine':'triangle';o.frequency.value=freq;g.gain.setValueAtTime(.0001,t+offset);g.gain.exponentialRampToValueAtTime(.07,t+offset+.025);g.gain.exponentialRampToValueAtTime(.0001,t+offset+len);o.connect(g);g.connect(ctx.destination);o.start(t+offset);o.stop(t+offset+len+.02);}
  setTimeout(()=>ctx.close(),1300);
 }catch{}}
@@ -146,7 +162,7 @@ app.addEventListener('click', async ev=>{
   if(target.dataset.choice){if(!run||run.phase!=='scene')return;const e=events[run.index];const timing=e.id==='D3-1'?clockSelected:null;
     try{run=calculate(run,e,e.choices.find(c=>c.id===target.dataset.choice),timing);const last=run.pending;const category=last.name.replace(/疑義$/,'');records.names[category]??={count:0};records.names[category].count++;
     if(last.speedCp>0&&last.speedName!==last.name.replace(/疑義$/,'')){records.names[last.speedName]??={count:0};records.names[last.speedName].count++;}
-    storeRecords();save();finishRunOnce();resetClock();tone(last.deltaCp===0,last.deltaCp,run.logs.slice(-3).filter(l=>l.deltaCp>0).length);render();}catch(err){toast=err.message;render(false);}return;}
+    storeRecords();save();finishRunOnce();resetClock();tone(last.deltaCp===0,last.deltaCp,last.comboStreak??0);render();}catch(err){toast=err.message;render(false);}return;}
   const action=target.dataset.action;
   if(action==='start'||action==='restart'){maybeNew();return;}
   if(action==='intro'){screen='intro';popup='';render();return;}
@@ -174,6 +190,6 @@ document.addEventListener('keydown',ev=>{
   }
 });
 
-(async()=>{try{const response=await fetch('./events.json?v=0.5.0',{cache:'no-store'});if(!response.ok)throw new Error(`HTTP ${response.status}`);const json=await response.json();events=json.events;
+(async()=>{try{const response=await fetch('./events.json?v=0.5.1',{cache:'no-store'});if(!response.ok)throw new Error(`HTTP ${response.status}`);const json=await response.json();events=json.events;
   if(!Array.isArray(events)||events.length!==15||events.some(e=>e.choices.length!==6))throw new Error('イベント定義が不正です');
   render();}catch(err){app.innerHTML=`<div class="error"><strong>ゲームデータを読み込めませんでした。</strong><p>${esc(err.message)}</p><p>ネットワーク接続を確認してページを再読み込みしてください。</p></div>`;}})();

@@ -1,6 +1,6 @@
 /** C1 gameplay logic. Pure and dependency-free: also imported by tests. */
-export const VERSION = '0.5.0';
-export const UPDATED_JST = '2026-10-25 19:35 JST';
+export const VERSION = '0.5.1';
+export const UPDATED_JST = '2026-10-26 00:38 JST';
 export const LIMITS = Object.freeze({ cp: 20, progress: 22, growth: 6 });
 export const DAYS = ['月曜日', '火曜日', '水曜日', '木曜日', '金曜日'];
 export const SPEED_HARASSMENTS = Object.freeze(['即レスハラ','遅レスハラ']);
@@ -12,9 +12,11 @@ export const DIRECTIVES = Object.freeze([
   {time:'09:00', title:'本日17時、役員説明', demand:'進捗22以上・習熟6以上で着地。コンプラ20点は即呼び出し。言い訳は認めない。', progress:22, growth:6, remark:'成功するまでが育成。成功しなかったら指導方法を見直そう。'}
 ]);
 const pick = (xs, rng) => xs[Math.min(xs.length - 1, Math.floor(rng() * xs.length))];
-const names = {
-  '男性': [['青木','悠真'], ['佐藤','陸'], ['高橋','一樹'], ['小林','湊'], ['山本','直哉'], ['森','拓海']],
-  '女性': [['青木','花音'], ['佐藤','葵'], ['高橋','美咲'], ['小林','結衣'], ['山本','陽菜'], ['森','彩乃']],
+// Display names are independently generated; neither gender nor name affects gameplay rules.
+const surnames = ['佐藤','鈴木','高橋','田中','伊藤','渡辺','山本','中村','小林','加藤','吉田','山田','佐々木','山口','松本','井上','木村','林','斎藤','清水','山崎','森','阿部','池田','橋本','石川','前田','藤田','青木','岡田'];
+const givenNames = {
+  '男性': ['悠真','陸','一樹','湊','直哉','拓海','蒼','大輝','悠斗','蓮','陽翔','晴人','颯太','大和','航平','翔太','健太','樹','悠人','朝陽','智也','新','俊介','直樹'],
+  '女性': ['花音','葵','美咲','結衣','陽菜','彩乃','紗季','結菜','凛','美月','琴音','莉子','陽葵','さくら','心春','菜々','楓','優奈','咲良','千尋','明日香','真央','詩織','美緒'],
 };
 export const ENDING_META = {
   E01: ['初週で部長室','月曜の朝は、もう戻ってこない。','D'],
@@ -36,7 +38,8 @@ export const ENDING_META = {
 };
 export function createProfile(rng = Math.random) {
   const gender = pick(['男性','女性'],rng);
-  const [surname,given] = pick(names[gender],rng);
+  const surname = pick(surnames,rng);
+  const given = pick(givenNames[gender],rng);
   const check = pick(['guided','autonomous'],rng);
   const medium = pick(['spoken','written'],rng);
   const feedback = pick(['immediate','batched'],rng);
@@ -96,6 +99,23 @@ export function calculate(run, event, choice, replyTiming = null) {
     else if(mode==='late') {speedName='遅レスハラ';speedReason='業務時間内の問い合わせを翌朝まで保留し、相談機会を遅らせたと社内認定された。';}
     if(speedName && speedName!==choice.harassment.replace(/疑義$/,'')){speedCp=2;deltaCp+=speedCp;}
   }
+  // Every third consecutive officially recognized event adds one compliance point.
+  // Suspicions (0-point, no speed penalty) interrupt the streak. Old saves are supported.
+  const official=deltaCp>0;
+  let previousStreak=0;
+  if(official){
+    for(let i=run.logs.length-1;i>=0;i--){
+      const prior=run.logs[i];
+      const priorOfficial=('baseCp' in prior || 'speedCp' in prior)
+        ? (Number(prior.baseCp||0)+Number(prior.speedCp||0)>0)
+        : Number(prior.deltaCp||0)>0;
+      if(!priorOfficial)break;
+      previousStreak++;
+    }
+  }
+  const comboStreak=official?previousStreak+1:0;
+  const comboCp=comboStreak>0 && comboStreak%3===0?1:0;
+  deltaCp+=comboCp;
   const baseName=choice.harassment.replace(/疑義$/,'');
   const effectiveName=baseCp===0?`${baseName}疑義`:baseName;
   const next=structuredClone(run);
@@ -109,7 +129,7 @@ export function calculate(run, event, choice, replyTiming = null) {
   }
   if(event.id==='D4-3' && ['A','C','E'].includes(choice.id)) next.flags.presentationPrepped=true;
   const log={id:event.id,day:event.day,title:event.title,choiceId:choice.id,choiceText:choice.text,
-    name:effectiveName,rawName:choice.harassment,reason:choice.reason,baseCp,speedCp,speedReason,deltaCp,deltaP,deltaS,
+    name:effectiveName,rawName:choice.harassment,reason:choice.reason,baseCp,speedCp,comboCp,comboStreak,speedReason,deltaCp,deltaP,deltaS,
     speedName,replyTiming,eventIndex:run.index,extraReason,fitAdjustment:adjustment,time:event.time||'',};
   next.logs.push(log);
   next.pending=log;
@@ -171,7 +191,7 @@ export function resolveEnding(run) {
   return 'E09';
 }
 export function isValidSave(save, events) {
-  return !!save && ['0.4.0','0.4.1',VERSION].includes(save.version) && Number.isInteger(save.index) && save.index>=0 && save.index<events.length
+  return !!save && ['0.4.0','0.4.1','0.5.0',VERSION].includes(save.version) && Number.isInteger(save.index) && save.index>=0 && save.index<events.length
    && ['briefing','scene','result','dayReview','ending'].includes(save.phase) && Array.isArray(save.logs) && typeof save.profile?.name==='string'
    && save.flags && typeof save.cp==='number';
 }
