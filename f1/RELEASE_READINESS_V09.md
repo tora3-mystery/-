@@ -50,3 +50,9 @@
 
 ## 作業担当
 **原則このF1専用チャットでGitHubへの反映まで実施可能。Work必須ではない。** ブラウザ操作・バイナリファイル転送など、利用可能ツールで実行できない特定工程が判明した場合に限りWork等へ切り出し、どの工程かを具体的に示す。
+
+### ブラウザ試験スクリプト（追加）
+- [x] `f1/tests/v09_browser_smoke.py`を作成。Python Playwright＋Chromiumを用い、ローカルHTTP配信で320/390/768/1280pxの表示、横スクロール、日報の再読込、翌日遷移、初期画像の描画を検査する。
+- [x] スクリプトに通常3／早期2／怪異4の計9固定経路・スクリーンショット保存機能を実装。
+- [ ] **本スクリプトの実行は未完了**。DOMモック試験とは異なり、Playwright実行環境から最新ブランチのHTMLと写真を取得できる状態にしてから実行すること。スクリプト作成とブラウザQA完了を混同しない。
+- 実行：`python f1/tests/v09_browser_smoke.py --screenshots`（事前に`pip install playwright`、`python -m playwright install chromium`）。画面保存先は`f1/tests/artifacts/`。
