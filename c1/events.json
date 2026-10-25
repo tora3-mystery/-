@@ -1,7 +1,7 @@
 {
-  "version": "0.5.2",
+  "version": "0.5.5",
   "date": "2026-10-25 JST",
-  "status": "playtest v0.5.2",
+  "status": "playtest v0.5.5",
   "thresholds": {
     "cp_gameover": 20,
     "p_win": 22,
@@ -24,7 +24,8 @@
           "cp": 3,
           "progress": 1,
           "growth": 0,
-          "fit": "career:management"
+          "fit": "career:management",
+          "altText": "「活躍を期待しているよ。楽しみにしてる」"
         },
         {
           "id": "B",
@@ -59,9 +60,9 @@
         {
           "id": "E",
           "text": "「まず今週の目標を一緒に決めよう」",
-          "harassment": "目標設定ハラ",
+          "harassment": "目標設定ハラ疑義",
           "reason": "目標の設定自体は疑義に留まり、今回は認定なし。",
-          "cp": 1,
+          "cp": 0,
           "progress": 1,
           "growth": 1,
           "fit": null
@@ -74,7 +75,8 @@
           "cp": 1,
           "progress": 0,
           "growth": 1,
-          "fit": null
+          "fit": null,
+          "altText": "「何かあればいつでも声をかけて」"
         }
       ],
       "note": "",
@@ -169,7 +171,8 @@
           "cp": 1,
           "progress": 2,
           "growth": 0,
-          "fit": "check:guided"
+          "fit": "check:guided",
+          "altText": "「1時間ごとに進み具合を聞きに行くね」"
         },
         {
           "id": "B",
@@ -209,7 +212,8 @@
           "cp": 1,
           "progress": 1,
           "growth": 1,
-          "fit": "check:guided"
+          "fit": "check:guided",
+          "altText": "「先に確認する時間を相談して決めよう」"
         },
         {
           "id": "F",
@@ -242,7 +246,8 @@
           "cp": 2,
           "progress": 0,
           "growth": 1,
-          "fit": "feedback:immediate"
+          "fit": "feedback:immediate",
+          "altText": "「よければ今日、一緒にランチしない？」"
         },
         {
           "id": "B",
@@ -292,7 +297,8 @@
           "cp": 0,
           "progress": 0,
           "growth": 1,
-          "fit": null
+          "fit": null,
+          "altText": "「社食も外食もあるよ。あとは自由に選んで」"
         }
       ],
       "note": "",
@@ -387,7 +393,8 @@
           "cp": 2,
           "progress": 1,
           "growth": 1,
-          "fit": "medium:spoken"
+          "fit": "medium:spoken",
+          "altText": "「まずは横について30分、全部説明するね」"
         },
         {
           "id": "B",
@@ -427,7 +434,8 @@
           "cp": 1,
           "progress": 1,
           "growth": 1,
-          "fit": "medium:spoken"
+          "fit": "medium:spoken",
+          "altText": "「詰まった場所だけ聞いて、一緒に確認しよう」"
         },
         {
           "id": "F",
@@ -532,7 +540,8 @@
           "cp": 3,
           "progress": 3,
           "growth": 0,
-          "fit": null
+          "fit": null,
+          "altText": "「もう提出してしまおう。時間優先で」"
         },
         {
           "id": "B",
@@ -562,7 +571,8 @@
           "cp": 1,
           "progress": 1,
           "growth": 1,
-          "fit": "strength:analysis"
+          "fit": "strength:analysis",
+          "altText": "「確認できていない出典を、一緒に分担して調べよう」"
         },
         {
           "id": "E",
@@ -605,7 +615,8 @@
           "cp": 2,
           "progress": 2,
           "growth": 0,
-          "fit": "check:guided"
+          "fit": "check:guided",
+          "altText": "「今どれくらい進んだ？ すぐ教えて」"
         },
         {
           "id": "B",
@@ -635,7 +646,8 @@
           "cp": 0,
           "progress": 1,
           "growth": 1,
-          "fit": "check:guided"
+          "fit": "check:guided",
+          "altText": "「約束した時刻に、困っている点だけ確認する」"
         },
         {
           "id": "E",
@@ -678,7 +690,8 @@
           "cp": 0,
           "progress": 1,
           "growth": 1,
-          "fit": "feedback:batched"
+          "fit": "feedback:batched",
+          "altText": "「承知しました。いつまでに必要でしょうか？」"
         },
         {
           "id": "B",
@@ -688,7 +701,8 @@
           "cp": 2,
           "progress": 2,
           "growth": 0,
-          "fit": null
+          "fit": null,
+          "altText": "「すぐ確認します！ 5分で返事します！」"
         },
         {
           "id": "C",
@@ -751,7 +765,8 @@
           "cp": 1,
           "progress": 1,
           "growth": 1,
-          "fit": "feedback:immediate"
+          "fit": "feedback:immediate",
+          "altText": "「今画面を共有して、式の意味を説明しよう」"
         },
         {
           "id": "B",
@@ -791,7 +806,8 @@
           "cp": 0,
           "progress": 1,
           "growth": 2,
-          "fit": "feedback:immediate"
+          "fit": "feedback:immediate",
+          "altText": "「原因だけ一緒に調べよう。直す作業は任せる」"
         },
         {
           "id": "F",
@@ -916,7 +932,8 @@
           "cp": 0,
           "progress": 1,
           "growth": 1,
-          "fit": "career:management"
+          "fit": "career:management",
+          "altText": "「まず部長に優先順位を確認して範囲を絞ろう」"
         },
         {
           "id": "D",
@@ -926,7 +943,8 @@
           "cp": 1,
           "progress": 2,
           "growth": 1,
-          "fit": "career:expert"
+          "fit": "career:expert",
+          "altText": "「新人の担当箇所だけ決めて進める」"
         },
         {
           "id": "E",
@@ -1041,7 +1059,8 @@
           "cp": 1,
           "progress": 0,
           "growth": 1,
-          "fit": null
+          "fit": null,
+          "altText": "「今晩、よかったら二人で一杯どう？」"
         },
         {
           "id": "B",
@@ -1091,7 +1110,8 @@
           "cp": 1,
           "progress": 0,
           "growth": 1,
-          "fit": "check:autonomous"
+          "fit": "check:autonomous",
+          "altText": "「来られる人だけで。店の情報は共有しておくよ」"
         }
       ],
       "note": "",
@@ -1102,7 +1122,7 @@
         {
           "variantId": "B",
           "title": "部長の歓迎ランチ補助制度",
-          "scene": "部長「今夜の飲み会が難しいなら昼に集まればいい。交流実績は必ず報告」。新人からは参加希望の連絡はない。",
+          "scene": "部長「新人との昼食交流も考えてくれ。交流実績は報告してほしい」。新人から参加希望の連絡はまだない。",
           "time": "10:00",
           "actor": "boss",
           "cue": "制度の実績と本人の希望は別問題。",
@@ -1186,7 +1206,8 @@
           "cp": 2,
           "progress": 2,
           "growth": 0,
-          "fit": null
+          "fit": null,
+          "altText": "「すごい才能！ 次も全部頼めるね」"
         },
         {
           "id": "B",
@@ -1226,7 +1247,8 @@
           "cp": 0,
           "progress": 1,
           "growth": 2,
-          "fit": "feedback:immediate"
+          "fit": "feedback:immediate",
+          "altText": "「どこがよかったか、一つ具体的に伝えよう」"
         },
         {
           "id": "F",
@@ -1331,7 +1353,8 @@
           "cp": 2,
           "progress": 2,
           "growth": 2,
-          "fit": "strength:presentation"
+          "fit": "strength:presentation",
+          "altText": "「役員説明は全部お願いしてもいいかな」"
         },
         {
           "id": "B",
@@ -1351,7 +1374,8 @@
           "cp": 0,
           "progress": 1,
           "growth": 2,
-          "fit": "strength:presentation"
+          "fit": "strength:presentation",
+          "altText": "「自分の担当ページだけ説明してもらおう」"
         },
         {
           "id": "D",
@@ -1424,7 +1448,8 @@
           "cp": 0,
           "progress": 2,
           "growth": 1,
-          "fit": "strength:analysis"
+          "fit": "strength:analysis",
+          "altText": "「重要な数字に絞って確認し、直そう」"
         },
         {
           "id": "D",
@@ -1444,7 +1469,8 @@
           "cp": 1,
           "progress": 1,
           "growth": 1,
-          "fit": "career:management"
+          "fit": "career:management",
+          "altText": "「不足データは部長に共有して、範囲を相談しよう」"
         },
         {
           "id": "F",
@@ -1477,7 +1503,8 @@
           "cp": 2,
           "progress": 1,
           "growth": 0,
-          "fit": null
+          "fit": null,
+          "altText": "「一文ずつ最後まで見直そう」"
         },
         {
           "id": "B",
@@ -1497,7 +1524,8 @@
           "cp": 0,
           "progress": 2,
           "growth": 1,
-          "fit": "medium:written"
+          "fit": "medium:written",
+          "altText": "「重要箇所だけ、お互いに確認しよう」"
         },
         {
           "id": "D",
@@ -1622,7 +1650,8 @@
           "cp": 1,
           "progress": 1,
           "growth": 1,
-          "fit": null
+          "fit": null,
+          "altText": "「今回の成果は全部新人のおかげです」"
         },
         {
           "id": "B",
@@ -1642,7 +1671,8 @@
           "cp": 0,
           "progress": 1,
           "growth": 1,
-          "fit": "career:management"
+          "fit": "career:management",
+          "altText": "「進捗と育成の事実を整理して報告します」"
         },
         {
           "id": "D",
@@ -1763,5 +1793,5 @@
       "rule": "成功、最終報告でハラ指摘ハラを選んだ"
     }
   ],
-  "updated_jst": "2026-10-26 01:10 JST"
+  "updated_jst": "2026-10-26 02:10 JST"
 }

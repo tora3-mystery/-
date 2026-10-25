@@ -1,6 +1,6 @@
 /** C1 gameplay logic. Pure and dependency-free: also imported by tests. */
-export const VERSION = '0.5.4';
-export const UPDATED_JST = '2026-10-26 01:53 JST';
+export const VERSION = '0.5.5';
+export const UPDATED_JST = '2026-10-26 02:10 JST';
 export const LIMITS = Object.freeze({ cp: 20, progress: 22, growth: 6 });
 export const DAYS = ['月曜日', '火曜日', '水曜日', '木曜日', '金曜日'];
 export const SPEED_HARASSMENTS = Object.freeze(['即レスハラ','遅レスハラ']);
@@ -19,18 +19,18 @@ const givenNames = {
   '女性': ['花音','葵','美咲','結衣','陽菜','彩乃','紗季','結菜','凛','美月','琴音','莉子','陽葵','さくら','心春','菜々','楓','優奈','咲良','千尋','明日香','真央','詩織','美緒'],
 };
 export const ENDING_META = {
-  E01: ['初週で部長室','月曜の朝は、もう戻ってこない。','D'],
+  E01: ['初週で部長室','週の途中で、部長室への呼び出しだけが確定した。','D'],
   E02: ['全部私がやりました','課長の作業だけが、すべての部署を救った。新人の机は真っ白だ。','D'],
   E03: ['ランチでつまずいた課長','あの昼休みを境に、人事のファイルが厚くなった。','D'],
   E04: ['ハラスメント百貨店','一週間で何種類の社内分類に触れたのだろう。職場は今日も平和だ。','D'],
   E05: ['全員が幸せな未完成資料','気を配り、よく話し合った。納期だけが誰にも配慮されなかった。','C'],
-  E06: ['会議だけで終わった5日間','新人の名前は覚えた。資料の1ページ目はまだ白い。','D'],
+  E06: ['進まなかった5営業日','対応に追われた一週間。仕事も育成も、目標には届かなかった。','D'],
   E07: ['最強のプレイングマネージャー','仕事は完璧。なお、新人は何も覚えていない。','B−'],
   E08: ['新人、何も覚えず','資料は完成した。新人は来週も「最初から教えてください」と言う。','C'],
   E09: ['無難な課長','大きな事故もなく、仕事も育成も終わった。部長は褒めない。','B'],
   E10: ['修羅場の納期職人','ハラスメント認定寸前で資料を提出。人事室の廊下が長く見えた。','B'],
   E11: ['育成課長','新しい戦力が育った。次は指導法を全社展開しろと言われた。','A'],
-  E12: ['提案資料のスピードスター','余裕で納品した。部長は来週の案件も抱えてきた。','A'],
+  E12: ['提案資料のスピードスター','なんとか数字を揃えて納品。部長は来週の案件も抱えてきた。','A'],
   E13: ['出典はすべて確認しました','裏を取ることを教えた。役員から「AIなら一瞬でしょ？」と尋ねられた。','A'],
   E14: ['令和の調整職人','認定をほとんど受けず、仕事を終えた。社内で絶滅危惧種と呼ばれる。','S'],
   E15: ['新人が役員席で話した日','新人の説明に役員が頷く。部長はなぜか自分の手柄にした。','S'],
@@ -88,6 +88,13 @@ export function createProfile(rng = Math.random) {
   const strength = pick(['presentation','analysis'],rng);
   const career = pick(['management','expert'],rng);
   const grade = pick([1,2,3,4],rng);
+  // 交流の好みは本人が申告した情報。体育会系サークル所属だけで判断しない。
+  const socialStyle = pick(['convivial','quiet','flexible'],rng);
+  const socialVoices={
+    convivial:'仕事帰りの食事会や飲み会は好きです。誘ってもらえると嬉しいですが、参加は自由だと安心です。',
+    quiet:'仕事帰りは自分の時間を大切にしています。食事会は事前に分かると助かります。',
+    flexible:'ご飯会は日程次第です。参加するか自分で決められると嬉しいです。'
+  };
   const previous = grade === 1 ? '新卒配属' : pick(['法人営業部','カスタマーサクセス部','データ分析部','商品企画部','営業推進部'],rng);
   const checks = {guided:'途中で進捗を確認してもらえると安心です。',autonomous:'まず自分で進めて、詰まった時にまとめて相談したいです。'};
   const mediums = {spoken:'口頭で教えてもらうと頭に入りやすいです。',written:'文章やメモで確認しながら覚えるのが得意です。'};
@@ -96,7 +103,7 @@ export function createProfile(rng = Math.random) {
   const careers = {management:'将来はチームをまとめる仕事に挑戦したいです。',expert:'専門性を深めて頼られる担当者になりたいです。'};
   return {
     name: `${surname} ${given}`,gender,grade,age:22+grade-1,
-    previous, department:'営業企画部',
+    previous, department:'営業企画部',socialStyle,socialVoice:socialVoices[socialStyle],
     university,faculty,club,studentMemory,temperament,temperamentText,photo,
     check,medium,feedback,strength,career,
     speech:[checks[check],mediums[medium],feedbacks[feedback]],
@@ -112,6 +119,13 @@ export function createRun(profile) {
     // Each playthrough chooses the authored alternate scene in roughly half of eligible slots.
     // Stored in the save so that reloading never rerolls an ongoing scenario.
     eventPlan:Array.from({length:15},()=>Math.random()<0.5?0:1),
+    // Stable for this playthrough. Legacy saves without an order retain original A-F ordering.
+    choiceOrders:Array.from({length:15},()=>{
+      const order=['A','B','C','D','E','F'];
+      for(let i=order.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[order[i],order[j]]=[order[j],order[i]];}
+      return order;
+    }),
+    choiceTextPlan:Array.from({length:15},()=>Math.random()<0.5?0:1),
   };
 }
 export function fitAdjustment(choice, profile) {
@@ -124,10 +138,15 @@ export function calculate(run, event, choice, replyTiming = null) {
   if (run.phase !== 'scene') throw new Error('この場面はすでに処理済みです');
   if (event.id !== run.currentId && run.currentId !== undefined) throw new Error('イベントの不整合');
   const adjustment=fitAdjustment(choice, run.profile);
-  const baseCp=Math.max(0,choice.cp+adjustment);
+  let baseCp=choice.harassment.endsWith('疑義')?0:Math.max(0,choice.cp+adjustment);
+  const styleMismatch=event.id==='D4-1'&&run.profile.socialStyle==='convivial'&&choice.id==='A';
+  if(styleMismatch)baseCp=Math.max(0,baseCp-1);
   let deltaCp=baseCp;
   let deltaP=choice.progress;
-  const deltaS=choice.growth;
+  let deltaS=choice.growth;
+  if(event.id==='D4-1' && run.profile.socialStyle==='convivial' && ((event.alternateId==='B'&&choice.id==='C')||(!event.alternateId&&choice.id==='F'))) {
+    deltaS++;
+  }
   let extraReason='';
   let speedName='',speedReason='',speedCp=0;
   if(event.id==='D2-3' && choice.id==='D' && run.flags.checkAgreed) {
@@ -141,6 +160,7 @@ export function calculate(run, event, choice, replyTiming = null) {
   if(event.id==='D3-1') {
     const mode=typeof replyTiming==='number'?(replyTiming<=2?'instant':replyTiming>20?'late':'normal'):replyTiming;
     if(!['instant','normal','late'].includes(mode)) throw new Error('返信タイミングを選択してください');
+    if(mode==='late')extraReason='この問い合わせへの返信は保留したまま、他の予定業務は進行した。';
     if(mode==='instant') {speedName='即レスハラ';speedReason='通知から数秒で返信したため、常時即応を求める空気を生むと社内認定された。';}
     else if(mode==='late') {speedName='遅レスハラ';speedReason='業務時間内の問い合わせを翌朝まで保留し、相談機会を遅らせたと社内認定された。';}
     if(speedName && speedName!==choice.harassment.replace(/疑義$/,'')){speedCp=2;deltaCp+=speedCp;}
@@ -164,6 +184,13 @@ export function calculate(run, event, choice, replyTiming = null) {
   deltaCp+=comboCp;
   const baseName=choice.harassment.replace(/疑義$/,'');
   const effectiveName=baseCp===0?`${baseName}疑義`:baseName;
+  const denial=/不認定|認定なし|疑義止まり|疑義に留まり|正式認定には至らない|正式認定は回避|正式認定はなかった/;
+  const resolvedReason=baseCp>0 && denial.test(choice.reason)
+    ? `本人の希望・得意分野との不一致により、制度上「${baseName}」として正式認定された。`
+    : choice.reason;
+  if(event.id==='D4-1' && run.profile.socialStyle==='convivial'){
+    extraReason += ' 本人は「同僚との食事や飲み会は好きです。参加は自由だと嬉しいです」と話していた。';
+  }
   const next=structuredClone(run);
   next.cp+=deltaCp;
   next.progress=Math.max(0,next.progress+deltaP);
@@ -173,9 +200,9 @@ export function calculate(run, event, choice, replyTiming = null) {
     next.flags.aiUnverified=['A','E'].includes(choice.id);
     next.flags.aiVerified=choice.id==='D';
   }
-  if(event.id==='D4-3' && ['A','C','E'].includes(choice.id)) next.flags.presentationPrepped=true;
+  if(event.id==='D4-3' && ['A','C'].includes(choice.id)) next.flags.presentationPrepped=true;
   const log={id:event.id,day:event.day,title:event.title,choiceId:choice.id,choiceText:choice.text,
-    name:effectiveName,rawName:choice.harassment,reason:choice.reason,baseCp,speedCp,comboCp,comboStreak,speedReason,deltaCp,deltaP,deltaS,
+    name:effectiveName,rawName:choice.harassment,reason:resolvedReason,baseCp,speedCp,comboCp,comboStreak,speedReason,deltaCp,deltaP,deltaS,
     speedName,replyTiming,eventIndex:run.index,extraReason,fitAdjustment:adjustment,time:event.time||'',};
   next.logs.push(log);
   next.pending=log;
@@ -237,7 +264,7 @@ export function resolveEnding(run) {
   return 'E09';
 }
 export function isValidSave(save, events) {
-  return !!save && ['0.4.0','0.4.1','0.5.0','0.5.1','0.5.2','0.5.3',VERSION].includes(save.version) && Number.isInteger(save.index) && save.index>=0 && save.index<events.length
+  return !!save && ['0.4.0','0.4.1','0.5.0','0.5.1','0.5.2','0.5.3','0.5.4',VERSION].includes(save.version) && Number.isInteger(save.index) && save.index>=0 && save.index<events.length
    && ['briefing','scene','result','dayReview','ending'].includes(save.phase) && Array.isArray(save.logs) && typeof save.profile?.name==='string'
    && save.flags && typeof save.cp==='number';
 }
