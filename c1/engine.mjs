@@ -139,7 +139,7 @@ export function calculate(run, event, choice, replyTiming = null) {
   if (event.id !== run.currentId && run.currentId !== undefined) throw new Error('イベントの不整合');
   const adjustment=fitAdjustment(choice, run.profile);
   let baseCp=choice.harassment.endsWith('疑義')?0:Math.max(0,choice.cp+adjustment);
-  const styleMismatch=event.id==='D4-1'&&run.profile.socialStyle==='convivial'&&choice.id==='A';
+  const styleMismatch=event.id==='D4-1'&&!event.alternateId&&run.profile.socialStyle==='convivial'&&choice.id==='A';
   if(styleMismatch)baseCp=Math.max(0,baseCp-1);
   let deltaCp=baseCp;
   let deltaP=choice.progress;
