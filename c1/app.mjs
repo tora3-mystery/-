@@ -1,4 +1,4 @@
-import {VERSION,UPDATED_JST,LIMITS,DAYS,ENDING_META,createProfile,createRun,calculate,advance,isValidSave} from './engine.mjs';
+import {VERSION,UPDATED_JST,LIMITS,DAYS,ENDING_META,createProfile,createRun,calculate,advance,isValidSave,SPEED_HARASSMENTS} from './engine.mjs';
 
 const app=document.getElementById('app');
 const SAVE_KEY='arg_c1_save_v04';
@@ -11,6 +11,7 @@ let events=[];
 let run=null;
 let screen='intro';
 let popup='';
+let modalReturnFocus=null;
 let records=load(RECORD_KEY,{names:{},endings:{},plays:0});
 let muted=load(PREF_KEY,false);
 let clockMode='choice';
@@ -22,6 +23,7 @@ const isTouch=()=>false;
 
 function save(){if(run)persist(SAVE_KEY,run);}
 function storeRecords(){persist(RECORD_KEY,records);}
+function restoreSaved(saved){const migrated=structuredClone(saved);migrated.version=VERSION;migrated.profileAccepted=migrated.profileAccepted??(migrated.logs.length>0||migrated.index>0);return migrated;}
 function stat(label,value,cap,kind){return `<div class="stat ${kind}"><div class="statline"><span>${label}</span><span>${Math.min(value,cap)}/${cap}</span></div><div class="statnum mono">${value}<small style="font-size:11px;font-weight:500;color:#778a96"> / ${cap}</small></div><div class="bar"><i style="width:${Math.min(100,Math.round(100*value/cap))}%"></i></div></div>`;}
 function scorePanel(){return `<div class="stats">${stat('コンプラ',run.cp,LIMITS.cp,'cp')}${stat('業務進捗',run.progress,LIMITS.progress,'progress')}${stat('新人の習熟',run.growth,LIMITS.growth,'growth')}</div>`;}
 function statusBar(){return `<div class="progress-label"><span>5営業日間の育成記録</span><span>${DAYS[Math.floor(run.index/3)]}　${run.index%3+1} / 3</span></div><div class="progressline">${DAYS.map((_,i)=>`<i class="${Math.floor(run.index/3)>=i?'active':''}"></i>`).join('')}</div>`;}
@@ -60,17 +62,19 @@ function clockWidget(){return `<div class="clockbox"><strong class="small">特�
     `<div class="clocktime mono" id="clock-display">${clockStart===null?'00.0 秒':((performance.now()-clockStart)/1000).toFixed(1)+' 秒'}</div><div class="clockmode"><button class="secondary" data-action="clock-start" ${clockStart!==null?'disabled':''}>${clockStart===null?'計測開始':'計測中…'}</button></div><div class="clock-warning">計測中は返信を選んだ瞬間に停止します。ページ再読込でタイマーのみリセットされます。</div>`}
   </div>`;}
 function resultScreen(){const log=run.pending;if(!log)return '<p class="error">表示できる判定がありません。</p>';
-  const safe=log.deltaCp===0, name=log.name.endsWith('疑義')&&safe?log.name:log.name;
-  const newly=records.names[log.rawName]?.count===1;
+  const safe=log.deltaCp===0;
+  const speedPrimary=log.speedCp>0&&log.baseCp===0;
+  const name=speedPrimary?log.speedName:log.name;
+  const newLabels=[log.rawName,...(log.speedCp>0?[log.speedName]:[])].filter(n=>records.names[n]?.count===1);
   return `<div class="eyebrow">社内コンプライアンス認定システム / 判定結果</div><div class="result-card ${safe?'safe':''}">
     <div class="result-symbol">${safe?'✓':'!'}</div><div class="tiny">${safe?'審査終了｜正式認定なし':'新たなハラスメントを検出'}</div>
     <div class="result-name">${esc(name)}！</div><strong class="small">${safe?'今回は疑義止まりです':'社内コンプライアンス分類'}</strong>
-    <p class="result-reason">${esc(log.reason)}</p>
+    <p class="result-reason">${esc(speedPrimary?log.speedReason:log.reason)}</p>${speedPrimary?`<p class="tiny">返信内容への判定：${esc(log.name)}（+0pt）</p>`:''}
     ${log.fitAdjustment!==0?`<p class="tiny">${log.fitAdjustment<0?'本人の希望・得意分野に一致したため認定が軽減されました。':'本人の希望・得意分野との不一致が加点に影響しました。'}</p>`:''}
-    ${log.speedName?`<p class="small"><strong>追加認定：${esc(log.speedName)}</strong>（返信${log.replySeconds.toFixed(1)}秒）</p>`:''}
+    ${log.speedCp>0&&!speedPrimary?`<p class="small"><strong>追加認定：${esc(log.speedName)}（+${log.speedCp}pt）</strong><br>${esc(log.speedReason)}（返信${log.replySeconds.toFixed(1)}秒）</p>`:''}
     ${log.extraReason?`<p class="small">${esc(log.extraReason)}</p>`:''}
     <div class="score-boost ${safe?'safe':''}">+${log.deltaCp} pt</div><div class="result-stats"><span>業務進捗 ${log.deltaP>=0?'+':''}${log.deltaP}</span><span>新人の習熟 +${log.deltaS}</span><span>累積 ${run.cp}/${LIMITS.cp}</span></div>
-    ${newly?'<div class="collection">✦ 新たなハラ分類を図鑑に登録しました</div>':''}</div>
+    ${newLabels.length?`<div class="collection">✦ 図鑑に新規登録：${newLabels.map(esc).join('・')}</div>`:''}</div>
     <div class="actions"><button class="primary" data-action="next">${run.ending?(run.cp>=LIMITS.cp?'部長室に向かう':'最終評価を確認する'):(run.index%3===2?'翌営業日へ進む':'次の業務へ進む')}</button><button class="secondary" data-action="show-notes">これまでの対応を確認</button></div>`;}
 function endingScreen(){const id=run.ending||'E04', [title,desc,grade]=ENDING_META[id];const failed=run.cp>=LIMITS.cp;
   const director=failed?'「君、今週いったい何回ハラスメントをしたんだ！ こんなに申告される管理職は初めて見たぞ！ 君には新人を任せられん！」':
@@ -89,11 +93,14 @@ function showModal(type){
   if(type==='profile'){title='配属社員プロフィール';body=p?profileCard(p):'<div class="empty">まだ社員が配属されていません。</div>';}
   if(type==='guide'){title='操作説明';body=`<div class="info">5営業日・15イベントで、6つの対応から1つずつ選びます。コンプラ20ptで即敗北。金曜までに業務22以上・習熟6以上でクリア。選択後の結果画面で「○○ハラ」の種類と点数が表示されます。</div><p class="small">チャット返信イベントでは、実時間計測または時間指定を選べます。プロフィールと業務メモはいつでも参照できます。</p><p class="privacy">スコア、名前、イベントはゲーム内のフィクションであり、現実の法的判断ではありません。</p>`;}
   if(type==='notes'){title='業務メモ';body=run?`${run.logs.length?`<div class="timeline">${run.logs.map(l=>`<div class="history-row"><strong>${esc(l.id)}｜${esc(l.title)}　+${l.deltaCp}pt</strong>${esc(l.choiceText)}<br><span class="muted">${esc(l.name)}　${esc(l.reason)}</span></div>`).join('')}</div>`:'<div class="empty">対応履歴はありません。</div>'}<hr class="sectionline"><div class="info"><b>これまでの引継ぎ事項</b>${run.flags.checkAgreed?'✓ 確認時間を合意済み<br>':'・確認時刻は未合意<br>'}${run.flags.aiVerified?'✓ AIの資料は出典検証済み<br>':run.flags.aiUnverified?'！AIの出典に未確認部分がある<br>':'・AIの出典は未確認リスクが明示されていない<br>'}${run.flags.presentationPrepped?'✓ 発表担当の準備を進めた':'・発表担当の練習は未確認'}</div>`:'<div class="empty">まだ業務履歴はありません。</div>';}
-  if(type==='archive'){title='ハラ図鑑';const names=[...new Set(events.flatMap(e=>e.choices.map(c=>c.harassment)))];body=`<p class="small muted">発見 ${Object.keys(records.names).length} / ${names.length} 分類。疑義として現れた名称も図鑑に登録されます。</p><div class="timeline">${names.map(n=>{const info=records.names[n];return `<div class="history-row"><strong>${info?'✦ '+esc(n):'？？？ 未発見'}</strong>${info?`認定・疑義を含む遭遇回数：${info.count}回`:'未発見の分類'}</div>`;}).join('')}</div>`;}
+  if(type==='archive'){title='ハラ図鑑';const names=[...new Set([...events.flatMap(e=>e.choices.map(c=>c.harassment)),...SPEED_HARASSMENTS,...Object.keys(records.names)])].sort((a,b)=>Number(!!records.names[b])-Number(!!records.names[a]));const found=names.filter(n=>records.names[n]).length;body=`<p class="small muted">発見 ${found} / ${names.length} 分類。認定・疑義を含めて記録。発見済みを先頭に表示します。</p><div class="timeline">${names.map(n=>{const info=records.names[n];return `<div class="history-row"><strong>${info?'✦ '+esc(n):'？？？ 未発見'}</strong>${info?`認定・疑義を含む遭遇回数：${info.count}回`:'未発見の分類'}</div>`;}).join('')}</div>`;}
   if(type==='endings'){title='エンディングコレクション';body=`<p class="small muted">${Object.keys(records.endings).length}/16 種を解放</p><div class="timeline">${Object.entries(ENDING_META).map(([id,d])=>`<div class="history-row"><strong>${records.endings[id]?`${id}｜${esc(d[0])}`:`${id}｜？？？`}</strong>${records.endings[id]?esc(d[1]):'未達成のエンディング'}</div>`).join('')}</div>`;}
+  modalReturnFocus=document.activeElement?.dataset?.action||null;
   popup=`<div class="overlay" id="overlay"><section class="modal" role="dialog" aria-modal="true" aria-label="${esc(title)}"><button class="modal-close" data-action="close-modal" aria-label="閉じる">×</button><h2 class="h2">${esc(title)}</h2>${body}</section></div>`;
   render(false);
+  app.querySelector('.modal-close')?.focus();
 }
+function closeModal(){popup='';render(false);if(modalReturnFocus)app.querySelector(`[data-action="${modalReturnFocus}"]`)?.focus();modalReturnFocus=null;}
 function render(scroll=true){
   if(!events.length){app.innerHTML='<div class="loading">読み込み中…</div>';return;}
   if(screen==='intro')app.innerHTML=intro();
@@ -127,24 +134,24 @@ function downloadCard(){if(!run?.ending)return;const [title,desc,grade]=ENDING_M
 function maybeNew(){const saved=load(SAVE_KEY,null);if(isValidSave(saved,events)&&!confirm('保存中のプレイは上書きされます。新しく始めますか？'))return;run=createRun(createProfile());resetClock();screen='profile';popup='';save();render();}
 app.addEventListener('click', async ev=>{
   const target=ev.target.closest('[data-action],[data-choice],[data-time]');
-  if(!target){if(ev.target.id==='overlay'){popup='';render(false)}return;}
+  if(!target){if(ev.target.id==='overlay')closeModal();return;}
   if(target.dataset.time){clockSelected=Number(target.dataset.time);render(false);return;}
   if(target.dataset.choice){if(!run||run.phase!=='scene')return;const e=events[run.index];let seconds=null;if(e.id==='D3-1'){
     if(clockMode==='real'&&clockStart===null)return;
     seconds=clockMode==='choice'?clockSelected:(performance.now()-clockStart)/1000;
   }
     try{run=calculate(run,e,e.choices.find(c=>c.id===target.dataset.choice),seconds);const last=run.pending;records.names[last.rawName]??={count:0};records.names[last.rawName].count++;
-    if(last.speedName&&last.speedName!==last.rawName){records.names[last.speedName]??={count:0};records.names[last.speedName].count++;}
+    if(last.speedCp>0&&last.speedName!==last.rawName){records.names[last.speedName]??={count:0};records.names[last.speedName].count++;}
     storeRecords();save();finishRunOnce();resetClock();tone(last.deltaCp===0);render();}catch(err){toast=err.message;render(false);}return;}
   const action=target.dataset.action;
   if(action==='start'||action==='restart'){maybeNew();return;}
   if(action==='intro'){screen='intro';popup='';render();return;}
-  if(action==='resume'){const saved=load(SAVE_KEY,null);if(isValidSave(saved,events)){run=saved;screen='play';resetClock();render();}return;}
+  if(action==='resume'){const saved=load(SAVE_KEY,null);if(isValidSave(saved,events)){run=restoreSaved(saved);screen=run.profileAccepted?'play':'profile';resetClock();save();render();}return;}
   if(action==='reroll'){run=createRun(createProfile());save();render();return;}
-  if(action==='begin'){screen='play';save();render();return;}
+  if(action==='begin'){run.profileAccepted=true;screen='play';save();render();return;}
   if(action==='next'){run=advance(run);save();render();return;}
   if(action.startsWith('show-')){showModal(action.slice(5));return;}
-  if(action==='close-modal'){popup='';render(false);return;}
+  if(action==='close-modal'){closeModal();return;}
   if(action==='clock-choice'){resetClock();clockMode='choice';render(false);return;}
   if(action==='clock-real'){resetClock();clockMode='real';render(false);return;}
   if(action==='clock-start'){clockStart=performance.now();render(false);return;}
@@ -152,8 +159,19 @@ app.addEventListener('click', async ev=>{
   if(action==='share'){await share();return;}
   if(action==='download-card'){downloadCard();return;}
 });
-document.addEventListener('keydown',ev=>{if(ev.key==='Escape'&&popup){popup='';render(false);}});
+document.addEventListener('keydown',ev=>{
+  if(!popup)return;
+  if(ev.key==='Escape'){ev.preventDefault();closeModal();return;}
+  if(ev.key==='Tab'){
+    const modal=app.querySelector('[role="dialog"]');if(!modal)return;
+    const focusable=[...modal.querySelectorAll('button:not([disabled]),a[href],input:not([disabled]),[tabindex]:not([tabindex="-1"])')];
+    if(!focusable.length){ev.preventDefault();modal.focus();return;}
+    const first=focusable[0],last=focusable.at(-1);
+    if(ev.shiftKey&&(document.activeElement===first||!modal.contains(document.activeElement))){ev.preventDefault();last.focus();}
+    else if(!ev.shiftKey&&(document.activeElement===last||!modal.contains(document.activeElement))){ev.preventDefault();first.focus();}
+  }
+});
 
-(async()=>{try{const response=await fetch('./events.json?v=0.4.0',{cache:'no-store'});if(!response.ok)throw new Error(`HTTP ${response.status}`);const json=await response.json();events=json.events;
+(async()=>{try{const response=await fetch('./events.json?v=0.4.1',{cache:'no-store'});if(!response.ok)throw new Error(`HTTP ${response.status}`);const json=await response.json();events=json.events;
   if(!Array.isArray(events)||events.length!==15||events.some(e=>e.choices.length!==6))throw new Error('イベント定義が不正です');
   render();}catch(err){app.innerHTML=`<div class="error"><strong>ゲームデータを読み込めませんでした。</strong><p>${esc(err.message)}</p><p>ネットワーク接続を確認してページを再読み込みしてください。</p></div>`;}})();

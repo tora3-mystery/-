@@ -1,8 +1,9 @@
 /** C1 gameplay logic. Pure and dependency-free: also imported by tests. */
-export const VERSION = '0.4.0';
-export const UPDATED_JST = '2026-10-25 17:05 JST';
+export const VERSION = '0.4.1';
+export const UPDATED_JST = '2026-10-25 18:00 JST';
 export const LIMITS = Object.freeze({ cp: 20, progress: 22, growth: 6 });
 export const DAYS = ['月曜日', '火曜日', '水曜日', '木曜日', '金曜日'];
+export const SPEED_HARASSMENTS = Object.freeze(['即レスハラ','遅レスハラ']);
 const pick = (xs, rng) => xs[Math.min(xs.length - 1, Math.floor(rng() * xs.length))];
 const names = {
   '男性': [['青木','悠真'], ['佐藤','陸'], ['高橋','一樹'], ['小林','湊'], ['山本','直哉'], ['森','拓海']],
@@ -52,7 +53,7 @@ export function createProfile(rng = Math.random) {
 }
 export function createRun(profile) {
   return {
-    version:VERSION, profile,index:0, cp:0, progress:0, growth:0, logs:[],
+    version:VERSION, profile,profileAccepted:false,index:0, cp:0, progress:0, growth:0, logs:[],
     flags:{checkAgreed:false,aiUnverified:false,aiVerified:false,presentationPrepped:false},
     phase:'scene',pending:null,ending:null,
   };
@@ -67,11 +68,12 @@ export function calculate(run, event, choice, replySeconds = null) {
   if (run.phase !== 'scene') throw new Error('この場面はすでに処理済みです');
   if (event.id !== run.currentId && run.currentId !== undefined) throw new Error('イベントの不整合');
   const adjustment=fitAdjustment(choice, run.profile);
-  let deltaCp=Math.max(0,choice.cp+adjustment);
+  const baseCp=Math.max(0,choice.cp+adjustment);
+  let deltaCp=baseCp;
   let deltaP=choice.progress;
   const deltaS=choice.growth;
   let extraReason='';
-  let speedName='';
+  let speedName='',speedReason='',speedCp=0;
   if(event.id==='D2-3' && choice.id==='D' && run.flags.checkAgreed) {
     deltaP++;
     extraReason='初日に確認時刻を合意していたため、作業がスムーズに進んだ。';
@@ -82,10 +84,11 @@ export function calculate(run, event, choice, replySeconds = null) {
   }
   if(event.id==='D3-1') {
     if(!Number.isFinite(replySeconds) || replySeconds < 0) throw new Error('返信時間を選択してください');
-    if(replySeconds<=2) {deltaCp++;speedName='即レスハラ';}
-    else if(replySeconds>20) {deltaCp++;speedName='遅レスハラ';}
+    if(replySeconds<=2) {speedName='即レスハラ';speedReason='2秒以内の返信が、同じ即応速度を求める社内圧力と認定された。';}
+    else if(replySeconds>20) {speedName='遅レスハラ';speedReason='返信まで20秒超の経過が、相談を後回しにしたとの社内認定につながった。';}
+    if(speedName && speedName!==choice.harassment){speedCp=1;deltaCp+=speedCp;}
   }
-  const effectiveName=deltaCp===0 && !choice.harassment.endsWith('疑義') ? `${choice.harassment}疑義` : choice.harassment;
+  const effectiveName=baseCp===0 && !choice.harassment.endsWith('疑義') ? `${choice.harassment}疑義` : choice.harassment;
   const next=structuredClone(run);
   next.cp+=deltaCp;
   next.progress=Math.max(0,next.progress+deltaP);
@@ -97,7 +100,7 @@ export function calculate(run, event, choice, replySeconds = null) {
   }
   if(event.id==='D4-3' && ['A','C','E'].includes(choice.id)) next.flags.presentationPrepped=true;
   const log={id:event.id,day:event.day,title:event.title,choiceId:choice.id,choiceText:choice.text,
-    name:effectiveName,rawName:choice.harassment,reason:choice.reason,deltaCp,deltaP,deltaS,
+    name:effectiveName,rawName:choice.harassment,reason:choice.reason,baseCp,speedCp,speedReason,deltaCp,deltaP,deltaS,
     speedName,replySeconds,eventIndex:run.index,extraReason,fitAdjustment:adjustment};
   next.logs.push(log);
   next.pending=log;
@@ -136,7 +139,7 @@ export function resolveEnding(run) {
   return 'E09';
 }
 export function isValidSave(save, events) {
-  return !!save && save.version===VERSION && Number.isInteger(save.index) && save.index>=0 && save.index<events.length
+  return !!save && ['0.4.0',VERSION].includes(save.version) && Number.isInteger(save.index) && save.index>=0 && save.index<events.length
    && ['scene','result','ending'].includes(save.phase) && Array.isArray(save.logs) && typeof save.profile?.name==='string'
    && save.flags && typeof save.cp==='number';
 }

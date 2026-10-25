@@ -1,8 +1,8 @@
-# C1 適切にご対応ください。 v0.4.0
+# C1 適切にご対応ください。 v0.4.1
 
 - Public URL: https://tora3-mystery.github.io/short-ui-games/c1/
 - Scope: All C1 assets are under `c1/` only. Root `index.html` is maintained by ARG master.
-- Updated (JST): 2026-10-25 17:05
+- Updated (JST): 2026-10-25 18:00
 - Static HTML/CSS/JavaScript, no server/API dependencies, no external images, no AI decision API.
 
 ## Mechanics
@@ -26,3 +26,10 @@ Automated engine/UI QA evidence is produced locally before publication. GitHub c
 ## Important disclaimer
 
 Fictional satire on organizational classification and management tensions. Not a legal definition of harassment or workplace training material.
+## v0.4.1 audit fixes
+
+- Merge base and timing recognition without duplicate category; keep the two explanations separate.
+- Register timing-only harassment in archive (including 遅レスハラ); count unique classifications consistently.
+- Preserve pre-profile confirmation state on resume, including legacy v0.4.0 saves.
+- Modal focus is trapped, Escape/backdrop closes the modal and returns focus to its launcher.
+- Events metadata is consistent with the game version.

@@ -1,7 +1,7 @@
 {
-  "version": "0.3",
+  "version": "0.4.1",
   "date": "2026-10-25 JST",
-  "status": "draft_not_implemented",
+  "status": "public_playtest",
   "thresholds": {
     "cp_gameover": 20,
     "p_win": 22,
@@ -448,8 +448,8 @@
         {
           "id": "B",
           "text": "「今すぐ見ます！ 五分で返します！」",
-          "harassment": "即レスハラ",
-          "reason": "本人が急ぎでないと言ったのに即応圧力を形成。",
+          "harassment": "先回り即応ハラ",
+          "reason": "急ぎではないと伝えられたのに「五分で返す」と自ら期限を設定し、相手に即時対応を求める社内慣行をつくった。",
           "cp": 2,
           "progress": 2,
           "growth": 0,
@@ -1140,5 +1140,6 @@
       "name": "コンプラ室への推薦状",
       "rule": "成功、最終報告でハラ指摘ハラを選んだ"
     }
-  ]
+  ],
+  "updated_jst": "2026-10-25 18:00 JST"
 }
