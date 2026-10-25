@@ -26,6 +26,12 @@ ROUTES={
     "X3":(["discount","receive","audit","camera0","open0","glitch6","ticket"],"odd_day8"),
     "X4":(["quiet","delivery","audit","camera0","open0","glitch6","ticket"],"odd_hidden")
 }
+SCENES=[
+    "store-normal.jpg","store-queue.jpg","store-aisle.jpg","store-stock.jpg","store-noise.jpg",
+    "store-thriving.jpg","store-popular-chaos.jpg","store-underused.jpg","store-declining.jpg",
+    "store-construction.jpg","store-odd1.jpg","store-odd2.jpg","store-odd3.jpg",
+    "store-human-day.jpg","store-closed.jpg"
+]
 
 class SilentHandler(http.server.SimpleHTTPRequestHandler):
     def log_message(self, fmt, *args):
@@ -55,6 +61,16 @@ def run_test(screenshots):
                     assert page.locator("#total").inner_text().strip()=="50万円", f"{width}px: revenue not shown"
                     page.locator("#storeImage").evaluate("el=>el.decode().catch(()=>null)")
                     assert page.locator("#storeImage").evaluate("el=>el.naturalWidth>0"),f"{width}px: store image/fallback not loaded"
+                    assert page.locator("#storeImage").get_attribute("src").startswith("./assets/"),f"{width}px: JPEG fell back to SVG"
+                    photos=page.evaluate("""async files=>Promise.all(files.map(file=>new Promise(resolve=>{
+                      const image=new Image();
+                      image.onload=()=>resolve({file,width:image.naturalWidth,height:image.naturalHeight,ok:true});
+                      image.onerror=()=>resolve({file,width:0,height:0,ok:false});
+                      image.src='./assets/'+file;
+                    })))""",SCENES)
+                    for photo in photos:
+                        assert photo["ok"],f"{width}px: failed to load {photo['file']}"
+                        assert (photo["width"],photo["height"])==(1100,619),f"{width}px: bad dimensions {photo}"
                     overflow=page.evaluate("()=>document.documentElement.scrollWidth-window.innerWidth")
                     assert overflow<=2, f"{width}px: horizontal overflow {overflow}px"
                     if screenshots: page.screenshot(path=str(shots/f"f1-day1-{width}.png"),full_page=True)
@@ -113,7 +129,7 @@ def run_test(screenshots):
         server.shutdown()
         server.server_close()
     print(f"PASS: {total} browser cases (4 viewport/saving + 9 outcome routes)")
-    print("NOTE: local fallback SVG imagery is permitted for this smoke test; final photo presence is a separate release gate.")
+    print("PASS: all 15 production JPEG scenes loaded at 1100x619 in every viewport; no SVG fallback used.")
 
 if __name__=="__main__":
     parser=argparse.ArgumentParser()
