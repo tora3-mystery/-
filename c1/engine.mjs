@@ -62,6 +62,8 @@ const CLUBS = [
  ['学園祭実行委員','関係者に何度も確認を取って進める役回りでした。'],
  ['写真部','細かな違いに気づくのが好きです。'],
  ['バスケットボールサークル','チームで役割を決めて動くのが好きでした。'],
+ ['ラグビー部','練習後の食事会で先輩に相談していたことが多いです。'],
+ ['野球部','チームで協力して予定を進めるのが好きでした。'],
  ['放送研究会','説明することは好きですが、急に指名されると焦ります。'],
  ['料理研究会','みんなで作業を分担するのが得意でした。'],
  ['無所属','授業の後はアルバイトに集中していました。']
@@ -89,7 +91,8 @@ export function createProfile(rng = Math.random) {
   const career = pick(['management','expert'],rng);
   const grade = pick([1,2,3,4],rng);
   // 交流の好みは本人が申告した情報。体育会系サークル所属だけで判断しない。
-  const socialStyle = pick(['convivial','quiet','flexible'],rng);
+  const sporty=['バスケットボールサークル','ラグビー部','野球部'].includes(club);
+  const socialStyle = sporty?pick(['convivial','convivial','convivial','quiet','flexible'],rng):pick(['convivial','quiet','flexible'],rng);
   const socialVoices={
     convivial:'仕事帰りの食事会や飲み会は好きです。誘ってもらえると嬉しいですが、参加は自由だと安心です。',
     quiet:'仕事帰りは自分の時間を大切にしています。食事会は事前に分かると助かります。',
