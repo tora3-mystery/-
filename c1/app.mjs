@@ -80,7 +80,7 @@ function dayReviewScreen(){const i=displayDay(),r=run.bossReports?.at(-1),d=DIRE
 function scene(){const e=activeEvent();const dayIndex=displayDay();const isBoss=bossBadge(e);
 return `<div class="panelhead"><span class="eyebrow">2030年度 人材育成支援システム</span><span class="tag">自動保存</span></div>${statusBar()}${scorePanel()}${directiveCompact()}${topActions()}
 <section class="event-unit ${isBoss?'event-boss':'event-employee'}"><div class="event-type"><span>${isBoss?'⚠ 部長案件':'● 若手社員との対応'}</span><span>${DAYS[dayIndex]} ${esc(e.time||'')}</span></div>
-<div class="scene-header"><img class="scene-actor-photo" src="${isBoss?DIRECTOR_IMAGE:esc(run.profile.photo||'./assets/employee-f01.webp')}" alt="${isBoss?'部長':'配属社員'}の顔（架空人物）" width="76" height="88" loading="lazy"><div class="scene-index">CASE ${run.index%3+1}　${esc(e.id)}</div><div class="scene-title">${esc(e.title)}</div><div class="scene-description">${esc(e.scene)}</div>${run.index<3?`<div class="cue">配属初日の確認メモ：${esc(e.cue)}</div>`:`<details class="context-note"><summary>必要なら背景メモを確認する</summary><p>${esc(e.cue)}</p></details>`}</div></section>
+<div class="scene-header"><img class="scene-actor-photo" src="${isBoss?DIRECTOR_IMAGE:esc(run.profile.photo||'./assets/employee-f01.webp')}" alt="${isBoss?'部長':'配属社員'}の顔（架空人物）" width="76" height="88" loading="lazy"><div class="scene-index">CASE ${run.index%3+1}　${esc(e.id)}</div><div class="scene-title">${esc(e.title)}</div><div class="scene-description">${esc(e.scene)}</div>${run.index<3?`<div class="cue">配属初日の確認メモ：${esc(e.cue)}</div>`:""}</div></section>
 <section class="paper spaced"><div class="panelhead"><strong class="small">あなたはどう対応しますか？</strong><span class="tiny">6つから1つ選択</span></div>${e.id==='D3-1'?clockWidget():''}<div class="choices">${e.choices.map(c=>`<button class="choice" data-choice="${c.id}"><span class="letter">${c.id}</span><span>${esc(c.text)}</span></button>`).join('')}</div></section><p class="privacy">※選択後は戻せません。コンプラ違反ポイントが20に到達すると部長室に呼び出されます。</p>`;}
 function clockWidget(){const choices=[['instant','通知から数秒で返信'],['normal','15分ほどで返信'],['late','翌朝まで保留']];return `<div class="clockbox"><strong class="small">社内チャット｜返信するタイミングを指定</strong><p class="clock-warning">実時間の計測はありません。先に返信タイミングを選び、続けて返信内容を選択してください。</p><div class="clockmode">${choices.map(([value,label])=>`<button data-time="${value}" class="quiet ${clockSelected===value?'selected':''}" aria-pressed="${clockSelected===value}">${label}</button>`).join('')}</div></div>`;}
 function resultScreen(){const log=run.pending;if(!log)return '<p class="error">表示できる判定がありません。</p>';
@@ -201,6 +201,6 @@ document.addEventListener('keydown',ev=>{
   }
 });
 
-(async()=>{try{const response=await fetch('./events.json?v=0.5.3',{cache:'no-store'});if(!response.ok)throw new Error(`HTTP ${response.status}`);const json=await response.json();events=json.events;
+(async()=>{try{const response=await fetch('./events.json?v=0.5.4',{cache:'no-store'});if(!response.ok)throw new Error(`HTTP ${response.status}`);const json=await response.json();events=json.events;
   if(!Array.isArray(events)||events.length!==15||events.some(e=>e.choices.length!==6))throw new Error('イベント定義が不正です');
   render();}catch(err){app.innerHTML=`<div class="error"><strong>ゲームデータを読み込めませんでした。</strong><p>${esc(err.message)}</p><p>ネットワーク接続を確認してページを再読み込みしてください。</p></div>`;}})();
