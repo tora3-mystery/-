@@ -39,5 +39,13 @@
 - 全15業務の枠組みを維持し、8枠に各1件の別シナリオを追加（23種類の業務シナリオ・計138択）。新規プレイごとに8枠を独立抽選し、途中セーブでは固定する。旧セーブはすべて元のイベントを継続。
 - 『判断材料：』を撤去。月曜は初日メモを表示し、火曜以降は任意で開く背景メモと会話文から読み取る。
 - 架空の大学・学部、サークル、学生時代のエピソード、自己紹介の性格を追加。性別・大学・サークル・顔画像は得点判定に影響しない。
-- 顔画像4点はPixabayのAI生成素材をCDNから表示。ネットワークに接続できない／読み込みに失敗する場合は従来アイコンを表示。画像の取得時のみPixabayへ画像リクエストが送信される。画像以外のゲームロジックはローカルで動作。
-- 素材元：男性モデルA: https://pixabay.com/illustrations/ai-generated-asian-man-young-8644544/ | 男性モデルB: https://pixabay.com/illustrations/ai-generated-man-portrait-model-9389099/ | 女性モデルA: https://pixabay.com/ja/illustrations/生成されたai-女性-肖像画-9220634/ | 女性モデルB: https://pixabay.com/ja/illustrations/生成されたai-女性-オフィス-8949601/（Pixabay Content License）。
+- 旧v0.5.2では顔画像4点をPixabayのAI生成素材をCDNから表示。ネットワークに接続できない／読み込みに失敗する場合は従来アイコンを表示。画像の取得時のみPixabayへ画像リクエストが送信される。画像以外のゲームロジックはローカルで動作。
+- （過去版の参考記録。v0.5.3から外部画像を使っていません）素材元：男性モデルA: https://pixabay.com/illustrations/ai-generated-asian-man-young-8644544/ | 男性モデルB: https://pixabay.com/illustrations/ai-generated-man-portrait-model-9389099/ | 女性モデルA: https://pixabay.com/ja/illustrations/生成されたai-女性-肖像画-9220634/ | 女性モデルB: https://pixabay.com/ja/illustrations/生成されたai-女性-オフィス-8949601/（Pixabay Content License）。
+
+## v0.5.3 更新（2026-10-26 01:33 JST）
+
+- ラコが生成した架空人物のポートレート13枚（若手社員12人分＋部長1人分）をWebP形式で `c1/assets/` に格納（合計約56.5KB）。実在人物の写真ではありません。
+- `PHOTO_BANK` を同一サイト内のローカルパスに変更。初回表示・プロフィールモーダル・業務イベント・部長指令・日次査定で画像を表示。
+- 旧セーブに保存されていたPixabayの外部URLも、再開時に同一サイト内画像に置き換える。社員の名前・特性・進捗は維持。プロフィール抽選ロジックと得点判定は変更なし。
+- 外部画像サーバーへの依存を解消。GitHub Pagesを最初に取得する通信は引き続き必要ですが、外部画像サービスへの通信は不要です。
+- 編集範囲：`c1/` 以下のみ。ルートのトップページには変更を加えません。

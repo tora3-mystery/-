@@ -43,3 +43,11 @@
 .context-note summary{cursor:pointer;font-weight:700}
 .context-note p{line-height:1.75;margin:9px 0 2px}
 @media(max-width:450px){.portrait.face-photo{flex-basis:88px;height:112px}.profile-grid{grid-template-columns:1fr 1fr}.employee-name{font-size:20px}}
+
+/* v0.5.3: local synthetic actor portraits */
+.boss-photo{float:right;margin:8px 2px 13px 18px;width:74px;height:87px;object-fit:cover;object-position:center 25%;border-radius:10px;border:2px solid #c3b0d3;box-shadow:0 4px 10px #180c2b24}
+.boss-orders{clear:both}
+.scene-actor-photo{float:right;width:76px;height:88px;object-fit:cover;object-position:center 25%;border-radius:10px;border:2px solid #b4ccdc;margin:0 0 12px 16px;background:#e1e9ef}
+.event-boss .scene-actor-photo{border-color:#bfa6d7}
+.scene-header::after{content:"";display:block;clear:both}
+@media(max-width:420px){.scene-actor-photo{width:62px;height:74px;margin-left:10px}.boss-photo{width:66px;height:76px;margin-left:10px}}

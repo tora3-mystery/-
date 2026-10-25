@@ -1,6 +1,6 @@
 /** C1 gameplay logic. Pure and dependency-free: also imported by tests. */
-export const VERSION = '0.5.2';
-export const UPDATED_JST = '2026-10-26 01:10 JST';
+export const VERSION = '0.5.3';
+export const UPDATED_JST = '2026-10-26 01:33 JST';
 export const LIMITS = Object.freeze({ cp: 20, progress: 22, growth: 6 });
 export const DAYS = ['月曜日', '火曜日', '水曜日', '木曜日', '金曜日'];
 export const SPEED_HARASSMENTS = Object.freeze(['即レスハラ','遅レスハラ']);
@@ -37,15 +37,20 @@ export const ENDING_META = {
   E16: ['コンプラ室への推薦状','「分類が多すぎませんか？」その一言を、人事部は新規分類の参考にした。','?'],
 };
 const PHOTO_BANK = Object.freeze({
-  '男性': [
-    'https://cdn.pixabay.com/photo/2024/03/20/03/45/ai-generated-8644544_1280.png',
-    'https://cdn.pixabay.com/photo/2025/02/07/06/42/ai-generated-9389099_1280.jpg'
-  ],
-  '女性': [
-    'https://cdn.pixabay.com/photo/2024/11/24/10/49/ai-generated-9220634_1280.jpg',
-    'https://cdn.pixabay.com/photo/2024/08/06/15/29/ai-generated-8949601_1280.jpg'
-  ]
+  '男性': ['./assets/employee-m01.webp', './assets/employee-m02.webp', './assets/employee-m03.webp', './assets/employee-m04.webp', './assets/employee-m05.webp', './assets/employee-m06.webp'],
+  '女性': ['./assets/employee-f01.webp', './assets/employee-f02.webp', './assets/employee-f03.webp', './assets/employee-f04.webp', './assets/employee-f05.webp', './assets/employee-f06.webp'],
 });
+/** Retain the employee identity when upgrading old saves; replace every legacy external portrait. */
+export function ensureLocalPortrait(profile) {
+  if(!profile)return profile;
+  const bank=PHOTO_BANK[profile.gender]||PHOTO_BANK['男性'];
+  if(!bank.includes(profile.photo)) {
+    let hash=0;
+    for(const ch of String(profile.name||''))hash=((hash*33)+ch.codePointAt(0))>>>0;
+    profile.photo=bank[hash%bank.length];
+  }
+  return profile;
+}
 const CAMPUS_BACKGROUNDS = [
   ['東都大学','経済学部'],['南星学院大学','社会学部'],['青葉大学','情報学部'],
   ['東央工科大学','理工学部'],['北辰大学','法学部'],['桜都大学','文学部'],
@@ -232,7 +237,7 @@ export function resolveEnding(run) {
   return 'E09';
 }
 export function isValidSave(save, events) {
-  return !!save && ['0.4.0','0.4.1','0.5.0','0.5.1',VERSION].includes(save.version) && Number.isInteger(save.index) && save.index>=0 && save.index<events.length
+  return !!save && ['0.4.0','0.4.1','0.5.0','0.5.1','0.5.2',VERSION].includes(save.version) && Number.isInteger(save.index) && save.index>=0 && save.index<events.length
    && ['briefing','scene','result','dayReview','ending'].includes(save.phase) && Array.isArray(save.logs) && typeof save.profile?.name==='string'
    && save.flags && typeof save.cp==='number';
 }
