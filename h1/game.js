@@ -1,6 +1,6 @@
 "use strict";
-const VERSION = "α0.1.1";
-const UPDATED = "2026.10.26 01:41 JST";
+const VERSION = "α0.2.0";
+const UPDATED = "2026.10.26 01:55 JST";
 const people = [
  {name:"大野 彩花",school:"経営学部・2027年3月卒業見込み",initial:"大",tone:"warm",character:"社交的で段取り上手。成果をやや大きく表現するが、自分で確認すると訂正できる。",es:"学園祭実行委員会で協賛交渉を担当しました。企業12社の協力を取りつけ、当日は赤い養生テープで来場者の動線を改善しました。誰も気づかない仕事を先に拾うことを大切にしています。",record:"協賛金を提供したのは11社で、残り1社は機材貸与でした。床に赤い矢印を3本貼り、最後の1本だけ逆向きにして出口を案内しました。"},
  {name:"岡野 直人",school:"理工学研究科・2027年3月修了見込み",initial:"岡",tone:"cool",character:"口下手だが誠実。数字を正確に覚え、記録の裏付けを重視する。",es:"4人の研究チームで環境計測装置の精度改善に取り組みました。測定条件を切り分け、誤差を約15％低減しました。午後6時12分に記録された異常値がきっかけでした。",record:"装置の自動校正が毎日18時12分に作動していました。23回目の条件変更で測定が安定しました。相対誤差は7.8％から6.6％になりました。"},
@@ -92,7 +92,44 @@ const rounds = [
  ]}
  ]
 ];
-const state={phase:"intro",round:0,a:0,b:0,shown:false,asked:[],tab:"es",person:0,archive:false,recordsOpen:true,reject:-1};
+
+// 本日の個人面接：ESの語句を1つ選ぶ。回答は非公開文字起こしに保存される。
+const privateQuestions=[
+ [
+  {term:"企業12社の協力",q:"協力いただいた12社の内訳を教えてください。",answer:"「協賛金は11社で、最後の1社は機材を貸してくださいました。ESの表現は正確ではありませんでした」",borrow:"11件の協力をいただき、最後の1件は教材の貸し出しでした。"},
+  {term:"赤い養生テープ",q:"養生テープをどのように使いましたか？",answer:"「床に赤い矢印を3本貼りました。最後の1本だけ逆向きにして出口を案内しました」",borrow:"赤い矢印を3本貼りました。最後の1本だけ逆向きにして出口を案内しました。"},
+  {term:"誰も気づかない仕事",q:"具体的にどのような裏方の仕事をしましたか？",answer:"「全員が帰った後、照明を消して、借りた備品が全て返っているか確認しました」",borrow:"全員が帰った後、照明を消して、借りた教材が全て返っているか確認しました。"}
+ ],
+ [
+  {term:"4名の研究チーム",q:"4名の役割分担を教えてください。",answer:"「測定担当が2人、装置調整が1人、私が記録担当です。指導教員は含めません」",borrow:"4名で、子どもの対応が2人、教材調整が1人、私が記録を担当していました。"},
+  {term:"午後6時12分",q:"なぜ18時12分という時刻を覚えているのですか？",answer:"「自動校正が毎日18時12分に入るので、何度もログで確認していました」",borrow:"毎日18時12分に作業しました。何度も記録で確認していたので覚えています。"},
+  {term:"誤差15％低減",q:"改善の過程を教えてください。",answer:"「23回目の条件変更で安定しました。相対誤差は7.8％から6.6％になりました」",borrow:"23回目にようやく結果が安定しました。回数は記録していました。"}
+ ],
+ [
+  {term:"大学2年次から",q:"学習支援を始めたのは何年ですか？",answer:"「2018年の秋です。……失礼しました。大学2年なら2024年です。似た記憶と混ざりました」",borrow:""},
+  {term:"最後の一人",q:"最後の一人まで残った理由は何ですか？",answer:"「出口の灯りは最後の一人のために残しておくものですから。そう答えるのが正しいと思いました」",borrow:""},
+  {term:"教材の工夫",q:"具体的にどんな教材を使いましたか？",answer:"「相手の理解度に合わせて変えていました。質問する側が必要とする答えを考えていました」",borrow:""}
+ ],
+ [
+  {term:"返品対応の改善",q:"対応時間はどれほど改善しましたか？",answer:"「平均9.8分から5.2分に短縮しました。計測は自分たちで行いました」",borrow:"個別対応を平均9.8分から5.2分まで短縮したんです。"},
+  {term:"役割を整理",q:"混乱を防ぐためにどのような方法を使いましたか？",answer:"「青い札で担当を区別して、終わったら札を裏返すことにしました」",borrow:"青い札で対応中の子を区別しました。終わったら裏返すんです。"},
+  {term:"反対意見",q:"反対した人にはどう対応しましたか？",answer:"「ベテランの先輩は最後まで納得しませんでした。結果を説明し続けました」",borrow:"ベテランの方は最後まで納得されませんでした。何度も説明しました。"}
+ ]
+];
+function privateEntry(i){return state.privateAnswers[i];}
+function groupAnswer(round,idx,person){
+ if(person!==2||round!==1)return rounds[round][idx].ans[person];
+ const source=idx===0?0:idx===1?1:idx===2?3:-1;
+ if(source>=0){
+  const entry=privateEntry(source);
+  const lead=idx===0?"「予定が変わったときの工夫として、":idx===1?"「そのときに残した記録ですが、":"「担当が混乱したときは、";
+  return lead+privateQuestions[source][entry.option].borrow+"」";
+ }
+ const bits=[0,1,3].map(i=>privateQuestions[i][privateEntry(i).option].borrow);
+ return "「自分の経験です。"+bits.slice(0,2).join(" それから、")+"……なぜ、ほかの方の話だと思うんですか？」";
+}
+
+const state={phase:"intro",privateIndex:0,privatePick:0,privateShown:false,privateAnswers:[null,null,null,null],round:0,a:0,b:0,shown:false,asked:[],tab:"es",person:0,archive:false,recordsOpen:true,reject:-1};
 const archive=[
  {year:"2018",name:"古谷 真奈",result:"最終面接・不採用",body:"「出口の灯りは、最後の一人のために残すものだと思っていました」",note:"本人の努力は認められるが、具体的成果の説明が弱い。"},
  {year:"2019",name:"坂本 智也",result:"二次面接・不採用",body:"「失敗した回数より、原因を記録する方が大事だと思います」",note:"実績の説明が曖昧。"},
@@ -120,11 +157,11 @@ function mood(){
  return t>=4?'会議室が静まり返る。澤田は動かず、こちらの指先だけを見ている。':t>=2?'空気が重い。澤田の笑顔が消えないまま、返答までの間が長くなった。':state.round>0?'一瞬、会話が途切れた。ほかの応募者が姿勢を直す。':'4人は少し緊張しながらも、落ち着いて話を聞いている。';
 }
 function head(){
- let step=state.phase==="intro"?0:state.phase==="game"?1:state.phase==="decision"?2:3;
- el("header-state").textContent=["PROLOGUE","GROUP INTERVIEW","FINAL DECISION","RESULT"][step];
+ const step={intro:0,private:1,game:2,decision:3,ending:4}[state.phase]??0;
+ el("header-state").textContent=["PROLOGUE","PERSONAL INTERVIEW","GROUP INTERVIEW","FINAL DECISION","RESULT"][step];
  el("version").textContent=VERSION+"｜更新 "+UPDATED;
- let progressStep=state.phase==="intro"||state.phase==="game"?0:state.phase==="decision"?1:2;
- el("progress").innerHTML=[1,2,3].map((n,i)=>'<span class="'+(i<progressStep?'done':i===progressStep?'on':'')+'">'+["面接","判定","結果"][i]+'</span>').join("");
+ const progressStep=state.phase==="intro"||state.phase==="private"?0:state.phase==="game"?1:state.phase==="decision"?2:3;
+ el("progress").innerHTML=["個人面接","グループ面接","採用判定","結果"].map((name,i)=>'<span class="'+(i<progressStep?'done':i===progressStep?'on':'')+'">'+name+'</span>').join("");
 }
 function chooseTab(x){state.tab=x;renderDocs();}
 function selectPerson(i){state.person=i;state.tab="es";renderDocs();}
@@ -158,11 +195,38 @@ function renderDocs(){
 }
 function renderIntro(){
  el("main").innerHTML='<section class="opening"><p class="eyebrow">CONFIDENTIAL｜人事部より</p><h1>本日の最終面接について</h1><p>4名の最終候補者から、<strong>1名を不採用</strong>としてください。</p><p>ただし、社内調査により<strong>1名は人間ではない存在</strong>である可能性が極めて高いと判明しました。</p><p>過去の事例では、この存在は<strong>他の学生の非公開面接記録を学習し、自分の経験として語る</strong>と報告されています。</p><p class="warning">正体を疑っていることを悟られないでください。通常どおり面接を実施し、静かに1名を見送ってください。</p>'+
- '<div class="guide"><h2>あなたが行うこと</h2><ol><li>4人のES・一次面接文字起こしを確認する</li><li>共通の質問を3問選び、各問に4人全員が答える</li><li>回答の出所・時系列・過去記録との重複を調べる</li><li>面接終了後、別室で不採用者を1人選ぶ</li></ol><p>質問の仕方によっては、会議室の空気が変わります。通常の深掘りは問題ありませんが、異形に正体への疑いを悟らせる質問の連続は危険です。</p><p class="tiny subtle">選考結果は後日通知。音声・個人情報の送信はありません。架空の会社・人物によるフィクションです。</p></div>'+
+ '<div class="guide"><h2>あなたが行うこと</h2><ol><li>4名を順番に個人面接し、ESから各1問を選ぶ</li><li>自動文字起こしされた4人の回答を資料として確認する</li><li>全員同席のグループ面接で共通質問を3問選ぶ</li><li>回答の出所・時系列・過去記録との重複を調べる</li><li>面接終了後、別室で不採用者を1人選ぶ</li></ol><p>質問の仕方によっては、会議室の空気が変わります。通常の深掘りは問題ありませんが、異形に正体への疑いを悟らせる質問の連続は危険です。</p><p class="tiny subtle">選考結果は後日通知。音声・個人情報の送信はありません。架空の会社・人物によるフィクションです。</p></div>'+
  '<button class="btn primary wide" id="start">選考資料を確認して面接を始める</button></section>';
  el("docs-wrap").hidden=true;el("bottom-mobile").hidden=true;
- el("start").onclick=()=>{state.phase="game";render();};
+ el("start").onclick=()=>{state.phase="private";render();};
 }
+
+function renderPrivate(){
+ el("docs-wrap").hidden=false;el("bottom-mobile").hidden=false;
+ const i=state.privateIndex,p=people[i],selected=privateQuestions[i][state.privatePick];
+ state.person=i;
+ let html='<section class="gamehead"><div><p class="eyebrow">PERSONAL INTERVIEW｜個人面接</p><h1>応募者 '+(i+1)+' / 4｜'+esc(p.name)+'</h1></div><span class="small status">'+(state.privateShown?'文字起こし保存済':'面接中')+'</span></section>';
+ html+='<div class="private-scene"><div class="avatar private-portrait">'+face(i,false)+'</div><div><strong>'+esc(p.name)+'</strong><p class="subtle small">'+esc(p.school)+'</p><p>「本日はよろしくお願いいたします」</p></div></div>';
+ html+='<div class="panel"><p class="eyebrow">ENTRY SHEET｜ES</p><p>'+esc(p.es)+'</p></div>';
+ if(!state.privateShown){
+  html+='<div class="panel"><h2>ESのどこを質問しますか？</h2><p class="subtle">気になる語句を選び、応募者に直接質問してください。回答は文字起こしで保存されます。</p><div class="private-choices">'+privateQuestions[i].map((q,k)=>'<label class="private-choice"><input type="radio" name="private-q" value="'+k+'" '+(state.privatePick===k?'checked':'')+'><span><strong>'+esc(q.term)+'</strong><small>'+esc(q.q)+'</small></span></label>').join('')+'</div><div class="preview"><span>選択中の質問</span><strong>'+esc(selected.q)+'</strong></div><button class="btn primary wide" id="ask-private">この応募者に質問する</button></div>';
+ }else{
+  const entry=privateEntry(i),pack=privateQuestions[i][entry.option];
+  html+='<div class="panel"><p class="eyebrow">面接官の質問</p><h2>'+esc(pack.q)+'</h2><div class="reply"><div class="who"><div class="avatar mini">'+face(i,false)+'</div><b>'+esc(p.name)+'</b></div><p>'+esc(entry.answer)+'</p></div><div class="save-note">✓ 面接内容を自動保存しました。この内容は次のグループ面接で照合できます。</div><button id="next-private" class="btn primary wide">'+(i===3?'4名の個人面接を終え、グループ面接へ':'次の応募者を個人面接する')+'</button></div>';
+ }
+ el("main").innerHTML=html;
+ if(!state.privateShown){
+  el("main").querySelectorAll('input[name="private-q"]').forEach(input=>input.onchange=()=>{state.privatePick=Number(input.value);render();});
+  el("ask-private").onclick=()=>{state.privateAnswers[i]={person:i,option:state.privatePick,answer:privateQuestions[i][state.privatePick].answer};state.privateShown=true;render();};
+ }else{
+  el("next-private").onclick=()=>{
+   if(i===3){state.phase="game";state.person=0;state.tab="record";}
+   else{state.privateIndex++;state.privatePick=0;state.privateShown=false;state.person=state.privateIndex;state.tab="es";}
+   render();
+  };
+ }
+}
+
 function questionOptions(){
  const axis=axes[state.round];
  return '<div class="compose"><label>質問の前半<select id="axis-a">'+axis.a.map((x,i)=>'<option value="'+i+'"'+(state.a===i?' selected':'')+'>'+esc(x)+'</option>').join('')+'</select></label><label>質問の後半<select id="axis-b">'+axis.b.map((x,i)=>'<option value="'+i+'"'+(state.b===i?' selected':'')+'>'+esc(x)+'</option>').join('')+'</select></label></div>';
@@ -226,10 +290,11 @@ function renderEnding(){
 function render(){
  head();
  if(state.phase==="intro")renderIntro();
+ else if(state.phase==="private")renderPrivate();
  else if(state.phase==="game")renderGame();
  else if(state.phase==="decision")renderDecision();
  else renderEnding();
- if(state.phase==="game"||state.phase==="decision")renderDocs();
+ if(state.phase==="private"||state.phase==="game"||state.phase==="decision")renderDocs();
  el("docs-wrap").classList.remove("mobile-open");
 }
 function selfTest(){
