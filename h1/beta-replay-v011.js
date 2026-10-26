@@ -61,7 +61,7 @@ renderPrivateHub=function(){
  for(let i=0;i<4;i++){
   const base=esc(people[i].es);
   const pos=html.indexOf('<p class="candidate-brief">'+base+'</p>');
-  if(pos>=0)html=html.replace('<p class="candidate-brief">'+base+'</p>','<p class="candidate-brief">'+base+'<span class="beta-story-brief">'+esc(H1_B011.story(i).es)+'</span></p>');
+  if(pos>=0)html=html.replace('<p class="candidate-brief">'+base+'</p>','<p class="candidate-brief">'+base+'</p><p class="beta-story-brief">'+esc(H1_B011.story(i).es)+'</p>');
  }
  if(html===root.innerHTML)return;
  // Replace the visual hub only when supplementary prose exists. The button
