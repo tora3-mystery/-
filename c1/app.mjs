@@ -1,4 +1,4 @@
-import {VERSION,UPDATED_JST,LIMITS,DAYS,DIRECTIVES,ENDING_META,PROFILE_TYPES,createProfile,createRun,calculate,advance,beginDay,isValidSave,SPEED_HARASSMENTS,ensureLocalPortrait} from './engine.mjs?v=0.6.0';
+import {VERSION,UPDATED_JST,LIMITS,DAYS,DIRECTIVES,ENDING_META,PROFILE_TYPES,createProfile,createRun,calculate,advance,beginDay,isValidSave,SPEED_HARASSMENTS,ensureLocalPortrait} from './engine.mjs?v=0.6.1';
 
 const app=document.getElementById('app');
 const SAVE_KEY='arg_c1_save_v04';
@@ -290,6 +290,6 @@ document.addEventListener('keydown',ev=>{
   }
 });
 
-(async()=>{try{const response=await fetch('./events.json?v=0.6.0',{cache:'no-store'});if(!response.ok)throw new Error(`HTTP ${response.status}`);const json=await response.json();events=json.events;
+(async()=>{try{const response=await fetch('./events.json?v=0.6.1',{cache:'no-store'});if(!response.ok)throw new Error(`HTTP ${response.status}`);const json=await response.json();events=json.events;
   if(!Array.isArray(events)||events.length!==15||events.some(e=>e.choices.length!==6))throw new Error('イベント定義が不正です');
   render();}catch(err){app.innerHTML=`<div class="error"><strong>ゲームデータを読み込めませんでした。</strong><p>${esc(err.message)}</p><p>ネットワーク接続を確認してページを再読み込みしてください。</p></div>`;}})();

@@ -1,6 +1,6 @@
 /** C1 gameplay logic. Pure and dependency-free: also imported by tests. */
-export const VERSION = '0.6.0';
-export const UPDATED_JST = '2026-10-26 13:40 JST';
+export const VERSION = '0.6.1';
+export const UPDATED_JST = '2026-10-26 14:19 JST';
 export const LIMITS = Object.freeze({ cp: 20, progress: 22, growth: 6 });
 export const DAYS = ['月曜日', '火曜日', '水曜日', '木曜日', '金曜日'];
 export const SPEED_HARASSMENTS = Object.freeze(['即レスハラ','遅レスハラ']);
@@ -37,8 +37,8 @@ export const ENDING_META = {
   E16: ['コンプラ室への推薦状','「ハラスメントが多すぎて無理でした」。その一言を、人事部は新規分類の参考にした。','?'],
 };
 const PHOTO_BANK = Object.freeze({
-  '男性': ['./assets/employee-m01.webp', './assets/employee-m02.webp', './assets/employee-m03.webp', './assets/employee-m04.webp', './assets/employee-m05.webp', './assets/employee-m06.webp'],
-  '女性': ['./assets/employee-f01.webp', './assets/employee-f02.webp', './assets/employee-f03.webp', './assets/employee-f04.webp', './assets/employee-f05.webp', './assets/employee-f06.webp'],
+  '男性': ['./assets/employee-m01.webp', './assets/employee-m02.webp', './assets/employee-m03.webp', './assets/employee-m04.webp', './assets/employee-m05.webp', './assets/employee-m06.webp', './assets/employee-m07.webp', './assets/employee-m08.webp', './assets/employee-m09.webp', './assets/employee-m10.webp', './assets/employee-m11.webp'],
+  '女性': ['./assets/employee-f01.webp', './assets/employee-f02.webp', './assets/employee-f03.webp', './assets/employee-f04.webp', './assets/employee-f05.webp', './assets/employee-f06.webp', './assets/employee-f07.webp', './assets/employee-f08.webp', './assets/employee-f09.webp', './assets/employee-f10.webp', './assets/employee-f11.webp'],
 });
 /** Retain the employee identity when upgrading old saves; replace every legacy external portrait. */
 export function ensureLocalPortrait(profile) {
@@ -307,7 +307,7 @@ export function resolveEnding(run) {
   return 'E09';
 }
 export function isValidSave(save, events) {
-  return !!save && ['0.4.0','0.4.1','0.5.0','0.5.1','0.5.2','0.5.3','0.5.4','0.5.5','0.5.6','0.5.7','0.5.8','0.5.9',VERSION].includes(save.version) && Number.isInteger(save.index) && save.index>=0 && save.index<events.length
+  return !!save && ['0.4.0','0.4.1','0.5.0','0.5.1','0.5.2','0.5.3','0.5.4','0.5.5','0.5.6','0.5.7','0.5.8','0.5.9','0.6.0',VERSION].includes(save.version) && Number.isInteger(save.index) && save.index>=0 && save.index<events.length
    && ['briefing','scene','result','dayReview','ending'].includes(save.phase) && Array.isArray(save.logs) && typeof save.profile?.name==='string'
    && save.flags && typeof save.cp==='number';
 }
