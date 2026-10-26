@@ -1,0 +1,27 @@
+/* H1 β0.1.1 — after-story report, applicant-specific replay details, interviewer portrait */
+.beta-story-extra{margin:12px 0 0;padding:11px 13px;background:#f2f6f5;border-left:3px solid #91aab3;white-space:pre-line;font-size:12px;line-height:1.9}
+.beta-story-extra small{display:block;color:#516f78;font-size:11px;font-weight:800;margin-bottom:4px}
+.beta-story-brief{display:block;margin-top:9px;padding-top:8px;border-top:1px solid #cbd9da;color:#456977;font-size:12px;line-height:1.8}
+.h011-new-interviewer{margin-bottom:4px;display:flex;justify-content:center}
+.h011-new-interviewer .avatar{display:block;width:146px;max-width:55%;height:auto;aspect-ratio:4/5;border:3px solid #e7e0e2;border-radius:6px;overflow:hidden;background:#f2f2ef;box-shadow:0 5px 19px #0004}
+.h011-assessment{padding:28px 23px;margin:12px auto;max-width:760px}
+.h011-end-mark{text-align:center;margin:7px 0 16px;letter-spacing:.28em;color:#79969c;font-size:11px;font-weight:900}
+.h011-assessment h1{font-size:clamp(23px,5vw,32px);margin:0 0 17px}
+.h011-evaluation{display:flex;gap:16px;align-items:center;padding:16px 18px;background:#e6eeeb;border:1px solid #adc6c6;border-radius:9px;margin:14px 0}
+.h011-evaluation small{font-weight:750;font-size:11px;color:#53727a}
+.h011-evaluation strong{font-size:36px;line-height:1.2;font-weight:900;color:#315d67;min-width:55px;text-align:center}
+.h011-evaluation strong.not-rated{font-size:23px;color:#873953}
+.h011-evaluation span{flex:1;font-size:14px;font-weight:800}
+.h011-verdict{line-height:1.9;margin:12px 0 18px}
+.h011-stat-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:15px 0 20px}
+.h011-stat-grid>div{background:#f0f4f3;border:1px solid #ccdad9;border-radius:8px;padding:12px}
+.h011-stat-grid small{display:block;color:#5f7880;font-size:11px}
+.h011-stat-grid b{display:block;font-size:13px;line-height:1.75;color:#263e43;word-break:break-word}
+.h011-proof{margin:14px 0 20px;border:1px solid #aac2c0;border-radius:8px;padding:12px 15px}
+.h011-proof summary{font-weight:850;font-size:14px;cursor:pointer;color:#2a5963}
+.h011-proof p{line-height:1.85;font-size:13px}
+.h011-proof-entry{background:#e9f1ef;padding:11px 13px;border-radius:6px;margin:10px 0}
+.h011-proof-entry small{font-size:11px;color:#4e6e73}
+.h011-proof-entry p{font-size:13px;margin:6px 0 0}
+.h011-after-horror{font-size:12px;color:#8b3c58;border-left:3px solid #b5849b;background:#f8eff1;padding:9px 13px;margin:12px 0 19px}
+@media(max-width:540px){.h011-assessment{padding:17px 13px}.h011-evaluation{gap:10px;padding:12px}.h011-evaluation strong{font-size:29px}.h011-stat-grid{gap:7px}.h011-stat-grid>div{padding:10px}.h011-new-interviewer .avatar{width:120px}}
