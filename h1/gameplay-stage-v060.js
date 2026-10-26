@@ -81,3 +81,26 @@ H1UX.stage=function(type,step,title,body){
  if(type==="horror"&&step===2)body='<div class="h106-staff-replacement"><small>採用管理画面｜社員証の再発行</small>'+h106InterviewerCard(true)+'</div>'+body;
  return h106OldStage.call(this,type,step,title,body);
 };
+
+
+/* A genuine new interview phase, rather than a mislabeled extra panel. */
+head=function(){
+ const phase=state.phase,step=phase==="intro"||phase==="private-select"||phase==="private"?0:phase==="game"?1:phase==="investigate"?2:phase==="reverse"?3:phase==="decision"?4:5;
+ const titles=["PERSONAL INTERVIEW","GROUP INTERVIEW","FOLLOW-UP INTERVIEW","REVERSE QUESTIONS","FINAL DECISION","RESULT"];
+ el("header-state").textContent=phase==="intro"?"PROLOGUE":titles[step];
+ el("version").textContent=VERSION+"｜更新 "+UPDATED;
+ el("progress").innerHTML=["個人","グループ","追加質問","逆質問","判定","結果"].map((x,i)=>'<span class="'+(i<step?'done':i===step?'on':'')+'">'+x+'</span>').join("");
+};
+const h106PriorIntro=renderIntro;
+renderIntro=function(){
+ h106PriorIntro();
+ const button=el("start");
+ if(typeof button?.insertAdjacentHTML==="function"){
+  button.insertAdjacentHTML("beforebegin",'<div class="h106-start-note">'+h106InterviewerCard(false)+'<p><b>今回の選考について：</b>質問候補は毎回変化します。グループ面接の後には、追加質問を2回まで行い、回答と非公開記録を照合できます。相手の返答を確認してから、最終判断してください。</p></div>');
+ }
+};
+const h106PriorGameRenderer=renderGame;
+renderGame=function(){
+ h106PriorGameRenderer();
+ if(state.round===2&&state.shown){const btn=el("continue");if(btn)btn.textContent="回答を終え、追加質問・照合へ進む";}
+};
