@@ -109,6 +109,23 @@ body.odd-3 .idle-action{background:#333a3b;border-color:#67716f;color:#eee}
 .action.odd-action.odd-tier-2,.action.odd-action.odd-tier-2:hover{background:linear-gradient(145deg,#26212c,#191820);border-color:#a16d83}
 .action.odd-action.odd-tier-3,.action.odd-action.odd-tier-3:hover{background:linear-gradient(145deg,#241923,#121417);border-color:#bb7791}
 @media(max-width:550px){.effect-line{gap:2px}.effect-chip{font-size:10px;letter-spacing:-.04em;padding:5px 0}.effect-chip .effect-symbol{font-size:11px}.effect-key{font-size:9px}}
+
+/* F1 v0.12 - newspaper and neighborhood board endings */
+.ending-media{display:grid;gap:14px;margin:22px 0 12px}
+.ending-paper{background:#fcf9ef;color:#282b2a;border:1px solid #b9aa8b;border-radius:3px;padding:16px 18px 18px;box-shadow:0 6px 18px #1b211c19}
+.ending-paper .media-mast{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:0 0 8px;border-bottom:3px double #55544b;font-family:serif;font-weight:850;font-size:16px}
+.ending-paper .media-date{font-family:sans-serif;font-size:10px;font-weight:600;letter-spacing:.04em}
+.ending-paper h2{font-family:serif;font-size:clamp(20px,5vw,27px);line-height:1.32;margin:14px 0 10px;color:#242625;letter-spacing:.02em}
+.ending-paper p{font-family:serif;font-size:13px;line-height:1.9;color:#363b36;margin:9px 0}
+.ending-paper blockquote{border-left:3px solid #8b8a80;margin:12px 0;padding:6px 0 6px 12px;font-family:serif;font-size:13px;line-height:1.7;color:#454b44}
+.ending-forum{border:1px solid #869cab;background:#f0f6f6;color:#263e43;border-radius:9px;padding:13px}
+.ending-forum .forum-head{font-size:11px;font-weight:900;letter-spacing:.05em;color:#345a70;border-bottom:1px solid #bbcccf;padding-bottom:8px}
+.ending-forum h3{font-size:14px;line-height:1.45;margin:9px 0 12px;color:#23485e}
+.ending-forum .forum-post{display:flex;gap:8px;border-top:1px dashed #c4d5d9;padding:9px 0;font-size:12px;line-height:1.65}
+.ending-forum .forum-no{flex:0 0 auto;color:#647c81;font-size:11px;font-variant-numeric:tabular-nums}
+.ending-forum .forum-post p{margin:0;white-space:pre-line}
+@media(max-width:480px){.ending-paper{padding:12px 13px}.ending-paper h2{font-size:21px}.ending-paper p{font-size:12px}.ending-forum{padding:11px}}
+@media(max-width:550px){.effect-chip{flex-direction:column;gap:0;line-height:1.1;padding:3px 0}.effect-chip .effect-symbol{font-size:13px}.effect-line{gap:2px}}
 </style></head><body><main class="container"><header class="mast"><div class="brand"><span class="brand-icon" id="brandIcon">🛒</span><span id="brandName">まるまるスーパー<br><small class="tiny">お客様改善センター / 研修ゲーム</small></span></div><div class="header-actions"><button id="help" class="button-quiet hidden">遊び方</button><button id="restart" class="button-quiet hidden">最初から</button></div></header><div class="version-top"><b>F1 v0.11</b><span>2026-10-26 02:07 JST更新</span></div>
 <section id="intro" class="focus box"><div class="overline">月曜日 08:45｜店舗運営本部</div><h1 class="head">改善しすぎる店</h1><div class="intro-note"><b>【業務連絡】店長代理の任命について</b>レジの行列を解消すると通路が狭くなり、品切れを減らすと売場が騒がしくなる。改善の報告は毎日届くのに、苦情だけがなくなりません。店長が一週間不在となるため、本日から7営業日の店舗運営をあなたに任せます。</div><p><strong>本部からの指示は、売上を維持すること。お客様の声への対応は店長代理に一任されます。</strong><br><span class="tiny">※本部の評価指標は売上のみです。</span></p><div class="intro-grid"><div><small>集客力</small><b>7/10</b><small>来店したい理由</small></div><div><small>未解決クレーム</small><b>5件</b><small>レジ・通路・品切れ・騒音</small></div><div><small>日売上見込み</small><b>50万円</b><small>現状のまま営業した場合</small></div></div><h2 style="font-size:17px">仕事は2つだけ</h2><ol class="intro-jobs"><li>毎日、お客様の声を確認する。</li><li>毎日、6つの改善策か「何も対策しない」を選ぶ。</li></ol><div class="guidebox"><b>基本ルール</b><p>施策の効果は翌営業日の開店時に反映されます。7日目の選択は最終集計に反映されますが、その日の売上は変わりません。売上0で閉店、40万円未満が2営業日続くと店長交代です。</p></div><details class="box detail"><summary>操作ガイドを見る（営業はまだ始まりません）</summary><ol class="intro-jobs"><li>投稿内容を読み、店長回答は翌営業日以降に確認します。</li><li>施策カードの翌営業日の集客力・苦情増減を見て1案を選びます。</li><li>営業日報を確認し、「翌営業日へ」で進みます。</li><li>選択した施策は、その日の売上には影響しません。</li><li>日売上（万円）＝max(0,30＋集客力×10－未解決クレーム×10)。</li><li>進行はこの端末のブラウザに自動保存されます。</li></ol></details><p class="tiny">1プレイ約5〜8分／通信・ログイン不要</p><div class="intro-actions"><button class="widebtn" id="start">7日間の店長代理を始める</button><button class="widebtn hidden" id="resume">続きから再開</button><button class="button-quiet hidden" id="startOver">保存記録を消して最初から始める</button><button class="button-quiet hidden" id="backToGame">営業に戻る</button></div></section>
 <div id="game" class="gameonly"><div class="metrics"><div class="stat"><label>営業日</label><strong id="day">1/7</strong></div><div class="stat"><label>集客力</label><strong id="cash">7</strong><small>/10</small></div><div class="stat"><label>日売上見込</label><strong id="total">50万円</strong></div><div class="stat"><label>累計売上</label><strong id="revenueTotal">0万円</strong></div></div><section class="operations-board" aria-label="売上とお客様の声"><div id="moneyDetail" class="money-note"></div><div id="meters" class="operational-meters"></div></section><div id="oddMetrics" class="anomaly-grid hidden"><div class="stat"><label>閉店後売上</label><strong id="afterSales">0</strong><small>万円</small></div><div class="stat"><label>未退店客数</label><strong id="remainingCustomers">0</strong><small>名</small></div><div class="stat"><label>閉店許可</label><strong id="closePermit">許可</strong></div></div><div id="oddEvidenceBoard" class="evidence-board hidden" aria-label="内部照合記録"><b>内部照合記録</b><p>受領した記録は、開くと内容を確認できます。</p><div id="oddEvidenceList"></div></div><figure class="store-scene" id="storeScene"><img id="storeImage" alt="スーパーの現在の店内状況を示す画像" src="./assets/store-queue.jpg"><div class="scene-status" id="sceneStatus">営業中の売場</div><div class="scene-markers" id="sceneMarkers"></div><figcaption id="sceneCaption">店内の状態は選んだ施策によって変わります。</figcaption></figure><div class="actions-head"><div><div class="overline" id="dateLabel">DAY 01 / 07</div><h1 class="head" style="font-size:23px">本日の改善判断</h1></div><span class="pill">本日あと1件</span></div><div class="two"><section class="box issue-card"><div class="issue-meta"><span>📮 お客様の声・店長回答一覧</span><span id="issueTag" class="pill urgent">要対応</span></div><div id="issuePerson" class="hidden"></div><div id="issueText" class="hidden"></div><p id="issueReason" class="issue-tail"></p><div id="complaintSummary" class="complaint-summary" aria-live="polite"></div><div id="complaintBoard" class="complaint-board"></div><details id="complaintExtra" class="complaint-extra hidden"><summary id="complaintExtraLabel">ほかのご意見を見る</summary><div id="complaintExtraBody" class="complaint-board"></div></details><details id="complaintArchive" class="complaint-extra"><summary id="complaintArchiveLabel">以前のご意見と店長回答</summary><div id="complaintArchiveBody" class="complaint-board"></div></details><div class="news" id="newNotice"></div><div id="hqBulletin" class="hq-bulletin" aria-live="polite"></div><div class="help" id="pendingMini"></div></section><section class="box"><div class="actions-head"><h2>今日できる対応</h2><span id="choiceCount" class="context">7案から1つ</span></div><div class="effect-key" aria-label="施策カードの数値の読み方"><span>👥 集客力</span><span>🧾 レジ待ち</span><span>↔️ 通路</span><span>📦 品切れ</span><span>🔊 騒音</span></div><div id="actions" class="day-actions"></div><p class="help">選ぶと当日の営業を終えます。施策の効果は翌営業日に反映されます。同じ施策は何度も繰り返すと効きにくくなります。</p></section></div><details class="box detail" id="breakdown"><summary>詳しく見る：施策・運営履歴</summary><div id="tasks"></div><div class="guidebox"><b>通常経営の判定</b><p>売上0で閉店、40万円未満が2営業日続くと店長交代。本部が確認するのは売上です。7日目の施策の効果は最終集計で確認されます。</p></div><div class="overline">最近の動き</div><ul id="history" class="journal"></ul></details></div>
@@ -770,13 +787,91 @@ function finalDecision(kind){
   if(s.clues===3){s.afterSales=0;s.remaining=0;s.permit='許可'}}
  s.inferencePending=false;s.finish=true;persist();renderEnd();
 }
+
+/* The newspaper is from outside the protagonist's unreliable day-to-day perspective.
+   Different endings keep their original mechanics; articles reveal their human consequences. */
+const V12_PRESS={
+ normal_success:{
+  headline:'街のスーパー、1週間で顧客評価と売上を回復',
+  article:'まるまるスーパーの短期店舗運営が成果を上げた。レジ前の混雑や欠品を見直す取り組みが進み、地域住民からも「前より買いやすい」との声が届く。本部は売上を評価し、店舗は次週も営業を続ける。',
+  quote:'「ちゃんと買い物ができるようになった。こういう改善が一番うれしい」――近隣の買い物客',
+  topic:'【朗報】まるまるスーパー、最近かなり良くない？',
+  posts:['昨日レジ待ち少なかった。普通に助かる','品切れも減ってる気がする。珍しく良い方向の改善','店長代理が一週間だけだったって本当？ 続けてほしい']
+ },
+ normal_customer:{
+  headline:'まるまるスーパー、売上伸長も苦情対応に課題',
+  article:'地域スーパーで売上が好調となる一方、レジの待ち時間や売場の混雑に不満が残っている。本部は売上目標達成を評価したが、常連客の意見は割れた。',
+  quote:'「賑わっているのはいい。でも毎日買い物する側のことも考えてほしい」――常連客',
+  topic:'【混雑】まるまるスーパー、売れてるけど疲れる',
+  posts:['お客さん増えすぎて通れない','売上は良いらしい。でもレジで待たされるのはこっち','改善って、誰にとっての改善なんだろう']
+ },
+ normal_strain:{
+  headline:'店舗運営の立て直し難航、まるまるスーパーが対策を再検討',
+  article:'まるまるスーパーは今週の運営成績を受け、店長代理の体制と営業方針を見直す。顧客対応策の導入後にも売上低迷や新たな苦情が見られ、改善の方向性が問われている。',
+  quote:'「お願いしたのは、普通に買い物できる店になってほしいということだった」――近隣住民',
+  topic:'【悲報】あのスーパーまた店長変わるの？',
+  posts:['昨日も売場が変わってた。何がしたいんだろ','大きな施策より先に、普段の買い物を何とかしてほしい']
+ },
+ odd_stop:{
+  headline:'閉鎖済みスーパーの旧レジ停止、元店長代理が現地で確認される',
+  article:'先月廃業したまるまるスーパーの建物で、深夜にレジ端末が動いていたとの通報があった。所有者が現地を確認したところ、かつての店長代理が営業日報を処理していた。本人が端末を停止し、現場は静かになったという。',
+  quote:'「店はとっくに閉めた。なのに、帳簿だけが毎晩増えていた」――店舗オーナー',
+  topic:'【旧店舗】まるまるスーパー跡地、昨夜まで明かりついてた？',
+  posts:['あそこ先月閉店したよね？','裏手の古い社、最近お供え物が置いてあった','昨夜は静かだった。やっと終わったのかな']
+ },
+ odd_missing:{
+  headline:'廃業済みスーパーで深夜のレジ操作　所有者が元店長代理を発見',
+  article:'先月閉鎖したまるまるスーパーの建物で、夜間に営業を続けていた人物が見つかった。所有者が訪れた際、店内には元店長代理が一人いるだけで、買い物客は確認できなかった。本人は「閉店後もお客様が来る」と繰り返したという。',
+  quote:'「レジの前で一人ずつ『いらっしゃいませ』と言っていた。向かい側には誰もいなかった」――店舗オーナー',
+  topic:'【閲覧注意】夜のまるまるスーパー、変な客いない？',
+  posts:['夜になると妙に人影が多い気がする。昼間は真っ暗なのに','あそこ閉店したはず。誰に売ってるの？','この前の夜、店長っぽい人が誰もいない通路に頭下げてた']
+ },
+ odd_day8:{
+  headline:'閉鎖店舗から連日の「本日も営業中」　オーナーが現場で唖然',
+  article:'まるまるスーパーは先月閉店したが、元店長代理とみられる人物がレジの前で営業を続けていた。所有者が閉店を伝えても、本人は「まだ今日が終わっていません」と答えた。建物に客の姿はなく、紙の日報には存在しない曜日が繰り返し記されていた。',
+  quote:'「閉めろと言っても、次の日の開店準備を始める。どうしたらいいのか」――店舗オーナー',
+  topic:'【現地報告】閉店したスーパー、夜中だけ営業してる',
+  posts:['昨日も「営業中」って貼り紙があった','あの建物の前、夜だけ変な買い物客が並んでるように見える','もう何日目なんだろう。曜日の感覚がおかしくなる']
+ },
+ odd_hidden:{
+  headline:'閉鎖済み店舗で奇妙な日報　「昨日の返品」だけが未処理',
+  article:'先月閉鎖したまるまるスーパーで、元店長代理が旧レジの異常記録を調べていたことが分かった。所有者が到着した際、店内は無人だったが、「昨日を返品」という手書きのレシートが残っていた。裏手の古い社からは空の精肉トレーが見つかった。',
+  quote:'「誰が最後に店を出たのか、もう誰も覚えていない」――店舗オーナー',
+  topic:'【検証】まるまるスーパーで何があったんだ？',
+  posts:['夜中、店員が一人だけいるのを見た。次に見たら誰もいなかった','裏手の社からレジの音がしたって話、さすがに嘘だろ','レシートの日付が一日ずれてる写真、持ってる人いる？']
+ }
+};
+function v12RenderPress(){
+ const data=V12_PRESS[s.ending]||V12_PRESS.normal_strain;
+ const section=document.createElement('section');section.className='ending-media';section.setAttribute('aria-label','外部報道と近隣の反応');
+ const paper=document.createElement('article');paper.className='ending-paper';
+ const mast=document.createElement('div');mast.className='media-mast';
+ const mastName=document.createElement('span');mastName.textContent='まちの朝刊';
+ const mastDate=document.createElement('span');mastDate.className='media-date';mastDate.textContent='店舗運営終了後・号外';
+ mast.append(mastName,mastDate);
+ const title=document.createElement('h2');title.textContent=data.headline;
+ const article=document.createElement('p');article.textContent=data.article;
+ const quote=document.createElement('blockquote');quote.textContent=data.quote;
+ paper.append(mast,title,article,quote);
+ const forum=document.createElement('section');forum.className='ending-forum';
+ const label=document.createElement('div');label.className='forum-head';label.textContent='ご近所掲示板 ／ まちの噂';
+ const thread=document.createElement('h3');thread.textContent=data.topic;
+ forum.append(label,thread);
+ data.posts.forEach((post,i)=>{
+  const item=document.createElement('div');item.className='forum-post';
+  const no=document.createElement('span');no.className='forum-no';no.textContent=String(i+1).padStart(3,'0');
+  const message=document.createElement('p');message.textContent=post;
+  item.append(no,message);forum.append(item);
+ });
+ section.append(paper,forum);return section;
+}
 const V09_ENDINGS={
  normal_success:['店舗運営報告','選ばれる店へ。','売上を維持しながら、お客様が困る理由を減らしました。'],
  normal_customer:['店舗運営報告','数字は好調。お客様の声は未解決。','売上目標を達成しましたが、お客様の苦情が残りました。本部は売上だけを評価し、お客様の声は報告書に残されました。'],
  normal_strain:['本部からの通知','改善したのに、続かなかった。','苦情対応と集客のバランスを崩し、目標売上を確保できませんでした。'],
- odd_stop:['0番レジの記録','売上を手放して、閉店する。','0番レジを停止し、説明できない帳簿上の売上を訂正しました。閉店許可が戻ります。'],
- odd_day8:['0番レジの記録','DAY 08 / 07。まだ営業が終わらない。','人曜日に閉店を再申請しましたが、許可は拒否されました。'],
- odd_missing:['0番レジの記録','誰もいない。それでも、売上は増える。','返品の相手を特定できないまま帳簿上の取引を続けました。防犯映像に来客はいません。'],
+ odd_stop:['0番レジの記録','売上を手放して、閉店する。','裏手の社への供え物を片付け、0番レジの記録を停止しました。説明できない売上は失われますが、店を出られるようになりました。'],
+ odd_day8:['0番レジの記録','DAY 08 / 07。まだ営業が終わらない。','誰もいない売場で開店準備を続けました。営業日報には存在しない曜日が増え、社の前には新しい供え物が置かれています。'],
+ odd_missing:['0番レジの記録','誰もいない。それでも、売上は増える。','裏手の社の前で待ったあとも、閉店後の会計を続けました。売上は増える一方、誰一人レジに並ぶ姿は確認できません。'],
  odd_hidden:['照合完了','「昨日」を返品します。','最後の客は翌日のあなた自身でした。昨日の営業日だけが未処理として残っていたのです。']
 };
 function renderEnd(){
@@ -804,7 +899,7 @@ function renderEnd(){
  s.complaintTickets.filter(x=>x.customer.includes('佐藤さん')).length+'件。';tab.append(note);
  const memo=document.createElement('p');memo.textContent='本部週報：週間売上'+s.revenue+'万円。売上以外の店舗指標は評価対象外です。';tab.append(memo)}
  const again=document.createElement('button');again.className='widebtn';again.style.marginTop='14px';again.textContent='もう一度営業する';again.onclick=restart;
- $('ending').append(label,head,photo,desc,tab,again);scrollTo(0,0);
+ $('ending').append(label,head,photo,desc,tab,v12RenderPress(),again);scrollTo(0,0);
 }
 
 function restart(){$('dayTransition').classList.add('hidden');s=fresh();rollback=null;persist();$('intro').classList.add('hidden');$('overlay').classList.add('hidden');$('breakdown').open=false;render();scrollTo(0,0)}
