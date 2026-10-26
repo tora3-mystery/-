@@ -1,0 +1,27 @@
+/* H1 α0.6.4 | Uncanny without cartoon pupils.
+   Keep original faces intact; identity records provide the horror. */
+.portrait-photo.pupil-stage-1::after,
+.portrait-photo.pupil-stage-2::after,
+.portrait-photo.pupil-stage-3::after{display:none!important}
+.portrait-photo.uncanny{filter:none!important;transform:none!important}
+.h164-action-recall{background:#312d39;border:1px solid #7c657b;border-left:4px solid #d6a5ad;padding:15px 17px;margin:16px 0;color:#f5e4e6;border-radius:4px}
+.h164-action-recall small{color:#e1adbc;font-size:11px;letter-spacing:.03em}
+.h164-action-recall p{line-height:1.9;margin:10px 0 0;font-size:14px}
+.h164-scan,.h164-system-switch{border:1px solid #796573;background:#282630;color:#e8dde2;border-radius:6px;margin:15px 0;padding:15px}
+.h164-scan{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.h164-scan>div{background:#36343e;border:1px solid #625762;padding:12px;border-radius:4px}
+.h164-scan small,.h164-final-record small,.h164-system-switch small{display:block;color:#cdb2be;font-size:11px;margin-bottom:8px}
+.h164-scan b{display:block;font-size:16px;margin:7px 0}
+.h164-scan span{color:#e4a1af;font-size:11px}
+.h164-before,.h164-after{display:flex;gap:13px;align-items:center;justify-content:space-between;padding:12px;border:1px solid #68616a;border-radius:5px}
+.h164-before{opacity:.64}
+.h164-before b,.h164-after b{flex:0 0 52px;font-size:13px}
+.h164-before span,.h164-after span{flex:1;font-size:12px;line-height:1.7}
+.h164-after{background:#3b303e;border-color:#b389a3;color:#ffe7eb}
+.h164-arrow{text-align:center;font-size:23px;color:#db9fb1;padding:4px}
+.h164-final-record{background:#f3f0ea;color:#313942;border:1px solid #9d9395;padding:16px;margin:14px 0;border-radius:5px}
+.h164-final-record small{color:#6f6370}
+.h164-final-record strong{display:block;font-size:20px;margin:8px 0}
+.h164-final-record p{font-size:13px;line-height:1.7}
+.h164-identity-error{margin-top:14px}
+@media(max-width:520px){.h164-scan{grid-template-columns:1fr;gap:7px}.h164-before,.h164-after{align-items:flex-start}.h164-before span,.h164-after span{font-size:11px}.h164-action-recall{padding:12px}}
