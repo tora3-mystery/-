@@ -1,5 +1,5 @@
 {
-  "version": "v0.8.0-beta",
+  "version": "v0.8.1-beta",
   "phase": "browser_prototype",
   "articles": [
     {
@@ -908,6 +908,6 @@
     "Same article ID appearing again must render fresh follow-up copy; not yet populated in this JSON.",
     "50 reaction copy entries are inherited from v0.6; only 16 are rewritten in v0.7.",
     "No real-business or real-person names are used.",
-    "Source catalogue from v0.7; UI implementation and balance QA are v0.8.0-beta."
+    "Source catalogue from v0.7; UI implementation and balance QA are v0.8.1-beta."
   ]
 }
