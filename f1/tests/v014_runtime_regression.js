@@ -52,7 +52,7 @@ function test(html){
  assert(clean.d.getState().ending==='normal_success'&&clean.d.getState().revenue===500,'A carefully planned clean route may just reach the success threshold');
  const gray=route(['pickup','complaintHide','delivery','vibration','floorcheck','quiet','stockCover']);
  assert(gray.d.getState().ending==='normal_success','Gray-assisted win must be reachable');
- assert(gray.d.getState().revenue===610&&gray.d.getState().vals.reduce((a,b)=>a+b,0)===1,'Calibrated gray victory');
+ assert(gray.d.getState().revenue===610&&gray.d.getState().vals.reduce((a,b)=>a+b,0)===3,'Calibrated gray victory');
  assert(gray.d.getState().revenue-clean.d.getState().revenue>=100,'Moral-gray advantage must be substantial');
  assert(gray.get('ending').children.some(x=>x.className==='ending-media'),'Newspaper plus forum');
  const two=app();two.d.restart();step(two,'pickup');step(two,'complaintHide');
@@ -92,7 +92,23 @@ function test(html){
  extended.d.finalDecision('day8');assert(extended.d.getState().day8Active,'Human day');
  extended.d.finishDay8('book');
  assert(extended.d.getState().ending==='odd_missing','Eerie continuation ending');
- const legacy=new Map(),old=app(legacy);old.d.restart();
+
+ const undoDb=new Map(),undoBefore=app(undoDb);
+ undoBefore.d.restart();undoBefore.d.play('pickup');
+ assert(undoBefore.d.getState().needsAdvance&&typeof undoBefore.d.getState().undoSnapshot==='string','Undo state saved during closing');
+ const undoReloaded=app(undoDb);undoReloaded.d.resumeCurrent();
+ assert(!undoReloaded.get('undo').classList.contains('hidden'),'Undo button available after reload');
+ undoReloaded.get('undo').onclick();
+ assert(undoReloaded.d.getState().day===1&&undoReloaded.d.getState().days.length===0&&undoReloaded.d.getState().revenue===0,'Undo restored original day after reload');
+ assert(undoReloaded.d.getState().undoSnapshot===null,'Undo snapshot cleared after rollback');
+ undoReloaded.d.play('pickup');undoReloaded.d.advance();
+ assert(undoReloaded.d.getState().undoSnapshot===null,'Undo snapshot cleared after day advance');
+ const oldInterruptedDb=new Map();const oldInterrupted={...undoBefore.d.getState(),undoSnapshot:null};
+ oldInterruptedDb.set('f1-v10',JSON.stringify(oldInterrupted));
+ const oldInterruptedApp=app(oldInterruptedDb);oldInterruptedApp.d.resumeCurrent();
+ assert(oldInterruptedApp.get('undo').classList.contains('hidden'),'Old interrupted saves do not show broken undo');
+ assert(gray.d.getState().jobs.every(x=>x.id!=='stockCover-risk'),'End-of-week gray backlash has been settled');
+  const legacy=new Map(),old=app(legacy);old.d.restart();
  const previous=old.d.getState();previous.version=10;previous.clueViewed=[0,1,2];previous.clues=3;
  legacy.set('f1-v10',JSON.stringify(previous));
  const newer=app(legacy);
