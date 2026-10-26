@@ -1,6 +1,6 @@
 /** C1 gameplay logic. Pure and dependency-free: also imported by tests. */
-export const VERSION = '0.6.2';
-export const UPDATED_JST = '2026-10-26 17:35 JST';
+export const VERSION = '0.6.3';
+export const UPDATED_JST = '2026-10-26 17:53 JST';
 export const LIMITS = Object.freeze({ cp: 20, progress: 22, growth: 6 });
 export const DAYS = ['月曜日', '火曜日', '水曜日', '木曜日', '金曜日'];
 export const SPEED_HARASSMENTS = Object.freeze(['即レスハラ','遅レスハラ']);
@@ -329,7 +329,7 @@ export function resolveEnding(run) {
   return 'E09';
 }
 export function isValidSave(save, events) {
-  return !!save && ['0.4.0','0.4.1','0.5.0','0.5.1','0.5.2','0.5.3','0.5.4','0.5.5','0.5.6','0.5.7','0.5.8','0.5.9','0.6.0','0.6.1',VERSION].includes(save.version) && Number.isInteger(save.index) && save.index>=0 && save.index<events.length
+  return !!save && ['0.4.0','0.4.1','0.5.0','0.5.1','0.5.2','0.5.3','0.5.4','0.5.5','0.5.6','0.5.7','0.5.8','0.5.9','0.6.0','0.6.1','0.6.2',VERSION].includes(save.version) && Number.isInteger(save.index) && save.index>=0 && save.index<events.length
    && ['briefing','scene','result','dayReview','ending'].includes(save.phase) && Array.isArray(save.logs) && typeof save.profile?.name==='string'
    && save.flags && typeof save.cp==='number';
 }

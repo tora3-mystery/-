@@ -1,4 +1,4 @@
-import {VERSION,UPDATED_JST,LIMITS,DAYS,DIRECTIVES,ENDING_META,PROFILE_TYPES,createProfile,createRun,calculate,advance,beginDay,isValidSave,SPEED_HARASSMENTS,ensureLocalPortrait} from './engine.mjs?v=0.6.2';
+import {VERSION,UPDATED_JST,LIMITS,DAYS,DIRECTIVES,ENDING_META,PROFILE_TYPES,createProfile,createRun,calculate,advance,beginDay,isValidSave,SPEED_HARASSMENTS,ensureLocalPortrait} from './engine.mjs?v=0.6.3';
 
 const app=document.getElementById('app');
 const SAVE_KEY='arg_c1_save_v04';
@@ -221,7 +221,7 @@ function endingScreen(){
     id==='E05'||id==='E06'?'「配慮は分かった。ところで、提出資料はどこにある？」':
     ['E07','E08'].includes(id)?'「仕事はできているな。……で、新人に何を教えたんだ？」':
     '「よくやった。来週もう一人配属される。ちなみに来月から社内分類が17項目増えるそうだ」';
-  return `<div class="eyebrow">2030年度 / 人事評価通知</div><div class="end-banner"><div class="tiny" style="color:#c3d1dd">ENDING ${id.slice(1)} / 16</div><div class="ending-title">${esc(title)}</div><div class="grade">評価 ${esc(grade)}</div><p class="end-sub">${esc(desc)}</p></div>
+  return `<div class="eyebrow">2030年度 / 人事評価通知</div><div class="end-banner"><div class="tiny" style="color:#c3d1dd">ENDING ${id.slice(1)} / ${ENDING_TOTAL}</div><div class="ending-title">${esc(title)}</div><div class="grade">評価 ${esc(grade)}</div><p class="end-sub">${esc(desc)}</p></div>
   <div class="end-grid"><div><strong>${finalCp()}</strong><span>コンプラ pt</span></div><div><strong>${run.progress}</strong><span>業務進捗</span></div><div><strong>${run.growth}</strong><span>新人の習熟</span></div></div>
   <section class="paper"><div class="panelhead"><strong>上司からの最終講評</strong><span class="tag ${failed?'red':''}">${failed?'管理職適性再審査':'週次評価'}</span></div><div class="quote">${director}</div><p class="small muted">配属社員：${esc(run.profile.name)} / ${esc(run.profile.ambition)}</p></section>
   <section class="paper spaced"><div class="panelhead"><strong>新人からのコメント</strong><span class="tag">習熟度 ${run.growth}</span></div><div class="employee mini-employee"><div class="portrait face-photo"><img src="${esc(run.profile.photo||'./assets/employee-f01.webp')}" alt="配属社員の顔写真" loading="lazy"></div><div><strong>${esc(run.profile.name)}</strong><p class="quote">${esc(rookieComment().note)}${rookieComment().ambition?'\n'+esc(rookieComment().ambition):''}</p></div></div></section>
@@ -263,13 +263,35 @@ function tone(safe,points=0,combo=0){if(muted)return;try{const ctx=new (window.A
  for(const [freq,offset,len] of notes){const o=ctx.createOscillator(),g=ctx.createGain();o.type=safe?'sine':'triangle';o.frequency.value=freq;g.gain.setValueAtTime(.0001,t+offset);g.gain.exponentialRampToValueAtTime(.07,t+offset+.025);g.gain.exponentialRampToValueAtTime(.0001,t+offset+len);o.connect(g);g.connect(ctx.destination);o.start(t+offset);o.stop(t+offset+len+.02);}
  setTimeout(()=>ctx.close(),1300);
 }catch{}}
+function secretTone(id,stage){
+ if(muted||stage<1||stage>2)return;
+ try{
+   const Audio=window.AudioContext||window.webkitAudioContext;
+   if(!Audio)return;
+   const ctx=new Audio(),start=ctx.currentTime;
+   const notes=id==='E17'
+     ? (stage===1?[[210,0,.16],[150,.18,.24]]:[[250,0,.13],[160,.16,.28],[100,.48,.24]])
+     : (stage===1?[[523,0,.12],[659,.14,.14],[784,.30,.20]]:[[780,0,.11],[510,.15,.12],[260,.32,.24]]);
+   for(const [freq,offset,len] of notes){
+     const osc=ctx.createOscillator(),gain=ctx.createGain();
+     osc.type=id==='E17'?'sawtooth':stage===1?'sine':'triangle';
+     osc.frequency.value=freq;
+     gain.gain.setValueAtTime(.0001,start+offset);
+     gain.gain.exponentialRampToValueAtTime(.045,start+offset+.025);
+     gain.gain.exponentialRampToValueAtTime(.0001,start+offset+len);
+     osc.connect(gain);gain.connect(ctx.destination);
+     osc.start(start+offset);osc.stop(start+offset+len+.015);
+   }
+   setTimeout(()=>ctx.close(),1300);
+ }catch{}
+}
 function finishRunOnce(){if(!run?.ending||run.finishedRecorded)return;run.finishedRecorded=true;records.plays++;records.endings[run.ending]=(records.endings[run.ending]||0)+1;storeRecords();save();}
-function resultToText(){if(!run?.ending)return '';const d=ENDING_META[run.ending];return `適切にご対応ください。｜ARG C1\nENDING ${run.ending.slice(1)} / 16「${d[0]}」\n評価 ${d[2]}｜コンプラ違反 ${finalCp()}pt／進捗 ${run.progress}／習熟 ${run.growth}\n${d[1]}\nhttps://tora3-mystery.github.io/short-ui-games/c1/`}
+function resultToText(){if(!run?.ending)return '';const d=ENDING_META[run.ending];return `適切にご対応ください。｜ARG C1\nENDING ${run.ending.slice(1)} / ${ENDING_TOTAL}「${d[0]}」\n評価 ${d[2]}｜コンプラ違反 ${finalCp()}pt／進捗 ${run.progress}／習熟 ${run.growth}\n${d[1]}\nhttps://tora3-mystery.github.io/short-ui-games/c1/`}
 async function share(){const txt=resultToText();if(!txt)return;try{if(navigator.share){await navigator.share({title:'適切にご対応ください。',text:txt});return;}if(navigator.clipboard?.writeText){await navigator.clipboard.writeText(txt);}else{const el=document.createElement('textarea');el.value=txt;document.body.appendChild(el);el.select();document.execCommand('copy');el.remove();}toast='結果テキストをコピーしました。';}catch(e){if(e?.name!=='AbortError')toast='共有に失敗しました。画像保存をお試しください。';}render(false);}
 function drawWrapped(ctx,text,x,y,maxWidth,lineHeight){let line='';for(const char of text){if(ctx.measureText(line+char).width>maxWidth){ctx.fillText(line,x,y);y+=lineHeight;line='';}line+=char;}if(line){ctx.fillText(line,x,y);y+=lineHeight;}return y;}
 function downloadCard(){if(!run?.ending)return;const [title,desc,grade]=ENDING_META[run.ending];const can=document.createElement('canvas');can.width=1000;can.height=800;const ctx=can.getContext('2d');if(!ctx){toast='画像保存に対応していないブラウザです。';render(false);return;}
   ctx.fillStyle='#132d47';ctx.fillRect(0,0,1000,800);ctx.fillStyle='#b9cfe0';ctx.font='26px sans-serif';ctx.fillText('東央ソリューションズ　|　管理職人事評価 2030',68,94);
-  ctx.fillStyle='#fff';ctx.font='bold 29px sans-serif';ctx.fillText(`ENDING ${run.ending.slice(1)} / 16`,68,166);
+  ctx.fillStyle='#fff';ctx.font='bold 29px sans-serif';ctx.fillText(`ENDING ${run.ending.slice(1)} / ${ENDING_TOTAL}`,68,166);
   ctx.font='bold 53px sans-serif';let y=drawWrapped(ctx,title,68,253,860,67);
   ctx.fillStyle='#f5d89b';ctx.font='bold 63px sans-serif';ctx.fillText('評価 '+grade,68,y+42);
   ctx.fillStyle='#dfe9f0';ctx.font='28px sans-serif';y=drawWrapped(ctx,desc,68,y+112,860,45);
@@ -290,6 +312,7 @@ app.addEventListener('click', async ev=>{
   if(action==='secret-next'||action==='secret-skip'){
     if(!run||run.phase!=='ending'||!['E17','E18'].includes(run.ending))return;
     run.specialStage=action==='secret-skip'?3:Math.min(3,Number(run.specialStage||0)+1);
+    if(action==='secret-next')secretTone(run.ending,run.specialStage);
     save();render();return;
   }
   if(action==='start'||action==='restart'){maybeNew();return;}
