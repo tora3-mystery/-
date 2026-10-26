@@ -1,6 +1,6 @@
 /** C1 gameplay logic. Pure and dependency-free: also imported by tests. */
-export const VERSION = '0.6.1';
-export const UPDATED_JST = '2026-10-26 14:19 JST';
+export const VERSION = '0.6.2';
+export const UPDATED_JST = '2026-10-26 17:32 JST';
 export const LIMITS = Object.freeze({ cp: 20, progress: 22, growth: 6 });
 export const DAYS = ['月曜日', '火曜日', '水曜日', '木曜日', '金曜日'];
 export const SPEED_HARASSMENTS = Object.freeze(['即レスハラ','遅レスハラ']);
@@ -35,6 +35,8 @@ export const ENDING_META = {
   E14: ['令和の調整職人','認定をほとんど受けず、仕事を終えた。社内で絶滅危惧種と呼ばれる。','S'],
   E15: ['新人が役員席で話した日','新人の説明に役員が頷く。部長はなぜか自分の手柄にした。','S'],
   E16: ['コンプラ室への推薦状','「ハラスメントが多すぎて無理でした」。その一言を、人事部は新規分類の参考にした。','?'],
+  E17: ['本件、対応いたしかねます。','板挟みの末、課長は社員証を置いて姿を消した。人事部はこれを「業務放棄誘発ハラ」と分類した。','?'],
+  E18: ['好きになってしまいました。','新人からの思いがけない告白。架空の社内基準によって「恋愛感情誘発ハラ」が特別認定された。','D'],
 };
 const PHOTO_BANK = Object.freeze({
   '男性': ['./assets/employee-m01.webp', './assets/employee-m02.webp', './assets/employee-m03.webp', './assets/employee-m04.webp', './assets/employee-m05.webp', './assets/employee-m06.webp', './assets/employee-m07.webp', './assets/employee-m08.webp', './assets/employee-m09.webp', './assets/employee-m10.webp', './assets/employee-m11.webp'],
@@ -251,7 +253,10 @@ export function calculate(run, event, choice, replyTiming = null) {
   next.pending=log;
   next.phase='result';
   const done=next.cp>=LIMITS.cp || next.index===14;
-  if(done) next.ending=resolveEnding(next);
+  if(done){
+    next.ending=resolveEnding(next);
+    if(next.ending==='E18')next.specialRecognition=20; // After ending determination, not live CP.
+  }
   return next;
 }
 export function beginDay(run) {
@@ -285,6 +290,18 @@ export function advance(run) {
   next.pending=null;
   return next;
 }
+// Hidden trust is derived from choices, not from gender/portrait, and requires no save migration.
+export function trustEvidence(run) {
+  let score=0;const days=new Set();
+  for(const log of run.logs||[]){
+    const cp=Number(log.baseCp??log.deltaCp??0),growth=Number(log.deltaS??0);
+    const good=growth>0&&cp===0?2:growth>0&&cp===1?1:0;
+    if(!good)continue;
+    score+=good+(log.fitAdjustment===-1?1:0);
+    if(log.day)days.add(log.day);
+  }
+  return {score,days:days.size};
+}
 export function resolveEnding(run) {
   const wraps=run.logs.filter(l=>/巻取り|無言修正|抱え込み|登壇機会剥奪|過剰保護/.test(l.rawName)).length;
   const lunch=run.logs.find(l=>l.id==='D1-3');
@@ -294,10 +311,15 @@ export function resolveEnding(run) {
     if(lunch&&['A','B'].includes(lunch.choiceId)&&Number(lunch.baseCp??lunch.deltaCp)>=2)return 'E03';
     return 'E04';
   }
+  const last=run.logs.at(-1);
+  const missed=(run.bossReports||[]).filter(r=>!r.met).length;
+  // Friday's deliberate resignation is distinct from the 20-point immediate loss.
+  if(run.index===14&&last?.id==='D5-3'&&last.choiceId==='F'&&run.cp>=12&&missed>=2)return 'E17';
   if(run.progress<LIMITS.progress) return run.growth>=LIMITS.growth?'E05':'E06';
   if(run.growth<LIMITS.growth) return wraps>=3?'E07':'E08';
-  const last=run.logs.at(-1);
   if(last?.choiceId==='F'&&last.id==='D5-3')return 'E16';
+  const trust=trustEvidence(run);
+  if(run.index===14&&run.cp<=8&&run.growth>=9&&trust.score>=21&&trust.days>=4)return 'E18';
   if(run.flags.presentationPrepped&&run.profile.strength==='presentation'&&run.growth>=8)return 'E15';
   if(run.cp<=5)return 'E14';
   if(run.flags.aiVerified&&run.logs.find(l=>l.id==='D5-1')?.choiceId==='C'&&run.progress>=25)return 'E13';
@@ -307,7 +329,7 @@ export function resolveEnding(run) {
   return 'E09';
 }
 export function isValidSave(save, events) {
-  return !!save && ['0.4.0','0.4.1','0.5.0','0.5.1','0.5.2','0.5.3','0.5.4','0.5.5','0.5.6','0.5.7','0.5.8','0.5.9','0.6.0',VERSION].includes(save.version) && Number.isInteger(save.index) && save.index>=0 && save.index<events.length
+  return !!save && ['0.4.0','0.4.1','0.5.0','0.5.1','0.5.2','0.5.3','0.5.4','0.5.5','0.5.6','0.5.7','0.5.8','0.5.9','0.6.0','0.6.1',VERSION].includes(save.version) && Number.isInteger(save.index) && save.index>=0 && save.index<events.length
    && ['briefing','scene','result','dayReview','ending'].includes(save.phase) && Array.isArray(save.logs) && typeof save.profile?.name==='string'
    && save.flags && typeof save.cp==='number';
 }
