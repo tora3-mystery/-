@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#20372f">
-<title>B1｜採用結果をお知らせします。｜α0.3.2</title>
+<title>B1｜採用結果をお知らせします。｜α0.3.3</title>
 <style>
 :root{--bg:#f5f4ef;--paper:#fffdf8;--ink:#24332f;--muted:#64736e;--line:#d9ddd5;--green:#26684c;--soft:#e7f0e7;--red:#a34639;--redbg:#fff0e9;--amber:#82570e;--amberbg:#fff2d5}
 *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;line-height:1.65}
@@ -63,7 +63,7 @@ progress::-webkit-progress-bar{background:#e5e7e0}progress::-webkit-progress-val
 @media(max-width:470px){.recruits{grid-template-columns:repeat(3,minmax(0,1fr))}.quickstats strong{font-size:17px}.quickstats b{font-size:10px}}
 .layout.board-alone{grid-template-columns:1fr}.layout.board-alone .side{display:none}.advicedetails summary{cursor:pointer;font-weight:800}.advicedetails .btn-row{margin:12px 0}</style>
 </head><body>
-<header><div class="brand">喫茶まどか <small>B1｜採用結果をお知らせします。</small></div><div class="version">α0.3.2<br>更新 2026.10.26 20:17 JST</div></header>
+<header><div class="brand">喫茶まどか <small>B1｜採用結果をお知らせします。</small></div><div class="version">α0.3.3<br>更新 2026.10.26 20:30 JST</div></header>
 <main id="app" class="wrap"></main>
 <script>
 "use strict";
@@ -303,7 +303,7 @@ function render(){
  if(st.screen==="intro"){
  root.innerHTML='<div class="intro card"><div class="eyebrow">B1 / NEW STAFF RECRUITMENT</div><h1>採用結果をお知らせします。</h1><p class="lead">喫茶まどかの新任店長として、8人の応募者から4人を採用してください。ただし、優秀な4人を集めただけでは店は回りません。</p>'
  +'<div class="three"><div class="mini"><b>面接で情報を集める</b>8人全員の応募書類を確認し、各2問の質問で勤務条件や本人希望を把握。</div><div class="mini"><b>候補を入れると仮シフト更新</b>最大4人を入れ替えながら、7日間の必要人数を確認。</div><div class="mini"><b>採用通知には責任が伴う</b>承諾後は取り消せない。辞退や条件付き承諾も考慮。</div></div>'
- +'<p class="small muted">α0.3.2は8人の条件を固定した検証版です。面接順のみ周回ごとに変わります。人物画像は仮イラストです。ゲームデータは端末内に保存されます。</p>'
+ +'<p class="small muted">α0.3.3は8人の条件を固定した検証版です。面接順のみ周回ごとに変わります。人物画像は仮イラストです。ゲームデータは端末内に保存されます。</p>'
  +'<button class="btn primary" data-action="start">新任店長として着任する</button></div>';
  return;
  }
@@ -313,7 +313,7 @@ function render(){
  let main=onOffer?renderOffers():onResult?renderResult():onBoard?board(false):renderInterview();
  let sidebar=board(false);
  root.innerHTML=nav+'<div class="layout"><section class="main '+(onBoard&&isMobile?"hide":"")+'">'+(onBoard&&!isMobile?renderInterview():main)+'</section><aside class="side '+(onBoard&&isMobile?"show":"")+'">'+sidebar+'</aside></div>'
- +'<div class="footer">B1 α0.3.2｜架空の人物・店舗です。外部API・通信なし。固定ケース検証版。</div>'
+ +'<div class="footer">B1 α0.3.3｜架空の人物・店舗です。外部API・通信なし。固定ケース検証版。</div>'
  +'<div class="mobilebar"><button data-action="interview">面接を見る</button><button data-action="board">仮シフト '+solve(st.picked,false).filled+'/'+target+'</button><button data-action="offer">採用通知</button></div>';
 }
 function ask(id,i){
@@ -372,8 +372,8 @@ function handle(e){
 // B1 5-day recruiting layer. Day advancement is entirely player-controlled.
 const DNAME=["月","火","水","木","金"];
 const LIMITS={s:[1,4,5,"他店と比較中。今週中に連絡希望"],y:[1,3,4,"早めに面接希望。木曜までに結果希望"],n:[1,2,3,"他店も選考中。火曜までに面接希望"],g:[1,4,4,"木曜までの結果連絡を希望"],t:[2,4,4,"友人も応募中。木曜までの連絡を希望"],h:[2,4,4,"他店と比較中。木曜までに結果希望"],k:[3,5,5,"金曜まで面接・結果連絡が可能"],i:[3,5,5,"日曜夜の勤務を優先。金曜まで待てる"],m:[4,5,5,"金曜中に勤務先を決めたい"],o:[4,5,5,"金曜までの採用連絡を希望"],w:[5,5,5,"金曜の面接・連絡も可能"]};
-function freshV3(){return {schema:3,screen:"intro",view:"desk",day:1,used:0,active:null,selected:"s",visited:[],interviewed:[],asked:{},picked:[],confirmed:[],contacted:[],declined:[],pending:{},offerLog:[],status:{},messages:[{kind:"new",id:null,title:"4件の応募が届きました",body:"喫茶まどかの採用活動が始まりました。書類を比較し、面接する人を選びましょう。",day:1}],archive:[],confirmAdvance:false,advice:"",result:null};}
-function loadV3(){try{let x=JSON.parse(localStorage.getItem("b1-v030"));if(x?.schema===3)return x;}catch(e){}return freshV3();}
+function freshV3(){return {schema:3,screen:"intro",view:"desk",day:1,used:0,active:null,selected:"s",visited:[],interviewed:[],asked:{},picked:[],confirmed:[],contacted:[],declined:[],pending:{},offerLog:[],status:{},messages:[{kind:"new",id:null,title:"4件の応募が届きました",body:"喫茶まどかの採用活動が始まりました。書類を比較し、面接する人を選びましょう。",day:1}],archive:[],confirmAdvance:false,confirmOffer:null,advice:"",result:null};}
+function loadV3(){try{let x=JSON.parse(localStorage.getItem("b1-v030"));if(x?.schema===3){if(!("confirmOffer" in x))x.confirmOffer=null;return x;}}catch(e){}return freshV3();}
 function saveV3(){try{localStorage.setItem("b1-v030",JSON.stringify(st));}catch(e){}}
 function status(id){return st.status[id]||"applicant";}
 function arrived(id){return LIMITS[id][0]<=st.day;}
@@ -403,7 +403,7 @@ function morning(day,last){
   if(!arrived(id))continue;
   if(status(id)==="applicant"&&day>LIMITS[id][1]){
    st.status[id]="withdrawn";st.picked=st.picked.filter(x=>x!==id);
-   msg("withdraw",id,p.name+"さんから選考辞退のご連絡","お世話になっております。面接のご案内を待っておりましたが、他店で働くことになりました。今回の応募を取り下げます。");
+   if(!last && (st.picked.length<4 || !st.picked.every(x=>lockedV(x))))msg("withdraw",id,p.name+"さんから選考辞退のご連絡","お世話になっております。面接のご案内を待っておりましたが、他店で働くことになりました。今回の応募を取り下げます。");
   }else if(status(id)==="interviewed"&&day>LIMITS[id][2]){
    st.status[id]="withdrawn";st.picked=st.picked.filter(x=>x!==id);
    msg("withdraw",id,p.name+"さんから選考辞退のご連絡","面接いただきありがとうございました。ほかのアルバイトに決まりましたので、結果連絡を待たずに辞退いたします。");
@@ -435,7 +435,7 @@ function morning(day,last){
 function advance(force){
  if(st.active)return;
  const due=P.filter(p=>arrived(p.id)&&((status(p.id)==="applicant"&&LIMITS[p.id][1]===st.day)||(status(p.id)==="interviewed"&&LIMITS[p.id][2]===st.day)));
- if(due.length&&!force&&!st.confirmAdvance){st.confirmAdvance=true;return;}
+ if(due.length&&!force&&!st.confirmAdvance && (st.picked.length<4||!st.picked.every(x=>lockedV(x)))){st.confirmAdvance=true;return;}
  morning(st.day+1,st.day===5);
 }
 function progressV(){return '<div class="card"><div class="eyebrow">採用活動　'+st.day+' / 5日目</div><div class="daytrack">'+DNAME.map((d,i)=>'<span class="'+(i+1===st.day?"current":i+1<st.day?"done":"")+'">'+d+'</span>').join("")+'</div><div class="quickstats"><div><b>本日の面接</b><strong>'+st.used+' / 2</strong></div><div><b>採用確定</b><strong>'+st.confirmed.length+' / 4</strong></div><div><b>候補・通知中</b><strong>'+st.picked.length+' / 4</strong></div></div></div>';}
@@ -446,7 +446,10 @@ function applicantView(id){
  let controls="";
  if(s==="applicant"&&st.used<2&&!st.active)controls='<button class="btn primary" data-action="interview" data-id="'+id+'">この人を面接する（残り'+(2-st.used)+'枠）</button>';
  else if(s==="applicant")controls='<div class="note warn">今日はこれ以上面接できません。翌日の期限に注意してください。</div>';
- else if(s==="interviewed")controls='<div class="btn-row"><button class="btn" data-action="candidate" data-id="'+id+'" '+(!st.picked.includes(id)&&st.picked.length>=4?"disabled":"")+'>'+(st.picked.includes(id)?"候補から外す":"採用候補に追加")+'</button>'+(st.picked.includes(id)?'<button class="btn primary" data-action="offer-one" data-id="'+id+'">採用通知を送る</button>':"")+'</div>';
+ else if(s==="interviewed")controls=
+ st.confirmOffer===id?
+ '<div class="note warn"><b>'+esc(p.name)+'さんに正式な採用通知を送信しますか？</b><br>通知後は取り消せません。返答は翌朝届きます。</div><div class="btn-row"><button class="btn primary" data-action="offer-confirm" data-id="'+id+'">送信する</button><button class="btn" data-action="offer-cancel">戻る</button></div>':
+ '<div class="btn-row"><button class="btn" data-action="candidate" data-id="'+id+'" '+(!st.picked.includes(id)&&st.picked.length>=4?"disabled":"")+'>'+(st.picked.includes(id)?"候補から外す":"採用候補に追加")+'</button>'+(st.picked.includes(id)?'<button class="btn primary" data-action="offer-one" data-id="'+id+'">採用通知を送る</button>':"")+'</div>';
  else controls='<div class="note '+(s==="withdrawn"?"danger":"")+'">'+esc(labelV(id))+(s==="offered"?"。返答は翌朝届きます。":"")+'</div>';
  return '<div class="card"><div class="profile"><span class="face">'+face(p)+'</span><div><div class="namebig">'+esc(p.name)+'</div><p class="small muted">'+p.age+'歳・'+esc(p.history)+'</p><span class="tag">'+esc(labelV(id))+'</span><p class="small">'+esc(p.bio)+'</p></div></div>'+
  '<div class="memo"><b>応募者のコメント</b><p>「'+esc(p.intro)+'」</p><b>応募書類に記載された勤務日</b><p>'+p.known.map(shortSlot).join("・")+' ほか</p><b>他店応募・連絡希望</b><p>'+esc(LIMITS[id][3])+'</p><span class="tiny muted">面接期限：'+DNAME[LIMITS[id][1]-1]+'曜 ／ 採用通知：'+DNAME[LIMITS[id][2]-1]+'曜まで</span></div>'+
@@ -500,18 +503,18 @@ function renderV3(){
  '<div class="three"><div class="mini"><b>面接は1日2人</b>事前の応募書類を見ながら面接の順番を決める。</div><div class="mini"><b>採用候補で仮シフト更新</b>必要な曜日や経験者を確認する。</div><div class="mini"><b>採用通知を急ぐべき時も</b>待たせると他店に決めてしまう応募者も。</div></div>'+
  '<p class="small muted">時間は「翌朝へ進む」でのみ進行します。応募者の登場・期限は固定のテスト版。旧版とはセーブを分けています。</p><button class="btn primary" data-action="start">採用活動を始める</button></div>';return;
  }
- if(st.screen==="morning"){root.innerHTML=morningView()+'<div class="footer">B1 α0.3.2｜5日間の採用テスト版</div>';return;}
+ if(st.screen==="morning"){root.innerHTML=morningView()+'<div class="footer">B1 α0.3.3｜5日間の採用テスト版</div>';return;}
  if(st.screen==="result"){
  let old=renderResult();old=old.replace("営業成功｜喫茶まどか",st.gameSuccess?"営業成功｜喫茶まどか":"採用活動の結果").replace("営業に課題が残りました","採用活動の結果");
  const replies=st.messages.filter(m=>m.kind==="answer"||m.kind==="withdraw");
  const lastMail=replies.length?'<div class="card"><div class="eyebrow">SATURDAY MAIL / 最終の採用返答</div><h2>土曜朝のご連絡</h2>'+replies.map(m=>'<details class="letter" '+(m.kind==="withdraw"?"open":"")+'><summary>'+esc(m.title)+'</summary><div class="mailbody">'+esc(m.body)+'</div></details>').join("")+'</div>':"";
- root.innerHTML=lastMail+'<div class="card"><div class="eyebrow">SATURDAY / 採用結果</div><h2>5日間の採用活動が終了しました</h2><p class="small">採用確定：'+(st.confirmed.map(nameV).join("・")||"なし")+'</p><p class="small muted">勤務条件が成立しない仮承諾者は、採用確定として数えません。</p></div>'+old+'<div class="footer">B1 α0.3.2</div>';return;
+ root.innerHTML=lastMail+'<div class="card"><div class="eyebrow">SATURDAY / 採用結果</div><h2>5日間の採用活動が終了しました</h2><p class="small">採用確定：'+(st.confirmed.map(nameV).join("・")||"なし")+'</p><p class="small muted">勤務条件が成立しない仮承諾者は、採用確定として数えません。</p></div>'+old+'<div class="footer">B1 α0.3.3</div>';return;
  }
  const view=st.active?"interview":st.view;
  const nav='<nav class="topnav"><button class="tab '+(view==="desk"?"on":"")+'" data-action="desk" '+(st.active?"disabled":"")+'>応募・面接</button><button class="tab '+(view==="board"?"on":"")+'" data-action="board" '+(st.active?"disabled":"")+'>仮シフト</button><button class="tab '+(view==="mail"?"on":"")+'" data-action="mail" '+(st.active?"disabled":"")+'>メール</button></nav>';
  const content=view==="interview"?interviewView():view==="board"?boardV():view==="mail"?archiveV():deskV();
  const desktop=!window.matchMedia("(max-width:780px)").matches;
- root.innerHTML=nav+'<div class="layout '+(view==="board"?"board-alone":"")+'"><section class="main">'+content+'</section><aside class="side">'+(desktop&&view!=="board"?boardV():"")+'</aside></div><div class="footer">B1 α0.3.2｜架空の人物・店舗</div>'+
+ root.innerHTML=nav+'<div class="layout '+(view==="board"?"board-alone":"")+'"><section class="main">'+content+'</section><aside class="side">'+(desktop&&view!=="board"?boardV():"")+'</aside></div><div class="footer">B1 α0.3.3｜架空の人物・店舗</div>'+
  '<div class="mobilebar"><button data-action="desk" '+(st.active?"disabled":"")+'>面接</button><button data-action="board" '+(st.active?"disabled":"")+'>仮シフト</button><button data-action="mail" '+(st.active?"disabled":"")+'>メール</button></div>';
 }
 function handleV3(e){
@@ -520,13 +523,15 @@ function handleV3(e){
  if(a==="start"){st.screen="morning";}
  else if(a==="restart"){st=freshV3();st.screen="morning";}
  else if(a==="continue"){st.screen="play";st.view="desk";}
- else if(a==="select"&&arrived(id)){st.selected=id;st.view="desk";st.confirmAdvance=false;}
+ else if(a==="select"&&arrived(id)){st.selected=id;st.view="desk";st.confirmAdvance=false;st.confirmOffer=null;}
  else if(a==="interview")interviewV(id);
  else if(a==="ask"&&st.active){let arr=st.asked[st.active]||(st.asked[st.active]=[]),i=Number(b.dataset.i);if(arr.length<2&&!arr.includes(i))arr.push(i);}
  else if(a==="end-interview")endInterview();
- else if(a==="candidate")pick(id);
- else if(a==="offer-one")offerV(id);
- else if(a==="advance")advance(false);
+ else if(a==="candidate"){pick(id);st.confirmOffer=null;}
+ else if(a==="offer-one"&&status(id)==="interviewed"&&st.picked.includes(id))st.confirmOffer=id;
+ else if(a==="offer-confirm"&&st.confirmOffer===id){offerV(id);st.confirmOffer=null;}
+ else if(a==="offer-cancel")st.confirmOffer=null;
+ else if(a==="advance"){st.confirmOffer=null;advance(false);}
  else if(a==="advance-confirm")advance(true);
  else if(a==="cancel-advance")st.confirmAdvance=false;
  else if(a==="advice")st.advice=b.dataset.who;
