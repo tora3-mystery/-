@@ -1,0 +1,27 @@
+import assert from 'node:assert/strict';
+import {ENDING_META,resolveEnding,trustEvidence,createRun,calculate,isValidSave} from '../engine.mjs';
+import {readFileSync} from 'node:fs';
+
+const events=JSON.parse(readFileSync(new URL('../events.json',import.meta.url),'utf8')).events;
+const state={index:14,cp:15,progress:26,growth:10,logs:[],bossReports:[],profile:{name:'検証社員',strength:'analysis'},flags:{aiVerified:false,presentationPrepped:false}};
+const finalF={id:'D5-3',choiceId:'F'},finalC={id:'D5-3',choiceId:'C'};
+assert.equal(Object.keys(ENDING_META).length,18);
+assert.notEqual(resolveEnding({...state,cp:20,logs:[finalF],bossReports:[{met:false},{met:false}]}),'E17');
+assert.equal(resolveEnding({...state,logs:[finalF],bossReports:[{met:false},{met:false}]}),'E17');
+assert.equal(resolveEnding({...state,cp:11,logs:[finalF],bossReports:[{met:false},{met:false}]}),'E16');
+assert.equal(resolveEnding({...state,logs:[finalF],bossReports:[{met:false}]}),'E16');
+const good=['月','火','水','木','金'].flatMap(day=>Array.from({length:2},()=>({day,deltaS:1,baseCp:0,fitAdjustment:-1})));
+assert.deepEqual(trustEvidence({logs:good}),{score:30,days:5});
+assert.equal(resolveEnding({...state,cp:5,logs:[...good,finalC]}),'E18');
+assert.notEqual(resolveEnding({...state,cp:9,logs:[...good,finalC]}),'E18');
+assert.notEqual(resolveEnding({...state,cp:5,growth:8,logs:[...good,finalC]}),'E18');
+assert.equal(resolveEnding({...state,cp:5,logs:[...good,finalF]}),'E16');
+assert.notEqual(resolveEnding({...state,cp:5,index:13,logs:[...good,finalC]}),'E18');
+const run={...createRun({name:'検証社員',strength:'analysis',socialStyle:'reserved'}),index:14,phase:'scene',currentId:'D5-3',cp:5,progress:26,growth:10,logs:[...good],bossReports:[],flags:{aiVerified:false,presentationPrepped:false}};
+const result=calculate(run,events[14],events[14].choices.find(x=>x.id==='C'));
+assert.equal(result.ending,'E18');
+assert.equal(result.specialRecognition,20);
+assert.equal(result.cp,5);
+assert.equal(isValidSave({...result,version:'0.6.1'},events),true);
+assert.equal(isValidSave(result,events),true);
+console.log('PASS C1 v0.6.2 secret endings');
