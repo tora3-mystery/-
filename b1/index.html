@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#20372f">
-<title>B1｜採用結果をお知らせします。｜α0.3.4</title>
+<title>B1｜採用結果をお知らせします。｜α0.4.0</title>
 <style>
 :root{--bg:#f5f4ef;--paper:#fffdf8;--ink:#24332f;--muted:#64736e;--line:#d9ddd5;--green:#26684c;--soft:#e7f0e7;--red:#a34639;--redbg:#fff0e9;--amber:#82570e;--amberbg:#fff2d5}
 *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;line-height:1.65}
@@ -25,7 +25,7 @@ h1,h2,h3,p{margin:0 0 11px}h1{font-size:clamp(25px,4vw,35px);line-height:1.4}h2{
 .person{border:1px solid var(--line);background:#fff;border-radius:10px;padding:8px;text-align:left;min-width:0}
 .person.active{border:2px solid var(--green);padding:7px}.person.selected{background:#e7f1e8}
 .person .name{font-weight:800;font-size:12px}.person .pstate{font-size:10px;color:var(--muted)}
-.face{display:block;width:100%;aspect-ratio:1;object-fit:cover;border-radius:9px;overflow:hidden;background:#e9eee8}.portrait{width:100%;height:100%;display:block}
+.face{display:block;width:100%;aspect-ratio:1;border-radius:9px;overflow:hidden;background:#e9eee8}.portrait{width:100%;height:100%;display:block;object-fit:cover;object-position:center 29%}.portrait-fallback{display:none}.portrait.is-broken{display:none}.portrait.is-broken+.portrait-fallback{display:block}
 .profile{display:grid;grid-template-columns:132px minmax(0,1fr);gap:14px;align-items:start}
 .profile .face{aspect-ratio:4/5}.namebig{font-size:22px;font-weight:900;margin-bottom:2px}
 .tag{display:inline-block;padding:3px 8px;background:var(--soft);color:#286448;border-radius:30px;font-size:10px;font-weight:800;margin:3px 5px 3px 0}
@@ -59,11 +59,12 @@ progress::-webkit-progress-bar{background:#e5e7e0}progress::-webkit-progress-val
 .daytrack{display:flex;gap:5px;margin:8px 0}.daytrack span{flex:1;text-align:center;border:1px solid var(--line);border-radius:8px;background:#edf0e9;padding:5px 0;font-size:12px;font-weight:800}.daytrack .current{background:var(--green);color:#fff}.daytrack .done{background:#e1eee2;color:#315e46}
 .quickstats{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}.quickstats div{padding:10px 7px;background:#f3f5ef;border-radius:9px}.quickstats b,.quickstats strong{display:block;font-size:11px}.quickstats strong{font-size:20px}
 .recruits{grid-template-columns:repeat(4,minmax(0,1fr))}.recruits .person{min-height:140px}.person.lost{opacity:.52}
-.letter{border:1px solid var(--line);border-radius:9px;background:#fff;padding:12px;margin:9px 0}.letter summary{cursor:pointer;font-size:13px;font-weight:750}.mailbody{padding:12px 3px 4px;font-size:13px;white-space:pre-wrap}
-@media(max-width:470px){.recruits{grid-template-columns:repeat(3,minmax(0,1fr))}.quickstats strong{font-size:17px}.quickstats b{font-size:10px}}
+.letter{border:1px solid var(--line);border-radius:9px;background:#fff;padding:12px;margin:9px 0}.letter summary{cursor:pointer;font-size:13px;font-weight:750}.mailbody{padding:12px 3px 4px;font-size:13px;white-space:pre-wrap}.letter.important{border-color:#a5c9ad;background:#f4faf4}.letter.important summary{color:#205e40}.person .name,.person .pstate{display:block;overflow-wrap:anywhere}.person .name{line-height:1.35;margin-top:4px}.ending-scene{font-size:14px;line-height:1.8;background:#f0f3eb;border-left:4px solid var(--green);padding:14px;margin:12px 0}.ending-scene p:last-child{margin-bottom:0}
+@media(max-width:470px){.recruits{grid-template-columns:repeat(3,minmax(0,1fr))}.quickstats strong{font-size:17px}.quickstats b{font-size:10px}.recruits .person{min-height:0;padding:6px}.recruits .person.active{padding:5px}.recruits .person .name{font-size:12px}.recruits .person .pstate{font-size:10px}.recruits .face{aspect-ratio:1}.profile .face{aspect-ratio:4/5}}
+@media(max-width:370px){.recruits{grid-template-columns:repeat(2,minmax(0,1fr))}}
 .layout.board-alone{grid-template-columns:1fr}.layout.board-alone .side{display:none}.advicedetails summary{cursor:pointer;font-weight:800}.advicedetails .btn-row{margin:12px 0}</style>
 </head><body>
-<header><div class="brand">喫茶まどか <small>B1｜採用結果をお知らせします。</small></div><div class="version">α0.3.4<br>更新 2026.10.26 20:31 JST</div></header>
+<header><div class="brand">喫茶まどか <small>B1｜採用結果をお知らせします。</small></div><div class="version">α0.4.0<br>更新 2026.10.26 22:53 JST</div></header>
 <main id="app" class="wrap"></main>
 <script>
 "use strict";
@@ -125,11 +126,26 @@ P.push(
 {id:"o",name:"森 智也",age:26,history:"飲食店3年／閉店業務経験者",bio:"夜間勤務が得意。他店とも比較中。",intro:"特に火曜と日曜の夜が空いています。閉店作業は任せてください。",cap:3,all:["TuN","ThN","SaN","SuN"],known:["TuN","SuN"],trained:true,tag:"閉店業務可",col:"#aeb9cb",hair:"#303239",qs:[["勤務できる曜日は。","火・木・土・日曜の夜です。週3回までです。","days"],["選考状況を教えてください。","別の店も候補ですが、金曜には決めたいです。","terms"],["閉店業務はできますか。","レジ締めと施錠を担当していました。","skill"],["職場選びで大事なことは。","役割がはっきりしていることです。","other"]]},
 {id:"w",name:"西川 楓",age:21,history:"小売接客経験／週末昼希望",bio:"週末に働きたい。閉店の経験はない。",intro:"土日のお昼を中心に働きたいです。お客様と話すのは好きです。",cap:2,all:["FrD","SaD","SuD"],known:["SaD","SuD"],trained:false,tag:"初回研修必要",col:"#afc69e",hair:"#38332c",qs:[["勤務できる曜日は。","金・土・日のお昼です。週2回まで働けます。","days"],["研修の希望は。","初日は経験者に付き添っていただきたいです。","terms"],["接客の経験は。","小売店で案内やレジ補助をしていました。","skill"],["応募理由を教えてください。","授業のない週末に働きたいです。","other"]]}
 );
+// 表示文だけを更新する。勤務可能日・上限・採用条件はPの元データを正本とする。
+const characterCopy={
+t:{bio:"前のカフェが閉店して転職中。佐藤とは友人で、仕事を教えるつもりでいる。",intro:"夕方中心で働きたいです。佐藤も応募していて、僕が教える予定です。たぶん。",lines:["火・木・金の夜、土曜の昼、日曜の夜です。週4回まで。曜日はスマホにも書いたので、今度は忘れません。","佐藤と土曜のお昼に一緒に入れることが条件です。別々なら今回は見送ります。教える約束をしたので。","レジ締めと清掃まで一通りできます。鍵だけは毎回、三度見します。","ほかも見ていますが、佐藤と土曜昼に働けるならここが第一希望です。"]},
+s:{bio:"接客未経験だが、段取りは友人の田中よりしっかりしている。",intro:"初めての接客です。田中とは友人ですが、勤務は別々でも大丈夫です。",lines:["月・水・金・土・日のお昼です。週4回まで働けます。手帳にも書いてあります。","一緒なら心強いですが、別々でも大丈夫です。田中に教わる前に、私がメモを取ります。","レジ操作が少し不安です。初日は経験者の方に教えていただけると助かります。","常連さんの好みを覚えたいです。田中の注文はもう覚えています。"]},
+h:{bio:"夜の責任者を務めた経験者。勤務回数を現実的に確認している。",intro:"夜の仕事には慣れています。週の勤務回数を先に確認したいです。",lines:["火・木・金・土・日の夜に入れます。週3回まで。無理に詰めると続かないので。","夜を週2回以上お願いしたいです。そこが合えば、こちらに決めます。","レジ締めと発注、引き継ぎを担当しました。引き継ぎメモは短めです。","もう一店とも話しています。長く続けられる回数で決めたいです。"]},
+y:{bio:"専門学校に通う新人。気づいたことをすぐメモする几帳面さがある。",intro:"お昼を希望します。面接の質問もメモしていいですか。",lines:["月・水・金・土・日のお昼です。週4回まで。授業と重ならないよう確認しました。","初日は経験者の方と一緒だと安心です。手順はメモして覚えます。","飲食は初めてです。文化祭の販売係では、値札の貼り忘れを全部見つけました。","午後に授業がある曜日は外しました。今も時間割を見直してきました。"]},
+n:{bio:"居酒屋経験3年。口数は少ないが、仕込みと閉店作業には熱心。",intro:"土日夜も入れます。仕込みと締め作業が、割と好きです。",lines:["火曜夜、金曜夜、土曜昼・夜、日曜夜です。週3回までです。","週末の夜は歓迎です。仕込みか閉店を任せてもらえると、落ち着きます。","前の店で新人に手順を教えました。説明は短いですが、実演はします。","混んだら詰まっている作業から片づけます。会話より先に手が動く方です。"]},
+g:{bio:"販売・接客経験3年。面接では受け答えが巧みで、こちらにも質問を返す。",intro:"お昼の接客なら任せてください。こちらからも一つ質問していいですか。",lines:["月・水・金・日のお昼です。夜は家庭の都合で難しいです。","週2回以上が希望です。週1回だと継続が難しくて。店長さんはどの昼が一番忙しいですか。","販売で提案と新人指導をしていました。お客様の話を聞くのが好きです。","生活圏のお店で長く働きたいんです。こちらの常連さんは、どんな方が多いですか。"]},
+k:{bio:"カフェとラテアートに憧れる新人。まずは基本をきちんと学びたい。",intro:"ラテアートに憧れています。でもまずはレジと片づけから覚えます。",lines:["火・木の夜、金の昼、土の夜、日の昼です。週3回までです。","飲食は初めてなので、初日は経験者と同じシフトにしてください。","夜は少し緊張します。閉店手順を教わったら、手順表を作って復習します。","試験前は早めに相談します。初週は予定どおり働けます。"]},
+i:{bio:"閉店業務経験があり、日曜夜を希望する几帳面な人。",intro:"日曜夜を希望します。閉店の確認項目は、最後まできちんと見ます。",lines:["木曜夜、金曜昼、土曜昼、日曜昼・夜です。週4回までです。","日曜夜を含むことが採用の条件です。そこが合えば承諾します。","レジ締めと鍵、翌日の準備を担当しました。チェックを飛ばすと眠れません。","手順が決まっている職場が合います。書類の端も、つい揃えます。"]},
+m:{bio:"カフェ勤務2年。ランチの忙しさに慣れた、手際のよい実務派。",intro:"平日のお昼なら安定して働けます。ランチの波には慣れています。",lines:["月・水・金のお昼です。週3回まで。昼のピークに合わせて入れます。","金曜中にご連絡をいただければ大丈夫です。予定を決めておきたくて。","接客とドリンクを同時に担当しました。注文が重なると、かえって集中します。","長く続けられる職場を探しています。昼の仕込みも好きです。"]},
+o:{bio:"飲食店経験3年。閉店チェックリストを作るのが好き。",intro:"火曜と日曜の夜が特に空いています。閉店チェックリスト、ありますか。",lines:["火・木・土・日曜の夜です。週3回までです。","別の店も候補です。金曜には決めたいと思っています。","レジ締めと施錠を担当しました。チェックリストは短いほど使われます。","役割がはっきりしている職場がいいです。曖昧な項目は書き直したくなります。"]},
+w:{bio:"小売店で接客経験がある新人。カフェのメニューを覚えるのが楽しみ。",intro:"土日のお昼を中心に希望します。メニューを覚えるのが楽しみです。",lines:["金・土・日のお昼です。週2回まで働けます。","初日は経験者の方と一緒だと助かります。メニューも先に読みます。","小売店でご案内とレジ補助をしました。飲食の仕事はこれからです。","週末に働きたいです。おすすめを聞かれたら答えられるようになりたいです。"]}
+};
+for(const p of P){const c=characterCopy[p.id];p.bio=c.bio;p.intro=c.intro;c.lines.forEach((line,i)=>p.qs[i][1]=line);}
 const byId=id=>P.find(p=>p.id===id);
 const target=13;
 const WINNING_FIXED=[
- ["t","s","h","y"],["t","s","h","g"],["t","s","y","n"],
- ["t","s","n","g"],["t","s","k","i"],["s","h","k","i"],
+ ["t","s","h","y"],["t","s","h","g"],["t","s","y","n"],["t","s","y","o"],
+ ["t","s","n","g"],["t","s","g","o"],["t","s","k","i"],["s","h","k","i"],
  ["s","n","k","i"],["h","y","k","i"],["y","n","k","i"]
 ];
 const staffMentors={MoD:true,MoN:true,TuD:true,WeN:true,ThD:true,FrN:true,SaD:true,SaN:true,SuD:true};
@@ -142,7 +158,8 @@ function load(){try{const raw=localStorage.getItem("b1-alpha-010");if(raw){let x
 function save(){try{localStorage.setItem("b1-alpha-010",JSON.stringify(st));}catch(e){}}
 function esc(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
 function shortSlot(id){let s=S.find(s=>s.id===id);return s?s.day+s.tm:"";}
-function face(p){let hair=p.hair;let bg=p.col;return '<svg class="portrait" viewBox="0 0 140 160" role="img" aria-label="'+esc(p.name)+'の仮イラスト"><rect width="140" height="160" fill="'+bg+'"/><circle cx="70" cy="62" r="42" fill="'+hair+'"/><path d="M12 162Q15 114 70 116Q124 114 128 162" fill="#f3f2e9"/><path d="M40 160Q48 128 70 127Q92 128 100 160" fill="#c4ded2"/><rect x="58" y="102" width="24" height="29" rx="10" fill="#d9a482"/><ellipse cx="70" cy="78" rx="32" ry="39" fill="#e2b08e"/><path d="M39 76Q34 33 70 34Q109 35 102 76Q94 58 83 54Q63 73 39 76" fill="'+hair+'"/><circle cx="58" cy="81" r="2.8" fill="#43352f"/><circle cx="83" cy="81" r="2.8" fill="#43352f"/><path d="M63 98Q70 103 78 98" stroke="#915e54" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M53 73h11M78 73h11" stroke="'+hair+'" stroke-width="2" stroke-linecap="round"/></svg>';}
+function fallbackFace(p){let hair=p.hair;let bg=p.col;return '<svg class="portrait portrait-fallback" viewBox="0 0 140 160" role="img" aria-label="'+esc(p.name)+'の代替イラスト"><rect width="140" height="160" fill="'+bg+'"/><circle cx="70" cy="62" r="42" fill="'+hair+'"/><path d="M12 162Q15 114 70 116Q124 114 128 162" fill="#f3f2e9"/><path d="M40 160Q48 128 70 127Q92 128 100 160" fill="#c4ded2"/><rect x="58" y="102" width="24" height="29" rx="10" fill="#d9a482"/><ellipse cx="70" cy="78" rx="32" ry="39" fill="#e2b08e"/><path d="M39 76Q34 33 70 34Q109 35 102 76Q94 58 83 54Q63 73 39 76" fill="'+hair+'"/><circle cx="58" cy="81" r="2.8" fill="#43352f"/><circle cx="83" cy="81" r="2.8" fill="#43352f"/><path d="M63 98Q70 103 78 98" stroke="#915e54" stroke-width="2" stroke-linecap="round"/><path d="M53 73h11M78 73h11" stroke="'+hair+'" stroke-width="2" stroke-linecap="round"/></svg>';}
+function face(p){return '<img class="portrait" src="assets/portraits/'+p.id+'.jpg" alt="応募者・'+esc(p.name)+'の架空ポートレート" loading="lazy" decoding="async">'+fallbackFace(p);}
 function knownSlots(p,full){return full||(st.asked[p.id]||[]).includes(0)||st.contacted.includes(p.id)?p.all:p.known;}
 function checkTerms(group,assign,full){const terms=[];
  const has=id=>group.includes(id);
@@ -276,19 +293,26 @@ function renderResult(){
  }).join("");
  const group=st.confirmed.map(byId);
  const shortage=S.filter(s=>(solved.assignment[s.id]||[]).length<s.n-s.f.length).map(s=>shortSlot(s.id));
- // 固定ケースの全70通り探索で検証済み。ランダム化時はケースごとに再計算する。
+ // 11人から4人の全330通りを実条件で再検査した成立組合せを比較に使う。
  const feasible=WINNING_FIXED.filter(ids=>ids.every(id=>!st.declined.includes(id))).slice();
  feasible.sort((a,b)=>b.filter(x=>st.confirmed.includes(x)).length-a.filter(x=>st.confirmed.includes(x)).length);
  const alternative=feasible.find(ids=>!ids.every(id=>st.confirmed.includes(id)));
  const counterfactual=!full&&alternative?
  '<div class="note"><b>別の採用なら：</b>'+alternative.map(id=>esc(byId(id).name.split(" ")[0])).join("・")+'の4人なら、勤務表が成立する例があります。'+
  '<br><span class="small">これは採用をやり直した場合の比較であり、確定した採用を取り消せるという意味ではありません。</span></div>':"";
- let ep=full?'<p>必要人数を満たし、リニューアル初週を完走しました。</p>'
- +(st.confirmed.includes("t")&&st.confirmed.includes("s")?'<div class="diary">土曜昼、田中さんと佐藤さんが同じカウンターに立ちました。採用時の約束が守られ、連携もスムーズでした。</div>':"")
- +(st.confirmed.includes("i")?'<div class="diary">日曜夜、伊藤さんは希望どおり閉店業務を担当。レジ締めも問題なく終わりました。</div>':"")
- +(st.confirmed.some(id=>!byId(id).trained)?'<div class="diary">新人は経験者と初回勤務を共にし、翌日の仕事に必要な基本操作を覚えました。</div>':"")
- :'<p>初週の勤務表に問題が残りました。誰を採用したか、どの条件を確認したかを振り返ってください。</p>';
- return '<div class="card"><div class="eyebrow">03 / FIRST WEEK</div><h1>'+(full?"営業成功｜喫茶まどか":"営業に課題が残りました")+'</h1>'
+ const friendSuccess=full&&st.confirmed.includes("t")&&st.confirmed.includes("s");
+ const interviewOnly=!full&&(st.interviewed||[]).length>=7&&st.contacted.length<=1&&st.confirmed.length<=1;
+ const filledTeamFailure=!full&&st.confirmed.length===4;
+ const heading=friendSuccess?"友人同士の初出勤":full?"喫茶まどか、本日開店":interviewOnly?"面接だけは大成功":filledTeamFailure?"採用したのに、人がいません":"喫茶まどか、開店準備は続く";
+ let ep=friendSuccess?'<div class="ending-scene"><p>土曜昼。田中は佐藤にレジの説明を始めたが、伝票を一枚見失った。</p><p>「悠斗、これですね。先に番号順に並べておきました」</p><p>「……教える側、僕だったよね？」二人の笑い声に、店長はようやく肩の力を抜いた。</p></div>'
+ :full?'<div class="ending-scene"><p>開店前、店長は七日分の勤務表をもう一度なぞる。どの枠にも、来てくれる人の名前がある。</p><p>「よし、喫茶まどか、本日開店です」シャッターを上げる音が、思ったより軽い。</p></div>'
+ :interviewOnly?'<div class="ending-scene"><p>面接メモは机いっぱい。だが、土曜朝の勤務表には空欄が並ぶ。</p><p>オーナーが言う。「面接は盛況だったね。ところで、開店する人は？」</p><p>店長は送信しなかった採用通知を見つめた。</p></div>'
+ :filledTeamFailure?'<div class="ending-scene"><p>採用確定は四人。それでも勤務表の空白は消えない。</p><p>「人数は揃ったんです」と店長。「でも、この曜日には誰も来られません」と小林。</p><p>椅子を並べる前に、店長は勤務可能日を見直した。</p></div>'
+ :'<div class="ending-scene"><p>シャッターの前で、店長は返事の届いたメールと空いた勤務枠を見比べる。</p><p>「次は、面接の後の連絡まで仕事にしよう」。店内の明かりを一つ点けた。</p></div>';
+ if(full&&st.confirmed.includes("i"))ep+='<div class="diary">日曜夜、伊藤さんは閉店チェックを一項目ずつ確認した。「鍵、最後にもう一度見ます」</div>';
+ if(st.declined?.length)ep+='<p class="small muted">条件が合わず最終辞退：'+st.declined.map(id=>esc(byId(id).name)).join("・")+'</p>';
+ ep+='<p class="small muted">面接 '+(st.interviewed?.length||0)+'人／採用通知 '+st.contacted.length+'件／採用確定 '+st.confirmed.length+'人</p>';
+ return '<div class="card"><div class="eyebrow">03 / FIRST WEEK</div><h1>'+heading+'</h1>'
  +ep+'<div class="stat"><b>人員充足</b><strong>'+solved.filled+'/'+target+'</strong></div>'
  +(shortage.length?'<div class="note danger"><b>不足した勤務枠：</b>'+shortage.map(esc).join("・")+'。採用した人の勤務可能時間と週上限では、この枠をすべて埋められません。</div>':"")
  +(solved.issues.length?'<div class="note danger">本人条件の未達：'+solved.issues.map(esc).join("・")+'</div>':"")
@@ -381,6 +405,20 @@ function nameV(id){return byId(id).name.split(" ")[0];}
 function labelV(id){return {applicant:"書類選考中",interview:"面接中",interviewed:"面接済み",offered:"採用通知済み",conditional:"条件付き承諾",confirmed:"採用確定",withdrawn:"選考辞退",declined:"辞退"}[status(id)];}
 function lockedV(id){return ["offered","conditional","confirmed"].includes(status(id));}
 function msg(kind,id,title,body){const m={kind,id,title,body,day:st.day};st.messages.push(m);st.archive.push(m);}
+const MAIL={
+t:{accept:"採用のご連絡ありがとうございます。佐藤と土曜昼をご一緒できるなら、ぜひ働きたいです。僕が教えると言いましたが、たぶん助けられます。",withdraw:"佐藤との勤務を相談できる店を選びました。",final:"佐藤との土曜昼の同時勤務が組めないため、今回は辞退します。ご検討ありがとうございました。",fixed:"佐藤と土曜昼に一緒に入れると確認できました。初出勤を楽しみにしています。"},
+s:{accept:"採用ありがとうございます。田中とは別の時間でも大丈夫です。まずは接客を一つずつ覚えます。",withdraw:"先にお返事をいただいたお店で、接客に挑戦することにしました。"},
+h:{accept:"採用ありがとうございます。夜を週2回以上担当できるなら、こちらで働きたいです。",withdraw:"勤務回数が先に決まった別のお店を選びました。",final:"夜の勤務を週2回以上確保できないため、今回は辞退します。",fixed:"夜を週2回以上担当できると確認しました。よろしくお願いします。"},
+y:{accept:"採用ありがとうございます。初日の手順をメモするノートを用意しました。経験者の方と一緒に始められると安心です。",withdraw:"木曜までにお返事をいただいた別のお店で働くことにしました。"},
+n:{accept:"採用ありがとうございます。仕込みと閉店作業、任せてください。",withdraw:"仕込みを任せていただける別のお店に決めました。"},
+g:{accept:"採用ありがとうございます。週2回以上のお昼勤務が可能なら、ぜひお願いします。初日の忙しい時間も教えてください。",withdraw:"勤務回数が先に決まった別のお店で接客を続けます。",final:"希望する週2回以上の勤務を組めないため、今回は辞退します。",fixed:"週2回以上の勤務を確認できました。お昼の接客、よろしくお願いします。"},
+k:{accept:"採用ありがとうございます。初日は経験者の方と基本を覚えます。ラテアートはそのあとで。",withdraw:"先に研修日が決まった別のお店に進むことにしました。"},
+i:{accept:"採用ありがとうございます。日曜夜の勤務が含まれるなら、お引き受けします。閉店手順も確認します。",withdraw:"日曜夜の勤務が先に決まった別のお店を選びました。",final:"希望していた日曜夜の勤務が組めないため、今回は辞退します。",fixed:"日曜夜の勤務を確認しました。閉店チェックも担当します。"},
+m:{accept:"採用ありがとうございます。月・水・金のランチで、さっそくお役に立てればと思います。",withdraw:"金曜中に勤務先を決める必要があり、先に決まったお店を選びました。"},
+o:{accept:"採用ありがとうございます。閉店作業の確認項目を教えてください。火曜と日曜の夜も入れます。",withdraw:"金曜に返事をいただいた別のお店に決めました。"},
+w:{accept:"採用ありがとうございます。週末のお昼、まずはメニューを覚えるところから始めます。",withdraw:"先にお返事をいただいたお店で週末勤務を始めることにしました。"}
+};
+function withdrawalMail(id,interviewed){return (interviewed?"面接ありがとうございました。":"応募をご確認いただきありがとうございました。")+"結果のご連絡を待っていましたが、"+MAIL[id].withdraw+"今回は選考を辞退します。";}
 function interviewV(id){if(st.active||st.used>=2||status(id)!=="applicant"||!arrived(id)||st.day>LIMITS[id][1])return;st.used++;st.active=id;st.selected=id;st.status[id]="interview";st.view="interview";}
 function endInterview(){if(!st.active)return;const id=st.active;st.active=null;st.status[id]="interviewed";st.interviewed.push(id);st.view="desk";}
 function pick(id){if(status(id)!=="interviewed")return;if(st.picked.includes(id))st.picked=st.picked.filter(x=>x!==id);else if(st.picked.length<4)st.picked.push(id);}
@@ -393,7 +431,7 @@ function morning(day,last){
    const cond=["t","h","g","i"].includes(id);
    st.status[id]=cond?"conditional":"confirmed";
    if(!cond)st.confirmed.push(id);
-   const response=cond?"採用のお話ありがとうございます。ただし、"+p.term+"なら働きたいと思います。":"採用のご連絡ありがとうございます。ぜひよろしくお願いいたします。";
+   const response=MAIL[id].accept;
    msg("answer",id,p.name+"さんから"+(cond?"条件付き承諾":"採用承諾")+"のご連絡",response);
    const log=st.offerLog.find(x=>x.id===id);if(log){log.ok=true;log.reason=response;}
   }
@@ -403,10 +441,10 @@ function morning(day,last){
   if(!arrived(id))continue;
   if(status(id)==="applicant"&&day>LIMITS[id][1]){
    st.status[id]="withdrawn";st.picked=st.picked.filter(x=>x!==id);
-   if(!last && (st.picked.length<4 || !st.picked.every(x=>lockedV(x))))msg("withdraw",id,p.name+"さんから選考辞退のご連絡","お世話になっております。面接のご案内を待っておりましたが、他店で働くことになりました。今回の応募を取り下げます。");
+   if(!last && (st.picked.length<4 || !st.picked.every(x=>lockedV(x))))msg("withdraw",id,p.name+"さんから選考辞退のご連絡",withdrawalMail(id,false));
   }else if(status(id)==="interviewed"&&day>LIMITS[id][2]){
    st.status[id]="withdrawn";st.picked=st.picked.filter(x=>x!==id);
-   msg("withdraw",id,p.name+"さんから選考辞退のご連絡","面接いただきありがとうございました。ほかのアルバイトに決まりましたので、結果連絡を待たずに辞退いたします。");
+   msg("withdraw",id,p.name+"さんから選考辞退のご連絡",withdrawalMail(id,true));
   }
  }
  const newly=P.filter(p=>LIMITS[p.id][0]===day);
@@ -421,10 +459,12 @@ function morning(day,last){
     if(status(id)!=="conditional")continue;
     if(estimate.issues.includes(terms[id])){
       st.status[id]="declined";st.declined.push(id);st.picked=st.picked.filter(x=>x!==id);
-      msg("withdraw",id,byId(id).name+"さんから最終辞退のご連絡","採用のお話をいただきありがとうございます。ご相談した勤務条件が成立しないため、今回は辞退させていただきます。");
+      msg("withdraw",id,byId(id).name+"さんから最終辞退のご連絡",MAIL[id].final);
+      const log=st.offerLog.find(x=>x.id===id);if(log){log.ok=false;log.reason=MAIL[id].final;}
     }else{
       st.status[id]="confirmed";st.confirmed.push(id);
-      msg("answer",id,byId(id).name+"さんの勤務条件が確定","お伝えしていた勤務条件を満たせることを確認しました。よろしくお願いいたします。");
+      msg("answer",id,byId(id).name+"さんの勤務条件が確定",MAIL[id].fixed);
+      const log=st.offerLog.find(x=>x.id===id);if(log)log.reason=MAIL[id].fixed;
     }
   }
   st.result=solve(st.confirmed,true);
@@ -439,7 +479,7 @@ function advance(force){
  morning(st.day+1,st.day===5);
 }
 function progressV(){return '<div class="card"><div class="eyebrow">採用活動　'+st.day+' / 5日目</div><div class="daytrack">'+DNAME.map((d,i)=>'<span class="'+(i+1===st.day?"current":i+1<st.day?"done":"")+'">'+d+'</span>').join("")+'</div><div class="quickstats"><div><b>本日の面接</b><strong>'+st.used+' / 2</strong></div><div><b>採用確定</b><strong>'+st.confirmed.length+' / 4</strong></div><div><b>候補・通知中</b><strong>'+st.picked.length+' / 4</strong></div></div></div>';}
-function morningView(){return progressV()+'<div class="card"><div class="eyebrow">MORNING MAIL / 朝のメール</div><h2>採用管理の受信トレイ</h2><p class="small muted">前日からの変化を確認してください。メール本文は開閉できます。</p>'+st.messages.map(m=>'<details class="letter" '+(m.kind==="withdraw"?"open":"")+'><summary>'+(m.kind==="withdraw"?"✉ 選考辞退　":m.kind==="answer"?"✓ 採用返答　":m.kind==="new"?"＋ 新規応募　":"・ ")+esc(m.title)+'</summary><div class="mailbody">差出人：'+(m.id?esc(byId(m.id).name):"採用管理システム")+'<div class="rule"></div>'+esc(m.body)+'</div></details>').join("")+'<button class="btn primary" data-action="continue">今日の採用業務へ進む</button></div>';}
+function morningView(){return progressV()+'<div class="card"><div class="eyebrow">MORNING MAIL / 朝のメール</div><h2>採用管理の受信トレイ</h2><p class="small muted">昨日の採用通知への返答と辞退を先に確認してください。本文は開閉できます。</p>'+st.messages.map(m=>'<details class="letter '+(["answer","withdraw"].includes(m.kind)?"important":"")+'" '+(["answer","withdraw"].includes(m.kind)?"open":"")+'><summary>'+(m.kind==="withdraw"?"✉ 選考辞退　":m.kind==="answer"?"✓ 採用返答　":m.kind==="new"?"＋ 新規応募　":"・ ")+esc(m.title)+'</summary><div class="mailbody">差出人：'+(m.id?esc(byId(m.id).name):"採用管理システム")+'<div class="rule"></div>'+esc(m.body)+'</div></details>').join("")+'<button class="btn primary" data-action="continue">今日の採用業務へ進む</button></div>';}
 function applicantView(id){
  const p=byId(id);if(!p||!arrived(id))return "";
  const s=status(id);
@@ -466,7 +506,7 @@ function deskV(){
  const list=P.filter(p=>arrived(p.id)),urgent=list.filter(p=>(status(p.id)==="applicant"&&LIMITS[p.id][1]===st.day)||(status(p.id)==="interviewed"&&LIMITS[p.id][2]===st.day));
  return progressV()+'<div class="card"><div class="eyebrow">RECRUITMENT DESK / 応募者一覧</div><h2>面接する人を選ぶ</h2><p class="small muted">書類を確認 → 1日2人まで面接 → 採用候補に登録 → 正式な採用通知。面接後はいつでも候補を見直せますが、通知後は取り消せません。</p>'+
  (urgent.length?'<div class="note warn">今日が期限：'+urgent.map(p=>esc(nameV(p.id))).join("・")+'</div>':"")+
- '<div class="persons recruits">'+list.map(p=>'<button class="person '+(st.selected===p.id?"active ":"")+(status(p.id)==="withdrawn"?"lost":"")+'" data-action="select" data-id="'+p.id+'"><span class="face">'+face(p)+'</span><span class="name">'+esc(p.name)+'</span><span class="pstate">'+esc(labelV(p.id))+'</span><span class="pstate">面接 '+DNAME[LIMITS[p.id][1]-1]+'曜まで</span></button>').join("")+'</div></div>'+applicantView(st.selected)+advisorV()+
+ '<div class="persons recruits">'+list.map(p=>'<button class="person '+(st.selected===p.id?"active ":"")+(status(p.id)==="withdrawn"?"lost":"")+'" data-action="select" data-id="'+p.id+'"><span class="face">'+face(p)+'</span><span class="name">'+esc(p.name)+'</span><span class="pstate">'+p.age+'歳｜'+p.known.map(shortSlot).join("・")+' ほか</span><span class="pstate">'+esc(labelV(p.id))+'</span><span class="pstate">面接 '+DNAME[LIMITS[p.id][1]-1]+'曜まで</span></button>').join("")+'</div></div>'+applicantView(st.selected)+advisorV()+
  '<div class="card"><h3>本日の採用活動を終了する</h3><p class="small muted">翌朝、新規応募・採用返答・辞退メールが届きます。</p>'+
  (st.confirmAdvance?'<div class="note danger">今日が期限の候補者がいます。進めると辞退になる場合があります。<div class="btn-row"><button class="btn warn" data-action="advance-confirm">それでも進む</button><button class="btn" data-action="cancel-advance">戻る</button></div></div>':"")+
  '<button class="btn primary" data-action="advance" '+(st.active?"disabled":"")+'>'+(st.day===5?"採用活動を締め切り、営業結果へ":"翌朝へ進む")+'</button></div>';
@@ -503,18 +543,18 @@ function renderV3(){
  '<div class="three"><div class="mini"><b>面接は1日2人</b>事前の応募書類を見ながら面接の順番を決める。</div><div class="mini"><b>採用候補で仮シフト更新</b>必要な曜日や経験者を確認する。</div><div class="mini"><b>採用通知を急ぐべき時も</b>待たせると他店に決めてしまう応募者も。</div></div>'+
  '<p class="small muted">時間は「翌朝へ進む」でのみ進行します。応募者の登場・期限は固定のテスト版。旧版とはセーブを分けています。</p><button class="btn primary" data-action="start">採用活動を始める</button></div>';return;
  }
- if(st.screen==="morning"){root.innerHTML=morningView()+'<div class="footer">B1 α0.3.4｜5日間の採用テスト版</div>';return;}
+ if(st.screen==="morning"){root.innerHTML=morningView()+'<div class="footer">B1 α0.4.0｜5日間の採用テスト版</div>';return;}
  if(st.screen==="result"){
  let old=renderResult();old=old.replace("営業成功｜喫茶まどか",st.gameSuccess?"営業成功｜喫茶まどか":"採用活動の結果").replace("営業に課題が残りました","採用活動の結果");
  const replies=st.messages.filter(m=>m.kind==="answer"||m.kind==="withdraw");
- const lastMail=replies.length?'<div class="card"><div class="eyebrow">SATURDAY MAIL / 最終の採用返答</div><h2>土曜朝のご連絡</h2>'+replies.map(m=>'<details class="letter" '+(m.kind==="withdraw"?"open":"")+'><summary>'+esc(m.title)+'</summary><div class="mailbody">'+esc(m.body)+'</div></details>').join("")+'</div>':"";
- root.innerHTML=lastMail+'<div class="card"><div class="eyebrow">SATURDAY / 採用結果</div><h2>5日間の採用活動が終了しました</h2><p class="small">採用確定：'+(st.confirmed.map(nameV).join("・")||"なし")+'</p><p class="small muted">勤務条件が成立しない仮承諾者は、採用確定として数えません。</p></div>'+old+'<div class="footer">B1 α0.3.4</div>';return;
+ const lastMail=replies.length?'<div class="card"><div class="eyebrow">SATURDAY MAIL / 最終の採用返答</div><h2>土曜朝のご連絡</h2>'+replies.map(m=>'<details class="letter important" open><summary>'+esc(m.title)+'</summary><div class="mailbody">'+esc(m.body)+'</div></details>').join("")+'</div>':"";
+ root.innerHTML=lastMail+'<div class="card"><div class="eyebrow">SATURDAY / 採用結果</div><h2>5日間の採用活動が終了しました</h2><p class="small">採用確定：'+(st.confirmed.map(nameV).join("・")||"なし")+'</p><p class="small muted">勤務条件が成立しない仮承諾者は、採用確定として数えません。</p></div>'+old+'<div class="footer">B1 α0.4.0</div>';return;
  }
  const view=st.active?"interview":st.view;
  const nav='<nav class="topnav"><button class="tab '+(view==="desk"?"on":"")+'" data-action="desk" '+(st.active?"disabled":"")+'>応募・面接</button><button class="tab '+(view==="board"?"on":"")+'" data-action="board" '+(st.active?"disabled":"")+'>仮シフト</button><button class="tab '+(view==="mail"?"on":"")+'" data-action="mail" '+(st.active?"disabled":"")+'>メール</button></nav>';
  const content=view==="interview"?interviewView():view==="board"?boardV():view==="mail"?archiveV():deskV();
  const desktop=!window.matchMedia("(max-width:780px)").matches;
- root.innerHTML=nav+'<div class="layout '+(view==="board"?"board-alone":"")+'"><section class="main">'+content+'</section><aside class="side">'+(desktop&&view!=="board"?boardV():"")+'</aside></div><div class="footer">B1 α0.3.4｜架空の人物・店舗</div>'+
+ root.innerHTML=nav+'<div class="layout '+(view==="board"?"board-alone":"")+'"><section class="main">'+content+'</section><aside class="side">'+(desktop&&view!=="board"?boardV():"")+'</aside></div><div class="footer">B1 α0.4.0｜架空の人物・店舗</div>'+
  '<div class="mobilebar"><button data-action="desk" '+(st.active?"disabled":"")+'>面接</button><button data-action="board" '+(st.active?"disabled":"")+'>仮シフト</button><button data-action="mail" '+(st.active?"disabled":"")+'>メール</button></div>';
 }
 function handleV3(e){
@@ -541,6 +581,7 @@ function handleV3(e){
 }
 st=loadV3();
 document.getElementById("app").addEventListener("click",handleV3);
+document.getElementById("app").addEventListener("error",e=>{if(e.target.matches?.("img.portrait"))e.target.classList.add("is-broken");},true);
 renderV3();
 })();
 </script></body></html>
