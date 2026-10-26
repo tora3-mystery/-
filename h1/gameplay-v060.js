@@ -63,7 +63,7 @@ renderPrivate=function(){
  if(!state.privateShown)html+='<section class="panel interview-question"><h2>どのエピソードを深掘りしますか？</h2><p class="subtle">各人6種類の質問から3種類が選ばれます。</p><div class="private-choices">'+offers.map((q,k)=>'<label class="private-choice"><input type="radio" name="private-q" value="'+k+'" '+(state.privatePick===k?'checked':'')+'><span><strong>'+esc(q.term)+'</strong><small>'+esc(q.q)+'</small></span></label>').join("")+'</div><div class="preview"><span>面接官の質問</span><strong>'+esc(pick.q)+'</strong></div><button class="btn primary wide" id="ask-private">この質問をする</button></section>';
  else html+=recordMarkup(i)+'<section class="panel private-next"><div class="save-note">✓ 個人面接を保存しました。</div><button type="button" id="next-private" class="btn primary wide">応募者一覧に戻る</button></section>';
  el("main").innerHTML=html;
- el("back-to-candidates").onclick=()=>{state.phase="private-select";state.tab="file";render();};
+ el("back-to-candidates").onclick=()=>{state.phase="private-select";state.tab="es";render();};
  if(!state.privateShown){
   el("main").querySelectorAll('input[name="private-q"]').forEach(input=>input.onchange=()=>{state.privatePick=Number(input.value);render();});
   el("ask-private").onclick=()=>{
@@ -71,7 +71,7 @@ renderPrivate=function(){
    state.privateAnswers[i]={person:i,option:pick.base,variant:pick.variant,term:pick.term,question:pick.q,answer:i===state.monsterIndex?pick.monster:pick.human};
    state.privateShown=true;render();
   };
- }else el("next-private").onclick=()=>{state.phase="private-select";state.privateShown=false;state.docsPinned=false;state.tab="file";render();};
+ }else el("next-private").onclick=()=>{state.phase="private-select";state.privateShown=false;state.docsPinned=false;state.tab="es";render();};
 };
 questionOptions=function(){
  const offered=H1_V060.groupOptions(state.round);
