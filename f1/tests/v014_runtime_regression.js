@@ -49,10 +49,11 @@ function test(html){
  assert(!html.includes('id="anomalyComplaints"'),'Highlighting fake complaints must be removed');
  assert(!html.includes('記録 A：差出人不明のご意見'),'Spurious clue must be removed');
  const clean=route(['pickup','vibration','floorcheck','delivery','quiet','display','quiet']);
- assert(clean.d.getState().ending!=='normal_success','Routine-only route should be hard');
+ assert(clean.d.getState().ending==='normal_success'&&clean.d.getState().revenue===500,'A carefully planned clean route may just reach the success threshold');
  const gray=route(['pickup','complaintHide','delivery','vibration','floorcheck','quiet','stockCover']);
  assert(gray.d.getState().ending==='normal_success','Gray-assisted win must be reachable');
- assert(gray.d.getState().revenue===570&&gray.d.getState().vals.reduce((a,b)=>a+b,0)===2,'Calibrated gray victory');
+ assert(gray.d.getState().revenue===610&&gray.d.getState().vals.reduce((a,b)=>a+b,0)===1,'Calibrated gray victory');
+ assert(gray.d.getState().revenue-clean.d.getState().revenue>=100,'Moral-gray advantage must be substantial');
  assert(gray.get('ending').children.some(x=>x.className==='ending-media'),'Newspaper plus forum');
  const two=app();two.d.restart();step(two,'pickup');step(two,'complaintHide');
  assert(two.d.availableIds().includes('audit'),'Eerie choice and gray should coexist');
@@ -96,6 +97,6 @@ function test(html){
  legacy.set('f1-v10',JSON.stringify(previous));
  const newer=app(legacy);
  assert(newer.d.getState().version===11&&newer.d.getState().clues===0,'Legacy A does not unlock hidden route');
- return {checks,grayRevenue:gray.d.getState().revenue,grayComplaints:2,cleanEnding:clean.d.getState().ending,hiddenEnding:eerie.d.getState().ending};
+ return {checks,grayRevenue:gray.d.getState().revenue,grayComplaints:gray.d.getState().vals.reduce((a,b)=>a+b,0),cleanRevenue:clean.d.getState().revenue,cleanEnding:clean.d.getState().ending,hiddenEnding:eerie.d.getState().ending};
 }
 console.log('F1 PASS',JSON.stringify(test(html)));
