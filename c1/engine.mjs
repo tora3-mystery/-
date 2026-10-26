@@ -1,6 +1,6 @@
 /** C1 gameplay logic. Pure and dependency-free: also imported by tests. */
-export const VERSION = '0.5.7';
-export const UPDATED_JST = '2026-10-26 09:49 JST';
+export const VERSION = '0.5.8';
+export const UPDATED_JST = '2026-10-26 10:06 JST';
 export const LIMITS = Object.freeze({ cp: 20, progress: 22, growth: 6 });
 export const DAYS = ['月曜日', '火曜日', '水曜日', '木曜日', '金曜日'];
 export const SPEED_HARASSMENTS = Object.freeze(['即レスハラ','遅レスハラ']);
@@ -163,10 +163,15 @@ export function calculate(run, event, choice, replyTiming = null) {
   if(event.id==='D3-1') {
     const mode=typeof replyTiming==='number'?(replyTiming<=2?'instant':replyTiming>20?'late':'normal'):replyTiming;
     if(!['instant','normal','late'].includes(mode)) throw new Error('返信タイミングを選択してください');
-    if(mode==='late')extraReason='この問い合わせへの返信は保留したまま、他の予定業務は進行した。';
-    if(mode==='instant') {speedName='即レスハラ';speedReason='通知から数秒で返信したため、常時即応を求める空気を生むと社内認定された。';}
-    else if(mode==='late') {speedName='遅レスハラ';speedReason='業務時間内の問い合わせを翌朝まで保留し、相談機会を遅らせたと社内認定された。';}
-    if(speedName && speedName!==choice.harassment.replace(/疑義$/,'')){speedCp=2;deltaCp+=speedCp;}
+    if(mode==='late')extraReason='この問い合わせへの返信を保留したまま、他の予定業務は進行した。';
+    // F is not a reply, so avoid falsely claiming "immediate/late reply" and double-counting a nonexistent response.
+    if(choice.id==='F'){
+      if(mode!=='normal')extraReason+=' 返信を送らない選択だったため、返信速度による追加認定はなかった。';
+    } else {
+      if(mode==='instant'){speedName='即レスハラ';speedReason='通知から数秒で返信したため、常時即応を求める空気を生むと社内認定された。';}
+      else if(mode==='late'){speedName='遅レスハラ';speedReason='業務時間内の問い合わせを翌朝まで保留し、相談機会を遅らせたと社内認定された。';}
+      if(speedName && speedName!==choice.harassment.replace(/疑義$/,'')){speedCp=2;deltaCp+=speedCp;}
+    }
   }
   // Every third consecutive officially recognized event adds one compliance point.
   // Suspicions (0-point, no speed penalty) interrupt the streak. Old saves are supported.
@@ -272,7 +277,7 @@ export function resolveEnding(run) {
   return 'E09';
 }
 export function isValidSave(save, events) {
-  return !!save && ['0.4.0','0.4.1','0.5.0','0.5.1','0.5.2','0.5.3','0.5.4','0.5.5','0.5.6',VERSION].includes(save.version) && Number.isInteger(save.index) && save.index>=0 && save.index<events.length
+  return !!save && ['0.4.0','0.4.1','0.5.0','0.5.1','0.5.2','0.5.3','0.5.4','0.5.5','0.5.6','0.5.7',VERSION].includes(save.version) && Number.isInteger(save.index) && save.index>=0 && save.index<events.length
    && ['briefing','scene','result','dayReview','ending'].includes(save.phase) && Array.isArray(save.logs) && typeof save.profile?.name==='string'
    && save.flags && typeof save.cp==='number';
 }

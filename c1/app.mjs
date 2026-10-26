@@ -1,4 +1,4 @@
-import {VERSION,UPDATED_JST,LIMITS,DAYS,DIRECTIVES,ENDING_META,createProfile,createRun,calculate,advance,beginDay,isValidSave,SPEED_HARASSMENTS,ensureLocalPortrait} from './engine.mjs?v=0.5.7';
+import {VERSION,UPDATED_JST,LIMITS,DAYS,DIRECTIVES,ENDING_META,createProfile,createRun,calculate,advance,beginDay,isValidSave,SPEED_HARASSMENTS,ensureLocalPortrait} from './engine.mjs?v=0.5.8';
 
 const app=document.getElementById('app');
 const SAVE_KEY='arg_c1_save_v04';
@@ -34,7 +34,7 @@ function thursdayChatFollowup(){
  if(!['instant','normal','late'].includes(mode))return null;
  const texts=previous.choiceId==='F'?
    {
-     instant:'「昨日はすぐ確認いただいたようですが、その後どう進めればいいか少し迷っていました。今日は先に相談してもいいですか？」',
+     instant:'「昨日の連絡、どう進めればいいか少し迷っていました。今日は先に相談してもいいですか？」',
      normal:'「昨日の連絡、読まれたかどうか分からなくて少し気になっていました。今日は進め方を先に確認したいです」',
      late:'「昨日の連絡は今朝まで保留だったので、少し様子を見ていました。今日は先に段取りを確認しておきたいです」'
    }:{
@@ -65,6 +65,14 @@ function activeEvent(){
    if(choice)choice.text=run.flags.checkAgreed
      ? '月曜に決めた確認時刻に、困りごとだけ聞く'
      : '今から本人と確認時刻を相談し、困りごとだけ聞く';
+ }
+ if(result.id==='D3-1'){
+   const choiceB=result.choices.find(c=>c.id==='B');
+   const choiceC=result.choices.find(c=>c.id==='C');
+   const choiceE=result.choices.find(c=>c.id==='E');
+   if(choiceB&&clockSelected!=='instant')choiceB.text='「これから見ます！ 5分で返事します！」';
+   if(choiceC&&clockSelected==='late')choiceC.text='「返信が遅くなりました。確認はこの後にしてください」';
+   if(choiceE&&clockSelected==='late')choiceE.text='「今からなら1時間後に見られます」';
  }
  return result;
 }
@@ -136,7 +144,7 @@ ${followup?`<aside class="chat-followup" aria-label="前日のチャットを受
   <p>${esc(followup.text)}</p>
 </aside>`:''}
 <section class="paper spaced"><div class="panelhead"><strong class="small">あなたはどう対応しますか？</strong><span class="tiny">6つから1つ選択</span></div>${e.id==='D3-1'?clockWidget():''}<div class="choices">${orderedChoices(e).map((c,i)=>`<button class="choice" data-choice="${c.id}"><span class="letter">${String.fromCharCode(65+i)}</span><span>${esc(c.text)}</span></button>`).join('')}</div></section><p class="privacy">※選択後は戻せません。コンプラ違反ポイントが20に到達すると部長室に呼び出されます。</p>`;}
-function clockWidget(){const choices=[['instant','通知から数秒で返信'],['normal','15分ほどで返信'],['late','翌朝まで保留']];return `<div class="clockbox"><strong class="small">社内チャット｜返信するタイミングを指定</strong><p class="clock-warning">実時間の計測はありません。先に返信タイミングを選び、続けて返信内容を選択してください。</p><div class="clockmode">${choices.map(([value,label])=>`<button data-time="${value}" class="quiet ${clockSelected===value?'selected':''}" aria-pressed="${clockSelected===value}">${label}</button>`).join('')}</div></div>`;}
+function clockWidget(){const choices=[['instant','通知から数秒で対応'],['normal','15分ほどで対応'],['late','翌朝まで保留']];return `<div class="clockbox"><strong class="small">社内チャット｜対応するタイミングを指定</strong><p class="clock-warning">実時間の計測はありません。先にタイミングを選び、続けて返信内容または対応を選択してください。</p><div class="clockmode">${choices.map(([value,label])=>`<button data-time="${value}" class="quiet ${clockSelected===value?'selected':''}" aria-pressed="${clockSelected===value}">${label}</button>`).join('')}</div></div>`;}
 function resultScreen(){const log=run.pending;if(!log)return '<p class="error">表示できる判定がありません。</p>';
 const safe=log.deltaCp===0,speedPrimary=log.speedCp>0&&log.baseCp===0;
 const name=speedPrimary?log.speedName:log.name;
@@ -278,6 +286,6 @@ document.addEventListener('keydown',ev=>{
   }
 });
 
-(async()=>{try{const response=await fetch('./events.json?v=0.5.7',{cache:'no-store'});if(!response.ok)throw new Error(`HTTP ${response.status}`);const json=await response.json();events=json.events;
+(async()=>{try{const response=await fetch('./events.json?v=0.5.8',{cache:'no-store'});if(!response.ok)throw new Error(`HTTP ${response.status}`);const json=await response.json();events=json.events;
   if(!Array.isArray(events)||events.length!==15||events.some(e=>e.choices.length!==6))throw new Error('イベント定義が不正です');
   render();}catch(err){app.innerHTML=`<div class="error"><strong>ゲームデータを読み込めませんでした。</strong><p>${esc(err.message)}</p><p>ネットワーク接続を確認してページを再読み込みしてください。</p></div>`;}})();
