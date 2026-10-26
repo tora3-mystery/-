@@ -53,8 +53,8 @@ function chooseTab(x){state.tab=x;renderDocs("tab");}
 function selectPerson(i){state.person=i;state.docsPinned=true;renderDocs("person");}
 const shortcuts=[
  [{round:0,idx:2,label:"協賛活動・リーダー経験"},{round:1,idx:0,label:"赤い養生テープ"},{round:2,idx:0,label:"成果の評価"}],
- [{round:0,idx:3,label:"実験時の失敗"},{round:1,idx:1,label:"測定条件の記録"},{round:2,idx:2,label:"経験の裏付け"}],
- [{round:0,idx:0,label:"最後の一人"},{round:1,idx:2,label:"学習支援の役割分担"},{round:2,idx:1,label:"自分の努力の評価"}],
+ [{round:0,idx:1,label:"実験時の失敗"},{round:1,idx:1,label:"測定条件の記録"},{round:2,idx:2,label:"実験の結果と過程"}],
+ [{round:0,idx:2,label:"学習支援での取りまとめ"},{round:1,idx:2,label:"学習支援の役割分担"},{round:2,idx:1,label:"担当者への引継ぎ"}],
  [{round:0,idx:2,label:"改善活動での役割"},{round:1,idx:2,label:"返品対応の工夫"},{round:2,idx:0,label:"反対意見への対応"}]
 ];
 function resumeMarkup(i,compact=false){
