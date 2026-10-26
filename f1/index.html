@@ -358,7 +358,7 @@ function renderComplaints(){
  renderAnomalyComplaints();
 }
 function renderAnomalyComplaints(){
- const box=$('anomalyComplaints');box.replaceChildren();box.className='anomaly-inbox'+(s.odd>=3?' ritual-3':'')+(s.odd===0?' hidden':'');
+ const box=$('anomalyComplaints');box.replaceChildren();box.classList.toggle('ritual-3',s.odd>=3);box.classList.toggle('hidden',s.odd===0);
  if(!s.odd)return;
  const n=s.odd>=3?10:s.odd===2?3:1;
  const messages=s.odd>=3?Array.from({length:n},()=> 'ありがとうございました。完璧なスーパーです。スーパーは完璧なので好きです。ありがとうございました。ありがとうございました。'):
