@@ -170,7 +170,7 @@ docMarkup=function(){
  if(state.tab==="memo"){
   const pos=html.indexOf("</div>");
   // Existing markup always begins with .tabs-doc; do not include a person's resume here.
-  return html.slice(0,pos)+tab+html.slice(pos,pos+6)+h163MemoBody();
+  return html.slice(0,pos).replace(/data-tab="file" class="on"/,'data-tab="file" class=""')+tab+html.slice(pos,pos+6)+h163MemoBody();
  }
  return html.replace("</div>",tab+"</div>");
 };
