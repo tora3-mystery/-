@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="ja"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>N1 v0.4.0 シナリオ検証用・10問</title>
+<meta name="robots" content="noindex,nofollow"/>
+<style>
+:root{--bg:#131626;--panel:#22283b;--panel2:#30374d;--line:#515b72;--ink:#faf8f2;--sub:#bfc9d6;--gold:#ffdc82;--teal:#8ee6d9;--rose:#ffc5d5}*{box-sizing:border-box}html{font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN",sans-serif}body{margin:0;background:radial-gradient(circle at 100% -5%,#3d3652 0,transparent 45%),var(--bg);color:var(--ink);line-height:1.65}main{max-width:730px;margin:auto;padding:22px 16px 60px}h1{font-size:clamp(26px,6vw,40px);line-height:1.3;letter-spacing:-.02em}.tag{color:var(--teal);font-weight:900;letter-spacing:.12em;font-size:12px}.muted{color:var(--sub)}.small{font-size:13px}.panel{border:1px solid var(--line);border-radius:19px;padding:19px;background:var(--panel);margin:14px 0}.stage{background:#2b394d;border-left:4px solid var(--teal);border-radius:10px;padding:12px 16px;font-size:14px;font-weight:650}.character{color:var(--gold);font-weight:900;font-size:21px}.quote{margin:14px 0;background:#fff9ec;color:#22283b;padding:19px;border-radius:17px;font-size:21px;font-weight:900;line-height:1.6}.context{font-size:14px;color:var(--sub);padding:0 4px}.item{background:#303a50;border-radius:13px;padding:14px;margin-top:13px}.item-title{font-weight:850;font-size:16px}.item-sub{font-size:13px;color:#d5e0ed}.meta{border-bottom:1px solid var(--line);padding:11px 0;margin-bottom:16px;display:flex;align-items:center;gap:10px;justify-content:space-between;flex-wrap:wrap}.meter{background:#333b52;border-radius:20px;height:8px;overflow:hidden;margin:16px 0}.meter>div{height:100%;background:var(--teal);transition:width .2s}.numrow{display:flex;align-items:center;gap:9px;margin:14px 0}.numrow input{width:100%;min-width:0;background:#fffaf1;color:#253044;font-size:27px;font-weight:800;border-radius:10px;padding:9px 12px;border:3px solid var(--gold)}.unit{font-size:22px;font-weight:900}.button{background:var(--gold);color:#25233a;border:0;padding:14px 18px;border-radius:11px;font-size:16px;min-height:52px;cursor:pointer;font-weight:900}.button:disabled{opacity:.45}.secondary{background:#374258;color:var(--ink);border:1px solid var(--line)}.button:focus-visible,input:focus-visible{outline:3px solid var(--teal);outline-offset:3px}.buttons{display:flex;gap:9px;flex-wrap:wrap}.buttons>*{flex:1}.hint{background:#263f45;padding:13px;border-radius:10px;margin:12px 0;color:#e5fff4}.result-points{font-size:55px;font-weight:950;color:var(--gold);line-height:1.15;margin:8px 0}.dialogline{background:#f8ecda;color:#273044;padding:11px 14px;border-radius:11px;margin:8px 0}.dialogline strong{display:block;font-size:12px;color:#6f4052}.truth{color:var(--teal);font-size:30px;font-weight:900;margin:5px 0}.scoreboard{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.scoreboard>div{background:#31384e;border-radius:12px;padding:15px}.scoreboard strong{display:block;font-size:27px;color:var(--gold)}.error{color:#ffc4cb;font-size:14px;min-height:22px}.split{display:flex;gap:10px;justify-content:space-between;align-items:center;flex-wrap:wrap}.line{border:0;border-top:1px solid var(--line);margin:16px 0}.logtable{font-size:13px;display:grid;gap:7px}.logrow{border-bottom:1px solid var(--line);padding:6px 0}.footnote{font-size:12px;color:#bac4d0}a{color:var(--teal)}@media(max-width:400px){main{padding:14px 11px 44px}.panel{padding:15px}.quote{font-size:18px}.numrow input{font-size:24px}}@media(prefers-reduced-motion:reduce){.meter>div{transition:none}}
+</style></head><body><main>
+<div class="meta"><div><div class="tag">N1 / SCENARIO PREVIEW</div><strong>シナリオ検証版 v0.4.0</strong></div><a href="./" class="small">本番版へ</a></div>
+<div id="notice" class="panel small" style="border-color:#7b88a3">これは <strong>会話とゲームバランスの検証用</strong> です。Workによる高画質画像・UI更新とは独立しています。こちらには画像を載せず、本番のN1を上書きしません。</div>
+<div id="app" aria-live="polite"></div>
+</main>
+<script src="./scenario-v04.js"></script>
+<script>
+'use strict';
+/* The following price/score data were copied from the latest N1 main game at the time of staging. */
+
+const VERSION='v0.3.0', PRICE_DATE='2026-10-26';
+const fmt=n=>new Intl.NumberFormat('ja-JP').format(n);
+const faces={
+ makabe:{name:'真壁 先輩',role:'若く見られたい、でもお世辞には鋭い',c:'#f7b37a',h:'#403243',shirt:'#8869a6',kind:1},
+ umeda:{name:'梅田 航',role:'買い物上手を自称する同僚',c:'#dbad85',h:'#313343',shirt:'#518a9b',kind:0},
+ arai:{name:'新井 悠',role:'商品価格にやたら詳しい同僚',c:'#e8b78f',h:'#55443b',shirt:'#76a883',kind:0},
+ rika:{name:'梨花',role:'ツッコミが速い友人',c:'#e7b49b',h:'#613949',shirt:'#d37e8b',kind:1},
+ souma:{name:'相馬 さん',role:'有名人の話が好きな知人',c:'#d8ab89',h:'#494a4b',shirt:'#836aaa',kind:1},
+ fujino:{name:'藤野 さん',role:'お返しを気にする気配り屋',c:'#ebbb91',h:'#51484b',shirt:'#ae7f5a',kind:1},
+ shoji:{name:'庄司 徹',role:'数字に厳しい経理担当',c:'#dbaa81',h:'#303d46',shirt:'#637b9e',kind:0},
+ keisuke:{name:'圭介',role:'街歩き好きの友人',c:'#f0c39a',h:'#464035',shirt:'#758c64',kind:0},
+ hina:{name:'陽菜',role:'学生扱いされがちな後輩',c:'#f2cbb4',h:'#4d3e4b',shirt:'#d282a1',kind:1}
+};
+const official=(name,price,url,emoji,detail)=>({name,price,url,emoji,detail,official:true});
+const prices={
+ cloth:official('Apple ポリッシングクロス',1580,'https://www.apple.com/jp/shop/product/mlh74fe/a/','🧽','Apple純正の画面用クリーニングクロス／税込・通常表示価格'),
+ mug:official('Snow Peak チタンシングルマグ450／MG-143',3520,'https://ec.snowpeak.co.jp/item/SNP0117A0185','☕','チタン製・450ml／税込・公式掲載価格'),
+ scissors:official('コクヨ サクサ チタン・グルーレス刃／HSM-PTA100D',1540,'https://www.kokuyo-shop.jp/sc/ProductDetail.aspx?pcd=4901480395548','✂️','ブラック・JAN 4901480395548／税込・公式販売価格'),
+ toraya:official('とらや 小形羊羹 5本入',1782,'https://checkout.toraya-group.co.jp/products/box-yokan-petite_boxof5','🎁','5本詰合せ／税込・公式掲載価格'),
+ yokumoku:official('ヨックモック シガール 20本入',1998,'https://yokumoku.co.jp/products/1010011201030','🍪','20本入・通常品／税込・公式掲載価格'),
+ kinto:official('KINTO SCS-S03 マグ 320ml',2200,'https://kinto.co.jp/products/20754','☕','320ml／税込・公式掲載価格'),
+ hario:official('HARIO×たち吉 V60透過ドリッパー02 伝統釉・織部',11000,'https://shop.hariocorp.co.jp/products/t-vdt-02-ob','🍵','型番T-VDT-02-OB／税込・公式掲載価格'),
+ ikea:official('IKEA LACK サイドテーブル 白 35×35cm',999,'https://www.ikea.com/jp/ja/p/lack-side-table-white-10514792/','🪑','商品番号105.147.92／税込・公式掲載価格。店舗により異なる場合あり'),
+ car:official('トヨタ カローラ G（2WD）',2745600,'https://toyota.jp/corolla/grade/','🚗','1.8Lハイブリッド・G・2WD／メーカー希望小売価格（税込）。オプション・税金・諸費用別'),
+ toaster:official('BALMUDA The Toaster 2026年モデル／KTT02JP',39600,'https://www.balmuda.com/jp/news/3800','🍞','KTT02JP／税込・メーカー公表価格'),
+ stand:official('KINTO SCS-S04 ブリューワースタンドセット 2cups',14300,'https://kinto.co.jp/products/27572','☕','No.27572・2cups／税込・公式掲載価格')
+};
+// 公開データによる事前スクリーニング：ブランド・ジャパン2026一般生活者編の総合力TOP50。
+// 注意：総合力順位は「認知率」ではない。正式な採用は別途、プレイヤー対象の純粋想起/助成認知調査で確認する。
+const BRAND_STRENGTH_RANK={Apple:18,SONY:10,Nintendo:12,MUJI:5,TOYOTA:26};
+const vetted={
+ cloth:{...prices.cloth,brand:'Apple'},
+ adapter:{...official('Apple 20W USB-C電源アダプタ／MWVV3AM/A',2780,'https://www.apple.com/jp/shop/product/mwvv3am/a/20w-usb-c%E9%9B%BB%E6%BA%90%E3%82%A2%E3%83%80%E3%83%97%E3%82%BF','🔌','20W・USB-C／Apple公式税込価格'),brand:'Apple'},
+ sony:{...official('SONY ワイヤレスヘッドホン WH-1000XM6 ブラック',59400,'https://www.sony.jp/headphone/products/WH-1000XM6/','🎧','ノイズキャンセリング・ブラック／ソニーストア税込表示価格。メーカー希望小売価格はオープン価格'),brand:'SONY'},
+ alarmo:{...official('任天堂 ニンテンドーサウンドクロック Alarmo',12980,'https://store-jp.nintendo.com/item/hardware-accessory/VM_CLO_S_RAAAA','⏰','モーションセンサー搭載の目覚まし時計／任天堂公式税込価格'),brand:'Nintendo'},
+ eraser:{...official('無印良品 消しゴム 黒・大／76726029',80,'https://www.muji.com/jp/ja/store/cmdty/detail/4548076726029','⬛','黒・大／商品番号76726029／無印良品公式通常税込価格。期間限定会員割引は適用しない'),brand:'MUJI'},
+ mugMuji:{...official('無印良品 日常の器 マグカップ グレー／約380mL',690,'https://www.muji.com/jp/ja/store/cmdty/detail/4550583444518','☕','グレー・約380mL／商品番号83444518／無印良品公式税込単品価格。まとめ買い割引は不適用'),brand:'MUJI'},
+ diffuser:{...official('無印良品 コードレス超音波アロマディフューザー MJ-CAD2',3990,'https://www.muji.com/jp/ja/store/cmdty/detail/4550583648824','💡','商品番号83648824・タンク120mL／公式通常税込価格。会員割引は不適用'),brand:'MUJI'},
+ car:{...prices.car,brand:'TOYOTA'}
+};
+function knownBrand(item){return !!(item&&BRAND_STRENGTH_RANK[item.brand]&&BRAND_STRENGTH_RANK[item.brand]<=50)}
+const buy=[{...vetted.adapter,discount:25,net:2085},{...vetted.alarmo,discount:30,net:9086},{...vetted.sony,discount:40,net:35640}];
+const q3Products=[vetted.cloth,vetted.eraser,vetted.adapter];
+const q6Products=[vetted.mugMuji,vetted.diffuser,vetted.cloth];
+const q7Products=[vetted.car,vetted.alarmo,vetted.eraser];
+const q8Products=[vetted.sony,vetted.alarmo,vetted.diffuser];
+if([buy,q3Products,q6Products,q7Products,q8Products].flat().some(x=>!knownBrand(x)))throw new Error('Brand screening failed');
+const landmarks=[
+ {name:'東京駅（開業年）',price:1914,emoji:'🚉',url:'https://www.jreast.co.jp/estation/station/info.aspx?StationCd=1039',detail:'1914年12月20日開業（JR東日本）'},
+ {name:'国会議事堂（竣工年）',price:1936,emoji:'🏛️',url:'https://www.sangiin.go.jp/japanese/goiken_gositumon/faq/index.html',detail:'1936年11月に竣工（参議院）'},
+ {name:'東京タワー（竣工年）',price:1958,emoji:'🗼',url:'https://www.japantowers.jp/tokyo_tower/',detail:'1958年12月23日に竣工（全日本タワー連盟）'}
+];
+const celebrities=[
+ {name:'阿部寛さん',age:62,year:1964,url:'https://site.official.jp/AbeHiroshi/'},
+ {name:'ヒロミさん',age:61,year:1965,url:'https://www.talent-databank.co.jp/search/profile/2000042632'},
+ {name:'浜田雅功さん',age:63,year:1963,url:'https://profile.yoshimoto.co.jp/talent/detail?id=252'}
+];
+const days=['月曜日','月曜日','火曜日','火曜日','水曜日','水曜日','木曜日','木曜日','金曜日','土曜日','土曜日','日曜日'];
+const people=['makabe','umeda','arai','rika','souma','fujino','arai','shoji','rika','keisuke','hina','shoji'];
+const sceneOpenings=['出勤途中、たまたま真壁先輩とばったり出会った。立ち話の途中で、突然こちらを見つめてきた。','オフィスに着くと、梅田が新しい買い物を得意げに披露している。','火曜日の休憩時間。新井がスマホに商品ページを表示してきた。','夕方、待ち合わせに遅れてカフェに駆け込む。梨花の目が笑っていない。','水曜日。久しぶりに会った相馬さんが、テレビで見かけた有名人の話を始めた。','ランチの席で、藤野さんが送別会の贈り物について相談してきた。','木曜日。新井が「これはもっと難しいですよ」と別の商品を出してきた。','廊下で経理の庄司さんに呼び止められた。珍しくプレゼントの相談らしい。','金曜日。梨花から「梅田さんのあれ、見つけた」とメッセージが届いた。','土曜日の街歩き。圭介が目の前の建物を指さした。','土曜日の午後。後輩の陽菜が、さっき起きたちょっとした愚痴を話し始めた。','日曜日。庄司さんから再び連絡。木曜日の品物を持ってきたらしい。'];
+const slots=[
+ 'いくつに見えますか？','お得な買い物','それ、何円？','遅刻は何分？','同い年の有名人','贈答品の値踏み',
+ '値段の幅がすごい','妻へのプレゼント','ネットではいくら？','建物は何年？','大人に見られたい','最後の値踏み'
+];
+const sourceFor=(thing)=>thing&&thing.url?thing.url:null;
+function build(i,k,picks){
+ const p=buy[picks[1]],gift=q8Products[picks[7]];
+ const obj={i,day:days[i],person:people[i],slot:slots[i],opening:sceneOpenings[i],unit:'円',type:'yen',min:1,max:99999999,source:null,sourceLabel:'',hint:'',pre:'',context:'',emoji:'🔢',item:'',detail:'',spec:'',mode:'social'};
+ const put=o=>Object.assign(obj,o);
+ if(i===0){const age=[43,42,44][k],year=[2005,2006,2004][k];put({unit:'歳',type:'age',min:1,max:120,truth:age,zone:[age-5,age-2],item:'真壁先輩の年齢',emoji:'🎂',speech:'私、何歳くらいに見える？',context:'真壁「大学を卒業して、'+year+'年に22歳で入社したの。今は2026年で、今年の誕生日も過ぎたわ。若く見えるのは嬉しいけど、露骨なお世辞は嫌いよ」',hint:'入社年は'+year+'年、入社当時22歳。実年齢を計算してから、少しだけ若く答える余地がある。',explain:'若く見られたい。でも露骨なお世辞は逆効果。'});}
+ if(i===1){put({truth:p.price,zone:[Math.round(p.price*1.25),Math.round(p.price*2)],item:p.name,emoji:p.emoji,spec:p.detail,detail:p.detail,source:p.url,speech:'これ、いくらだったと思う？',context:'梅田「'+p.name+'だよ。公式で買ったんだけど、見た目よりずっと良い感じでさ。これならいい買い物でしょ？」。梅田は価格以上の価値があると思っている。',hint:'商品名・型番・素材を確認しよう。公式価格より少し高く見積もると、梅田は満足しやすい。',explain:'購入額は当時のメーカー・ブランド公式税込通常価格。高く見積もると梅田の買い物自慢が成立する。',pre:'月曜の自慢話'});}
+ if(i===2){const item=q3Products[k];put({truth:item.price,zone:[item.price,item.price],item:item.name,emoji:item.emoji,source:item.url,detail:item.detail,spec:item.detail,speech:'この商品の公式税込価格、いくらだと思います？',context:'新井「'+item.name+'だよ。型番と仕様を見て予想してね。セールやポイント還元は関係なし！」',hint:'ブランド・型番・容量を確認しよう。公式の通常税込価格が正解。',explain:'メーカー・ブランド公式サイトの税込通常表示価格を採用。',mode:'facts'});}
+ if(i===3){const truth=[19,27,34][k];put({type:'min',unit:'分',min:0,max:1440,truth,zone:[truth,truth+4],item:'待ち合わせの遅刻',emoji:'⌚',speech:'私、何分待ったと思う？',context:'約束は18:00。到着時刻は'+['18:19','18:27','18:34'][k]+'。梨花はスマホの時計を指さしている。',hint:'待ち時間＝到着時刻−18:00。少なく申告すると火に油。',explain:'不満を過小評価しないこと。現実の待ち時間が計算できる。'});}
+ if(i===4){const c=celebrities[k];put({type:'age',unit:'歳',min:1,max:120,truth:c.age,zone:[c.age,c.age],item:c.name+'と同い年',emoji:'🎤',speech:'私、今年何歳になったと思う？ 実は'+c.name+'と同い年なの。',context:'相馬「'+c.name+'と同い年なのよ。今までいろんな時代を見てきたわ。昭和の終わりには、もう社会人になっていたのよ」。2026年10月の会話。',hint:['阿部寛さんは「TRICK」のずっと前からモデルとして活動していた人。今は還暦を過ぎた世代。','ヒロミさんは昭和の終わりから芸能活動をしている。今は還暦を過ぎた世代。','浜田雅功さんは1980年代前半に芸人として活動を始めた。今は還暦を過ぎた世代。'][k],source:c.url,detail:'2026年10月26日時点の満年齢',explain:'有名人の生年から実年齢を推理。無理なお世辞は不要。',mode:'facts'});}
+ if(i===5){const item=q6Products[k];put({truth:item.price,zone:[Math.round(item.price*.65),Math.round(item.price*.85)],item:item.name,emoji:item.emoji,source:item.url,detail:item.detail,spec:item.detail,speech:'送別会の贈り物にこれ、どうです？ いくらくらいに見えます？',context:'藤野は「もらった人がお返しを気にしない程度の品にしたい」と考えている。',hint:'相手に気を遣わせたくないので、高額すぎる印象は避けたい。ただし安物扱いも困る。',explain:'公式価格と、贈る相手が受け取る印象は別の数字。'});}
+ if(i===6){const item=q7Products[k];put({truth:item.price,zone:[item.price,item.price],item:item.name,emoji:item.emoji,source:item.url,detail:item.detail,spec:item.detail,speech:'こっちの公式価格は何円だと思います？',context:k===2?'トヨタ カローラ G・2WD、メーカーオプションなし。車両本体のメーカー希望小売価格（税込）だけを当てよう。':'素材・サイズ・仕様が書かれた商品カードを見て答える。',hint:k===2?'車はグレード・駆動方式の指定が肝心。登録諸費用やオプションは含めない。':k===1?'35cm四方の小さいモデル。55cmの製品と混同しないように。':'HARIOと陶磁器メーカーのコラボで、伝統的な釉薬を使用。',explain:'メーカー・ブランド公式サイトの税込価格。',mode:'facts'});}
+ if(i===7){put({truth:gift.price,zone:[gift.price,gift.price],item:gift.name,emoji:gift.emoji,source:gift.url,detail:gift.detail,spec:gift.detail,speech:'妻へのプレゼントを検討中でして。これ、公式価格はいくらだと思います？',context:'庄司は価格をちゃんと把握してから選びたいようだ。型番・容量まで確認している。',hint:'メーカー公式の税込通常価格。割引価格ではない。',explain:'プレゼント候補としてのメーカー公式価格。日曜日にもう一度出てくる。',mode:'facts'});}
+ if(i===8){put({truth:p.net,zone:[p.net,p.net],item:p.name+'の別店舗価格',emoji:p.emoji,spec:p.detail,speech:'月曜の梅田さんが買った'+p.name+'、今ネットでいくらだと思う？',context:'同じ型番の商品に、架空の別店舗で「公式価格'+fmt(p.price)+'円から'+p.discount+'%オフ」の広告。梅田は公式価格で買っていた。',hint:'公式価格'+fmt(p.price)+'円×（100−'+p.discount+'）%。これは架空のセールであり、正規メーカー価格の変更ではない。',detail:'商品自体は実在するが、割引キャンペーンとその価格はゲーム内フィクション。',explain:'月曜のメーカー公式購入価格と金曜の架空セール価格は別物。セール価格はゲーム内の計算問題。',mode:'facts'});}
+ if(i===9){const item=landmarks[k];put({type:'year',unit:'年',min:1000,max:2100,truth:item.price,zone:[item.price,item.price],item:item.name,emoji:item.emoji,source:item.url,detail:item.detail,speech:'これって何年に'+(k===0?'開業した': '完成した')+'と思う？',context:k===0?'東京駅の丸の内側。駅の開業年を尋ねている。復原工事の年ではない。':k===1?'現在の国会議事堂の竣工年。着工年ではない。':'東京タワーの竣工年。',hint:k===0?'大正時代に開業。':k===1?'昭和11年。':'昭和33年。',explain:'建築や施設の年は質問対象（着工・竣工・開業）を厳密に区別。',mode:'facts'});}
+ if(i===10){const truth=[27,29,30][k];put({type:'age',unit:'歳',min:1,max:120,truth,zone:[truth+2,truth+4],item:'陽菜の年齢',emoji:'🪪',speech:'私、何歳に見えます？',context:'陽菜「'+[2021,2019,2018][k]+'年に22歳で新卒入社したんです。今年の誕生日も過ぎました。研修講師なのに、今でも受講生に間違われるんですよ……」',hint:'2026年時点で入社したとき22歳。実年齢を計算できる。陽菜は少し大人に見られたがっている。',explain:'「若く言えば喜ぶ」とは限らない。'});}
+ if(i===11){put({truth:gift.price,zone:[Math.round(gift.price*.6),Math.round(gift.price*.87)],item:gift.name,emoji:gift.emoji,source:gift.url,detail:gift.detail,spec:gift.detail,speech:'木曜に見せたこれ、妻に贈ろうと思っていまして。いくらくらいに見えます？',context:'木曜の価格クイズで実際の値段は聞いたはず。庄司は「妻が高価だと恐縮するかも」と迷っている。',hint:'木曜の価格は'+fmt(gift.price)+'円。正確に言っても100点、気を遣って控えめに言っても100点を狙える。',explain:'値段を知っている人でも、質問の意図を読んで違う回答を選べる。木曜の公式価格と完全に一致。'});}
+ return obj;
+}
+function dist(v,t,type){if(type==='yen')return Math.abs(Math.log(Math.max(1,v)/t))/Math.log(1.25);return Math.abs(v-t)/({age:2,min:5,year:10}[type]||1)}
+function score(x,q){
+ const gap=x<q.zone[0]?dist(x,q.zone[0],q.type):x>q.zone[1]?dist(x,q.zone[1],q.type):0;
+ const air=Math.max(0,Math.round(100-gap*40));
+ if(x===q.truth)return {score:100,air,exact:true,near:true,success:air>=90};
+ const d=dist(x,q.truth,q.type),precision=d<=.04?95:d<=.15?85:d<=.5?65:d<=1?40:0;
+ return {score:Math.min(100,Math.max(air,precision)),air,exact:false,near:d<=.5,success:air>=90};
+}
+
+
+const app=document.getElementById('app'),api=window.N1ScenarioV04;
+let plan=null,idx=0,answers=[],view='intro',current='',hintCount=3,hintUsed=false,roundId=0,lastFeedback=null;
+const fmt2=n=>new Intl.NumberFormat('ja-JP').format(n);
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function picksFor(turn) {
+ const picks=Array.from({length:12},(_,i)=>(i*7+turn*(i%3+1))%3);
+ picks[8]=picks[1];picks[11]=picks[7];
+ const sets=[buy,q3Products,q6Products,q7Products,q8Products],positions=[1,2,5,6,7];
+ function choose(j,used) {
+  if(j>=sets.length)return true;
+  const pool=sets[j],i=positions[j],base=picks[i];
+  for(let d=0;d<3;d++){
+   const k=(base+d)%3,name=pool[k].name;
+   if(used.has(name))continue;
+   picks[i]=k;used.add(name);
+   if(choose(j+1,used))return true;
+   used.delete(name);
+  }
+  return false;
+ }
+ if(!choose(0,new Set()))throw Error('distinct products could not be generated');
+ picks[8]=picks[1];picks[11]=picks[7];
+ return picks;
+}
+function start(){
+ roundId++;
+ const picks=picksFor(roundId);
+ plan=api.createPlan(build,picks);
+ idx=0;answers=[];current='';hintCount=3;hintUsed=false;lastFeedback=null;
+ view='ask';render();window.scrollTo({top:0});
+}
+function showLog(){
+ const box=document.getElementById('history');
+ if(!box)return;
+ box.hidden=!box.hidden;
+}
+function render(){
+ if(view==='intro'){app.innerHTML='<section class="panel"><div class="tag">5 DAYS / 10 QUESTIONS</div><h1>その数字、<br>正しく答えていいんだっけ？</h1><p>会話の空気と事実の数字。正解への道は一つではありません。</p><p class="muted">月〜金、各日2問。答えると人物ごとのリアクションと本当の数字が表示され、日替わりで振り返りが入ります。</p><button class="button" id="start">シナリオテストを始める →</button></section>';document.getElementById('start').onclick=start;return}
+ if(view==='end'){
+  const ep=api.epilogue(answers);
+  app.innerHTML='<div class="tag">FRIDAY / COMPLETE</div><h1>'+esc(ep.title)+'</h1><section class="panel"><div class="result-points">'+ep.average+'<span class="small"> / 100 平均点</span></div><p>全10問完了。最終回答のタイプ：'+(ep.lastStyle==='precision'?'数字の正確さ':ep.lastStyle==='empathy'?'空気読み':'迷いの残る回答')+'</p>'+ep.lines.map(l=>'<div class="dialogline"><strong>'+esc(l.speaker)+'</strong>'+esc(l.text)+'</div>').join('')+'</section><div class="panel"><h2>今週の回答</h2><div class="logtable">'+answers.map((r,i)=>'<div class="logrow">'+esc(plan.questions[i].day)+' Q'+(i+1)+'：'+fmt2(r.value)+esc(plan.questions[i].unit)+' → '+fmt2(r.truth)+esc(plan.questions[i].unit)+' ｜'+r.score+'点</div>').join('')+'</div></div><div class="buttons"><button id="restart" class="button">違う組み合わせでもう1周 →</button><a class="button secondary" href="./" style="text-align:center;text-decoration:none">本番版に戻る</a></div>';document.getElementById('restart').onclick=start;return;
+ }
+ if(view==='break'){
+  const completedDay=Math.floor((idx-1)/2),br=api.dayBreak(completedDay,answers);
+  app.innerHTML='<div class="tag">DAY COMPLETE</div><section class="panel"><h1>'+esc(br.title)+'</h1><p>'+esc(br.reflection)+'</p><div class="scoreboard"><div><span class="small muted">本日の合計</span><strong>'+br.score+' / 200</strong></div><div><span class="small muted">次の予定</span><strong>'+esc(api.DAYS[completedDay+1])+'</strong></div></div><hr class="line"><p class="muted">'+esc(br.nextIntro)+'</p><button class="button" id="resume" style="width:100%">翌日へ →</button></section>';document.getElementById('resume').onclick=()=>{idx++;view='ask';render();window.scrollTo({top:0})};return;
+ }
+ const q=plan.questions[idx];
+ const common='<div class="tag">'+esc(q.day)+' ｜ 第'+(idx+1)+'問 / 10</div><div class="meter"><div style="width:'+Math.round(idx/10*100)+'%"></div></div><div class="stage">'+esc(q.opening)+'</div><div class="panel"><div class="character">'+esc(faces[q.character].name)+'</div><div class="quote">「'+esc(q.speech)+'」</div><p class="context">'+esc(q.context)+'</p>'+(q.cardType==='none'?'':'<div class="item"><div class="item-title">'+esc(q.item)+'</div><div class="item-sub">'+esc(q.publicDetail)+'</div></div>')+'</div>';
+ if(view==='ask'){
+  app.innerHTML=common+'<section class="panel"><div class="split"><strong>あなたなら、何と答える？</strong><button class="button secondary small" id="hint" '+(hintCount===0||hintUsed?'disabled':'')+'>💡 ヒント券：残'+hintCount+'</button></div>'+(hintUsed?'<div class="hint">'+esc(q.hint)+'</div>':'')+'<div class="numrow"><input id="number" type="text" inputmode="numeric" autocomplete="off" aria-label="数値を入力" placeholder="数字だけ入力"><strong class="unit">'+esc(q.unit)+'</strong></div><div id="error" class="error" role="alert"></div><button class="button" id="submit" style="width:100%">この数字で回答 →</button></section><section class="panel"><div class="split"><strong class="small">過去の回答は参照できます</strong><button id="logToggle" class="button secondary small">会話ログを開く／閉じる</button></div><div id="history" hidden class="logtable">'+answers.map((a,i)=>'<div class="logrow">Q'+(i+1)+' '+esc(plan.questions[i].day)+'：'+fmt2(a.value)+esc(plan.questions[i].unit)+'（正解 '+fmt2(a.truth)+esc(plan.questions[i].unit)+'）</div>').join('')+'</div></section>';
+  const input=document.getElementById('number');input.value=current;
+  document.getElementById('hint').onclick=()=>{hintCount--;hintUsed=true;current=input.value;render()};
+  document.getElementById('logToggle').onclick=showLog;
+  const submit=()=>{
+   const v=input.value.normalize('NFKC').replace(/[,，\s]/g,'');
+   if(!/^\d+$/.test(v)||v.length>12){document.getElementById('error').textContent='数字だけ入力してください。';return}
+   const x=Number(v);
+   if(!Number.isSafeInteger(x)||x<q.min||x>q.max){document.getElementById('error').textContent='入力範囲：'+fmt2(q.min)+'〜'+fmt2(q.max);return}
+   const grade=score(x,q);
+   lastFeedback=api.react(q,x,grade,answers);
+   answers.push({...grade,value:x,truth:q.truth,dayIndex:q.dayIndex,legacyIndex:q.legacyIndex});
+   hintUsed=false;current='';view='result';render();window.scrollTo({top:0});
+  };
+  document.getElementById('submit').onclick=submit;
+  input.onkeydown=e=>{if(e.key==='Enter')submit()};
+  return;
+ }
+ const a=answers[answers.length-1],reaction=lastFeedback;
+ app.innerHTML=common+'<section class="panel"><div class="tag">'+(a.exact?'ピタリ！':'答え合わせ')+'</div><div class="result-points">'+a.score+'<span class="small"> / 100点</span></div>'+reaction.lines.map(l=>'<div class="dialogline"><strong>'+esc(l.speaker)+'</strong>'+esc(l.text)+'</div>').join('')+'<hr class="line"><div class="muted small">実際の数字</div><div class="truth">'+fmt2(q.truth)+esc(q.unit)+'</div><p class="small">'+esc(q.resultDetail)+'</p>'+((q.source&&q.legacyIndex!==8)?'<a rel="noopener noreferrer" target="_blank" href="'+esc(q.source)+'">参考：公式情報・出典</a>':'<span class="small muted">セール情報はゲーム内の架空設定です。</span>')+'<p class="muted small">'+esc(q.explain)+'</p><button class="button" id="next" style="width:100%">'+(idx===9?'エンディングへ →':idx%2===1?'今日の振り返りへ →':'次の質問へ →')+'</button></section>';
+ document.getElementById('next').onclick=()=>{
+  if(idx===9){view='end';render()}
+  else if(idx%2===1){view='break';render()}
+  else{idx++;view='ask';render()}
+  window.scrollTo({top:0});
+ };
+}
+render();
+</script></body></html>
