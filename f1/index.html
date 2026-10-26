@@ -526,6 +526,19 @@ options.splice(0,options.length,...V09_DATA.actions.filter(a=>a.active).map(a=>(
  attractionToday:0,attractionOnCompletion:(a.attractionToday||0)+(a.attractionOnCompletion||0),
  desc:a.story.replace(/当日|翌日/g,'翌営業日')
 })),V12_SHRINE,...V09_ODD);
+const V14_GRAY=[
+{id:'dateShift',name:'賞味期限の表示をこっそり延ばす',kind:'gray',role:'gray',delta:[0,0,-3,0],attractionOnCompletion:1,desc:'廃棄を減らし、欠品の印象を抑える。ただし商品の表示について後日苦情が来るかもしれません。',risk:[0,0,2,1],min:2,max:6,repeat:false,completionDays:1},
+{id:'complaintHide',name:'ご意見箱をレジの裏に移す',kind:'gray',role:'gray',delta:[-1,-1,0,-1],attractionOnCompletion:1,desc:'目につく苦情は減りますが、本当に解決したかどうかは確認しません。',risk:[1,1,0,0],min:2,max:7,repeat:false,completionDays:1},
+{id:'stockCover',name:'空の棚に「入荷済み」の札を出す',kind:'gray',role:'gray',delta:[0,0,-2,0],attractionOnCompletion:2,desc:'品切れの印象を抑える。後日、問い合わせが集中するおそれがあります。',risk:[0,0,2,0],min:3,max:7,repeat:false,completionDays:1}
+];
+options.push(...V14_GRAY);
+const V14_PRESSURE={2:[1,0,0,0],3:[0,1,1,0],4:[1,0,0,1],5:[0,0,1,1],6:[1,1,0,0],7:[0,1,1,1]};
+function v14DailyPressure(day){
+ const delta=V14_PRESSURE[day]||[0,0,0,0],before=[...s.vals];
+ change(delta);
+ recordSideEffects('dailyPressure',before,day);
+ if(s.vals.some((v,i)=>v>before[i]))s.history.unshift('DAY '+day+'：前日の改善とは別に、新たなご意見が届きました。');
+}
 const v09Resolve=(()=>{
  const module={exports:{}};/* F1 scene resolver proposal v0.9, pure helper.
  * NOT wired into f1/index.html, and files are not yet committed to assets/.
@@ -609,6 +622,9 @@ function available(){
   if(pool.length)picks.push(pool[0]);
  };
  take(['quick']);take(['long']);take(['promotion']);take(['suppression']);take(['attraction','long']);take(['kpi','local']);
+ const grayPool=legal.filter(a=>a.kind==='gray');
+ const gray=grayPool.length?grayPool[(s.day-2+grayPool.length*7)%grayPool.length]:null;
+ if(gray){if(picks.length>=6)picks.splice(5,1,gray);else picks.push(gray)}
  const odd=legal.find(a=>a.kind==='odd');
  if(odd){const offset=Math.min(5,picks.length);picks.splice(offset,picks.length>=6?1:0,odd)}
  for(const a of legal.sort((a,b)=>score(b)-score(a)||a.id.localeCompare(b.id)))
@@ -677,9 +693,11 @@ function play(id){
  const before=[...s.vals],previousUses=s.actionCounts[id]||0;
  s.actionCounts[id]=previousUses+1;s.last={id:a.id,name:a.name};s.used.push(id);
  const normal=a.kind!=='odd'&&a.id!=='glitch6'&&a.id!=='idle';
+ if(a.kind==='gray'){if(!Array.isArray(s.grayUsed))s.grayUsed=[];s.grayUsed.push(a.id)}
  if(normal){
   const delta=a.delta.map(x=>x<0&&a.repeat&&previousUses>=2?0:x);
   s.jobs.push({id,name:a.name,delta,attraction:a.attractionOnCompletion||0,finishDay:s.day+1});
+  if(a.kind==='gray')s.jobs.push({id:id+'-risk',name:'後日のご意見',delta:a.risk,attraction:0,finishDay:s.day+2});
  }else if(a.kind==='odd'){
   s.jobs.push({kind:'odd',id,name:a.name,delta:[...a.delta],attraction:a.attractionOnCompletion||0,after:a.after||0,remain:a.remain||0,finishDay:s.day+1});
  }
@@ -811,7 +829,7 @@ function advance(){
   if(s.odd)renderFinalChoice();else{normalEnding();renderEnd()}
   persist();return;
  }
- s.day++;v09CompleteJobs(s.day);reconcileComplaints();persist();render();scrollTo(0,0);
+ s.day++;v09CompleteJobs(s.day);v14DailyPressure(s.day);reconcileComplaints();persist();render();scrollTo(0,0);
  v11OpenTransition(openingBefore);
 }
 function normalEnding(){
