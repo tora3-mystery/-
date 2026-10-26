@@ -113,3 +113,43 @@ groupAnswer=function(round,idx,person){return H1_B010.formatAnswer(round,idx,per
 
 /* No numerical identifiers, question numbers or evidence labels revealed to the
    player; keep this metadata purely in deterministic game logic. */
+
+
+/* Lightweight public-page smoke QA. Run deeper combinatorial tests before publish. */
+const H1_BETA_QA=function(){
+ const snapshot={seed:state.seed,monsterIndex:state.monsterIndex,privateAnswers:state.privateAnswers,asked:state.asked,reverseStyles:state.reverseStyles,reject:state.reject};
+ const positions=[0,0,0];
+ let checked=0,coreClues=0,auxClues=0;
+ try{
+  for(let monster=0;monster<4;monster++){
+   for(let n=0;n<36;n++){
+    state.monsterIndex=monster;state.seed=9844+monster*219+n*101;
+    state.privateAnswers=[0,1,2,3].map(i=>({person:i,option:(i+n)%3,answer:"テスト記録"}));
+    state.asked=[];
+    const info=H1_B010.inspect();
+    positions[info.strongRound]++;
+    if(info.source===monster||info.anchor===null)throw Error("β: improper evidence source");
+    let c=0,a=0;
+    for(let r=0;r<3;r++){
+     const idx=(n+monster+r)%6;
+     const result=groupAnswer(r,idx,monster);
+     const mode=H1_B010.evidenceRole(r);
+     if(mode==="strong"){
+      if(!result.includes(H1_V061_CUES[info.source][info.anchor]))throw Error("β: lost unique factual clue");
+      c++;
+     }else{
+      if(!result.includes(mode==="soft"?H1_B010.softCue(info.source):H1_B010.followCue(info.source,info.anchor)))throw Error("β: missing support cue");
+      a++;
+     }
+     checked++;
+    }
+    if(c!==1||a!==2)throw Error("β: wrong evidence distribution");
+    coreClues+=c;auxClues+=a;
+   }
+  }
+  if(positions.some(x=>x===0))throw Error("β: strong clue never appears in some round");
+  return {checked,coreClues,auxClues,strongRoundDistribution:positions};
+ }finally{Object.assign(state,snapshot);}
+};
+selfTest=H1_BETA_QA;
+window.H1_QA=H1_BETA_QA;
