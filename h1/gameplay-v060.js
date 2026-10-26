@@ -1,6 +1,6 @@
 "use strict";
 const H1_V060={
- ensure(){if(state.h106Seed===state.seed)return;state.h106Seed=state.seed;state.h106Phase="pending";state.h106Probes=[];state.h106Links=[];state.h106Target=0;state.h106Mode="source";state.h106Result=false;state.h106Source=1;state.h106Round=1;},
+ ensure(){if(state.h106Seed===state.seed)return;state.h106Seed=state.seed;state.h106Phase="pending";state.h106Probes=[];state.h106Links=[];state.h106Target=0;state.h106Mode="source";state.h106Result=false;state.h106Source=1;state.h106Round=1;state.h106Round=1;},
  offers(i){return [0,1,2].map(k=>{const alt=H1_V050.pick(state.seed,2,71,i,k),x=alt?H1_V060_DATA.individualAlternatives[i][k]:privateQuestions[i][k];return {base:k,term:x.term,q:x.q,human:x.human??x.answer,monster:x.monster,variant:alt};}).sort((a,b)=>H1_V050.hash(state.seed,51,i,a.base)-H1_V050.hash(state.seed,51,i,b.base));},
  groupOptions(r){let p=[0,1,2,3,4,5].sort((a,b)=>H1_V050.hash(state.seed,88,r,a)-H1_V050.hash(state.seed,88,r,b)).slice(0,4);if(r===1&&!p.some(k=>k<4))p[3]=0;return p.sort((a,b)=>a-b);},
  modes:{source:"発案者を確認する",specific:"具体的な根拠を聞く",confront:"非公開記録との一致を示す"},
