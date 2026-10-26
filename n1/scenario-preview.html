@@ -112,7 +112,15 @@ let plan=null,idx=0,answers=[],view='intro',current='',hintCount=3,hintUsed=fals
 const fmt2=n=>new Intl.NumberFormat('ja-JP').format(n);
 function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 function picksFor(turn) {
- const picks=Array.from({length:12},(_,i)=>(i*7+turn*(i%3+1))%3);
+ let randomState=(0x9e3779b9^(turn*2654435761))>>>0;
+ function nextChoice(){
+  randomState=(randomState+0x6d2b79f5)>>>0;
+  let z=randomState;
+  z=Math.imul(z^(z>>>15),z|1);
+  z^=z+Math.imul(z^(z>>>7),z|61);
+  return ((z^(z>>>14))>>>0)%3;
+ }
+ const picks=Array.from({length:12},()=>nextChoice());
  picks[8]=picks[1];picks[11]=picks[7];
  const sets=[buy,q3Products,q6Products,q7Products,q8Products],positions=[1,2,5,6,7];
  function choose(j,used) {
