@@ -713,7 +713,7 @@ function play(id){
  const sales=v09Sales();s.revenue+=sales;s.lowDays=sales<40?s.lowDays+1:0;
  s.days.push({day:s.day,id,sales,attraction:s.attraction,complaints:[...s.vals]});
  queueManagerReplies(a,before,s.vals);
- if(s.odd&&normal){const job=s.jobs.at(-1);job.anomalySideEffect=true;job.anomalyEvenDay=s.day%2===0;}
+ if(s.odd&&normal){const job=s.jobs.find(j=>j.id===id&&j.finishDay===s.day+1);if(job){job.anomalySideEffect=true;job.anomalyEvenDay=s.day%2===0;}}
  if(!s.odd&&sales===0){
   s.finish=true;s.ending='normal_strain';s.endingReason='店長解任・営業停止';
  }
@@ -801,9 +801,16 @@ function v11OpenTransition(before){
   $('transitionTotal').textContent='本日の日売上見込み：'+after.sales+'万円';
   $('transitionCaption').textContent='今日の売場を確認し、次の改善策を決めてください。';
  }
- const deltas=labels.map((label,i)=>({label,d:after.vals[i]-before.vals[i]})).filter(x=>x.d!==0);
- const brief=deltas.slice(0,2).map(x=>x.label+(x.d>0?'＋':'−')+Math.abs(x.d)+'件').join('／');
- $('transitionDecision').textContent='昨日の判断：「'+before.lastName+'」 → '+(brief||'苦情件数は維持')+'。'+(deltas.length>2?'ほかにも変動があります。':'');
+ const report=s.openingReport||{};
+ const effected=(report.effect||[]).map((v,i)=>({name:labels[i],delta:v})).filter(x=>x.delta!==0);
+ const improved=effected.filter(x=>x.delta<0).reduce((sum,x)=>sum-x.delta,0);
+ const deteriorated=effected.filter(x=>x.delta>0).reduce((sum,x)=>sum+x.delta,0);
+ const attracted=report.attraction||0;
+ const appeared=(report.newComplaints||[]).reduce((sum,x)=>sum+Math.max(0,x),0);
+ const effectSummary=[attracted?'集客力'+(attracted>0?'＋':'')+attracted:null,
+   improved?'苦情'+improved+'件改善':null,deteriorated?'副作用で苦情'+deteriorated+'件増加':null].filter(Boolean).join('／');
+ $('transitionDecision').textContent='昨日の判断：「'+before.lastName+'」 → '+(effectSummary||'売場への変化なし')+
+  '。'+(report.backlash?'以前の施策の反動あり。':'')+(appeared?'別件で新たなご意見'+appeared+'件。':'新たなご意見なし。');
  const changes=[];
  if(masked)changes.push({text:'業務状態：正常',tone:'neutral'});
  else if(strange){
@@ -841,11 +848,17 @@ function advance(){
   if(s.odd)renderFinalChoice();else{normalEnding();renderEnd()}
   persist();return;
  }
- s.day++;v09CompleteJobs(s.day);v14DailyPressure(s.day);reconcileComplaints();persist();render();scrollTo(0,0);
+  s.day++;v09CompleteJobs(s.day);
+ const appliedVals=[...s.vals],appliedAttraction=s.attraction;
+ v14DailyPressure(s.day);
+ const directDelta=appliedVals.map((v,i)=>v-openingBefore.vals[i]),newDelta=s.vals.map((v,i)=>v-appliedVals[i]);
+ s.openingReport={decision:openingBefore.lastName,attraction:appliedAttraction-openingBefore.attraction,
+  effect:directDelta,newComplaints:newDelta,backlash:(s.appliedToday||[]).some(job=>job.id?.endsWith('-risk'))};
+ reconcileComplaints();persist();render();scrollTo(0,0);
  v11OpenTransition(openingBefore);
 }
 function normalEnding(){
- const total=v09Count();s.ending=s.revenue>=570&&total<=4?'normal_success':
+ const total=v09Count();s.ending=s.revenue>=540&&total<=7?'normal_success':
  s.revenue>=480&&total>=4?'normal_customer':'normal_strain';
  s.finish=true;
 }
