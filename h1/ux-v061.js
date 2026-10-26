@@ -73,3 +73,51 @@ renderDecision=function(){
  for(const node of root.querySelectorAll("em"))if(node.textContent.includes("追加質問"))node.remove();
  for(const node of root.querySelectorAll("p"))if(node.textContent.includes("件の追加質問を実施"))node.textContent="個人面接4名、共通ケース3問、逆質問2名の回答を確認しました。照合した記録も参考に、どの応募者を不採用にするか選んでください。";
 };
+
+
+/* The dangerous choice is made in the reverse interview, not by a hidden
+   earlier question-index combination. No extra follow-up phase remains. */
+exposed=function(){
+ return state.reverseStyles.some(x=>x.person===state.monsterIndex&&x.style==="verify");
+};
+const h161PreviousHorror=H1UX.horror;
+H1UX.horror=function(){
+ h161PreviousHorror.call(this);
+ if((state.horrorStep||0)===0&&typeof document.querySelector==="function"){
+  const explanation=document.querySelector(".h1-risk-recall");
+  if(explanation)explanation.textContent="あなたは異形本人へ、他の応募者だけが話した非公開の面接内容を示した。どこまで見抜かれているのか、相手はそこで気づいた。";
+ }
+};
+// QA includes all four monster identities, 6×6×6 shared-case choices,
+// two reverse-question targets, their reply methods, and rejection choice.
+selfTest=function(){
+ const before={monster:state.monsterIndex,privateAnswers:state.privateAnswers,asked:state.asked,styles:state.reverseStyles,reject:state.reject};
+ let borrowing=0,branches=0,good=0,bad=0,horror=0;
+ for(let monster=0;monster<4;monster++)for(let p0=0;p0<3;p0++)for(let p1=0;p1<3;p1++)for(let p2=0;p2<3;p2++)for(let p3=0;p3<3;p3++){
+  state.monsterIndex=monster;
+  state.privateAnswers=[p0,p1,p2,p3].map((option,i)=>({option,answer:privateAnswer(i,option)}));
+  for(let q=0;q<6;q++){
+   const others=[0,1,2,3].filter(i=>i!==monster),source=others[[0,1,2,0,1,2][q]];
+   const fragment=stripQuote(S.borrowing_echoes[monster][source][state.privateAnswers[source].option]);
+   if(!groupAnswer(1,q,monster).includes(fragment))throw Error("Borrowed evidence missing: "+monster+"/"+q);
+   borrowing++;
+  }
+ }
+ for(let monster=0;monster<4;monster++)for(let g0=0;g0<6;g0++)for(let g1=0;g1<6;g1++)for(let g2=0;g2<6;g2++){
+  state.monsterIndex=monster;
+  state.asked=[{idx:g0,round:0},{idx:g1,round:1},{idx:g2,round:2}];
+  for(let a=0;a<4;a++)for(let b=a+1;b<4;b++)for(let x=0;x<3;x++)for(let y=0;y<3;y++)for(let reject=0;reject<4;reject++){
+   state.reverseStyles=[{person:a,style:reverseMethods[x][0]},{person:b,style:reverseMethods[y][0]}];
+   state.reject=reject;
+   const direct=(a===monster&&x===2)||(b===monster&&y===2);
+   const expected=direct?"horror":reject===monster?"good":"bad";
+   const actual=outcome();
+   if(actual!==expected)throw Error("Unexpected ending "+monster+"/"+a+"/"+b+"/"+x+"/"+y);
+   branches++;if(actual==="good")good++;else if(actual==="bad")bad++;else horror++;
+  }
+ }
+ Object.assign(state,{monsterIndex:before.monster,privateAnswers:before.privateAnswers,asked:before.asked,reverseStyles:before.styles,reject:before.reject});
+ if(borrowing!==1944||branches!==186624||!good||!bad||!horror)throw Error("α0.6.1 QA count mismatch");
+ return {borrowRoutes:borrowing,endingBranches:branches,good,bad,horror,groupCases:18};
+};
+window.H1_QA=selfTest;
