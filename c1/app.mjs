@@ -1,4 +1,4 @@
-import {VERSION,UPDATED_JST,LIMITS,DAYS,DIRECTIVES,ENDING_META,PROFILE_TYPES,createProfile,createRun,calculate,advance,beginDay,isValidSave,SPEED_HARASSMENTS,ensureLocalPortrait} from './engine.mjs?v=0.6.3';
+import {VERSION,UPDATED_JST,LIMITS,DAYS,DIRECTIVES,ENDING_META,PROFILE_TYPES,createProfile,createRun,calculate,advance,beginDay,isValidSave,SPEED_HARASSMENTS,ensureLocalPortrait} from './engine.mjs?v=0.6.4';
 
 const app=document.getElementById('app');
 const SAVE_KEY='arg_c1_save_v04';
@@ -115,7 +115,7 @@ function intro(){
     <p class="lead">あなたは営業企画部の課長です。今週、新しい若手社員が配属されます。<br>金曜日の役員説明までに<strong>仕事を終え、新人を育て、コンプラ違反ポイントの上限到達を回避</strong>してください。</p>
     <div class="paper spaced"><div class="panelhead"><b>管理職向け 業務指示</b><span class="tag">重要</span></div>
     <div class="quote">「新人には積極的に声をかけるように。指導は丁寧に。過干渉は厳禁。資料の遅延も認めません」<br><span class="tiny">— 営業本部 部長</span></div>
-    <div class="rules"><div class="rule"><span>コンプラ違反</span><b>20 pt</b><span>到達で即呼び出し</span></div><div class="rule"><span>業務進捗</span><b>22 以上</b><span>金曜の達成条件</span></div><div class="rule"><span>新人の習熟</span><b>6 以上</b><span>金曜の達成条件</span></div></div>
+    <div class="rules"><div class="rule"><span>コンプラ違反</span><b>20 pt</b><span>到達で即呼び出し</span></div><div class="rule"><span>業務進捗</span><b>22 以上</b><span>金曜の達成条件</span></div><div class="rule"><span>新人の習熟</span><b>${LIMITS.growth} 以上</b><span>金曜の達成条件</span></div></div>
     <p class="small" style="line-height:1.9">各場面で<strong>6つの対応</strong>から1つ選択。判定直後に新たな「○○ハラ」が派手に発表されます。<strong>認定でコンプラ違反ポイントが加算</strong>。部長指令のノルマを逃すと、その日の終業査定で再作業が発生し、進捗が下がります。<strong>疑義は原則0pt</strong>です。正式認定が<strong>3回連続するごとにコンプラ・コンボで+1pt</strong>。</p>
     <p class="privacy">架空の社内分類を風刺する作品です。現実の被害やハラスメント認定を扱う研修ではありません。記録はこの端末にのみ保存され、外部に送信されません。</p>
     <div class="actions">${canResume?'<button class="primary" data-action="resume">続きから再開</button>':''}<button class="${canResume?'secondary':'primary'}" data-action="start">${canResume?'最初から始める':'配属社員を確認して始める'}</button></div>
@@ -131,7 +131,7 @@ function profileCard(p){
  <section class="profile-section"><h3>仕事で大切にしたいこと</h3><div class="profile-grid">${cell('希望するキャリア',p.ambition)}${cell('得意分野',p.skill)}${cell('本人の希望',p.socialVoice)}</div><div class="profile-message">${(Array.isArray(p.speech)?p.speech:[]).map(s=>`<p>「${esc(s)}」</p>`).join('')}</div></section>
  ${story?`<section class="profile-section"><h3>その人らしさ</h3><div class="profile-grid">${cell('趣味',p.hobby)}${cell('仕事上の癖',p.workHabit)}${cell('小さな弱点',p.weakness)}${cell('本人らしいエピソード',p.episode)}</div></section>`:''}
  <section class="profile-section"><h3>これまでの背景</h3><div class="profile-grid">${cell('大学・学部',p.university&&p.faculty?`${p.university} ${p.faculty}`:'')}${cell('部活・サークル',p.club,p.studentMemory)}${cell('性格についての自己紹介',p.temperament,p.temperamentText)}</div></section>
- <p class="tiny">顔写真は架空社員のAI生成画像です。大学・サークル・趣味は判定に使用しません。本人が話した仕事上の希望・得意分野は一部の対応判断に関係します。</p>`;
+ <p class="tiny">顔写真は架空社員のAI生成画像です。</p>`;
 }
 function profileScreen(){return `<div class="eyebrow">DAY 01 / 配属通知</div><h1 class="h2">今週の配属社員</h1><p class="lead">人材基本情報を確認してください。希望や得意分野は、今週の指導に影響します。</p><section class="paper">${profileCard(run.profile)}<div class="actions"><button class="primary" data-action="begin">この社員を受け入れる</button><button class="quiet" data-action="reroll">別の社員を表示する</button></div></section>`;}
 function directiveCompact(){const d=DIRECTIVES[displayDay()];return `<aside class="boss-mini"><span class="boss-stamp">部長指令｜当日の縛り</span><strong>進捗 ${d.progress} 以上・習熟 ${d.growth} 以上</strong><span>未達なら追加報告が発生し、進捗が減少</span></aside>`;}
@@ -195,7 +195,9 @@ function rookieComment(){
  ));
  const social=admired&&run.profile.socialStyle==='convivial'?'食事のことも気軽に声をかけてくださって、嬉しかったです。':'';
  const ambition=run.profile.career==='expert'?'専門分野をもっと勉強したいです。':'いつか私もチームを動かせるようになりたいです。';
- return {note,ambition:early?'':(social?social+' ':'')+ambition};
+ const remarks=[note.replace(/^「|」$/g,'')];
+ if(!early){if(social)remarks.push(social);remarks.push(ambition);}
+ return {note:'「'+remarks.join(' ')+'」'};
 }
 function secretEndingScreen(){
   const id=run.ending,stage=Number(run.specialStage||0),collapse=id==='E17';
@@ -211,10 +213,33 @@ function secretEndingScreen(){
   const scene=scenes[Math.min(stage,2)];
   return `<section class="secret-ending secret-${collapse?'collapse':'confession'} secret-stage-${stage}" aria-label="隠しエンディング演出"><div class="secret-kicker">${esc(scene[0])}</div><div class="secret-content">${scene[1]}</div><div class="actions"><button class="primary" data-action="secret-next">${esc(scene[2])}</button><button class="secondary" data-action="secret-skip">演出をスキップ</button></div><p class="tiny">タップして進みます。自動では進みません。</p></section>`;
 }
+function endingStat(label,value,target,isCompliance=false){
+ const pass=isCompliance?value<target:value>=target;
+ const status=isCompliance?(pass?`残り${target-value}pt`:`規定到達 ＋${value-target}pt`)
+   :(pass?`達成 ＋${value-target}`:`未達 −${target-value}`);
+ return `<div class="end-score ${pass?'end-score-pass':'end-score-fail'}">
+ <strong>${value}<small> / ${target}</small></strong>
+ <span>${esc(label)}</span>
+ <b class="end-score-status">${esc(status)}</b></div>`;
+}
+function bossMood(grade,ending){
+ if(ending==='E17')return {key:'stunned',icon:'😵',label:'呆然'};
+ if(ending==='E18')return {key:'stunned',icon:'😳',label:'驚愕'};
+ const mapping={
+   'S':{key:'happy',icon:'😄',label:'ご機嫌'},
+   'A':{key:'pleased',icon:'🙂',label:'満足'},
+   'B':{key:'neutral',icon:'😐',label:'無表情'},
+   'B−':{key:'neutral',icon:'😐',label:'無表情'},
+   'C':{key:'skeptical',icon:'😒',label:'不満'},
+   'D':{key:'angry',icon:'😠',label:'激怒'},
+   '?':{key:'stunned',icon:'😵‍💫',label:'困惑'}
+ };
+ return mapping[grade]||mapping['?'];
+}
 function endingScreen(){
   const id=run.ending||'E04';
   if(['E17','E18'].includes(id)&&Number(run.specialStage||0)<3)return secretEndingScreen();
-  const [title,desc,grade]=ENDING_META[id];const failed=run.cp>=LIMITS.cp||id==='E18';
+  const [title,desc,grade]=ENDING_META[id];const failed=run.cp>=LIMITS.cp||id==='E18';const mood=bossMood(grade,id);
   const director=id==='E17'?'「君の退職届は受け取っていない。人事からは新たな分類の相談が来ている」':
     id==='E18'?'「君が告白したわけではない？ それは人事に説明してくれ。既に認定されている」':
     failed?'「君、今週いったい何件のハラスメント認定を受けたんだ！ このままでは新人を任せられん！」':
@@ -222,9 +247,9 @@ function endingScreen(){
     ['E07','E08'].includes(id)?'「仕事はできているな。……で、新人に何を教えたんだ？」':
     '「よくやった。来週もう一人配属される。ちなみに来月から社内分類が17項目増えるそうだ」';
   return `<div class="eyebrow">2030年度 / 人事評価通知</div><div class="end-banner"><div class="tiny" style="color:#c3d1dd">ENDING ${id.slice(1)} / ${ENDING_TOTAL}</div><div class="ending-title">${esc(title)}</div><div class="grade">評価 ${esc(grade)}</div><p class="end-sub">${esc(desc)}</p></div>
-  <div class="end-grid"><div><strong>${finalCp()}</strong><span>コンプラ pt</span></div><div><strong>${run.progress}</strong><span>業務進捗</span></div><div><strong>${run.growth}</strong><span>新人の習熟</span></div></div>
-  <section class="paper"><div class="panelhead"><strong>上司からの最終講評</strong><span class="tag ${failed?'red':''}">${failed?'管理職適性再審査':'週次評価'}</span></div><div class="quote">${director}</div><p class="small muted">配属社員：${esc(run.profile.name)} / ${esc(run.profile.ambition)}</p></section>
-  <section class="paper spaced"><div class="panelhead"><strong>新人からのコメント</strong><span class="tag">習熟度 ${run.growth}</span></div><div class="employee mini-employee"><div class="portrait face-photo"><img src="${esc(run.profile.photo||'./assets/employee-f01.webp')}" alt="配属社員の顔写真" loading="lazy"></div><div><strong>${esc(run.profile.name)}</strong><p class="quote">${esc(rookieComment().note)}${rookieComment().ambition?'\n'+esc(rookieComment().ambition):''}</p></div></div></section>
+  <div class="end-grid">${endingStat("コンプラ違反",finalCp(),LIMITS.cp,true)}${endingStat("業務進捗",run.progress,LIMITS.progress)}${endingStat("新人の習熟",run.growth,LIMITS.growth)}</div>
+  <section class="paper"><div class="panelhead"><strong>上司からの最終講評</strong><span class="tag ${failed?'red':''}">${failed?'管理職適性再審査':'週次評価'}</span></div><div class="boss-final"><div class="boss-final-photo boss-mood-${mood.key}"><img src="${DIRECTOR_IMAGE}" alt="部長の顔写真（架空人物）" width="90" height="106"><span class="boss-expression" role="img" aria-label="部長の反応：${mood.label}" title="部長の反応：${mood.label}">${mood.icon}</span><span class="boss-mood-caption">${mood.label}</span></div><div class="boss-final-quote"><div class="quote">${director}</div><p class="small muted">配属社員：${esc(run.profile.name)} / ${esc(run.profile.ambition)}</p></div></div></section>
+  <section class="paper spaced"><div class="panelhead"><strong>新人からのコメント</strong><span class="tag">習熟度 ${run.growth}</span></div><div class="employee mini-employee"><div class="portrait face-photo"><img src="${esc(run.profile.photo||'./assets/employee-f01.webp')}" alt="配属社員の顔写真" loading="lazy"></div><div><strong>${esc(run.profile.name)}</strong><p class="quote">${esc(rookieComment().note)}</p></div></div></section>
   <div class="paper spaced"><strong>今回のハラ認定履歴</strong><p class="tiny">どの対応が何点だったか、選択ごとの根拠を確認できます。</p>${id==='E18'?'<div class="history-row secret-extra"><strong>特別認定｜恋愛感情誘発ハラ ＋20pt</strong>新人から告白されたことを理由とする、架空の社内独自判定です。現実の法的なハラスメント認定ではありません。</div>':''}${run.logs.map(l=>`<details class="history-row" style="margin-top:7px"><summary><b>${esc(l.id)}｜${esc(logLabel(l))}　コンプラ違反+${l.deltaCp}pt</b></summary><div class="small" style="padding-top:7px">対応：${esc(l.choiceText)}<br>${esc(logReason(l))}${l.extraReason?`<br>${esc(l.extraReason)}`:''}</div></details>`).join('')}</div>
   <div class="actions"><button class="primary" data-action="restart">別の社員でもう一度</button><button class="secondary" data-action="download-card">結果カードを画像保存</button><button class="secondary" data-action="share">結果を共有・コピー</button></div>
   <div class="toolrow spaced"><button class="quiet" data-action="show-archive">ハラ図鑑 (${Object.keys(records.names).length}種)</button><button class="quiet" data-action="show-endings">獲得エンディング (${Object.keys(records.endings).length}/${ENDING_TOTAL})</button><button class="quiet" data-action="intro">タイトル画面へ戻る</button></div>`;}
@@ -232,7 +257,7 @@ function showModal(type){
   const p=run?.profile;
   let title='',body='';
   if(type==='profile'){title='配属社員プロフィール';body=p?profileCard(p):'<div class="empty">まだ社員が配属されていません。</div>';}
-  if(type==='guide'){title='操作説明';body=`<div class="info">5営業日×各3業務＝全15イベント（8枠にシナリオ差分あり、選択肢の並びや一部の文言も周回ごとに変化）で、6つの対応から1つずつ選びます。正式認定が3回連続するごとにコンプラ・コンボで追加+1pt（疑義はリセット）。コンプラ違反20ptで即敗北。金曜までに業務22以上・習熟6以上でクリア。毎朝の部長指令の数値ノルマを未達にすると、追加報告が発生し、業務進捗が減少します。選択後の結果画面で「○○ハラ」の種類と点数が表示されます。</div><p class="small">チャット返信イベントでは、実時間を測らず返信タイミングを選べます。プロフィールと業務メモはいつでも参照できます。</p><p class="privacy">スコア、名前、イベントはゲーム内のフィクションであり、現実の法的判断ではありません。</p>`;}
+  if(type==='guide'){title='操作説明';body=`<div class="info">5営業日×各3業務＝全15イベント（8枠にシナリオ差分あり、選択肢の並びや一部の文言も周回ごとに変化）で、6つの対応から1つずつ選びます。正式認定が3回連続するごとにコンプラ・コンボで追加+1pt（疑義はリセット）。コンプラ違反20ptで即敗北。金曜までに業務${LIMITS.progress}以上・習熟${LIMITS.growth}以上でクリア。毎朝の部長指令の数値ノルマを未達にすると、追加報告が発生し、業務進捗が減少します。選択後の結果画面で「○○ハラ」の種類と点数が表示されます。</div><p class="small">チャット返信イベントでは、実時間を測らず返信タイミングを選べます。プロフィールと業務メモはいつでも参照できます。</p><p class="privacy">スコア、名前、イベントはゲーム内のフィクションであり、現実の法的判断ではありません。</p>`;}
   if(type==='notes'){title='業務メモ';body=run?`${run.logs.length?`<div class="timeline">${run.logs.map(l=>`<div class="history-row"><strong>${esc(l.id)}｜${esc(l.title)}　コンプラ違反+${l.deltaCp}pt</strong>${esc(l.choiceText)}<br><span class="muted">${esc(logLabel(l))}　${esc(logReason(l))}</span></div>`).join('')}</div>`:'<div class="empty">対応履歴はありません。</div>'}<hr class="sectionline"><div class="info"><b>これまでの引継ぎ事項</b>${run.flags.checkAgreed?'✓ 確認時間を合意済み<br>':'・確認時刻は未合意<br>'}${run.flags.aiVerified?'✓ AIの資料は出典検証済み<br>':run.flags.aiUnverified?'！AIの出典に未確認部分がある<br>':'・AIの出典は未確認リスクが明示されていない<br>'}${run.flags.presentationPrepped?'✓ 発表担当の準備を進めた':'・発表担当の練習は未確認'}</div>`:'<div class="empty">まだ業務履歴はありません。</div>';}
   if(type==='archive'){title='ハラ図鑑';const names=[...new Set([...events.flatMap(e=>[...e.choices,...(e.alternates||[]).flatMap(a=>a.choices)].map(c=>c.harassment.replace(/疑義$/,''))),...SPEED_HARASSMENTS,...Object.keys(records.names)])].sort((a,b)=>Number(!!records.names[b])-Number(!!records.names[a]));const found=names.filter(n=>records.names[n]).length;body=`<p class="small muted">発見 ${found} / ${names.length} 分類。認定・疑義を含めて記録。発見済みを先頭に表示します。</p><div class="timeline">${names.map(n=>{const info=records.names[n];return `<div class="history-row"><strong>${info?'✦ '+esc(n):'？？？ 未発見'}</strong>${info?`認定・疑義を含む遭遇回数：${info.count}回`:'未発見の分類'}</div>`;}).join('')}</div>`;}
   if(type==='endings'){title='エンディングコレクション';body=`<p class="small muted">${Object.keys(records.endings).length}/${ENDING_TOTAL} 種を解放</p><div class="timeline">${Object.entries(ENDING_META).map(([id,d])=>`<div class="history-row"><strong>${records.endings[id]?`${id}｜${esc(d[0])}`:`${id}｜？？？`}</strong>${records.endings[id]?esc(d[1]):'未達成のエンディング'}</div>`).join('')}</div>`;}

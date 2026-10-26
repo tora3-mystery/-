@@ -1,15 +1,15 @@
 /** C1 gameplay logic. Pure and dependency-free: also imported by tests. */
-export const VERSION = '0.6.3';
-export const UPDATED_JST = '2026-10-26 17:53 JST';
-export const LIMITS = Object.freeze({ cp: 20, progress: 22, growth: 6 });
+export const VERSION = '0.6.4';
+export const UPDATED_JST = '2026-10-26 23:51 JST';
+export const LIMITS = Object.freeze({ cp: 20, progress: 22, growth: 9 });
 export const DAYS = ['月曜日', '火曜日', '水曜日', '木曜日', '金曜日'];
 export const SPEED_HARASSMENTS = Object.freeze(['即レスハラ','遅レスハラ']);
 export const DIRECTIVES = Object.freeze([
   {time:'09:00', title:'初週の育成と即戦力化', demand:'歓迎・指導は丁寧に。ただし資料も初日から進めること。進捗3以上、習熟2以上を報告。', progress:3, growth:2, remark:'挨拶だけで終わる初日など論外だぞ。'},
-  {time:'09:00', title:'生産性向上の即日報告', demand:'AIは積極活用。ミスはゼロ。昨日まで含め進捗9以上、習熟3以上に。', progress:9, growth:3, remark:'AIに任せたのに遅い、という説明は受け付けない。'},
-  {time:'09:00', title:'自主性と進捗管理を両立', demand:'手取り足取りは禁止。ただし進捗15以上、習熟4以上を必達。', progress:15, growth:4, remark:'放置と自律支援の区別くらい、課長なら分かるだろう。'},
-  {time:'09:00', title:'会議ゼロ・品質最大化', demand:'残業はゼロ。明日の役員報告に向け、進捗20以上・習熟5以上。', progress:20, growth:5, remark:'間に合わないなら工夫して。もちろん長時間労働は禁止。'},
-  {time:'09:00', title:'本日17時、役員説明', demand:'進捗22以上・習熟6以上で着地。コンプラ20点は即呼び出し。言い訳は認めない。', progress:22, growth:6, remark:'成功するまでが育成。成功しなかったら指導方法を見直そう。'}
+  {time:'09:00', title:'生産性向上の即日報告', demand:'AIは積極活用。ミスはゼロ。昨日まで含め進捗9以上、習熟4以上に。', progress:9, growth:4, remark:'AIに任せたのに遅い、という説明は受け付けない。'},
+  {time:'09:00', title:'自主性と進捗管理を両立', demand:'手取り足取りは禁止。ただし進捗15以上、習熟5以上を必達。', progress:15, growth:5, remark:'放置と自律支援の区別くらい、課長なら分かるだろう。'},
+  {time:'09:00', title:'会議ゼロ・品質最大化', demand:'残業はゼロ。明日の役員報告に向け、進捗20以上・習熟7以上。', progress:20, growth:7, remark:'間に合わないなら工夫して。もちろん長時間労働は禁止。'},
+  {time:'09:00', title:'本日17時、役員説明', demand:'進捗22以上・習熟9以上で着地。コンプラ20点は即呼び出し。言い訳は認めない。', progress:22, growth:9, remark:'成功するまでが育成。成功しなかったら指導方法を見直そう。'}
 ]);
 const pick = (xs, rng) => xs[Math.min(xs.length - 1, Math.floor(rng() * xs.length))];
 // Display names are independently generated; neither gender nor name affects gameplay rules.
@@ -329,7 +329,7 @@ export function resolveEnding(run) {
   return 'E09';
 }
 export function isValidSave(save, events) {
-  return !!save && ['0.4.0','0.4.1','0.5.0','0.5.1','0.5.2','0.5.3','0.5.4','0.5.5','0.5.6','0.5.7','0.5.8','0.5.9','0.6.0','0.6.1','0.6.2',VERSION].includes(save.version) && Number.isInteger(save.index) && save.index>=0 && save.index<events.length
+  return !!save && ['0.4.0','0.4.1','0.5.0','0.5.1','0.5.2','0.5.3','0.5.4','0.5.5','0.5.6','0.5.7','0.5.8','0.5.9','0.6.0','0.6.1','0.6.2','0.6.3',VERSION].includes(save.version) && Number.isInteger(save.index) && save.index>=0 && save.index<events.length
    && ['briefing','scene','result','dayReview','ending'].includes(save.phase) && Array.isArray(save.logs) && typeof save.profile?.name==='string'
    && save.flags && typeof save.cp==='number';
 }

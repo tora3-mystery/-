@@ -85,3 +85,25 @@
 @keyframes secret-pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.07)}}
 @media(max-width:450px){.secret-ending{padding:13px}.secret-message{padding:13px}.secret-absence{padding:15px}}
 @media(prefers-reduced-motion:reduce){.secret-ending *{animation:none!important;transition:none!important}}
+
+/* v0.6.4: target-aware final scores and grade-dependent director reaction */
+.end-score{min-width:0;background:#f0f4f7;border:1px solid #dce5ec;border-radius:9px;text-align:center;padding:12px 5px 10px}
+.end-score strong{display:block;font-size:clamp(19px,4.5vw,25px);line-height:1.4;font-variant-numeric:tabular-nums;white-space:nowrap;color:#253c53}
+.end-score strong small{font-size:.53em;font-weight:600;color:#667b89}
+.end-score>span{display:block;font-size:11px;color:#566a79;margin-top:2px}
+.end-score-status{display:block;margin:7px auto 0;width:fit-content;max-width:100%;border-radius:5px;font-size:10px;line-height:1.5;padding:3px 5px;color:#27695a;background:#dff2e9}
+.end-score-fail .end-score-status{color:#a73a40;background:#fae2e3}
+.boss-final{display:flex;align-items:flex-start;gap:15px;margin-top:12px}
+.boss-final-photo{flex:0 0 90px;width:90px;position:relative;text-align:center}
+.boss-final-photo img{display:block;width:90px;height:106px;object-fit:cover;object-position:center 25%;border-radius:9px;border:3px solid #8a9cac}
+.boss-expression{position:absolute;top:78px;right:-8px;border:2px solid #fff;border-radius:50%;background:#fff;font-size:27px;line-height:1.2;padding:2px;box-shadow:0 2px 9px #0002}
+.boss-mood-caption{display:block;font-size:10px;color:#627586;font-weight:700;margin-top:6px}
+.boss-mood-happy img{border-color:#5aab79;filter:brightness(1.06)}
+.boss-mood-pleased img{border-color:#80b795}
+.boss-mood-neutral img{border-color:#a5b2bd}
+.boss-mood-skeptical img{border-color:#d0a56e;filter:saturate(.8)}
+.boss-mood-angry img{border-color:#c85d65;filter:saturate(1.2) contrast(1.05)}
+.boss-mood-stunned img{border-color:#9870b6;filter:saturate(.65)}
+.boss-final-quote{flex:1;min-width:0}
+.boss-final-quote .quote{margin:0 0 9px}
+@media(max-width:380px){.end-grid{gap:5px}.end-score{padding:10px 2px}.end-score strong{font-size:18px}.end-score>span,.end-score-status{font-size:9px}.boss-final{gap:11px}.boss-final-photo,.boss-final-photo img{width:76px}.boss-final-photo{flex-basis:76px}.boss-final-photo img{height:91px}.boss-expression{top:66px;right:-8px;font-size:22px}}

@@ -5,7 +5,7 @@
   "thresholds": {
     "cp_gameover": 20,
     "p_win": 22,
-    "s_win": 6,
+    "s_win": 9,
     "cp": 20
   },
   "events": [
