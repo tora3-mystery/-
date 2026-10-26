@@ -1,11 +1,15 @@
 import assert from 'node:assert/strict';
-import {ENDING_META,resolveEnding,trustEvidence,createRun,calculate,isValidSave} from '../engine.mjs';
+import {ENDING_META,LIMITS,DIRECTIVES,resolveEnding,trustEvidence,createRun,calculate,isValidSave} from '../engine.mjs';
 import {readFileSync} from 'node:fs';
 
 const events=JSON.parse(readFileSync(new URL('../events.json',import.meta.url),'utf8')).events;
 const state={index:14,cp:15,progress:26,growth:10,logs:[],bossReports:[],profile:{name:'検証社員',strength:'analysis'},flags:{aiVerified:false,presentationPrepped:false}};
 const finalF={id:'D5-3',choiceId:'F'},finalC={id:'D5-3',choiceId:'C'};
 assert.equal(Object.keys(ENDING_META).length,18);
+assert.deepEqual(LIMITS,{cp:20,progress:23,growth:9});
+assert.deepEqual(DIRECTIVES.map(d=>d.progress),[3,9,15,20,23]);
+assert.equal(resolveEnding({...state,cp:5,progress:22,logs:[finalC]}),'E05');
+assert.equal(resolveEnding({...state,cp:5,progress:23,logs:[finalC]}),'E14');
 assert.notEqual(resolveEnding({...state,cp:20,logs:[finalF],bossReports:[{met:false},{met:false}]}),'E17');
 assert.equal(resolveEnding({...state,logs:[finalF],bossReports:[{met:false},{met:false}]}),'E17');
 assert.equal(resolveEnding({...state,cp:11,logs:[finalF],bossReports:[{met:false},{met:false}]}),'E16');
@@ -30,4 +34,5 @@ assert.equal(result.specialRecognition,20);
 assert.equal(result.cp,5);
 assert.equal(isValidSave({...result,version:'0.6.1'},events),true);
 assert.equal(isValidSave(result,events),true);
-console.log('PASS C1 v0.6.5 secret ending rarity and regression');
+assert.equal(isValidSave({...result,version:'0.6.5'},events),true);
+console.log('PASS C1 v0.6.6 progress 23 and secret endings regression');

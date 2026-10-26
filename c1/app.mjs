@@ -1,4 +1,4 @@
-import {VERSION,UPDATED_JST,LIMITS,DAYS,DIRECTIVES,ENDING_META,PROFILE_TYPES,createProfile,createRun,calculate,advance,beginDay,isValidSave,SPEED_HARASSMENTS,ensureLocalPortrait} from './engine.mjs?v=0.6.5';
+import {VERSION,UPDATED_JST,LIMITS,DAYS,DIRECTIVES,ENDING_META,PROFILE_TYPES,createProfile,createRun,calculate,advance,beginDay,isValidSave,SPEED_HARASSMENTS,ensureLocalPortrait} from './engine.mjs?v=0.6.6';
 
 const app=document.getElementById('app');
 const SAVE_KEY='arg_c1_save_v04';
@@ -115,7 +115,7 @@ function intro(){
     <p class="lead">あなたは営業企画部の課長です。今週、新しい若手社員が配属されます。<br>金曜日の役員説明までに<strong>仕事を終え、新人を育て、コンプラ違反ポイントの上限到達を回避</strong>してください。</p>
     <div class="paper spaced"><div class="panelhead"><b>管理職向け 業務指示</b><span class="tag">重要</span></div>
     <div class="quote">「新人には積極的に声をかけるように。指導は丁寧に。過干渉は厳禁。資料の遅延も認めません」<br><span class="tiny">— 営業本部 部長</span></div>
-    <div class="rules"><div class="rule"><span>コンプラ違反</span><b>20 pt</b><span>到達で即呼び出し</span></div><div class="rule"><span>業務進捗</span><b>22 以上</b><span>金曜の達成条件</span></div><div class="rule"><span>新人の習熟</span><b>${LIMITS.growth} 以上</b><span>金曜の達成条件</span></div></div>
+    <div class="rules"><div class="rule"><span>コンプラ違反</span><b>20 pt</b><span>到達で即呼び出し</span></div><div class="rule"><span>業務進捗</span><b>${LIMITS.progress} 以上</b><span>金曜の達成条件</span></div><div class="rule"><span>新人の習熟</span><b>${LIMITS.growth} 以上</b><span>金曜の達成条件</span></div></div>
     <p class="small" style="line-height:1.9">各場面で<strong>6つの対応</strong>から1つ選択。判定直後に新たな「○○ハラ」が派手に発表されます。<strong>認定でコンプラ違反ポイントが加算</strong>。部長指令のノルマを逃すと、その日の終業査定で再作業が発生し、進捗が下がります。<strong>疑義は原則0pt</strong>です。正式認定が<strong>3回連続するごとにコンプラ・コンボで+1pt</strong>。</p>
     <p class="privacy">架空の社内分類を風刺する作品です。現実の被害やハラスメント認定を扱う研修ではありません。記録はこの端末にのみ保存され、外部に送信されません。</p>
     <div class="actions">${canResume?'<button class="primary" data-action="resume">続きから再開</button>':''}<button class="${canResume?'secondary':'primary'}" data-action="start">${canResume?'最初から始める':'配属社員を確認して始める'}</button></div>

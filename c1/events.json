@@ -4,7 +4,7 @@
   "status": "playtest v0.5.6",
   "thresholds": {
     "cp_gameover": 20,
-    "p_win": 22,
+    "p_win": 23,
     "s_win": 9,
     "cp": 20
   },
