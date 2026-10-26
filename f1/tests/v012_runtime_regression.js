@@ -78,6 +78,22 @@ function runRegression(html){
   check(numbers.length===5,'All five effect numbers required');
   check(numbers[0]<=0&&numbers[1]>=0&&numbers[2]<=0&&numbers[3]>=0&&numbers[4]<=0,'Unbounded shown effect');
  }
+
+ const repeated=boot();repeated.api.restart();
+ repeated.api.setState({day:4,attraction:7,vals:[2,1,1,2],revenue:150,
+  actionCounts:{quiet:2},days:[{day:1,sales:50},{day:2,sales:50},{day:3,sales:50}]});
+ check(repeated.api.availableIds().includes('quiet'),'Repeated quiet action unavailable in test');
+ repeated.api.play('quiet');
+ const noiseResponse=repeated.api.getState().complaintTickets.find(x=>x.metric===3).replies.at(-1).body;
+ check(noiseResponse.includes('改善対象に含まれていません')&&!noiseResponse.includes('改善するため'),
+  'Third repeat erroneously promises a complaint reduction');
+ const ongoing=boot();ongoing.api.restart();
+ ongoing.api.setState({day:5,odd:1,attraction:8,vals:[2,1,1,2],revenue:230,
+  afterSales:18,remaining:1,permit:'要確認',
+  days:[{day:1,sales:50},{day:2,sales:60},{day:3,sales:60},{day:4,sales:60}]});
+ step(ongoing,'idle');
+ check(ongoing.get('transitionHeadline').textContent==='閉店後の取引が続いています',
+  'Unchanged uncanny level repeats ritual completion event');
  return {pass:true,assertions,endingTypes:7,tests:['seven choice cards','deferred effects','sales formula','complaint ledger','full seven-endings','resume after close','five-number visual bounds','shrine']};
 
 }
