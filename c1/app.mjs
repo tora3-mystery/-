@@ -1,4 +1,4 @@
-import {VERSION,UPDATED_JST,LIMITS,DAYS,DIRECTIVES,ENDING_META,createProfile,createRun,calculate,advance,beginDay,isValidSave,SPEED_HARASSMENTS,ensureLocalPortrait} from './engine.mjs';
+import {VERSION,UPDATED_JST,LIMITS,DAYS,DIRECTIVES,ENDING_META,createProfile,createRun,calculate,advance,beginDay,isValidSave,SPEED_HARASSMENTS,ensureLocalPortrait} from './engine.mjs?v=0.5.6';
 
 const app=document.getElementById('app');
 const SAVE_KEY='arg_c1_save_v04';
