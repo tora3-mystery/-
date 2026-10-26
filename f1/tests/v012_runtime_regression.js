@@ -43,15 +43,15 @@ function runRegression(html){
  }
  function route(ids){const h=boot();h.api.restart();ids.forEach(id=>step(h,id));return h}
  check(html.includes('<label>👥 集客力</label>')&&html.includes("['🧾','↔️','📦','🔊'][i]"),'Top indicators lack matching icons');
- const none=route(Array(7).fill('idle'));
- check(none.api.getState().revenue===350&&none.api.getState().ending==='normal_strain','All idle route');
- const best=route(['pickup','vibration','rest','farmer','delivery','rest','display']);
- check(best.api.getState().revenue===710&&best.api.getState().ending==='normal_success','Successful route');
- const mixed=route(['pickup','vibration','rest','farmer','display','gourmet','discount']);
- check(mixed.api.getState().revenue===680&&mixed.api.getState().ending==='normal_customer','Customer complaints route');
+ const none=boot();none.api.restart();for(let day=1;day<=7&&!none.api.getState().finish;day++)step(none,'idle');
+ check(none.api.getState().ending==='normal_strain'&&none.api.getState().days.length<7,'All idle must fail before 7 days');
+ const best=route(['pickup','vibration','floorcheck','delivery','quiet','display','discount']);
+ check(best.api.getState().revenue===500&&best.api.getState().ending==='normal_success','Hard clean route');
+ const mixed=route(['pickup','complaintHide','delivery','vibration','floorcheck','stockCover','shrine']);
+ check(mixed.api.getState().revenue>=500&&mixed.api.getState().ending==='normal_success'&&mixed.api.getState().grayUsed.length>=2,'Gray strategy wins');
  const shrine=boot();shrine.api.restart();step(shrine,'shrine');check(shrine.api.getState().attraction===8,'Shrine deferred boost');
  const closure=boot();closure.api.restart();closure.api.setState({day:2,lowDays:1,attraction:0,vals:[5,5,5,5],days:[{day:1,sales:0}],revenue:0});
- step(closure,'idle');check(closure.api.getState().finish&&closure.api.getState().endingReason==='閉店','Immediate close on zero sales');
+ step(closure,'idle');check(closure.api.getState().finish&&closure.api.getState().endingReason==='店長解任・営業停止','Immediate close on zero sales');
  const savedDb=new Map(),original=boot(savedDb);original.api.restart();original.api.play('register');
  const resumed=boot(savedDb);check(resumed.api.getState().needsAdvance,'Report not saved');resumed.api.resumeCurrent();
  check(!resumed.get('overlay').classList.contains('hidden'),'Report not restored');resumed.api.advance();
@@ -66,9 +66,9 @@ function runRegression(html){
  const clue=boot();clue.api.restart();
  for(const [i,id] of ['pickup','vibration','audit','camera0','open0','glitch6','idle'].entries()){
   step(clue,id);
-  if(i>=2&&i<=4){const line=clue.get('oddEvidenceList').children[i-2];check(!!line,'Clue not visible');line.children[0].onclick();}
+  if(i===3||i===4){const line=clue.get('oddEvidenceList').children[i-3];check(!!line,'Clue not visible');line.children[0].onclick();}
  }
- check(clue.api.getState().clues===3,'Three clues unread');
+ check(clue.api.getState().clues===2,'Both clues read');
  clue.api.startInference();clue.api.resolveInference('self','yesterday');
  check(clue.api.getState().ending==='odd_hidden','Hidden ending');
  for(const end of [none,best,mixed,stop,day8,sales8,clue])check(end.get('ending').children.some(x=>x.className==='ending-media'),'Missing news and forum');
@@ -101,27 +101,29 @@ function runRegression(html){
  step(first,'pickup');
  const day2=first.api.getState();
  check(day2.day===2,'DAY2 after first selection');
- check(day2.vals.join(',')==='1,0,0,2','Pickup applies next-day metrics');
+ check(day2.vals.join(',')==='1,1,0,2','Pickup plus new complaint');
  const pending=day2.complaintTickets.filter(x=>x.status==='open');
  const resolved=day2.complaintTickets.filter(x=>x.status==='resolved');
- check(pending.length===3&&resolved.length===3,'Three archived, three unresolved including one newly opened');
- check(first.get('complaintBoard').children.length===3,'Resolved complaints leaked into visible inbox');
+ check(pending.length===4&&resolved.length===3,'Three resolved and four current after new arrivals');
+ check(first.get('complaintBoard').children.length===4,'Resolved complaints leaked into visible inbox');
  check(first.get('complaintArchiveBody').children.length===3,'Archived replies absent');
  check(first.get('complaintArchiveBody').children.every(x=>x.className.includes('resolved')),'Resolved cards not grayed');
  check(first.get('complaintBoard').children.every(x=>!x.children.some(y=>y.className==='complaint-reply')),'Unresolved card received a reply');
  check(resolved.every(x=>x.replies.at(-1)?.body.includes('改善しました')),'Resolved replies must report actual fix');
  check(first.get('complaintArchiveLabel').textContent.includes('対応済みのご意見（3件'),'Archive label wrong');
+ check(first.get('transitionDecision').textContent.includes('昨日の判断')&&first.get('transitionDecision').textContent.includes('別件で新たなご意見'),'Decision result and daily pressure should be separate');
  const random=boot(),seen=new Set();
  for(let i=0;i<24;i++){random.api.restart();seen.add(random.api.getState().complaintTickets.map(x=>x.body).join('|'))}
  check(seen.size>5,'Starting complaints are fixed, not randomized');
  const creep=boot();creep.api.restart();creep.api.setState({day:6,odd:3,afterSales:91,remaining:9,permit:'不許可',revenue:290,
   days:[{day:1,sales:50},{day:2,sales:50},{day:3,sales:50},{day:4,sales:50},{day:5,sales:50}],vals:[2,2,1,3]});
- const horror=creep.get('anomalyComplaints');
- check(!horror.classList.contains('hidden'),'Stage three special complaints are hidden');
- check(horror.children.length===12,'Expected one title, 10 messages, and footer');
- check(horror.children.slice(1,11).every(x=>x.children.at(-1).textContent==='ありがとうございました。完璧なスーパーです。スーパーは完璧なので好きです。ありがとうございました。ありがとうございました。'),
-  'Ten identical voices must appear in late uncanny stages');
+ const horror=creep.get('complaintBoard');
+ check(horror.children.length>=10,'Ten regular complaint cards in late eerie stage');
+ check(horror.children.slice(0,10).every(x=>x.children[1]?.textContent.includes('ありがとうございました。完璧なスーパーです。スーパーは完璧なので好きです。ありがとうございました。ありがとうございました。')),
+  'Ten identical ordinary reviews required');
  check(creep.get('oddMetrics').classList.contains('hidden'),'Abstract occult dashboard should not be shown');
+ check(!html.includes('記録 A：差出人不明のご意見'),'Deleted record A should not exist');
+ check(!html.includes('id="anomalyComplaints"'),'Special reviews must not have a colored container');
 
  const late=boot();late.api.restart();
  late.api.setState({day:5,odd:0,revenue:200,attraction:7,vals:[2,1,1,1],
@@ -131,7 +133,7 @@ function runRegression(html){
  check(!late.get('finalChoice').classList.contains('hidden'),'Late ritual finale missing');
  check(late.get('finalLead').textContent.includes('生肉'),'Day7 ritual must reveal the offering next morning');
  const finalEcho=late.get('finalAnomalyComplaints');
- check(!finalEcho.classList.contains('hidden')&&finalEcho.children.length===12,'Closing scene should show ten identical customer letters');
+ check(finalEcho.children.length===10&&finalEcho.children[0].className==='complaint-ticket','Closing scene should show ten ordinary customer reviews');
  return {pass:true,assertions,endingTypes:7,tests:['seven choice cards','deferred effects','sales formula','complaint ledger','full seven-endings','resume after close','five-number visual bounds','shrine']};
 
 }
