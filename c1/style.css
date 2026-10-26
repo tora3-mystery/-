@@ -57,3 +57,8 @@
 .chat-followup-heading{font-size:12px;font-weight:700;letter-spacing:.01em;color:#3d657b;line-height:1.7}
 .chat-followup p{font-size:14px;line-height:1.8;margin:8px 0 0}
 @media(max-width:420px){.chat-followup{padding:11px 12px}.chat-followup p{font-size:13px}}
+
+/* v0.6.0 — profile information hierarchy */
+.profile-hero{align-items:center;min-width:0}.profile-hero>div:last-child{min-width:0}.profile-hero .employee-sub{margin-top:8px;overflow-wrap:anywhere}.profile-type{margin-top:4px;max-width:100%;white-space:normal;line-height:1.4}
+.profile-section{margin-top:21px;border-top:1px solid var(--line);padding-top:15px}.profile-section h3{font-size:15px;color:#244961;margin:0 0 10px}.profile-section .profile-grid{margin-top:0}.profile-section .info{min-width:0;overflow-wrap:anywhere}.profile-message{display:grid;gap:7px;margin-top:10px}.profile-message p{margin:0;padding:9px 12px;border-left:3px solid #9ab6c8;background:#f4f8fa;border-radius:0 7px 7px 0;font-size:12px;line-height:1.7}
+@media(max-width:450px){.profile-section .profile-grid{grid-template-columns:1fr}.profile-hero{gap:12px}.profile-hero .portrait.face-photo{flex-basis:78px;height:96px}.profile-hero .employee-name{font-size:20px}}

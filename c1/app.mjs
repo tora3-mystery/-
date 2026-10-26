@@ -1,4 +1,4 @@
-import {VERSION,UPDATED_JST,LIMITS,DAYS,DIRECTIVES,ENDING_META,createProfile,createRun,calculate,advance,beginDay,isValidSave,SPEED_HARASSMENTS,ensureLocalPortrait} from './engine.mjs?v=0.5.9';
+import {VERSION,UPDATED_JST,LIMITS,DAYS,DIRECTIVES,ENDING_META,PROFILE_TYPES,createProfile,createRun,calculate,advance,beginDay,isValidSave,SPEED_HARASSMENTS,ensureLocalPortrait} from './engine.mjs?v=0.6.0';
 
 const app=document.getElementById('app');
 const SAVE_KEY='arg_c1_save_v04';
@@ -122,14 +122,14 @@ function intro(){
 function profileCard(p){
  const fallback=esc(p.avatar||'🧑‍💼');
  const portrait=p.photo ? `<div class="portrait face-photo" role="img" aria-label="架空の社員の合成顔写真"><span class="portrait-fallback">${fallback}</span><img src="${esc(p.photo)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>` : `<div class="portrait" role="img" aria-label="社員アイコン">${fallback}</div>`;
- const education=p.university&&p.faculty?`<div class="info"><b>出身大学・学部</b>${esc(p.university)} ${esc(p.faculty)}</div>`:'';
- const club=p.club?`<div class="info"><b>サークル・学生生活</b>${esc(p.club)}<div class="tiny">${esc(p.studentMemory||'')}</div></div>`:'';
- const temperament=p.temperament?`<div class="info"><b>本人の自己紹介より</b><strong>${esc(p.temperament)}</strong><div class="tiny">${esc(p.temperamentText||'')}</div></div>`:'';
- const social=p.socialVoice?`<div class="info"><b>食事会・交流への希望</b>${esc(p.socialVoice)}</div>`:'';
- return `<div class="employee">${portrait}<div><div class="tiny">本日配属・人材プロフィール</div><div class="employee-name">${esc(p.name)}</div><div class="employee-sub">${esc(p.gender)}・${esc(p.age)}歳 / 入社${p.grade}年目<br>${esc(p.previous)} → ${esc(p.department)}</div></div></div>
- <div class="profile-grid">${education}${club}${temperament}${social}<div class="info"><b>希望するキャリア</b>${esc(p.ambition)}</div><div class="info"><b>強み・経験</b>${esc(p.skill)}</div></div>
- <div class="list-header">本人からのメッセージ</div>${p.speech.map(s=>`<div class="quote">「${esc(s)}」</div>`).join('')}
- <p class="tiny">顔写真は架空社員のAI生成画像を本ゲーム内に保存。外部の画像配信サービスには接続しません。大学・サークルは人物像の参考情報であり、コンプラ判定には使われません。</p>`;
+ const cell=(label,value,detail='')=>value?`<div class="info"><b>${label}</b>${esc(value)}${detail?`<span class="tiny">${esc(detail)}</span>`:''}</div>`:'';
+ const type=p.typeName?`<span class="tag profile-type">${esc(p.typeName)}</span>`:'';
+ const story=p.hobby||p.workHabit||p.weakness||p.episode;
+ return `<div class="employee profile-hero">${portrait}<div><div class="tiny">本日配属・人材プロフィール</div><div class="employee-name">${esc(p.name)}</div>${type}<div class="employee-sub">${esc(p.gender)}・${esc(p.age)}歳 / 入社${p.grade}年目<br>${esc(p.previous)} → ${esc(p.department)}</div></div></div>
+ <section class="profile-section"><h3>仕事で大切にしたいこと</h3><div class="profile-grid">${cell('希望するキャリア',p.ambition)}${cell('得意分野',p.skill)}${cell('本人の希望',p.socialVoice)}</div><div class="profile-message">${(Array.isArray(p.speech)?p.speech:[]).map(s=>`<p>「${esc(s)}」</p>`).join('')}</div></section>
+ ${story?`<section class="profile-section"><h3>その人らしさ</h3><div class="profile-grid">${cell('趣味',p.hobby)}${cell('仕事上の癖',p.workHabit)}${cell('小さな弱点',p.weakness)}${cell('本人らしいエピソード',p.episode)}</div></section>`:''}
+ <section class="profile-section"><h3>これまでの背景</h3><div class="profile-grid">${cell('大学・学部',p.university&&p.faculty?`${p.university} ${p.faculty}`:'')}${cell('部活・サークル',p.club,p.studentMemory)}${cell('性格についての自己紹介',p.temperament,p.temperamentText)}</div></section>
+ <p class="tiny">顔写真は架空社員のAI生成画像です。大学・サークル・趣味は判定に使用しません。本人が話した仕事上の希望・得意分野は一部の対応判断に関係します。</p>`;
 }
 function profileScreen(){return `<div class="eyebrow">DAY 01 / 配属通知</div><h1 class="h2">今週の配属社員</h1><p class="lead">人材基本情報を確認してください。希望や得意分野は、今週の指導に影響します。</p><section class="paper">${profileCard(run.profile)}<div class="actions"><button class="primary" data-action="begin">この社員を受け入れる</button><button class="quiet" data-action="reroll">別の社員を表示する</button></div></section>`;}
 function directiveCompact(){const d=DIRECTIVES[displayDay()];return `<aside class="boss-mini"><span class="boss-stamp">部長指令｜当日の縛り</span><strong>進捗 ${d.progress} 以上・習熟 ${d.growth} 以上</strong><span>未達なら追加報告が発生し、進捗が減少</span></aside>`;}
@@ -182,6 +182,10 @@ function rookieComment(){
  if(run.ending==='E07'||run.ending==='E08')note='「助けていただいてありがとうございました。ただ、次はもう少し自分でやってみたいです……」';
  if(run.ending==='E15')note='「課長、発表を任せてくださってありがとうございました！ 緊張しましたが、すごく自信になりました！」';
  if(early)note='「まだ週の途中なので、何がよかったのか整理できていません。ここまで教えていただいたことは覚えています」';
+ if(!early&&g>=6&&!['E07','E08','E15'].includes(run.ending)&&run.profile.typeId){
+   const thanks=PROFILE_TYPES.find(t=>t.id===run.profile.typeId)?.thanks;
+   if(thanks)note=`「課長、${thanks}${highCp?' ただ、コンプラ通知が続いたことは少し気になっています。':''}」`;
+ }
  const admired=run.logs.find(l=>l.id==='D4-1' && (
    (run.eventPlan?.[9]===1&&l.choiceId==='C')||(run.eventPlan?.[9]!==1&&['A','F'].includes(l.choiceId))
  ));
@@ -286,6 +290,6 @@ document.addEventListener('keydown',ev=>{
   }
 });
 
-(async()=>{try{const response=await fetch('./events.json?v=0.5.9',{cache:'no-store'});if(!response.ok)throw new Error(`HTTP ${response.status}`);const json=await response.json();events=json.events;
+(async()=>{try{const response=await fetch('./events.json?v=0.6.0',{cache:'no-store'});if(!response.ok)throw new Error(`HTTP ${response.status}`);const json=await response.json();events=json.events;
   if(!Array.isArray(events)||events.length!==15||events.some(e=>e.choices.length!==6))throw new Error('イベント定義が不正です');
   render();}catch(err){app.innerHTML=`<div class="error"><strong>ゲームデータを読み込めませんでした。</strong><p>${esc(err.message)}</p><p>ネットワーク接続を確認してページを再読み込みしてください。</p></div>`;}})();

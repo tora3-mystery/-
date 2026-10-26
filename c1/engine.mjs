@@ -1,6 +1,6 @@
 /** C1 gameplay logic. Pure and dependency-free: also imported by tests. */
-export const VERSION = '0.5.9';
-export const UPDATED_JST = '2026-10-26 10:16 JST';
+export const VERSION = '0.6.0';
+export const UPDATED_JST = '2026-10-26 13:40 JST';
 export const LIMITS = Object.freeze({ cp: 20, progress: 22, growth: 6 });
 export const DAYS = ['月曜日', '火曜日', '水曜日', '木曜日', '金曜日'];
 export const SPEED_HARASSMENTS = Object.freeze(['即レスハラ','遅レスハラ']);
@@ -51,66 +51,96 @@ export function ensureLocalPortrait(profile) {
   }
   return profile;
 }
-const CAMPUS_BACKGROUNDS = [
-  ['東都大学','経済学部'],['南星学院大学','社会学部'],['青葉大学','情報学部'],
-  ['東央工科大学','理工学部'],['北辰大学','法学部'],['桜都大学','文学部'],
-  ['星丘大学','商学部'],['新都大学','心理学部']
-];
-const CLUBS = [
- ['ボードゲーム研究会','企画書より先にルールの矛盾を探してしまう癖があります。'],
- ['軽音サークル','大勢の前では緊張しますが、練習は好きでした。'],
- ['学園祭実行委員','関係者に何度も確認を取って進める役回りでした。'],
- ['写真部','細かな違いに気づくのが好きです。'],
- ['バスケットボールサークル','チームで役割を決めて動くのが好きでした。'],
- ['ラグビー部','練習後の食事会で先輩に相談していたことが多いです。'],
- ['野球部','チームで協力して予定を進めるのが好きでした。'],
- ['放送研究会','説明することは好きですが、急に指名されると焦ります。'],
- ['料理研究会','みんなで作業を分担するのが得意でした。'],
- ['無所属','授業の後はアルバイトに集中していました。']
-];
-const TEMPERAMENTS = [
- ['慎重派','念のための確認が多いと言われることがあります。'],
- ['行動派','考えるより先に手を動かしてしまうことがあります。'],
- ['マイペース','集中すると周囲が見えなくなることがあります。'],
- ['社交派','つい雑談から入ってしまうタイプです。'],
- ['計画派','締切より前に手順を決めておくと安心します。'],
- ['職人気質','一つの資料を細かく直しすぎてしまうことがあります。']
-];
+export const CAMPUS_BACKGROUNDS = Object.freeze([
+  ['東都大学','経済学部'],['南星学院大学','社会学部'],['青葉大学','情報学部'],['東央工科大学','理工学部'],
+  ['北辰大学','法学部'],['桜都大学','文学部'],['星丘大学','商学部'],['新都大学','心理学部'],
+  ['海丘大学','統計学部'],['白峰大学','経営学部'],['緑川大学','国際学部'],['港央大学','メディア学部'],
+  ['西都大学','教育学部'],['朝凪大学','デザイン学部'],['千景大学','政策学部'],['光陵大学','人間科学部'],
+  ['若葉大学','地域創生学部'],['北浜大学','データ科学部'],['朱雀大学','コミュニケーション学部'],['水城大学','生活科学部'],
+  ['東雲大学','会計学部'],['南港大学','工学部'],['月峰大学','言語文化学部'],['桐葉大学','環境学部']
+]);
+export const CLUBS = Object.freeze([
+  ['ボードゲーム研究会','ルール説明を担当し、曖昧な条件に気づく役でした。'],
+  ['軽音サークル','演奏前の段取り表を作るのが好きでした。'],
+  ['学園祭実行委員','関係者の予定を一枚の表にまとめていました。'],
+  ['写真部','同じ場所でも光の違いに気づくのが楽しかったです。'],
+  ['バスケットボールサークル','試合前に役割を確認してから動いていました。'],
+  ['ラグビー部','練習後に先輩と作戦を振り返っていました。'],
+  ['野球部','記録係も経験し、練習メニューを見直していました。'],
+  ['放送研究会','聞き手に伝わる順番を考えて原稿を書いていました。'],
+  ['料理研究会','試作の手順と分量をノートに残していました。'],
+  ['無所属','授業の後は接客のアルバイトを続けていました。'],
+  ['統計研究会','アンケートの集計方法を何度も見直していました。'],
+  ['演劇部','台詞よりも相手の間の取り方を観察していました。'],
+  ['学生新聞部','取材相手の言葉を確かめてから記事にしました。'],
+  ['地域ボランティア','参加者ごとの困りごとを聞く役でした。'],
+  ['美術部','展示の細部を直していると時間を忘れました。'],
+  ['ディベートサークル','反対意見を先に整理して議論しました。'],
+  ['フットサル部','急な交代でも声を掛け合って動いていました。'],
+  ['天文研究会','観測記録を決まった形式で残していました。'],
+  ['映像制作サークル','短い映像でも伝える順番を何度も編集しました。'],
+  ['図書館ボランティア','本を探す人の質問を最後まで聞いていました。']
+]);
+export const TEMPERAMENTS = Object.freeze([
+  ['段取り重視','先に手順が見えると安心します。'],['行動派','試しながら方向を決めることが多いです。'],
+  ['検証派','根拠の出所を確かめてから進めたいです。'],['観察派','小さな変化を見つけるのが好きです。'],
+  ['調整派','全員の予定を揃えると落ち着きます。'],['伝え手','相手に届く説明の順番を考えます。'],
+  ['数字好き','表を見て傾向を探すのが楽しいです。'],['改善好き','一度決めた手順も見直したくなります。'],
+  ['聞き上手','結論を急がず相手の話を聞きます。'],['挑戦派','初めての案を試すときに力が出ます。'],
+  ['仕上げ派','最後の確認に時間をかけます。'],['橋渡し役','立場の違う人の言葉をつなぎます。'],
+  ['慎重派','見落としを防ぐために一度立ち止まります。'],['発想派','別の使い道を考えるのが好きです。'],
+  ['粘り強い','一度でできなくても工夫を続けます。']
+]);
+export const PREVIOUS_DEPARTMENTS = Object.freeze(['法人営業部','カスタマーサクセス部','データ分析部','商品企画部','営業推進部','顧客調査部','広報部','品質管理部','業務改革部','人材開発部']);
+// Each archetype owns its narrative and maps onto the existing six judgement traits.
+// Campus and club choices are restricted to themes that fit its story; names/photos stay cosmetic.
+export const PROFILE_TYPES = Object.freeze([
+  {id:'planner',name:'段取りを組む設計者',traits:['guided','written','batched','analysis','expert'],campus:[0,9,14,20],clubs:[2,8,17],temperaments:[0,12],previous:[4,8],hobbies:['旅行の行程表づくり','パズル'],habit:'作業前にチェック欄を作る。',weakness:'予定変更が重なると、優先順位を決め直すのに時間がかかる。',episode:'配属前の資料整理で手順の抜けを見つけ、担当者に確認してから修正した。',thanks:'最初に道筋を一緒に整理してくださったので、途中から自分で進められました。'},
+  {id:'runner',name:'現場で動く実行役',traits:['autonomous','spoken','immediate','presentation','management'],campus:[1,10,16,18],clubs:[4,5,6,16],temperaments:[1,14],previous:[0,1,4],hobbies:['街歩き','フットサル'],habit:'まず小さく試してから報告する。',weakness:'急ぐと記録を後回しにしがち。',episode:'配属前の合同作業で止まっていた連絡を引き受け、その日のうちに関係者へ確認した。',thanks:'任せていただいた後も要点をすぐ確認できたので、安心して動けました。'},
+  {id:'verifier',name:'根拠を追う検証家',traits:['guided','written','immediate','analysis','expert'],campus:[2,8,17,20],clubs:[0,10,12,15],temperaments:[2,12],previous:[2,5,7],hobbies:['推理小説','資料の出典探し'],habit:'数字の横に必ず出典をメモする。',weakness:'確認事項が増えると提出の判断が遅れる。',episode:'配属前の集計で定義の違う二つの数字に気づき、元資料まで戻って確かめた。',thanks:'根拠を確かめる時間を認めてくださって、自信を持って数字を説明できました。'},
+  {id:'observer',name:'静かな観察者',traits:['autonomous','written','batched','analysis','expert'],campus:[5,7,15,23],clubs:[3,14,17],temperaments:[3,12],previous:[5,7,8],hobbies:['写真散歩','植物の記録'],habit:'会議中は気づいた点を短く書き留める。',weakness:'発言のタイミングを逃すことがある。',episode:'配属前の会議で誰も気づかなかった表記のずれを、終了後にメモで伝えた。',thanks:'考えてから伝える時間をいただけたので、小さな違和感も提案に変えられました。'},
+  {id:'coordinator',name:'人をつなぐ調整役',traits:['guided','spoken','batched','presentation','management'],campus:[1,6,10,14],clubs:[2,4,13],temperaments:[4,11],previous:[0,1,4,9],hobbies:['持ち寄りの料理会','イベント運営'],habit:'話の最後に担当と期限を確認する。',weakness:'相手に気を遣って自分の作業を抱えがち。',episode:'配属前の共同企画で意見が割れたとき、双方の条件を一枚に整理した。',thanks:'役割を一緒に確認してくださって、皆さんと相談しながら前に進めました。'},
+  {id:'speaker',name:'説明を磨く伝え手',traits:['guided','spoken','immediate','presentation','expert'],campus:[5,11,18,22],clubs:[1,7,11,18],temperaments:[5,13],previous:[6,9,3],hobbies:['朗読','短い動画づくり'],habit:'結論を一文で言えるまで話す順番を直す。',weakness:'急な質問には一呼吸必要。',episode:'配属前の説明会で難しい用語を言い換え、質問が減った経験がある。',thanks:'説明の練習に付き合ってくださったので、自分の言葉で伝えられました。'},
+  {id:'analyst',name:'数字を読む分析家',traits:['autonomous','written','batched','analysis','expert'],campus:[2,3,8,17,20],clubs:[0,10,17],temperaments:[6,2],previous:[2,5,7],hobbies:['数独','天気データを見ること'],habit:'会議の前に集計条件を確認する。',weakness:'数字に集中すると読み手の前提を忘れやすい。',episode:'配属前のレポートで平均値だけでは見えない偏りを見つけた。',thanks:'数字の見方を一緒に確認してくださって、分析を説明に結びつけられました。'},
+  {id:'improver',name:'仕組みを直す改善屋',traits:['autonomous','written','immediate','analysis','management'],campus:[3,9,17,21],clubs:[8,15,18],temperaments:[7,13],previous:[7,8,4],hobbies:['道具の手入れ','工作'],habit:'同じ手間が二度出たら手順を書き換える。',weakness:'改善案を出しすぎて周囲を急かすことがある。',episode:'配属前の作業で重複入力を見つけ、確認を挟んだ簡単な手順に直した。',thanks:'改善案を試す範囲を一緒に決めてくださったので、周りと歩調を合わせられました。'},
+  {id:'listener',name:'相手に寄り添う聞き手',traits:['guided','spoken','batched','presentation','management'],campus:[1,7,12,15],clubs:[9,13,19],temperaments:[8,11],previous:[1,5,9],hobbies:['読書会','地域の催し'],habit:'相談を受けると最初に困りごとを言い直す。',weakness:'断る場面で言葉を選びすぎる。',episode:'配属前の窓口業務で、質問の背景を聞いてから担当部署へつないだ。',thanks:'答えを急がず話を聞いてくださったので、私も相談の仕方を学べました。'},
+  {id:'challenger',name:'新しい案を試す企画者',traits:['autonomous','spoken','immediate','presentation','management'],campus:[6,11,13,16],clubs:[2,11,16,18],temperaments:[9,13],previous:[3,6,4],hobbies:['新しい店めぐり','企画展'],habit:'思いつきを小さな試案にして見せる。',weakness:'面白い案に気を取られ、地味な確認を忘れがち。',episode:'配属前の企画募集で小さな試作品を持ち込み、反応を見て案を直した。',thanks:'試案を頭ごなしに否定せず、試す条件を一緒に考えてくださって嬉しかったです。'},
+  {id:'finisher',name:'最後まで詰める仕上げ役',traits:['guided','written','batched','analysis','expert'],campus:[3,5,19,21],clubs:[3,8,14],temperaments:[10,14],previous:[7,2,8],hobbies:['模型づくり','料理の作り置き'],habit:'提出前に体裁と数字をもう一度見る。',weakness:'細部を直し続け、完了の線引きに迷う。',episode:'配属前の資料で注記の抜けを見つけ、提出前に関係者へ確認した。',thanks:'完成の基準を示してくださったので、確認を終えて自分の手で提出できました。'},
+  {id:'bridge',name:'部署をまたぐ橋渡し役',traits:['guided','spoken','immediate','presentation','management'],campus:[4,10,18,22],clubs:[7,12,13,19],temperaments:[11,4],previous:[0,1,6,9],hobbies:['ラジオ','まちの案内図集め'],habit:'専門用語を別部署向けに言い換える。',weakness:'両方の期待を引き受けて予定が詰まりがち。',episode:'配属前の引継ぎで二つの部署の用語の違いを一覧にし、確認の往復を減らした。',thanks:'誰に何を伝えるか一緒に整理してくださって、部署をまたぐ仕事が少し怖くなくなりました。'}
+]);
 export function createProfile(rng = Math.random) {
   const gender = pick(['男性','女性'],rng);
-  const [university, faculty] = pick(CAMPUS_BACKGROUNDS,rng);
-  const [club,studentMemory] = pick(CLUBS,rng);
-  const [temperament,temperamentText] = pick(TEMPERAMENTS,rng);
+  const type=pick(PROFILE_TYPES,rng);
+  const [university, faculty] = CAMPUS_BACKGROUNDS[pick(type.campus,rng)];
+  const [club,studentMemory] = CLUBS[pick(type.clubs,rng)];
+  const [temperament,temperamentText] = TEMPERAMENTS[pick(type.temperaments,rng)];
   const photo=pick(PHOTO_BANK[gender],rng);
   const surname = pick(surnames,rng);
   const given = pick(givenNames[gender],rng);
-  const check = pick(['guided','autonomous'],rng);
-  const medium = pick(['spoken','written'],rng);
-  const feedback = pick(['immediate','batched'],rng);
-  const strength = pick(['presentation','analysis'],rng);
-  const career = pick(['management','expert'],rng);
+  const [check,medium,feedback,strength,career]=type.traits;
   const grade = pick([1,2,3,4],rng);
-  // 交流の好みは本人が申告した情報。体育会系サークル所属だけで判断しない。
-  const sporty=['バスケットボールサークル','ラグビー部','野球部'].includes(club);
-  const socialStyle = sporty?pick(['convivial','convivial','convivial','quiet','flexible'],rng):pick(['convivial','quiet','flexible'],rng);
+  // 交流希望は本人の申告で、部活・人物タイプ・性別から断定しない。
+  const socialStyle = pick(['convivial','quiet','flexible'],rng);
   const socialVoices={
     convivial:'仕事帰りの食事会や飲み会は好きです。誘ってもらえると嬉しいですが、参加は自由だと安心です。',
     quiet:'仕事帰りは自分の時間を大切にしています。食事会は事前に分かると助かります。',
     flexible:'ご飯会は日程次第です。参加するか自分で決められると嬉しいです。'
   };
-  const previous = grade === 1 ? '新卒配属' : pick(['法人営業部','カスタマーサクセス部','データ分析部','商品企画部','営業推進部'],rng);
+  const previous = grade === 1 ? '新卒配属' : PREVIOUS_DEPARTMENTS[pick(type.previous,rng)];
   const checks = {guided:'途中で進捗を確認してもらえると安心です。',autonomous:'まず自分で進めて、詰まった時にまとめて相談したいです。'};
   const mediums = {spoken:'口頭で教えてもらうと頭に入りやすいです。',written:'文章やメモで確認しながら覚えるのが得意です。'};
   const feedbacks = {immediate:'改善点は気づいた時に教えてください。',batched:'改善点は一度にまとめて聞けると助かります。'};
-  const strengths = {presentation:'説明やプレゼンが得意です。',analysis:'数字の検証やデータ集計が得意です。'};
-  const careers = {management:'将来はチームをまとめる仕事に挑戦したいです。',expert:'専門性を深めて頼られる担当者になりたいです。'};
+  const strengths = {presentation:['相手に合わせて要点を説明するのが得意です。','短い発表でも伝える順番を考えるのが得意です。'],analysis:['数字の出所と集計条件を確かめるのが得意です。','資料の差分やデータの偏りを見つけるのが得意です。']};
+  const careers = {management:['将来は役割を調整し、チームを支える仕事に挑戦したいです。','現場を知ったうえで、企画を動かす立場を目指しています。'],expert:['専門分野を深めて、根拠を説明できる担当者になりたいです。','一つの分野を磨き、難しい相談にも応えられる人になりたいです。']};
   return {
     name: `${surname} ${given}`,gender,grade,age:22+grade-1,
     previous, department:'営業企画部',socialStyle,socialVoice:socialVoices[socialStyle],
     university,faculty,club,studentMemory,temperament,temperamentText,photo,
+    typeId:type.id,typeName:type.name,hobby:pick(type.hobbies,rng),workHabit:type.habit,weakness:type.weakness,
+    episode:type.episode.replace('配属前の',grade===1?'配属前研修の':'前部署での'),
     check,medium,feedback,strength,career,
     speech:[checks[check],mediums[medium],feedbacks[feedback]],
-    ambition:careers[career],skill:strengths[strength],
+    ambition:pick(careers[career],rng),skill:pick(strengths[strength],rng),
     avatar:pick(['💼','🧑‍💼','📊','🗂️','🧑‍💻'],rng)
   };
 }
@@ -277,7 +307,7 @@ export function resolveEnding(run) {
   return 'E09';
 }
 export function isValidSave(save, events) {
-  return !!save && ['0.4.0','0.4.1','0.5.0','0.5.1','0.5.2','0.5.3','0.5.4','0.5.5','0.5.6','0.5.7','0.5.8',VERSION].includes(save.version) && Number.isInteger(save.index) && save.index>=0 && save.index<events.length
+  return !!save && ['0.4.0','0.4.1','0.5.0','0.5.1','0.5.2','0.5.3','0.5.4','0.5.5','0.5.6','0.5.7','0.5.8','0.5.9',VERSION].includes(save.version) && Number.isInteger(save.index) && save.index>=0 && save.index<events.length
    && ['briefing','scene','result','dayReview','ending'].includes(save.phase) && Array.isArray(save.logs) && typeof save.profile?.name==='string'
    && save.flags && typeof save.cp==='number';
 }
