@@ -1,0 +1,44 @@
+/* H1 α0.5.0 — expression states reuse each candidate's own original photo to preserve identity.
+   Original local four-person portrait sprite remains the source; no external requests. */
+.portrait-photo{isolation:isolate;overflow:hidden;transition:filter .35s ease,transform .35s ease}
+.portrait-photo.expression-neutral{filter:none}
+.portrait-photo.expression-smile{filter:brightness(1.075) saturate(1.14) contrast(.96)}
+.portrait-photo.expression-thinking{filter:brightness(.955) saturate(.86) contrast(1.035)}
+.portrait-photo.expression-tense{filter:brightness(.93) saturate(.8) contrast(1.11)}
+.portrait-photo.expression-smile::before,
+.portrait-photo.expression-thinking::before,
+.portrait-photo.expression-tense::before{
+ content:"";position:absolute;inset:0;pointer-events:none;z-index:1;opacity:.5;
+}
+.portrait-photo.expression-smile::before{background:radial-gradient(ellipse at 31% 56%,rgba(239,171,150,.1),transparent 27%),radial-gradient(ellipse at 68% 56%,rgba(239,171,150,.1),transparent 27%)}
+.portrait-photo.expression-thinking::before{background:linear-gradient(175deg,rgba(41,48,59,.12) 16%,transparent 55%)}
+.portrait-photo.expression-tense::before{background:radial-gradient(ellipse at 50% 48%,transparent 35%,rgba(26,37,50,.16) 100%)}
+.portrait-photo.person-0{--eye-left:39.7%;--eye-right:59.5%;--eye-top:41.2%}
+.portrait-photo.person-1{--eye-left:39%;--eye-right:58%;--eye-top:40.7%}
+.portrait-photo.person-2{--eye-left:38%;--eye-right:59%;--eye-top:45%}
+.portrait-photo.person-3{--eye-left:39%;--eye-right:59%;--eye-top:41.7%}
+.portrait-photo.pupil-stage-1::after,.portrait-photo.pupil-stage-2::after,.portrait-photo.pupil-stage-3::after{
+ content:"";position:absolute;inset:0;pointer-events:none;z-index:3;opacity:.8;
+ background-repeat:no-repeat;
+}
+.portrait-photo.pupil-stage-1::after{
+ background-image:radial-gradient(circle at var(--eye-left) var(--eye-top),rgba(6,9,14,.8) 0 2.35%,transparent 3.05%),radial-gradient(circle at var(--eye-right) var(--eye-top),rgba(6,9,14,.8) 0 2.35%,transparent 3.05%);
+}
+.portrait-photo.pupil-stage-2::after{
+ opacity:.91;background-image:radial-gradient(circle at var(--eye-left) var(--eye-top),#0c0c14 0 4.5%,rgba(15,13,20,.6) 5.2%,transparent 6.1%),radial-gradient(circle at var(--eye-right) var(--eye-top),#0c0c14 0 4.5%,rgba(15,13,20,.6) 5.2%,transparent 6.1%);
+}
+.portrait-photo.pupil-stage-3::after{
+ opacity:1;background-image:radial-gradient(circle at var(--eye-left) var(--eye-top),#030508 0 8.7%,rgba(8,7,13,.9) 9.3%,transparent 10.7%),radial-gradient(circle at var(--eye-right) var(--eye-top),#030508 0 8.7%,rgba(8,7,13,.9) 9.3%,transparent 10.7%);
+}
+.avatar.mini .portrait-photo.pupil-stage-1::after,.avatar.mini .portrait-photo.pupil-stage-2::after{display:none}
+.portrait-photo.uncanny{filter:brightness(.69) saturate(.55) contrast(1.34);transform:scale(1.04)}
+.reaction-card{background:#eff3f1;border:1px solid #b8cdd0;border-left:4px solid #72949e;border-radius:9px;padding:13px 15px;margin:14px 0 13px}
+.reaction-heading{display:flex;align-items:center;gap:9px;margin-bottom:7px}.reaction-heading .mini{width:42px;height:47px}
+.reaction-heading b{font-size:13px;display:block}.reaction-heading small{font-size:10px;color:#6b8288;display:block}
+.reaction-card p{font-size:13px;line-height:1.85;padding:2px 0 5px}.reaction-description{border-top:1px solid #d4ddde;font-size:11px;color:#667e84;padding-top:8px}
+.reverse-person{display:flex;align-items:center;gap:10px;min-width:0}.reverse-person .avatar.mini{min-width:38px}
+.reverse-subject{display:flex;align-items:center;gap:14px;background:#ecf1f1;border:1px solid #cbd9da;border-radius:8px;padding:13px;margin:12px 0}
+.reverse-portrait{width:112px;flex:0 0 112px;border:3px solid white;border-radius:4px}
+.reverse-subject blockquote{margin:0;flex:1;font-size:13px}
+@media(max-width:540px){.reverse-portrait{width:77px;flex-basis:77px}.reverse-subject{gap:10px;padding:10px}.reverse-subject blockquote{padding:8px;font-size:12px}.reaction-card{padding:11px}}
+@media(prefers-reduced-motion:reduce){.portrait-photo{transition:none!important}}
