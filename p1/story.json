@@ -1,0 +1,913 @@
+{
+  "version": "v0.8.0-beta",
+  "phase": "browser_prototype",
+  "articles": [
+    {
+      "id": "I01",
+      "type": "investigative",
+      "reporter": "佐伯",
+      "topic": "医療",
+      "topicCode": "H",
+      "publicAttentionTopic": "H",
+      "headline": "未執行の県費、中央病院への活用余地",
+      "body": "県が公表した歳出資料に、年度内の執行がまだ決まっていない事業費があることが分かった。中央病院の運営費への転用には県議会での手続きが必要で、現時点で支援は決定していない。",
+      "leadVariant": {
+        "leadToken": "hospital_budget",
+        "body": "病院救済をめぐり県の予算担当者に確認したところ、対象となる財源と手続きの期限が示された。ただし議会審議までに具体的な再建方針が必要という。"
+      },
+      "evidenceFlag": "public_h"
+    },
+    {
+      "id": "I02",
+      "type": "investigative",
+      "reporter": "佐伯",
+      "topic": "観光",
+      "topicCode": "T",
+      "publicAttentionTopic": "T",
+      "headline": "高原観光計画、許認可の一部は審査進む",
+      "body": "霧峰高原の観光開発について、道路利用や既存施設に関する協議が進んでいる。一方、開発区域全体の許可は下りておらず、工事開始が決まったわけではない。",
+      "leadVariant": {
+        "leadToken": "development_land",
+        "body": "観光課への照会と地権者の公開資料を突き合わせた結果、事業者の説明に含まれていなかった用地調整が残っていることが判明した。許可の進捗と投資決定は別の問題だ。"
+      },
+      "evidenceFlag": "permits_t"
+    },
+    {
+      "id": "I03",
+      "type": "investigative",
+      "reporter": "佐伯",
+      "topic": "自然",
+      "topicCode": "E",
+      "publicAttentionTopic": "E",
+      "headline": "保護区域維持へ、条例に適用余地",
+      "body": "千鳥湿原周辺には県条例による保護指定があり、指定を維持する選択は法制度上可能だ。ただし既存の管理計画では保全費用の確保が課題となっている。",
+      "leadVariant": {
+        "leadToken": "wetland_map",
+        "body": "県の旧計画図と現行の指定資料を照合すると、境界線の記載が変更された経緯を確認できた。担当課は変更自体を認め、保護の必要性は改めて審議するとしている。"
+      },
+      "evidenceFlag": "public_e"
+    },
+    {
+      "id": "I04",
+      "type": "investigative",
+      "reporter": "佐伯",
+      "topic": "県政",
+      "topicCode": "G",
+      "publicAttentionTopic": "H",
+      "headline": "県費の執行残、公開資料と説明に差",
+      "body": "県が公開した複数の予算資料を比較すると、事業費の集計時点が異なるため執行残に差が生じていた。病院支援に直結する財源かどうかは、今後の審議次第となる。",
+      "leadVariant": {
+        "leadToken": "public_records",
+        "body": "議会資料の最終ページに計上日の注記があり、担当課は金額の相違が対象年度の違いによるものと説明した。差額のうち支援へ転用できる範囲を継続して確認する。"
+      },
+      "evidenceFlag": null
+    },
+    {
+      "id": "I05",
+      "type": "investigative",
+      "reporter": "桐谷",
+      "topic": "医療",
+      "topicCode": "H",
+      "publicAttentionTopic": "H",
+      "headline": "地元企業、病院再建に条件付き出資案",
+      "body": "地元企業の連合体が中央病院の経営再建への出資を検討している。出資条件には医療機関との連携や経営計画の見直しが含まれ、単独で赤字を補填する提案ではない。",
+      "leadVariant": {
+        "leadToken": "land_h",
+        "body": "病院隣接地に関する投書を裏取りすると、買付を進める企業と医療支援を検討する企業連合は別法人だった。隣接地の売買が病院の出資条件になっているという証拠は確認できない。"
+      },
+      "evidenceFlag": "private_h"
+    },
+    {
+      "id": "I06",
+      "type": "investigative",
+      "reporter": "桐谷",
+      "topic": "観光",
+      "topicCode": "T",
+      "publicAttentionTopic": "T",
+      "headline": "高原開発、企業側が投資条件を提示",
+      "body": "蒼波観光開発は霧峰高原の観光事業への投資を検討しているが、行政手続き、資金調達、環境対策を条件に挙げた。事業の実施や着工時期は未定としている。",
+      "leadVariant": {
+        "leadToken": "tourism_capital",
+        "body": "関係企業が示した資金計画を確認すると、自然保護区域を避ける整備案なら投資継続の余地があることが分かった。ただし建設費の増加についてはなお協議が必要となる。"
+      },
+      "evidenceFlag": "investment_t"
+    },
+    {
+      "id": "I07",
+      "type": "investigative",
+      "reporter": "桐谷",
+      "topic": "自然",
+      "topicCode": "E",
+      "publicAttentionTopic": "E",
+      "headline": "県内企業、自然保全基金を協議",
+      "body": "県内企業の有志が千鳥湿原の管理費を支える基金設立を協議している。拠出額や継続期間は確定しておらず、基金だけで恒久的な保全を保証するものではない。",
+      "leadVariant": {
+        "leadToken": "conservation_finance",
+        "body": "企業側の試案では、資金拠出に加えて地域団体への管理業務の委託が検討されている。参加企業が求める情報公開と、住民側の監督体制が今後の課題となる。"
+      },
+      "evidenceFlag": null
+    },
+    {
+      "id": "I08",
+      "type": "investigative",
+      "reporter": "桐谷",
+      "topic": "県政",
+      "topicCode": "G",
+      "publicAttentionTopic": "T",
+      "headline": "金融機関、県の資金調達環境を分析",
+      "body": "県内金融機関は、観光投資と医療支援の双方が資金需要を増やすとみている。行政の支援余力には限界があり、民間事業との役割分担が重要になる。",
+      "leadVariant": {
+        "leadToken": "tourism_capital",
+        "body": "投資担当者への追加取材で、融資条件が県の直接補助と事業採算の両方に左右されることが分かった。行政による誘致の発表だけでは融資は確定しない。"
+      },
+      "evidenceFlag": null
+    },
+    {
+      "id": "I09",
+      "type": "investigative",
+      "reporter": "森下",
+      "topic": "医療",
+      "topicCode": "H",
+      "publicAttentionTopic": "H",
+      "headline": "近隣の医療機関、中央病院と連携を協議",
+      "body": "中央病院の運営再建に向けて、近隣の医療機関が診療科の分担や共同採用を協議している。人員配置の改善は見込まれるが、患者の移動負担への対応が必要だ。",
+      "leadVariant": {
+        "leadToken": "hospital_staff",
+        "body": "退職した職員らの話と病院側の説明を照合すると、欠員の背景には夜間勤務の偏りがあった。連携案では夜間診療を分担する仕組みを盛り込む方向だ。"
+      },
+      "evidenceFlag": "reform_h"
+    },
+    {
+      "id": "I10",
+      "type": "investigative",
+      "reporter": "森下",
+      "topic": "観光",
+      "topicCode": "T",
+      "publicAttentionTopic": "T",
+      "headline": "観光客増加に備える救急体制、病院が懸念",
+      "body": "高原観光の拡大に伴い救急搬送の増加が見込まれるが、県内の受入体制は十分ではない。観光開発の事業計画には医療機関との協定が必要との指摘が出ている。",
+      "leadVariant": {
+        "leadToken": "medical_tourism",
+        "body": "住民と観光事業者から救急対応の見通しを聞いたところ、繁忙期の搬送時間と人員負担に大きな懸念があった。事業者は協力金を含む対策を検討すると説明している。"
+      },
+      "evidenceFlag": null
+    },
+    {
+      "id": "I11",
+      "type": "investigative",
+      "reporter": "森下",
+      "topic": "自然",
+      "topicCode": "E",
+      "publicAttentionTopic": "E",
+      "headline": "河川の水質変化、健康影響はなお調査段階",
+      "body": "県北部の河川では過去の観測値と異なる水質指標が確認された。ただし住民の体調不良との因果関係は現段階では判断できず、追加調査が必要だ。",
+      "leadVariant": {
+        "leadToken": "ecology_data",
+        "body": "第三者機関の再検査で一部の測定点に変化が認められた。一方、健康被害との関連は証明されておらず、医師らは断定的な言説を控えるよう呼びかけている。"
+      },
+      "evidenceFlag": null
+    },
+    {
+      "id": "I12",
+      "type": "investigative",
+      "reporter": "森下",
+      "topic": "県政",
+      "topicCode": "G",
+      "publicAttentionTopic": "H",
+      "headline": "県の医療費試算、前提条件に差",
+      "body": "医療費の将来推計を確認すると、県の試算と現場の見通しでは高齢患者数の想定が異なる。どちらの推計にも不確実性が残り、制度変更の影響を含めた検討が必要となる。",
+      "leadVariant": {
+        "leadToken": "hospital_staff",
+        "body": "医療従事者の聞き取りと公開資料を照合したところ、医療体制再編の効果が県の説明より小さくなる条件が見つかった。再建計画の透明性が問われる。"
+      },
+      "evidenceFlag": null
+    },
+    {
+      "id": "I13",
+      "type": "investigative",
+      "reporter": "大野",
+      "topic": "医療",
+      "topicCode": "H",
+      "publicAttentionTopic": "H",
+      "headline": "高齢者向け滞在ケア、地域観光との接点",
+      "body": "中央病院周辺で、高齢者の短期滞在ケアと地域の宿泊施設を連携させる案が浮上している。治療の代替ではなく、退院後の生活支援を目的とする構想だ。",
+      "leadVariant": {
+        "leadToken": "medical_tourism",
+        "body": "観光事業者と医療機関に確認すると、滞在型支援には送迎と訪問診療の体制が不可欠と分かった。経済効果だけでなく、地域の医療資源への負担も検討が必要だ。"
+      },
+      "evidenceFlag": null
+    },
+    {
+      "id": "I14",
+      "type": "investigative",
+      "reporter": "大野",
+      "topic": "観光",
+      "topicCode": "T",
+      "publicAttentionTopic": "T",
+      "headline": "自然に配慮した観光整備の代替案",
+      "body": "霧峰高原の観光開発について、施設規模を調整し千鳥湿原の保護区域を避ける案が地元関係者から示された。建設費や動線の再検討が必要となる。",
+      "leadVariant": {
+        "leadToken": "eco_joint",
+        "body": "事業者と保全団体への取材で、湿原を避ける配置案と周辺の観察路整備を両立する余地があることが分かった。両者の合意はまだ成立していない。"
+      },
+      "evidenceFlag": "eco_tour"
+    },
+    {
+      "id": "I15",
+      "type": "investigative",
+      "reporter": "大野",
+      "topic": "自然",
+      "topicCode": "E",
+      "publicAttentionTopic": "E",
+      "headline": "地元事業者、湿原保全の協定案",
+      "body": "千鳥湿原の維持管理を地元事業者と住民団体が共同で担う協定案が検討されている。行政だけに依存しない仕組みだが、長期的な資金と責任分担が焦点となる。",
+      "leadVariant": {
+        "leadToken": "conservation_finance",
+        "body": "関係者の協議記録を確認すると、保全基金の拠出先と管理人員の役割分担が具体化しつつある。事業者は観光客の受入規模に上限を設ける案も示した。"
+      },
+      "evidenceFlag": "community_e"
+    },
+    {
+      "id": "I16",
+      "type": "investigative",
+      "reporter": "大野",
+      "topic": "県政",
+      "topicCode": "G",
+      "publicAttentionTopic": "T",
+      "headline": "宿泊税の一部、保全活動へ充当する構想",
+      "body": "県議会の議論では、将来の宿泊税収の一部を環境保全に充てる案が示されている。税そのものは未成立で、今すぐ使える財源ではない。",
+      "leadVariant": {
+        "leadToken": "tourism_levy",
+        "body": "観光関係者への聞き取りによると、使途を公開するなら負担を受け入れ得るとの声があった。一方、税収予測に幅があり、保全の唯一の財源とするのは難しい。"
+      },
+      "evidenceFlag": null
+    },
+    {
+      "id": "I17",
+      "type": "investigative",
+      "reporter": "黒田",
+      "topic": "医療",
+      "topicCode": "H",
+      "publicAttentionTopic": "H",
+      "headline": "病院用地の取引、公開資料の説明にずれ",
+      "body": "中央病院周辺の土地取引について、登記資料と県の説明に日付の違いが見つかった。現段階で違法行為を裏付ける資料はなく、契約の目的を確認している。",
+      "leadVariant": {
+        "leadToken": "land_h",
+        "body": "会社側の説明と公開記録を照合したところ、買付の対象は病院敷地ではなく隣接地だった。投書の「病院が売却される」との断定には根拠が確認できなかった。"
+      },
+      "evidenceFlag": null
+    },
+    {
+      "id": "I18",
+      "type": "investigative",
+      "reporter": "黒田",
+      "topic": "観光",
+      "topicCode": "T",
+      "publicAttentionTopic": "T",
+      "headline": "観光予定地の土地取引、説明に食い違い",
+      "body": "高原開発予定地では一部地権者との交渉が続いており、事業者と住民の認識に差がある。土地取得が完了したとの情報は確認できなかった。",
+      "leadVariant": {
+        "leadToken": "development_land",
+        "body": "取引に関する資料を調べたところ、企業が説明した取得面積と契約済み面積が異なった。会社側は予定と実績の区別が十分に伝わっていなかったと説明する。"
+      },
+      "evidenceFlag": null
+    },
+    {
+      "id": "I19",
+      "type": "investigative",
+      "reporter": "黒田",
+      "topic": "自然",
+      "topicCode": "E",
+      "publicAttentionTopic": "E",
+      "headline": "環境調査、湿原周辺の一部が対象外",
+      "body": "霧峰高原の開発計画に添付された環境調査では、千鳥湿原に近い一部の区画が対象外となっている。担当者は追加調査が必要との認識を示した。",
+      "leadVariant": {
+        "leadToken": "wetland_map",
+        "body": "旧地図と現在の計画図を照合した結果、境界表示の変更を確認した。ただし直ちに違法な指定解除を示すものではなく、変更の手続きと環境評価を再確認する必要がある。"
+      },
+      "evidenceFlag": "survey_e"
+    },
+    {
+      "id": "I20",
+      "type": "investigative",
+      "reporter": "黒田",
+      "topic": "県政",
+      "topicCode": "G",
+      "publicAttentionTopic": "E",
+      "headline": "審査資料の時系列、公表説明と一致せず",
+      "body": "県の審査資料と過去の説明会記録を比較したところ、開発区域の変更が説明された時期に差があった。行政は文書作成日と説明日の違いによるものと説明している。",
+      "leadVariant": {
+        "leadToken": "public_records",
+        "body": "議会記録と担当課への照会で、事業者からの申請内容が会議後に更新されていたことが分かった。更新自体は制度上可能だが、住民への説明が十分だったかは検証が必要だ。"
+      },
+      "evidenceFlag": null
+    },
+    {
+      "id": "N01",
+      "type": "routine",
+      "headline": "中央病院、外来待ち時間が長期化",
+      "body": "外来患者の増加と医師の不足が重なり、診療科によって待ち時間が長くなっている。病院は予約枠の調整を進める。",
+      "publicAttentionTopic": "H"
+    },
+    {
+      "id": "N02",
+      "type": "routine",
+      "headline": "中央病院で看護師3人が退職",
+      "body": "中央病院では看護師3人が退職し、夜勤の勤務計画を見直している。患者への影響を抑えるため代替要員を確保する方針だ。",
+      "publicAttentionTopic": "H"
+    },
+    {
+      "id": "N03",
+      "type": "routine",
+      "headline": "山間部の診療所、医師派遣が縮小",
+      "body": "県北部の診療所で中央病院からの医師派遣が減少した。高齢住民からは通院への不安が聞かれる。",
+      "publicAttentionTopic": "H"
+    },
+    {
+      "id": "N04",
+      "type": "routine",
+      "headline": "病院存続求める署名、県庁に提出",
+      "body": "中央病院の診療体制を維持するよう求める署名が提出された。県は運営審査で地域医療への影響を検討する。",
+      "publicAttentionTopic": "H"
+    },
+    {
+      "id": "N05",
+      "type": "routine",
+      "headline": "県北部の開発予定地、企業が視察",
+      "body": "蒼波観光開発の関係者が霧峰高原を訪れた。視察は投資の確約ではなく、事業計画の検討は続いている。",
+      "publicAttentionTopic": "T"
+    },
+    {
+      "id": "N06",
+      "type": "routine",
+      "headline": "県内の宿泊予約、前年を上回る",
+      "body": "県内の宿泊施設で予約が伸びている。ただし短期的な需要増加が大型観光事業の採算を保証するものではない。",
+      "publicAttentionTopic": "T"
+    },
+    {
+      "id": "N07",
+      "type": "routine",
+      "headline": "高原へ向かう県道で渋滞",
+      "body": "週末の交通量増加を受けて県道の一部区間で渋滞が発生した。住民は観光開発後の交通対策を求めている。",
+      "publicAttentionTopic": "T"
+    },
+    {
+      "id": "N08",
+      "type": "routine",
+      "headline": "観光予定地の地権者交渉が難航",
+      "body": "霧峰高原の一部区画で地権者との契約が成立していない。事業者は交渉を続けるとしている。",
+      "publicAttentionTopic": "T"
+    },
+    {
+      "id": "N09",
+      "type": "routine",
+      "headline": "千鳥湿原で希少な鳥の繁殖確認",
+      "body": "県北部の千鳥湿原で希少鳥の繁殖が確認された。保全団体は繁殖期の立ち入りを抑えるよう呼びかける。",
+      "publicAttentionTopic": "E"
+    },
+    {
+      "id": "N10",
+      "type": "routine",
+      "headline": "県北部の河川、水質に変化",
+      "body": "県が公表した観測記録で水質指標に変化が見られた。変化の原因については今後の調査が必要だ。",
+      "publicAttentionTopic": "E"
+    },
+    {
+      "id": "N11",
+      "type": "routine",
+      "headline": "崩れた登山道、住民が復旧作業",
+      "body": "霧峰高原の登山道で住民団体が復旧作業を行っている。観光利用と自然環境の維持を両立する管理が課題だ。",
+      "publicAttentionTopic": "E"
+    },
+    {
+      "id": "N12",
+      "type": "routine",
+      "headline": "住民ら、湿原の保全活動を継続",
+      "body": "地域のボランティアが千鳥湿原の清掃と観察記録を続けている。活動費と担い手の確保が課題となっている。",
+      "publicAttentionTopic": "E"
+    },
+    {
+      "id": "N13",
+      "type": "routine",
+      "headline": "県議会、病院の運営費を審議",
+      "body": "県議会で病院運営費について質問が相次いだ。県は今週の審査結果を踏まえて方針を整理するとしている。",
+      "publicAttentionTopic": "H"
+    },
+    {
+      "id": "N14",
+      "type": "routine",
+      "headline": "宿泊税の導入議論、意見分かれる",
+      "body": "観光客の増加を見据え、宿泊税の導入案を巡って議員の意見が分かれている。税額も使途も決まっていない。",
+      "publicAttentionTopic": "T"
+    },
+    {
+      "id": "N15",
+      "type": "routine",
+      "headline": "保護区域の審議日程が公表",
+      "body": "県は千鳥湿原周辺の保護区域について今週末に審議すると発表した。指定の扱いが議題となる。",
+      "publicAttentionTopic": "E"
+    },
+    {
+      "id": "N16",
+      "type": "routine",
+      "headline": "病院敷地の将来利用案に賛否",
+      "body": "中央病院の存続が不透明な中、万一診療が縮小された場合の敷地利用について意見が出ている。県は現時点で転用方針を決めていない。",
+      "publicAttentionTopic": "H"
+    },
+    {
+      "id": "C01",
+      "type": "chain",
+      "headline": "中央病院の存続求め、町民集会",
+      "body": "中央病院への支援を求める住民が集会を開いた。県民の関心は高まっているが、運営体制の改善策も必要とされる。",
+      "publicAttentionTopic": "H"
+    },
+    {
+      "id": "C02",
+      "type": "chain",
+      "headline": "病院向け予算の使途に問い合わせ",
+      "body": "新聞で報じられた未執行予算について、県に問い合わせが相次いだ。財源の使途は議会審議で判断される。",
+      "publicAttentionTopic": "H"
+    },
+    {
+      "id": "C03",
+      "type": "chain",
+      "headline": "観光企業、開発予定地を再視察",
+      "body": "観光開発への注目が高まり、企業関係者が現地視察を行った。条件が整わなければ投資は見送られる可能性もある。",
+      "publicAttentionTopic": "T"
+    },
+    {
+      "id": "C04",
+      "type": "chain",
+      "headline": "観光事業、自然共生型の案浮上",
+      "body": "観光事業者と地域団体の間で、保護区域を避ける整備案が議論され始めた。実現には追加設計が必要だ。",
+      "publicAttentionTopic": "T"
+    },
+    {
+      "id": "C05",
+      "type": "chain",
+      "headline": "住民団体、保護区域の説明を要求",
+      "body": "千鳥湿原の指定区域を巡り、住民団体が県に説明会を求めた。審議前に追加資料が提出される見通しだ。",
+      "publicAttentionTopic": "E"
+    },
+    {
+      "id": "C06",
+      "type": "chain",
+      "headline": "環境調査の第三者検証求める声",
+      "body": "環境調査の対象外区画が明らかになったことを受け、第三者による検証を求める声が広がっている。",
+      "publicAttentionTopic": "E"
+    },
+    {
+      "id": "C07",
+      "type": "chain",
+      "headline": "観光計画に反対する住民集会",
+      "body": "観光開発への期待が高まる一方、自然保護への配慮不足を理由に反対集会が開かれた。参加者の意見は一様ではない。",
+      "publicAttentionTopic": "E"
+    },
+    {
+      "id": "C08",
+      "type": "chain",
+      "headline": "病院支援と観光投資、県議会で論戦",
+      "body": "病院の公的支援決定を受け、他事業への支出余力が議論された。県は事業の優先順位を説明する必要がある。",
+      "publicAttentionTopic": "T"
+    }
+  ],
+  "reactions": [
+    {
+      "id": "R01",
+      "eligibilityDescription": "病院報道トップ",
+      "baseCopy": "「うちの母は毎週通院しています。続きを取材してください」",
+      "leadToken": null,
+      "verified": false,
+      "revisionSample": {
+        "channel": "読者投書",
+        "copy": "中央病院に通う母は、この記事を切り抜いて冷蔵庫に貼っていました。今度は病院がどう立て直すのか、聞いてください。",
+        "editorialNotes": "生活上の不安。制度情報ではない。"
+      }
+    },
+    {
+      "id": "R02",
+      "eligibilityDescription": "病院記事ほぼ不掲載",
+      "baseCopy": "「病院の話はどこへいったのでしょう」",
+      "leadToken": null,
+      "verified": false
+    },
+    {
+      "id": "R03",
+      "eligibilityDescription": "医療制度に関する記事",
+      "baseCopy": "「現場の先生方の声が少ないと思います」",
+      "leadToken": "hospital_staff",
+      "verified": false
+    },
+    {
+      "id": "R04",
+      "eligibilityDescription": "観光開発報道",
+      "baseCopy": "「町が明るくなるなら期待しています」",
+      "leadToken": null,
+      "verified": false
+    },
+    {
+      "id": "R05",
+      "eligibilityDescription": "観光偏重",
+      "baseCopy": "「観光以外の県内ニュースも取り上げてほしい」",
+      "leadToken": null,
+      "verified": false,
+      "revisionSample": {
+        "channel": "読者投書",
+        "copy": "観光の記事ばかりが一面に出ますが、病院や川の問題は進んでいるのでしょうか。私はどちらも気になっています。",
+        "editorialNotes": "未掲載分野への気付き。"
+      }
+    },
+    {
+      "id": "R06",
+      "eligibilityDescription": "観光と医療がともに掲載",
+      "baseCopy": "「観光客が増えたら救急車は足りるのでしょうか」",
+      "leadToken": "medical_tourism",
+      "verified": false
+    },
+    {
+      "id": "R07",
+      "eligibilityDescription": "自然保護記事トップ",
+      "baseCopy": "「子供と歩く湿地が残るなら嬉しい」",
+      "leadToken": null,
+      "verified": false
+    },
+    {
+      "id": "R08",
+      "eligibilityDescription": "自然の不掲載が続く",
+      "baseCopy": "「北部の川の様子も取材してもらえませんか」",
+      "leadToken": "wetland_map",
+      "verified": false
+    },
+    {
+      "id": "R09",
+      "eligibilityDescription": "県政関連報道",
+      "baseCopy": "「予算の話が少し分かりやすくなりました」",
+      "leadToken": "tourism_levy",
+      "verified": false
+    },
+    {
+      "id": "R10",
+      "eligibilityDescription": "どのテーマでも",
+      "baseCopy": "「昨日の記事の漢字、間違っていませんか」",
+      "leadToken": null,
+      "verified": false
+    },
+    {
+      "id": "R11",
+      "eligibilityDescription": "病院トップ",
+      "baseCopy": "「中央病院の件、ようやく新聞に出た」",
+      "leadToken": null,
+      "verified": false
+    },
+    {
+      "id": "R12",
+      "eligibilityDescription": "病院関心上昇",
+      "baseCopy": "「県の広報と新聞、どっちが正しいんだ？」",
+      "leadToken": "hospital_budget",
+      "verified": false,
+      "revisionSample": {
+        "channel": "SNS",
+        "copy": "@sino_note：県の「医療体制は維持できる」と新聞の「運営に懸念」。結局どこが食い違うんだろう。",
+        "editorialNotes": "行政資料の前提を確認するきっかけ。"
+      }
+    },
+    {
+      "id": "R13",
+      "eligibilityDescription": "病院問題が拡散",
+      "baseCopy": "「寄付だけで乗り切れる規模じゃないでしょ」",
+      "leadToken": null,
+      "verified": false
+    },
+    {
+      "id": "R14",
+      "eligibilityDescription": "観光トップ",
+      "baseCopy": "「東雲県に大型施設できるなら楽しみ」",
+      "leadToken": null,
+      "verified": false
+    },
+    {
+      "id": "R15",
+      "eligibilityDescription": "観光トップ連続",
+      "baseCopy": "「観光開発の宣伝紙みたいになってない？」",
+      "leadToken": null,
+      "verified": false
+    },
+    {
+      "id": "R16",
+      "eligibilityDescription": "観光注目高・自然低",
+      "baseCopy": "「開発予定地、あの湿地の近くだよね」",
+      "leadToken": "wetland_map",
+      "verified": false,
+      "revisionSample": {
+        "channel": "SNS",
+        "copy": "@north_watch：開発予定地って千鳥湿原の端にかかってない？ 昔の地図しか手元にないから断言できないけど。",
+        "editorialNotes": "本人も未確認と認める地図情報。"
+      }
+    },
+    {
+      "id": "R17",
+      "eligibilityDescription": "自然トップ",
+      "baseCopy": "「写真の場所、昔は違う名前で呼ばれてた」",
+      "leadToken": "wetland_map",
+      "verified": false
+    },
+    {
+      "id": "R18",
+      "eligibilityDescription": "環境調査報道",
+      "baseCopy": "「これって正式な環境調査なの？」",
+      "leadToken": "ecology_data",
+      "verified": false
+    },
+    {
+      "id": "R19",
+      "eligibilityDescription": "行政の苦言後",
+      "baseCopy": "「新聞が議会から怒られたって本当？」",
+      "leadToken": null,
+      "verified": false,
+      "revisionSample": {
+        "channel": "SNS",
+        "copy": "@local_press：議員が新聞社に文句を言ったらしい。でも内容を誰も見てない段階で決めつけるのは違うと思う。",
+        "editorialNotes": "伝聞のため、圧力の事実自体が要確認。"
+      }
+    },
+    {
+      "id": "R20",
+      "eligibilityDescription": "高注目・関心二分",
+      "baseCopy": "「県民の意見、そんなに一つじゃないよ」",
+      "leadToken": null,
+      "verified": false
+    },
+    {
+      "id": "R21",
+      "eligibilityDescription": "病院予算報道",
+      "baseCopy": "「事実確認のため、県の資料も参照願いたい」（県広報課）",
+      "leadToken": "hospital_budget",
+      "verified": false,
+      "revisionSample": {
+        "channel": "県医療政策課",
+        "copy": "本日付の記事に掲載された予算額は、決算見込みと補正予算の区別が必要です。照会があれば資料を提供します。",
+        "editorialNotes": "訂正要求ではなく正当な説明。"
+      }
+    },
+    {
+      "id": "R22",
+      "eligibilityDescription": "行政への批判連続",
+      "baseCopy": "「貴紙の報道は県民の不安を煽る」（県議会事務所）",
+      "leadToken": "public_records",
+      "verified": false
+    },
+    {
+      "id": "R23",
+      "eligibilityDescription": "強い行政批判",
+      "baseCopy": "「県の広報事業の発注について再検討する」（県議）",
+      "leadToken": null,
+      "verified": false,
+      "revisionSample": {
+        "channel": "県議事務所",
+        "copy": "貴紙の取材姿勢には強い懸念があります。今後、県政広報の発注先選定に際しても、説明責任を求める考えです。",
+        "editorialNotes": "不当な圧力の可能性。ただし事実認定は別。"
+      }
+    },
+    {
+      "id": "R24",
+      "eligibilityDescription": "観光の投資報道",
+      "baseCopy": "「正式な事業選定前です。断定は避けてください」（県観光課）",
+      "leadToken": "development_land",
+      "verified": false,
+      "revisionSample": {
+        "channel": "県観光課",
+        "copy": "許認可に関する本日付の記事は、協議の進捗を示すものであり、着工の承認を意味するものではありません。",
+        "editorialNotes": "正当な説明・誤解の防止。"
+      }
+    },
+    {
+      "id": "R25",
+      "eligibilityDescription": "環境報道",
+      "baseCopy": "「週末の住民説明会で意見を伺います」（環境担当課）",
+      "leadToken": "ecology_data",
+      "verified": false
+    },
+    {
+      "id": "R26",
+      "eligibilityDescription": "予算を医療に使用",
+      "baseCopy": "「残る事業の財源には厳しい調整が必要です」（財政課）",
+      "leadToken": null,
+      "verified": false
+    },
+    {
+      "id": "R27",
+      "eligibilityDescription": "県政記事を掲載",
+      "baseCopy": "「本日の議会日程が変更となりました」（議会事務局）",
+      "leadToken": "public_records",
+      "verified": false
+    },
+    {
+      "id": "R28",
+      "eligibilityDescription": "記事に誤解余地",
+      "baseCopy": "「当該数値の出典をご確認ください」（担当官）",
+      "leadToken": null,
+      "verified": false
+    },
+    {
+      "id": "R29",
+      "eligibilityDescription": "病院トップ",
+      "baseCopy": "「弊社にも病院支援について問い合わせが来ています」",
+      "leadToken": "hospital_staff",
+      "verified": false
+    },
+    {
+      "id": "R30",
+      "eligibilityDescription": "桐谷×医療記事を掲載",
+      "baseCopy": "「提示条件には地域医療連携の実施が含まれます」",
+      "leadToken": "hospital_staff",
+      "verified": false,
+      "revisionSample": {
+        "channel": "企業連合窓口",
+        "copy": "出資の検討自体は事実ですが、医療機関の連携が成立しなければ資金拠出を決定できません。",
+        "editorialNotes": "投資条件の具体化。"
+      }
+    },
+    {
+      "id": "R31",
+      "eligibilityDescription": "観光の注目上昇",
+      "baseCopy": "「事業に対する関心はありますが、用地条件の確認が必要です」",
+      "leadToken": "tourism_capital",
+      "verified": false
+    },
+    {
+      "id": "R32",
+      "eligibilityDescription": "企業の投資条件が未掲載",
+      "baseCopy": "「投資について一部で誤解があるようです」",
+      "leadToken": "tourism_capital",
+      "verified": false
+    },
+    {
+      "id": "R33",
+      "eligibilityDescription": "観光・自然をともに報道",
+      "baseCopy": "「環境対策が明示されるなら投資検討を継続します」",
+      "leadToken": "eco_joint",
+      "verified": false
+    },
+    {
+      "id": "R34",
+      "eligibilityDescription": "調査報道で取引先を批判",
+      "baseCopy": "「広告契約の更新について協議したい」",
+      "leadToken": null,
+      "verified": false,
+      "revisionSample": {
+        "channel": "広告主",
+        "copy": "先日の調査記事について意見を伺いたい。広告契約とは別件ですが、社内で取引継続の判断材料にはなっています。",
+        "editorialNotes": "利害の圧力と記事真偽は別。"
+      }
+    },
+    {
+      "id": "R35",
+      "eligibilityDescription": "自然保護が議題化",
+      "baseCopy": "「県内企業有志として保全への協力を検討しています」",
+      "leadToken": "conservation_finance",
+      "verified": false
+    },
+    {
+      "id": "R36",
+      "eligibilityDescription": "病院報道継続",
+      "baseCopy": "「昨日の病院記事に追跡取材希望が来ています」（整理部）",
+      "leadToken": null,
+      "verified": false
+    },
+    {
+      "id": "R37",
+      "eligibilityDescription": "観光報道連続",
+      "baseCopy": "「投資金額と着工予定を混同しないでください」（校閲）",
+      "leadToken": null,
+      "verified": false,
+      "revisionSample": {
+        "channel": "校閲部",
+        "copy": "「投資を決定した」と「投資を検討している」は別です。見出しで事業者の説明を越えて断定しないようお願いします。",
+        "editorialNotes": "正確性の注意。"
+      }
+    },
+    {
+      "id": "R38",
+      "eligibilityDescription": "環境の未掲載続き",
+      "baseCopy": "「県北の通信員が資料を送ってきました」（地方支局）",
+      "leadToken": "wetland_map",
+      "verified": false,
+      "revisionSample": {
+        "channel": "北部支局",
+        "copy": "千鳥湿原の古い管理図を見つけました。最新の指定範囲と比べる必要があるので、現時点では記事化しません。",
+        "editorialNotes": "公開前の社内取材メモ。"
+      }
+    },
+    {
+      "id": "R39",
+      "eligibilityDescription": "連鎖記事発生",
+      "baseCopy": "「関連記事が増えました。紙面の割当は任せます」（編集部）",
+      "leadToken": null,
+      "verified": false
+    },
+    {
+      "id": "R40",
+      "eligibilityDescription": "特定記事を小記事掲載",
+      "baseCopy": "「小さく扱った記事への問い合わせが来ています」（読者窓口）",
+      "leadToken": null,
+      "verified": false
+    },
+    {
+      "id": "R41",
+      "eligibilityDescription": "病院問題を報道",
+      "baseCopy": "「あそこの土地を狙っている会社を調べろ」",
+      "leadToken": "land_h",
+      "verified": false,
+      "revisionSample": {
+        "channel": "匿名投書",
+        "copy": "中央病院の隣の土地を調べてください。病院全体を売るという話ではないかもしれません。",
+        "editorialNotes": "出所不明・断定しない。"
+      }
+    },
+    {
+      "id": "R42",
+      "eligibilityDescription": "予算の件を報道",
+      "baseCopy": "「議事録の数字は最後のページにある」",
+      "leadToken": "hospital_budget",
+      "verified": false
+    },
+    {
+      "id": "R43",
+      "eligibilityDescription": "観光記事が続く",
+      "baseCopy": "「視察した会社が本当に投資するとは限らない」",
+      "leadToken": "tourism_capital",
+      "verified": false
+    },
+    {
+      "id": "R44",
+      "eligibilityDescription": "自然を小さく報道",
+      "baseCopy": "「以前の地図では湿地の境界が違う」",
+      "leadToken": "wetland_map",
+      "verified": false,
+      "revisionSample": {
+        "channel": "匿名投書",
+        "copy": "県北の湿地の地図が変わっています。昔の図面を見てください。",
+        "editorialNotes": "独立資料との照合が必要。"
+      }
+    },
+    {
+      "id": "R45",
+      "eligibilityDescription": "第4日・病院救済決定",
+      "baseCopy": "「これで病院は残りますね。あとの二つはまだ分からない」",
+      "leadToken": null,
+      "verified": false,
+      "revisionSample": {
+        "channel": "差出人不明",
+        "copy": "中央病院は残ったようですね。残りの二つについて、紙面に何を残すかが気になります。",
+        "editorialNotes": "違和感はあるが未来確定の攻略指示ではない。"
+      }
+    },
+    {
+      "id": "R46",
+      "eligibilityDescription": "第6日・特殊条件",
+      "baseCopy": "「昨年の新聞を読んだ。あなたが載せなかったものが、いちばん大きかった」",
+      "leadToken": null,
+      "verified": false,
+      "revisionSample": {
+        "channel": "差出人不明",
+        "copy": "去年の東雲日報を読み返しました。載らなかった記事にも、あの時の県が残っています。",
+        "editorialNotes": "時間表現に矛盾。不穏ルートの伏線。"
+      }
+    },
+    {
+      "id": "R47",
+      "eligibilityDescription": "医療問題が県内で注目",
+      "baseCopy": "「全国紙が中央病院の危機を報道」（配信社）",
+      "leadToken": null,
+      "verified": false
+    },
+    {
+      "id": "R48",
+      "eligibilityDescription": "観光開発が進む",
+      "baseCopy": "「近隣県の観光団体が共同企画を打診」（観光連盟）",
+      "leadToken": null,
+      "verified": false
+    },
+    {
+      "id": "R49",
+      "eligibilityDescription": "自然保護に注目",
+      "baseCopy": "「環境団体が現地調査結果を発表」（市民団体）",
+      "leadToken": "ecology_data",
+      "verified": false
+    },
+    {
+      "id": "R50",
+      "eligibilityDescription": "いずれか政策決定",
+      "baseCopy": "「地元放送局が決定の背景を特集」（地方放送局）",
+      "leadToken": null,
+      "verified": false
+    }
+  ],
+  "modelNotes": [
+    "Article lead variants only become public when the article is printed.",
+    "Same article ID appearing again must render fresh follow-up copy; not yet populated in this JSON.",
+    "50 reaction copy entries are inherited from v0.6; only 16 are rewritten in v0.7.",
+    "No real-business or real-person names are used.",
+    "Source catalogue from v0.7; UI implementation and balance QA are v0.8.0-beta."
+  ]
+}
