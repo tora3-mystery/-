@@ -84,16 +84,44 @@ function runRegression(html){
   actionCounts:{quiet:2},days:[{day:1,sales:50},{day:2,sales:50},{day:3,sales:50}]});
  check(repeated.api.availableIds().includes('quiet'),'Repeated quiet action unavailable in test');
  repeated.api.play('quiet');
- const noiseResponse=repeated.api.getState().complaintTickets.find(x=>x.metric===3).replies.at(-1).body;
- check(noiseResponse.includes('改善対象に含まれていません')&&!noiseResponse.includes('改善するため'),
-  'Third repeat erroneously promises a complaint reduction');
+ check(repeated.api.getState().complaintTickets.filter(x=>x.status==='open').every(x=>(x.replies||[]).length===0),
+  'Unresolved complaints should not receive template replies');
  const ongoing=boot();ongoing.api.restart();
  ongoing.api.setState({day:5,odd:1,attraction:8,vals:[2,1,1,2],revenue:230,
   afterSales:18,remaining:1,permit:'要確認',
   days:[{day:1,sales:50},{day:2,sales:60},{day:3,sales:60},{day:4,sales:60}]});
  step(ongoing,'idle');
- check(ongoing.get('transitionHeadline').textContent==='閉店後の取引が続いています',
+ check(ongoing.get('transitionHeadline').textContent==='今日も、同じご意見が届きました',
   'Unchanged uncanny level repeats ritual completion event');
+
+ const first=boot();first.api.restart();
+ const initial=first.api.getState().complaintTickets;
+ check(initial.length===5,'Five initial complaints');
+ check(initial.every(x=>x.status==='open'&&(x.replies||[]).length===0),'Initial complaints must be unanswered');
+ step(first,'pickup');
+ const day2=first.api.getState();
+ check(day2.day===2,'DAY2 after first selection');
+ check(day2.vals.join(',')==='1,0,0,2','Pickup applies next-day metrics');
+ const pending=day2.complaintTickets.filter(x=>x.status==='open');
+ const resolved=day2.complaintTickets.filter(x=>x.status==='resolved');
+ check(pending.length===3&&resolved.length===3,'Three archived, three unresolved including one newly opened');
+ check(first.get('complaintBoard').children.length===3,'Resolved complaints leaked into visible inbox');
+ check(first.get('complaintArchiveBody').children.length===3,'Archived replies absent');
+ check(first.get('complaintArchiveBody').children.every(x=>x.className.includes('resolved')),'Resolved cards not grayed');
+ check(first.get('complaintBoard').children.every(x=>!x.children.some(y=>y.className==='complaint-reply')),'Unresolved card received a reply');
+ check(resolved.every(x=>x.replies.at(-1)?.body.includes('改善しました')),'Resolved replies must report actual fix');
+ check(first.get('complaintArchiveLabel').textContent.includes('対応済みのご意見（3件'),'Archive label wrong');
+ const random=boot(),seen=new Set();
+ for(let i=0;i<24;i++){random.api.restart();seen.add(random.api.getState().complaintTickets.map(x=>x.body).join('|'))}
+ check(seen.size>5,'Starting complaints are fixed, not randomized');
+ const creep=boot();creep.api.restart();creep.api.setState({day:6,odd:3,afterSales:91,remaining:9,permit:'不許可',revenue:290,
+  days:[{day:1,sales:50},{day:2,sales:50},{day:3,sales:50},{day:4,sales:50},{day:5,sales:50}],vals:[2,2,1,3]});
+ const horror=creep.get('anomalyComplaints');
+ check(!horror.classList.contains('hidden'),'Stage three special complaints are hidden');
+ check(horror.children.length===12,'Expected one title, 10 messages, and footer');
+ check(horror.children.slice(1,11).every(x=>x.children.at(-1).textContent==='ありがとうございました。完璧なスーパーです。スーパーは完璧なので好きです。ありがとうございました。ありがとうございました。'),
+  'Ten identical voices must appear in late uncanny stages');
+ check(creep.get('oddMetrics').classList.contains('hidden'),'Abstract occult dashboard should not be shown');
  return {pass:true,assertions,endingTypes:7,tests:['seven choice cards','deferred effects','sales formula','complaint ledger','full seven-endings','resume after close','five-number visual bounds','shrine']};
 
 }
