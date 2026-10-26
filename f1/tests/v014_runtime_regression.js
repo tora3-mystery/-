@@ -55,6 +55,33 @@ function test(html){
  assert(gray.d.getState().revenue===610&&gray.d.getState().vals.reduce((a,b)=>a+b,0)===3,'Calibrated gray victory');
  assert(gray.d.getState().revenue-clean.d.getState().revenue>=100,'Moral-gray advantage must be substantial');
  assert(gray.get('ending').children.some(x=>x.className==='ending-media'),'Newspaper plus forum');
+ const lowComplaint=route(['pickup','vibration','floorcheck','display','forecast','floorcheck','quiet']);
+ const highComplaint=route(['pickup','quiet','delivery','vibration','floorcheck','shrine','receive']);
+ const lowState=lowComplaint.d.getState(),highState=highComplaint.d.getState();
+ assert(lowState.revenue===490&&lowState.vals.reduce((a,b)=>a+b,0)===2,'Low complaint near-miss setup');
+ assert(highState.revenue===490&&highState.vals.reduce((a,b)=>a+b,0)===4,'High complaint near-miss setup');
+ assert(lowState.ending==='normal_customer'&&highState.ending==='normal_customer','Equal sales do not punish lower complaints');
+ const endingHead=c=>c.get('ending').children[1].textContent;
+ assert(endingHead(lowComplaint).includes('お客様の声は改善'),'Near-miss low-complaint title');
+ assert(endingHead(highComplaint).includes('課題も残る'),'Near-miss high-complaint title');
+ const headline=c=>c.get('ending').children[5].children[0].children[1].textContent;
+ assert(headline(lowComplaint).includes('苦情減少'),'Near-miss low-complaint newspaper');
+ assert(headline(highComplaint).includes('残る苦情'),'Near-miss high-complaint newspaper');
+ function boundary(revenue,counts){
+  const c=app();c.d.restart();
+  const vals=counts===2?[1,1,0,0]:counts===4?[1,1,1,1]:[2,2,2,1];
+  const today=Math.max(0,30+70-counts*10);
+  c.d.setState({day:7,odd:0,attraction:7,vals,revenue:revenue-today,days:Array.from({length:6},(_,i)=>({day:i+1,sales:0})),jobs:[],used:[],actionCounts:{},complaintTickets:null,finish:false,ending:null,needsAdvance:false});
+  assert(c.d.availableIds().includes('idle'),'Boundary route can finish');
+  c.d.play('idle');c.d.advance();return c.d.getState().ending;
+ }
+ assert(boundary(479,2)==='normal_strain','479 with few complaints remains below near-miss threshold');
+ assert(boundary(480,2)==='normal_customer','480 with few complaints receives near-miss ending');
+ assert(boundary(499,2)==='normal_customer','499 with few complaints receives near-miss ending');
+ assert(boundary(500,2)==='normal_success','500 with few complaints remains success');
+ assert(boundary(480,4)==='normal_customer','480 with unresolved complaints stays customer ending');
+ assert(boundary(500,4)==='normal_success','500 with four complaints remains success');
+ assert(boundary(500,7)==='normal_customer','500 with seven complaints is not full success');
  const two=app();two.d.restart();step(two,'pickup');step(two,'complaintHide');
  assert(two.d.availableIds().includes('audit'),'Eerie choice and gray should coexist');
  assert(two.d.availableIds().some(x=>['dateShift','stockCover'].includes(x)),'Gray action not displaced');
