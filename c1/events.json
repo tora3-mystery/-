@@ -1,7 +1,7 @@
 {
-  "version": "0.5.5",
+  "version": "0.5.6",
   "date": "2026-10-25 JST",
-  "status": "playtest v0.5.5",
+  "status": "playtest v0.5.6",
   "thresholds": {
     "cp_gameover": 20,
     "p_win": 22,
@@ -138,8 +138,8 @@
               "harassment": "自己紹介連鎖ハラ",
               "reason": "歓迎を名目に全員へ説明負荷を広げた。",
               "cp": 1,
-              "progress": 1,
-              "growth": 1,
+              "progress": 0,
+              "growth": 0,
               "fit": null
             },
             {
@@ -149,7 +149,7 @@
               "reason": "新人への歓迎の機会を作らなかった。",
               "cp": 1,
               "progress": 0,
-              "growth": 1,
+              "growth": 0,
               "fit": null
             }
           ]
@@ -207,9 +207,9 @@
         {
           "id": "E",
           "text": "「確認時刻を一緒に決めてから任せる」",
-          "harassment": "確認予定ハラ",
-          "reason": "事前合意があるため正式認定には至らない。",
-          "cp": 1,
+          "harassment": "確認予定ハラ疑義",
+          "reason": "本人と確認時刻を合意したため、正式認定はなかった。",
+          "cp": 0,
           "progress": 1,
           "growth": 1,
           "fit": "check:guided",
@@ -246,7 +246,7 @@
           "cp": 2,
           "progress": 0,
           "growth": 1,
-          "fit": "feedback:immediate",
+          "fit": "socialStyle:convivial",
           "altText": "「よければ今日、一緒にランチしない？」"
         },
         {
@@ -277,7 +277,7 @@
           "cp": 1,
           "progress": 0,
           "growth": 1,
-          "fit": "check:guided"
+          "fit": null
         },
         {
           "id": "E",
@@ -321,7 +321,7 @@
               "reason": "食事の居場所を上司が決めてしまった。",
               "cp": 2,
               "progress": 0,
-              "growth": 1,
+              "growth": 0,
               "fit": null
             },
             {
@@ -331,7 +331,7 @@
               "reason": "親睦を理由に一律の行動を求めた。",
               "cp": 2,
               "progress": 0,
-              "growth": 1,
+              "growth": 0,
               "fit": null
             },
             {
@@ -352,7 +352,7 @@
               "cp": 1,
               "progress": 0,
               "growth": 1,
-              "fit": null
+              "fit": "check:guided"
             },
             {
               "id": "E",
@@ -371,7 +371,7 @@
               "reason": "求められていない場所の推奨をしたとされた。",
               "cp": 1,
               "progress": 0,
-              "growth": 1,
+              "growth": 0,
               "fit": null
             }
           ]
@@ -469,7 +469,7 @@
               "cp": 2,
               "progress": 1,
               "growth": 1,
-              "fit": null
+              "fit": "medium:spoken"
             },
             {
               "id": "B",
@@ -477,8 +477,8 @@
               "harassment": "根拠不足ハラ",
               "reason": "確認前に名前だけで判断させた。",
               "cp": 1,
-              "progress": 1,
-              "growth": 1,
+              "progress": 0,
+              "growth": 0,
               "fit": null
             },
             {
@@ -487,9 +487,9 @@
               "harassment": "探索丸投げハラ",
               "reason": "版の判断を新人一人に委ねた。",
               "cp": 2,
-              "progress": 2,
+              "progress": 1,
               "growth": 0,
-              "fit": null
+              "fit": "check:autonomous"
             },
             {
               "id": "D",
@@ -507,8 +507,8 @@
               "harassment": "履歴消去ハラ",
               "reason": "必要な過去資料まで失われた。",
               "cp": 1,
-              "progress": 1,
-              "growth": 1,
+              "progress": 0,
+              "growth": 0,
               "fit": null
             },
             {
@@ -517,7 +517,7 @@
               "harassment": "会議召集ハラ",
               "reason": "即時に解消できる問題で会議負荷を生んだ。",
               "cp": 2,
-              "progress": 2,
+              "progress": 0,
               "growth": 0,
               "fit": null
             }
@@ -640,9 +640,9 @@
         },
         {
           "id": "D",
-          "text": "「予定した確認時刻に、困りごとだけ聞く」",
+          "text": "確認する時刻を本人と相談し、困りごとだけ聞く",
           "harassment": "確認予定ハラ疑義",
-          "reason": "合意したタイミングと内容のため不認定。",
+          "reason": "確認方法を本人に相談したため、突然の進捗確認による負担は抑えられた。",
           "cp": 0,
           "progress": 1,
           "growth": 1,
@@ -680,7 +680,7 @@
       "day": "水",
       "title": "午後のチャット返信",
       "scene": "新人「資料の確認をお願いできますか。急ぎではないです！」。返信タイミングを選べる。",
-      "cue": "計測開始は明示操作後。反応速度が極端な場合に追加疑義が出る。",
+      "cue": "返信の内容と返信タイミングは、別々に社内判定される。",
       "choices": [
         {
           "id": "A",
@@ -849,8 +849,8 @@
               "harassment": "巻取りハラ",
               "reason": "新人の修正機会を管理職が引き取った。",
               "cp": 1,
-              "progress": 1,
-              "growth": 1,
+              "progress": 2,
+              "growth": 0,
               "fit": null
             },
             {
@@ -861,7 +861,7 @@
               "cp": 2,
               "progress": 2,
               "growth": 0,
-              "fit": null
+              "fit": "strength:analysis"
             },
             {
               "id": "D",
@@ -869,7 +869,7 @@
               "harassment": "公開指摘ハラ",
               "reason": "原因追究より個人の特定が優先された。",
               "cp": 1,
-              "progress": 3,
+              "progress": 0,
               "growth": 0,
               "fit": null
             },
@@ -879,8 +879,8 @@
               "harassment": "楽観放置ハラ",
               "reason": "具体的な修正を先送りした。",
               "cp": 1,
-              "progress": 1,
-              "growth": 2,
+              "progress": 0,
+              "growth": 0,
               "fit": null
             },
             {
@@ -889,7 +889,7 @@
               "harassment": "秘密報告ハラ",
               "reason": "修正担当本人を改善過程から外した。",
               "cp": 3,
-              "progress": 2,
+              "progress": 0,
               "growth": 0,
               "fit": null
             }
@@ -1025,10 +1025,10 @@
               "text": "新人と手分けして確認先を整理する",
               "harassment": "分担調整ハラ",
               "reason": "分担調整まで制度上の配慮対象にされた。",
-              "cp": 3,
-              "progress": 3,
-              "growth": 0,
-              "fit": null
+              "cp": 1,
+              "progress": 2,
+              "growth": 1,
+              "fit": "career:management"
             },
             {
               "id": "F",
@@ -1048,7 +1048,7 @@
       "id": "D4-1",
       "day": "木",
       "title": "部長が突然の飲み会を提案",
-      "scene": "部長「新人との一体感を出すため、今夜みんなで軽く飲もう」。新人は飲み会についてまだ何も言っていない。",
+      "scene": "部長「新人との一体感を出すため、今夜みんなで軽く飲もう」。部長は新人本人の参加希望を確認していない。",
       "cue": "参加意思や飲酒の好みは決めつけない。そもそも明日が役員説明。",
       "choices": [
         {
@@ -1070,7 +1070,7 @@
           "cp": 2,
           "progress": 1,
           "growth": 0,
-          "fit": "career:management"
+          "fit": null
         },
         {
           "id": "C",
@@ -1105,12 +1105,12 @@
         {
           "id": "F",
           "text": "「参加は自由とし、希望者に店情報だけ共有」",
-          "harassment": "任意参加ハラ",
-          "reason": "不参加が評価に影響しないことを明示し不認定。",
-          "cp": 1,
+          "harassment": "任意参加ハラ疑義",
+          "reason": "参加の自由と不参加時の評価への影響がないことを明示したため、不認定。",
+          "cp": 0,
           "progress": 0,
           "growth": 1,
-          "fit": "check:autonomous",
+          "fit": null,
           "altText": "「来られる人だけで。店の情報は共有しておくよ」"
         }
       ],
@@ -1122,7 +1122,7 @@
         {
           "variantId": "B",
           "title": "部長の歓迎ランチ補助制度",
-          "scene": "部長「新人との昼食交流も考えてくれ。交流実績は報告してほしい」。新人から参加希望の連絡はまだない。",
+          "scene": "部長「新人との昼食交流も考えてくれ。交流実績は報告してほしい」。部長は新人本人の参加希望をまだ確認していない。",
           "time": "10:00",
           "actor": "boss",
           "cue": "制度の実績と本人の希望は別問題。",
@@ -1134,7 +1134,7 @@
               "reason": "休憩時間の参加を事実上の必須とした。",
               "cp": 1,
               "progress": 0,
-              "growth": 1,
+              "growth": 0,
               "fit": null
             },
             {
@@ -1143,7 +1143,7 @@
               "harassment": "幹事丸投げハラ",
               "reason": "配属直後の社員に負担を集中させた。",
               "cp": 2,
-              "progress": 1,
+              "progress": 0,
               "growth": 0,
               "fit": null
             },
@@ -1163,7 +1163,7 @@
               "harassment": "理由聴取ハラ",
               "reason": "私的な事情の説明を求めた。",
               "cp": 3,
-              "progress": 2,
+              "progress": 0,
               "growth": 0,
               "fit": null
             },
@@ -1172,7 +1172,7 @@
               "text": "部長には参加予定人数を多めに報告する",
               "harassment": "実績水増しハラ",
               "reason": "実態より多い数字を報告した。",
-              "cp": 1,
+              "cp": 2,
               "progress": 0,
               "growth": 0,
               "fit": null
@@ -1282,7 +1282,7 @@
               "cp": 2,
               "progress": 2,
               "growth": 0,
-              "fit": null
+              "fit": "feedback:immediate"
             },
             {
               "id": "B",
@@ -1301,7 +1301,7 @@
               "reason": "本人の貢献が見えなくなった。",
               "cp": 1,
               "progress": 1,
-              "growth": 1,
+              "growth": 0,
               "fit": null
             },
             {
@@ -1321,7 +1321,7 @@
               "reason": "自分を褒める文章を本人に求めた。",
               "cp": 1,
               "progress": 1,
-              "growth": 2,
+              "growth": 0,
               "fit": null
             },
             {
@@ -1442,7 +1442,7 @@
         },
         {
           "id": "C",
-          "text": "「重要項目だけ検証して差し替える」",
+          "text": "追加数字の重要な部分を検証して差し替える",
           "harassment": "検証限定ハラ疑義",
           "reason": "優先度と根拠を確認したため不認定。",
           "cp": 0,
@@ -1453,7 +1453,7 @@
         },
         {
           "id": "D",
-          "text": "「検証しないまま提出する」",
+          "text": "追加数字を検証しないまま提出する",
           "harassment": "未検証提出ハラ",
           "reason": "正しさを確認しないまま意思決定へ利用。",
           "cp": 3,
@@ -1579,7 +1579,7 @@
               "cp": 2,
               "progress": 1,
               "growth": 0,
-              "fit": null
+              "fit": "medium:spoken"
             },
             {
               "id": "B",
@@ -1627,7 +1627,7 @@
               "harassment": "責任転嫁ハラ",
               "reason": "本人の落ち度として先回りの説明をした。",
               "cp": 1,
-              "progress": 2,
+              "progress": 0,
               "growth": 0,
               "fit": null
             }
@@ -1648,8 +1648,8 @@
           "harassment": "功績委譲ハラ",
           "reason": "成果の責任と功績を新人へ偏らせた。",
           "cp": 1,
-          "progress": 1,
-          "growth": 1,
+          "progress": 0,
+          "growth": 0,
           "fit": null,
           "altText": "「今回の成果は全部新人のおかげです」"
         },
@@ -1659,7 +1659,7 @@
           "harassment": "功績独占ハラ",
           "reason": "共同成果を管理職一人の成果として報告。",
           "cp": 2,
-          "progress": 2,
+          "progress": 0,
           "growth": 0,
           "fit": null
         },
@@ -1669,8 +1669,8 @@
           "harassment": "事実報告ハラ疑義",
           "reason": "成果を過不足なく報告し正式認定なし。",
           "cp": 0,
-          "progress": 1,
-          "growth": 1,
+          "progress": 0,
+          "growth": 0,
           "fit": "career:management",
           "altText": "「進捗と育成の事実を整理して報告します」"
         },
@@ -1690,7 +1690,7 @@
           "harassment": "過剰保護ハラ",
           "reason": "成長の機会を奪う管理姿勢を肯定。",
           "cp": 1,
-          "progress": 1,
+          "progress": 0,
           "growth": 0,
           "fit": null
         },
@@ -1793,5 +1793,5 @@
       "rule": "成功、最終報告でハラ指摘ハラを選んだ"
     }
   ],
-  "updated_jst": "2026-10-26 02:10 JST"
+  "updated_jst": "2026-10-26 09:17 JST"
 }

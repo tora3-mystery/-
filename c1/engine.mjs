@@ -1,6 +1,6 @@
 /** C1 gameplay logic. Pure and dependency-free: also imported by tests. */
-export const VERSION = '0.5.5';
-export const UPDATED_JST = '2026-10-26 02:10 JST';
+export const VERSION = '0.5.6';
+export const UPDATED_JST = '2026-10-26 09:17 JST';
 export const LIMITS = Object.freeze({ cp: 20, progress: 22, growth: 6 });
 export const DAYS = ['月曜日', '火曜日', '水曜日', '木曜日', '金曜日'];
 export const SPEED_HARASSMENTS = Object.freeze(['即レスハラ','遅レスハラ']);
@@ -21,10 +21,10 @@ const givenNames = {
 export const ENDING_META = {
   E01: ['初週で部長室','週の途中で、部長室への呼び出しだけが確定した。','D'],
   E02: ['全部私がやりました','仕事と対応を課長が抱え込んだ。新人が手を動かす機会は、少しずつ失われていった。','D'],
-  E03: ['ランチでつまずいた課長','あの昼休みを境に、人事のファイルが厚くなった。','D'],
+  E03: ['ランチでつまずいた課長','あの昼休みの強引な対応が、人事の記録にも残ってしまった。','D'],
   E04: ['ハラスメント百貨店','一週間で何種類の社内分類に触れたのだろう。職場は今日も平和だ。','D'],
   E05: ['全員が幸せな未完成資料','気を配り、よく話し合った。納期だけが誰にも配慮されなかった。','C'],
-  E06: ['進まなかった5営業日','対応に追われた一週間。仕事も育成も、目標には届かなかった。','D'],
+  E06: ['目標未達の5営業日','対応に追われた一週間。仕事も育成も、目標には届かなかった。','D'],
   E07: ['最強のプレイングマネージャー','仕事は完璧。なお、新人は何も覚えていない。','B−'],
   E08: ['新人、まだ独り立ちできず','資料は完成した。新人は「来週も、分からないところは相談させてください」と言う。','C'],
   E09: ['無難な課長','大きな事故もなく、仕事も育成も終わった。部長は褒めない。','B'],
@@ -34,7 +34,7 @@ export const ENDING_META = {
   E13: ['出典はすべて確認しました','裏を取ることを教えた。役員から「AIなら一瞬でしょ？」と尋ねられた。','A'],
   E14: ['令和の調整職人','認定をほとんど受けず、仕事を終えた。社内で絶滅危惧種と呼ばれる。','S'],
   E15: ['新人が役員席で話した日','新人の説明に役員が頷く。部長はなぜか自分の手柄にした。','S'],
-  E16: ['コンプラ室への推薦状','「分類が多すぎませんか？」その一言を、人事部は新規分類の参考にした。','?'],
+  E16: ['コンプラ室への推薦状','「ハラスメントが多すぎて無理でした」。その一言を、人事部は新規分類の参考にした。','?'],
 };
 const PHOTO_BANK = Object.freeze({
   '男性': ['./assets/employee-m01.webp', './assets/employee-m02.webp', './assets/employee-m03.webp', './assets/employee-m04.webp', './assets/employee-m05.webp', './assets/employee-m06.webp'],
@@ -147,19 +147,19 @@ export function calculate(run, event, choice, replyTiming = null) {
   let deltaCp=baseCp;
   let deltaP=choice.progress;
   let deltaS=choice.growth;
-  if(event.id==='D4-1' && run.profile.socialStyle==='convivial' && ((event.alternateId==='B'&&choice.id==='C')||(!event.alternateId&&choice.id==='F'))) {
-    deltaS++;
-  }
+  // Social approval is reflected in feedback, not an unearned technical-skill increase.
   let extraReason='';
   let speedName='',speedReason='',speedCp=0;
   if(event.id==='D2-3' && choice.id==='D' && run.flags.checkAgreed) {
     deltaP++;
-    extraReason='初日に確認時刻を合意していたため、作業がスムーズに進んだ。';
+    extraReason='月曜に確認時刻を合意していたため、予定どおり短時間で確認できた。';
   }
   if(event.id==='D5-1') {
     if(run.flags.aiUnverified) {deltaP-=2;extraReason='火曜に出典を未検証のまま進めたため、差し戻し対応が発生した。';}
     else if(run.flags.aiVerified) {deltaP++;extraReason='火曜に出典を検証していたため、追加依頼への対応が早かった。';}
   }
+  // The final report is after the 17:00 presentation. Reporting cannot retroactively complete a slide or train an employee.
+  if(event.id==='D5-3'){deltaP=0;deltaS=0;}
   if(event.id==='D3-1') {
     const mode=typeof replyTiming==='number'?(replyTiming<=2?'instant':replyTiming>20?'late':'normal'):replyTiming;
     if(!['instant','normal','late'].includes(mode)) throw new Error('返信タイミングを選択してください');
@@ -188,11 +188,16 @@ export function calculate(run, event, choice, replyTiming = null) {
   const baseName=choice.harassment.replace(/疑義$/,'');
   const effectiveName=baseCp===0?`${baseName}疑義`:baseName;
   const denial=/不認定|認定なし|疑義止まり|疑義に留まり|正式認定には至らない|正式認定は回避|正式認定はなかった/;
-  const resolvedReason=baseCp>0 && denial.test(choice.reason)
+  let resolvedReason=baseCp>0 && denial.test(choice.reason)
     ? `本人の希望・得意分野との不一致により、制度上「${baseName}」として正式認定された。`
-    : choice.reason;
+    : baseCp===0&&!choice.harassment.endsWith('疑義')
+      ? `本人の希望・得意分野との適合が認められたため、今回は正式認定を見送り「${baseName}」の疑義にとどまった。`
+      : choice.reason;
+  if(styleMismatch) resolvedReason='本人が交流を希望しており、任意参加を前提とした誘いだったため正式認定を見送った。';
   if(event.id==='D4-1' && run.profile.socialStyle==='convivial'){
-    extraReason += ' 本人は「同僚との食事や飲み会は好きです。参加は自由だと嬉しいです」と話していた。';
+    extraReason += ['B','D'].includes(choice.id)
+      ? ' 本人は交流好きだが、強制参加や酒席での業務まで望んではいない。'
+      : ' 本人は交流の機会を好むと話していた。ただし参加は任意である。';
   }
   const next=structuredClone(run);
   next.cp+=deltaCp;
@@ -251,7 +256,7 @@ export function resolveEnding(run) {
   if(run.cp>=LIMITS.cp) {
     if(run.index<=8)return 'E01';
     if(wraps>=3)return 'E02';
-    if(lunch&&['A','B'].includes(lunch.choiceId))return 'E03';
+    if(lunch&&['A','B'].includes(lunch.choiceId)&&Number(lunch.baseCp??lunch.deltaCp)>=2)return 'E03';
     return 'E04';
   }
   if(run.progress<LIMITS.progress) return run.growth>=LIMITS.growth?'E05':'E06';
@@ -260,14 +265,14 @@ export function resolveEnding(run) {
   if(last?.choiceId==='F'&&last.id==='D5-3')return 'E16';
   if(run.flags.presentationPrepped&&run.profile.strength==='presentation'&&run.growth>=8)return 'E15';
   if(run.cp<=5)return 'E14';
-  if(run.flags.aiVerified&&run.progress>=25)return 'E13';
+  if(run.flags.aiVerified&&run.logs.find(l=>l.id==='D5-1')?.choiceId==='C'&&run.progress>=25)return 'E13';
   if(run.progress>=28)return 'E12';
   if(run.growth>=9)return 'E11';
   if(run.cp>=15)return 'E10';
   return 'E09';
 }
 export function isValidSave(save, events) {
-  return !!save && ['0.4.0','0.4.1','0.5.0','0.5.1','0.5.2','0.5.3','0.5.4',VERSION].includes(save.version) && Number.isInteger(save.index) && save.index>=0 && save.index<events.length
+  return !!save && ['0.4.0','0.4.1','0.5.0','0.5.1','0.5.2','0.5.3','0.5.4','0.5.5',VERSION].includes(save.version) && Number.isInteger(save.index) && save.index>=0 && save.index<events.length
    && ['briefing','scene','result','dayReview','ending'].includes(save.phase) && Array.isArray(save.logs) && typeof save.profile?.name==='string'
    && save.flags && typeof save.cp==='number';
 }

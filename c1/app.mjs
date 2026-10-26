@@ -38,6 +38,10 @@ function activeEvent(){
  if(result.id==='D3-2' && run.logs.some(l=>l.id==='D3-1' && l.replyTiming==='late')){
    result.scene='前のチャットは未返信のまま、別件が発生。'+result.scene;
  }
+ if(result.id==='D2-3'&&run.flags.checkAgreed){
+   const choice=result.choices.find(c=>c.id==='D');
+   if(choice)choice.text='月曜に決めた確認時刻に、困りごとだけ聞く';
+ }
  if(result.id==='D4-1'&&run.profile.socialVoice)result.scene+=' 配属時の本人メモ：「'+run.profile.socialVoice+'」';
  result.choices=result.choices.map(c=>({...c,text:(!v&&run.choiceTextPlan?.[run.index]===1&&c.altText)?c.altText:c.text}));
  return result;
@@ -99,7 +103,7 @@ function profileCard(p){
 }
 function profileScreen(){return `<div class="eyebrow">DAY 01 / 配属通知</div><h1 class="h2">今週の配属社員</h1><p class="lead">人材基本情報を確認してください。希望や得意分野は、今週の指導に影響します。</p><section class="paper">${profileCard(run.profile)}<div class="actions"><button class="primary" data-action="begin">この社員を受け入れる</button><button class="quiet" data-action="reroll">別の社員を表示する</button></div></section>`;}
 function directiveCompact(){const d=DIRECTIVES[displayDay()];return `<aside class="boss-mini"><span class="boss-stamp">部長指令｜当日の縛り</span><strong>進捗 ${d.progress} 以上・習熟 ${d.growth} 以上</strong><span>未達なら追加報告が発生し、進捗が減少</span></aside>`;}
-function briefingScreen(){const i=displayDay(),d=DIRECTIVES[i];return `<div class="eyebrow">部長室からの通達 / 2030</div><div class="daytime large"><span class="day-pill">DAY ${i+1} / 5</span><strong>${DAYS[i]}　${d.time}</strong></div><section class="boss-directive"><div class="boss-crest">部長指令 <span>読了必須</span></div><img class="boss-photo" src="${DIRECTOR_IMAGE}" alt="部長の顔（架空人物のAI生成画像）" width="74" height="87"><h2>${esc(d.title)}</h2><p>「${esc(d.demand)}」</p><div class="boss-orders"><div><small>この日の終業までに</small><strong>業務進捗 ${d.progress} 以上</strong></div><div><small>加えて</small><strong>新人の習熟 ${d.growth} 以上</strong></div></div><p class="boss-remark">部長：「${esc(d.remark)}」</p><p class="small">両方の目標を外すと追加確認が発生し、仕事の進捗が減ります。部長の評価と新人への対応は別の問題です。</p></section><div class="actions"><button class="primary" data-action="begin-day">指令を確認して業務開始</button></div>`;}
+function briefingScreen(){const i=displayDay(),d=DIRECTIVES[i];return `<div class="eyebrow">部長室からの通達 / 2030</div><div class="daytime large"><span class="day-pill">DAY ${i+1} / 5</span><strong>${DAYS[i]}　${d.time}</strong></div><section class="boss-directive"><div class="boss-crest">部長指令 <span>読了必須</span></div><img class="boss-photo" src="${DIRECTOR_IMAGE}" alt="部長の顔（架空人物のAI生成画像）" width="74" height="87"><h2>${esc(d.title)}</h2><p>「${esc(d.demand)}」</p><div class="boss-orders"><div><small>この日の終業までに</small><strong>業務進捗 ${d.progress} 以上</strong></div><div><small>加えて</small><strong>新人の習熟 ${d.growth} 以上</strong></div></div><p class="boss-remark">部長：「${esc(d.remark)}」</p><p class="small">どちらか一方でも目標を外すと、未達項目ごとに追加確認が発生し、仕事の進捗が減ります。部長の評価と新人への対応は別の問題です。</p></section><div class="actions"><button class="primary" data-action="begin-day">指令を確認して業務開始</button></div>`;}
 function dayReviewScreen(){const i=displayDay(),r=run.bossReports?.at(-1),d=DIRECTIVES[i];if(!r)return '<p>日次査定を確認できませんでした。</p>';return `<div class="eyebrow">終業報告 / 部長からの返信</div><div class="daytime large"><span class="day-pill">DAY ${i+1} / 5</span><strong>${DAYS[i]}　18:00</strong></div><section class="boss-directive ${r.met?'boss-pass':'boss-fail'}"><div class="boss-crest">部長査定 <span>${r.met?'ノルマ達成':'追加業務発生'}</span></div><img class="boss-photo" src="${DIRECTOR_IMAGE}" alt="部長の顔（架空人物のAI生成画像）" width="74" height="87"><h2>${r.met?'「まあ、今日のところはいいだろう」':'「この数字で帰るつもりか？」'}</h2><p>提出した数字：進捗 ${r.progress} / 目標 ${d.progress}、習熟 ${r.growth} / 目標 ${d.growth}</p>${r.met?'<p>本日の部長指令はクリア。次の日の指示はさらに厳しくなります。</p>':`<p>未達の項目：${r.missing.map(esc).join('・')}。不足資料の再作成が発生しました。</p><div class="score-boost boss-penalty">業務進捗 −${r.penalty}</div>`}</section><div class="actions"><button class="primary" data-action="next">翌営業日の部長指令を確認</button><button class="secondary" data-action="show-notes">対応履歴を確認</button></div>`;}
 function scene(){const e=activeEvent();const dayIndex=displayDay();const isBoss=bossBadge(e);
 return `<div class="panelhead"><span class="eyebrow">2030年度 人材育成支援システム</span><span class="tag">自動保存</span></div>${statusBar()}${scorePanel()}${directiveCompact()}${topActions()}
@@ -120,7 +124,7 @@ return `<div class="eyebrow">DAY ${displayDay()+1}｜${DAYS[displayDay()]} ${dis
 <div class="result-symbol">${safe?'★':'⚡'}</div><div class="reveal-kicker">${safe?'社内審査：疑義レベル':'H A R A S S M E N T 　D E T E C T E D'}</div>
 <div class="reveal-word">${safe?'あぶない！':'認 定 ！'}</div><h1 class="result-name">${esc(name)}！</h1><strong class="small">${safe?'今回は正式認定なし':'本日、新たな社内分類が記録されました'}</strong>
 <p class="result-reason">${esc(speedPrimary?log.speedReason:log.reason)}</p>
-${log.fitAdjustment!==0?`<p class="tiny">${log.fitAdjustment<0?'本人の希望・得意分野と一致し、判定が軽減。':'本人の希望・得意分野との不一致が加点に影響。'}</p>`:''}
+${log.fitAdjustment!==0&&!log.rawName?.endsWith('疑義')?`<p class="tiny">${log.fitAdjustment<0?(log.baseCp===0?'本人の希望・得意分野と一致し、正式認定を回避。':'本人の希望・得意分野と一致し、判定が軽減。'):'本人の希望・得意分野との不一致により、正式認定のポイントが増加。'}</p>`:''}
 ${log.speedCp>0&&!speedPrimary?`<div class="extra-hit"><b>追撃！ ${esc(log.speedName)}：+${log.speedCp} コンプラ違反ポイント</b><p>${esc(log.speedReason)}</p></div>`:''}
 ${log.extraReason?`<p class="small">${esc(log.extraReason)}</p>`:''}
 <div class="score-title">${safe?'今回は加点なし':'コンプラ違反ポイント 加算'}</div><div class="score-boost ${safe?'safe':''}">+${log.deltaCp}<small> コンプラ違反pt</small></div>
@@ -135,19 +139,24 @@ function logLabel(l){
 }
 function logReason(l){return l.reason+(l.speedCp>0&&l.speedReason?'／'+l.speedReason:'');}
 function rookieComment(){
- const g=run.growth, early=run.logs.length<15;
- let note=g<=2?'「いろいろありましたが、まだ自分で仕事を進める自信はありません……」'
-   :g<=5?'「少し分かってきたところです。次に似た仕事が来ても、まだ相談したいです」'
-   :g<=8?'「任せてもらえた部分は、自分でも少し手応えがありました！」'
-   :'「次の案件は、最初の計画から自分で考えてみたいです！」';
- if(run.ending==='E07'||run.ending==='E08')note='「課長が全部仕上げてくれたので助かりました！ でも、同じことを一人でできるかは不安です……」';
- if(run.ending==='E15')note='「役員の前で担当部分を説明できたのは、自信になりました！」';
+ const g=run.growth, early=run.logs.length<15, highCp=run.cp>=15;
+ let note=g<=2?'「まだ自信が持てないところも多いです。もう少し質問できると助かります……」'
+   :g<=5?'「少しずつ分かってきました。今週教えていただいたことを、来週も確認してみます」'
+   :g<=8?'「課長、丁寧に見てくださってありがとうございました！ 担当した部分は、少し自信がつきました」'
+   :highCp?'「課長、今週はいろいろ教えてくださってありがとうございました！ 成長できた気がします。……でも、コンプラの通知はちょっと怖かったです」'
+   :'「課長、今週は本当にありがとうございました！ 自分で考えて進められるようになったのは、課長のおかげです。来週も頑張ります！」';
+ if(run.ending==='E07'||run.ending==='E08')note='「助けていただいてありがとうございました。ただ、次はもう少し自分でやってみたいです……」';
+ if(run.ending==='E15')note='「課長、発表を任せてくださってありがとうございました！ 緊張しましたが、すごく自信になりました！」';
  if(early)note='「まだ週の途中なので、何がよかったのか整理できていません。ここまで教えていただいたことは覚えています」';
+ const admired=run.logs.find(l=>l.id==='D4-1' && (
+   (run.eventPlan?.[9]===1&&l.choiceId==='C')||(run.eventPlan?.[9]!==1&&['A','F'].includes(l.choiceId))
+ ));
+ const social=admired&&run.profile.socialStyle==='convivial'?'食事のことも気軽に声をかけてくださって、嬉しかったです。':'';
  const ambition=run.profile.career==='expert'?'専門分野をもっと勉強したいです。':'いつか私もチームを動かせるようになりたいです。';
- return {note,ambition:early?'':ambition};
+ return {note,ambition:early?'':(social?social+' ':'')+ambition};
 }
 function endingScreen(){const id=run.ending||'E04', [title,desc,grade]=ENDING_META[id];const failed=run.cp>=LIMITS.cp;
-  const director=failed?'「君、今週いったい何回ハラスメントをしたんだ！ こんなに申告される管理職は初めて見たぞ！ 君には新人を任せられん！」':
+  const director=failed?'「君、今週いったい何件のハラスメント認定を受けたんだ！ このままでは新人を任せられん！」':
     id==='E05'||id==='E06'?'「配慮は分かった。ところで、提出資料はどこにある？」':
     ['E07','E08'].includes(id)?'「仕事はできているな。……で、新人に何を教えたんだ？」':
     '「よくやった。来週もう一人配属される。ちなみに来月から社内分類が17項目増えるそうだ」';
@@ -243,6 +252,6 @@ document.addEventListener('keydown',ev=>{
   }
 });
 
-(async()=>{try{const response=await fetch('./events.json?v=0.5.5',{cache:'no-store'});if(!response.ok)throw new Error(`HTTP ${response.status}`);const json=await response.json();events=json.events;
+(async()=>{try{const response=await fetch('./events.json?v=0.5.6',{cache:'no-store'});if(!response.ok)throw new Error(`HTTP ${response.status}`);const json=await response.json();events=json.events;
   if(!Array.isArray(events)||events.length!==15||events.some(e=>e.choices.length!==6))throw new Error('イベント定義が不正です');
   render();}catch(err){app.innerHTML=`<div class="error"><strong>ゲームデータを読み込めませんでした。</strong><p>${esc(err.message)}</p><p>ネットワーク接続を確認してページを再読み込みしてください。</p></div>`;}})();
