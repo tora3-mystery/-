@@ -37,11 +37,26 @@ const prices={
  toaster:official('BALMUDA The Toaster 2026年モデル／KTT02JP',39600,'https://www.balmuda.com/jp/news/3800','🍞','KTT02JP／税込・メーカー公表価格'),
  stand:official('KINTO SCS-S04 ブリューワースタンドセット 2cups',14300,'https://kinto.co.jp/products/27572','☕','No.27572・2cups／税込・公式掲載価格')
 };
-const buy=[
- {...prices.mug,net:2640,discount:25},
- {...prices.hario,net:7700,discount:30},
- {...prices.toaster,net:23760,discount:40}
-];
+// 公開データによる事前スクリーニング：ブランド・ジャパン2026一般生活者編の総合力TOP50。
+// 注意：総合力順位は「認知率」ではない。正式な採用は別途、プレイヤー対象の純粋想起/助成認知調査で確認する。
+const BRAND_STRENGTH_RANK={Apple:18,SONY:10,Nintendo:12,MUJI:5,TOYOTA:26};
+const vetted={
+ cloth:{...prices.cloth,brand:'Apple'},
+ adapter:{...official('Apple 20W USB-C電源アダプタ／MWVV3AM/A',2780,'https://www.apple.com/jp/shop/product/mwvv3am/a/20w-usb-c%E9%9B%BB%E6%BA%90%E3%82%A2%E3%83%80%E3%83%97%E3%82%BF','🔌','20W・USB-C／Apple公式税込価格'),brand:'Apple'},
+ sony:{...official('SONY ワイヤレスヘッドホン WH-1000XM6 ブラック',59400,'https://www.sony.jp/headphone/products/WH-1000XM6/','🎧','ノイズキャンセリング・ブラック／ソニーストア税込表示価格。メーカー希望小売価格はオープン価格'),brand:'SONY'},
+ alarmo:{...official('任天堂 ニンテンドーサウンドクロック Alarmo',12980,'https://store-jp.nintendo.com/item/hardware-accessory/VM_CLO_S_RAAAA','⏰','モーションセンサー搭載の目覚まし時計／任天堂公式税込価格'),brand:'Nintendo'},
+ eraser:{...official('無印良品 消しゴム 黒・大／76726029',80,'https://www.muji.com/jp/ja/store/cmdty/detail/4548076726029','⬛','黒・大／商品番号76726029／無印良品公式通常税込価格。期間限定会員割引は適用しない'),brand:'MUJI'},
+ mugMuji:{...official('無印良品 日常の器 マグカップ グレー／約380mL',690,'https://www.muji.com/jp/ja/store/cmdty/detail/4550583444518','☕','グレー・約380mL／商品番号83444518／無印良品公式税込単品価格。まとめ買い割引は不適用'),brand:'MUJI'},
+ diffuser:{...official('無印良品 コードレス超音波アロマディフューザー MJ-CAD2',3990,'https://www.muji.com/jp/ja/store/cmdty/detail/4550583648824','💡','商品番号83648824・タンク120mL／公式通常税込価格。会員割引は不適用'),brand:'MUJI'},
+ car:{...prices.car,brand:'TOYOTA'}
+};
+function knownBrand(item){return !!(item&&BRAND_STRENGTH_RANK[item.brand]&&BRAND_STRENGTH_RANK[item.brand]<=50)}
+const buy=[{...vetted.adapter,discount:25,net:2085},{...vetted.alarmo,discount:30,net:9086},{...vetted.sony,discount:40,net:35640}];
+const q3Products=[vetted.cloth,vetted.eraser,vetted.adapter];
+const q6Products=[vetted.mugMuji,vetted.diffuser,vetted.cloth];
+const q7Products=[vetted.car,vetted.alarmo,vetted.eraser];
+const q8Products=[vetted.sony,vetted.alarmo,vetted.diffuser];
+if([buy,q3Products,q6Products,q7Products,q8Products].flat().some(x=>!knownBrand(x)))throw new Error('Brand screening failed');
 const landmarks=[
  {name:'東京駅（開業年）',price:1914,emoji:'🚉',url:'https://www.jreast.co.jp/estation/station/info.aspx?StationCd=1039',detail:'1914年12月20日開業（JR東日本）'},
  {name:'国会議事堂（竣工年）',price:1936,emoji:'🏛️',url:'https://www.sangiin.go.jp/japanese/goiken_gositumon/faq/index.html',detail:'1936年11月に竣工（参議院）'},
@@ -61,16 +76,16 @@ const slots=[
 ];
 const sourceFor=(thing)=>thing&&thing.url?thing.url:null;
 function build(i,k,picks){
- const p=buy[picks[1]],gift=[prices.toaster,prices.hario,prices.stand][picks[7]];
+ const p=buy[picks[1]],gift=q8Products[picks[7]];
  const obj={i,day:days[i],person:people[i],slot:slots[i],opening:sceneOpenings[i],unit:'円',type:'yen',min:1,max:99999999,source:null,sourceLabel:'',hint:'',pre:'',context:'',emoji:'🔢',item:'',detail:'',spec:'',mode:'social'};
  const put=o=>Object.assign(obj,o);
  if(i===0){const age=[43,42,44][k],year=[2005,2006,2004][k];put({unit:'歳',type:'age',min:1,max:120,truth:age,zone:[age-5,age-2],item:'真壁先輩の年齢',emoji:'🎂',speech:'私、何歳くらいに見える？',context:'真壁「大学を卒業して、'+year+'年に22歳で入社したの。今は2026年で、今年の誕生日も過ぎたわ。若く見えるのは嬉しいけど、露骨なお世辞は嫌いよ」',hint:'入社年は'+year+'年、入社当時22歳。実年齢を計算してから、少しだけ若く答える余地がある。',explain:'若く見られたい。でも露骨なお世辞は逆効果。'});}
  if(i===1){put({truth:p.price,zone:[Math.round(p.price*1.25),Math.round(p.price*2)],item:p.name,emoji:p.emoji,spec:p.detail,detail:p.detail,source:p.url,speech:'これ、いくらだったと思う？',context:'梅田「'+p.name+'だよ。公式で買ったんだけど、見た目よりずっと良い感じでさ。これならいい買い物でしょ？」。梅田は価格以上の価値があると思っている。',hint:'商品名・型番・素材を確認しよう。公式価格より少し高く見積もると、梅田は満足しやすい。',explain:'購入額は当時のメーカー・ブランド公式税込通常価格。高く見積もると梅田の買い物自慢が成立する。',pre:'月曜の自慢話'});}
- if(i===2){const item=[prices.cloth,prices.mug,prices.scissors][k];put({truth:item.price,zone:[item.price,item.price],item:item.name,emoji:item.emoji,source:item.url,detail:item.detail,spec:item.detail,speech:'この商品の公式税込価格、いくらだと思います？',context:'新井「'+item.name+'だよ。型番と仕様を見て予想してね。セールやポイント還元は関係なし！」',hint:'ブランド・型番・容量を確認しよう。公式の通常税込価格が正解。',explain:'メーカー・ブランド公式サイトの税込通常表示価格を採用。',mode:'facts'});}
+ if(i===2){const item=q3Products[k];put({truth:item.price,zone:[item.price,item.price],item:item.name,emoji:item.emoji,source:item.url,detail:item.detail,spec:item.detail,speech:'この商品の公式税込価格、いくらだと思います？',context:'新井「'+item.name+'だよ。型番と仕様を見て予想してね。セールやポイント還元は関係なし！」',hint:'ブランド・型番・容量を確認しよう。公式の通常税込価格が正解。',explain:'メーカー・ブランド公式サイトの税込通常表示価格を採用。',mode:'facts'});}
  if(i===3){const truth=[19,27,34][k];put({type:'min',unit:'分',min:0,max:1440,truth,zone:[truth,truth+4],item:'待ち合わせの遅刻',emoji:'⌚',speech:'私、何分待ったと思う？',context:'約束は18:00。到着時刻は'+['18:19','18:27','18:34'][k]+'。梨花はスマホの時計を指さしている。',hint:'待ち時間＝到着時刻−18:00。少なく申告すると火に油。',explain:'不満を過小評価しないこと。現実の待ち時間が計算できる。'});}
  if(i===4){const c=celebrities[k];put({type:'age',unit:'歳',min:1,max:120,truth:c.age,zone:[c.age,c.age],item:c.name+'と同い年',emoji:'🎤',speech:'私、今年何歳になったと思う？ 実は'+c.name+'と同い年なの。',context:'相馬「'+c.name+'と同い年なのよ。今までいろんな時代を見てきたわ。昭和の終わりには、もう社会人になっていたのよ」。2026年10月の会話。',hint:['阿部寛さんは「TRICK」のずっと前からモデルとして活動していた人。今は還暦を過ぎた世代。','ヒロミさんは昭和の終わりから芸能活動をしている。今は還暦を過ぎた世代。','浜田雅功さんは1980年代前半に芸人として活動を始めた。今は還暦を過ぎた世代。'][k],source:c.url,detail:'2026年10月26日時点の満年齢',explain:'有名人の生年から実年齢を推理。無理なお世辞は不要。',mode:'facts'});}
- if(i===5){const item=[prices.toraya,prices.yokumoku,prices.kinto][k];put({truth:item.price,zone:[Math.round(item.price*.65),Math.round(item.price*.85)],item:item.name,emoji:item.emoji,source:item.url,detail:item.detail,spec:item.detail,speech:'送別会の贈り物にこれ、どうです？ いくらくらいに見えます？',context:'藤野は「もらった人がお返しを気にしない程度の品にしたい」と考えている。',hint:'相手に気を遣わせたくないので、高額すぎる印象は避けたい。ただし安物扱いも困る。',explain:'公式価格と、贈る相手が受け取る印象は別の数字。'});}
- if(i===6){const item=[prices.hario,prices.ikea,prices.car][k];put({truth:item.price,zone:[item.price,item.price],item:item.name,emoji:item.emoji,source:item.url,detail:item.detail,spec:item.detail,speech:'こっちの公式価格は何円だと思います？',context:k===2?'トヨタ カローラ G・2WD、メーカーオプションなし。車両本体のメーカー希望小売価格（税込）だけを当てよう。':'素材・サイズ・仕様が書かれた商品カードを見て答える。',hint:k===2?'車はグレード・駆動方式の指定が肝心。登録諸費用やオプションは含めない。':k===1?'35cm四方の小さいモデル。55cmの製品と混同しないように。':'HARIOと陶磁器メーカーのコラボで、伝統的な釉薬を使用。',explain:'メーカー・ブランド公式サイトの税込価格。',mode:'facts'});}
+ if(i===5){const item=q6Products[k];put({truth:item.price,zone:[Math.round(item.price*.65),Math.round(item.price*.85)],item:item.name,emoji:item.emoji,source:item.url,detail:item.detail,spec:item.detail,speech:'送別会の贈り物にこれ、どうです？ いくらくらいに見えます？',context:'藤野は「もらった人がお返しを気にしない程度の品にしたい」と考えている。',hint:'相手に気を遣わせたくないので、高額すぎる印象は避けたい。ただし安物扱いも困る。',explain:'公式価格と、贈る相手が受け取る印象は別の数字。'});}
+ if(i===6){const item=q7Products[k];put({truth:item.price,zone:[item.price,item.price],item:item.name,emoji:item.emoji,source:item.url,detail:item.detail,spec:item.detail,speech:'こっちの公式価格は何円だと思います？',context:k===2?'トヨタ カローラ G・2WD、メーカーオプションなし。車両本体のメーカー希望小売価格（税込）だけを当てよう。':'素材・サイズ・仕様が書かれた商品カードを見て答える。',hint:k===2?'車はグレード・駆動方式の指定が肝心。登録諸費用やオプションは含めない。':k===1?'35cm四方の小さいモデル。55cmの製品と混同しないように。':'HARIOと陶磁器メーカーのコラボで、伝統的な釉薬を使用。',explain:'メーカー・ブランド公式サイトの税込価格。',mode:'facts'});}
  if(i===7){put({truth:gift.price,zone:[gift.price,gift.price],item:gift.name,emoji:gift.emoji,source:gift.url,detail:gift.detail,spec:gift.detail,speech:'妻へのプレゼントを検討中でして。これ、公式価格はいくらだと思います？',context:'庄司は価格をちゃんと把握してから選びたいようだ。型番・容量まで確認している。',hint:'メーカー公式の税込通常価格。割引価格ではない。',explain:'プレゼント候補としてのメーカー公式価格。日曜日にもう一度出てくる。',mode:'facts'});}
  if(i===8){put({truth:p.net,zone:[p.net,p.net],item:p.name+'の別店舗価格',emoji:p.emoji,spec:p.detail,speech:'月曜の梅田さんが買った'+p.name+'、今ネットでいくらだと思う？',context:'同じ型番の商品に、架空の別店舗で「公式価格'+fmt(p.price)+'円から'+p.discount+'%オフ」の広告。梅田は公式価格で買っていた。',hint:'公式価格'+fmt(p.price)+'円×（100−'+p.discount+'）%。これは架空のセールであり、正規メーカー価格の変更ではない。',detail:'商品自体は実在するが、割引キャンペーンとその価格はゲーム内フィクション。',explain:'月曜のメーカー公式購入価格と金曜の架空セール価格は別物。セール価格はゲーム内の計算問題。',mode:'facts'});}
  if(i===9){const item=landmarks[k];put({type:'year',unit:'年',min:1000,max:2100,truth:item.price,zone:[item.price,item.price],item:item.name,emoji:item.emoji,source:item.url,detail:item.detail,speech:'これって何年に'+(k===0?'開業した': '完成した')+'と思う？',context:k===0?'東京駅の丸の内側。駅の開業年を尋ねている。復原工事の年ではない。':k===1?'現在の国会議事堂の竣工年。着工年ではない。':'東京タワーの竣工年。',hint:k===0?'大正時代に開業。':k===1?'昭和11年。':'昭和33年。',explain:'建築や施設の年は質問対象（着工・竣工・開業）を厳密に区別。',mode:'facts'});}
@@ -145,11 +160,20 @@ function initRound(){
  // Truly independent keys: Q9 shares Q2; Q12 shares Q8; Q10 and Q11 use separate keys.
  picks[9]=sel[8];picks[10]=sel[9];
  // 同じ周回で同一の実在商品を別の独立問題に重複出題しない。
- if(picks[1]===0 && picks[2]===1)picks[2]=0;
- if(picks[1]===1 && picks[6]===0)picks[6]=1;
- if(picks[1]===1 && picks[7]===1)picks[7]=2;
- if(picks[1]===2 && picks[7]===0)picks[7]=2;
- if(picks[6]===0 && picks[7]===1)picks[7]=2;
+ // 独立した5問で商品が重複しないように検証済みの候補から選択。
+ const slots=[1,2,5,6,7],pools=[buy,q3Products,q6Products,q7Products,q8Products];
+ function choose(j,used){
+   if(j===slots.length)return true;
+   const slot=slots[j],pool=pools[j],base=picks[slot];
+   for(let a=0;a<3;a++){
+     const k=(base+a)%3,item=pool[k];if(used.has(item.name))continue;
+     picks[slot]=k;used.add(item.name);
+     if(choose(j+1,used))return true;
+     used.delete(item.name);
+   }
+   return false;
+ }
+ if(!choose(0,new Set()))throw new Error('Cannot generate distinct products');
  picks[8]=picks[1];picks[11]=picks[7];
  results=[];hints=3;state={i:0,phase:'ask'};
  try{sessionStorage.setItem('n1_current_round',JSON.stringify({round,picks}))}catch(e){}
