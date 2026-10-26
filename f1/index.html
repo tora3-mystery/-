@@ -140,7 +140,7 @@ body.odd-3 .idle-action{background:#333a3b;border-color:#67716f;color:#eee}
 </style></head><body><main class="container"><header class="mast"><div class="brand"><span class="brand-icon" id="brandIcon">🛒</span><span id="brandName">まるまるスーパー<br><small class="tiny">お客様改善センター / 研修ゲーム</small></span></div><div class="header-actions"><button id="help" class="button-quiet hidden">遊び方</button><button id="restart" class="button-quiet hidden">最初から</button></div></header><div class="version-top"><b>F1 v0.12.2</b><span>2026-10-26 13:28 JST更新</span></div>
 <section id="intro" class="focus box"><div class="overline">月曜日 08:45｜店舗運営本部</div><h1 class="head">改善しすぎる店</h1><div class="intro-note"><b>【業務連絡】店長代理の任命について</b>レジの行列を解消すると通路が狭くなり、品切れを減らすと売場が騒がしくなる。改善の報告は毎日届くのに、苦情だけがなくなりません。店長が一週間不在となるため、本日から7営業日の店舗運営をあなたに任せます。</div><p><strong>本部からの指示は、売上を維持すること。お客様の声への対応は店長代理に一任されます。</strong><br><span class="tiny">※本部の評価指標は売上のみです。</span></p><div class="intro-grid"><div><small>集客力</small><b>7/10</b><small>来店したい理由</small></div><div><small>未解決クレーム</small><b>5件</b><small>レジ・通路・品切れ・騒音</small></div><div><small>日売上見込み</small><b>50万円</b><small>現状のまま営業した場合</small></div></div><h2 style="font-size:17px">仕事は2つだけ</h2><ol class="intro-jobs"><li>毎日、お客様の声を確認する。</li><li>通常営業では毎日、6つの改善策か「何も対策しない」を選ぶ。</li></ol><div class="guidebox"><b>基本ルール</b><p>施策の効果は翌営業日の開店時に反映されます。7日目の選択は最終集計に反映されますが、その日の売上は変わりません。売上0で閉店、40万円未満が2営業日続くと店長交代です。</p></div><details class="box detail"><summary>操作ガイドを見る（営業はまだ始まりません）</summary><ol class="intro-jobs"><li>投稿内容を読み、店長回答は翌営業日以降に確認します。</li><li>施策カードの翌営業日の集客力・苦情増減を見て1案を選びます。</li><li>営業日報を確認し、「翌営業日へ」で進みます。</li><li>選択した施策は、その日の売上には影響しません。</li><li>日売上（万円）＝max(0,30＋集客力×10－未解決クレーム×10)。</li><li>進行はこの端末のブラウザに自動保存されます。</li></ol></details><p class="tiny">1プレイ約5〜8分／通信・ログイン不要</p><div class="intro-actions"><button class="widebtn" id="start">7日間の店長代理を始める</button><button class="widebtn hidden" id="resume">続きから再開</button><button class="button-quiet hidden" id="startOver">保存記録を消して最初から始める</button><button class="button-quiet hidden" id="backToGame">営業に戻る</button></div></section>
 <div id="game" class="gameonly"><div class="metrics"><div class="stat"><label>営業日</label><strong id="day">1/7</strong></div><div class="stat"><label>👥 集客力</label><strong id="cash">7</strong><small>/10</small></div><div class="stat"><label>日売上見込</label><strong id="total">50万円</strong></div><div class="stat"><label>累計売上</label><strong id="revenueTotal">0万円</strong></div></div><section class="operations-board" aria-label="売上とお客様の声"><div id="moneyDetail" class="money-note"></div><div id="meters" class="operational-meters"></div></section><div id="oddMetrics" class="anomaly-grid hidden"><div class="stat"><label>閉店後売上</label><strong id="afterSales">0</strong><small>万円</small></div><div class="stat"><label>未退店客数</label><strong id="remainingCustomers">0</strong><small>名</small></div><div class="stat"><label>閉店許可</label><strong id="closePermit">許可</strong></div></div><div id="oddEvidenceBoard" class="evidence-board hidden" aria-label="内部照合記録"><b>内部照合記録</b><p>受領した記録は、開くと内容を確認できます。</p><div id="oddEvidenceList"></div></div><figure class="store-scene" id="storeScene"><img id="storeImage" alt="スーパーの現在の店内状況を示す画像" src="./assets/store-queue.jpg"><div class="scene-status" id="sceneStatus">営業中の売場</div><div class="scene-markers" id="sceneMarkers"></div><figcaption id="sceneCaption">店内の状態は選んだ施策によって変わります。</figcaption></figure><div class="actions-head"><div><div class="overline" id="dateLabel">DAY 01 / 07</div><h1 class="head" style="font-size:23px">本日の改善判断</h1></div><span class="pill">本日あと1件</span></div><div class="two"><section class="box issue-card"><div class="issue-meta"><span>📮 お客様の声・店長回答一覧</span><span id="issueTag" class="pill urgent">要対応</span></div><div id="issuePerson" class="hidden"></div><div id="issueText" class="hidden"></div><p id="issueReason" class="issue-tail"></p><div id="complaintSummary" class="complaint-summary" aria-live="polite"></div><div id="complaintBoard" class="complaint-board"></div><div id="anomalyComplaints" class="anomaly-inbox hidden" aria-label="出所不明のご意見"></div><details id="complaintExtra" class="complaint-extra hidden"><summary id="complaintExtraLabel">ほかのご意見を見る</summary><div id="complaintExtraBody" class="complaint-board"></div></details><details id="complaintArchive" class="complaint-extra"><summary id="complaintArchiveLabel">以前のご意見と店長回答</summary><div id="complaintArchiveBody" class="complaint-board"></div></details><div class="news" id="newNotice"></div><div id="hqBulletin" class="hq-bulletin" aria-live="polite"></div><div class="help" id="pendingMini"></div></section><section class="box"><div class="actions-head"><h2>今日できる対応</h2><span id="choiceCount" class="context">7案から1つ</span></div><div class="effect-key" aria-label="施策カードの数値の読み方"><span>👥 集客力</span><span>🧾 レジ待ち</span><span>↔️ 通路</span><span>📦 品切れ</span><span>🔊 騒音</span></div><div id="actions" class="day-actions"></div><p class="help">選ぶと当日の営業を終えます。施策の効果は翌営業日に反映されます。同じ施策は何度も繰り返すと効きにくくなります。</p></section></div><details class="box detail" id="breakdown"><summary>詳しく見る：施策・運営履歴</summary><div id="tasks"></div><div class="guidebox"><b>通常経営の判定</b><p>売上0で閉店、40万円未満が2営業日続くと店長交代。本部が確認するのは売上です。7日目の施策の効果は最終集計で確認されます。</p></div><div class="overline">最近の動き</div><ul id="history" class="journal"></ul></details></div>
-<section id="finalChoice" class="focus box final-choice hidden" aria-live="polite"><div class="overline">DAY 07 / CLOSING REJECTED</div><h1 class="head">まだ、閉店できません。</h1><p id="finalLead"></p><div class="guidebox"><b>7日間の営業終了報告</b><p>今日で担当期間は終わるはずです。ところが本部の報告書は「次の営業日を未入力」として戻ってきました。お客様のご意見にも差出人不明の投稿が含まれています。</p><p id="receiptClue"></p></div><div class="evidence-board" id="finalEvidenceBoard"><b>閉店処理時点の照合記録</b><div id="finalEvidenceList"></div></div><div class="final-actions"><button class="widebtn" id="stop0">店舗を施錠して帰宅する</button><button class="widebtn" id="continue8">翌朝の開店準備を進める</button><button class="widebtn hidden-route" id="checkCustomer">ご意見の差出人を確認する</button></div><div class="guidebox hidden" id="inferArea" role="group" aria-labelledby="inferTitle"><b id="inferTitle">照合した記録から、最後の客を推理する</b><p>閲覧した記録に基づいて判断してください。確認していない資料は自動で補完されません。</p><label for="inferWho">残っているのは誰？</label><select id="inferWho"><option value="">選んでください</option><option value="clerk">レジ担当者</option><option value="self">未来の自分</option><option value="visitor">通常のお客様</option></select><label for="inferWhat">何を返品したい？</label><select id="inferWhat"><option value="">選んでください</option><option value="receipt">0番のレシート</option><option value="yesterday">昨日</option><option value="sales">閉店後の売上</option></select><button id="inferSubmit" class="widebtn" type="button">照合結果を確定する</button><p id="inferFeedback" role="status" aria-live="polite"></p></div></section>
+<section id="finalChoice" class="focus box final-choice hidden" aria-live="polite"><div class="overline">DAY 07 / CLOSING REJECTED</div><h1 class="head">まだ、閉店できません。</h1><p id="finalLead"></p><div class="guidebox"><b>7日間の営業終了報告</b><p>今日で担当期間は終わるはずです。ところが本部の報告書は「次の営業日を未入力」として戻ってきました。お客様のご意見にも差出人不明の投稿が含まれています。</p><p id="receiptClue"></p></div><div class="evidence-board" id="finalEvidenceBoard"><b>差出人不明のご意見に関する資料</b><div id="finalEvidenceList"></div></div><div class="final-actions"><button class="widebtn" id="stop0">店舗を施錠して帰宅する</button><button class="widebtn" id="continue8">翌朝の開店準備を進める</button><button class="widebtn hidden-route" id="checkCustomer">ご意見の差出人を確認する</button></div><div class="guidebox hidden" id="inferArea" role="group" aria-labelledby="inferTitle"><b id="inferTitle">ご意見の差出人を推理する</b><p>閲覧した記録に基づいて判断してください。確認していない資料は自動で補完されません。</p><label for="inferWho">差出人は誰？</label><select id="inferWho"><option value="">選んでください</option><option value="clerk">レジ担当者</option><option value="self">未来の自分</option><option value="visitor">通常のお客様</option></select><label for="inferWhat">何を返してほしい？</label><select id="inferWhat"><option value="">選んでください</option><option value="receipt">0番のレシート</option><option value="yesterday">昨日</option><option value="sales">閉店後の売上</option></select><button id="inferSubmit" class="widebtn" type="button">照合結果を確定する</button><p id="inferFeedback" role="status" aria-live="polite"></p></div></section>
 <section id="day8Panel" class="focus box hidden" aria-live="polite">
  <div class="overline">翌朝 08:45 ／ 出勤表にはない曜日</div><div class="day8-weekdays" aria-label="月曜日から日曜日の後に人曜日が追加された営業カレンダー"><span>月</span><span>火</span><span>水</span><span>木</span><span>金</span><span>土</span><span>日</span><span class="day8-new">人</span></div>
  <h1 class="head">本日は、人曜日です。</h1>
@@ -216,16 +216,16 @@ function pickMainConcern(){
 }
 
 const ledgerClues=[
- {name:'照合票 A：売上日付',body:'売上計上日＝明日。返品対象＝本日の1営業日前。\n備考：該当するレシートは0番レジのもののみ。'},
- {name:'照合票 B：閉店後の映像',body:'入店した人物は0人。閉店後のレジ前に、明日の店長代理と同じ社員証の人物が映っている。\n映像の時刻は現在より1日先。'},
- {name:'照合票 C：返品受付',body:'返品希望者の社員番号と、現在の店長代理の番号が一致。\n返品申請には「出勤日を1日分返還したい」と記載。'}
+ {name:'記録 A：差出人不明のご意見',body:'10件のご意見はすべて同じ文章です。\n差出人の職員番号は現在の店長代理本人のものでした。'},
+ {name:'記録 B：閉店後の防犯映像',body:'店内には誰もいません。\n裏手の社の前に立つ人物は、翌日の制服を着たあなたと同じ顔をしています。'},
+ {name:'記録 C：社に残された紙',body:'紙には「お返しください」と書かれています。\n返却希望品目は「昨日」、受取人は「明日のあなた」です。'}
 ];
 function inspectClue(k){
  if(k>=s.odd||k<0)return;
  if(!Array.isArray(s.clueViewed))s.clueViewed=[];
  if(!s.clueViewed.includes(k)){s.clueViewed.push(k);s.clues=s.clueViewed.length;persist();}
  renderClues();
- if(!$('finalChoice').classList.contains('hidden'))$('receiptClue').textContent=s.clues>=3?'照合票A・B・Cを確認済みです。最後の客と返却対象を記録から推理できます。':'未確認の照合票が残っています。';
+ if(!$('finalChoice').classList.contains('hidden'))$('receiptClue').textContent=s.clues>=3?'3件の資料を確認済みです。差出人と返却希望品を推理できます。':'まだ確認していない資料があります。';
 }
 function renderClues(){
  $('oddEvidenceBoard').classList.toggle('hidden',s.odd===0||seventhDayNormal());
@@ -859,7 +859,7 @@ const V12_PRESS={
   article:'先月廃業したまるまるスーパーの建物で、深夜にレジ端末が動いていたとの通報があった。所有者が現地を確認したところ、かつての店長代理が営業日報を処理していた。本人が端末を停止し、現場は静かになったという。',
   quote:'「店はとっくに閉めた。なのに、帳簿だけが毎晩増えていた」――店舗オーナー',
   topic:'【旧店舗】まるまるスーパー跡地、昨夜まで明かりついてた？',
-  posts:['あそこ先月閉店したよね？','裏手の古い社、最近お供え物が置いてあった','昨夜は静かだった。やっと終わったのかな']
+  posts:['あそこ先月閉店したよね？','夜中に「ありがとうございました」という声が聞こえた','昨夜は静かだった。やっと終わったのかな']
  },
  odd_missing:{
   headline:'廃業済みスーパーで深夜のレジ操作　所有者が元店長代理を発見',
@@ -919,9 +919,9 @@ const V09_ENDINGS={
  normal_success:['店舗運営報告','選ばれる店へ。','売上を維持しながら、お客様が困る理由を減らしました。'],
  normal_customer:['店舗運営報告','数字は好調。お客様の声は未解決。','売上目標を達成しましたが、お客様の苦情が残りました。本部は売上だけを評価し、お客様の声は報告書に残されました。'],
  normal_strain:['本部からの通知','改善したのに、続かなかった。','苦情対応と集客のバランスを崩し、目標売上を確保できませんでした。'],
- odd_stop:['0番レジの記録','売上を手放して、閉店する。','裏手の社への供え物を片付け、0番レジの記録を停止しました。説明できない売上は失われますが、店を出られるようになりました。'],
- odd_day8:['0番レジの記録','DAY 08 / 07。まだ営業が終わらない。','誰もいない売場で開店準備を続けました。営業日報には存在しない曜日が増え、社の前には新しい供え物が置かれています。'],
- odd_missing:['0番レジの記録','誰もいない。それでも、売上は増える。','裏手の社の前で待ったあとも、閉店後の会計を続けました。売上は増える一方、誰一人レジに並ぶ姿は確認できません。'],
+ odd_stop:['営業終了報告','この店の明日を、終わらせる。','夜が明ける前に裏手の社へ最後の挨拶をして、店舗の鍵を閉めました。誰かからのご意見は、その後も届いたままです。'],
+ odd_day8:['勤務記録','DAY 08 / 07。まだ営業が終わらない。','曜日の欄がひとつ増え、誰もいない売場で開店準備を続けています。「ありがとうございました」の投稿が、ずっと止まりません。'],
+ odd_missing:['お客様の声','誰もいない。それでも、お礼は届く。','裏手の社の前で待った翌朝も、店内に客は見当たりませんでした。画面には完璧なスーパーを褒める投稿だけが届き続けます。'],
  odd_hidden:['照合完了','「昨日」を返品します。','最後の客は翌日のあなた自身でした。昨日の営業日だけが未処理として残っていたのです。']
 };
 function renderEnd(){
@@ -930,9 +930,9 @@ function renderEnd(){
  const [flag,name,story]=V09_ENDINGS[s.ending]||V09_ENDINGS.normal_strain;
  $('ending').replaceChildren();const label=document.createElement('div');label.className='overline';label.textContent=flag;
  const head=document.createElement('h1');head.className='head';head.textContent=name;
- const narrative=s.ending==='odd_stop'&&s.odd<3?'裏手の古い社に関わる取引記録を破棄し、0番レジの処理を停止しました。説明できない売上は失われますが、店を出られるようになりました。':story;
+ const narrative=story;
   const desc=document.createElement('p');desc.textContent=narrative+(s.endingReason?'／'+s.endingReason+'のため営業終了。':'')+
- (['odd_stop','odd_hidden'].includes(s.ending)?'／訂正した架空の売上'+(s.forfeitedGain||0)+'万円。':'');
+ '';
  const photo=document.createElement('img');photo.className='ending-photo';photo.alt='今週の営業結果を示すスーパー';
  photo.loading='lazy';
  const endingPhoto=v09Resolve({day:s.day,attraction:s.attraction,complaintsByCategory:s.vals,ending:s.ending,endingReason:s.endingReason});
@@ -942,7 +942,7 @@ function renderEnd(){
  '件／営業'+Math.min(7,s.days.length)+'日間</div>';
  const stamps=document.createElement('div');stamps.className='stamps';
  labels.forEach((name,i)=>{const p=document.createElement('span');p.className='stamp';p.textContent=name+' '+s.vals[i]+'件';stamps.append(p)});
- if(s.odd)['閉店後売上 '+s.afterSales+'万円','未退店客 '+s.remaining+'名','閉店許可 '+s.permit].forEach(x=>{const p=document.createElement('span');p.className='stamp';p.textContent=x;stamps.append(p)});
+ if(s.odd){const p=document.createElement('span');p.className='stamp';p.textContent='差出人不明のご意見 '+(s.odd>=3?10:s.odd===2?3:1)+'件';stamps.append(p)}
  tab.append(stamps);
  if(!s.odd){ensureComplaints();const note=document.createElement('div');note.className='weekly-customer';
  const missing=s.complaintTickets.filter(x=>x.status==='open').length;
