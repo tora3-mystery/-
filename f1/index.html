@@ -537,7 +537,7 @@ const V14_GRAY=[
 {id:'stockCover',name:'空の棚に「入荷済み」の札を出す',kind:'gray',role:'gray',delta:[-1,0,-3,0],attractionOnCompletion:3,desc:'品切れの印象を抑える。後日、問い合わせが集中するおそれがあります。',risk:[0,0,2,0],min:3,max:7,repeat:false,completionDays:1}
 ];
 options.push(...V14_GRAY);
-const V14_PRESSURE={2:[0,1,0,0],3:[0,0,1,0],4:[1,0,0,1],5:[0,1,1,0],6:[1,0,0,1],7:[0,1,1,0]};
+const V14_PRESSURE={2:[0,1,0,0],3:[0,0,1,0],4:[1,0,0,0],5:[0,1,1,0],6:[1,0,0,1],7:[0,0,1,0]};
 function v14DailyPressure(day){
  const delta=V14_PRESSURE[day]||[0,0,0,0],before=[...s.vals];
  change(delta);
@@ -858,7 +858,7 @@ function advance(){
  v11OpenTransition(openingBefore);
 }
 function normalEnding(){
- const total=v09Count();s.ending=s.revenue>=540&&total<=7?'normal_success':
+ const total=v09Count();s.ending=s.revenue>=500&&total<=6?'normal_success':
  s.revenue>=480&&total>=4?'normal_customer':'normal_strain';
  s.finish=true;
 }
@@ -940,8 +940,8 @@ function v12RenderPress(){
  if(s.ending==='odd_stop'&&s.odd<3)data={...data,
  posts:['あそこ先月閉店したよね？','裏手の古い社で誰かが祈っているのを見た','昨夜は静かだった。やっと終わったのかな']};
  if(s.ending==='normal_strain'&&s.endingReason==='店長解任・営業停止')data={...data,
- headline:'売上不振で営業停止、まるまるスーパーが閉店',
- article:'まるまるスーパーは営業中の売上がゼロとなり、店舗の閉鎖を決めた。改善策の効果を十分に確認する前に閉店となり、近隣住民からは惜しむ声も聞かれた。',
+ headline:'売上0万円で店長代理解任、まるまるスーパーが営業停止',
+ article:'まるまるスーパーは日売上が0万円となったため、店長代理を解任し営業を停止した。新たな苦情が増える一方で改善が追いつかず、地域住民からは困惑の声が上がった。',
  quote:'「もっと早く普通の買い物ができる店になってほしかった」――近隣住民',
  topic:'【閉店】まるまるスーパー営業終了のお知らせ',
  posts:['シャッター閉まってた。もう営業しないの？','買いやすくなったと思った時期もあったのに残念']};
