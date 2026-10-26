@@ -1,0 +1,338 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#20372f">
+<title>B1｜採用結果をお知らせします。｜α0.1.0</title>
+<style>
+:root{--bg:#f5f4ef;--paper:#fffdf8;--ink:#24332f;--muted:#64736e;--line:#d9ddd5;--green:#26684c;--soft:#e7f0e7;--red:#a34639;--redbg:#fff0e9;--amber:#82570e;--amberbg:#fff2d5}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;line-height:1.65}
+button{font:inherit;cursor:pointer}button:disabled{opacity:.45;cursor:not-allowed}button:focus-visible{outline:3px solid #e8a836;outline-offset:3px}
+header{background:#20372f;color:#f6f3e8;padding:13px max(14px,calc((100vw - 1180px)/2));display:flex;justify-content:space-between;align-items:center;gap:12px}
+.brand{font-size:16px;letter-spacing:.02em;font-weight:800}.brand small{font-weight:400;font-size:11px;display:block;color:#d2dfd5}.version{font-size:10px;text-align:right;color:#cbd9ce}
+.wrap{max-width:1180px;margin:auto;padding:18px 14px 86px}.muted{color:var(--muted)}.small{font-size:12px}.tiny{font-size:11px}
+h1,h2,h3,p{margin:0 0 11px}h1{font-size:clamp(25px,4vw,35px);line-height:1.4}h2{font-size:19px}h3{font-size:15px}
+.card{border:1px solid var(--line);background:var(--paper);border-radius:14px;padding:17px;box-shadow:0 4px 15px #29382d09}.card+ .card{margin-top:12px}
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 370px;gap:15px;align-items:start}.stack{display:grid;gap:12px}.side{position:sticky;top:12px}
+.btn{border:1px solid #8ea59a;border-radius:9px;background:#fff;color:var(--ink);font-weight:700;padding:10px 13px;min-height:44px;text-align:center}
+.btn.primary{background:var(--green);color:#fff;border-color:var(--green)}.btn.warn{border-color:#bd7955;background:var(--redbg);color:#823c2d}.btn:disabled{background:#eee;color:#888;border-color:#ddd}
+.btn-row{display:flex;gap:8px;flex-wrap:wrap}.btn-row .grow{flex:1}
+.topnav{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:13px}.tab{border:1px solid var(--line);background:#fff;padding:8px 13px;border-radius:20px;color:var(--muted);font-size:12px;font-weight:800}.tab.on{background:#274d3c;color:#fff;border-color:#274d3c}
+.eyebrow{color:var(--green);font-weight:900;font-size:11px;letter-spacing:.12em;margin-bottom:8px}
+.intro{max-width:800px;margin:28px auto}.intro .lead{font-size:16px;margin:13px 0 20px}
+.three{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:18px 0}.mini{padding:14px;background:var(--soft);border-radius:10px;font-size:12px}.mini b{display:block;font-size:14px;margin-bottom:4px}
+.persons{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px}
+.person{border:1px solid var(--line);background:#fff;border-radius:10px;padding:8px;text-align:left;min-width:0}
+.person.active{border:2px solid var(--green);padding:7px}.person.selected{background:#e7f1e8}
+.person .name{font-weight:800;font-size:12px}.person .pstate{font-size:10px;color:var(--muted)}
+.face{display:block;width:100%;aspect-ratio:1;object-fit:cover;border-radius:9px;overflow:hidden;background:#e9eee8}.portrait{width:100%;height:100%;display:block}
+.profile{display:grid;grid-template-columns:132px minmax(0,1fr);gap:14px;align-items:start}
+.profile .face{aspect-ratio:4/5}.namebig{font-size:22px;font-weight:900;margin-bottom:2px}
+.tag{display:inline-block;padding:3px 8px;background:var(--soft);color:#286448;border-radius:30px;font-size:10px;font-weight:800;margin:3px 5px 3px 0}
+.memo{background:#f1f3ed;border-radius:10px;padding:12px 13px;margin:13px 0;font-size:13px}
+.question{width:100%;display:block;text-align:left;background:#fff;border:1px solid var(--line);border-radius:10px;padding:11px 12px;margin:7px 0;font-weight:650;font-size:13px}
+.question.used{background:#edf3ed;color:#496452;border-color:#cadccf}
+.answer{margin:7px 0;padding:11px 13px;border-left:4px solid #7c9c89;border-radius:6px;background:#f1f4f0;font-size:13px}
+.note{font-size:12px;padding:10px 12px;border-radius:8px;background:var(--soft);margin:8px 0}
+.note.warn{background:var(--amberbg);color:var(--amber)}.note.danger{background:var(--redbg);color:var(--red)}
+.rule{border-top:1px solid var(--line);margin:13px 0}
+.roster{display:grid;grid-template-columns:repeat(2,1fr);gap:6px}.roster-item{border:1px solid var(--line);border-radius:8px;padding:9px;font-size:12px}
+.roster-item b{font-size:13px}.roster-item .sub{font-size:10px;color:var(--muted);display:block}.roster-item.locked{background:#e7f0e7}
+progress{appearance:none;width:100%;height:11px;border:0;border-radius:8px;overflow:hidden;background:#e5e7e0}
+progress::-webkit-progress-bar{background:#e5e7e0}progress::-webkit-progress-value{background:#3e946a}progress::-moz-progress-bar{background:#3e946a}
+.matrix{width:100%;border-collapse:separate;border-spacing:3px;font-size:11px}
+.matrix th{font-size:11px;color:var(--muted);padding:2px}
+.matrix td{padding:6px 5px;vertical-align:top;border-radius:7px;background:#eef0ed;min-width:0;text-align:center}
+.matrix td.ok{background:#dceee0;color:#245a3d}.matrix td.low{background:#fbe5d7;color:#97452f}.matrix td.zero{background:#f2f0e7;color:#74776f}
+.matrix .names{display:block;font-size:10px;line-height:1.4;opacity:.9;margin-top:3px;overflow-wrap:anywhere}
+.stat{display:flex;justify-content:space-between;align-items:end;gap:10px;margin:9px 0}.stat strong{font-size:27px;line-height:1;color:var(--green)}
+.summary{border-left:3px solid #608c71;padding:8px 12px;margin:9px 0;background:#f4f6f1;font-size:12px}
+.footer{color:var(--muted);font-size:11px;padding:20px 3px;text-align:center}
+.mobilebar{display:none}
+.offer-row{border:1px solid var(--line);border-radius:10px;padding:11px 12px;margin:7px 0;background:#fff}
+.offer-status{font-size:11px;font-weight:900;color:var(--green)}.offer-status.no{color:var(--red)}
+.diary{padding:13px 14px;border-left:3px solid #96ae9e;background:#f4f5ef;margin:10px 0}
+@media(max-width:780px){.layout{display:block}.side{display:none}.side.show{display:block}.main.hide{display:none}.persons{grid-template-columns:repeat(4,minmax(0,1fr));gap:5px}.profile{grid-template-columns:94px minmax(0,1fr)}.namebig{font-size:18px}.wrap{padding:12px 10px 100px}.card{padding:13px}.three{grid-template-columns:1fr}.mobilebar{display:flex;position:fixed;bottom:0;left:0;right:0;background:#20372f;color:#fff;padding:9px 12px max(9px,env(safe-area-inset-bottom));justify-content:space-around;gap:9px;z-index:20}.mobilebar button{border:1px solid #8eae9b;background:#2c5844;color:#fff;border-radius:9px;padding:8px 10px;font-size:13px;flex:1}.person .name{font-size:11px}.person .pstate{font-size:9px}}
+@media(max-width:370px){.persons{grid-template-columns:repeat(4,minmax(0,1fr))}.namebig{font-size:17px}.profile{grid-template-columns:82px minmax(0,1fr)}.tag{font-size:9px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head><body>
+<header><div class="brand">喫茶まどか <small>B1｜採用結果をお知らせします。</small></div><div class="version">α0.1.0<br>更新 2026.10.26 18:55 JST</div></header>
+<main id="app" class="wrap"></main>
+<script>
+"use strict";
+(function(){
+const S=[
+{id:"MoD",day:"月",tm:"昼",n:2,f:["村上"]},{id:"MoN",day:"月",tm:"夜",n:1,f:["小林"]},
+{id:"TuD",day:"火",tm:"昼",n:1,f:["村上"]},{id:"TuN",day:"火",tm:"夜",n:1,f:[]},
+{id:"WeD",day:"水",tm:"昼",n:1,f:[]},{id:"WeN",day:"水",tm:"夜",n:1,f:["小林"]},
+{id:"ThD",day:"木",tm:"昼",n:1,f:["村上"]},{id:"ThN",day:"木",tm:"夜",n:1,f:[]},
+{id:"FrD",day:"金",tm:"昼",n:1,f:[]},{id:"FrN",day:"金",tm:"夜",n:2,f:["小林"]},
+{id:"SaD",day:"土",tm:"昼",n:3,f:["村上"]},{id:"SaN",day:"土",tm:"夜",n:2,f:["小林"]},
+{id:"SuD",day:"日",tm:"昼",n:3,f:["村上"]},{id:"SuN",day:"日",tm:"夜",n:2,f:[]}
+];
+const P=[
+{id:"t",name:"田中 悠斗",age:21,history:"カフェ経験1年／レジ締め経験あり",bio:"前の店舗が閉店したため転職活動中。友人と一緒に応募した。",intro:"週3〜4回、夕方を中心に働きたいです。友人も応募しています。",cap:4,all:["TuN","ThN","FrN","SaD","SuN"],known:["FrN","SaD"],trained:true,tag:"閉店業務可",term:"佐藤と土曜昼に同時勤務できること",cond:1,col:"#83a5c1",hair:"#2e3535",
+qs:[["勤務できる曜日・時間帯を教えてください。","火・木・金の夜、土曜の昼、日曜の夜です。週4回まで働けます。","days"],
+["友人も応募されているそうですね。","佐藤と土曜のお昼に一緒に入れることが、僕の応募条件です。別々なら今回は見送ります。","terms"],
+["閉店業務はどこまでできますか。","売上金の照合とレジ締め、清掃の手順まで一通りできます。","skill"],
+["ほかのお店も検討していますか。","まだ比較中ですが、ここで友人と一緒に働けるなら最優先です。","other"]]},
+{id:"s",name:"佐藤 美咲",age:20,history:"接客未経験／大学2年生",bio:"接客の仕事に挑戦したい。田中とは友人。",intro:"平日のお昼と土日のお昼なら働けます。初めてなので教えてもらえると助かります。",cap:4,all:["MoD","WeD","FrD","SaD","SuD"],known:["MoD","SaD"],trained:false,tag:"初回研修必要",col:"#d4a5a7",hair:"#3c2c2c",
+qs:[["詳しい勤務可能日を教えてください。","月・水・金・土・日のお昼です。週4回まで働けます。","days"],
+["田中さんがいないと困りますか。","一緒だったら安心しますが、別々でも大丈夫です。接客を覚えたいので。","terms"],
+["初めての勤務で不安な点はありますか。","レジ操作ですね。最初に経験者の方に教えていただければ頑張れます。","skill"],
+["どんな接客をしてみたいですか。","常連さんの好みを覚えて、落ち着けるお店にしたいです。","other"]]},
+{id:"h",name:"高橋 涼",age:25,history:"飲食店勤務4年／閉店業務可",bio:"夜の責任者を任されていた経験がある。別店舗とも交渉中。",intro:"夜ならいくつかの曜日で対応できます。勤務回数を重視しています。",cap:3,all:["TuN","ThN","FrN","SaN","SuN"],known:["FrN","SuN"],trained:true,tag:"夜勤経験者",term:"週2回以上の夜勤務",cond:1,col:"#aaa9ca",hair:"#33323e",
+qs:[["勤務可能な曜日を教えてください。","火・木・金・土・日の夜に入れます。週3回までです。","days"],
+["希望する夜勤務の回数はありますか。","最低でも週2回、夜に働けると助かります。その条件ならこちらに決めます。","terms"],
+["店舗で担当していた仕事は何ですか。","レジ締めと発注、後輩への引き継ぎもしていました。","skill"],
+["他店からのオファー状況はどうですか。","一件お話があります。勤務回数で比較しています。","other"]]},
+{id:"y",name:"山本 葵",age:19,history:"未経験／専門学校1年生",bio:"時間には正確。細かい手順を覚えるのが得意。",intro:"主にお昼希望です。慣れるまでは先輩がいる時間だと安心です。",cap:4,all:["MoD","WeD","FrD","SaD","SuD"],known:["MoD","FrD"],trained:false,tag:"初回研修必要",col:"#c6af86",hair:"#302d2a",
+qs:[["勤務できる曜日・時間帯は。","月・水・金・土・日のお昼です。週4回まで大丈夫です。","days"],
+["研修について希望はありますか。","初日は経験者の方と一緒がいいです。手順をメモします。","terms"],
+["以前のアルバイト経験はありますか。","飲食店は初めてです。文化祭の販売係はやりました。","skill"],
+["学校との両立は問題ありませんか。","授業が午後にある曜日は勤務不可として記入しました。","other"]]},
+{id:"n",name:"中村 拓海",age:27,history:"居酒屋経験3年／閉店業務可",bio:"接客より裏方作業が得意。忙しい時間帯の応援に慣れている。",intro:"土曜と日曜の夜にも入れます。接客より準備や締め作業に自信があります。",cap:3,all:["TuN","FrN","SaD","SaN","SuN"],known:["SaN","SuN"],trained:true,tag:"閉店業務可",col:"#89b9aa",hair:"#323333",
+qs:[["勤務可能な曜日を詳しく教えてください。","火曜夜、金曜夜、土曜昼・夜、日曜夜です。週3回までです。","days"],
+["勤務するうえで希望はありますか。","週末の夜は歓迎です。仕込みや閉店作業を任せてもらえると嬉しいです。","terms"],
+["新人を指導したことはありますか。","以前の店で手順を教えたことがあります。初回研修も担当できます。","skill"],
+["忙しい場面で何を優先しますか。","まず混んでいる作業を見て、全体の滞留を減らすように動きます。","other"]]},
+{id:"g",name:"吉田 玲奈",age:23,history:"販売・接客経験3年／夜勤務不可",bio:"接客が得意で面接評価は高い。日曜の昼にも働ける。",intro:"接客は得意です。お昼の時間帯ならお役に立てると思います。",cap:4,all:["MoD","WeD","FrD","SuD"],known:["FrD","SuD"],trained:false,tag:"接客即戦力",term:"週2回以上の勤務",cond:1,col:"#c59caa",hair:"#352934",
+qs:[["具体的な勤務可能日を教えてください。","月・水・金・日のお昼です。夜は家庭の都合で難しいです。","days"],
+["何回程度の勤務を希望しますか。","週2回以上が希望です。週1回だけだと継続が難しいと思います。","terms"],
+["接客で強みだと思うことは。","お客様の話を聞いて提案するのが好きです。販売では新人指導もしました。","skill"],
+["今回応募した理由は何ですか。","生活圏のお店で、長く接客を続けたいと思ったからです。","other"]]},
+{id:"k",name:"加藤 陽菜",age:20,history:"飲食未経験／大学2年生",bio:"夜勤務も可能だが、最初は実地研修が必要。",intro:"授業の合間と週末に働きたいです。お店の仕事は初めてです。",cap:3,all:["TuN","ThN","FrD","SaN","SuD"],known:["SaN","SuD"],trained:false,tag:"初回研修必要",col:"#a8bdd5",hair:"#39352f",
+qs:[["具体的な勤務可能日を教えてください。","火・木の夜、金の昼、土の夜、日の昼です。週3回までです。","days"],
+["初回研修は必要ですか。","飲食店は初めてなので、初日は経験者と同じシフトにしてください。","terms"],
+["夜間の仕事で不安はありますか。","最初は不安ですが、閉店の手順を習えば続けられそうです。","skill"],
+["学業と両立できますか。","試験の時期は早めに申告します。今回の初週は問題ありません。","other"]]},
+{id:"i",name:"伊藤 健太",age:24,history:"飲食店勤務2年／閉店業務可",bio:"日曜夜を含む勤務を希望。丁寧な作業が得意。",intro:"日曜夜に働ける職場を探していました。閉店対応の経験はあります。",cap:4,all:["ThN","FrD","SaD","SuD","SuN"],known:["SuN","SaD"],trained:true,tag:"閉店業務可",term:"日曜夜の勤務を含めること",cond:1,col:"#c2b3a0",hair:"#302d2d",
+qs:[["勤務できる曜日と時間帯は。","木曜夜、金曜昼、土曜昼、日曜昼・夜です。週4回までです。","days"],
+["採用にあたって必須の条件は。","日曜の夜に勤務できることです。そこが条件に合えば承諾します。","terms"],
+["閉店経験について聞かせてください。","レジ締め、鍵の管理、翌日の準備を担当していました。","skill"],
+["働くうえで大切にしたいことは。","決まった手順を守れる職場が合っています。","other"]]}
+];
+const byId=id=>P.find(p=>p.id===id);
+const target=13;
+const staffMentors={MoD:true,MoN:true,TuD:true,WeN:true,ThD:true,FrN:true,SaD:true,SaN:true,SuD:true};
+let st;
+function fresh(){
+return {screen:"intro",view:"interview",person:"t",order:P.map(p=>p.id).sort(()=>Math.random()-.5),visited:[],asked:{},picked:[],confirmed:[],contacted:[],declined:[],offerLog:[],offerRounds:0,advice:"",result:null};
+}
+function load(){try{const raw=localStorage.getItem("b1-alpha-010");if(raw){let x=JSON.parse(raw);if(x&&Array.isArray(x.picked)&&x.screen)return x;}}catch(e){}return fresh();}
+function save(){try{localStorage.setItem("b1-alpha-010",JSON.stringify(st));}catch(e){}}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+function shortSlot(id){let s=S.find(s=>s.id===id);return s?s.day+s.tm:"";}
+function face(p){let hair=p.hair;let bg=p.col;return '<svg class="portrait" viewBox="0 0 140 160" role="img" aria-label="'+esc(p.name)+'の仮イラスト"><rect width="140" height="160" fill="'+bg+'"/><circle cx="70" cy="62" r="42" fill="'+hair+'"/><path d="M12 162Q15 114 70 116Q124 114 128 162" fill="#f3f2e9"/><path d="M40 160Q48 128 70 127Q92 128 100 160" fill="#c4ded2"/><rect x="58" y="102" width="24" height="29" rx="10" fill="#d9a482"/><ellipse cx="70" cy="78" rx="32" ry="39" fill="#e2b08e"/><path d="M39 76Q34 33 70 34Q109 35 102 76Q94 58 83 54Q63 73 39 76" fill="'+hair+'"/><circle cx="58" cy="81" r="2.8" fill="#43352f"/><circle cx="83" cy="81" r="2.8" fill="#43352f"/><path d="M63 98Q70 103 78 98" stroke="#915e54" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M53 73h11M78 73h11" stroke="'+hair+'" stroke-width="2" stroke-linecap="round"/></svg>';}
+function knownSlots(p,full){return full||(st.asked[p.id]||[]).includes(0)||st.contacted.includes(p.id)?p.all:p.known;}
+function checkTerms(group,assign,full){const terms=[];
+ const has=id=>group.includes(id);
+ const revealed=id=>full||(st.asked[id]||[]).includes(1)||st.contacted.includes(id);
+ if(has("t")&&revealed("t")&&(!has("s")||!assign.SaD.includes("t")||!assign.SaD.includes("s")))terms.push("田中の友人同時勤務");
+ if(has("h")&&revealed("h")&&S.filter(s=>s.tm==="夜"&&assign[s.id].includes("h")).length<2)terms.push("高橋の週2回夜勤");
+ if(has("g")&&revealed("g")&&S.filter(s=>assign[s.id].includes("g")).length<2)terms.push("吉田の週2回勤務");
+ if(has("i")&&revealed("i")&&!assign.SuN.includes("i"))terms.push("伊藤の日曜夜勤務");
+ return terms;
+}
+function solve(group,full){
+ const persons=group.map(byId).filter(Boolean);
+ const options=S.map(slot=>{
+  const who=persons.filter(p=>knownSlots(p,full).includes(slot.id)).map(p=>p.id);
+  const deficit=slot.n-slot.f.length, arr=[[]];
+  for(const p of who)arr.push([p]);
+  if(deficit>=2)for(let a=0;a<who.length;a++)for(let b=a+1;b<who.length;b++)arr.push([who[a],who[b]]);
+  return arr.filter(a=>a.length<=deficit).sort((a,b)=>b.length-a.length);
+ });
+ let best={score:-1e9,filled:-1,assignment:null,issues:[]},assign={},used={},days={},halt=false;
+ function dfs(idx,count){
+  if(halt)return;
+  if(idx===S.length){
+    const issues=checkTerms(group,assign,full);
+    const score=count*100-issues.length*250;
+    if(score>best.score){best={score,filled:count,assignment:Object.fromEntries(Object.entries(assign).map(([k,v])=>[k,[...v]])),issues};}
+    if(count===target&&issues.length===0)halt=true;
+    return;
+  }
+  let potential=count;
+  for(let j=idx;j<S.length;j++)potential+=S[j].n-S[j].f.length;
+  if(best.issues.length===0&&potential<best.filled)return;
+  const slot=S[idx];
+  for(const team of options[idx]){
+    if(team.some(id=>(used[id]||0)>=byId(id).cap||(days[id]||[]).includes(slot.day)))continue;
+    if(team.some(id=>!byId(id).trained&&!(used[id]||0)&&!staffMentors[slot.id]&&!team.some(other=>other!==id&&byId(other).trained)))continue;
+    assign[slot.id]=team;
+    for(const id of team){used[id]=(used[id]||0)+1;(days[id]||(days[id]=[])).push(slot.day);}
+    dfs(idx+1,count+team.length);
+    for(const id of team){used[id]--;days[id].pop();}
+  }
+  delete assign[slot.id];
+ }
+ dfs(0,0);
+ if(!best.assignment){best={score:0,filled:0,assignment:Object.fromEntries(S.map(s=>[s.id,[]])),issues:[]};}
+ return best;
+}
+function selectedCount(){return st.picked.length;}
+function board(full){
+ const group=full?st.confirmed:st.picked;
+ const answer=solve(group,full);
+ let unknown=group.filter(id=>!(st.asked[id]||[]).includes(0)&&!st.contacted.includes(id));
+ let unmet=answer.issues;
+ let cells="";
+ for(let day of ["月","火","水","木","金","土","日"]){
+ cells+='<tr><th>'+day+'</th>';
+ for(let tm of ["昼","夜"]){
+ const sl=S.find(s=>s.day===day&&s.tm===tm);
+ const a=answer.assignment[sl.id]||[],need=sl.n-sl.f.length;
+ const people=sl.f.concat(a.map(id=>byId(id).name.split(" ")[0]));
+ const cl=need===0?"zero":a.length===need?"ok":"low";
+ cells+='<td class="'+cl+'"><b>'+a.length+'/'+need+'</b><span class="names">'+esc(people.join("・"))+'</span></td>';
+ }
+ cells+='</tr>';
+ }
+ const missing=S.filter(s=>(answer.assignment[s.id]||[]).length<s.n-s.f.length).map(s=>shortSlot(s.id));
+ let note=full?"確定採用者の実条件で計算":"面接で把握した条件だけで計算。未確認条件は配置に使いません。";
+ let who=unknown.length?'<div class="note warn">勤務曜日の詳細が未確認：'+unknown.map(id=>byId(id).name.split(" ")[0]).join("・")+'</div>':"";
+ return '<div class="card" id="board"><div class="eyebrow">採用検討ボード</div><h2>採用候補 '+group.length+' / 4名</h2>'
+ +'<div class="roster">'+group.map(id=>'<div class="roster-item '+(st.confirmed.includes(id)?'locked':'')+'"><b>'+esc(byId(id).name.split(" ")[0])+'</b><span class="sub">'+(st.confirmed.includes(id)?"採用内定・変更不可":"オファー前・入替可能")+'</span></div>').join("")
+ +Array.from({length:Math.max(0,4-group.length)},()=>'<div class="roster-item muted">候補未選択</div>').join("")+'</div>'
+ +'<div class="rule"></div><div class="stat"><div><b>仮シフト充足</b><div class="small muted">新規採用者の必要枠</div></div><strong>'+answer.filled+' / '+target+'</strong></div>'
+ +'<progress value="'+answer.filled+'" max="'+target+'"></progress>'
+ +(answer.filled===target&&!unmet.length?'<div class="note">人数・確認済条件について配置が成立する見込みです。</div>':'<div class="note warn">不足枠：'+(missing.length?missing.map(esc).join("・"):"なし")+(unmet.length?"<br>条件未達："+unmet.map(esc).join("・"):"")+'</div>')
+ +who+'<table class="matrix" aria-label="採用候補の仮シフト"><thead><tr><th>曜日</th><th>昼</th><th>夜</th></tr></thead><tbody>'+cells+'</tbody></table>'
+ +'<p class="tiny muted">各マスは「新規配置数 / 新規必要数」。名前には既存スタッフも含む。'+note+' 採用承諾そのものは保証しません。</p></div>';
+}
+function renderInterview(){
+ const p=byId(st.person), asked=st.asked[p.id]||[];
+ const visited=st.visited.includes(p.id);
+ const canPick=!st.contacted.includes(p.id)&&(st.picked.includes(p.id)||st.picked.length<4);
+ const canAsk=asked.length<2;
+ let candidateGrid='<div class="persons">'+st.order.map(id=>{
+ const c=byId(id),active=st.person===id,chosen=st.picked.includes(id),called=st.contacted.includes(id);
+ return '<button class="person '+(active?"active ":"")+(chosen?"selected":"")+'" data-action="person" data-id="'+id+'">'+
+ '<span class="face">'+face(c)+'</span><span class="name">'+esc(c.name.split(" ")[0])+'</span><span class="pstate">'+(called?"結果通知済":chosen?"候補登録中":st.visited.includes(id)?"面接中":"未面接")+'</span></button>';
+ }).join("")+'</div>';
+ let questions=p.qs.map((q,i)=>{
+ let used=asked.includes(i);
+ return '<button class="question '+(used?"used":"")+'" data-action="ask" data-i="'+i+'" '+(used||!canAsk?"disabled":"")+'>'+(used?"✓ ":"") +esc(q[0])+'</button>';
+ }).join("");
+ let answers=asked.map(i=>'<div class="answer"><b>Q. '+esc(p.qs[i][0])+'</b><br>「'+esc(p.qs[i][1])+'」</div>').join("");
+ let allowed=knownSlots(p,false).map(shortSlot).join("・");
+ let pickButton=st.confirmed.includes(p.id)?'<div class="note">採用承諾済み。オファーは撤回できません。</div>':st.declined.includes(p.id)?'<div class="note danger">辞退済み。再オファーはできません。</div>':'<button class="btn '+(st.picked.includes(p.id)?"warn":"primary")+'" data-action="toggle" '+(!canPick?"disabled":"")+'>'+(st.picked.includes(p.id)?"候補から外す":"採用候補に入れる")+'</button>';
+ return '<div class="card"><div class="eyebrow">01 / INTERVIEW</div><h2>応募者との面接</h2><p class="small muted">応募書類を確認し、知りたいことを質問してください。応募者ごとに2問まで。</p>'+candidateGrid+'</div>'
+ +'<div class="card"><div class="profile"><span class="face">'+face(p)+'</span><div><div class="namebig">'+esc(p.name)+'</div><div class="small muted">'+p.age+'歳｜'+esc(p.history)+'</div><span class="tag">'+esc(p.tag)+'</span><p class="small">'+esc(p.bio)+'</p></div></div>'
+ +'<div class="memo"><b>本人からの応募コメント</b><br>「'+esc(p.intro)+'」<div class="rule"></div><b>勤務情報（確認済）</b><br>'+esc(allowed)+'<br><span class="tiny muted">詳細な曜日を質問すると情報が追加されます。</span></div>'
+ +'<div class="stat"><b>面接で確認する</b><span class="small">質問残り '+(2-asked.length)+' 回</span></div>'+questions+answers
+ +'<div class="rule"></div><div class="btn-row">'+pickButton+'<button class="btn" data-action="board">仮シフトを見る</button></div></div>'
+ +'<div class="card"><div class="eyebrow">店舗の先輩に相談</div><div class="btn-row"><button class="btn" data-action="advice" data-who="k">小林に相談</button><button class="btn" data-action="advice" data-who="m">村上に相談</button></div>'
+ +(st.advice?'<div class="summary">'+(st.advice==="k"?"【小林／シフト実績】「日曜夜は僕も村上さんも出られません。閉店の経験がある人を最低1人は配置してください。勤務の回数も確認するといいと思います。」":"【村上／現場経験】「土日の昼は新人を教える余裕がなくなることもあります。初回の研修をベテランのいる時間に置けるか確認しておきましょう。」")+'</div>':"")+'</div>';
+}
+function renderOffers(){
+ const draft=st.picked.filter(id=>!st.contacted.includes(id));
+ const have4=st.picked.length===4;
+ let html='<div class="card"><div class="eyebrow">02 / OFFER</div><h2>採用通知を送る</h2>'
+ +'<p>採用候補4人に正式なオファーを送ります。承諾すると採用枠が確定します。辞退した場合のみ、次点候補へ追加オファーできます。</p>'
+ +'<div class="note warn">オファー送信後、承諾された方の採用は取り消せません。シフトと本人希望を確認してから進めてください。</div>';
+ if(st.offerLog.length){
+ html+='<h3>これまでの返答</h3>'+st.offerLog.map(o=>'<div class="offer-row"><b>'+esc(o.name)+'</b> <span class="offer-status '+(o.ok?"":"no")+'">'+(o.ok?"承諾":"辞退")+'</span><div class="small">'+esc(o.reason)+'</div></div>').join("");
+ }
+ html+='<div class="rule"></div><b>今回のオファー対象</b><div class="memo">'+(draft.length?draft.map(id=>esc(byId(id).name)).join("・"):"対象者なし")+'</div>';
+ if(draft.length&&have4){
+ html+='<button class="btn primary" data-action="send">この候補にオファーする（'+draft.length+'人）</button>';
+ }else if(st.confirmed.length===4){
+ html+='<div class="note">4名の承諾が揃いました。採用したメンバーで最終シフトを確定できます。</div>';
+ }else{
+ html+='<div class="note warn">採用候補が足りません。面接へ戻り、次点候補を登録してください。</div>';
+ }
+ html+='<div class="btn-row" style="margin-top:12px"><button class="btn" data-action="interview">候補者を見直す</button>'
+ +'<button class="btn primary" data-action="finish" '+(!st.offerLog.length?"disabled":"")+'>採用を締め切り、営業へ</button></div></div>';
+ return html;
+}
+function renderResult(){
+ let solved=st.result||solve(st.confirmed,true);
+ const full=st.confirmed.length===4&&solved.filled===target&&solved.issues.length===0;
+ let rows=S.map(s=>{let names=s.f.concat((solved.assignment[s.id]||[]).map(id=>byId(id).name.split(" ")[0])),num=solved.assignment[s.id].length,need=s.n-s.f.length;
+ return '<div class="diary"><b>'+s.day+'曜 '+s.tm+'</b>　'+esc(names.join("・")||"配置なし")+'<div class="small '+(num<need?"":"muted")+'">'+(num<need?"新規人員が"+(need-num)+"人不足。":"必要人数を確保。")+'</div></div>';
+ }).join("");
+ const group=st.confirmed.map(byId);
+ let ep=full?'<p>必要人数を満たし、リニューアル初週を完走しました。</p>'
+ +(st.confirmed.includes("t")&&st.confirmed.includes("s")?'<div class="diary">土曜昼、田中さんと佐藤さんが同じカウンターに立ちました。採用時の約束が守られ、連携もスムーズでした。</div>':"")
+ +(st.confirmed.includes("i")?'<div class="diary">日曜夜、伊藤さんは希望どおり閉店業務を担当。レジ締めも問題なく終わりました。</div>':"")
+ +(st.confirmed.some(id=>!byId(id).trained)?'<div class="diary">新人は経験者と初回勤務を共にし、翌日の仕事に必要な基本操作を覚えました。</div>':"")
+ :'<p>初週の勤務表に問題が残りました。誰を採用したか、どの条件を確認したかを振り返ってください。</p>';
+ return '<div class="card"><div class="eyebrow">03 / FIRST WEEK</div><h1>'+(full?"営業成功｜喫茶まどか":"営業に課題が残りました")+'</h1>'
+ +ep+'<div class="stat"><b>人員充足</b><strong>'+solved.filled+'/'+target+'</strong></div>'
+ +(solved.issues.length?'<div class="note danger">本人条件の未達：'+solved.issues.map(esc).join("・")+'</div>':"")
+ +'<h2>初週の勤務表と営業日誌</h2>'+rows
+ +'<div class="rule"></div><h2>採用の振り返り</h2><div class="small">採用：'+group.map(p=>esc(p.name)).join("・")+'</div>'
+ +(!full?'<div class="note warn">人数・経験者・研修・採用条件を含めた組合せで再検討してください。経験豊富な候補ばかりでも、必要な曜日を埋められるとは限りません。</div>':"")
+ +'<div class="btn-row"><button class="btn primary" data-action="restart">別の採用で再挑戦する</button><button class="btn" data-action="interview">面接記録に戻る</button></div></div>';
+}
+function render(){
+ save();let root=document.getElementById("app");
+ if(st.screen==="intro"){
+ root.innerHTML='<div class="intro card"><div class="eyebrow">B1 / NEW STAFF RECRUITMENT</div><h1>採用結果をお知らせします。</h1><p class="lead">喫茶まどかの新任店長として、8人の応募者から4人を採用してください。ただし、優秀な4人を集めただけでは店は回りません。</p>'
+ +'<div class="three"><div class="mini"><b>面接で情報を集める</b>応募書類と各2問の質問で、勤務条件や本人希望を把握。</div><div class="mini"><b>候補を入れると仮シフト更新</b>最大4人を入れ替えながら、7日間の必要人数を確認。</div><div class="mini"><b>採用通知には責任が伴う</b>承諾後は取り消せない。辞退や条件付き承諾も考慮。</div></div>'
+ +'<p class="small muted">α0.1.0は8人の条件を固定した検証版です。面接順のみ周回ごとに変わります。人物画像は仮イラストです。ゲームデータは端末内に保存されます。</p>'
+ +'<button class="btn primary" data-action="start">新任店長として着任する</button></div>';
+ return;
+ }
+ const onBoard=st.view==="board",onOffer=st.view==="offer",onResult=st.view==="result";
+ const isMobile=window.matchMedia("(max-width: 780px)").matches;
+ let nav='<nav class="topnav" aria-label="進行"><button class="tab '+(!onBoard&&!onOffer&&!onResult?"on":"")+'" data-action="interview">面接</button><button class="tab '+(onBoard?"on":"")+'" data-action="board">採用検討ボード</button><button class="tab '+(onOffer?"on":"")+'" data-action="offer">採用オファー</button>'+(st.result?'<button class="tab '+(onResult?"on":"")+'" data-action="result">営業結果</button>':"")+'</nav>';
+ let main=onOffer?renderOffers():onResult?renderResult():onBoard?board(false):renderInterview();
+ let sidebar=board(false);
+ root.innerHTML=nav+'<div class="layout"><section class="main '+(onBoard&&isMobile?"hide":"")+'">'+(onBoard&&!isMobile?renderInterview():main)+'</section><aside class="side '+(onBoard&&isMobile?"show":"")+'">'+sidebar+'</aside></div>'
+ +'<div class="footer">B1 α0.1.0｜架空の人物・店舗です。外部API・通信なし。固定ケース検証版。</div>'
+ +'<div class="mobilebar"><button data-action="interview">面接を見る</button><button data-action="board">仮シフト '+solve(st.picked,false).filled+'/'+target+'</button><button data-action="offer">採用通知</button></div>';
+}
+function ask(id,i){
+ if(!st.asked[id])st.asked[id]=[];
+ if(st.asked[id].includes(i)||st.asked[id].length>=2)return;
+ st.asked[id].push(i);
+}
+function toggle(id){
+ if(st.confirmed.includes(id)||st.declined.includes(id)||st.contacted.includes(id))return;
+ if(st.picked.includes(id))st.picked=st.picked.filter(x=>x!==id);
+ else if(st.picked.length<4)st.picked.push(id);
+}
+function send(){
+ if(st.picked.length!==4)return;
+ let draft=st.picked.filter(id=>!st.contacted.includes(id));
+ if(!draft.length)return;
+ for(const id of draft){
+ const p=byId(id);
+ const decline=id==="t"&&!st.picked.includes("s");
+ st.contacted.push(id);
+ if(decline){st.declined.push(id);st.picked=st.picked.filter(x=>x!==id);}
+ else st.confirmed.push(id);
+ let reason=decline?"佐藤さんとの土曜昼の同時勤務が見込めないため、今回は辞退します。":
+ id==="t"?"佐藤さんと土曜昼に勤務できることを条件に承諾します。":
+ id==="h"?"週2回以上の夜勤務を約束できるなら承諾します。":
+ id==="i"?"日曜夜の勤務を含められるなら承諾します。":
+ id==="g"?"週2回以上の勤務なら承諾します。":
+ "ご連絡ありがとうございます。採用を承諾します。";
+ st.offerLog.push({name:p.name,id,ok:!decline,reason});
+ }
+ st.offerRounds++;st.view="offer";
+}
+function handle(e){
+ const b=e.target.closest("[data-action]");if(!b)return;
+ const a=b.dataset.action;
+ if(a==="start"){st.screen="play";st.view="interview";st.visited=["t"];}
+ if(a==="restart"){st=fresh();st.screen="play";st.view="interview";st.visited=["t"];}
+ if(a==="person"){st.person=b.dataset.id;st.visited=[...new Set([...st.visited,st.person])];st.view="interview";}
+ if(a==="ask"){ask(st.person,Number(b.dataset.i));}
+ if(a==="toggle")toggle(st.person);
+ if(a==="advice")st.advice=b.dataset.who;
+ if(a==="board"||a==="interview"||a==="offer"||a==="result"){if(a!=="result"||st.result)st.view=a;}
+ if(a==="send")send();
+ if(a==="finish"){st.result=solve(st.confirmed,true);st.view="result";}
+ render();
+ if(["board","interview","offer","result","person","start","restart","finish"].includes(a))window.scrollTo({top:0,behavior:"instant"});
+}
+st=load();
+document.getElementById("app").addEventListener("click",handle);
+render();
+})();
+</script></body></html>
