@@ -24,7 +24,7 @@ const H1_B011_REPORT={
       '<div class="h011-end-mark">THE END</div>'+
       '<h1>今回の選考評価</h1>'+
       '<div class="h011-evaluation"><small>評価結果</small><strong class="'+(kind==="horror"?"not-rated":"")+'">'+grade+'</strong><span>'+name+'</span></div>'+
-      '<p class="h011-verdict">'+reason+'</p>'+
+      '<p class="h011-verdict">'+reason+'</p><p class="h011-rubric">S＝正体特定＋核心の照合 ／ A＝正体特定 ／ D＝誤判定 ／ 判定不能＝面接官資格喪失</p>'+
       '<div class="h011-stat-grid">'+
       '<div><small>選んだ不採用者</small><b>'+rejected+'</b></div>'+
       '<div><small>異形の正体</small><b>'+culpritName+'</b></div>'+
