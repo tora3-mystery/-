@@ -93,34 +93,28 @@ function test(html){
  step(zero,'idle');
  assert(zero.d.getState().endingReason==='店長解任・営業停止','Zero-day firing');
  const eerie=app();eerie.d.restart();
- const eeriePath=['pickup','vibration','audit','camera0','open0','glitch6','idle'];
- for(const id of eeriePath){
-  const after=step(eerie,id),rows=eerie.get('oddEvidenceList').children;
-  if(after.odd===2&&after.clues===0){
-   assert(rows.length===1,'First clue is the CCTV footage, not missing feedback');
-   rows[0].children[0].onclick();
-  }
-  if(after.odd===3&&after.clues===1){
-   assert(rows.length===2,'Second clue is the shrine paper');
-   rows[1].children[0].onclick();
-  }
- }
- assert(eerie.d.getState().clues===2,'Exactly two clues required');
- assert(!eerie.get('finalChoice').classList.contains('hidden'),'Final eerie choice');
- assert(eerie.get('finalAnomalyComplaints').children.length===10,'Ten repetitive reviews');
- assert(eerie.get('finalAnomalyComplaints').children.every(x=>x.className==='complaint-ticket'),'Unusual reviews look exactly like normal cards');
- eerie.d.startInference();eerie.d.resolveInference('self','yesterday');
- assert(eerie.d.getState().ending==='odd_hidden','Hidden ending via two clues');
- const standard=app();standard.d.restart();
- for(const id of eeriePath)step(standard,id);
- standard.d.finalDecision('stop');
- assert(standard.d.getState().ending==='odd_stop','Stop ending');
- const extended=app();extended.d.restart();
- for(const id of eeriePath)step(extended,id);
- extended.d.finalDecision('day8');assert(extended.d.getState().day8Active,'Human day');
- extended.d.finishDay8('book');
- assert(extended.d.getState().ending==='odd_missing','Eerie continuation ending');
-
+ for(const id of ['pickup','vibration','audit','camera0','open0'])step(eerie,id);
+ assert(eerie.d.getState().day===6&&eerie.d.getState().odd===3,'Ten-comment route reaches DAY 6');
+ const six=eerie.get('complaintBoard').children;
+ assert(six.length>=10,'Day 6 ten reviews');
+ assert(six.slice(0,10).every(x=>x.className==='complaint-ticket'&&x.children[1]?.textContent.includes('レジのご案内が丁寧でした。ありがとうございました。')),'Ten identical regular review cards');
+ assert(!eerie.d.availableIds().includes('glitch6'),'No artificial DAY 6 glitch-choice');
+ step(eerie,'idle');
+ assert(eerie.d.getState().day===7,'DAY 7 reached');
+ assert(!eerie.get('complaintBoard').children.some(x=>x.children[1]?.textContent.includes('レジのご案内が丁寧でした。ありがとうございました。')),'DAY 7 returns to normal reviews');
+ assert(!eerie.get('newNotice').textContent.includes('差出人不明'),'DAY 7 has no abnormal notice');
+ step(eerie,'idle');
+ assert(eerie.d.getState().day8Active&&eerie.d.getState().day===8,'DAY 8 auto-start');
+ assert(eerie.get('day8Title').textContent==='DAY 08 / 07','Impossible DAY 8 counter');
+ eerie.d.advanceDay8();
+ assert(eerie.get('day8Feedback').children.length===10,'DAY 8 ten comments return');
+ const replay=app(eerie.db);replay.d.resumeCurrent();
+ assert(replay.d.getState().day8Stage===1&&replay.get('day8Feedback').children.length===10,'DAY 8 progress persists after reload');
+ eerie.d.advanceDay8();
+ assert(eerie.get('day8Title').textContent==='DAY 08 / 07 / 08','DAY 8 UI glitches');
+ eerie.d.advanceDay8();
+ assert(eerie.d.getState().ending==='odd_day8'&&eerie.d.getState().finish,'Scripted ending needs no inference');
+ assert(!html.includes('id="inferWho"')&&!html.includes('id="checkCustomer"'),'No deduction controls');
  const undoDb=new Map(),undoBefore=app(undoDb);
  undoBefore.d.restart();undoBefore.d.play('pickup');
  assert(undoBefore.d.getState().needsAdvance&&typeof undoBefore.d.getState().undoSnapshot==='string','Undo state saved during closing');
