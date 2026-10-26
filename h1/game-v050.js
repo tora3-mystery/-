@@ -215,7 +215,7 @@ function renderReverse(){
  }
  const i=state.reverseTargets[state.reverseIndex],style=state.reverseChoice;
  const methodIndex=reverseMethods.findIndex(([k])=>k===style);
- let body='<section class="panel"><p class="eyebrow">REVERSE QUESTIONS｜'+(state.reverseIndex+1)+'/2</p><h1>'+esc(people[i].name)+'の逆質問</h1><blockquote>'+esc(S.reverse_questions[i])+'</blockquote>';
+ let body='<section class="panel"><p class="eyebrow">REVERSE QUESTIONS｜'+(state.reverseIndex+1)+'/2</p><h1>'+esc(people[i].name)+'の逆質問</h1><div class="reverse-subject"><div class="avatar reverse-portrait">'+face(i,false,"reverse")+'</div><blockquote>'+esc(S.reverse_questions[i])+'</blockquote></div>';
  if(!state.reverseShown){
   body+='<p>どのように回答しますか？</p><div class="private-choices">'+reverseMethods.map(([key,label])=>'<label class="private-choice"><input type="radio" name="reverse-method" value="'+key+'" '+(key===style?'checked':'')+'><span><strong>'+esc(label)+'</strong>'+(key==="verify"?'<small>※他の応募者の非公開内容を本人に伝える、通常の採用面接では不適切な追及です</small>':'')+'</span></label>').join('')+'</div><div class="preview"><span>面接官の回答</span><strong>'+esc(S.reverse_replies[style])+'</strong></div><button class="btn primary wide" id="answer-reverse">この内容で回答する</button>';
  }else{
