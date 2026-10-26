@@ -122,6 +122,16 @@ function runRegression(html){
  check(horror.children.slice(1,11).every(x=>x.children.at(-1).textContent==='ありがとうございました。完璧なスーパーです。スーパーは完璧なので好きです。ありがとうございました。ありがとうございました。'),
   'Ten identical voices must appear in late uncanny stages');
  check(creep.get('oddMetrics').classList.contains('hidden'),'Abstract occult dashboard should not be shown');
+
+ const late=boot();late.api.restart();
+ late.api.setState({day:5,odd:0,revenue:200,attraction:7,vals:[2,1,1,1],
+  days:[{day:1,sales:50},{day:2,sales:50},{day:3,sales:50},{day:4,sales:50}]});
+ step(late,'audit');step(late,'camera0');step(late,'open0');
+ check(late.api.getState().odd===3&&late.api.getState().day===7,'Late-stage ritual not effective in closing calculation');
+ check(!late.get('finalChoice').classList.contains('hidden'),'Late ritual finale missing');
+ check(late.get('finalLead').textContent.includes('生肉'),'Day7 ritual must reveal the offering next morning');
+ const finalEcho=late.get('finalAnomalyComplaints');
+ check(!finalEcho.classList.contains('hidden')&&finalEcho.children.length===12,'Closing scene should show ten identical customer letters');
  return {pass:true,assertions,endingTypes:7,tests:['seven choice cards','deferred effects','sales formula','complaint ledger','full seven-endings','resume after close','five-number visual bounds','shrine']};
 
 }
