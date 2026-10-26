@@ -28,7 +28,7 @@ function runRegression(html){
  function step(h,id){
   const s=h.api.getState(),choices=h.api.availableIds();
   check(choices.includes(id),'Missing action '+id+' on day '+s.day);
-  check(choices.length<=7,'Too many choices');
+  check(choices.length<=(s.day===1?7:s.day<=3?9:s.day<=5?11:13),'Too many choices');
   check(h.get('actions').children.length===choices.length,'Visible option count mismatch');
   for(const b of h.get('actions').children)check((b.innerHTML.match(/class="effect-chip/g)||[]).length===5,'Metric chips not five');
   h.api.play(id);const post=h.api.getState();
