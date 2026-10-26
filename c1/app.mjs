@@ -1,4 +1,4 @@
-import {VERSION,UPDATED_JST,LIMITS,DAYS,DIRECTIVES,ENDING_META,createProfile,createRun,calculate,advance,beginDay,isValidSave,SPEED_HARASSMENTS,ensureLocalPortrait} from './engine.mjs?v=0.5.8';
+import {VERSION,UPDATED_JST,LIMITS,DAYS,DIRECTIVES,ENDING_META,createProfile,createRun,calculate,advance,beginDay,isValidSave,SPEED_HARASSMENTS,ensureLocalPortrait} from './engine.mjs?v=0.5.9';
 
 const app=document.getElementById('app');
 const SAVE_KEY='arg_c1_save_v04';
@@ -140,7 +140,7 @@ return `<div class="panelhead"><span class="eyebrow">2030年度 人材育成支�
 <section class="event-unit ${isBoss?'event-boss':'event-employee'}"><div class="event-type"><span>${isBoss?'⚠ 部長案件':'● 若手社員との対応'}</span><span>${DAYS[dayIndex]} ${esc(e.time||'')}</span></div>
 <div class="scene-header"><img class="scene-actor-photo" src="${isBoss?DIRECTOR_IMAGE:esc(run.profile.photo||'./assets/employee-f01.webp')}" alt="${isBoss?'部長':'配属社員'}の顔（架空人物）" width="76" height="88" loading="lazy"><div class="scene-index">CASE ${run.index%3+1}　${esc(e.id)}</div><div class="scene-title">${esc(e.title)}</div><div class="scene-description">${esc(e.scene)}</div>${run.index<3?`<div class="cue">配属初日の確認メモ：${esc(e.cue)}</div>`:""}</div></section>
 ${followup?`<aside class="chat-followup" aria-label="前日のチャットを受けた新人の反応">
-  <div class="chat-followup-heading"><span aria-hidden="true">✉</span> 昨日のチャットから｜木曜 09:10・新人からのメッセージ</div>
+  <div class="chat-followup-heading"><span aria-hidden="true">✉</span> 昨日のチャットから｜木曜 10:05・新人からのメッセージ</div>
   <p>${esc(followup.text)}</p>
 </aside>`:''}
 <section class="paper spaced"><div class="panelhead"><strong class="small">あなたはどう対応しますか？</strong><span class="tiny">6つから1つ選択</span></div>${e.id==='D3-1'?clockWidget():''}<div class="choices">${orderedChoices(e).map((c,i)=>`<button class="choice" data-choice="${c.id}"><span class="letter">${String.fromCharCode(65+i)}</span><span>${esc(c.text)}</span></button>`).join('')}</div></section><p class="privacy">※選択後は戻せません。コンプラ違反ポイントが20に到達すると部長室に呼び出されます。</p>`;}
@@ -254,15 +254,15 @@ function maybeNew(){const saved=load(SAVE_KEY,null);if(isValidSave(saved,events)
 app.addEventListener('click', async ev=>{
   const target=ev.target.closest('[data-action],[data-choice],[data-time]');
   if(!target){if(ev.target.id==='overlay')closeModal();return;}
-  if(target.dataset.time){clockSelected=target.dataset.time;render(false);return;}
+  if(target.dataset.time){clockSelected=target.dataset.time;if(run?.phase==='scene'&&activeEvent()?.id==='D3-1'){run.chatTimingChoice=clockSelected;save();}render(false);return;}
   if(target.dataset.choice){if(!run||run.phase!=='scene')return;const e=activeEvent();const timing=e.id==='D3-1'?clockSelected:null;
-    try{run=calculate(run,e,e.choices.find(c=>c.id===target.dataset.choice),timing);const last=run.pending;const category=last.name.replace(/疑義$/,'');records.names[category]??={count:0};records.names[category].count++;
+    try{run=calculate(run,e,e.choices.find(c=>c.id===target.dataset.choice),timing);delete run.chatTimingChoice;const last=run.pending;const category=last.name.replace(/疑義$/,'');records.names[category]??={count:0};records.names[category].count++;
     if(last.speedCp>0&&last.speedName!==last.name.replace(/疑義$/,'')){records.names[last.speedName]??={count:0};records.names[last.speedName].count++;}
     storeRecords();save();finishRunOnce();resetClock();tone(last.deltaCp===0,last.deltaCp,last.comboStreak??0);render();}catch(err){toast=err.message;render(false);}return;}
   const action=target.dataset.action;
   if(action==='start'||action==='restart'){maybeNew();return;}
   if(action==='intro'){screen='intro';popup='';render();return;}
-  if(action==='resume'){const saved=load(SAVE_KEY,null);if(isValidSave(saved,events)){run=restoreSaved(saved);screen=run.profileAccepted?'play':'profile';resetClock();save();render();}return;}
+  if(action==='resume'){const saved=load(SAVE_KEY,null);if(isValidSave(saved,events)){run=restoreSaved(saved);screen=run.profileAccepted?'play':'profile';resetClock();if(run.phase==='scene'&&run.index===6&&['instant','normal','late'].includes(run.chatTimingChoice))clockSelected=run.chatTimingChoice;save();render();}return;}
   if(action==='reroll'){run=createRun(createProfile());save();render();return;}
   if(action==='begin'){run.profileAccepted=true;screen='play';save();render();return;}
   if(action==='begin-day'){run=beginDay(run);save();render();return;}
@@ -286,6 +286,6 @@ document.addEventListener('keydown',ev=>{
   }
 });
 
-(async()=>{try{const response=await fetch('./events.json?v=0.5.8',{cache:'no-store'});if(!response.ok)throw new Error(`HTTP ${response.status}`);const json=await response.json();events=json.events;
+(async()=>{try{const response=await fetch('./events.json?v=0.5.9',{cache:'no-store'});if(!response.ok)throw new Error(`HTTP ${response.status}`);const json=await response.json();events=json.events;
   if(!Array.isArray(events)||events.length!==15||events.some(e=>e.choices.length!==6))throw new Error('イベント定義が不正です');
   render();}catch(err){app.innerHTML=`<div class="error"><strong>ゲームデータを読み込めませんでした。</strong><p>${esc(err.message)}</p><p>ネットワーク接続を確認してページを再読み込みしてください。</p></div>`;}})();
