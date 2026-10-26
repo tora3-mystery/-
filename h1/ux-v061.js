@@ -41,7 +41,7 @@ renderIntro=function(){
  '<li><strong>最終判断：</strong>4名から1名を不採用とする</li></ol>'+
  '<p>同じ言葉だけで決めず、<strong>具体的な数字・道具・手順・出来事</strong>に着目してください。</p></div>'+
  '<button class="btn primary wide" id="start">選考資料を確認して面接を始める</button></section>';
- el("start").onclick=()=>{state.phase="private-select";state.tab="file";render();};
+ el("start").onclick=()=>{state.phase="private-select";state.tab="es";render();};
 };
 head=function(){
  const phase=state.phase;
