@@ -629,10 +629,13 @@ function available(){
  };
  take(['quick']);take(['long']);take(['promotion']);take(['suppression']);take(['attraction','long']);take(['kpi','local']);
  const grayPool=legal.filter(a=>a.kind==='gray');
- const gray=grayPool.length?grayPool[(s.day-2+grayPool.length*7)%grayPool.length]:null;
+ const gray=grayPool.sort((a,b)=>{
+  const score=x=>x.delta.reduce((v,d,i)=>v+Math.min(s.vals[i],Math.max(0,-d))*10,0)+(x.attractionOnCompletion||0)*10;
+  return score(b)-score(a);
+ })[0]||null;
  if(gray){if(picks.length>=6)picks.splice(5,1,gray);else picks.push(gray)}
  const odd=legal.find(a=>a.kind==='odd');
- if(odd){const offset=Math.min(5,picks.length);picks.splice(offset,picks.length>=6?1:0,odd)}
+ if(odd){const offset=gray?Math.min(4,picks.length):Math.min(5,picks.length);picks.splice(offset,picks.length>=6?1:0,odd)}
  for(const a of legal.sort((a,b)=>score(b)-score(a)||a.id.localeCompare(b.id)))
   if(picks.length<6&&!picks.includes(a))picks.push(a);
  return [...picks.slice(0,6).sort((a,b)=>((a.id.length+s.day*3+a.name.length)%9)-((b.id.length+s.day*3+b.name.length)%9)),idleAction];
