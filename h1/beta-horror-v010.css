@@ -1,0 +1,15 @@
+/* H1 β0.1.0 | the horror is in the changed record, not a fake face swap */
+.beta-reassigned{
+ margin:18px 0 16px;padding:26px 20px;background:#272a33;
+ border:1px solid #bd879c;border-left:5px solid #b16f84;
+ color:#f6ecf0;border-radius:5px;display:flex;flex-direction:column;gap:10px;
+ box-shadow:0 5px 22px rgba(0,0,0,.17)
+}
+.beta-reassigned small{display:block;color:#d9b5c2;font-size:11px;letter-spacing:.07em}
+.beta-reassigned strong{display:block;font-size:clamp(24px,5vw,38px);font-weight:900;letter-spacing:.02em;line-height:1.4;overflow-wrap:anywhere}
+.beta-reassigned span{display:block;align-self:flex-start;color:#e6d3dd;font-size:12px;border:1px solid #7b6c77;border-radius:4px;padding:3px 10px}
+.beta-reassigned-final{background:#353238;border-color:#8c717d;box-shadow:none}
+.beta-horror .h1-false-transcript{line-height:1.8}
+.beta-horror .h1-false-transcript b{font-size:16px}
+.beta-horror .h1-chat-log p{line-height:1.9}
+@media(max-width:540px){.beta-reassigned{padding:20px 15px}.beta-reassigned strong{font-size:26px}}
