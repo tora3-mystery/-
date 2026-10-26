@@ -38,12 +38,14 @@ function activeEvent(){
  if(result.id==='D3-2' && run.logs.some(l=>l.id==='D3-1' && l.replyTiming==='late')){
    result.scene='前のチャットは未返信のまま、別件が発生。'+result.scene;
  }
- if(result.id==='D2-3'&&run.flags.checkAgreed){
-   const choice=result.choices.find(c=>c.id==='D');
-   if(choice)choice.text='月曜に決めた確認時刻に、困りごとだけ聞く';
- }
  if(result.id==='D4-1'&&run.profile.socialVoice)result.scene+=' 配属時の本人メモ：「'+run.profile.socialVoice+'」';
  result.choices=result.choices.map(c=>({...c,text:(!v&&run.choiceTextPlan?.[run.index]===1&&c.altText)?c.altText:c.text}));
+ if(result.id==='D2-3'){
+   const choice=result.choices.find(c=>c.id==='D');
+   if(choice)choice.text=run.flags.checkAgreed
+     ? '月曜に決めた確認時刻に、困りごとだけ聞く'
+     : '今から本人と確認時刻を相談し、困りごとだけ聞く';
+ }
  return result;
 }
 function orderedChoices(e){
