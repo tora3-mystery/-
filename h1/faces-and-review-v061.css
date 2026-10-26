@@ -1,0 +1,55 @@
+/* H1 α0.6.1 | restore natural 4:5 applicant photographs from the 4×4 JPEG sprite.
+   Previously a square source tile was stretched vertically to fill every portrait-shaped container.
+   This crops the sides instead, without changing anyone's face or creating synthetic eyes. */
+.avatar{aspect-ratio:4/5!important}
+.avatar.mini{height:auto!important;aspect-ratio:4/5!important}
+.h106-live .avatar,.h106-vote .avatar,.h106-person-option .avatar,
+.room-inner .seat .avatar,.h1-final-person .avatar,.reverse-portrait{aspect-ratio:4/5!important;height:auto!important}
+.portrait-photo{
+ background-size:500% 400%!important;
+ background-repeat:no-repeat;
+ image-rendering:auto;
+ filter:none;
+ border-radius:0;
+}
+.portrait-photo.expression-neutral{background-position-x:3.125%!important}
+.portrait-photo.expression-smile{background-position-x:34.375%!important}
+.portrait-photo.expression-thinking{background-position-x:65.625%!important}
+.portrait-photo.expression-tense{background-position-x:96.875%!important}
+.portrait-photo.expression-smile::before,
+.portrait-photo.expression-thinking::before,
+.portrait-photo.expression-tense::before{display:none!important}
+.portrait-photo.person-0{--eye-left:33.75%;--eye-right:65%;--eye-top:36%}
+.portrait-photo.person-1{--eye-left:35%;--eye-right:65%;--eye-top:41%}
+.portrait-photo.person-2{--eye-left:36.25%;--eye-right:66.25%;--eye-top:37%}
+.portrait-photo.person-3{--eye-left:35%;--eye-right:65%;--eye-top:39%}
+.portrait-photo.pupil-stage-1::after{opacity:.12!important}
+.portrait-photo.pupil-stage-2::after{opacity:.22!important}
+.portrait-photo.pupil-stage-3::after{opacity:.9!important}
+.h106-live{gap:20px;align-items:center;background:#e8eeed}
+.h106-live .avatar{width:180px;min-width:180px;border:3px solid #f5f7f4}
+.room-inner .seat .avatar{width:112px;max-width:100%}
+.replies .who .avatar{width:82px;min-width:82px;height:auto!important;aspect-ratio:4/5!important}
+.h161-evidence{margin:14px 0}
+.h161-evidence h3{font-size:13px;margin:18px 0 9px}
+.h161-brief{background:#e9f2f1;border:1px solid #abc8c9;border-radius:8px;padding:16px 18px;margin:16px 0 2px}
+.h161-brief b{font-size:14px}
+.h161-brief ol{padding-left:24px;margin:10px 0}
+.h161-brief li{font-size:13px;line-height:1.8;margin:7px 0}
+.h161-brief p{color:#365964;font-size:12px;line-height:1.9;border-top:1px solid #b8cecc;padding-top:10px;margin-top:12px}
+.h161-memos{margin:14px 0 18px;padding:12px;border-top:1px solid #c6d6d8}
+.h161-memos>b{display:block;font-size:12px;color:#40626f}
+.h161-memo{border-left:2px solid #86a5aa;padding:6px 10px;background:#f1f4f4;font-size:12px}
+.h161-evidence .h106-compare-symbol{font-size:25px;font-weight:600}
+.h161-evidence .h106-compare p{line-height:1.85}
+@media(max-width:820px){
+ .h106-live .avatar{width:144px;min-width:144px}
+ .room-inner .seat .avatar{width:90px}
+}
+@media(max-width:540px){
+ .h106-live .avatar{width:118px;min-width:118px}
+ .room-inner .seat .avatar{width:69px}
+ .replies .who .avatar{width:67px;min-width:67px}
+ .h161-brief{padding:12px}
+ .h161-brief li{font-size:12px}
+}
