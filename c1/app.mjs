@@ -1,4 +1,4 @@
-import {VERSION,UPDATED_JST,LIMITS,DAYS,DIRECTIVES,ENDING_META,createProfile,createRun,calculate,advance,beginDay,isValidSave,SPEED_HARASSMENTS,ensureLocalPortrait} from './engine.mjs?v=0.5.6';
+import {VERSION,UPDATED_JST,LIMITS,DAYS,DIRECTIVES,ENDING_META,createProfile,createRun,calculate,advance,beginDay,isValidSave,SPEED_HARASSMENTS,ensureLocalPortrait} from './engine.mjs?v=0.5.7';
 
 const app=document.getElementById('app');
 const SAVE_KEY='arg_c1_save_v04';
@@ -24,6 +24,26 @@ const cpRemaining=()=>Math.max(0,LIMITS.cp-run.cp);
 const bossBadge=(e)=>e.actor==='boss';
 const DIRECTOR_IMAGE='./assets/director.webp';
 // Save-level eventPlan chooses the optional alternative. Legacy saves retain their original events.
+// Small cause-and-effect callback: Wednesday reply timing informs one Thursday line.
+// No new flags or scoring. Saved D3-1 logs already contain the required fields.
+function thursdayChatFollowup(){
+ const previous=run?.logs?.find(l=>l.id==='D3-1');
+ if(!previous)return null;
+ const t=previous.replyTiming;
+ const mode=typeof t==='number'?(t<=2?'instant':t>20?'late':'normal'):t;
+ if(!['instant','normal','late'].includes(mode))return null;
+ const texts=previous.choiceId==='F'?
+   {
+     instant:'「昨日はすぐ確認いただいたようですが、その後どう進めればいいか少し迷っていました。今日は先に相談してもいいですか？」',
+     normal:'「昨日の連絡、読まれたかどうか分からなくて少し気になっていました。今日は進め方を先に確認したいです」',
+     late:'「昨日の連絡は今朝まで保留だったので、少し様子を見ていました。今日は先に段取りを確認しておきたいです」'
+   }:{
+     instant:'「昨日はすぐ反応があって安心しました。次もすぐ返事が来ると思って、つい頼ってしまいそうです……」',
+     normal:'「昨日は落ち着いたタイミングでお返事をいただきました。次からは先に必要な時刻も伝えるようにします」',
+     late:'「昨日の件は今朝まで保留になっていたので、少し進め方に迷いました。次は優先度も一緒にお伝えします」'
+   };
+ return {text:texts[mode]};
+}
 function activeEvent(){
  if(!run)return null;
  const e=events[run.index], v=e?.alternates?.[run.eventPlan?.[run.index]-1];
@@ -107,10 +127,14 @@ function profileScreen(){return `<div class="eyebrow">DAY 01 / 配属通知</div
 function directiveCompact(){const d=DIRECTIVES[displayDay()];return `<aside class="boss-mini"><span class="boss-stamp">部長指令｜当日の縛り</span><strong>進捗 ${d.progress} 以上・習熟 ${d.growth} 以上</strong><span>未達なら追加報告が発生し、進捗が減少</span></aside>`;}
 function briefingScreen(){const i=displayDay(),d=DIRECTIVES[i];return `<div class="eyebrow">部長室からの通達 / 2030</div><div class="daytime large"><span class="day-pill">DAY ${i+1} / 5</span><strong>${DAYS[i]}　${d.time}</strong></div><section class="boss-directive"><div class="boss-crest">部長指令 <span>読了必須</span></div><img class="boss-photo" src="${DIRECTOR_IMAGE}" alt="部長の顔（架空人物のAI生成画像）" width="74" height="87"><h2>${esc(d.title)}</h2><p>「${esc(d.demand)}」</p><div class="boss-orders"><div><small>この日の終業までに</small><strong>業務進捗 ${d.progress} 以上</strong></div><div><small>加えて</small><strong>新人の習熟 ${d.growth} 以上</strong></div></div><p class="boss-remark">部長：「${esc(d.remark)}」</p><p class="small">どちらか一方でも目標を外すと、未達項目ごとに追加確認が発生し、仕事の進捗が減ります。部長の評価と新人への対応は別の問題です。</p></section><div class="actions"><button class="primary" data-action="begin-day">指令を確認して業務開始</button></div>`;}
 function dayReviewScreen(){const i=displayDay(),r=run.bossReports?.at(-1),d=DIRECTIVES[i];if(!r)return '<p>日次査定を確認できませんでした。</p>';return `<div class="eyebrow">終業報告 / 部長からの返信</div><div class="daytime large"><span class="day-pill">DAY ${i+1} / 5</span><strong>${DAYS[i]}　18:00</strong></div><section class="boss-directive ${r.met?'boss-pass':'boss-fail'}"><div class="boss-crest">部長査定 <span>${r.met?'ノルマ達成':'追加業務発生'}</span></div><img class="boss-photo" src="${DIRECTOR_IMAGE}" alt="部長の顔（架空人物のAI生成画像）" width="74" height="87"><h2>${r.met?'「まあ、今日のところはいいだろう」':'「この数字で帰るつもりか？」'}</h2><p>提出した数字：進捗 ${r.progress} / 目標 ${d.progress}、習熟 ${r.growth} / 目標 ${d.growth}</p>${r.met?'<p>本日の部長指令はクリア。次の日の指示はさらに厳しくなります。</p>':`<p>未達の項目：${r.missing.map(esc).join('・')}。報告・指導計画の再確認が発生しました。</p><div class="score-boost boss-penalty">業務進捗 −${r.penalty}</div>`}</section><div class="actions"><button class="primary" data-action="next">翌営業日の部長指令を確認</button><button class="secondary" data-action="show-notes">対応履歴を確認</button></div>`;}
-function scene(){const e=activeEvent();const dayIndex=displayDay();const isBoss=bossBadge(e);
+function scene(){const e=activeEvent();const dayIndex=displayDay();const isBoss=bossBadge(e);const followup=e.id==='D4-1'?thursdayChatFollowup():null;
 return `<div class="panelhead"><span class="eyebrow">2030年度 人材育成支援システム</span><span class="tag">自動保存</span></div>${statusBar()}${scorePanel()}${directiveCompact()}${topActions()}
 <section class="event-unit ${isBoss?'event-boss':'event-employee'}"><div class="event-type"><span>${isBoss?'⚠ 部長案件':'● 若手社員との対応'}</span><span>${DAYS[dayIndex]} ${esc(e.time||'')}</span></div>
 <div class="scene-header"><img class="scene-actor-photo" src="${isBoss?DIRECTOR_IMAGE:esc(run.profile.photo||'./assets/employee-f01.webp')}" alt="${isBoss?'部長':'配属社員'}の顔（架空人物）" width="76" height="88" loading="lazy"><div class="scene-index">CASE ${run.index%3+1}　${esc(e.id)}</div><div class="scene-title">${esc(e.title)}</div><div class="scene-description">${esc(e.scene)}</div>${run.index<3?`<div class="cue">配属初日の確認メモ：${esc(e.cue)}</div>`:""}</div></section>
+${followup?`<aside class="chat-followup" aria-label="前日のチャットを受けた新人の反応">
+  <div class="chat-followup-heading"><span aria-hidden="true">✉</span> 昨日のチャットから｜木曜 09:10・新人からのメッセージ</div>
+  <p>${esc(followup.text)}</p>
+</aside>`:''}
 <section class="paper spaced"><div class="panelhead"><strong class="small">あなたはどう対応しますか？</strong><span class="tiny">6つから1つ選択</span></div>${e.id==='D3-1'?clockWidget():''}<div class="choices">${orderedChoices(e).map((c,i)=>`<button class="choice" data-choice="${c.id}"><span class="letter">${String.fromCharCode(65+i)}</span><span>${esc(c.text)}</span></button>`).join('')}</div></section><p class="privacy">※選択後は戻せません。コンプラ違反ポイントが20に到達すると部長室に呼び出されます。</p>`;}
 function clockWidget(){const choices=[['instant','通知から数秒で返信'],['normal','15分ほどで返信'],['late','翌朝まで保留']];return `<div class="clockbox"><strong class="small">社内チャット｜返信するタイミングを指定</strong><p class="clock-warning">実時間の計測はありません。先に返信タイミングを選び、続けて返信内容を選択してください。</p><div class="clockmode">${choices.map(([value,label])=>`<button data-time="${value}" class="quiet ${clockSelected===value?'selected':''}" aria-pressed="${clockSelected===value}">${label}</button>`).join('')}</div></div>`;}
 function resultScreen(){const log=run.pending;if(!log)return '<p class="error">表示できる判定がありません。</p>';
@@ -254,6 +278,6 @@ document.addEventListener('keydown',ev=>{
   }
 });
 
-(async()=>{try{const response=await fetch('./events.json?v=0.5.6',{cache:'no-store'});if(!response.ok)throw new Error(`HTTP ${response.status}`);const json=await response.json();events=json.events;
+(async()=>{try{const response=await fetch('./events.json?v=0.5.7',{cache:'no-store'});if(!response.ok)throw new Error(`HTTP ${response.status}`);const json=await response.json();events=json.events;
   if(!Array.isArray(events)||events.length!==15||events.some(e=>e.choices.length!==6))throw new Error('イベント定義が不正です');
   render();}catch(err){app.innerHTML=`<div class="error"><strong>ゲームデータを読み込めませんでした。</strong><p>${esc(err.message)}</p><p>ネットワーク接続を確認してページを再読み込みしてください。</p></div>`;}})();
