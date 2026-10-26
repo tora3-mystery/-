@@ -22,7 +22,7 @@ function runRegression(html){
   };
   const document={body:el(),createElement:el,getElementById:id=>{if(!dom.has(id))dom.set(id,el());return dom.get(id)}};
   const localStorage={getItem:k=>db.get(k)??null,setItem:(k,v)=>db.set(k,v)};
-  const window={};new Function('document','localStorage','window','scrollTo','confirm',script)(document,localStorage,window,()=>{},()=>true);
+  const window={};new Function('document','localStorage','window','scrollTo','confirm',script.replace('grayAuditSeed:Math.floor(Math.random()*4294967296)>>>0','grayAuditSeed:0'))(document,localStorage,window,()=>{},()=>true);
   return {api:window.__F1_DEBUG__,get:document.getElementById,db};
  }
  function step(h,id){
