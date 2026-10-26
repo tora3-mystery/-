@@ -687,7 +687,7 @@ function render(){
   '" style="width:'+(n*20)+'%"></div></div><b>'+n+'件</b>';$('meters').append(row);
  });
  $('moneyDetail').textContent='日売上見込 '+v09Sales()+'万円＝基礎30＋集客'+(10*s.attraction)+'－苦情'+(10*v09Count())+
- ' ／ 今週累計 '+s.revenue+'万円';
+ ' ／ 今週累計 '+s.revenue+'万円 ｜ 日売上0万円で営業停止';
  $('tasks').replaceChildren();
  if(s.jobs.length)s.jobs.forEach(j=>{const p=document.createElement('div');p.className='task';
  p.textContent='⏱ '+j.name+'：DAY '+j.finishDay+'に反映予定';$('tasks').append(p)});
@@ -845,7 +845,7 @@ function advance(){
  v11OpenTransition(openingBefore);
 }
 function normalEnding(){
- const total=v09Count();s.ending=s.revenue>=540&&total<=3?'normal_success':
+ const total=v09Count();s.ending=s.revenue>=570&&total<=4?'normal_success':
  s.revenue>=480&&total>=4?'normal_customer':'normal_strain';
  s.finish=true;
 }
