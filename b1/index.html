@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#20372f">
-<title>B1｜採用結果をお知らせします。｜α0.1.1</title>
+<title>B1｜採用結果をお知らせします。｜α0.1.2</title>
 <style>
 :root{--bg:#f5f4ef;--paper:#fffdf8;--ink:#24332f;--muted:#64736e;--line:#d9ddd5;--green:#26684c;--soft:#e7f0e7;--red:#a34639;--redbg:#fff0e9;--amber:#82570e;--amberbg:#fff2d5}
 *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;line-height:1.65}
@@ -57,7 +57,7 @@ progress::-webkit-progress-bar{background:#e5e7e0}progress::-webkit-progress-val
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 </style>
 </head><body>
-<header><div class="brand">喫茶まどか <small>B1｜採用結果をお知らせします。</small></div><div class="version">α0.1.1<br>更新 2026.10.26 19:25 JST</div></header>
+<header><div class="brand">喫茶まどか <small>B1｜採用結果をお知らせします。</small></div><div class="version">α0.1.2<br>更新 2026.10.26 19:30 JST</div></header>
 <main id="app" class="wrap"></main>
 <script>
 "use strict";
@@ -115,6 +115,11 @@ qs:[["勤務できる曜日と時間帯は。","木曜夜、金曜昼、土曜�
 ];
 const byId=id=>P.find(p=>p.id===id);
 const target=13;
+const WINNING_FIXED=[
+ ["t","s","h","y"],["t","s","h","g"],["t","s","y","n"],
+ ["t","s","n","g"],["t","s","k","i"],["s","h","k","i"],
+ ["s","n","k","i"],["h","y","k","i"],["y","n","k","i"]
+];
 const staffMentors={MoD:true,MoN:true,TuD:true,WeN:true,ThD:true,FrN:true,SaD:true,SaN:true,SuD:true};
 let st;
 function shuffle(ids){for(let i=ids.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[ids[i],ids[j]]=[ids[j],ids[i]];}return ids;}
@@ -259,13 +264,10 @@ function renderResult(){
  }).join("");
  const group=st.confirmed.map(byId);
  const shortage=S.filter(s=>(solved.assignment[s.id]||[]).length<s.n-s.f.length).map(s=>shortSlot(s.id));
- const feasible=[];
- for(let a=0;a<P.length;a++)for(let b=a+1;b<P.length;b++)for(let c=b+1;c<P.length;c++)for(let d=c+1;d<P.length;d++){
-  const ids=[a,b,c,d].map(i=>P[i].id);const possible=solve(ids,true);
-  if(possible.filled===target&&!possible.issues.length)feasible.push(ids);
- }
+ // 固定ケースの全70通り探索で検証済み。ランダム化時はケースごとに再計算する。
+ const feasible=WINNING_FIXED.filter(ids=>ids.every(id=>!st.declined.includes(id))).slice();
  feasible.sort((a,b)=>b.filter(x=>st.confirmed.includes(x)).length-a.filter(x=>st.confirmed.includes(x)).length);
- const alternative=feasible.find(ids=>ids.join()!=st.confirmed.slice().sort().join());
+ const alternative=feasible.find(ids=>!ids.every(id=>st.confirmed.includes(id)));
  const counterfactual=!full&&alternative?
  '<div class="note"><b>別の採用なら：</b>'+alternative.map(id=>esc(byId(id).name.split(" ")[0])).join("・")+'の4人なら、勤務表が成立する例があります。'+
  '<br><span class="small">これは採用をやり直した場合の比較であり、確定した採用を取り消せるという意味ではありません。</span></div>':"";
@@ -289,7 +291,7 @@ function render(){
  if(st.screen==="intro"){
  root.innerHTML='<div class="intro card"><div class="eyebrow">B1 / NEW STAFF RECRUITMENT</div><h1>採用結果をお知らせします。</h1><p class="lead">喫茶まどかの新任店長として、8人の応募者から4人を採用してください。ただし、優秀な4人を集めただけでは店は回りません。</p>'
  +'<div class="three"><div class="mini"><b>面接で情報を集める</b>8人全員の応募書類を確認し、各2問の質問で勤務条件や本人希望を把握。</div><div class="mini"><b>候補を入れると仮シフト更新</b>最大4人を入れ替えながら、7日間の必要人数を確認。</div><div class="mini"><b>採用通知には責任が伴う</b>承諾後は取り消せない。辞退や条件付き承諾も考慮。</div></div>'
- +'<p class="small muted">α0.1.1は8人の条件を固定した検証版です。面接順のみ周回ごとに変わります。人物画像は仮イラストです。ゲームデータは端末内に保存されます。</p>'
+ +'<p class="small muted">α0.1.2は8人の条件を固定した検証版です。面接順のみ周回ごとに変わります。人物画像は仮イラストです。ゲームデータは端末内に保存されます。</p>'
  +'<button class="btn primary" data-action="start">新任店長として着任する</button></div>';
  return;
  }
@@ -299,7 +301,7 @@ function render(){
  let main=onOffer?renderOffers():onResult?renderResult():onBoard?board(false):renderInterview();
  let sidebar=board(false);
  root.innerHTML=nav+'<div class="layout"><section class="main '+(onBoard&&isMobile?"hide":"")+'">'+(onBoard&&!isMobile?renderInterview():main)+'</section><aside class="side '+(onBoard&&isMobile?"show":"")+'">'+sidebar+'</aside></div>'
- +'<div class="footer">B1 α0.1.1｜架空の人物・店舗です。外部API・通信なし。固定ケース検証版。</div>'
+ +'<div class="footer">B1 α0.1.2｜架空の人物・店舗です。外部API・通信なし。固定ケース検証版。</div>'
  +'<div class="mobilebar"><button data-action="interview">面接を見る</button><button data-action="board">仮シフト '+solve(st.picked,false).filled+'/'+target+'</button><button data-action="offer">採用通知</button></div>';
 }
 function ask(id,i){
