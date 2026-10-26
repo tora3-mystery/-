@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" role="img" aria-labelledby="t d">
+  <title id="t">無印良品 消しゴム 黒・大の独自参考イラスト</title><desc id="d">黒い直方体の大型消しゴムと切り込みの入った黒い紙スリーブ。</desc>
+  <defs><linearGradient id="bg" x2="1" y2="1"><stop stop-color="#f4f0e8"/><stop offset="1" stop-color="#d7d0c6"/></linearGradient><filter id="s"><feDropShadow dy="22" stdDeviation="18" flood-opacity=".25"/></filter></defs>
+  <rect width="800" height="600" rx="54" fill="url(#bg)"/>
+  <g filter="url(#s)" transform="rotate(-9 400 300)"><path d="M164 259 553 166l97 123-389 94Z" fill="#2d3136"/><path d="m261 383 389-94v118l-389 95Z" fill="#090b0d"/><path d="m164 259 97 124v119l-97-126Z" fill="#4b5056"/><path d="M257 236 548 166l68 87-291 70Z" fill="#15181c"/><path d="m325 323 291-70v154l-291 70Z" fill="#030405"/><path d="m257 236 68 87v154l-68-91Z" fill="#20242a"/><path d="m310 300 18 23 22-6-17-23Z" fill="#d8d8d4"/><text x="451" y="345" transform="rotate(-13 451 345)" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="28" fill="#e9e8e4">BLACK / LARGE</text></g>
+  <text x="400" y="563" font-family="-apple-system,BlinkMacSystemFont,'Noto Sans JP',sans-serif" text-anchor="middle" font-size="28" font-weight="700" fill="#323232">商品番号 76726029</text>
+</svg>

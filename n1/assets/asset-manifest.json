@@ -1,0 +1,16 @@
+{
+  "version": "1.0",
+  "portraitStyle": "AI-generated, modern semi-real Japanese visual-novel portraits, 1024x1024 WebP",
+  "portraits": ["makabe", "umeda", "arai", "rika", "souma", "fujino", "shoji", "keisuke", "hina"],
+  "productIllustrations": {
+    "Apple ポリッシングクロス MLH74FE/A": "products/apple-polishing-cloth.svg",
+    "Apple 20W USB-C電源アダプタ MWVV3AM/A": "products/apple-20w-adapter.svg",
+    "SONY WH-1000XM6 ブラック": "products/sony-wh1000xm6.svg",
+    "Nintendo Sound Clock Alarmo": "products/nintendo-alarmo.svg",
+    "無印良品 消しゴム 黒・大 76726029": "products/muji-eraser-black-large.svg",
+    "無印良品 日常の器 マグカップ グレー 約380mL 83444518": "products/muji-mug-gray-380.svg",
+    "無印良品 コードレス超音波アロマディフューザー MJ-CAD2": "products/muji-diffuser-mjcad2.svg",
+    "トヨタ カローラ G 1.8Lハイブリッド 2WD": "products/toyota-corolla-g-2wd.svg"
+  },
+  "rightsNote": "Portraits are newly generated original assets. Product images are original non-official reference illustrations based on manufacturer names, model numbers and published appearance/specifications; they are not copied manufacturer photos."
+}

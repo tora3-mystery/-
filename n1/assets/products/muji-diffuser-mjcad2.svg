@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" role="img" aria-labelledby="t d">
+  <title id="t">無印良品 コードレス超音波アロマディフューザー MJ-CAD2の独自参考イラスト</title><desc id="d">乳白色の丸みある円筒形ディフューザー。上部からミストが出ている。</desc>
+  <defs><linearGradient id="bg" x2="1" y2="1"><stop stop-color="#f1f7f3"/><stop offset="1" stop-color="#d6ebe3"/></linearGradient><linearGradient id="body" x2=".8" y2="1"><stop stop-color="#fffdf1"/><stop offset="1" stop-color="#d9ddd5"/></linearGradient><filter id="s"><feDropShadow dy="20" stdDeviation="17" flood-opacity=".22"/></filter></defs>
+  <rect width="800" height="600" rx="54" fill="url(#bg)"/>
+  <g filter="url(#s)"><ellipse cx="400" cy="453" rx="171" ry="38" fill="#8fa9a0" opacity=".24"/><path d="M273 219q12-72 127-72t127 72l22 196q5 66-149 66t-149-66l22-196Z" fill="url(#body)" stroke="#c6cbc4" stroke-width="7"/><ellipse cx="400" cy="219" rx="127" ry="39" fill="#f4f4e9" stroke="#c6cbc4" stroke-width="7"/><ellipse cx="400" cy="221" rx="78" ry="18" fill="#b8d4d4" opacity=".75"/><path d="M367 163c-50-53 33-73-3-126M423 163c65-64-20-83 31-135" fill="none" stroke="#b3dde2" stroke-width="15" stroke-linecap="round" opacity=".72"/><circle cx="362" cy="422" r="8" fill="#8a918d"/><circle cx="389" cy="422" r="8" fill="#8a918d"/><rect x="415" y="414" width="54" height="16" rx="8" fill="#b1b7b2"/></g>
+  <text x="400" y="558" font-family="-apple-system,BlinkMacSystemFont,'Noto Sans JP',sans-serif" text-anchor="middle" font-size="28" font-weight="700" fill="#465d57">MJ-CAD2 ・ タンク120mL</text>
+</svg>

@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" role="img" aria-labelledby="t d">
+  <title id="t">Apple ポリッシングクロスの独自参考イラスト</title>
+  <desc id="d">角の丸い淡いグレーの正方形クロス。公式製品の形状説明をもとに制作した非公式イラスト。</desc>
+  <defs><linearGradient id="bg" x2="1" y2="1"><stop stop-color="#f7f9fc"/><stop offset="1" stop-color="#dce5ee"/></linearGradient><filter id="s"><feDropShadow dx="0" dy="18" stdDeviation="18" flood-opacity=".2"/></filter><pattern id="p" width="14" height="14" patternUnits="userSpaceOnUse"><path d="M0 14L14 0M-4 4L4-4M10 18L18 10" stroke="#aeb8c2" stroke-width="1" opacity=".45"/></pattern></defs>
+  <rect width="800" height="600" rx="54" fill="url(#bg)"/>
+  <g filter="url(#s)" transform="rotate(-7 400 300)"><rect x="205" y="108" width="390" height="390" rx="55" fill="#d9dde0" stroke="#fff" stroke-width="12"/><rect x="219" y="122" width="362" height="362" rx="45" fill="url(#p)" opacity=".9"/><circle cx="531" cy="433" r="19" fill="none" stroke="#a8afb6" stroke-width="5"/><path d="M531 419c-6 8-6 18 0 27 7-8 7-18 0-27Z" fill="#a8afb6"/></g>
+  <g font-family="-apple-system,BlinkMacSystemFont,'Noto Sans JP',sans-serif" text-anchor="middle"><text x="400" y="546" font-size="28" font-weight="700" fill="#3b4651">MLH74FE/A ・ 角丸クロス</text></g>
+</svg>

@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" role="img" aria-labelledby="t d">
+  <title id="t">無印良品 日常の器 マグカップ グレー 約380mLの独自参考イラスト</title><desc id="d">安定感のあるグレーの磁器マグカップ。</desc>
+  <defs><linearGradient id="bg" x2="1" y2="1"><stop stop-color="#f4f1eb"/><stop offset="1" stop-color="#d7ddd9"/></linearGradient><linearGradient id="cup" x2=".7" y2="1"><stop stop-color="#c4c5c1"/><stop offset=".55" stop-color="#969b99"/><stop offset="1" stop-color="#747a79"/></linearGradient><filter id="s"><feDropShadow dy="20" stdDeviation="16" flood-opacity=".25"/></filter></defs>
+  <rect width="800" height="600" rx="54" fill="url(#bg)"/>
+  <g filter="url(#s)"><ellipse cx="365" cy="443" rx="174" ry="36" fill="#5d6362" opacity=".24"/><path d="M232 176h294l-25 254c-4 43-49 70-122 70s-118-27-122-70l-25-254Z" fill="url(#cup)" stroke="#737a79" stroke-width="7"/><ellipse cx="379" cy="176" rx="147" ry="36" fill="#b8bbb7" stroke="#737a79" stroke-width="7"/><ellipse cx="379" cy="180" rx="121" ry="24" fill="#454a49"/><path d="M514 231c104-28 137 25 124 101-12 75-63 114-139 89l8-62c45 16 67-2 72-37 6-36-9-52-70-35Z" fill="url(#cup)" stroke="#737a79" stroke-width="7"/><path d="M272 213q105 24 213 0" fill="none" stroke="#d9dbd8" stroke-width="12" opacity=".38"/></g>
+  <text x="400" y="559" font-family="-apple-system,BlinkMacSystemFont,'Noto Sans JP',sans-serif" text-anchor="middle" font-size="28" font-weight="700" fill="#4a5251">グレー ・ 約380mL ・ 83444518</text>
+</svg>

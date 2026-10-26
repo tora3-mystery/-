@@ -1,0 +1,1117 @@
+{
+  "baseUrl": "http://127.0.0.1:4173/n1/",
+  "startedAt": "2026-10-26T18:58:56.238Z",
+  "checks": [
+    {
+      "name": "intro visible 320",
+      "ok": true,
+      "detail": "intro title"
+    },
+    {
+      "name": "no horizontal overflow 320",
+      "ok": true,
+      "detail": "{\"scrollWidth\":320,\"clientWidth\":320,\"portraitNatural\":1024,\"productNatural\":200,\"productRect\":232}"
+    },
+    {
+      "name": "high-res portrait 320",
+      "ok": true,
+      "detail": "{\"scrollWidth\":320,\"clientWidth\":320,\"portraitNatural\":1024,\"productNatural\":200,\"productRect\":232}"
+    },
+    {
+      "name": "product rendered 320",
+      "ok": true,
+      "detail": "{\"scrollWidth\":320,\"clientWidth\":320,\"portraitNatural\":1024,\"productNatural\":200,\"productRect\":232}"
+    },
+    {
+      "name": "product zoom opens 320",
+      "ok": true,
+      "detail": "zoom dialog"
+    },
+    {
+      "name": "intro visible 390",
+      "ok": true,
+      "detail": "intro title"
+    },
+    {
+      "name": "no horizontal overflow 390",
+      "ok": true,
+      "detail": "{\"scrollWidth\":390,\"clientWidth\":390,\"portraitNatural\":1024,\"productNatural\":200,\"productRect\":302}"
+    },
+    {
+      "name": "high-res portrait 390",
+      "ok": true,
+      "detail": "{\"scrollWidth\":390,\"clientWidth\":390,\"portraitNatural\":1024,\"productNatural\":200,\"productRect\":302}"
+    },
+    {
+      "name": "product rendered 390",
+      "ok": true,
+      "detail": "{\"scrollWidth\":390,\"clientWidth\":390,\"portraitNatural\":1024,\"productNatural\":200,\"productRect\":302}"
+    },
+    {
+      "name": "product zoom opens 390",
+      "ok": true,
+      "detail": "zoom dialog"
+    },
+    {
+      "name": "intro visible 768",
+      "ok": true,
+      "detail": "intro title"
+    },
+    {
+      "name": "no horizontal overflow 768",
+      "ok": true,
+      "detail": "{\"scrollWidth\":768,\"clientWidth\":768,\"portraitNatural\":1024,\"productNatural\":200,\"productRect\":420}"
+    },
+    {
+      "name": "high-res portrait 768",
+      "ok": true,
+      "detail": "{\"scrollWidth\":768,\"clientWidth\":768,\"portraitNatural\":1024,\"productNatural\":200,\"productRect\":420}"
+    },
+    {
+      "name": "product rendered 768",
+      "ok": true,
+      "detail": "{\"scrollWidth\":768,\"clientWidth\":768,\"portraitNatural\":1024,\"productNatural\":200,\"productRect\":420}"
+    },
+    {
+      "name": "product zoom opens 768",
+      "ok": true,
+      "detail": "zoom dialog"
+    },
+    {
+      "name": "intro visible 1280",
+      "ok": true,
+      "detail": "intro title"
+    },
+    {
+      "name": "no horizontal overflow 1280",
+      "ok": true,
+      "detail": "{\"scrollWidth\":1280,\"clientWidth\":1280,\"portraitNatural\":1024,\"productNatural\":200,\"productRect\":420}"
+    },
+    {
+      "name": "high-res portrait 1280",
+      "ok": true,
+      "detail": "{\"scrollWidth\":1280,\"clientWidth\":1280,\"portraitNatural\":1024,\"productNatural\":200,\"productRect\":420}"
+    },
+    {
+      "name": "product rendered 1280",
+      "ok": true,
+      "detail": "{\"scrollWidth\":1280,\"clientWidth\":1280,\"portraitNatural\":1024,\"productNatural\":200,\"productRect\":420}"
+    },
+    {
+      "name": "product zoom opens 1280",
+      "ok": true,
+      "detail": "zoom dialog"
+    },
+    {
+      "name": "invalid input rejected \"\"",
+      "ok": true,
+      "detail": "半角数字の整数を入力してください。"
+    },
+    {
+      "name": "invalid input rejected \"0\"",
+      "ok": true,
+      "detail": "1〜120の範囲で入力してください。"
+    },
+    {
+      "name": "invalid input rejected \"-1\"",
+      "ok": true,
+      "detail": "半角数字の整数を入力してください。"
+    },
+    {
+      "name": "invalid input rejected \"1.5\"",
+      "ok": true,
+      "detail": "半角数字の整数を入力してください。"
+    },
+    {
+      "name": "invalid input rejected \"999999999999\"",
+      "ok": true,
+      "detail": "1〜120の範囲で入力してください。"
+    },
+    {
+      "name": "hint decremented",
+      "ok": true,
+      "detail": "💡 ヒント券を使う（残2）"
+    },
+    {
+      "name": "log opens",
+      "ok": true,
+      "detail": "log dialog"
+    },
+    {
+      "name": "run 1 q1 exact score",
+      "ok": true,
+      "detail": "真壁先輩の年齢"
+    },
+    {
+      "name": "run 1 q2 exact score",
+      "ok": true,
+      "detail": "任天堂 ニンテンドーサウンドクロック Alarmo"
+    },
+    {
+      "name": "run 1 q3 exact score",
+      "ok": true,
+      "detail": "Apple 20W USB-C電源アダプタ／MWVV3AM/A"
+    },
+    {
+      "name": "run 1 q4 exact score",
+      "ok": true,
+      "detail": "待ち合わせの遅刻"
+    },
+    {
+      "name": "run 1 q5 exact score",
+      "ok": true,
+      "detail": "ヒロミさんと同い年"
+    },
+    {
+      "name": "run 1 q6 exact score",
+      "ok": true,
+      "detail": "Apple ポリッシングクロス"
+    },
+    {
+      "name": "run 1 q7 exact score",
+      "ok": true,
+      "detail": "トヨタ カローラ G（2WD）"
+    },
+    {
+      "name": "run 1 q8 exact score",
+      "ok": true,
+      "detail": "無印良品 コードレス超音波アロマディフューザー MJ-CAD2"
+    },
+    {
+      "name": "run 1 q9 exact score",
+      "ok": true,
+      "detail": "任天堂 ニンテンドーサウンドクロック Alarmoの別店舗価格"
+    },
+    {
+      "name": "run 1 q10 exact score",
+      "ok": true,
+      "detail": "東京タワー（竣工年）"
+    },
+    {
+      "name": "run 1 q11 exact score",
+      "ok": true,
+      "detail": "陽菜の年齢"
+    },
+    {
+      "name": "run 1 q12 exact score",
+      "ok": true,
+      "detail": "無印良品 コードレス超音波アロマディフューザー MJ-CAD2"
+    },
+    {
+      "name": "run 1 reaches ending",
+      "ok": true,
+      "detail": "ending"
+    },
+    {
+      "name": "run 1 q2 to q9 recurrence",
+      "ok": true,
+      "detail": "{\"q2\":12980,\"q9Base\":12980,\"q8\":3990,\"q12\":3990,\"count\":12}"
+    },
+    {
+      "name": "run 1 q8 to q12 recurrence",
+      "ok": true,
+      "detail": "{\"q2\":12980,\"q9Base\":12980,\"q8\":3990,\"q12\":3990,\"count\":12}"
+    },
+    {
+      "name": "run 1 has 12 answers",
+      "ok": true,
+      "detail": "{\"q2\":12980,\"q9Base\":12980,\"q8\":3990,\"q12\":3990,\"count\":12}"
+    },
+    {
+      "name": "run 2 q1 exact score",
+      "ok": true,
+      "detail": "真壁先輩の年齢"
+    },
+    {
+      "name": "run 2 q2 exact score",
+      "ok": true,
+      "detail": "SONY ワイヤレスヘッドホン WH-1000XM6 ブラック"
+    },
+    {
+      "name": "run 2 q3 exact score",
+      "ok": true,
+      "detail": "Apple ポリッシングクロス"
+    },
+    {
+      "name": "run 2 q4 exact score",
+      "ok": true,
+      "detail": "待ち合わせの遅刻"
+    },
+    {
+      "name": "run 2 q5 exact score",
+      "ok": true,
+      "detail": "浜田雅功さんと同い年"
+    },
+    {
+      "name": "run 2 q6 exact score",
+      "ok": true,
+      "detail": "無印良品 日常の器 マグカップ グレー／約380mL"
+    },
+    {
+      "name": "run 2 q7 exact score",
+      "ok": true,
+      "detail": "任天堂 ニンテンドーサウンドクロック Alarmo"
+    },
+    {
+      "name": "run 2 q8 exact score",
+      "ok": true,
+      "detail": "無印良品 コードレス超音波アロマディフューザー MJ-CAD2"
+    },
+    {
+      "name": "run 2 q9 exact score",
+      "ok": true,
+      "detail": "SONY ワイヤレスヘッドホン WH-1000XM6 ブラックの別店舗価格"
+    },
+    {
+      "name": "run 2 q10 exact score",
+      "ok": true,
+      "detail": "東京駅（開業年）"
+    },
+    {
+      "name": "run 2 q11 exact score",
+      "ok": true,
+      "detail": "陽菜の年齢"
+    },
+    {
+      "name": "run 2 q12 exact score",
+      "ok": true,
+      "detail": "無印良品 コードレス超音波アロマディフューザー MJ-CAD2"
+    },
+    {
+      "name": "run 2 reaches ending",
+      "ok": true,
+      "detail": "ending"
+    },
+    {
+      "name": "run 2 q2 to q9 recurrence",
+      "ok": true,
+      "detail": "{\"q2\":59400,\"q9Base\":59400,\"q8\":3990,\"q12\":3990,\"count\":12}"
+    },
+    {
+      "name": "run 2 q8 to q12 recurrence",
+      "ok": true,
+      "detail": "{\"q2\":59400,\"q9Base\":59400,\"q8\":3990,\"q12\":3990,\"count\":12}"
+    },
+    {
+      "name": "run 2 has 12 answers",
+      "ok": true,
+      "detail": "{\"q2\":59400,\"q9Base\":59400,\"q8\":3990,\"q12\":3990,\"count\":12}"
+    },
+    {
+      "name": "run 3 q1 exact score",
+      "ok": true,
+      "detail": "真壁先輩の年齢"
+    },
+    {
+      "name": "run 3 q2 exact score",
+      "ok": true,
+      "detail": "Apple 20W USB-C電源アダプタ／MWVV3AM/A"
+    },
+    {
+      "name": "run 3 q3 exact score",
+      "ok": true,
+      "detail": "無印良品 消しゴム 黒・大／76726029"
+    },
+    {
+      "name": "run 3 q4 exact score",
+      "ok": true,
+      "detail": "待ち合わせの遅刻"
+    },
+    {
+      "name": "run 3 q5 exact score",
+      "ok": true,
+      "detail": "阿部寛さんと同い年"
+    },
+    {
+      "name": "run 3 q6 exact score",
+      "ok": true,
+      "detail": "無印良品 コードレス超音波アロマディフューザー MJ-CAD2"
+    },
+    {
+      "name": "run 3 q7 exact score",
+      "ok": true,
+      "detail": "トヨタ カローラ G（2WD）"
+    },
+    {
+      "name": "run 3 q8 exact score",
+      "ok": true,
+      "detail": "SONY ワイヤレスヘッドホン WH-1000XM6 ブラック"
+    },
+    {
+      "name": "run 3 q9 exact score",
+      "ok": true,
+      "detail": "Apple 20W USB-C電源アダプタ／MWVV3AM/Aの別店舗価格"
+    },
+    {
+      "name": "run 3 q10 exact score",
+      "ok": true,
+      "detail": "国会議事堂（竣工年）"
+    },
+    {
+      "name": "run 3 q11 exact score",
+      "ok": true,
+      "detail": "陽菜の年齢"
+    },
+    {
+      "name": "run 3 q12 exact score",
+      "ok": true,
+      "detail": "SONY ワイヤレスヘッドホン WH-1000XM6 ブラック"
+    },
+    {
+      "name": "run 3 reaches ending",
+      "ok": true,
+      "detail": "ending"
+    },
+    {
+      "name": "run 3 q2 to q9 recurrence",
+      "ok": true,
+      "detail": "{\"q2\":2780,\"q9Base\":2780,\"q8\":59400,\"q12\":59400,\"count\":12}"
+    },
+    {
+      "name": "run 3 q8 to q12 recurrence",
+      "ok": true,
+      "detail": "{\"q2\":2780,\"q9Base\":2780,\"q8\":59400,\"q12\":59400,\"count\":12}"
+    },
+    {
+      "name": "run 3 has 12 answers",
+      "ok": true,
+      "detail": "{\"q2\":2780,\"q9Base\":2780,\"q8\":59400,\"q12\":59400,\"count\":12}"
+    },
+    {
+      "name": "36 variants produced",
+      "ok": true,
+      "detail": "36"
+    },
+    {
+      "name": "36 exact answers score 100",
+      "ok": true,
+      "detail": "[]"
+    },
+    {
+      "name": "36 air-zone answers score 100",
+      "ok": true,
+      "detail": "[]"
+    },
+    {
+      "name": "36 variants have openings",
+      "ok": true,
+      "detail": "opening presence"
+    },
+    {
+      "name": "no console errors",
+      "ok": true,
+      "detail": "[]"
+    },
+    {
+      "name": "no page errors",
+      "ok": true,
+      "detail": "[]"
+    }
+  ],
+  "viewports": [
+    {
+      "width": 320,
+      "height": 844,
+      "screenshot": "n1/tests/screenshots/n1-v040-320px.jpg",
+      "metrics": {
+        "scrollWidth": 320,
+        "clientWidth": 320,
+        "portraitNatural": 1024,
+        "productNatural": 200,
+        "productRect": 232
+      }
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "screenshot": "n1/tests/screenshots/n1-v040-390px.jpg",
+      "metrics": {
+        "scrollWidth": 390,
+        "clientWidth": 390,
+        "portraitNatural": 1024,
+        "productNatural": 200,
+        "productRect": 302
+      }
+    },
+    {
+      "width": 768,
+      "height": 1024,
+      "screenshot": "n1/tests/screenshots/n1-v040-768px.jpg",
+      "metrics": {
+        "scrollWidth": 768,
+        "clientWidth": 768,
+        "portraitNatural": 1024,
+        "productNatural": 200,
+        "productRect": 420
+      }
+    },
+    {
+      "width": 1280,
+      "height": 800,
+      "screenshot": "n1/tests/screenshots/n1-v040-1280px.jpg",
+      "metrics": {
+        "scrollWidth": 1280,
+        "clientWidth": 1280,
+        "portraitNatural": 1024,
+        "productNatural": 200,
+        "productRect": 420
+      }
+    }
+  ],
+  "fullRuns": [
+    {
+      "run": 1,
+      "seen": [
+        "真壁先輩の年齢",
+        "任天堂 ニンテンドーサウンドクロック Alarmo",
+        "Apple 20W USB-C電源アダプタ／MWVV3AM/A",
+        "待ち合わせの遅刻",
+        "ヒロミさんと同い年",
+        "Apple ポリッシングクロス",
+        "トヨタ カローラ G（2WD）",
+        "無印良品 コードレス超音波アロマディフューザー MJ-CAD2",
+        "任天堂 ニンテンドーサウンドクロック Alarmoの別店舗価格",
+        "東京タワー（竣工年）",
+        "陽菜の年齢",
+        "無印良品 コードレス超音波アロマディフューザー MJ-CAD2"
+      ],
+      "recurrence": {
+        "q2": 12980,
+        "q9Base": 12980,
+        "q8": 3990,
+        "q12": 3990,
+        "count": 12
+      }
+    },
+    {
+      "run": 2,
+      "seen": [
+        "真壁先輩の年齢",
+        "SONY ワイヤレスヘッドホン WH-1000XM6 ブラック",
+        "Apple ポリッシングクロス",
+        "待ち合わせの遅刻",
+        "浜田雅功さんと同い年",
+        "無印良品 日常の器 マグカップ グレー／約380mL",
+        "任天堂 ニンテンドーサウンドクロック Alarmo",
+        "無印良品 コードレス超音波アロマディフューザー MJ-CAD2",
+        "SONY ワイヤレスヘッドホン WH-1000XM6 ブラックの別店舗価格",
+        "東京駅（開業年）",
+        "陽菜の年齢",
+        "無印良品 コードレス超音波アロマディフューザー MJ-CAD2"
+      ],
+      "recurrence": {
+        "q2": 59400,
+        "q9Base": 59400,
+        "q8": 3990,
+        "q12": 3990,
+        "count": 12
+      }
+    },
+    {
+      "run": 3,
+      "seen": [
+        "真壁先輩の年齢",
+        "Apple 20W USB-C電源アダプタ／MWVV3AM/A",
+        "無印良品 消しゴム 黒・大／76726029",
+        "待ち合わせの遅刻",
+        "阿部寛さんと同い年",
+        "無印良品 コードレス超音波アロマディフューザー MJ-CAD2",
+        "トヨタ カローラ G（2WD）",
+        "SONY ワイヤレスヘッドホン WH-1000XM6 ブラック",
+        "Apple 20W USB-C電源アダプタ／MWVV3AM/Aの別店舗価格",
+        "国会議事堂（竣工年）",
+        "陽菜の年齢",
+        "SONY ワイヤレスヘッドホン WH-1000XM6 ブラック"
+      ],
+      "recurrence": {
+        "q2": 2780,
+        "q9Base": 2780,
+        "q8": 59400,
+        "q12": 59400,
+        "count": 12
+      }
+    }
+  ],
+  "consoleErrors": [],
+  "pageErrors": [],
+  "variantMatrix": [
+    {
+      "i": 1,
+      "k": 0,
+      "truth": 43,
+      "zone": [
+        38,
+        41
+      ],
+      "exact": 100,
+      "air": 100,
+      "min": 1,
+      "max": 120,
+      "opening": "出勤途中、たまたま真壁先輩とばったり出会った。立ち話の途中で、突然こちらを見つめてきた。",
+      "item": "真壁先輩の年齢",
+      "source": null
+    },
+    {
+      "i": 1,
+      "k": 1,
+      "truth": 42,
+      "zone": [
+        37,
+        40
+      ],
+      "exact": 100,
+      "air": 100,
+      "min": 1,
+      "max": 120,
+      "opening": "出勤途中、たまたま真壁先輩とばったり出会った。立ち話の途中で、突然こちらを見つめてきた。",
+      "item": "真壁先輩の年齢",
+      "source": null
+    },
+    {
+      "i": 1,
+      "k": 2,
+      "truth": 44,
+      "zone": [
+        39,
+        42
+      ],
+      "exact": 100,
+      "air": 100,
+      "min": 1,
+      "max": 120,
+      "opening": "出勤途中、たまたま真壁先輩とばったり出会った。立ち話の途中で、突然こちらを見つめてきた。",
+      "item": "真壁先輩の年齢",
+      "source": null
+    },
+    {
+      "i": 2,
+      "k": 0,
+      "truth": 2780,
+      "zone": [
+        3475,
+        5560
+      ],
+      "exact": 100,
+      "air": 100,
+      "min": 1,
+      "max": 99999999,
+      "opening": "オフィスに着くと、梅田が新しい買い物を得意げに披露している。",
+      "item": "Apple 20W USB-C電源アダプタ／MWVV3AM/A",
+      "source": "https://www.apple.com/jp/shop/product/mwvv3am/a/20w-usb-c%E9%9B%BB%E6%BA%90%E3%82%A2%E3%83%80%E3%83%97%E3%82%BF"
+    },
+    {
+      "i": 2,
+      "k": 1,
+      "truth": 12980,
+      "zone": [
+        16225,
+        25960
+      ],
+      "exact": 100,
+      "air": 100,
+      "min": 1,
+      "max": 99999999,
+      "opening": "オフィスに着くと、梅田が新しい買い物を得意げに披露している。",
+      "item": "任天堂 ニンテンドーサウンドクロック Alarmo",
+      "source": "https://store-jp.nintendo.com/item/hardware-accessory/VM_CLO_S_RAAAA"
+    },
+    {
+      "i": 2,
+      "k": 2,
+      "truth": 59400,
+      "zone": [
+        74250,
+        118800
+      ],
+      "exact": 100,
+      "air": 100,
+      "min": 1,
+      "max": 99999999,
+      "opening": "オフィスに着くと、梅田が新しい買い物を得意げに披露している。",
+      "item": "SONY ワイヤレスヘッドホン WH-1000XM6 ブラック",
+      "source": "https://www.sony.jp/headphone/products/WH-1000XM6/"
+    },
+    {
+      "i": 3,
+      "k": 0,
+      "truth": 1580,
+      "zone": [
+        1580,
+        1580
+      ],
+      "exact": 100,
+      "air": 100,
+      "min": 1,
+      "max": 99999999,
+      "opening": "火曜日の休憩時間。新井がスマホに商品ページを表示してきた。",
+      "item": "Apple ポリッシングクロス",
+      "source": "https://www.apple.com/jp/shop/product/mlh74fe/a/"
+    },
+    {
+      "i": 3,
+      "k": 1,
+      "truth": 80,
+      "zone": [
+        80,
+        80
+      ],
+      "exact": 100,
+      "air": 100,
+      "min": 1,
+      "max": 99999999,
+      "opening": "火曜日の休憩時間。新井がスマホに商品ページを表示してきた。",
+      "item": "無印良品 消しゴム 黒・大／76726029",
+      "source": "https://www.muji.com/jp/ja/store/cmdty/detail/4548076726029"
+    },
+    {
+      "i": 3,
+      "k": 2,
+      "truth": 2780,
+      "zone": [
+        2780,
+        2780
+      ],
+      "exact": 100,
+      "air": 100,
+      "min": 1,
+      "max": 99999999,
+      "opening": "火曜日の休憩時間。新井がスマホに商品ページを表示してきた。",
+      "item": "Apple 20W USB-C電源アダプタ／MWVV3AM/A",
+      "source": "https://www.apple.com/jp/shop/product/mwvv3am/a/20w-usb-c%E9%9B%BB%E6%BA%90%E3%82%A2%E3%83%80%E3%83%97%E3%82%BF"
+    },
+    {
+      "i": 4,
+      "k": 0,
+      "truth": 19,
+      "zone": [
+        19,
+        23
+      ],
+      "exact": 100,
+      "air": 100,
+      "min": 0,
+      "max": 1440,
+      "opening": "夕方、待ち合わせに遅れてカフェに駆け込む。梨花の目が笑っていない。",
+      "item": "待ち合わせの遅刻",
+      "source": null
+    },
+    {
+      "i": 4,
+      "k": 1,
+      "truth": 27,
+      "zone": [
+        27,
+        31
+      ],
+      "exact": 100,
+      "air": 100,
+      "min": 0,
+      "max": 1440,
+      "opening": "夕方、待ち合わせに遅れてカフェに駆け込む。梨花の目が笑っていない。",
+      "item": "待ち合わせの遅刻",
+      "source": null
+    },
+    {
+      "i": 4,
+      "k": 2,
+      "truth": 34,
+      "zone": [
+        34,
+        38
+      ],
+      "exact": 100,
+      "air": 100,
+      "min": 0,
+      "max": 1440,
+      "opening": "夕方、待ち合わせに遅れてカフェに駆け込む。梨花の目が笑っていない。",
+      "item": "待ち合わせの遅刻",
+      "source": null
+    },
+    {
+      "i": 5,
+      "k": 0,
+      "truth": 62,
+      "zone": [
+        62,
+        62
+      ],
+      "exact": 100,
+      "air": 100,
+      "min": 1,
+      "max": 120,
+      "opening": "水曜日。久しぶりに会った相馬さんが、テレビで見かけた有名人の話を始めた。",
+      "item": "阿部寛さんと同い年",
+      "source": "https://site.official.jp/AbeHiroshi/"
+    },
+    {
+      "i": 5,
+      "k": 1,
+      "truth": 61,
+      "zone": [
+        61,
+        61
+      ],
+      "exact": 100,
+      "air": 100,
+      "min": 1,
+      "max": 120,
+      "opening": "水曜日。久しぶりに会った相馬さんが、テレビで見かけた有名人の話を始めた。",
+      "item": "ヒロミさんと同い年",
+      "source": "https://www.talent-databank.co.jp/search/profile/2000042632"
+    },
+    {
+      "i": 5,
+      "k": 2,
+      "truth": 63,
+      "zone": [
+        63,
+        63
+      ],
+      "exact": 100,
+      "air": 100,
+      "min": 1,
+      "max": 120,
+      "opening": "水曜日。久しぶりに会った相馬さんが、テレビで見かけた有名人の話を始めた。",
+      "item": "浜田雅功さんと同い年",
+      "source": "https://profile.yoshimoto.co.jp/talent/detail?id=252"
+    },
+    {
+      "i": 6,
+      "k": 0,
+      "truth": 690,
+      "zone": [
+        449,
+        587
+      ],
+      "exact": 100,
+      "air": 100,
+      "min": 1,
+      "max": 99999999,
+      "opening": "ランチの席で、藤野さんが送別会の贈り物について相談してきた。",
+      "item": "無印良品 日常の器 マグカップ グレー／約380mL",
+      "source": "https://www.muji.com/jp/ja/store/cmdty/detail/4550583444518"
+    },
+    {
+      "i": 6,
+      "k": 1,
+      "truth": 3990,
+      "zone": [
+        2594,
+        3392
+      ],
+      "exact": 100,
+      "air": 100,
+      "min": 1,
+      "max": 99999999,
+      "opening": "ランチの席で、藤野さんが送別会の贈り物について相談してきた。",
+      "item": "無印良品 コードレス超音波アロマディフューザー MJ-CAD2",
+      "source": "https://www.muji.com/jp/ja/store/cmdty/detail/4550583648824"
+    },
+    {
+      "i": 6,
+      "k": 2,
+      "truth": 1580,
+      "zone": [
+        1027,
+        1343
+      ],
+      "exact": 100,
+      "air": 100,
+      "min": 1,
+      "max": 99999999,
+      "opening": "ランチの席で、藤野さんが送別会の贈り物について相談してきた。",
+      "item": "Apple ポリッシングクロス",
+      "source": "https://www.apple.com/jp/shop/product/mlh74fe/a/"
+    },
+    {
+      "i": 7,
+      "k": 0,
+      "truth": 2745600,
+      "zone": [
+        2745600,
+        2745600
+      ],
+      "exact": 100,
+      "air": 100,
+      "min": 1,
+      "max": 99999999,
+      "opening": "木曜日。新井が「これはもっと難しいですよ」と別の商品を出してきた。",
+      "item": "トヨタ カローラ G（2WD）",
+      "source": "https://toyota.jp/corolla/grade/"
+    },
+    {
+      "i": 7,
+      "k": 1,
+      "truth": 12980,
+      "zone": [
+        12980,
+        12980
+      ],
+      "exact": 100,
+      "air": 100,
+      "min": 1,
+      "max": 99999999,
+      "opening": "木曜日。新井が「これはもっと難しいですよ」と別の商品を出してきた。",
+      "item": "任天堂 ニンテンドーサウンドクロック Alarmo",
+      "source": "https://store-jp.nintendo.com/item/hardware-accessory/VM_CLO_S_RAAAA"
+    },
+    {
+      "i": 7,
+      "k": 2,
+      "truth": 80,
+      "zone": [
+        80,
+        80
+      ],
+      "exact": 100,
+      "air": 100,
+      "min": 1,
+      "max": 99999999,
+      "opening": "木曜日。新井が「これはもっと難しいですよ」と別の商品を出してきた。",
+      "item": "無印良品 消しゴム 黒・大／76726029",
+      "source": "https://www.muji.com/jp/ja/store/cmdty/detail/4548076726029"
+    },
+    {
+      "i": 8,
+      "k": 0,
+      "truth": 59400,
+      "zone": [
+        59400,
+        59400
+      ],
+      "exact": 100,
+      "air": 100,
+      "min": 1,
+      "max": 99999999,
+      "opening": "廊下で経理の庄司さんに呼び止められた。珍しくプレゼントの相談らしい。",
+      "item": "SONY ワイヤレスヘッドホン WH-1000XM6 ブラック",
+      "source": "https://www.sony.jp/headphone/products/WH-1000XM6/"
+    },
+    {
+      "i": 8,
+      "k": 1,
+      "truth": 12980,
+      "zone": [
+        12980,
+        12980
+      ],
+      "exact": 100,
+      "air": 100,
+      "min": 1,
+      "max": 99999999,
+      "opening": "廊下で経理の庄司さんに呼び止められた。珍しくプレゼントの相談らしい。",
+      "item": "任天堂 ニンテンドーサウンドクロック Alarmo",
+      "source": "https://store-jp.nintendo.com/item/hardware-accessory/VM_CLO_S_RAAAA"
+    },
+    {
+      "i": 8,
+      "k": 2,
+      "truth": 3990,
+      "zone": [
+        3990,
+        3990
+      ],
+      "exact": 100,
+      "air": 100,
+      "min": 1,
+      "max": 99999999,
+      "opening": "廊下で経理の庄司さんに呼び止められた。珍しくプレゼントの相談らしい。",
+      "item": "無印良品 コードレス超音波アロマディフューザー MJ-CAD2",
+      "source": "https://www.muji.com/jp/ja/store/cmdty/detail/4550583648824"
+    },
+    {
+      "i": 9,
+      "k": 0,
+      "truth": 2085,
+      "zone": [
+        2085,
+        2085
+      ],
+      "exact": 100,
+      "air": 100,
+      "min": 1,
+      "max": 99999999,
+      "opening": "金曜日。梨花から「梅田さんのあれ、見つけた」とメッセージが届いた。",
+      "item": "Apple 20W USB-C電源アダプタ／MWVV3AM/Aの別店舗価格",
+      "source": null
+    },
+    {
+      "i": 9,
+      "k": 1,
+      "truth": 9086,
+      "zone": [
+        9086,
+        9086
+      ],
+      "exact": 100,
+      "air": 100,
+      "min": 1,
+      "max": 99999999,
+      "opening": "金曜日。梨花から「梅田さんのあれ、見つけた」とメッセージが届いた。",
+      "item": "任天堂 ニンテンドーサウンドクロック Alarmoの別店舗価格",
+      "source": null
+    },
+    {
+      "i": 9,
+      "k": 2,
+      "truth": 35640,
+      "zone": [
+        35640,
+        35640
+      ],
+      "exact": 100,
+      "air": 100,
+      "min": 1,
+      "max": 99999999,
+      "opening": "金曜日。梨花から「梅田さんのあれ、見つけた」とメッセージが届いた。",
+      "item": "SONY ワイヤレスヘッドホン WH-1000XM6 ブラックの別店舗価格",
+      "source": null
+    },
+    {
+      "i": 10,
+      "k": 0,
+      "truth": 1914,
+      "zone": [
+        1914,
+        1914
+      ],
+      "exact": 100,
+      "air": 100,
+      "min": 1000,
+      "max": 2100,
+      "opening": "土曜日の街歩き。圭介が目の前の建物を指さした。",
+      "item": "東京駅（開業年）",
+      "source": "https://www.jreast.co.jp/estation/station/info.aspx?StationCd=1039"
+    },
+    {
+      "i": 10,
+      "k": 1,
+      "truth": 1936,
+      "zone": [
+        1936,
+        1936
+      ],
+      "exact": 100,
+      "air": 100,
+      "min": 1000,
+      "max": 2100,
+      "opening": "土曜日の街歩き。圭介が目の前の建物を指さした。",
+      "item": "国会議事堂（竣工年）",
+      "source": "https://www.sangiin.go.jp/japanese/goiken_gositumon/faq/index.html"
+    },
+    {
+      "i": 10,
+      "k": 2,
+      "truth": 1958,
+      "zone": [
+        1958,
+        1958
+      ],
+      "exact": 100,
+      "air": 100,
+      "min": 1000,
+      "max": 2100,
+      "opening": "土曜日の街歩き。圭介が目の前の建物を指さした。",
+      "item": "東京タワー（竣工年）",
+      "source": "https://www.japantowers.jp/tokyo_tower/"
+    },
+    {
+      "i": 11,
+      "k": 0,
+      "truth": 27,
+      "zone": [
+        29,
+        31
+      ],
+      "exact": 100,
+      "air": 100,
+      "min": 1,
+      "max": 120,
+      "opening": "土曜日の午後。後輩の陽菜が、さっき起きたちょっとした愚痴を話し始めた。",
+      "item": "陽菜の年齢",
+      "source": null
+    },
+    {
+      "i": 11,
+      "k": 1,
+      "truth": 29,
+      "zone": [
+        31,
+        33
+      ],
+      "exact": 100,
+      "air": 100,
+      "min": 1,
+      "max": 120,
+      "opening": "土曜日の午後。後輩の陽菜が、さっき起きたちょっとした愚痴を話し始めた。",
+      "item": "陽菜の年齢",
+      "source": null
+    },
+    {
+      "i": 11,
+      "k": 2,
+      "truth": 30,
+      "zone": [
+        32,
+        34
+      ],
+      "exact": 100,
+      "air": 100,
+      "min": 1,
+      "max": 120,
+      "opening": "土曜日の午後。後輩の陽菜が、さっき起きたちょっとした愚痴を話し始めた。",
+      "item": "陽菜の年齢",
+      "source": null
+    },
+    {
+      "i": 12,
+      "k": 0,
+      "truth": 59400,
+      "zone": [
+        35640,
+        51678
+      ],
+      "exact": 100,
+      "air": 100,
+      "min": 1,
+      "max": 99999999,
+      "opening": "日曜日。庄司さんから再び連絡。木曜日の品物を持ってきたらしい。",
+      "item": "SONY ワイヤレスヘッドホン WH-1000XM6 ブラック",
+      "source": "https://www.sony.jp/headphone/products/WH-1000XM6/"
+    },
+    {
+      "i": 12,
+      "k": 1,
+      "truth": 12980,
+      "zone": [
+        7788,
+        11293
+      ],
+      "exact": 100,
+      "air": 100,
+      "min": 1,
+      "max": 99999999,
+      "opening": "日曜日。庄司さんから再び連絡。木曜日の品物を持ってきたらしい。",
+      "item": "任天堂 ニンテンドーサウンドクロック Alarmo",
+      "source": "https://store-jp.nintendo.com/item/hardware-accessory/VM_CLO_S_RAAAA"
+    },
+    {
+      "i": 12,
+      "k": 2,
+      "truth": 3990,
+      "zone": [
+        2394,
+        3471
+      ],
+      "exact": 100,
+      "air": 100,
+      "min": 1,
+      "max": 99999999,
+      "opening": "日曜日。庄司さんから再び連絡。木曜日の品物を持ってきたらしい。",
+      "item": "無印良品 コードレス超音波アロマディフューザー MJ-CAD2",
+      "source": "https://www.muji.com/jp/ja/store/cmdty/detail/4550583648824"
+    }
+  ],
+  "finishedAt": "2026-10-26T19:00:01.698Z",
+  "passed": true
+}
