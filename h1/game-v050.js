@@ -1,6 +1,6 @@
 "use strict";
-const VERSION = "α0.5.0";
-const UPDATED = "2026.10.26 15:03 JST";
+const VERSION = "α0.5.1";
+const UPDATED = "2026.10.26 17:53 JST";
 const people = [
  {name:"大野 彩花",school:"経営学部・2027年3月卒業見込み",initial:"大",tone:"warm",character:"社交的で段取り上手。成果をやや大きく表現するが、自分で確認すると訂正できる。",es:"学園祭実行委員会で協賛交渉を担当しました。企業12社の協力を取りつけ、当日は赤い養生テープで来場者の動線を改善しました。誰も気づかない仕事を先に拾うことを大切にしています。",record:"協賛金を提供したのは11社で、残り1社は機材貸与でした。床に赤い矢印を3本貼り、最後の1本だけ逆向きにして出口を案内しました。"},
  {name:"岡野 直人",school:"理工学研究科・2027年3月修了見込み",initial:"岡",tone:"cool",character:"口下手だが誠実。数字を正確に覚え、記録の裏付けを重視する。",es:"4人の研究チームで環境計測装置の精度改善に取り組みました。測定条件を切り分け、誤差を約15％低減しました。午後6時12分に記録された異常値がきっかけでした。",record:"装置の自動校正が毎日18時12分に作動していました。23回目の条件変更で測定が安定しました。相対誤差は7.8％から6.6％になりました。"},
@@ -45,9 +45,8 @@ function highlightWords(text,words){
 const recordWords=["担当","引継ぎ","記録","評価","成果","完了"];
 function face(i,distort,phase="neutral"){
  const expression=distort?"tense":phase==="group"?H1_V050.expression(state.seed,i,"group",state.round,state.b,state.shown):phase==="reverse"?H1_V050.expression(state.seed,i,"reverse",state.reverseIndex,state.reverseTargets[state.reverseIndex]??0,state.reverseShown):phase==="private"?H1_V050.expression(state.seed,i,"private",state.privateIndex,state.privatePick,state.privateShown):"neutral";
- const stage=phase==="reverse"?"reverse":"last-group";
- const late=phase==="reverse"||(phase==="group"&&state.round===2&&state.shown);
- const pupil=distort?3:H1_V050.pupil(state.seed,state.monsterIndex,i,stage,late);
+ // Only the final exchanges reveal a gradual, ambiguous change in the eyes.
+ const pupil=distort?3:i!==state.monsterIndex?0:phase==="reverse"&&state.reverseIndex===1&&state.reverseShown?2:phase==="group"&&state.round===2&&state.shown?1:0;
  return '<span class="portrait-photo person-'+i+' expression-'+expression+(pupil?" pupil-stage-"+pupil:"")+(distort?" uncanny":"")+'" role="img" aria-label="'+esc(people[i].name)+'の顔写真"></span>';
 }
 // 面接中の通常の緊張演出。異形の識別情報を混ぜない。
@@ -153,6 +152,7 @@ function renderPrivate(){
  let html='<section class="gamehead"><div><p class="eyebrow">PERSONAL INTERVIEW｜個人面接</p><h1>'+esc(p.name)+'</h1><p class="subtle small">ESから質問を選び、回答を記録する</p></div><span class="small status">'+(state.privateShown?'文字起こし保存済':'面接中')+'</span></section>';
  html+='<button id="back-to-candidates" type="button" class="back-link">‹ 応募者一覧に戻る</button>';
  html+=resumeMarkup(i,false);
+ html+='<div class="h1-live-candidate"><div class="avatar">'+face(i,false,"private")+'</div><div><small>面接室｜現在の表情</small><b>'+esc(p.name)+'</b><span>'+(state.privateShown?'回答を終え、こちらの反応を待っている。':'面接官の質問を待っている。')+'</span></div></div>';
  if(!state.privateShown){
   html+='<section class="panel interview-question"><h2>ESのどの記述について尋ねますか？</h2><p class="subtle">質問は1つ選べます。回答は非公開記録として残ります。</p><div class="private-choices">'+privateQuestions[i].map((q,k)=>'<label class="private-choice"><input type="radio" name="private-q" value="'+k+'" '+(state.privatePick===k?'checked':'')+'><span><strong>'+esc(q.term)+'</strong><small>'+esc(q.q)+'</small></span></label>').join('')+'</div><div class="preview"><span>面接官の質問</span><strong>'+esc(selected.q)+'</strong></div><button class="btn primary wide" id="ask-private">質問して回答を記録する</button></section>';
  }else{

@@ -2,12 +2,22 @@
 const H1UX={
  originalRender:render, originalEnding:renderEnding, originalDocs:docMarkup, originalMood:mood,
  level(){
-  if(state.phase==="game")return Math.min(2,state.round+(state.round===2&&state.shown?1:0));
-  if(state.phase==="reverse"||state.phase==="decision")return 3;
-  if(state.phase==="ending"&&outcome()==="horror")return 4;
+  if(state.phase==="private"||state.phase==="private-select")return Math.min(2,state.privateAnswers.filter(Boolean).length*.4+(state.privateShown?.3:0));
+  if(state.phase==="game")return 2.2+state.round*1.3+(state.shown?.7:0);
+  if(state.phase==="reverse")return 6+state.reverseIndex+(state.reverseShown?.6:0)+(state.reverseConfirmed?.3:0);
+  if(state.phase==="decision")return 8.3;
+  if(state.phase==="ending"&&outcome()==="horror")return 10;
   return 0;
  },
- shade(){if(!document.body?.classList)return;for(let i=0;i<5;i++)document.body.classList.remove("h1-dread-"+i);document.body.classList.add("h1-dread-"+this.level());},
+ shade(){
+  if(!document.body?.classList)return;
+  const level=this.level(),t=level/10;
+  for(let i=0;i<5;i++)document.body.classList.remove("h1-dread-"+i);
+  document.body.classList.add("h1-dread-"+(level>=9?4:level>=6?3:level>=4?2:level>=2?1:0));
+  const rgb=(light,dark)=>"rgb("+light.map((v,i)=>Math.round(v+(dark[i]-v)*t)).join(",")+")";
+  document.body.style.setProperty("--h1-site-color",rgb([231,236,236],[133,146,156]));
+  document.body.style.setProperty("--h1-room-bright",String(Math.max(.54,1-level*.046)));
+ },
  reset(){
   state.goodStep=0;state.horrorStep=0;
   Object.assign(state,{seed:Math.floor(Math.random()*2147483647),docsPinned:false,reverseTargets:[],reverseConfirmed:false,reverseStyles:[],reverseIndex:0,reverseShown:false,reverseChoice:"policy",monsterIndex:drawMonster(),phase:"intro",privateIndex:0,privatePick:0,privateShown:false,privateAnswers:[null,null,null,null],round:0,a:0,b:0,shown:false,asked:[],tab:"file",person:0,archive:false,recordsOpen:true,reject:-1});render();
@@ -27,7 +37,7 @@ const H1UX={
    this.stage("good",1,"面接室には、誰もいない。",'<div class="h1-vacant-room"><small>第4面接室｜終了後</small><div class="h1-four-chairs"><i></i><i></i><i></i><i></i></div><p>蛍光灯の低い音が戻ってきた。</p></div><p>さっきまで暗く見えた部屋は、ただの会議室だった。</p><p>扉を閉める前に振り返る。四つの椅子は、どれも空いている。</p>');
   }else{
    const portraits='<div class="ending-portraits">'+ok.map(i=>'<div class="h1-final-person"><div class="avatar">'+face(i,false)+'</div><small>'+esc(people[i].name)+'</small></div>').join("")+'</div>';
-   this.stage("good",2,"守ったのは、三人の未来。",'<div class="h1-good-memo"><small>人事部｜最終選考報告</small><strong>異常事象の終息を確認</strong><p>異常な入社手続きは確認されませんでした。採用予定者3名について、通常の入社準備を進めます。</p></div>'+portraits+'<p class="h1-final-line">あなたの面接は、確かに終わった。</p><details><summary>質問・回答の記録を確認</summary>'+getRecords()+'</details>');
+   this.stage("good",2,"三人は、それぞれの春へ。",'<div class="h1-good-memo"><small>後日報告｜人事部</small><strong>三人の採用手続きが始まった</strong><p>'+ok.map(i=>esc(people[i].name)).join('、')+'へ選考通過を通知しました。三人は受諾し、入社書類の確認へ進んでいます。不採用者の名義での手続きや、記録の書き換えは確認されていません。</p></div>'+portraits+'<p class="h1-final-line">あなたの面接は、確かに終わった。</p><details><summary>質問・回答の記録を確認</summary>'+getRecords()+'</details>');
   }
  },
  horror(){
@@ -41,10 +51,13 @@ const H1UX={
   }
  },
  after(){
-  if(state.phase==="game"&&state.round===2&&state.shown){
-   const b=el("continue");if(typeof b?.insertAdjacentHTML==="function")b.insertAdjacentHTML("beforebegin",'<div class="h1-reverse-cue">最後の回答のあと、誰かがこちらを見た。<br>「では、面接官の方はどう思われますか？」</div>');
+  if(state.phase==="game"&&state.shown){
+   const lines=["相づちを返した声が、少し遠く聞こえた。四人は次の質問を待っている。","回答が終わると、あなたの相づちだけが記録に残った。誰かが記録画面を見ている。","最後の回答のあと、誰かがこちらを見た。<br>「では、面接官の方はどう思われますか？」"];
+   const b=el("continue");if(typeof b?.insertAdjacentHTML==="function")b.insertAdjacentHTML("beforebegin",'<div class="h1-reverse-cue">'+lines[state.round]+'</div>');
   }
-  if(state.phase==="reverse"){const m=el("main");if(typeof m?.insertAdjacentHTML==="function")m.insertAdjacentHTML("afterbegin",'<div class="h1-reverse-cue"><small>面接進行記録</small><br>質問者：応募者　／　回答者：あなた</div>');}
+  if(state.phase==="reverse"){
+   const m=el("main");if(typeof m?.insertAdjacentHTML==="function")m.insertAdjacentHTML("afterbegin",'<div class="h1-reverse-cue"><small>面接進行記録</small><br>質問者：応募者　／　回答者：あなた'+(state.reverseShown?'　／　評価：記録中':'')+'</div>');
+  }
  }
 };
 docMarkup=function(){
