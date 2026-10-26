@@ -13,10 +13,10 @@
 .portrait-photo.expression-smile::before{background:radial-gradient(ellipse at 31% 56%,rgba(239,171,150,.1),transparent 27%),radial-gradient(ellipse at 68% 56%,rgba(239,171,150,.1),transparent 27%)}
 .portrait-photo.expression-thinking::before{background:linear-gradient(175deg,rgba(41,48,59,.12) 16%,transparent 55%)}
 .portrait-photo.expression-tense::before{background:radial-gradient(ellipse at 50% 48%,transparent 35%,rgba(26,37,50,.16) 100%)}
-.portrait-photo.person-0{--eye-left:39.7%;--eye-right:59.5%;--eye-top:41.2%}
-.portrait-photo.person-1{--eye-left:39%;--eye-right:58%;--eye-top:40.7%}
-.portrait-photo.person-2{--eye-left:38%;--eye-right:59%;--eye-top:45%}
-.portrait-photo.person-3{--eye-left:39%;--eye-right:59%;--eye-top:41.7%}
+.portrait-photo.person-0{--eye-left:42.4%;--eye-right:66.4%;--eye-top:35.9%}
+.portrait-photo.person-1{--eye-left:40.8%;--eye-right:64%;--eye-top:33.1%}
+.portrait-photo.person-2{--eye-left:33.4%;--eye-right:56.6%;--eye-top:37.6%}
+.portrait-photo.person-3{--eye-left:40.1%;--eye-right:64.8%;--eye-top:34.1%}
 .portrait-photo.pupil-stage-1::after,.portrait-photo.pupil-stage-2::after,.portrait-photo.pupil-stage-3::after{
  content:"";position:absolute;inset:0;pointer-events:none;z-index:3;opacity:.8;
  background-repeat:no-repeat;
