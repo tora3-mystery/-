@@ -13,6 +13,12 @@ assert.equal(resolveEnding({...state,logs:[finalF],bossReports:[{met:false}]}),'
 const good=['月','火','水','木','金'].flatMap(day=>Array.from({length:2},()=>({day,deltaS:1,baseCp:0,fitAdjustment:-1})));
 assert.deepEqual(trustEvidence({logs:good}),{score:30,days:5});
 assert.equal(resolveEnding({...state,cp:5,logs:[...good,finalC]}),'E18');
+const insufficientTrust=good.map((log,i)=>({...log,fitAdjustment:i<8?0:-1}));
+assert.equal(trustEvidence({logs:insufficientTrust}).score,22);
+assert.notEqual(resolveEnding({...state,cp:5,logs:[...insufficientTrust,finalC]}),'E18');
+const fourDayTrust=good.filter(log=>log.day!=='金');
+assert.equal(trustEvidence({logs:fourDayTrust}).days,4);
+assert.notEqual(resolveEnding({...state,cp:5,logs:[...fourDayTrust,finalC]}),'E18');
 assert.notEqual(resolveEnding({...state,cp:9,logs:[...good,finalC]}),'E18');
 assert.notEqual(resolveEnding({...state,cp:5,growth:8,logs:[...good,finalC]}),'E18');
 assert.equal(resolveEnding({...state,cp:5,logs:[...good,finalF]}),'E16');
@@ -24,4 +30,4 @@ assert.equal(result.specialRecognition,20);
 assert.equal(result.cp,5);
 assert.equal(isValidSave({...result,version:'0.6.1'},events),true);
 assert.equal(isValidSave(result,events),true);
-console.log('PASS C1 v0.6.2 secret endings');
+console.log('PASS C1 v0.6.5 secret ending rarity and regression');

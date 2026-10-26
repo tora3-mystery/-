@@ -1,6 +1,6 @@
 /** C1 gameplay logic. Pure and dependency-free: also imported by tests. */
-export const VERSION = '0.6.4';
-export const UPDATED_JST = '2026-10-26 23:51 JST';
+export const VERSION = '0.6.5';
+export const UPDATED_JST = '2026-10-27 00:26 JST';
 export const LIMITS = Object.freeze({ cp: 20, progress: 22, growth: 9 });
 export const DAYS = ['月曜日', '火曜日', '水曜日', '木曜日', '金曜日'];
 export const SPEED_HARASSMENTS = Object.freeze(['即レスハラ','遅レスハラ']);
@@ -319,7 +319,7 @@ export function resolveEnding(run) {
   if(run.growth<LIMITS.growth) return wraps>=3?'E07':'E08';
   if(last?.choiceId==='F'&&last.id==='D5-3')return 'E16';
   const trust=trustEvidence(run);
-  if(run.index===14&&run.cp<=8&&run.growth>=9&&trust.score>=21&&trust.days>=4)return 'E18';
+  if(run.index===14&&run.cp<=8&&run.growth>=9&&trust.score>=23&&trust.days===5)return 'E18';
   if(run.flags.presentationPrepped&&run.profile.strength==='presentation'&&run.growth>=8)return 'E15';
   if(run.cp<=5)return 'E14';
   if(run.flags.aiVerified&&run.logs.find(l=>l.id==='D5-1')?.choiceId==='C'&&run.progress>=25)return 'E13';
@@ -329,7 +329,7 @@ export function resolveEnding(run) {
   return 'E09';
 }
 export function isValidSave(save, events) {
-  return !!save && ['0.4.0','0.4.1','0.5.0','0.5.1','0.5.2','0.5.3','0.5.4','0.5.5','0.5.6','0.5.7','0.5.8','0.5.9','0.6.0','0.6.1','0.6.2','0.6.3',VERSION].includes(save.version) && Number.isInteger(save.index) && save.index>=0 && save.index<events.length
+  return !!save && ['0.4.0','0.4.1','0.5.0','0.5.1','0.5.2','0.5.3','0.5.4','0.5.5','0.5.6','0.5.7','0.5.8','0.5.9','0.6.0','0.6.1','0.6.2','0.6.3','0.6.4',VERSION].includes(save.version) && Number.isInteger(save.index) && save.index>=0 && save.index<events.length
    && ['briefing','scene','result','dayReview','ending'].includes(save.phase) && Array.isArray(save.logs) && typeof save.profile?.name==='string'
    && save.flags && typeof save.cp==='number';
 }
