@@ -20,7 +20,7 @@ function test(html){
   }
   const document={body:node(),createElement:node,getElementById:id=>{if(!ids.has(id))ids.set(id,node());return ids.get(id)}};
   const localStorage={getItem:k=>db.get(k)??null,setItem:(k,v)=>db.set(k,v)},window={};
-  new Function('document','localStorage','window','scrollTo','confirm',code)(document,localStorage,window,()=>{},()=>true);
+  new Function('document','localStorage','window','scrollTo','confirm',code.replace('grayAuditSeed:Math.floor(Math.random()*4294967296)>>>0','grayAuditSeed:0'))(document,localStorage,window,()=>{},()=>true);
   return {d:window.__F1_DEBUG__,get:document.getElementById,db};
  }
  function step(ctx,id){
@@ -172,6 +172,33 @@ function test(html){
  });
  assert(JSON.stringify(v15Actions.find(x=>x[0]==='queueReset')[4])==='[-4,2,0,2]','Queue overhaul raises aisle/noise trouble');
  assert(JSON.stringify(v15Actions.find(x=>x[0]==='stockReset')[4])==='[1,1,-4,2]','Stock overhaul raises other complaints');
+  function auditScenario(id,detected){
+  for(let seed=0;seed<300;seed++){
+   const db=new Map(),c=app(db);c.d.restart();const s=c.d.getState();
+   c.d.setState({...s,grayAuditSeed:seed,day:2,attraction:7,vals:id==='dateShift'?[0,0,4,0]:[2,1,1,1],days:[{day:1,sales:50}],revenue:50});
+   if(!c.d.availableIds().includes(id))continue;
+   c.d.play(id);const job=c.d.getState().jobs.find(j=>j.sourceAction===id);
+   if(job&&job.detected===detected)return {db,c,job};
+  }throw Error('Missing test seed '+id);
+ }
+ function settle(item){
+  item.c.d.advance();item.c.d.closeTransition();item.c.d.play('idle');item.c.d.advance();item.c.d.closeTransition();return item.c.d.getState();
+ }
+ const exposed=auditScenario('complaintHide',true),hidden=auditScenario('complaintHide',false);
+ assert(exposed.job.chance===30&&hidden.job.chance===30,'Concealment risk starts at 30 percent');
+ assert(exposed.job.roll<30&&hidden.job.roll>=30,'Stored detection is based on roll');
+ const resumed=app(exposed.db);resumed.d.resumeCurrent();
+ assert(resumed.d.getState().jobs.find(j=>j.sourceAction==='complaintHide').detected,'Exposure survives reload');
+ resumed.get('undo').onclick();resumed.d.play('complaintHide');
+ assert(resumed.d.getState().jobs.find(j=>j.sourceAction==='complaintHide').roll===exposed.job.roll,'Undo and reselect cannot reroll');
+ const exposedEnd=settle(exposed),hiddenEnd=settle(hidden);
+ assert(exposedEnd.grayFines===20&&exposedEnd.grayStrikes===1,'Caught policy incurs twenty fine and warning');
+ assert(exposedEnd.auditEvents.length===1&&exposedEnd.auditEvents[0].day===4,'Detection only triggers on scheduled day');
+ assert(hiddenEnd.grayFines===0&&hiddenEnd.grayStrikes===0&&hiddenEnd.auditEvents.length===0,'Uncaught action retains no penalty');
+ const severe=auditScenario('dateShift',true),fired=settle(severe);
+ assert(severe.job.chance===45,'Food tampering discovery chance');
+ assert(fired.finish&&fired.endingReason==='重大な不正発覚による解任','Severe forgery causes dismissal');
+ assert(fired.grayFines===40&&fired.grayStrikes===2,'Severe forgery incurs forty fee and two points');
   const legacy=new Map(),old=app(legacy);old.d.restart();
  const previous=old.d.getState();previous.version=10;previous.clueViewed=[0,1,2];previous.clues=3;
  legacy.set('f1-v10',JSON.stringify(previous));
