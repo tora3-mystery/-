@@ -1,6 +1,6 @@
 "use strict";
-const VERSION = "β0.1.3";
-const UPDATED = "2026.10.27 02:27 JST";
+const VERSION = "β0.1.4";
+const UPDATED = "2026.10.27 02:51 JST";
 const people = [
  {name:"大野 彩花",school:"経営学部・2027年3月卒業見込み",initial:"大",tone:"warm",character:"社交的で段取り上手。成果をやや大きく表現するが、自分で確認すると訂正できる。",es:"学園祭実行委員会で協賛交渉を担当しました。企業12社の協力を取りつけ、当日は赤い養生テープで来場者の動線を改善しました。誰も気づかない仕事を先に拾うことを大切にしています。",record:"協賛金を提供したのは11社で、残り1社は機材貸与でした。床に赤い矢印を3本貼り、最後の1本だけ逆向きにして出口を案内しました。"},
  {name:"岡野 直人",school:"理工学研究科・2027年3月修了見込み",initial:"岡",tone:"cool",character:"口下手だが誠実。数字を正確に覚え、記録の裏付けを重視する。",es:"4人の研究チームで環境計測装置の精度改善に取り組みました。測定条件を切り分け、誤差を約15％低減しました。午後6時12分に記録された異常値がきっかけでした。",record:"装置の自動校正が毎日18時12分に作動していました。23回目の条件変更で測定が安定しました。相対誤差は7.8％から6.6％になりました。"},
@@ -90,7 +90,7 @@ function docMarkup(){
  if(state.tab==="es"){
   const current=state.phase==="private"&&!state.privateShown&&state.person===state.privateIndex;
   const privateHints=current?'<div class="es-hints"><b>この記述から質問する</b>'+privateQuestions[state.privateIndex].map((q,i)=>'<button data-private-option="'+i+'" type="button">'+esc(q.term)+' → 質問へ</button>').join("")+'</div>':'';
-  const hints=shortcuts[state.person].filter(x=>state.phase==="game"&&!state.shown&&x.round===state.round);
+  const hints=shortcuts[state.person].filter(x=>state.phase==="game"&&!state.shown&&x.round===state.round&&H1_V060.groupOptions(state.round).includes(x.idx));
   const groupHints=hints.length?'<div class="es-hints"><b>関連する共通質問</b>'+hints.map(x=>'<button data-shortcut="'+x.idx+'" type="button">'+esc(x.label)+' → 質問を選ぶ</button>').join("")+'</div>':'';
   return tabs+profiles+resumeMarkup(state.person,false)+privateHints+groupHints;
  }
