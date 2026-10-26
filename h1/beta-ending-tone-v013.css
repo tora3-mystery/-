@@ -1,0 +1,75 @@
+/* H1 β0.1.3 — dedicated visual treatment for each ending.
+   The interview retains its original neutral palette. */
+body.h113-outcome-good{
+ background:linear-gradient(145deg,#234f4b,#0f282f 72%) fixed!important;
+ --h1-site-color:#244b4c!important;
+}
+body.h113-outcome-bad{
+ background:linear-gradient(145deg,#532b3b,#1e242c 72%) fixed!important;
+ --h1-site-color:#58323f!important;
+}
+body.h113-outcome-horror{
+ background:linear-gradient(150deg,#151828,#342236 78%) fixed!important;
+ --h1-site-color:#262333!important;
+}
+body[class*="h113-outcome-"] .mast{border-bottom-color:#819a96}
+body[class*="h113-outcome-"] .progress span{color:#d1dadd;border-color:#778789}
+body[class*="h113-outcome-"] .progress span.done,
+body[class*="h113-outcome-"] .progress span.on{color:#f9e7d8;border-color:#d6af90}
+body[class*="h113-outcome-"] #main>.ending,
+body[class*="h113-outcome-"] #main>.h113-report{
+ border-width:1px;border-radius:12px;
+ box-shadow:0 22px 60px #080b1480,0 0 0 1px #ffffff1f;
+}
+body.h113-outcome-good #main>.ending{background:#e3f0e9;color:#183d3a;border-color:#a8cebb}
+body.h113-outcome-bad #main>.ending{background:#f4e6e6;color:#4b2535;border-color:#d8b5bd}
+body.h113-outcome-horror #main>.ending{background:#302a3b;color:#f3e9ee;border-color:#8c708b}
+body.h113-outcome-horror #main>.ending .eyebrow,
+body.h113-outcome-horror #main>.ending .eyebrow.bad{color:#f2b8c7}
+body.h113-outcome-horror #main>.ending .subtle{color:#e0cbd5}
+body.h113-outcome-horror #main>.ending .h1-horror-whisper{color:#ffd7df}
+body.h113-outcome-horror #main>.ending .btn.primary{background:#e3c7d4;border-color:#e3c7d4;color:#2d2531}
+body.h113-outcome-good #main>.ending .btn.primary{background:#285e53;border-color:#285e53;color:#fff}
+body.h113-outcome-bad #main>.ending .btn.primary{background:#65384a;border-color:#65384a;color:#fff}
+/* Final outcome documents, styled as distinct HR records. */
+body.h113-outcome-good .h113-report{background:#f0f7f2;color:#1e423e;border-color:#b0cbbc}
+body.h113-outcome-bad .h113-report{background:#f8eff0;color:#522d3b;border-color:#d5b7c1}
+body.h113-outcome-horror .h113-report{background:#2e2a3a;color:#f1e7ed;border-color:#8b778b}
+.h113-report .h011-end-mark{margin:4px 0 16px;font-size:13px;letter-spacing:.32em}
+body.h113-outcome-good .h113-report .h011-end-mark{color:#357263}
+body.h113-outcome-bad .h113-report .h011-end-mark{color:#9a6072}
+body.h113-outcome-horror .h113-report .h011-end-mark{color:#dfafc2}
+.h113-report .h011-evaluation{margin-bottom:18px;align-items:center}
+body.h113-outcome-good .h113-report .h011-evaluation{background:#d6e9df;border-color:#acd0bb}
+body.h113-outcome-bad .h113-report .h011-evaluation{background:#f0dfe2;border-color:#ddb8c2}
+body.h113-outcome-horror .h113-report .h011-evaluation{background:#483a4c;border-color:#94738a}
+body.h113-outcome-good .h113-report .h011-evaluation strong{color:#28634f}
+body.h113-outcome-bad .h113-report .h011-evaluation strong{color:#85374b}
+body.h113-outcome-horror .h113-report .h011-evaluation strong,
+body.h113-outcome-horror .h113-report .h011-evaluation strong.not-rated{color:#ffe4ef}
+body.h113-outcome-horror .h113-report .h011-evaluation small,
+body.h113-outcome-horror .h113-report .h011-evaluation span{color:#f0dbe5}
+.h113-signoff{margin:15px 0 12px;padding:16px 18px;border:1px solid #a9c4c0;border-radius:8px;background:#fffefa}
+.h113-signoff small{display:block;font-size:11px;font-weight:700;letter-spacing:.04em;color:#566f73}
+.h113-signoff strong{display:block;margin-top:4px;font-size:clamp(19px,4vw,27px);line-height:1.5;overflow-wrap:anywhere}
+body.h113-outcome-bad .h113-signoff{background:#fff7f7;border-color:#d7b8c0}
+body.h113-outcome-horror .h113-signoff{background:#443948;border-color:#92758c}
+body.h113-outcome-horror .h113-signoff small{color:#dac3d2}
+.h113-conclusion{margin:12px 0 18px;line-height:1.95;font-size:14px}
+.h113-archive{border:1px solid #bbceca;border-radius:7px;padding:13px 15px;margin:18px 0;background:#ffffffa3}
+.h113-archive summary{font-size:13px;font-weight:800;cursor:pointer}
+.h113-archive p{line-height:1.9;margin:9px 0;font-size:13px}
+.h113-archive blockquote{background:#eaf0ed;color:#304c48;font-size:12px;line-height:1.8}
+body.h113-outcome-bad .h113-archive{border-color:#d4b7c1;background:#fff5f4}
+body.h113-outcome-horror .h113-archive{background:#3a3447;border-color:#826f88}
+body.h113-outcome-horror .h113-archive blockquote{background:#524459;color:#f7edf3;border-left-color:#b692ac}
+body.h113-outcome-horror .h113-report .btn.primary{background:#e3c7d4;border-color:#e3c7d4;color:#302536}
+body.h113-outcome-bad .h113-report .btn.primary{background:#68374c;border-color:#68374c;color:white}
+body.h113-outcome-good .h113-report .btn.primary{background:#285e53;border-color:#285e53;color:white}
+@media(max-width:540px){
+ .h113-report .h011-evaluation{gap:8px;padding:10px}
+ .h113-report .h011-evaluation span{font-size:12px}
+ .h113-signoff{padding:13px 12px}
+ .h113-archive{padding:12px}
+}
+@media(prefers-reduced-motion:reduce){body[class*="h113-outcome-"]{transition:none!important}}
