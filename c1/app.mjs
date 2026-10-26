@@ -123,13 +123,13 @@ const combo=log.comboStreak??0;
 const comboCp=log.comboCp??0;
 return `<div class="eyebrow">DAY ${displayDay()+1}｜${DAYS[displayDay()]} ${displayTime()}　社内ハラスメント認定システム</div>
 <section class="result-card ${safe?'safe':'hit'} ${heat}" aria-label="${esc(name)}の判定結果"><div class="result-confetti" aria-hidden="true">${Array.from({length:14},(_,i)=>`<i style="--k:${i};--x:${(i*37)%99}%;--d:${i%5*0.12}s"></i>`).join('')}</div>
-<div class="result-symbol">${safe?'★':'⚡'}</div><div class="reveal-kicker">${safe?'社内審査：疑義レベル':'H A R A S S M E N T 　D E T E C T E D'}</div>
-<div class="reveal-word">${safe?'あぶない！':'認 定 ！'}</div><h1 class="result-name">${esc(name)}！</h1><strong class="small">${safe?'今回は正式認定なし':'本日、新たな社内分類が記録されました'}</strong>
+<div class="result-symbol">${safe?'✓':'⚡'}</div><div class="reveal-kicker">${safe?'疑義の記録のみ ／ コンプラ加点なし':'H A R A S S M E N T 　D E T E C T E D'}</div>
+<div class="reveal-word">${safe?'認定なし':'認 定 ！'}</div><h1 class="result-name">${esc(name)}！</h1><strong class="small">${safe?'今回は正式認定なし':'本日、新たな社内分類が記録されました'}</strong>
 <p class="result-reason">${esc(speedPrimary?log.speedReason:log.reason)}</p>
 ${log.fitAdjustment!==0&&!log.rawName?.endsWith('疑義')?`<p class="tiny">${log.fitAdjustment<0?(log.baseCp===0?'本人の希望・得意分野と一致し、正式認定を回避。':'本人の希望・得意分野と一致し、判定が軽減。'):'本人の希望・得意分野との不一致により、正式認定のポイントが増加。'}</p>`:''}
 ${log.speedCp>0&&!speedPrimary?`<div class="extra-hit"><b>追撃！ ${esc(log.speedName)}：+${log.speedCp} コンプラ違反ポイント</b><p>${esc(log.speedReason)}</p></div>`:''}
 ${log.extraReason?`<p class="small">${esc(log.extraReason)}</p>`:''}
-<div class="score-title">${safe?'今回は加点なし':'コンプラ違反ポイント 加算'}</div><div class="score-boost ${safe?'safe':''}">+${log.deltaCp}<small> コンプラ違反pt</small></div>
+<div class="score-title">${safe?'疑義のみ・ペナルティ0pt':'コンプラ違反ポイント 加算'}</div><div class="score-boost ${safe?'safe':''}">+${log.deltaCp}<small> コンプラ違反pt</small></div>
 <div class="limit-proximity">累積コンプラ違反 <strong>${run.cp} / ${LIMITS.cp} pt</strong>　｜　${cpRemaining()===0?'部長室へ直行':`あと ${cpRemaining()} pt でゲームオーバー`}</div>
 ${comboCp>0?`<div class="combo combo-bonus">🔥 ${combo}連続正式認定！ コンプラ・コンボ <strong>+${comboCp}pt</strong><small>（通常認定 +${log.deltaCp-comboCp}pt ／ コンボ +${comboCp}pt）</small></div>`:combo===2||combo%3===2?`<div class="combo combo-ready">⚡ ${combo}連続認定。次も正式認定ならコンボ +1pt！</div>`:''}
 <div class="result-stats"><span>業務進捗 ${log.deltaP>=0?'+':''}${log.deltaP}</span><span>新人の習熟 ${log.deltaS>=0?'+':''}${log.deltaS}</span><span>コンプラ残り ${cpRemaining()}pt</span></div>
