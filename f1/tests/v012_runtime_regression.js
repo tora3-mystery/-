@@ -56,22 +56,12 @@ function runRegression(html){
  const resumed=boot(savedDb);check(resumed.api.getState().needsAdvance,'Report not saved');resumed.api.resumeCurrent();
  check(!resumed.get('overlay').classList.contains('hidden'),'Report not restored');resumed.api.advance();
  check(resumed.api.getState().day===2&&resumed.api.getState().vals[0]===0,'Deferred effect lost on resume');
- function odd(){return route(['pickup','vibration','audit','camera0','open0','glitch6','idle'])}
- const stop=odd();check(!stop.get('finalChoice').classList.contains('hidden'),'Odd final prompt');stop.api.finalDecision('stop');
- check(stop.api.getState().ending==='odd_stop','Odd stop');
- const day8=odd();day8.api.finalDecision('day8');check(day8.api.getState().day8Active,'Day8 not opened');day8.api.finishDay8('close');
- check(day8.api.getState().ending==='odd_day8','Day8 closure');
- const sales8=odd();sales8.api.finalDecision('day8');sales8.api.finishDay8('book');
- check(sales8.api.getState().ending==='odd_missing','Day8 sales ending');
- const clue=boot();clue.api.restart();
- for(const [i,id] of ['pickup','vibration','audit','camera0','open0','glitch6','idle'].entries()){
-  step(clue,id);
-  if(i===3||i===4){const line=clue.get('oddEvidenceList').children[i-3];check(!!line,'Clue not visible');line.children[0].onclick();}
- }
- check(clue.api.getState().clues===2,'Both clues read');
- clue.api.startInference();clue.api.resolveInference('self','yesterday');
- check(clue.api.getState().ending==='odd_hidden','Hidden ending');
- for(const end of [none,best,mixed,stop,day8,sales8,clue])check(end.get('ending').children.some(x=>x.className==='ending-media'),'Missing news and forum');
+ const day8=route(['pickup','vibration','audit','camera0','open0','idle','idle']);
+ check(day8.api.getState().day8Active&&day8.api.getState().day===8,'DAY 8 automatic');
+ day8.api.advanceDay8();check(day8.get('day8Feedback').children.length===10,'DAY 8 ten regular review cards');
+ day8.api.advanceDay8();day8.api.advanceDay8();
+ check(day8.api.getState().ending==='odd_day8','DAY 8 scripted ending');
+ for(const end of [none,best,mixed,day8])check(end.get('ending').children.some(x=>x.className==='ending-media'),'Missing newspaper and forum');
  const clamp=boot();clamp.api.restart();clamp.api.setState({day:4,attraction:10,vals:[0,5,0,5],days:[{day:1,sales:80}],revenue:80});
  for(const card of clamp.get('actions').children){
   const numbers=[...card.innerHTML.matchAll(/aria-label="(?:集客力|レジ待ち|通路|品切れ|店内騒音) ([+-]?\d+)"/g)].map(x=>Number(x[1]));
@@ -91,7 +81,7 @@ function runRegression(html){
   afterSales:18,remaining:1,permit:'要確認',
   days:[{day:1,sales:50},{day:2,sales:60},{day:3,sales:60},{day:4,sales:60}]});
  step(ongoing,'idle');
- check(ongoing.get('transitionHeadline').textContent==='今日も、同じご意見が届きました',
+ check(ongoing.get('transitionHeadline').textContent!=='今日も、同じご意見が届きました',
   'Unchanged uncanny level repeats ritual completion event');
 
  const first=boot();first.api.restart();
@@ -119,7 +109,7 @@ function runRegression(html){
   days:[{day:1,sales:50},{day:2,sales:50},{day:3,sales:50},{day:4,sales:50},{day:5,sales:50}],vals:[2,2,1,3]});
  const horror=creep.get('complaintBoard');
  check(horror.children.length>=10,'Ten regular complaint cards in late eerie stage');
- check(horror.children.slice(0,10).every(x=>x.children[1]?.textContent.includes('ありがとうございました。完璧なスーパーです。スーパーは完璧なので好きです。ありがとうございました。ありがとうございました。')),
+ check(horror.children.slice(0,10).every(x=>x.children[1]?.textContent.includes('レジのご案内が丁寧でした。ありがとうございました。')),
   'Ten identical ordinary reviews required');
  check(creep.get('oddMetrics').classList.contains('hidden'),'Abstract occult dashboard should not be shown');
  check(!html.includes('記録 A：差出人不明のご意見'),'Deleted record A should not exist');
@@ -129,12 +119,8 @@ function runRegression(html){
  late.api.setState({day:5,odd:0,revenue:200,attraction:7,vals:[2,1,1,1],
   days:[{day:1,sales:50},{day:2,sales:50},{day:3,sales:50},{day:4,sales:50}]});
  step(late,'audit');step(late,'camera0');step(late,'open0');
- check(late.api.getState().odd===3&&late.api.getState().day===7,'Late-stage ritual not effective in closing calculation');
- check(!late.get('finalChoice').classList.contains('hidden'),'Late ritual finale missing');
- check(late.get('finalLead').textContent.includes('生肉'),'Day7 ritual must reveal the offering next morning');
- const finalEcho=late.get('finalAnomalyComplaints');
- check(finalEcho.children.length===10&&finalEcho.children[0].className==='complaint-ticket','Closing scene should show ten ordinary customer reviews');
- return {pass:true,assertions,endingTypes:7,tests:['seven choice cards','deferred effects','sales formula','complaint ledger','full seven-endings','resume after close','five-number visual bounds','shrine']};
+ check(late.api.getState().day8Active&&late.api.getState().day===8,'Late unusual route also auto-enters DAY 8');
+ return {pass:true,assertions,endingTypes:4,tests:['seven choice cards','deferred effects','sales formula','complaint ledger','four active endings and deterministic DAY 8','resume after close','five-number visual bounds','shrine']};
 
 }
 const outcome=runRegression(html);
