@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#20372f">
-<title>B1｜採用結果をお知らせします。｜α0.1.0</title>
+<title>B1｜採用結果をお知らせします。｜α0.1.1</title>
 <style>
 :root{--bg:#f5f4ef;--paper:#fffdf8;--ink:#24332f;--muted:#64736e;--line:#d9ddd5;--green:#26684c;--soft:#e7f0e7;--red:#a34639;--redbg:#fff0e9;--amber:#82570e;--amberbg:#fff2d5}
 *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;line-height:1.65}
@@ -57,7 +57,7 @@ progress::-webkit-progress-bar{background:#e5e7e0}progress::-webkit-progress-val
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 </style>
 </head><body>
-<header><div class="brand">喫茶まどか <small>B1｜採用結果をお知らせします。</small></div><div class="version">α0.1.0<br>更新 2026.10.26 18:55 JST</div></header>
+<header><div class="brand">喫茶まどか <small>B1｜採用結果をお知らせします。</small></div><div class="version">α0.1.1<br>更新 2026.10.26 19:25 JST</div></header>
 <main id="app" class="wrap"></main>
 <script>
 "use strict";
@@ -117,8 +117,9 @@ const byId=id=>P.find(p=>p.id===id);
 const target=13;
 const staffMentors={MoD:true,MoN:true,TuD:true,WeN:true,ThD:true,FrN:true,SaD:true,SaN:true,SuD:true};
 let st;
+function shuffle(ids){for(let i=ids.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[ids[i],ids[j]]=[ids[j],ids[i]];}return ids;}
 function fresh(){
-return {screen:"intro",view:"interview",person:"t",order:P.map(p=>p.id).sort(()=>Math.random()-.5),visited:[],asked:{},picked:[],confirmed:[],contacted:[],declined:[],offerLog:[],offerRounds:0,advice:"",result:null};
+return {screen:"intro",view:"interview",person:"t",order:shuffle(P.map(p=>p.id)),visited:[],asked:{},picked:[],confirmed:[],contacted:[],declined:[],offerLog:[],offerRounds:0,advice:"",result:null};
 }
 function load(){try{const raw=localStorage.getItem("b1-alpha-010");if(raw){let x=JSON.parse(raw);if(x&&Array.isArray(x.picked)&&x.screen)return x;}}catch(e){}return fresh();}
 function save(){try{localStorage.setItem("b1-alpha-010",JSON.stringify(st));}catch(e){}}
@@ -149,7 +150,7 @@ function solve(group,full){
   if(halt)return;
   if(idx===S.length){
     const issues=checkTerms(group,assign,full);
-    const score=count*100-issues.length*250;
+    const score=count*100-issues.length*2500;
     if(score>best.score){best={score,filled:count,assignment:Object.fromEntries(Object.entries(assign).map(([k,v])=>[k,[...v]])),issues};}
     if(count===target&&issues.length===0)halt=true;
     return;
@@ -219,13 +220,13 @@ function renderInterview(){
  let answers=asked.map(i=>'<div class="answer"><b>Q. '+esc(p.qs[i][0])+'</b><br>「'+esc(p.qs[i][1])+'」</div>').join("");
  let allowed=knownSlots(p,false).map(shortSlot).join("・");
  let pickButton=st.confirmed.includes(p.id)?'<div class="note">採用承諾済み。オファーは撤回できません。</div>':st.declined.includes(p.id)?'<div class="note danger">辞退済み。再オファーはできません。</div>':'<button class="btn '+(st.picked.includes(p.id)?"warn":"primary")+'" data-action="toggle" '+(!canPick?"disabled":"")+'>'+(st.picked.includes(p.id)?"候補から外す":"採用候補に入れる")+'</button>';
- return '<div class="card"><div class="eyebrow">01 / INTERVIEW</div><h2>応募者との面接</h2><p class="small muted">応募書類を確認し、知りたいことを質問してください。応募者ごとに2問まで。</p>'+candidateGrid+'</div>'
+ return '<div class="card"><div class="eyebrow">01 / INTERVIEW</div><h2>応募者との面接</h2><p class="small muted">応募者8人の面接を終えてから採用通知へ。質問は各2問まで。面接済み '+st.visited.length+' / 8人。</p>'+candidateGrid+'</div>'
  +'<div class="card"><div class="profile"><span class="face">'+face(p)+'</span><div><div class="namebig">'+esc(p.name)+'</div><div class="small muted">'+p.age+'歳｜'+esc(p.history)+'</div><span class="tag">'+esc(p.tag)+'</span><p class="small">'+esc(p.bio)+'</p></div></div>'
  +'<div class="memo"><b>本人からの応募コメント</b><br>「'+esc(p.intro)+'」<div class="rule"></div><b>勤務情報（確認済）</b><br>'+esc(allowed)+'<br><span class="tiny muted">詳細な曜日を質問すると情報が追加されます。</span></div>'
  +'<div class="stat"><b>面接で確認する</b><span class="small">質問残り '+(2-asked.length)+' 回</span></div>'+questions+answers
  +'<div class="rule"></div><div class="btn-row">'+pickButton+'<button class="btn" data-action="board">仮シフトを見る</button></div></div>'
  +'<div class="card"><div class="eyebrow">店舗の先輩に相談</div><div class="btn-row"><button class="btn" data-action="advice" data-who="k">小林に相談</button><button class="btn" data-action="advice" data-who="m">村上に相談</button></div>'
- +(st.advice?'<div class="summary">'+(st.advice==="k"?"【小林／シフト実績】「日曜夜は僕も村上さんも出られません。閉店の経験がある人を最低1人は配置してください。勤務の回数も確認するといいと思います。」":"【村上／現場経験】「土日の昼は新人を教える余裕がなくなることもあります。初回の研修をベテランのいる時間に置けるか確認しておきましょう。」")+'</div>':"")+'</div>';
+ +(st.advice?'<div class="summary">'+(st.advice==="k"?"【小林／勤務実績】「日曜夜は僕も村上さんも出られません。候補の勤務可能日を確認してください。」"+(st.picked.length?" 現在の候補で人数が不足している時間帯："+(S.filter(s=>(solve(st.picked,false).assignment[s.id]||[]).length<s.n-s.f.length).slice(0,4).map(s=>shortSlot(s.id)).join("・")||"確認済み範囲では不足なし")+"。":""):"【村上／教育担当】「初回勤務は経験者と一緒にしてください。忙しい土日の昼だけでなく、月曜昼や金曜夜にも研修を置けるか考えましょう。」"+(st.picked.some(id=>!byId(id).trained)?" 今の候補には未経験者が含まれています。":""))+'</div>':"")+'</div>';
 }
 function renderOffers(){
  const draft=st.picked.filter(id=>!st.contacted.includes(id));
@@ -234,10 +235,12 @@ function renderOffers(){
  +'<p>採用候補4人に正式なオファーを送ります。承諾すると採用枠が確定します。辞退した場合のみ、次点候補へ追加オファーできます。</p>'
  +'<div class="note warn">オファー送信後、承諾された方の採用は取り消せません。シフトと本人希望を確認してから進めてください。</div>';
  if(st.offerLog.length){
- html+='<h3>これまでの返答</h3>'+st.offerLog.map(o=>'<div class="offer-row"><b>'+esc(o.name)+'</b> <span class="offer-status '+(o.ok?"":"no")+'">'+(o.ok?"承諾":"辞退")+'</span><div class="small">'+esc(o.reason)+'</div></div>').join("");
+ html+='<h3>これまでの返答</h3>'+st.offerLog.map(o=>'<div class="offer-row"><b>'+esc(o.name)+'</b> <span class="offer-status '+(o.ok?"":"no")+'">'+(o.ok?(o.conditional?"条件付き承諾":"承諾"):"辞退")+'</span><div class="small">'+esc(o.reason)+'</div></div>').join("");
  }
  html+='<div class="rule"></div><b>今回のオファー対象</b><div class="memo">'+(draft.length?draft.map(id=>esc(byId(id).name)).join("・"):"対象者なし")+'</div>';
- if(draft.length&&have4){
+ const unseen=st.order.filter(id=>!st.visited.includes(id));
+ if(unseen.length)html+='<div class="note warn">面接がまだ '+unseen.length+' 人残っています。採用通知は8人全員のプロフィールを確認してから送ってください。</div>';
+ if(draft.length&&have4&&!unseen.length){
  html+='<button class="btn primary" data-action="send">この候補にオファーする（'+draft.length+'人）</button>';
  }else if(st.confirmed.length===4){
  html+='<div class="note">4名の承諾が揃いました。採用したメンバーで最終シフトを確定できます。</div>';
@@ -255,6 +258,17 @@ function renderResult(){
  return '<div class="diary"><b>'+s.day+'曜 '+s.tm+'</b>　'+esc(names.join("・")||"配置なし")+'<div class="small '+(num<need?"":"muted")+'">'+(num<need?"新規人員が"+(need-num)+"人不足。":"必要人数を確保。")+'</div></div>';
  }).join("");
  const group=st.confirmed.map(byId);
+ const shortage=S.filter(s=>(solved.assignment[s.id]||[]).length<s.n-s.f.length).map(s=>shortSlot(s.id));
+ const feasible=[];
+ for(let a=0;a<P.length;a++)for(let b=a+1;b<P.length;b++)for(let c=b+1;c<P.length;c++)for(let d=c+1;d<P.length;d++){
+  const ids=[a,b,c,d].map(i=>P[i].id);const possible=solve(ids,true);
+  if(possible.filled===target&&!possible.issues.length)feasible.push(ids);
+ }
+ feasible.sort((a,b)=>b.filter(x=>st.confirmed.includes(x)).length-a.filter(x=>st.confirmed.includes(x)).length);
+ const alternative=feasible.find(ids=>ids.join()!=st.confirmed.slice().sort().join());
+ const counterfactual=!full&&alternative?
+ '<div class="note"><b>別の採用なら：</b>'+alternative.map(id=>esc(byId(id).name.split(" ")[0])).join("・")+'の4人なら、勤務表が成立する例があります。'+
+ '<br><span class="small">これは採用をやり直した場合の比較であり、確定した採用を取り消せるという意味ではありません。</span></div>':"";
  let ep=full?'<p>必要人数を満たし、リニューアル初週を完走しました。</p>'
  +(st.confirmed.includes("t")&&st.confirmed.includes("s")?'<div class="diary">土曜昼、田中さんと佐藤さんが同じカウンターに立ちました。採用時の約束が守られ、連携もスムーズでした。</div>':"")
  +(st.confirmed.includes("i")?'<div class="diary">日曜夜、伊藤さんは希望どおり閉店業務を担当。レジ締めも問題なく終わりました。</div>':"")
@@ -262,7 +276,9 @@ function renderResult(){
  :'<p>初週の勤務表に問題が残りました。誰を採用したか、どの条件を確認したかを振り返ってください。</p>';
  return '<div class="card"><div class="eyebrow">03 / FIRST WEEK</div><h1>'+(full?"営業成功｜喫茶まどか":"営業に課題が残りました")+'</h1>'
  +ep+'<div class="stat"><b>人員充足</b><strong>'+solved.filled+'/'+target+'</strong></div>'
+ +(shortage.length?'<div class="note danger"><b>不足した勤務枠：</b>'+shortage.map(esc).join("・")+'。採用した人の勤務可能時間と週上限では、この枠をすべて埋められません。</div>':"")
  +(solved.issues.length?'<div class="note danger">本人条件の未達：'+solved.issues.map(esc).join("・")+'</div>':"")
+ +counterfactual
  +'<h2>初週の勤務表と営業日誌</h2>'+rows
  +'<div class="rule"></div><h2>採用の振り返り</h2><div class="small">採用：'+group.map(p=>esc(p.name)).join("・")+'</div>'
  +(!full?'<div class="note warn">人数・経験者・研修・採用条件を含めた組合せで再検討してください。経験豊富な候補ばかりでも、必要な曜日を埋められるとは限りません。</div>':"")
@@ -272,8 +288,8 @@ function render(){
  save();let root=document.getElementById("app");
  if(st.screen==="intro"){
  root.innerHTML='<div class="intro card"><div class="eyebrow">B1 / NEW STAFF RECRUITMENT</div><h1>採用結果をお知らせします。</h1><p class="lead">喫茶まどかの新任店長として、8人の応募者から4人を採用してください。ただし、優秀な4人を集めただけでは店は回りません。</p>'
- +'<div class="three"><div class="mini"><b>面接で情報を集める</b>応募書類と各2問の質問で、勤務条件や本人希望を把握。</div><div class="mini"><b>候補を入れると仮シフト更新</b>最大4人を入れ替えながら、7日間の必要人数を確認。</div><div class="mini"><b>採用通知には責任が伴う</b>承諾後は取り消せない。辞退や条件付き承諾も考慮。</div></div>'
- +'<p class="small muted">α0.1.0は8人の条件を固定した検証版です。面接順のみ周回ごとに変わります。人物画像は仮イラストです。ゲームデータは端末内に保存されます。</p>'
+ +'<div class="three"><div class="mini"><b>面接で情報を集める</b>8人全員の応募書類を確認し、各2問の質問で勤務条件や本人希望を把握。</div><div class="mini"><b>候補を入れると仮シフト更新</b>最大4人を入れ替えながら、7日間の必要人数を確認。</div><div class="mini"><b>採用通知には責任が伴う</b>承諾後は取り消せない。辞退や条件付き承諾も考慮。</div></div>'
+ +'<p class="small muted">α0.1.1は8人の条件を固定した検証版です。面接順のみ周回ごとに変わります。人物画像は仮イラストです。ゲームデータは端末内に保存されます。</p>'
  +'<button class="btn primary" data-action="start">新任店長として着任する</button></div>';
  return;
  }
@@ -283,7 +299,7 @@ function render(){
  let main=onOffer?renderOffers():onResult?renderResult():onBoard?board(false):renderInterview();
  let sidebar=board(false);
  root.innerHTML=nav+'<div class="layout"><section class="main '+(onBoard&&isMobile?"hide":"")+'">'+(onBoard&&!isMobile?renderInterview():main)+'</section><aside class="side '+(onBoard&&isMobile?"show":"")+'">'+sidebar+'</aside></div>'
- +'<div class="footer">B1 α0.1.0｜架空の人物・店舗です。外部API・通信なし。固定ケース検証版。</div>'
+ +'<div class="footer">B1 α0.1.1｜架空の人物・店舗です。外部API・通信なし。固定ケース検証版。</div>'
  +'<div class="mobilebar"><button data-action="interview">面接を見る</button><button data-action="board">仮シフト '+solve(st.picked,false).filled+'/'+target+'</button><button data-action="offer">採用通知</button></div>';
 }
 function ask(id,i){
@@ -297,22 +313,29 @@ function toggle(id){
  else if(st.picked.length<4)st.picked.push(id);
 }
 function send(){
- if(st.picked.length!==4)return;
- let draft=st.picked.filter(id=>!st.contacted.includes(id));
+ if(st.picked.length!==4||st.visited.length<8)return;
+ const draft=st.picked.filter(id=>!st.contacted.includes(id));
  if(!draft.length)return;
+ const preview=solve(st.picked,true);
+ const conds={t:"田中の友人同時勤務",h:"高橋の週2回夜勤",g:"吉田の週2回勤務",i:"伊藤の日曜夜勤務"};
+ const refusalReasons={
+  t:"佐藤さんとの土曜昼の同時勤務を確保できないため、今回は辞退します。",
+  h:"週2回以上の夜勤務という条件が確保できないため、今回は辞退します。",
+  g:"週2回以上の勤務が確保できないため、今回は辞退します。",
+  i:"日曜夜の勤務が確保できないため、今回は辞退します。"
+ };
  for(const id of draft){
- const p=byId(id);
- const decline=id==="t"&&!st.picked.includes("s");
- st.contacted.push(id);
- if(decline){st.declined.push(id);st.picked=st.picked.filter(x=>x!==id);}
- else st.confirmed.push(id);
- let reason=decline?"佐藤さんとの土曜昼の同時勤務が見込めないため、今回は辞退します。":
- id==="t"?"佐藤さんと土曜昼に勤務できることを条件に承諾します。":
- id==="h"?"週2回以上の夜勤務を約束できるなら承諾します。":
- id==="i"?"日曜夜の勤務を含められるなら承諾します。":
- id==="g"?"週2回以上の勤務なら承諾します。":
- "ご連絡ありがとうございます。採用を承諾します。";
- st.offerLog.push({name:p.name,id,ok:!decline,reason});
+  const p=byId(id), decline=Boolean(conds[id]&&preview.issues.includes(conds[id]));
+  st.contacted.push(id);
+  if(decline){st.declined.push(id);st.picked=st.picked.filter(x=>x!==id);}
+  else st.confirmed.push(id);
+  const reason=decline?refusalReasons[id]:
+  id==="t"?"佐藤さんと土曜昼に勤務できる約束で承諾します。":
+  id==="h"?"週2回以上の夜勤務を条件に承諾します。":
+  id==="i"?"日曜夜の勤務を含む条件で承諾します。":
+  id==="g"?"週2回以上の勤務を条件に承諾します。":
+  "ご連絡ありがとうございます。採用を承諾します。";
+  st.offerLog.push({name:p.name,id,ok:!decline,conditional:Boolean(p.cond),reason});
  }
  st.offerRounds++;st.view="offer";
 }
