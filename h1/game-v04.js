@@ -1,6 +1,6 @@
 "use strict";
 const VERSION = "α0.4.0";
-const UPDATED = "2026.10.26 10:08 JST";
+const UPDATED = "2026.10.26 10:12 JST";
 const people = [
  {name:"大野 彩花",school:"経営学部・2027年3月卒業見込み",initial:"大",tone:"warm",character:"社交的で段取り上手。成果をやや大きく表現するが、自分で確認すると訂正できる。",es:"学園祭実行委員会で協賛交渉を担当しました。企業12社の協力を取りつけ、当日は赤い養生テープで来場者の動線を改善しました。誰も気づかない仕事を先に拾うことを大切にしています。",record:"協賛金を提供したのは11社で、残り1社は機材貸与でした。床に赤い矢印を3本貼り、最後の1本だけ逆向きにして出口を案内しました。"},
  {name:"岡野 直人",school:"理工学研究科・2027年3月修了見込み",initial:"岡",tone:"cool",character:"口下手だが誠実。数字を正確に覚え、記録の裏付けを重視する。",es:"4人の研究チームで環境計測装置の精度改善に取り組みました。測定条件を切り分け、誤差を約15％低減しました。午後6時12分に記録された異常値がきっかけでした。",record:"装置の自動校正が毎日18時12分に作動していました。23回目の条件変更で測定が安定しました。相対誤差は7.8％から6.6％になりました。"},
@@ -42,7 +42,6 @@ function face(i,distort){
  '<path d="M54 81Q60 84 66 81" fill="none" stroke="#805c57" stroke-width="2" stroke-linecap="round"/>'+
  (distort?'<path d="M31 41Q5 65 28 115M88 39Q116 80 88 130" fill="none" stroke="#534a56" stroke-width="4"/><ellipse cx="76" cy="61" rx="5" ry="10" fill="#30313a"/>':'')+'</svg>';
 }
-function tension(){return state.asked.reduce((s,x)=>s+rounds[x.round][x.idx].risk,0);}
 function tension(){return state.asked.filter(x=>x.idx===3).length;}
 function mood(){
  if(state.phase==="reverse")return "応募者は全員、こちらの返答を待っている。誰が選ばれるのか、まだ分からない。";
@@ -216,7 +215,7 @@ function renderEnding(){
   text='<p>採用管理システムに通知が現れた。</p><blockquote>「面接が終了していません」</blockquote><p>面接官の席に'+people[state.monsterIndex].name+'が座っている。腕がテーブルの端まで、あり得ない長さで伸びていた。</p><p>「では、これまでのご経験について、もう少し詳しく教えてください」</p><p><strong>次の応募者：あなた</strong></p>';
   scene='<div class="ending-horror"><div class="avatar">'+face(state.monsterIndex,true)+'</div><div class="horror-chair">面接官席<br>担当者：'+people[state.monsterIndex].name+'</div></div>';
  }
- el("main").innerHTML='<section class="ending panel '+result+'">'+header+scene+text+'<div class="recap"><strong>今回の選考</strong><p>不採用：'+people[state.reject].name+' ／ 質問3問 ／ 面接室：'+(tension()>=4?'異常':tension()>=2?'重い空気':'平穏')+'</p><details><summary>質問履歴と回答を確認</summary>'+getRecords()+'</details></div><button id="again" class="btn primary wide">別の質問で再プレイする</button></section>';
+ el("main").innerHTML='<section class="ending panel '+result+'">'+header+scene+text+'<div class="recap"><strong>今回の選考</strong><p>不採用：'+people[state.reject].name+' ／ 質問3問 ／ 面接室：'+(exposed()?'異常':state.reverseStyles.some(x=>x.style==='verify')?'重い空気':'平穏')+'</p><details><summary>質問履歴と回答を確認</summary>'+getRecords()+'</details></div><button id="again" class="btn primary wide">別の質問で再プレイする</button></section>';
  el("again").onclick=()=>{Object.assign(state,{reverseTargets:[],reverseStyles:[],reverseIndex:0,reverseShown:false,reverseChoice:"policy",monsterIndex:drawMonster(),phase:"intro",privateIndex:0,privatePick:0,privateShown:false,privateAnswers:[null,null,null,null],round:0,a:0,b:0,shown:false,asked:[],tab:"es",person:0,archive:false,recordsOpen:true,reject:-1});render();};
 }
 function render(){
@@ -227,7 +226,7 @@ function render(){
  else if(state.phase==="reverse")renderReverse();
  else if(state.phase==="decision")renderDecision();
  else renderEnding();
- if(state.phase==="private"||state.phase==="game"||state.phase==="decision")renderDocs();
+ if(state.phase==="private"||state.phase==="game"||state.phase==="reverse"||state.phase==="decision")renderDocs();
  el("docs-wrap").classList.remove("mobile-open");
 }
 function selfTest(){
