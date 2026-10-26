@@ -849,6 +849,8 @@ function advance(){
   persist();return;
  }
   s.day++;v09CompleteJobs(s.day);
+ // Archive actually resolved complaints before recording fresh daily complaints.
+ reconcileComplaints();
  const appliedVals=[...s.vals],appliedAttraction=s.attraction;
  v14DailyPressure(s.day);
  const directDelta=appliedVals.map((v,i)=>v-openingBefore.vals[i]),newDelta=s.vals.map((v,i)=>v-appliedVals[i]);
