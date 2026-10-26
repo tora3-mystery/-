@@ -180,7 +180,7 @@ function sixthDayGlitch(){return s.day===6&&s.odd>=3&&!s.glitchSeen}
 function seventhDayNormal(){return s.day===7&&!!s.glitchSeen&&!s.finish&&!s.sundayRevealed}
 const glitchAction={id:'glitch6',name:'本日の閉店処理を申請する',cost:0,delta:[0,0,0,0],desc:'営業日報を承認して処理を終了します',kind:'glitch',repeat:false};
 const idleAction={id:'idle',name:'何も対策しない',cost:0,delta:[0,0,0,0],desc:'本日は新しい改善施策を実施しません。売上と苦情は現状のままです。',kind:'idle',role:'idle',repeat:true,completionDays:1,attractionToday:0,attractionOnCompletion:0};
-function mood(){const normalMask=seventhDayNormal();document.body.classList.remove('odd-1','odd-2','odd-3');if(s.odd&&!normalMask)document.body.classList.add('odd-'+Math.min(3,s.odd));$('brandIcon').textContent=s.odd>=3&&!normalMask?'▣':'🛒';$('brandName').innerHTML=s.odd>=3&&!normalMask?'0番レジ<br><small class="tiny">販売責任者：あなた</small>':s.odd>=2&&!normalMask?'まるまるスーパー<br><small class="tiny">店舗番号：0000／登録なし</small>':'まるまるスーパー<br><small class="tiny">お客様改善センター / 研修ゲーム</small>'}
+function mood(){const normalMask=seventhDayNormal();document.body.classList.remove('odd-1','odd-2','odd-3');if(s.odd&&!normalMask)document.body.classList.add('odd-'+Math.min(3,s.odd));$('brandIcon').textContent=s.odd>=3&&!normalMask?'▣':'🛒';$('brandName').innerHTML=s.odd>=3&&!normalMask?'まるまるスーパー<br><small class="tiny">お客様の声：差出人不明</small>':s.odd>=2&&!normalMask?'まるまるスーパー<br><small class="tiny">店舗番号：0000／登録なし</small>':'まるまるスーパー<br><small class="tiny">お客様改善センター / 研修ゲーム</small>'}
 const complaintNarratives={"register":{"1":"レジは増えました。でも、ベビーカーが通れる幅まで減っています。"},"staff":{"3":"人を増やしたら、あちこちから『こちらへどうぞ』が聞こえます。"},"self":{"1":"会計は速いのに、操作の説明を聞くために並んでいます。","3":"セルフレジの呼出音が、何台も重なって鳴っています。"},"lane":{"0":"通路は空いたのに、レジに行くまで店を一周しました。"},"compact":{"2":"歩きやすくなりました。いつもの牛乳はどこへ行きました？"},"receive":{"3":"棚が埋まったと思ったら、品出しの声掛けがずっと響きます。"},"pickup":{"3":"予約品は便利です。でも受取番号の呼出しが止まりません。"},"sale":{"0":"ポイントは嬉しいけど、会計までの列が長すぎます。","3":"特売の放送が多すぎて、買い忘れたものを思い出せません。"},"night":{"0":"閉店時間は延びたのに、最後のレジがいつまでも混んでいます。","3":"遅くまで営業している分、案内放送も終わりません。"},"delivery":{"3":"宅配窓口の呼出しで、商品を探している間も落ち着きません。"},"discount":{"0":"見切り販売が続いて、値引きの時間に行列が集中しています。","2":"特売が続いて、今度は買いたい商品まで棚からなくなっています。"},"shift":{"3":"レジが速くなったのに、案内の声が何度も重なっています。"},"rope":{"0":"カートは通りやすいのに、出口の列に合流できません。"},"limit":{"3":"『お一人2点まで』の説明が、レジで延々と続いています。"},"sampling":{"0":"試食は楽しいけれど、会計待ちの列とつながっています。","1":"試食の列が商品棚の前まで伸びています。","3":"試食会の呼び込みが、店の端まで響いています。"},"gourmet":{"1":"名物フェアを始めたら、特設売場でカートがすれ違えません。","3":"名物フェアの案内が大きすぎて、普段の買い物に集中できません。"},"early":{},"quiet":{},"farmer":{},"forecast":{}};
 const defaultComplaintVoices=['レジの列が長くなっています。','買い物かごとカートが通路でぶつかりそうです。','いつもの商品が見つかりません。','売場の呼出しや放送が多くて落ち着きません。'];
 function recordSideEffects(id,before,appearDay){
@@ -282,7 +282,7 @@ function ensureComplaints(){
    ['店内放送が大きくて、子どもが泣いてしまいました。','特売のアナウンスが途切れず落ち着きません。','売場とレジの呼び出しが重なって、会話もできません。']
   ];
   const entries=[0,0,1,2,3];const used=[0,0,0,0];
-  if(Math.random()<0.50)buckets[1].push('スーパー裏手の古い社が不気味です。あれは取り壊してほしいです。');
+  if(Math.random()<0.50)buckets[1]=['スーパー裏手の古い社が不気味です。あれは取り壊してほしいです。'];
   for(const metric of entries){
    const variants=buckets[metric],candidates=variants.filter((_,i)=>!used[metric] || i!==s.initialComplaintPick);
    const body=candidates[Math.floor(Math.random()*candidates.length)];
@@ -695,7 +695,7 @@ function play(id){
  s.history.unshift('DAY '+s.day+'：'+a.name+'／売上'+sales+'万円。');
  $('dialogLabel').textContent='DAY '+String(s.day).padStart(2,'0')+' / 07 — '+weekday(s.day)+' — CLOSED';
  $('dialogTitle').textContent=s.finish?s.endingReason+'通知':
- a.id==='glitch6'?'6日目の営業報告':s.odd>=3&&!seventhDayNormal()?'0番レジの営業報告':s.day+'日目の営業報告';
+ a.id==='glitch6'?'6日目の営業報告':s.odd>=3&&!seventhDayNormal()?'本日のご意見受付報告':s.day+'日目の営業報告';
  $('dialogText').textContent=text;
  const build=$('buildProgress');build.classList.toggle('hidden',!(normal&&a.completionDays>=2));
  if(normal&&a.completionDays>=2)v09AttachFallback(build,'store-construction.jpg');
