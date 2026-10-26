@@ -1,6 +1,6 @@
 /** C1 gameplay logic. Pure and dependency-free: also imported by tests. */
 export const VERSION = '0.6.2';
-export const UPDATED_JST = '2026-10-26 17:32 JST';
+export const UPDATED_JST = '2026-10-26 17:35 JST';
 export const LIMITS = Object.freeze({ cp: 20, progress: 22, growth: 6 });
 export const DAYS = ['月曜日', '火曜日', '水曜日', '木曜日', '金曜日'];
 export const SPEED_HARASSMENTS = Object.freeze(['即レスハラ','遅レスハラ']);
