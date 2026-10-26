@@ -1,6 +1,6 @@
 "use strict";
-const VERSION = "α0.4.0";
-const UPDATED = "2026.10.26 10:16 JST";
+const VERSION = "α0.4.1";
+const UPDATED = "2026.10.26 13:20 JST";
 const people = [
  {name:"大野 彩花",school:"経営学部・2027年3月卒業見込み",initial:"大",tone:"warm",character:"社交的で段取り上手。成果をやや大きく表現するが、自分で確認すると訂正できる。",es:"学園祭実行委員会で協賛交渉を担当しました。企業12社の協力を取りつけ、当日は赤い養生テープで来場者の動線を改善しました。誰も気づかない仕事を先に拾うことを大切にしています。",record:"協賛金を提供したのは11社で、残り1社は機材貸与でした。床に赤い矢印を3本貼り、最後の1本だけ逆向きにして出口を案内しました。"},
  {name:"岡野 直人",school:"理工学研究科・2027年3月修了見込み",initial:"岡",tone:"cool",character:"口下手だが誠実。数字を正確に覚え、記録の裏付けを重視する。",es:"4人の研究チームで環境計測装置の精度改善に取り組みました。測定条件を切り分け、誤差を約15％低減しました。午後6時12分に記録された異常値がきっかけでした。",record:"装置の自動校正が毎日18時12分に作動していました。23回目の条件変更で測定が安定しました。相対誤差は7.8％から6.6％になりました。"},
@@ -25,24 +25,15 @@ function groupAnswer(round,idx,person){
  const borrowed=stripQuote(S.borrowing_echoes[person][source][entry.option]);
  return "「"+prefix+" "+borrowed+"」";
 }
-const state={reverseTargets:[],reverseStyles:[],reverseIndex:0,reverseShown:false,reverseChoice:"policy",monsterIndex:drawMonster(),phase:"intro",privateIndex:0,privatePick:0,privateShown:false,privateAnswers:[null,null,null,null],round:0,a:0,b:0,shown:false,asked:[],tab:"es",person:0,archive:false,recordsOpen:true,reject:-1};
+const state={docsPinned:false,reverseTargets:[],reverseStyles:[],reverseIndex:0,reverseShown:false,reverseChoice:"policy",monsterIndex:drawMonster(),phase:"intro",privateIndex:0,privatePick:0,privateShown:false,privateAnswers:[null,null,null,null],round:0,a:0,b:0,shown:false,asked:[],tab:"es",person:0,archive:false,recordsOpen:true,reject:-1};
 const archive=S.archive.map(x=>({year:x.year,name:x.name,result:"最終選考・不採用",body:x.text,note:x.note}));
 function el(id){return document.getElementById(id);}
 function esc(x){return String(x).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
 function face(i,distort){
- const colors=["#bc886d","#6c9ca8","#a28fb0","#829774"];
- const c=colors[i];
- return '<svg class="portrait '+(distort?'uncanny':'')+'" viewBox="0 0 120 140" role="img" aria-label="'+esc(people[i].name)+'の人物イラスト">'+
- '<rect width="120" height="140" fill="#d9e4e9"/><rect y="98" width="120" height="42" fill="#b6cad2"/>'+
- '<path d="M12 140Q16 101 49 95H71Q105 103 110 140Z" fill="#252e39"/>'+
- '<path d="M45 101L59 129 74 100Z" fill="#fff"/><path d="M57 128L61 128 65 140H51Z" fill="#596979"/>'+
- '<ellipse cx="60" cy="53" rx="30" ry="39" fill="#d8ac91"/>'+
- '<path d="M30 52Q25 9 60 10Q97 10 90 55L82 41Q67 32 40 41Z" fill="'+c+'"/>'+
- '<path d="M41 61Q48 57 52 62M68 62Q75 57 80 61" fill="none" stroke="#4e4747" stroke-width="2" stroke-linecap="round"/>'+
- '<path d="M54 81Q60 84 66 81" fill="none" stroke="#805c57" stroke-width="2" stroke-linecap="round"/>'+
- (distort?'<path d="M31 41Q5 65 28 115M88 39Q116 80 88 130" fill="none" stroke="#534a56" stroke-width="4"/><ellipse cx="76" cy="61" rx="5" ry="10" fill="#30313a"/>':'')+'</svg>';
+ const cls="portrait-photo person-"+i+(distort?" uncanny":"");
+ return '<span class="'+cls+'" role="img" aria-label="'+esc(people[i].name)+'の顔写真"></span>';
 }
-function tension(){return state.asked.filter(x=>x.idx===3).length;}
+
 function mood(){
  if(state.phase==="reverse")return "応募者は全員、こちらの返答を待っている。誰が選ばれるのか、まだ分からない。";
  if(state.round===0)return "4人は少し緊張している。岡野が手元を見つめ、水野が椅子に座り直した。";
@@ -56,8 +47,8 @@ function head(){
  const p=state.phase==="intro"||state.phase==="private"?0:state.phase==="game"?1:state.phase==="reverse"?2:state.phase==="decision"?3:4;
  el("progress").innerHTML=["個人","グループ","逆質問","判定","結果"].map((x,i)=>'<span class="'+(i<p?'done':i===p?'on':'')+'">'+x+'</span>').join("");
 }
-function chooseTab(x){state.tab=x;renderDocs();}
-function selectPerson(i){state.person=i;state.tab="es";renderDocs();}
+function chooseTab(x){state.tab=x;renderDocs("tab");}
+function selectPerson(i){state.person=i;state.docsPinned=true;renderDocs("person");}
 const shortcuts=[
  [{round:0,idx:2,label:"協賛活動・リーダー経験"},{round:1,idx:0,label:"赤い養生テープ"},{round:2,idx:0,label:"成果の評価"}],
  [{round:0,idx:3,label:"実験時の失敗"},{round:1,idx:1,label:"測定条件の記録"},{round:2,idx:2,label:"経験の裏付け"}],
@@ -82,14 +73,21 @@ function docMarkup(){
  const transcript=entry?'<blockquote><b>面接官：</b>'+esc(privateQuestions[state.person][entry.option].q)+'</blockquote><blockquote><b>'+esc(p.name)+'：</b>'+esc(entry.answer)+'</blockquote>':'<p>本日の個人面接はまだ実施されていません。面接終了後に記録が保存されます。</p>';
  return tabs+profiles+'<div class="paper"><h3>'+esc(p.name)+'｜本日の個人面接</h3><p class="subtle">採用管理システムの自動文字起こし／他の応募者には非公開</p>'+transcript+'</div>';
 }
-function renderDocs(){
+function renderDocs(mode="keep"){
  const panel=el("docs");
  if(!panel)return;
+ const oldScroll=panel.scrollTop;
  panel.innerHTML=docMarkup();
  panel.querySelectorAll("[data-tab]").forEach(b=>b.addEventListener("click",()=>chooseTab(b.dataset.tab)));
  panel.querySelectorAll("[data-person]").forEach(b=>b.addEventListener("click",()=>selectPerson(Number(b.dataset.person))));
  panel.querySelectorAll("[data-shortcut]").forEach(b=>b.addEventListener("click",()=>{const idx=Number(b.dataset.shortcut);state.a=Math.floor(idx/2);state.b=idx%2;render();}));
- panel.querySelectorAll("[data-private-option]").forEach(b=>b.addEventListener("click",()=>{state.privatePick=Number(b.dataset.privateOption);render();}));
+ panel.querySelectorAll("[data-private-option]").forEach(b=>b.addEventListener("click",()=>{state.privatePick=Number(b.dataset.privateOption);closeDocs();render();}));
+ if(mode==="keep")panel.scrollTop=oldScroll;
+ else{
+  panel.scrollTop=0;
+  const target=mode==="tab"?panel.querySelector('[data-tab="'+state.tab+'"]'):panel.querySelector('[data-person="'+state.person+'"]');
+  if(target&&typeof target.focus==="function")target.focus({preventScroll:true});
+ }
 }
 function renderIntro(){
  el("main").innerHTML='<section class="opening"><p class="eyebrow">CONFIDENTIAL｜人事部より</p><h1>本日の最終面接について</h1><p>4名の最終候補者から、<strong>1名を不採用</strong>としてください。</p><p>ただし、社内調査により<strong>1名は人間ではない存在</strong>である可能性が極めて高いと判明しました。</p><p>過去の事例では、この存在は<strong>他の学生の非公開面接記録を学習し、自分の経験として語る</strong>と報告されています。どの応募者が異形になるかは、プレイごとに変わります。</p><p class="warning">正体を疑っていることを悟られないでください。通常どおり面接を実施し、静かに1名を見送ってください。</p>'+
@@ -102,7 +100,7 @@ function renderIntro(){
 function renderPrivate(){
  el("docs-wrap").hidden=false;el("bottom-mobile").hidden=false;
  const i=state.privateIndex,p=people[i],selected=privateQuestions[i][state.privatePick];
- state.person=i;
+ if(!state.docsPinned)state.person=i;
  let html='<section class="gamehead"><div><p class="eyebrow">PERSONAL INTERVIEW｜個人面接</p><h1>応募者 '+(i+1)+' / 4｜'+esc(p.name)+'</h1></div><span class="small status">'+(state.privateShown?'文字起こし保存済':'面接中')+'</span></section>';
  html+='<div class="private-scene"><div class="avatar private-portrait">'+face(i,false)+'</div><div><strong>'+esc(p.name)+'</strong><p class="subtle small">'+esc(p.school)+'</p><p>「本日はよろしくお願いいたします」</p></div></div>';
  html+='<div class="panel"><p class="eyebrow">ENTRY SHEET｜ES</p><p>'+esc(p.es)+'</p></div>';
@@ -118,7 +116,7 @@ function renderPrivate(){
   el("ask-private").onclick=()=>{state.privateAnswers[i]={person:i,option:state.privatePick,answer:privateAnswer(i,state.privatePick)};state.privateShown=true;render();};
  }else{
   el("next-private").onclick=()=>{
-   if(i===3){state.phase="game";state.person=0;state.tab="record";}
+   if(i===3){state.phase="game";if(!state.docsPinned){state.person=0;state.tab="record";}}
    else{state.privateIndex++;state.privatePick=0;state.privateShown=false;state.person=state.privateIndex;state.tab="es";}
    render();
   };
@@ -216,7 +214,7 @@ function renderEnding(){
   scene='<div class="ending-horror"><div class="avatar">'+face(state.monsterIndex,true)+'</div><div class="horror-chair">面接官席<br>担当者：'+people[state.monsterIndex].name+'</div></div>';
  }
  el("main").innerHTML='<section class="ending panel '+result+'">'+header+scene+text+'<div class="recap"><strong>今回の選考</strong><p>不採用：'+people[state.reject].name+' ／ 質問3問 ／ 面接室：'+(exposed()?'異常':state.reverseStyles.some(x=>x.style==='verify')?'重い空気':'平穏')+'</p><details><summary>質問履歴と回答を確認</summary>'+getRecords()+'</details></div><button id="again" class="btn primary wide">別の質問で再プレイする</button></section>';
- el("again").onclick=()=>{Object.assign(state,{reverseTargets:[],reverseStyles:[],reverseIndex:0,reverseShown:false,reverseChoice:"policy",monsterIndex:drawMonster(),phase:"intro",privateIndex:0,privatePick:0,privateShown:false,privateAnswers:[null,null,null,null],round:0,a:0,b:0,shown:false,asked:[],tab:"es",person:0,archive:false,recordsOpen:true,reject:-1});render();};
+ el("again").onclick=()=>{Object.assign(state,{docsPinned:false,reverseTargets:[],reverseStyles:[],reverseIndex:0,reverseShown:false,reverseChoice:"policy",monsterIndex:drawMonster(),phase:"intro",privateIndex:0,privatePick:0,privateShown:false,privateAnswers:[null,null,null,null],round:0,a:0,b:0,shown:false,asked:[],tab:"es",person:0,archive:false,recordsOpen:true,reject:-1});render();};
 }
 function render(){
  head();
@@ -227,7 +225,7 @@ function render(){
  else if(state.phase==="decision")renderDecision();
  else renderEnding();
  if(state.phase==="private"||state.phase==="game"||state.phase==="reverse"||state.phase==="decision")renderDocs();
- el("docs-wrap").classList.remove("mobile-open");
+ closeDocs();
 }
 function selfTest(){
  const originalMonster=state.monsterIndex,originalP=state.privateAnswers,originalAsked=state.asked,originalReverse=state.reverseStyles,originalReject=state.reject;
@@ -257,9 +255,22 @@ function selfTest(){
  return {borrowRoutes:borrow,groupRoutes:group,endingBranches:ends,good:goods,bad:bads,horror:horrors};
 }
 window.H1_QA=selfTest;
+function openDocs(){
+ el("docs-wrap").classList.add("mobile-open");
+ document.body.classList.add("docs-open");
+ const close=el("close-docs");
+ if(close&&typeof close.focus==="function")close.focus({preventScroll:true});
+}
+function closeDocs(){
+ el("docs-wrap").classList.remove("mobile-open");
+ document.body.classList.remove("docs-open");
+}
 document.addEventListener("DOMContentLoaded",()=>{
- el("toggle-docs").onclick=()=>{const w=el("docs-wrap");w.classList.toggle("mobile-open");renderDocs();};
- el("close-docs").onclick=()=>el("docs-wrap").classList.remove("mobile-open");
+ el("toggle-docs").onclick=()=>{
+  if(el("docs-wrap").classList.contains("mobile-open"))closeDocs();else openDocs();
+ };
+ el("close-docs").onclick=()=>{closeDocs();const b=el("toggle-docs");if(b&&typeof b.focus==="function")b.focus({preventScroll:true});};
+ document.addEventListener("keydown",e=>{if(e.key==="Escape"&&el("docs-wrap").classList.contains("mobile-open"))closeDocs();});
  render();
  try{selfTest();}catch(e){console.error("H1 QA",e);}
 });
