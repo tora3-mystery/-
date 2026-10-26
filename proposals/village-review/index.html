@@ -186,11 +186,11 @@ function autonomousChanges(reviewedId,changes){
  }
 }
 function rippleMilestones(changes){
- const milestones=changes.filter(c=>c.kind==='big'&&c.stage===3&&c.facilityId),done=new Set();
+ const milestones=changes.filter(c=>c.kind==='big'&&c.stage>=2&&c.facilityId),done=new Set();
  for(const event of milestones){const source=find(event.facilityId);if(!source||done.has(source.id))continue;done.add(source.id);
   const slot=S.facilities.indexOf(source),row=Math.floor(slot/4),col=slot%4;
-  const nearest=S.facilities.filter(f=>f.open&&f.id!==source.id&&f.kind!=='scenic').map(f=>{const i=S.facilities.indexOf(f);return {f,d:Math.abs(Math.floor(i/4)-row)+Math.abs(i%4-col)}}).filter(x=>x.d<=2).sort((a,b)=>a.d-b.d||a.f.id.localeCompare(b.f.id)).slice(0,2);
-  for(const {f} of nearest){f.funds=clamp(f.funds+2,0,100);f.rep=clamp(f.rep+3,0,100);f.progress=clamp(f.progress+3.4,0,22);
+  const nearest=S.facilities.filter(f=>f.open&&f.id!==source.id&&f.kind!=='scenic').map(f=>{const i=S.facilities.indexOf(f);return {f,d:Math.abs(Math.floor(i/4)-row)+Math.abs(i%4-col)}}).filter(x=>x.d<=2).sort((a,b)=>a.d-b.d||a.f.id.localeCompare(b.f.id)).slice(0,event.stage>=3?2:1);
+  for(const {f} of nearest){f.funds=clamp(f.funds+2,0,100);f.rep=clamp(f.rep+3,0,100);f.progress=clamp(f.progress+(event.stage>=3?3.4:2.2),0,22);
    const before=f.stage;maybeUpgrade(f,changes);const detail=source.name+'の大規模発展を受け、周辺の客足や取引が変わり、設備と運営を見直しました。';
    f.lastChanged=S.month;f.lastFeedback=detail;changes.push({kind:'ripple',facilityId:f.id,icon:DEFS[f.kind].icon,title:f.name+'にも影響が波及！',detail:detail+(f.stage>before?' この施設も新しい姿になりました。':'')});
   }
@@ -206,7 +206,7 @@ function evolve(f,star,fa){const changes=[];const prevFunds=f.funds;f.visits++;f
  if(fa.tag==='sea'&&star>=4)S.visitors+=12;
  f.lastChanged=S.month;f.lastFeedback=effect;changes.push({kind:'direct',icon:DEFS[f.kind].icon,title:f.name+'が対応しました',detail:effect});
  maybeUpgrade(f,changes);maybeClose(f,changes);return changes}
-function nextReview(){if(S.completed||S.month>=12||!chosen||!S.candidates.includes(chosen)||!find(chosen)?.open)return;const f=find(chosen),fa=factsFor(f)[selectedFact]||factsFor(f)[0],post=reviewText(f,fa,currentStars),prev={population:S.population,visitors:S.visitors,economy:S.economy,quiet:S.quiet};S.month++;const months=period(-1);let changes=evolve(f,currentStars,fa);monthlyAdjust();autonomousChanges(f.id,changes);rippleMilestones(changes);for(const other of S.facilities){if(other!==f){maybeUpgrade(other,changes);maybeClose(other,changes)}}if(S.month%2===0||changes.some(x=>x.kind==='big'&&x.stage===3))chainEvent(changes);if(changes.length<3)incidental(changes);
+function nextReview(){if(S.completed||S.month>=12||!chosen||!S.candidates.includes(chosen)||!find(chosen)?.open)return;const f=find(chosen),fa=factsFor(f)[selectedFact]||factsFor(f)[0],post=reviewText(f,fa,currentStars),prev={population:S.population,visitors:S.visitors,economy:S.economy,quiet:S.quiet};S.month++;const months=period(-1);let changes=evolve(f,currentStars,fa);monthlyAdjust();autonomousChanges(f.id,changes);rippleMilestones(changes);for(const other of S.facilities){if(other!==f){maybeUpgrade(other,changes);maybeClose(other,changes)}}if(S.month%2===0||changes.some(x=>x.kind==='big'&&x.stage>=2))chainEvent(changes);if(changes.length<3)incidental(changes);
  // Reinstate one abandoned building only when there is an economy and a reason to reuse the site.
  if(S.economy>=50&&S.month%9===0){let old=S.facilities.find(x=>!x.open&&x.kind!=='scenic');if(old&&S.facilities.filter(x=>x.open).length<5){old.open=true;old.stage=0;old.funds=40;old.pressure=12;old.progress=0;old.lastFeedback='空き建物に新しい管理者が入り、営業を再開しました。';old.lastChanged=S.month;changes.push({kind:'chain',icon:'🌱',title:'旧'+old.name+'が再開！',detail:old.lastFeedback});S.stats.chain++}}
  S.stats.total++;S.lastReview={id:f.id,kind:f.kind,stars:currentStars,tag:fa.tag,post,month:S.month};S.reviewHistory.push({...S.lastReview});S.log.unshift({month:S.month,title:'★'+currentStars+' '+f.name+'へのレビュー',detail:post});for(const event of changes.slice(1)){S.log.unshift({month:S.month,title:event.title,detail:event.detail})}S.log=S.log.slice(0,65);S.result={facility:f.name,icon:DEFS[f.kind].icon,stars:currentStars,post,changes,prev,after:{population:S.population,visitors:S.visitors,economy:S.economy,quiet:S.quiet},date:months.year+'年'+months.month+'月',annual:S.month%12===0};S.annualDue=S.result.annual;S.completed=S.month>=12;if(S.completed){S.candidates=[];chosen=null;}else{makeCandidates();chosen=S.candidates[0];}selectedFact=0;currentStars=4;save();render();showResults()}
@@ -233,7 +233,7 @@ function getEndings(){
  if(S.month===12&&S.secrets.robot&&t.tech>=10&&ids.includes('robot')&&distinct('tech')>=2&&last?.kind==='robot'&&last?.tag==='tech'&&last?.stars>=4)hidden='近未来の村';
  if(S.month===12&&S.secrets.deep&&t.sea>=9&&ids.includes('harbor')&&distinct('sea')>=2&&last?.kind==='harbor'&&last?.tag==='sea'&&last?.stars>=4)hidden='海とつながりすぎた村';
  if(hidden&&!S.achievements.includes(hidden))S.achievements.push(hidden);
- const hiddenDesc={因習村:'村で生まれた新しい決まりが、いつからか「昔からの伝統」として扱われています。村の外に出る際は、事前の届け出が必要です。',近未来の村:'人間の転出後、ロボット住民が村役場・農園・学校を引き継ぎました。空中道路と自律住宅が完成し、住民満足度は過去最高です。',海とつながりすぎた村:'村の人口は増え続けています。増加した住民の住所を確認したところ、ほとんどが海面下でした。'};
+ const hiddenDesc={因習村:'村で生まれた新しい決まりが、いつからか「昔からの伝統」として扱われています。村の外に出る際は、事前の届け出が必要です。',近未来の村:'ロボットが村の新しい住民として迎えられ、行政・交通・生活設備は人間がいなくても稼働するようになりました。空中道路の建設も始まっています。',海とつながりすぎた村:'役場に新しい住民登録の申請が届きました。申請された住所を確かめると、そこは海面下でした。'};
  return {main:hidden?{name:hidden,desc:hiddenDesc[hidden],hidden:true}:candidates[0],sub:candidates.filter(x=>x.name!==hidden).slice(hidden?0:1,hidden?2:3),hidden};
 }
 function villageVoices(){
