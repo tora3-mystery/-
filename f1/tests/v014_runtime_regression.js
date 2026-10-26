@@ -162,7 +162,17 @@ function test(html){
  assert(stable.d.getState().vals[1]===2,'Only normal pressure when below threshold');
  const finalDay=app();finalDay.d.restart();finalDay.d.setState({day:6,odd:0,glitchSeen:false,last:null,actionCounts:{},needsAdvance:false});
  assert(finalDay.d.availableIds().length<=13&&finalDay.d.availableIds().length>=11,'Late choice list expands');
- const legacy=new Map(),old=app(legacy);old.d.restart();
+ const v15Raw=html.split('const V15_BRANCHES=')[1].split('.map(([id,name,v15Family,tier,delta,attractionOnCompletion,desc])')[0];
+ const v15Actions=JSON.parse(v15Raw);
+ assert(v15Actions.length===10,'Ten specialist and major actions remain');
+ v15Actions.forEach(([id,name,family,tier,delta])=>{
+  assert(delta.some(x=>x<0),'Upgrade '+id+' solves a complaint');
+  assert(delta.some(x=>x>0),'Upgrade '+id+' also worsens another complaint');
+  assert(delta.some(x=>x<=-3),'Upgrade '+id+' provides strong improvement');
+ });
+ assert(JSON.stringify(v15Actions.find(x=>x[0]==='queueReset')[4])==='[-4,2,0,2]','Queue overhaul raises aisle/noise trouble');
+ assert(JSON.stringify(v15Actions.find(x=>x[0]==='stockReset')[4])==='[1,1,-4,2]','Stock overhaul raises other complaints');
+  const legacy=new Map(),old=app(legacy);old.d.restart();
  const previous=old.d.getState();previous.version=10;previous.clueViewed=[0,1,2];previous.clues=3;
  legacy.set('f1-v10',JSON.stringify(previous));
  const newer=app(legacy);
