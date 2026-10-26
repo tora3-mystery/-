@@ -16,3 +16,6 @@
 .private-answer .reply{margin:13px 0}
 .save-note{border:1px solid #c0d8d3;color:#326759;background:#eaf5f0;border-radius:8px;padding:10px 12px;font-size:12px;margin-bottom:15px}
 @media(max-width:540px){.private-scene{gap:12px;padding:12px}.private-scene .private-portrait{width:90px}.private-choice{padding:11px}.private-scene strong{font-size:15px}}
+
+/* H1 v0.4 reverse question stage */
+.reverse-list{display:grid;gap:9px;margin:18px 0}.reverse-target{appearance:none;width:100%;text-align:left;justify-content:space-between;color:var(--ink);font-size:14px;background:#f5f9f8}.reverse-target.selected{border-color:#337280;background:#e4f2f1}.reverse-target .selected-mark{white-space:nowrap;align-self:center;font-size:11px;color:#376977;font-weight:800;margin-left:10px}.reverse-target small{display:block;color:var(--muted);font-size:12px;line-height:1.7;font-weight:400}.question-choices{display:grid;gap:9px;margin:14px 0}.question-choices .private-choice strong{font-size:12px;color:#68818a}.question-choices .private-choice small{font-size:13px;color:var(--ink);font-weight:500}.reverse-list .private-choice{min-height:68px}#progress span{font-size:10px}@media(max-width:540px){.reverse-target{gap:6px}.reverse-target .selected-mark{font-size:10px}.reverse-target small{font-size:11px}#progress span{font-size:9px}}
