@@ -16,7 +16,7 @@ header{display:flex;gap:16px;justify-content:space-between;align-items:center;pa
 </head>
 <body>
 <div class="shell">
-<header><div><div class="kicker">短編UIゲーム実験室 / α TEST</div><div class="brand">この村の評価をお願いします。</div><div class="sub">村レビュー（仮）・v0.3.2 α ｜ 更新：2026-10-27 JST</div></div><div class="actions"><button id="helpBtn" class="btn" type="button">あそびかた</button><button id="soundBtn" class="btn sound" type="button" aria-pressed="false">♪ OFF</button><button id="resetBtn" class="btn" type="button">新しい村</button></div></header>
+<header><div><div class="kicker">短編UIゲーム実験室 / α TEST</div><div class="brand">この村の評価をお願いします。</div><div class="sub">V1｜V1｜村レビュー（仮）・v0.3.3 α ｜ 更新：2026-10-27 JST</div></div><div class="actions"><button id="helpBtn" class="btn" type="button">あそびかた</button><button id="soundBtn" class="btn sound" type="button" aria-pressed="false">♪ OFF</button><button id="resetBtn" class="btn" type="button">新しい村</button></div></header>
 <main class="layout">
 <section class="panel"><div class="pad"><div class="villageHeader"><div><div class="kicker" id="period">2027年4月</div><div class="villageName" id="villageName">読み込み中...</div></div><span class="terrainTag" id="terrain">山間</span></div><div class="metadata" id="profile"></div><div class="stats" id="stats"></div><div id="map" class="map" aria-label="村の地図"></div><div class="mapLegend"><span><i class="dot"></i>今月レビューできる</span><span>点線：今月は観察のみ</span><span>灰色：閉業</span></div><div class="news" id="news"></div><div class="residentVoices" id="residentVoices"></div><div class="smallHeading">村の歩み</div><div id="history" class="history"></div></div></section>
 <section class="panel"><div class="sideTop"><div class="villageHeader"><div><div class="smallHeading" style="margin:0">今月の訪問先</div><div class="sectionTitle" id="monthTitle"></div></div><div id="monthCount" class="yearCount"></div></div><div class="progress"><span id="progressBar" style="width:0"></span></div><div class="tiny" style="margin-top:6px" id="candidatesNote"></div></div><div class="pad" id="detail"></div></section>
@@ -24,7 +24,7 @@ header{display:flex;gap:16px;justify-content:space-between;align-items:center;pa
 </div><div id="overlay" class="overlay" role="presentation"><div class="modal" id="modal" role="dialog" aria-modal="true" aria-label="ゲームの案内"></div></div>
 <script>
 (function(){'use strict';
-const VERSION='0.3.2-alpha';const STORE='village-review-prototype-v010';
+const VERSION='0.3.3-alpha';const STORE='village-review-prototype-v010';
 const $=id=>document.getElementById(id);
 const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
 const safe=n=>Math.round(n).toLocaleString('ja-JP');
@@ -86,7 +86,7 @@ let S=null;let chosen=null;let currentStars=4;let selectedFact=0;let sound=false
 function rand(){let t=S.rng|0;t^=t<<13;t^=t>>>17;t^=t<<5;S.rng=t>>>0;return (S.rng>>>0)/4294967296}
 function ri(a,b){return Math.floor(a+rand()*(b-a+1))}function pick(a){return a[Math.floor(rand()*a.length)]}function shuffle(a){let b=a.slice();for(let i=b.length-1;i>0;i--){let j=ri(0,i),tmp=b[i];b[i]=b[j];b[j]=tmp}return b}
 function save(){try{localStorage.setItem(STORE,JSON.stringify(S))}catch(e){}}
-function load(){try{const x=JSON.parse(localStorage.getItem(STORE));if(x && [VERSION,'0.3.1-alpha','0.3.0-alpha','0.2.0-alpha','0.1.1-alpha','0.1.0-alpha'].includes(x.version) && Array.isArray(x.facilities) && x.facilities.length){S=x;S.version=VERSION;S.reviewHistory=S.reviewHistory||[];S.reforms=S.reforms||{};S.completed=S.month>=12;S.annualDue=S.annualDue||false;S.facilities.forEach(f=>{if(f.name===DEFS[f.kind]?.name)f.name=facilityName(f.kind,f.id,true);if(!f.mode)f.mode='boost';if(f.stageFocus===undefined)f.stageFocus=f.stage>0?f.focus:null;if(!f.stageMode)f.stageMode=f.mode;if(!f.improvedFacets)f.improvedFacets={}});if(S.completed)S.candidates=[];save();return true}}catch(e){}return false}
+function load(){try{const x=JSON.parse(localStorage.getItem(STORE));if(x && [VERSION,'0.3.2-alpha','0.3.1-alpha','0.3.0-alpha','0.2.0-alpha','0.1.1-alpha','0.1.0-alpha'].includes(x.version) && Array.isArray(x.facilities) && x.facilities.length){S=x;S.version=VERSION;S.reviewHistory=S.reviewHistory||[];S.reforms=S.reforms||{};S.completed=S.month>=12;S.annualDue=S.annualDue||false;S.facilities.forEach(f=>{if(f.name===DEFS[f.kind]?.name)f.name=facilityName(f.kind,f.id,true);if(!f.mode)f.mode='boost';if(f.stageFocus===undefined)f.stageFocus=f.stage>0?f.focus:null;if(!f.stageMode)f.stageMode=f.mode;if(!f.improvedFacets)f.improvedFacets={}});if(S.completed)S.candidates=[];save();return true}}catch(e){}return false}
 function newWorld(seed){S={version:VERSION,rng:seed>>>0||1,month:0,terrain:'',trait:'',name:'',population:0,startPopulation:0,visitors:0,startVisitors:0,economy:0,startEconomy:0,quiet:0,startQuiet:0,facilities:[],reforms:{},themes:{trade:0,tech:0,history:0,tradition:0,strange:0,nature:0,sea:0,living:0,transport:0,tourism:0},secrets:{ancient:false,robot:false,deep:false},achievements:[],usedEvents:[],log:[],candidates:[],lastReview:null,result:null,annualDue:false,completed:false,reviewHistory:[],stats:{total:0,closed:0,newFacilities:0,big:0,chain:0},sound:false};
  const terrain=pick(TERRAIN);S.terrain=terrain.id;S.trait=pick(TRAITS).id;S.name=pick(FIRST)+pick(LAST)+'村';S.population=ri(220,580);S.startPopulation=S.population;S.visitors=ri(220,550);S.startVisitors=S.visitors;S.economy=ri(33,55);S.startEconomy=S.economy;S.quiet=ri(63,89);S.startQuiet=S.quiet;S.cityMins=ri(terrain.distance[0],terrain.distance[1]);S.stationMins=terrain.id==='island'?null:ri(8,70);S.secrets.ancient=rand()<.085;S.secrets.robot=rand()<.075;S.secrets.deep=(terrain.id==='coast'||terrain.id==='island')&&rand()<.12;
  const pool=['rail','market','school','shrine','inn','office','clinic','shop','hall','farm'];const count=ri(4,6);const commerce=['market','shop','farm','inn'];const life=['school','office','clinic','hall'];const chosenKinds=[pick(commerce),pick(life)];for(const k of shuffle(pool)){if(chosenKinds.length>=count)break;if(!chosenKinds.includes(k))chosenKinds.push(k)}
@@ -156,10 +156,10 @@ function canAdd(kind){return S.facilities.filter(f=>f.open).length<11&&!S.facili
 function chainEvent(changes){const t=S.themes;let events=[
  {id:'cafe',when:()=>t.trade>=6&&S.visitors>=550&&canAdd('cafe'),fn:()=>{const f=addFacility('cafe');return ['新しい喫茶店が開店！','観光客向けの休憩場所を求める声が増え、空き店舗に喫茶店がオープンしました。',f]}},
  {id:'museum',when:()=>t.history>=7&&t.tradition>=3&&canAdd('museum'),fn:()=>{const f=addFacility('museum');return ['村の資料館がオープン！','古い行事や建物への関心が高まり、村の記録を展示する資料館ができました。',f]}},
- {id:'lodge',when:()=>t.nature>=8&&S.visitors>=650&&canAdd('lodge'),fn:()=>{const f=addFacility('lodge');return ['新しい山の宿がオープン！','静けさや自然を求める旅行者が増え、小さな宿泊施設ができました。',f]}},
+ {id:'lodge',when:()=>t.nature>=8&&S.visitors>=650&&canAdd('lodge'),fn:()=>{const f=addFacility('lodge');return ['新しい宿がオープン！','静けさや自然を求める旅行者が増え、小さな宿泊施設ができました。',f]}},
  {id:'robot',when:()=>t.tech>=9&&canAdd('robot'),fn:()=>{const f=addFacility('robot');return ['自動化研究センターが開設！','施設の人手不足対策が評価され、実証設備が集まり始めました。',f]}},
- {id:'festival',when:()=>t.tradition>=7&&t.history>=3,fn:()=>['村の祭りが盛大になりました','公民館や神社を中心に祭りが再編され、今年は例年より多くの人が集まっています。',null]},
- {id:'wireless',when:()=>t.tech>=5&&S.facilities.some(f=>f.kind==='office'),fn:()=>['防災無線が新しくなりました','放送が聞き取りやすくなりました。ただし、一部の住民は昨日だけ二度鳴ったと話しています。',null]},
+ {id:'festival',when:()=>t.tradition>=7&&t.history>=3&&S.facilities.some(f=>f.open&&['shrine','hall'].includes(f.kind)),fn:()=>['村の祭りが盛大になりました','公民館や神社を中心に祭りが再編され、今年は例年より多くの人が集まっています。',null]},
+ {id:'wireless',when:()=>t.tech>=5&&S.facilities.some(f=>f.open&&f.kind==='office'),fn:()=>['防災無線が新しくなりました','放送が聞き取りやすくなりました。ただし、一部の住民は昨日だけ二度鳴ったと話しています。',null]},
  {id:'fish',when:()=>['coast','island'].includes(S.terrain)&&t.sea>=5&&canAdd('harbor'),fn:()=>{const f=addFacility('harbor');return ['漁港が整備されました','海の資源への関心が高まり、新しい漁港設備が使われ始めました。',f]}}
  ];const eligible=events.filter(e=>!S.usedEvents.includes(e.id)&&e.when());if(eligible.length){const event=eligible[0];S.usedEvents.push(event.id);const [title,detail,f]=event.fn();S.stats.chain++;S.economy=clamp(S.economy+1,0,100);changes.push({kind:'chain',icon:f?DEFS[f.kind].icon:'🎊',title,detail});return true}return false}
 function autonomousChanges(reviewedId,changes){
@@ -285,8 +285,43 @@ function showResults(){
  const content='<div class="modalHead">'+r.date+'の口コミが反映されました</div><div class="resultArt '+(majors.length?'major':'')+'"><div class="headline">'+headline+'</div><div class="icon">'+chosenEvent.icon+'</div><div class="type">'+chosenEvent.title+'</div><div class="heroDetail">'+chosenEvent.detail+'</div></div><div class="tiny">あなたが投稿した口コミ</div><div style="font-weight:700;margin:5px 0 13px">'+('★'.repeat(r.stars))+' '+r.post+'</div>'+(others.length?'<div class="cascadeHeader">'+title+'</div><div class="effects">'+list+'</div>':'')+'<div class="resultStats">'+[['人口','人',r.after.population-r.prev.population],['観光客','人',r.after.visitors-r.prev.visitors],['経済','pt',r.after.economy-r.prev.economy],['静けさ','pt',r.after.quiet-r.prev.quiet]].map(a=>'<div class="resultStat">'+a[0]+'<strong>'+chg(a[2])+a[1]+'</strong></div>').join('')+'</div><button id="nextBtn" class="btn primary" type="button">'+(r.annual?'1年間の村レポートを見る':'1か月後、また村を訪れる')+'</button>';
  showModal(content);if(sound)beep(majors.length>0);$('nextBtn').addEventListener('click',()=>{hideModal();S.result=null;save();if(S.annualDue){S.annualDue=false;showAnnual()}else{document.getElementById('monthTitle').scrollIntoView({behavior:'smooth',block:'center'})}});
 }
-function showAnnual(){const p=period(-1),e=getEndings();save();let reached=S.achievements.length;let text='<div class="modalHead">'+p.fy+'年度｜12件の口コミが生んだ村</div><div class="milestone">'+(e.main.hidden?'🔓 隠し村エンド発見！':'村の観光パンフレット完成')+'</div><div class="big" style="text-align:center">'+e.main.name+'</div><p style="text-align:center;font-size:13px">'+e.main.desc+'</p><table class="miniTable"><tr><td>定住人口</td><td>'+safe(S.population)+'人（開始時 '+safe(S.startPopulation)+'人）</td></tr><tr><td>月間観光客</td><td>'+safe(S.visitors)+'人（開始時 '+safe(S.startVisitors)+'人）</td></tr><tr><td>経済 / 静けさ</td><td>'+S.economy+' / '+S.quiet+'</td></tr><tr><td>開業・閉業</td><td>新施設 '+S.stats.newFacilities+'件 / 閉業 '+S.stats.closed+'件</td></tr></table><div class="smallHeading">そのほかの村の特徴</div><p>'+e.sub.map(x=>'<span class="badge">'+x.name+'</span>').join(' ')+'</p><div class="smallHeading">印象的な村の出来事</div><div class="annualList">'+S.log.filter(x=>!x.title.startsWith('★')).slice(0,4).map(x=>'<div>'+x.title+'</div>').join('')+'</div><div class="smallHeading">村民の声</div><div class="voices">'+villageVoices()[0]+'</div><div class="smallMuted">あなたの12件の口コミが、この村の1年を形づくりました。</div><button id="keepBtn" class="btn primary" type="button">村の記録に戻る</button><button id="newVillageBtn" class="btn" type="button" style="width:100%;margin-top:8px">新しい村でもう一度遊ぶ</button><button id="copyBtn" class="btn" type="button" style="width:100%;margin-top:8px">今年の村をコピーして共有</button>';
- showModal(text);$('keepBtn').addEventListener('click',()=>{hideModal();chosen=null;render()});$('newVillageBtn').addEventListener('click',()=>{if(confirm('新しい村を生成しますか？（現在の記録は上書きされます）')){hideModal();newWorld((Date.now()^Math.floor(Math.random()*0xffffffff))>>>0);render();showHelp(true)}});$('copyBtn').addEventListener('click',()=>{const msg='村レビュー｜'+S.name+' '+p.fy+'年度\n'+e.main.name+'\n人口 '+S.population+'人・観光客 '+S.visitors+'人\n'+location.href; if(navigator.clipboard?.writeText)navigator.clipboard.writeText(msg).then(()=>{$('copyBtn').textContent='コピーしました'}).catch(()=>{$('copyBtn').textContent='コピーできませんでした'});else $('copyBtn').textContent='コピー非対応の環境です'})}
+function showAnnual(){
+ const p=period(-1),e=getEndings(),open=S.facilities.filter(f=>f.open),closed=S.facilities.filter(f=>!f.open);
+ const grown=open.filter(f=>f.stage>=1).sort((a,b)=>b.stage-a.stage||b.rep-a.rep),newSites=S.facilities.filter(f=>f.createdAt>0);
+ const reviews=S.reviewHistory||[],good=reviews.filter(r=>r.stars>=4).length,bad=reviews.filter(r=>r.stars<=2).length;
+ const avg=reviews.length?(reviews.reduce((sum,r)=>sum+r.stars,0)/reviews.length).toFixed(1):'―';
+ const topicNames={trade:'商業・品揃え',nature:'自然・静けさ',history:'歴史',tradition:'伝統・行事',tech:'技術・設備',living:'暮らし',transport:'交通',tourism:'観光',strange:'不思議な噂',sea:'海'};
+ const topics=reviews.reduce((out,r)=>(out[r.tag]=(out[r.tag]||0)+1,out),{}),topicText=Object.entries(topics).sort((a,b)=>b[1]-a[1]).slice(0,3).map(([k,v])=>(topicNames[k]||k)+' '+v+'件').join('／');
+ const description=S.stats.big>=5?'建物の大きな変化が'+S.stats.big+'回も起こり、村の景色は一年前とは違うものになりました。':S.stats.big>=1?'一年で施設の大きな変化が'+S.stats.big+'回起こりました。':'大改装こそ起きませんでしたが、施設の工夫や住民の活動が積み重なりました。';
+ const reviewComment=good>bad?'好意的な口コミが多く、魅力を伸ばす取り組みが中心になりました。':bad>good?'改善を求める声が多く、見直しや改革が村を動かしました。':'好意的な声と厳しい声が交互に届き、村はさまざまな対応を迫られました。';
+ const facilityCards=grown.slice(0,6).map(f=>'<div class="annualCard"><strong>'+DEFS[f.kind].icon+' '+f.name+'</strong>'+phaseName(f)+'<small>'+(f.stage===3?'★ 最終形態 MAX':f.stage===2?'大幅に進化':'新しい取り組み')+'</small></div>').join('');
+ const newNames=newSites.length?newSites.map(f=>DEFS[f.kind].icon+' '+f.name+(f.open?'':'（現在は閉業）')).join('／'):'今年、新たな施設は建設されませんでした。';
+ const closedCards=closed.map(f=>'<div class="annualCard"><strong>🔒 '+f.name+'</strong>営業終了<small>村内に建物は残っています。</small></div>').join('');
+ const priority=['big','closed','chain','ripple'];const events=S.log.filter(x=>x.month>0&&!x.title.startsWith('★'));
+ const ordered=[...events.filter(x=>priority.includes(x.kind)),...events],used=new Set(),timeline=[];
+ for(const event of ordered){if(used.has(event.title))continue;used.add(event.title);timeline.push(event);if(timeline.length>=7)break}
+ timeline.sort((a,b)=>a.month-b.month);
+ const news=timeline.map(x=>'<div><strong>'+timeName(x.month)+'｜'+finalPunctuation(x.title)+'</strong><p style="margin:4px 0 0">'+x.detail+'</p></div>').join('');
+ const residents=villageVoices().map(v=>'<div class="annualVoice">'+v+'</div>').join('');
+ const closing=closed.length&&S.economy<45?'施設の変化の陰で、営業を終えた建物と村の経営が課題になっています。':S.quiet<50?'観光と賑わいが増える一方、静かな暮らしをどう守るかが次の課題です。':S.economy>=60?'仕事や経済に明るい動きが見られましたが、その恩恵が村全体に届くかはこれからです。':'良い口コミも厳しい口コミも残り、村にはまだ変わる余地があります。';
+ const text='<div class="modalHead">V1｜'+p.fy+'年度 村の観光パンフレット・年末号</div>'
+ +'<div class="annualCover"><div class="milestone">'+(e.main.hidden?'🔓 特別な村が生まれました':'12件の口コミが生んだ、今年の村')+'</div><div style="font-size:12px;color:#68796e">'+S.name+'｜'+p.fy+'年度</div><div class="big">'+e.main.name+'</div><p class="annualLead">'+e.main.desc+'</p></div>'
+ +'<h3 class="annualSection">今年の村の歩み</h3><p class="annualLead">'+description+reviewComment+'</p>'
+ +'<table class="miniTable"><tr><td>人口</td><td>'+safe(S.population)+'人（前年差 '+chg(S.population-S.startPopulation)+'人）</td></tr><tr><td>月間観光客</td><td>'+safe(S.visitors)+'人（前年差 '+chg(S.visitors-S.startVisitors)+'人）</td></tr><tr><td>経済</td><td>'+S.economy+' / 100</td></tr><tr><td>静けさ</td><td>'+S.quiet+' / 100（高いほど静か）</td></tr><tr><td>口コミの平均</td><td>★'+avg+'（12件）</td></tr><tr><td>施設の大変貌</td><td>'+S.stats.big+'回</td></tr><tr><td>新しい施設 / 年末の閉業</td><td>'+newSites.length+'件 / '+closed.length+'件</td></tr></table>'
+ +'<h3 class="annualSection">成長した施設たち</h3>'+(facilityCards?'<div class="annualCards">'+facilityCards+'</div>':'<p>大幅に改装された施設はありませんでした。</p>')
+ +'<h3 class="annualSection">新しく生まれた施設</h3><p>'+newNames+'</p>'
+ +(closed.length?'<h3 class="annualSection">閉業した施設</h3><div class="annualCards">'+closedCards+'</div>':'')
+ +'<h3 class="annualSection">今年の村ニュース</h3><div class="annualTimeline">'+(news||'<div>大きなニュースはなく、村の日常が続きました。</div>')+'</div>'
+ +'<h3 class="annualSection">口コミは何を変えた？</h3><p>多く話題になったテーマ：'+(topicText||'記録なし')+'。</p><p>★4〜5の口コミ '+good+'件／★1〜2の口コミ '+bad+'件。</p>'
+ +(e.sub.length?'<h3 class="annualSection">もうひとつの村の顔</h3><p>'+e.sub.map(x=>'<span class="badge">'+x.name+'</span>').join(' ')+'</p>':'')
+ +'<h3 class="annualSection">村民たちの本音</h3><p class="smallMuted">観光客の評価とは違う意見も届いています。</p>'+residents
+ +'<h3 class="annualSection">編集後記</h3><p class="annualLead">'+closing+'</p><div class="smallMuted">1年間の出来事は、12件の口コミと村自身の活動から生まれました。</div>'
+ +'<button id="keepBtn" class="btn primary" type="button">村の記録に戻る</button><button id="newVillageBtn" class="btn" type="button" style="width:100%;margin-top:8px">新しい村でもう一度遊ぶ</button><button id="copyBtn" class="btn" type="button" style="width:100%;margin-top:8px">今年の村をコピーして共有</button>';
+ showModal(text);save();
+ $('keepBtn').addEventListener('click',()=>{hideModal();chosen=null;render()});
+ $('newVillageBtn').addEventListener('click',()=>{if(confirm('新しい村を生成しますか？（現在の記録は上書きされます）')){hideModal();newWorld((Date.now()^Math.floor(Math.random()*0xffffffff))>>>0);render();showHelp(true)}});
+ $('copyBtn').addEventListener('click',()=>{const msg='V1 村レビュー｜'+S.name+' '+p.fy+'年度\n'+e.main.name+'\n人口 '+S.population+'人・観光客 '+S.visitors+'人\n'+location.href;if(navigator.clipboard?.writeText)navigator.clipboard.writeText(msg).then(()=>{$('copyBtn').textContent='コピーしました'}).catch(()=>{$('copyBtn').textContent='コピーできませんでした'});else $('copyBtn').textContent='コピー非対応の環境です'});
+}
 function showHelp(first=false){const examples=[
  ['★★★★★','地元の食材が最高！もっと有名になってほしい。','話題が広がり、店が大胆に拡大するかも。'],
  ['★★★★☆','地元の商品が良いので、今の品揃えを続けてほしい。','良さを守りながら着実に改善するかも。'],
@@ -298,7 +333,7 @@ function showHelp(first=false){const examples=[
 function beep(big){try{const C=window.AudioContext||window.webkitAudioContext;if(!C)return;const ctx=new C();const now=ctx.currentTime;[523,659,big?1046:784].forEach((freq,i)=>{const osc=ctx.createOscillator(),g=ctx.createGain();osc.type='sine';osc.frequency.setValueAtTime(freq,now+i*.085);g.gain.setValueAtTime(.0001,now+i*.085);g.gain.exponentialRampToValueAtTime(.095,now+i*.085+.01);g.gain.exponentialRampToValueAtTime(.0001,now+i*.085+.24);osc.connect(g);g.connect(ctx.destination);osc.start(now+i*.085);osc.stop(now+i*.085+.26)});setTimeout(()=>ctx.close(),1000)}catch(e){}}
 $('helpBtn').addEventListener('click',()=>showHelp(false));$('resetBtn').addEventListener('click',()=>{if(confirm('この村の記録を終了して、新しい村を生成しますか？\n（現在の村の記録は上書きされます）')){newWorld((Date.now()^Math.floor(Math.random()*0xffffffff))>>>0);render();showHelp(true)}});$('soundBtn').addEventListener('click',()=>{sound=!sound;$('soundBtn').textContent=sound?'♪ ON':'♪ OFF';$('soundBtn').setAttribute('aria-pressed',String(sound))});if(load()){chosen=S.candidates[0];render();if(S.result)showResults();else if(S.annualDue||S.completed)showAnnual()}else{newWorld((Date.now()^Math.floor(Math.random()*0xffffffff))>>>0);render();showHelp(true)}
 // Test harness is exposed in local QA only, not in user controls.
-if(location.search.includes('qa=1'))window.__VILLAGE_QA__={getState:()=>S,generate:(seed)=>{newWorld(seed);render()},post:(id,factIndex,stars)=>{chosen=id;selectedFact=factIndex;currentStars=stars;nextReview();hideModal()},annual:getEndings,factsFor};
+if(location.search.includes('qa=1'))window.__VILLAGE_QA__={getState:()=>S,generate:(seed)=>{newWorld(seed);render()},post:(id,factIndex,stars)=>{chosen=id;selectedFact=factIndex;currentStars=stars;nextReview();hideModal()},annual:getEndings,report:()=>{showAnnual();return $('modal').innerHTML},voices:villageVoices,factsFor};
 })();
 </script>
 </body></html>
