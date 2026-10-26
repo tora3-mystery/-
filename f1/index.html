@@ -628,7 +628,7 @@ function render(){
  $('day').textContent=s.day+'/7';$('cash').textContent=s.attraction;$('total').textContent=v09Sales()+'万円';$('revenueTotal').textContent=s.revenue+'万円';
  $('cash').classList.toggle('cash-low',s.attraction<=3);
  $('dateLabel').textContent='DAY '+String(s.day).padStart(2,'0')+' / 07 ｜ '+weekday(s.day);
- $('oddMetrics').classList.toggle('hidden',!s.odd||seventhDayNormal());
+ $('oddMetrics').classList.add('hidden');
  $('afterSales').textContent=s.afterSales;$('remainingCustomers').textContent=s.remaining;$('closePermit').textContent=s.permit;
  renderComplaints();renderClues();updateStore();
  $('newNotice').classList.toggle('odd',s.odd>0&&!seventhDayNormal());
@@ -650,7 +650,7 @@ function render(){
    const good=i===0?v>0:v<0,bad=i===0?v<0:v>0,sign=v>0?'+':'';
    return '<span class="effect-chip '+(good?'good':bad?'bad':'flat')+'" aria-label="'+names[i]+' '+sign+v+'"><span class="effect-symbol" aria-hidden="true">'+symbols[i]+'</span>'+sign+v+'</span>';
   }).join('');
-  const note=a.kind==='odd'?'🌙 閉店後売上 ＋'+(a.after||0)+'万円':a.id==='idle'?'新しい対策なし':a.repeat&&previous>=2?'繰返しによる改善効果減少':'';
+  const note=a.kind==='odd'?'🌙 翌朝のご意見に変化があるかもしれません':a.id==='idle'?'新しい対策なし':a.repeat&&previous>=2?'繰返しによる改善効果減少':'';
   b.innerHTML='<div class="choice-title"><span class="choice-icon" aria-hidden="true">'+iconFor(a)+'</span><b>'+a.name+'</b></div><small>'+a.desc+'</small><div class="effect-line" aria-label="翌営業日の効果">'+chips+'</div>'+(note?'<div class="action-note">'+note+'</div>':'');
   b.onclick=()=>play(a.id);$('actions').append(b);
  });
@@ -708,8 +708,8 @@ function play(id){
  if(!s.odd)lines.push('本部速報：本日の売上 '+sales+'万円');
  lines.forEach(line=>{const p=document.createElement('p');p.textContent=line;$('dailyReport').append(p)});
  if(s.odd&&!seventhDayNormal()){const p=document.createElement('p');p.className='scenario';
- p.textContent='異常指標：閉店後売上'+s.afterSales+'万円／未退店客'+s.remaining+'名／閉店許可 '+s.permit;
- $('dailyReport').append(p)}
+  p.textContent='差出人不明のご意見：'+(s.odd>=3?10:s.odd===2?3:1)+'件。閉店後にも受付が続いています。';
+  $('dailyReport').append(p)}
  $('next').textContent=s.finish?'最終報告を見る':s.day===7?'7日目の閉店処理へ':'翌営業日へ';
  $('overlay').classList.remove('hidden');s.needsAdvance=true;mood();persist();
 }
@@ -719,7 +719,7 @@ function v09CompleteJobs(day){
   if(j.kind==='odd'){
    s.odd++;change(j.delta||[0,0,0,0]);s.attraction=v09Clamp(s.attraction+(j.attraction||0),0,10);s.afterSales+=j.after||0;s.oddGain+=j.after||0;s.remaining+=j.remain||0;
    s.permit=s.odd===1?'要確認':s.odd===2?'保留':'不許可';
-   s.news=s.odd===1?'裏手の古い社にお参りをした記録はありません。それでも来店客が増えました。':s.odd===2?'閉店後、防犯映像に映らない客への会計が続いていました。':'売れ残った生肉を社に供えました。翌朝、包装紙だけが0番レジに戻っていました。';
+   s.news=s.odd===1?'昨日、裏手の古い社で手を合わせました。翌朝、お礼のご意見が差出人不明で届きました。':s.odd===2?'閉店後、誰もいない店内に来客へのお礼が3件届きました。':'売れ残った生肉を社に供えました。翌朝、空の包装と同じ文章のご意見が10件届いていました。';
   }else{
    const before=[...s.vals];change(j.delta||[0,0,0,0]);s.attraction=v09Clamp(s.attraction+(j.attraction||0),0,10);
    recordSideEffects(j.id,before,day);s.visuals.push({id:j.id,day});s.appliedToday.push({id:j.id,name:j.name,delta:j.delta||[0,0,0,0]});
@@ -748,13 +748,14 @@ function v11OpenTransition(before){
   $('transitionProgress').append(tick);
  }
  if(strange){
-  const messages={1:['古い社へのお参りが済みました','なぜか、昨夜より売上が増えています。'],2:['閉店後の会計が始まりました','誰もいないはずの売場で、レジの音だけが続いています。'],3:['お供え物が、受け取られました','売れ残った生肉を供えた翌朝、空の包装だけが0番レジに置かれていました。']};
-  const msg=level>before.odd?messages[Math.min(3,level)]:['閉店後の取引が続いています','新たな儀式をしていない夜にも、誰もいない店内のレジが動いています。'];
+  const messages={1:['古い社へのお参りが済みました','昨日、自分の足で社へ行き、手を合わせました。今朝、差出人不明のご意見が1件届いています。'],2:['閉店後にも、お客様からの声が','客がいない時間も会計を続けた翌朝、差出人の分からないご意見が3件届きました。'],3:['お供え物が、受け取られました','売れ残った生肉を社に供えた翌朝、空の包装が戻ってきました。同じ文章のご意見が10件届いています。']};
+  const msg=level>before.odd?messages[Math.min(3,level)]:['今日も、同じご意見が届きました','儀式をしていない日にも、差出人不明の投稿は途切れません。'];
   $('transitionHeadline').textContent=msg[0];$('transitionSubtitle').textContent=msg[1];
-  $('transitionScoreLabel').textContent='閉店後の記録された売上';
-  $('transitionScore').textContent=(oddDelta>0?'＋'+oddDelta+'万円':after.afterSales+'万円');
-  $('transitionTotal').textContent='未退店客 '+after.remaining+'名 ／ 閉店許可：'+after.permit;
-  $('transitionCaption').textContent='昨日までの記録と、一部の数値が一致しません。';
+  $('transitionScoreLabel').textContent='差出人不明のご意見';
+  const count=level>=3?10:level===2?3:1;
+  $('transitionScore').textContent=count+'件';
+  $('transitionTotal').textContent=level>=3?'10件すべて、同じ文章で届きました。':level===2?'投稿者名は、受付システムに登録されていません。':'返信先の情報が見つかりません。';
+  $('transitionCaption').textContent='今日の「お客様の声」を確認してください。';
  }else if(masked){
   $('transitionHeadline').textContent='営業データを復元しました';
   $('transitionSubtitle').textContent='前日の閉店記録は正常に処理されました。';
@@ -773,9 +774,8 @@ function v11OpenTransition(before){
  const changes=[];
  if(masked)changes.push({text:'業務状態：正常',tone:'neutral'});
  else if(strange){
-  changes.push({text:'閉店後売上 '+after.afterSales+'万円',tone:'worse'});
-  changes.push({text:'未退店客 '+after.remaining+'名',tone:'worse'});
-  changes.push({text:'閉店許可：'+after.permit,tone:'worse'});
+  changes.push({text:'差出人不明 '+(level>=3?10:level===2?3:1)+'件',tone:'worse'});
+  changes.push({text:level>=3?'同じ文章が10件':level===2?'閉店後のご意見':'裏手の古い社からの返信',tone:'worse'});
  }else{
   const attr=after.attraction-before.attraction;
   if(attr)changes.push({text:'集客力 '+(attr>0?'＋':'−')+Math.abs(attr),tone:attr>0?'better':'worse'});
