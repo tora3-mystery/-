@@ -79,6 +79,23 @@ test('public face post can match a previously seen student without revealing a n
   loaded.click('load');
   assert.deepEqual(Array.from(loaded.save.person.P017.socialMatches),['Photogram']);
 });
+test('an icon-only Photogram post never offers a face match', () => {
+  const h=toMonday();h.click('event',{eid:'E02'});h.click('finish-venue');
+  const screen=h.click('browse-sns',{platform:'Photogram'});
+  assert.match(screen,/音だけ先に公開しています/); // P040
+  assert.doesNotMatch(screen,/data-postid="S04"/);
+});
+test('a face match becomes a full identification only once the name is learned', () => {
+  const h=toMonday();h.click('event',{eid:'E01'});h.click('finish-venue');
+  h.click('browse-sns',{platform:'Photogram'});
+  h.click('start-sns-match',{postid:'S20'});
+  h.click('match-sns-person',{pid:'P017'});
+  const state=h.save;state.person.P017.introduced=true;
+  h.storage.set('s6-case-a-v03-auto',JSON.stringify(state));
+  h.click('load');h.click('notebook');h.click('open-person',{pid:'P017'});
+  assert.match(h.html,/斉藤咲/);
+  assert.match(h.html,/本人の名前を確認済み/);
+});
 test('unseen faces cannot be matched just by browsing SNS', () => {
   const h=toMonday();h.click('skip-day');
   const screen=h.click('browse-sns',{platform:'Photogram'});
@@ -89,10 +106,11 @@ test('unseen faces cannot be matched just by browsing SNS', () => {
 test('the owner of an anonymous post never receives a face avatar', () => {
   const h=toMonday();
   const s=h.save;
-  s.phase='sns';s.day=4;s.platform='Zitter';s.viewedPosts=['S10','S19'];
+  s.phase='sns';s.day=4;s.platform='Zitter';s.socialDate='2026-04-11';s.viewedPosts=['S10','S19'];
   h.storage.set('s6-case-a-v03-auto',JSON.stringify(s));
   h.click('load');
   assert.match(h.html,/匿名ユーザー/);
+  assert.match(h.html,/消したはずの下書きが残る/);
   assert.doesNotMatch(h.html,/data-postid="S19"/);
   assert.doesNotMatch(h.html,/assets\/faces\/p004.webp/);
 });
