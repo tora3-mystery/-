@@ -99,11 +99,48 @@ header{display:flex;gap:16px;justify-content:space-between;align-items:center;pa
 .map.terrainGrid .site.plot.selected{border-color:#67449e!important;background:#f5eeffb8!important;box-shadow:0 0 0 2px #fff9!important}
 .map.terrainGrid .site.plot.closed{background:#edf0ea77!important}
 .map.terrainGrid .site.plot:not(.selected):hover{background:#ffffff24!important}
+
+/* Compact five-column map on phones: one name line plus one action badge.
+   Evolution titles remain available in the selected facility details. */
+@media(max-width:600px){
+ .map.terrainGrid .site.plot{
+  min-width:0;max-width:100%;width:100%;height:100%;overflow:hidden;
+  justify-content:center;gap:1px;padding:2px 1px;transform:none;
+ }
+ .map.terrainGrid .site.plot .emoji{
+  flex:none;width:100%;height:clamp(27px,9vw,39px);min-height:0;
+ }
+ .map.terrainGrid .site.plot .v1Sprite{
+  width:min(100%,40px);height:clamp(27px,9vw,39px);
+ }
+ .map.terrainGrid .site.plot .siteName{
+  flex:none;display:block;width:100%;max-width:100%;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  font-size:clamp(8px,2.1vw,10px);line-height:1.25;
+  padding:1px 2px;border-radius:3px;
+ }
+ .map.terrainGrid .site.plot .newStage{display:none!important}
+ .map.terrainGrid .site.plot .marker{display:none!important}
+ .map.terrainGrid .site.plot.eligible .marker,
+ .map.terrainGrid .site.plot.closed .marker{
+  display:block!important;flex:none;max-width:100%;width:max-content;
+  box-sizing:border-box;overflow:hidden;white-space:nowrap;
+  font-size:clamp(8px,2.1vw,10px);line-height:1.2;
+  padding:2px 2px;margin:0;
+ }
+ .map.terrainGrid .site.plot.selected{border-width:2px!important}
+}
+@media(max-width:370px){
+ .map.terrainGrid .site.plot .emoji,
+ .map.terrainGrid .site.plot .v1Sprite{height:clamp(24px,8.4vw,30px)}
+ .map.terrainGrid .site.plot.eligible .marker,
+ .map.terrainGrid .site.plot.closed .marker{padding:1px 1px}
+}
 </style>
 </head>
 <body>
 <div class="shell">
-<header><div><div class="kicker">短編UIゲーム実験室 / α TEST</div><div class="brand">この村の評価をお願いします。</div><div class="sub">V1｜この村の評価をお願いします。・v0.6.26 α ｜ 更新：2026-10-28 00:15 JST</div></div><div class="actions"><button id="helpBtn" class="btn" type="button">あそびかた</button><button id="soundBtn" class="btn sound" type="button" aria-pressed="false">♪ OFF</button><button id="resetBtn" class="btn" type="button">新しい村</button></div></header>
+<header><div><div class="kicker">短編UIゲーム実験室 / α TEST</div><div class="brand">この村の評価をお願いします。</div><div class="sub">V1｜この村の評価をお願いします。・v0.6.27 α ｜ 更新：2026-10-28 02:00 JST</div></div><div class="actions"><button id="helpBtn" class="btn" type="button">あそびかた</button><button id="soundBtn" class="btn sound" type="button" aria-pressed="false">♪ OFF</button><button id="resetBtn" class="btn" type="button">新しい村</button></div></header>
 <main class="layout">
 <section class="panel"><div class="pad"><div class="villageHeader"><div><div class="kicker" id="period">2027年4月</div><div class="villageName" id="villageName">読み込み中...</div></div></div><div class="metadata" id="profile"></div><div id="arrivalNote" class="arrivalNote"></div><div class="stats" id="stats"></div><div id="map" class="map" aria-label="村の地図"></div><div class="mapLegend"><span>紫ラベル：今月訪問可</span><span>紫枠：選択中</span><span>灰色：閉業</span></div><div class="news" id="news"></div><div class="residentVoices" id="residentVoices"></div><div class="smallHeading">村の歩み</div><div id="history" class="history"></div><details class="reviewArchive"><summary>あなたの口コミ一覧（<span id="reviewCount">0</span>／12件）</summary><div id="reviewArchiveList"></div></details></div></section>
 <section class="panel"><div class="sideTop"><div class="villageHeader"><div><div class="smallHeading" style="margin:0">今月の訪問先</div><div class="sectionTitle" id="monthTitle"></div></div><div id="monthCount" class="yearCount"></div></div><div class="progress"><span id="progressBar" style="width:0"></span></div><div class="tiny" style="margin-top:6px" id="candidatesNote"></div></div><div class="pad" id="detail"></div></section>
@@ -111,7 +148,7 @@ header{display:flex;gap:16px;justify-content:space-between;align-items:center;pa
 </div><div id="overlay" class="overlay" role="presentation"><div class="modal" id="modal" role="dialog" aria-modal="true" aria-label="ゲームの案内"></div></div>
 <script>
 (function(){'use strict';
-const VERSION='0.6.26-alpha';const STORE='village-review-prototype-v010';
+const VERSION='0.6.27-alpha';const STORE='village-review-prototype-v010';
 const $=id=>document.getElementById(id);
 const V1_ART={ready:false,byId:new Map(),reason:'not loaded'};
 function v1Url(id){const record=V1_ART.ready?V1_ART.byId.get(id):null,u=record&&(record.webp||record.png);return typeof u==='string'&&/^assets\/[a-z0-9_\/-]+\.(webp|png)$/i.test(u)?u:null}
@@ -254,7 +291,7 @@ let S=null;let chosen=null;let currentStars=4;let selectedFact=0;let sound=false
 function rand(){let t=S.rng|0;t^=t<<13;t^=t>>>17;t^=t<<5;S.rng=t>>>0;return (S.rng>>>0)/4294967296}
 function ri(a,b){return Math.floor(a+rand()*(b-a+1))}function pick(a){return a[Math.floor(rand()*a.length)]}function shuffle(a){let b=a.slice();for(let i=b.length-1;i>0;i--){let j=ri(0,i),tmp=b[i];b[i]=b[j];b[j]=tmp}return b}
 function save(){try{localStorage.setItem(STORE,JSON.stringify(S))}catch(e){}}
-function load(){try{const x=JSON.parse(localStorage.getItem(STORE));if(x && [VERSION,'0.6.25-alpha','0.6.24-alpha','0.6.23-alpha','0.6.22-alpha','0.6.21-alpha','0.6.20-alpha','0.6.19-alpha','0.6.18-alpha','0.6.17-alpha','0.6.16-alpha','0.6.15-alpha','0.6.14-alpha','0.6.13-alpha','0.6.12-alpha','0.6.11-alpha','0.6.10-alpha','0.6.9-alpha','0.6.8-alpha','0.6.7-alpha','0.6.6-alpha','0.6.5-alpha','0.6.4-alpha','0.6.3-alpha','0.6.2-alpha','0.6.1-alpha','0.6.0-alpha','0.5.4-alpha','0.5.3-alpha','0.5.2-alpha','0.5.1-alpha','0.5.0-alpha','0.4.9-alpha','0.4.8-alpha','0.4.7-alpha','0.4.6-alpha','0.4.5-alpha','0.4.4-alpha','0.4.3-alpha','0.4.2-alpha','0.4.1-alpha','0.4.0-alpha','0.3.4-alpha','0.3.3-alpha','0.3.2-alpha','0.3.1-alpha','0.3.0-alpha','0.2.0-alpha','0.1.1-alpha','0.1.0-alpha'].includes(x.version) && Array.isArray(x.facilities) && x.facilities.length){S=x;S.version=VERSION;S.reviewHistory=S.reviewHistory||[];S.reforms=S.reforms||{};S.evolutionImpact=S.evolutionImpact||{visitors:0,economy:0,quiet:0};S.completed=S.month>=12;S.annualDue=S.annualDue||false;S.facilities.forEach(f=>{if(f.name===DEFS[f.kind]?.name)f.name=facilityName(f.kind,f.id,true);if(!f.mode)f.mode='boost';if(f.stageFocus===undefined)f.stageFocus=f.stage>0?f.focus:null;if(!f.stageMode)f.stageMode=f.mode;if(!f.improvedFacets)f.improvedFacets={};if(!f.routeScores)f.routeScores={};if(!f.directionScores)f.directionScores={};if(!f.secondDirectionScores)f.secondDirectionScores={};if(f.firstDirection===undefined)f.firstDirection=null;if(f.secondDirection===undefined)f.secondDirection=null;if(f.evolutionReviews===undefined)f.evolutionReviews=0;if(!f.observedFacts){f.observedFacts={};if(f.improvedFacets){for(let i=0;i<DEFS[f.kind].facts.length;i++){const tag=DEFS[f.kind].facts[i][1];if(Object.prototype.hasOwnProperty.call(f.improvedFacets,tag)&&DEFS[f.kind].facts.filter(row=>row[1]===tag).length===1)f.observedFacts[i]=!!f.improvedFacets[tag]}}}if(!f.revisedFacts)f.revisedFacts={};if(!f.aspectLevels)f.aspectLevels={};if(f.lastPolarity===undefined)f.lastPolarity=null;if(!f.visualRoute&&f.stage>=2){const i=DEFS[f.kind].facts.findIndex(v=>v[1]===f.stageFocus);f.visualRoute=(ROUTE_BY_FACT[f.kind]||[])[Math.max(0,i)]?.[f.stageMode==='reform'?1:0]||preferredRoute(f)}});// Preserve the meaning of older coastal reviews when resuming pre-sea-fix saves.
+function load(){try{const x=JSON.parse(localStorage.getItem(STORE));if(x && [VERSION,'0.6.26-alpha','0.6.25-alpha','0.6.24-alpha','0.6.23-alpha','0.6.22-alpha','0.6.21-alpha','0.6.20-alpha','0.6.19-alpha','0.6.18-alpha','0.6.17-alpha','0.6.16-alpha','0.6.15-alpha','0.6.14-alpha','0.6.13-alpha','0.6.12-alpha','0.6.11-alpha','0.6.10-alpha','0.6.9-alpha','0.6.8-alpha','0.6.7-alpha','0.6.6-alpha','0.6.5-alpha','0.6.4-alpha','0.6.3-alpha','0.6.2-alpha','0.6.1-alpha','0.6.0-alpha','0.5.4-alpha','0.5.3-alpha','0.5.2-alpha','0.5.1-alpha','0.5.0-alpha','0.4.9-alpha','0.4.8-alpha','0.4.7-alpha','0.4.6-alpha','0.4.5-alpha','0.4.4-alpha','0.4.3-alpha','0.4.2-alpha','0.4.1-alpha','0.4.0-alpha','0.3.4-alpha','0.3.3-alpha','0.3.2-alpha','0.3.1-alpha','0.3.0-alpha','0.2.0-alpha','0.1.1-alpha','0.1.0-alpha'].includes(x.version) && Array.isArray(x.facilities) && x.facilities.length){S=x;S.version=VERSION;S.reviewHistory=S.reviewHistory||[];S.reforms=S.reforms||{};S.evolutionImpact=S.evolutionImpact||{visitors:0,economy:0,quiet:0};S.completed=S.month>=12;S.annualDue=S.annualDue||false;S.facilities.forEach(f=>{if(f.name===DEFS[f.kind]?.name)f.name=facilityName(f.kind,f.id,true);if(!f.mode)f.mode='boost';if(f.stageFocus===undefined)f.stageFocus=f.stage>0?f.focus:null;if(!f.stageMode)f.stageMode=f.mode;if(!f.improvedFacets)f.improvedFacets={};if(!f.routeScores)f.routeScores={};if(!f.directionScores)f.directionScores={};if(!f.secondDirectionScores)f.secondDirectionScores={};if(f.firstDirection===undefined)f.firstDirection=null;if(f.secondDirection===undefined)f.secondDirection=null;if(f.evolutionReviews===undefined)f.evolutionReviews=0;if(!f.observedFacts){f.observedFacts={};if(f.improvedFacets){for(let i=0;i<DEFS[f.kind].facts.length;i++){const tag=DEFS[f.kind].facts[i][1];if(Object.prototype.hasOwnProperty.call(f.improvedFacets,tag)&&DEFS[f.kind].facts.filter(row=>row[1]===tag).length===1)f.observedFacts[i]=!!f.improvedFacets[tag]}}}if(!f.revisedFacts)f.revisedFacts={};if(!f.aspectLevels)f.aspectLevels={};if(f.lastPolarity===undefined)f.lastPolarity=null;if(!f.visualRoute&&f.stage>=2){const i=DEFS[f.kind].facts.findIndex(v=>v[1]===f.stageFocus);f.visualRoute=(ROUTE_BY_FACT[f.kind]||[])[Math.max(0,i)]?.[f.stageMode==='reform'?1:0]||preferredRoute(f)}});// Preserve the meaning of older coastal reviews when resuming pre-sea-fix saves.
  S.facilities.forEach(f=>{
   if(f.coastalStage!=null||f.stage<1||f.stageFocus!=='sea'||!['coast','island'].includes(S.terrain)||!['shrine','scenic','inn','lodge'].includes(f.kind))return;
   const prior=(S.reviewHistory||[]).slice().reverse().find(r=>r.id===f.id&&r.tag==='sea');
