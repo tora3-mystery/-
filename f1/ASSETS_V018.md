@@ -74,6 +74,7 @@
 
 - `main-checkout-aisle-moderate.webp`、`main-checkout-stock-moderate.webp`、`main-checkout-noise-moderate.webp` は、390px表示では中度のレジ列がP2 `main-checkout-moderate.webp` ほど明瞭でない。複合写真では通路・欠品・放送反応の副状態は見える。レジ待ちの厳密な段階判断は、P2の単独写真またはゲーム内数値を併用する。
 - 放送状態の軽度・中度・深刻は写真だけで音の強さを伝えられない。客の反応は補助情報として扱い、ゲーム内数値・状態表示を正とする。
+- 部分拡大では、P3の `main-aisle-mild.webp`、`main-aisle-moderate.webp`、`main-aisle-severe.webp`、`main-aisle-stock-moderate.webp`、`main-checkout-aisle-moderate.webp`、`main-checkout-noise-moderate.webp`、`main-checkout-noise-severe.webp`、`main-checkout-stock-moderate.webp`、`main-checkout-stock-severe.webp`、`main-noise-mild.webp`、`main-noise-moderate.webp`、`main-stock-moderate.webp`、`main-stock-severe.webp` の左上黒板に、生成由来の判読不能な白い文字模様が残る。390px表示では小さいが、無文字指定から外れる残課題。
 - これは写真素材の静的・390px幅での目視検品であり、ゲーム画面への実装、実機Safari表示、ユーザー評価は含まない。
 
 ## 編集範囲
