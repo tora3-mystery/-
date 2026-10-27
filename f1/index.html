@@ -475,8 +475,8 @@ let discoveryFlashIds=[];
 function focusReview(ticket,segment){
  if(s.finish||s.needsAdvance||s.day>=8)return false;
  const previouslyAvailable=new Set(available().map(a=>a.id));
- const key=ticket.id+':'+segment.start,chosen=focusedToday();
- if(!focusKnown(key)&&!chosen.includes(key)){
+ const key=ticket.id+':'+segment.start,chosen=focusedToday(),firstDiscovery=!focusKnown(key);
+ if(firstDiscovery&&!chosen.includes(key)){
    if(chosen.length>=3)return false;
    s.focusKeys=[...chosen,key];s.focusDay=s.day;
    if(!Array.isArray(s.focusHistory))s.focusHistory=[];
@@ -486,7 +486,7 @@ function focusReview(ticket,segment){
  for(const id of segment.ids)if(!s.discoveredActions.includes(id))s.discoveredActions.push(id);
  // One thematically related, seeded extra policy may be suggested each day.
  // The core text-to-policy mapping and both horror investigations stay deterministic.
- if(!focusKnown(key)&&ticket.metric>=0&&segment.ids.length>=2&&!s.randomBonusDays?.includes(s.day)){
+ if(firstDiscovery&&ticket.metric>=0&&segment.ids.length>=2&&!s.randomBonusDays?.includes(s.day)){
    const pool={0:['ticket','display','shift','self'],1:['lane','compact','floorcheck','cartSigns'],
      2:['receive','forecast','shelfcheck','farmer'],3:['quiet','vibration','rest','quietNotices']}[ticket.metric]||[];
    const candidates=pool.filter(id=>!s.discoveredActions.includes(id)&&options.some(a=>a.id===id&&s.day>=(a.min||1)&&s.day<=(a.max||7)));
@@ -516,7 +516,7 @@ function complaintNode(ticket){
    note.textContent='「'+clean.replace(/終わりはありますか。?$/,'');
    const ask=document.createElement('button');ask.className='complaint-focus';ask.type='button';
    ask.textContent='終わりはありますか';ask.setAttribute('aria-label','この文章を調べる：終わりはありますか');
-   ask.onclick=()=>{if(s.day8Revealed)return;s.day8Revealed=true;persist();renderDay8()};
+   ask.onclick=()=>{if(s.day8Revealed)return;s.day8Revealed=true;persist();renderDay8(true)};
    note.append(ask);
    const close=document.createElement('span');close.textContent='。」';note.append(close);
  }
@@ -760,7 +760,7 @@ function beginDay8(){
  s.day=8;s.day8Active=true;s.day8Stage=0;s.day8OpeningPending=true;s.permit='不許可';
  persist();renderDay8();showDay8Opening();
 }
-function renderDay8(){
+function renderDay8(preserveScroll=false){
  for(const id of ['game','day0Panel','finalChoice','ending','intro'])$(id).classList.add('hidden');
  $('day8Panel').classList.remove('hidden');$('restart').classList.remove('hidden');$('help').classList.remove('hidden');
  mood();
@@ -801,7 +801,7 @@ function renderDay8(){
  v09AttachFallback($('day8Image'),'scene-day8-strange.webp');
  $('day8Image').alt='お客様が見当たらない店内';
  $('day8Feedback').replaceChildren(...ordinaryUnusualComplaints().map(complaintNode));
- scrollTo(0,0);
+ if(!preserveScroll)scrollTo(0,0);
 }
 function advanceDay8(){
  if(!s.day8Active||s.finish||s.day8OpeningPending||!s.day8Revealed)return;
