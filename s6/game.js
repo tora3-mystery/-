@@ -5,7 +5,7 @@
   const SAVE_KEY = 's6-case-a-v03-save';
   const AUTO_KEY = 's6-case-a-v03-auto';
   const META_KEY = 's6-case-a-v03-meta';
-  const BUILD_AT = '2026-10-27 17:04 JST';
+  const BUILD_AT = '2026-10-27 17:16 JST';
   const DAYS = [
     ['2026-04-06','4月6日 月曜'],['2026-04-07','4月7日 火曜'],
     ['2026-04-08','4月8日 水曜'],['2026-04-09','4月9日 木曜'],
@@ -134,6 +134,24 @@
 
   // C1のアイコン＋短い言葉を参考に、相手の観察可能な反応だけを表現する。
   // 推理の証拠、好感度表示、フラグ解放条件には使用しない。
+
+  // 楽器／学年に基づく、短い音楽談義。職務や隠し真相を推測させない日常会話。
+  const personMusicCue=pid=>{
+    const person=pmap[pid];
+    if(person.year==='1')return '自分もまだ、どこで音楽をやるか考えているところなんだ。';
+    const notes={
+      'Vo/Gt':'弾き語りだと、最初の一音が大事なんだよね。',
+      'Vo':'歌いやすい高さを探すだけでも、曲の印象は変わるよ。',
+      'Gt':'ギターの音色って、弾く人でだいぶ違うんだ。',
+      'Ba':'ベースが合うと、ほかの楽器も気持ちよく鳴るんだ。',
+      'Dr':'最初のテンポを合わせると、みんな演奏しやすいよ。',
+      'Key':'鍵盤は音色を切り替えるだけでも雰囲気が変わるよ。',
+      'DTM':'まだ途中のデモでも、聴いてもらうと発見があるよ。',
+      'Perc':'小さな打楽器の音が、一曲のリズムを支えることもあるよ。',
+      'Sax':'一音を伸ばすところにも、演奏する人の癖が出るんだ。'
+    };
+    return notes[person.part]||'好きな音を見つけていけるといいね。';
+  };
   const REACTIONS={
     welcome:{icon:'😊',label:'にこやか'},
     glad:{icon:'😄',label:'嬉しそう'},
@@ -145,7 +163,8 @@
     calm:{icon:'😌',label:'穏やか'},
     accept:{icon:'😄',label:'快諾'},
     waiting:{icon:'🤔',label:'返事を検討中'},
-    awkward:{icon:'😶',label:'困った様子'}
+    awkward:{icon:'😶',label:'困った様子'},
+    cautious:{icon:'😌',label:'慎重な様子'}
   };
   const storeReaction=(pid,key)=>{
     if(!REACTIONS[key]||!S.activeGroup||!pmap[pid])return;
@@ -509,21 +528,27 @@
       let mood='shy';
       p.met=true;p.affinity=Math.min(8,p.affinity+2);p.lastInteraction='approach';
       S.participationHistory??=[];S.participationHistory.push({group_id:S.activeGroup,action:'approach',person_id:id});S.groupActions[S.activeGroup]='approach';
-      const style=pmap[id].social_style||'quiet';
+      const style=pmap[id].social_style||'quiet',cue=personMusicCue(id);
       const introduces=style==='open'||(style==='quiet'&&prior>=1)||(style==='reserved'&&prior>=2);
       if(prior>0&&p.introduced){
-        mood='familiar';
-        S.groupResult='「また会ったね」と'+pmap[id].name+'が声をかけてくれた。前に話したことから、音楽の話がもう少し続いた。';
-      }else if(introduces){
-        p.introduced=true;mood=style==='open'?'welcome':'glad';
+        mood=style==='reserved'?'calm':'familiar';
         S.groupResult=style==='open'
-          ?'「見学に来たの？　'+pmap[id].name+'です。よかったら話そう」と向こうから声をかけてくれた。'
-          :'「初めまして。'+pmap[id].name+'です」と自己紹介してくれた。お互いの好きな音楽を少し話した。';
+          ?'「また来てくれたんだ！」と'+pmap[id].name+'が笑う。「'+cue+'」'
+          :style==='quiet'
+            ?pmap[id].name+'がこちらに気づき、小さく手を振った。「この前の話の続き、する？」'
+            :pmap[id].name+'がうなずいた。「この前、話したよね」と短く笑う。';
+      }else if(introduces){
+        p.introduced=true;mood=style==='open'?'welcome':style==='reserved'?'calm':'glad';
+        S.groupResult=style==='open'
+          ?'「見学に来たの？　'+pmap[id].name+'です。'+cue+'」と気さくに話しかけてくれた。'
+          :style==='quiet'
+            ?'「'+pmap[id].name+'です」と少し言葉を選んでから、「'+cue+'」と続けた。'
+            :'「'+pmap[id].name+'です」と名乗って、落ち着いた声で「'+cue+'」と話してくれた。';
       }else{
         mood=style==='reserved'?'busy':'shy';
         S.groupResult=style==='reserved'
-          ?'「初めまして。今は準備で手が離せなくて」と短い返事。名前は聞けなかったが、次に会えば覚えていてくれそうだ。'
-          :'軽く会釈してくれたものの、ちょうど演奏中で長くは話せない。名前を聞くのは次の機会になった。';
+          ?'「今は準備で手が離せなくて」と短い返事。名前は聞けなかったが、会釈を返してくれた。'
+          :'少し照れたように会釈してくれた。ちょうど演奏中で長くは話せず、名前は次の機会になった。';
       }
       storeReaction(id,mood);S.groupResults??={};S.groupResults[S.activeGroup]=S.groupResult;S.phase='group';saveAndRender();return;
     }
@@ -532,7 +557,21 @@
     if(act==='back-group'){S.phase='group';saveAndRender();return}
     if(act==='ask-person'){
       const q=D.questions.find(q=>q.group_id===S.activeGroup&&q.target_id===id);if(!q)return;
-      if(S.groupActions[S.activeGroup])return;const respondent=ps(id);respondent.met=true;respondent.clearPortrait=true;respondent.affinity=Math.min(8,respondent.affinity+1);if(q.answer.includes(pmap[id].name))respondent.introduced=true;respondent.lastInteraction='question';storeReaction(id,(pmap[id].social_style==='reserved')?'calm':(pmap[id].social_style==='quiet')?'thoughtful':'interested');S.participationHistory??=[];S.participationHistory.push({group_id:S.activeGroup,action:'question',person_id:id});S.groupActions[S.activeGroup]='question';S.groupResult=q.answer;S.groupResults??={};S.groupResults[S.activeGroup]=S.groupResult;
+      if(S.groupActions[S.activeGroup])return;
+      const respondent=ps(id),style=pmap[id].social_style||'quiet';
+      const musicTopic=q.question.includes('音楽')||q.question.includes('アーティスト');
+      respondent.met=true;respondent.clearPortrait=true;respondent.affinity=Math.min(8,respondent.affinity+1);
+      // 氏名は自己紹介を依頼したときにだけ新たに判明する。
+      if(q.question==='自己紹介してもらってもいい？'&&q.answer.includes(pmap[id].name))respondent.introduced=true;
+      respondent.lastInteraction='question';
+      const mood=musicTopic?'interested':style==='reserved'?'calm':style==='quiet'?'thoughtful':'interested';
+      const preface=musicTopic
+        ?style==='reserved'?'好きな音楽の話になると、少し声が弾んだ。 ':style==='quiet'?'曲名を思い浮かべてから、ゆっくり答えてくれた。 ':'身を乗り出して、楽しそうに答えてくれた。 '
+        :style==='reserved'?'一度考えてから、端的に答えてくれた。 ':style==='quiet'?'少し考えて、言葉を選びながら答えてくれた。 ':'すぐに答えが返ってきた。 ';
+      storeReaction(id,mood);
+      S.participationHistory??=[];S.participationHistory.push({group_id:S.activeGroup,action:'question',person_id:id});
+      S.groupActions[S.activeGroup]='question';S.groupResult=preface+q.answer;
+      S.groupResults??={};S.groupResults[S.activeGroup]=S.groupResult;
       S.phase='group';saveAndRender();return;
     }
     if(act==='contact-person'){
@@ -547,16 +586,16 @@
       let mood='waiting';
       if(p.contacts.includes(platform)){
         mood='familiar';S.groupResult=intro+'既に'+platform+'で連絡できる。';
-      }else if(policy==='after_week'&&p.affinity<3){mood='awkward';S.groupResult=intro+'「もう少し話してから」と、今回は交換を断られた。';
-      }else if(policy==='next_day'&&p.affinity<1){mood='awkward';S.groupResult=intro+'「また話す機会があったら」と、今日は連絡先を渡してもらえなかった。';
+      }else if(policy==='after_week'&&p.affinity<3){mood='cautious';S.groupResult=intro+'「もう少し話してからにしよう」と穏やかに断られた。';
+      }else if(policy==='next_day'&&p.affinity<1){mood=pmap[id].social_style==='reserved'?'cautious':'awkward';S.groupResult=intro+'「また話す機会があったら」と、今日は連絡先を渡してもらえなかった。';
       }else if(policy==='next_day'||policy==='after_week'){
         mood='waiting';p.contact_pending=true;if(!p.pendingContacts.includes(platform))p.pendingContacts.push(platform);
-        S.groupResult=intro+'「いいよ、あとで承認するね」と返事があった。';
+        S.groupResult=intro+(pmap[id].social_style==='open'?'「いいよ、あとで承認するね！」と明るい返事。':pmap[id].social_style==='reserved'?'「後で確認しておくね」と落ち着いた返事。':'「あとで確認してみるね」と小さくうなずいた。');
       }else{
         mood='accept';if(!p.contacts.includes(platform))p.contacts.push(platform);
         p.contact_exchanged=true;p.clearPortrait=true;p.introduced=true;
         if(platform==='TINE'){S.contactSince??={};S.contactSince[id]=currentDate()}
-        S.groupResult=intro+' '+platform+'の交換を了承してもらえた。表示名「'+a.display_name+'」を確認した。';
+        S.groupResult=intro+(pmap[id].social_style==='open'?'「いいよ、つながろう！」と笑ってくれた。':pmap[id].social_style==='reserved'?'「大丈夫だよ」と連絡先を見せてくれた。':'「うん、いいよ」とうなずいてくれた。')+' '+platform+'の表示名「'+a.display_name+'」を確認した。';
       }
       storeReaction(id,mood);S.groupResults??={};S.groupResults[S.activeGroup]=S.groupResult;
       S.phase='group';saveAndRender();return;
