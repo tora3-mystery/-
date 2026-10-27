@@ -246,7 +246,7 @@
     const originalPosition=ORDER.indexOf(old.i);
     const sourceScene=SCENES[originalPosition];
     if(!sourceScene)throw new Error('Unknown legacy question '+old.i);
-    const q = Object.assign({}, old, {
+    let q = Object.assign({}, old, {
       index: position,
       dayIndex: Math.floor(position / 2),
       day: DAYS[Math.floor(position / 2)],
@@ -395,6 +395,10 @@
       q.context = '庄司「妻への贈り物に' + q.speechName + 'を考えていまして。少し予算が気になって……」';
     }
     applyProductScene(q);
+    if(opts.sideScenes?.[q.legacyIndex]) {
+      if(!root.N1SideQuestions)throw new Error('Incidental question bank unavailable');
+      q=root.N1SideQuestions.applyToQuestion(q,opts.sideScenes[q.legacyIndex]);
+    }
     guardPublic(q);
     return q;
   }
