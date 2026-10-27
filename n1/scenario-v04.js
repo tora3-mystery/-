@@ -39,8 +39,8 @@
     {name:'東京駅',event:'開業',year:1914,emoji:'🚉',source:'https://www.jreast.co.jp/estation/station/info.aspx?StationCd=1039',detail:'東京駅の開業は1914年。現存する駅舎の復原工事が完了した年ではない。',clue:'丸の内側の赤レンガ駅舎。大正時代に営業を始めた駅だ。'},
     {name:'国会議事堂',event:'竣工',year:1936,emoji:'🏛️',source:'https://www.sangiin.go.jp/japanese/goiken_gositumon/faq/index.html',detail:'国会議事堂は1936年に竣工。着工年ではない。',clue:'現在の国会議事堂。昭和初期に完成した建物だ。'},
     {name:'東京タワー',event:'竣工',year:1958,emoji:'🗼',source:'https://www.japantowers.jp/tokyo_tower/',detail:'東京タワーは1958年に竣工。',clue:'戦後の高度成長を象徴する赤白の電波塔だ。'},
-    {name:'東京スカイツリー',event:'開業',year:2012,emoji:'🗼',source:'https://www.tokyo-skytree.jp/about/timeline/',detail:'東京スカイツリータウンのグランドオープンは2012年5月22日。',clue:'高さ634m。東日本大震災の翌年に開業した新しい電波塔だ。'},
-    {name:'東京ドーム',event:'開場',year:1988,emoji:'🏟️',source:'https://www.tokyo-dome.jp/company/history/',detail:'東京ドームは1988年3月17日に開場した。',clue:'日本初の全天候型多目的スタジアム。昭和の終わりに開場した。'},
+    {name:'東京スカイツリー',event:'開業',year:2012,emoji:'🗼',source:'https://www.tokyo-skytree.jp/about/timeline/',detail:'東京スカイツリータウンのグランドオープンは2012年5月22日。',clue:'高さ634m。21世紀に開業した比較的新しい電波塔だ。'},
+    {name:'東京ドーム',event:'開場',year:1988,emoji:'🏟️',source:'https://www.tokyo-dome.jp/company/history/',detail:'東京ドームは1988年3月17日に開場した。',clue:'日本初の全天候型多目的スタジアム。昭和後期に開場した。'},
     {name:'レインボーブリッジ',event:'開通',year:1993,emoji:'🌉',source:'https://www.shutoko.co.jp/activities/database/bridge/rainbow-bridge/',detail:'レインボーブリッジは1993年8月26日に開通した。',clue:'東京湾の吊橋。東京臨海副都心の開発が進んだ平成初期に開通した。'},
     {name:'横浜赤レンガ倉庫２号館',event:'竣工',year:1911,emoji:'🧱',source:'https://www.city.yokohama.lg.jp/kanko-bunka/minato/taikan/asobu/spot/red-renga/rekishi/history.html',detail:'横浜赤レンガ倉庫2号館は1911年に竣工。1号館は1913年なので混同しない。',clue:'横浜の新港ふ頭。商業施設としての再オープンよりずっと前に完成していた。'},
     {name:'京都駅ビル（現在の４代目）',event:'開業',year:1997,emoji:'🚉',source:'https://www.kyoto-station-building.co.jp/about/',detail:'京都駅ビルは1997年9月11日にグランドオープン。駅そのものの初代開業年ではない。',clue:'原広司設計の大規模な駅ビル。平成の半ばに新しい姿になった。'},
@@ -187,7 +187,7 @@
       q.cardType = 'history';
       if(Number.isInteger(opts.landmarkIndex)){
         const l=LANDMARKS_POOL[opts.landmarkIndex%LANDMARKS_POOL.length];
-        q.item=l.name+'（'+l.event+'年）';
+        q.item=l.name;
         q.truth=l.year;q.zone=[l.year,l.year];
         q.emoji=l.emoji;q.source=l.source;
         q.speech='これって何年に'+l.event+'したと思う？';
