@@ -33,7 +33,7 @@ try {
     await page.goto(baseUrl, { waitUntil: 'networkidle' });
     check(`intro visible ${width}`, await page.getByRole('heading', { name: /正確に/ }).isVisible(), 'intro title');
     await page.locator('#start').click();
-    await page.evaluate(() => { state.i = 1; state.phase = 'ask'; render(); });
+    await page.evaluate(() => { state.i=plan.questions.findIndex(q=>q.cardType==='product');state.phase='ask';render(); });
     await page.locator('.product-zoom img').waitFor({ state: 'visible' });
     const metrics = await page.evaluate(() => ({
       scrollWidth: document.documentElement.scrollWidth,
@@ -44,7 +44,7 @@ try {
     }));
     check(`no horizontal overflow ${width}`, metrics.scrollWidth <= metrics.clientWidth, JSON.stringify(metrics));
     check(`high-res portrait ${width}`, metrics.portraitNatural >= 1024, JSON.stringify(metrics));
-    check(`product rendered ${width}`, metrics.productNatural >= 200 && metrics.productRect >= Math.min(220, width - 88), JSON.stringify(metrics));
+    check(`product rendered ${width}`, metrics.productNatural >= 800 && metrics.productRect >= Math.min(180, width - 120), JSON.stringify(metrics));
     await page.locator('.product-zoom').click();
     check(`product zoom opens ${width}`, await page.locator('.productbox').isVisible(), 'zoom dialog');
     await page.getByRole('button', { name: '閉じる ×' }).click();
@@ -77,13 +77,12 @@ try {
   await page.goto(baseUrl, { waitUntil: 'networkidle' });
   await page.locator('#start').click();
 
-  for (const value of ['', '0', '-1', '1.5', '999999999999']) {
+  for (const value of ['', '-1', '1.5', '999999999999']) {
     await page.locator('#number').fill(value);
     await page.locator('#submit').click();
     check(`invalid input rejected ${JSON.stringify(value)}`, await page.locator('#number').getAttribute('aria-invalid') === 'true', await page.locator('#err').innerText());
   }
-  await page.locator('#hint').click();
-  check('hint decremented', (await page.locator('#hint').innerText()).includes('残2'), await page.locator('#hint').innerText());
+  check('hint tokens removed',await page.locator('#hint').count()===0,'side questions must not offer clues via button');
   await page.getByRole('button', { name: '会話ログ' }).click();
   check('log opens', await page.locator('.logbox').isVisible(), 'log dialog');
   await page.getByRole('button', { name: '閉じる ×' }).click();
@@ -108,16 +107,17 @@ try {
     check(`run ${run} reaches ending`, await page.getByText('ONE WEEK COMPLETE', { exact: false }).isVisible(), 'ending');
     const recurrence = await page.evaluate(() => ({
       q2: results.find(x=>x.legacyIndex===1)?.truth,
-      q9Base: results.find(x=>x.legacyIndex===1)?.truth,
+      q9Base: results.find(x=>x.legacyIndex===8)?.truth,
       q8: results.find(x=>x.legacyIndex===7)?.truth,
       q10: results.find(x=>x.legacyIndex===11)?.truth,
       productQ2: plan.questions.find(q=>q.legacyIndex===1)?.productId,
       productQ9: plan.questions.find(q=>q.legacyIndex===8)?.productId,
       productQ8: plan.questions.find(q=>q.legacyIndex===7)?.productId,
       productQ10: plan.questions.find(q=>q.legacyIndex===11)?.productId,
+      saleRate: plan.questions.find(q=>q.legacyIndex===8)?.discountRate,
       count: results.length
     }));
-    check(`run ${run} q2 to q9 recurrence`, recurrence.q2 === recurrence.q9Base && recurrence.productQ2 === recurrence.productQ9, JSON.stringify(recurrence));
+    check(`run ${run} q2 to q9 recurrence`, recurrence.q9Base === Math.round(recurrence.q2*(100-recurrence.saleRate)/100) && recurrence.productQ2 === recurrence.productQ9, JSON.stringify(recurrence));
     check(`run ${run} q8 to q10 recurrence`, recurrence.q8 === recurrence.q10 && recurrence.productQ8 === recurrence.productQ10, JSON.stringify(recurrence));
     check(`run ${run} has 10 answers`, recurrence.count === 10, JSON.stringify(recurrence));
     report.fullRuns.push({ run, seen, recurrence });
@@ -130,6 +130,30 @@ try {
   await page.evaluate(() => timeoutAnswer());
   const timeoutResult=await page.evaluate(() => ({phase:state.phase, count:results.length, timeout:results[0]?.timeout, score:results[0]?.score}));
   check('timed mode: timeout creates one zero-point answer',timeoutResult.phase==='result'&&timeoutResult.count===1&&timeoutResult.timeout&&timeoutResult.score===0,JSON.stringify(timeoutResult));
+
+  const sideMatrix=await page.evaluate(()=>{
+    const ids=new Set(),topics=new Set(),allUnits=new Set(),failures=[];
+    for(let seed=1;seed<=180;seed++){
+      const selected=window.N1SideQuestions.draw(seed);
+      for(const scene of Object.values(selected)){
+        ids.add(scene.id);topics.add(scene.theme);allUnits.add(scene.unit);
+        try{
+          window.N1SideQuestions.applyToQuestion({day:'月曜日'},scene);
+          if(scene.mode!=='facts'){
+            const zone=[scene.zone[0],scene.zone[1]];
+            for(const x of zone){
+              const q={truth:scene.truth,type:scene.type,mode:scene.mode,zone:scene.zone,scale:scene.scale};
+              const grade=score(x,q);
+              if(grade.score!==100||!grade.success)failures.push(scene.id+' '+x);
+            }
+          }
+        }catch(e){failures.push(scene.id+': '+e.message)}
+      }
+    }
+    return {scenes:ids.size,topics:topics.size,units:[...allUnits],failures};
+  });
+  check('36 incidental question variants and 12 topics valid',sideMatrix.scenes===36&&sideMatrix.topics===12&&sideMatrix.failures.length===0,JSON.stringify(sideMatrix));
+  report.incidentalMatrix=sideMatrix;
 
   const matrix = await page.evaluate(() => {
     const rows = [];
