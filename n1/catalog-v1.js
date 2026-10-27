@@ -74,6 +74,15 @@
   product("muji-lidded-mug-white-02181222","無印良品 ポリプロピレンふた付きマグカップ 白／02181222","無印のふた付きマグ",490,"mug","https://www.muji.com/jp/ja/store/cmdty/detail/4550002181222",{details:"白・約270mL／商品番号02181222",roles:['buy','fact','gift','present']}),
   product("muji-lidded-mug-black-02181239","無印良品 ポリプロピレンふた付きマグカップ 黒／02181239","無印の黒いふた付きマグ",490,"mug","https://www.muji.com/jp/ja/store/cmdty/detail/4550002181239",{details:"黒・約270mL／商品番号02181239",roles:['fact','gift','present']})
  ]);
+ // Cross-brand manufacturer-priced SKUs; image readiness remains false until Work delivery.
+ const mixedBrandAdditions=Object.freeze([
+  product("snowpeak-titanium-single450-mg143","スノーピーク チタンシングルマグ450 MG-143","スノーピークのチタンマグ",3520,"mug","https://ec.snowpeak.co.jp/item/SNP0117A0185",{brand:"snowpeak",details:"450mL・型番MG-143",roles:['buy','fact','gift','present']}),
+  product("snowpeak-titanium-single450-online-mg143ec","スノーピーク チタンシングルマグ450 ONLINE MG-143-EC","スノーピークの限定チタンマグ",6820,"mug","https://ec.snowpeak.co.jp/item/SNP0124A0675",{brand:"snowpeak",details:"450mL・オンライン限定・型番MG-143-EC",roles:['buy','fact','gift','present']}),
+  product("snowpeak-titanium-double450-mg153","スノーピーク チタンダブルマグ450 MG-153","スノーピークの二重構造チタンマグ",5940,"mug","https://ec.snowpeak.co.jp/snowpeak/ja/%E3%82%AD%E3%83%A3%E3%83%B3%E3%83%97/%E3%83%86%E3%83%BC%E3%83%96%E3%83%AB%E3%82%A6%E3%82%A7%E3%82%A2/%E3%83%81%E3%82%BF%E3%83%B3%E3%83%80%E3%83%96%E3%83%AB%E3%83%9E%E3%82%B0-450/p/164832",{brand:"snowpeak",details:"450mL・型番MG-153",roles:['buy','fact','gift','present']}),
+  product("ikea-lack-side-35-white-10514792","IKEA LACK ラック サイドテーブル ホワイト 35×35cm／105.147.92","IKEAの小さなサイドテーブル",999,"furniture","https://www.ikea.com/jp/ja/p/lack-side-table-white-10514792/",{brand:"IKEA",details:"ホワイト・35×35cm・品番105.147.92",roles:['buy','fact','gift','present']}),
+  product("ikea-lack-side-55-white-10449909","IKEA LACK ラック サイドテーブル ホワイト 55×55cm／104.499.09","IKEAのサイドテーブル",1799,"furniture","https://www.ikea.com/jp/ja/p/lack-side-table-white-10449909/",{brand:"IKEA",details:"ホワイト・55×55cm・品番104.499.09",roles:['buy','fact','gift','present']}),
+  product("ikea-lack-coffee-70-white-00361228","IKEA LACK ラック コーヒーテーブル ホワイト 70×40cm／003.612.28","IKEAのローテーブル",2999,"furniture","https://www.ikea.com/jp/ja/p/lack-coffee-table-white-00361228/",{brand:"IKEA",details:"ホワイト・70×40cm・品番003.612.28",roles:['buy','fact','gift','present']})
+ ]);
  // Expansion backlog: labels/categories only; no guessed official prices, no gameplay eligibility.
  const researchBacklog=Object.freeze([
   {id:'muji-tape-research',name:'無印良品 修正テープ本体',category:'correction_tape',source:'https://www.muji.com/jp/ja/store/cmdty/section/S1070327',status:'needs_product_page'},
@@ -126,13 +135,13 @@
  ]);
  const validate=()=>{
   const seen=new Set();
-  for(const p of confirmedAdditions){
+  for(const p of [...confirmedAdditions,...mixedBrandAdditions]){
     if(seen.has(p.id)||!imageCatalog[p.imageKey]||!p.source.startsWith('https://')||!Number.isSafeInteger(p.price))throw new Error('catalog product invalid '+p.id);seen.add(p.id);
   }
   for(const l of newLandmarks)if(!Number.isInteger(l.year)||!/開業|開場|竣工/.test(l.event)||!l.source)throw new Error('catalog landmark invalid '+l.name);
   return true;
  };
  validate();
- const API=Object.freeze({VERSION:'1.0.0',imageCatalog,confirmedAdditions,researchBacklog,newLandmarks,playable,normalizeLegacy,chooseSlots,validate});
+ const API=Object.freeze({VERSION:'1.1.0',imageCatalog,confirmedAdditions,mixedBrandAdditions,researchBacklog,newLandmarks,playable,normalizeLegacy,chooseSlots,validate});
  root.N1Catalog=API;if(typeof module!=='undefined'&&module.exports)module.exports=API;
 })(typeof window!=='undefined'?window:globalThis);
