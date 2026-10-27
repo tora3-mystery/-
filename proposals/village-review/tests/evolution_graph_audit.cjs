@@ -75,6 +75,59 @@ for(const kind of db.facilityKinds)for(let facet=0;facet<3;facet++)for(const hig
  ratingImageCases++;
 }
 assert.equal(ratingImageCases,384);
+// Human review: audit the image semantics behind representative mismatches.
+// A valid image ID alone is insufficient when it depicts the opposite concept.
+const imageMeaning={
+ 'market.2.0':'community','market.2.1':'tourist',
+ 'school.2.1':'culture','shrine.2.1':'mystery',
+ 'office.1.1':'policy','office.2.1':'policy',
+ 'shop.0.0':'daily','shop.0.1':'specialty','shop.2.1':'daily',
+ 'farm.2.1':'agritourism','museum.1.1':'mystery','museum.2.1':'history',
+ 'robot.1.1':'coexist'
+};
+for(const [id,route] of Object.entries(imageMeaning))
+ assert.equal(stage2.get(id).imageRoute,route,'Image visually contradicts '+id);
+
+// Pre-DB fallback and authoritative DB routes must agree under all ratings.
+const fallbackQA=createHarness();
+let routeFallbackCases=0;
+for(const rec of db.stage2)for(const stars of [1,2,4,5]){
+ const currentHigh=(stars>=4)===(rec.target==='more');
+ assert.equal(fallbackQA.routeFor({kind:rec.kind},{key:rec.facet,high:currentHigh,tag:'living'},stars),rec.imageRoute,'Pre-DB route mismatch '+rec.id);
+ routeFallbackCases++;
+}
+assert.equal(routeFallbackCases,384);
+
+// Game simulation: a just-submitted review may not cause an upgrade of the SAME
+// observation in the exact opposite direction due to historical reviews.
+let recentReviewUpgrades=0,sameFacetChanges=0,oppositeSameFacet=0;
+for(let seed=1;seed<=250;seed++){
+ qa.generate(Math.imul(seed,2654435761)>>>0);
+ for(let month=0;month<12;month++){
+  const state=qa.getState(),id=state.candidates[(seed+month)%state.candidates.length],
+   facility=state.facilities.find(f=>f.id===id),facts=qa.factsFor(facility),
+   index=(seed*2+month)%facts.length,observation=facts[index],
+   stars=[1,2,4,5][(seed+month)%4],expected=stars>=4?observation.high:!observation.high;
+  qa.post(id,index,stars);
+  const event=qa.getState().result.changes.find(e=>e.kind==='big'&&e.facilityId===id);
+  if(!event||observation.tag==='sea')continue;
+  recentReviewUpgrades++;
+  const chosen=stage2.get(event.stage===2?facility.firstDirection:facility.secondDirection);
+  if(chosen&&chosen.facet===index){
+   sameFacetChanges++;
+   if((chosen.target==='more')!==expected)oppositeSameFacet++;
+  }
+ }
+}
+assert.equal(oppositeSameFacet,0,'Newest review and matching-facet upgrade diverged');
+
+// The map uses explicit visit labels, not green-on-grass coloring or arbitrary
+// beige outlines, and no redundant year/terrain-type header labels.
+assert(html.includes('background:#4d367a'),'Purple eligibility label missing');
+assert(!html.includes('id="terrain"'),'Redundant terrain header tag returned');
+assert(!html.includes("'1年目'"),'Redundant first-year suffix returned');
+assert(html.includes('border-color:transparent!important'),'Ambiguous facility border remained');
+
 let gentle=0;
 for(const kind of db.facilityKinds)for(let facet=0;facet<3;facet++)for(const high of [false,true])for(const rating of [2,4]){
  qa.generate(kind==='harbor'?stageSeeds.island:stageSeeds.plain);const st=qa.getState();
@@ -90,6 +143,6 @@ for(const kind of db.facilityKinds)for(let facet=0;facet<3;facet++)for(const hig
  gentle++;
 }
 const report={status:'PASS',stage2:stage2.size,finalRecords:db.stage3.length,terminalPathsVerified:traversals,
- star2And4Cases:gentle,ratingImageCases,uniqueImagesReused:seenImages.size,saveCompatibility:'covered by qa_bridge.cjs',
+ star2And4Cases:gentle,ratingImageCases,routeFallbackCases,recentReviewUpgrades,sameFacetChanges,oppositeSameFacet,imageMeaningCorrections:Object.keys(imageMeaning).length,uniqueImagesReused:seenImages.size,saveCompatibility:'covered by qa_bridge.cjs',
  validation:'Deterministic state/DOM simulation; not physical browser test'};
 console.log(JSON.stringify(report,null,2));
