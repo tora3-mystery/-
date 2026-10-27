@@ -29,6 +29,16 @@
   const FILES=Object.freeze(filenames);
   const FILE_SET=new Set(FILES);
   if(FILES.length!==34||FILE_SET.size!==34)throw Error('F1 scene manifest must contain 34 unique files');
+  // The original 34-image list remains an archive of candidates, NOT a
+  // mandatory production order. v0.18 uses 28 state photos plus the existing
+  // one-time register-installation report photo. Existing ending photos stay.
+  const MAIN_FILES=Object.freeze([
+    ...BASE.map(x=>'main-base-'+x+'.webp'),
+    ...AXES.flatMap(x=>LEVELS.map(level=>'main-'+x+'-'+level+'.webp')),
+    ...PAIRS.flatMap(([a,b])=>['moderate','severe'].map(level=>'main-'+a+'-'+b+'-'+level+'.webp'))
+  ]);
+  const RESULT_FILES=Object.freeze(['main-improved-register-added.webp']);
+  const PRODUCTION_FILES=Object.freeze([...MAIN_FILES,...RESULT_FILES]);
 
   /**
    * input: {complaints:[q,aisle,stock,noise], attraction:0..10,
@@ -45,22 +55,18 @@
     const day=input.day==null?1:input.day;
     if(!Number.isInteger(day)||day<1||day>8)throw Error('DAY 1..8 required');
 
-    const actions=new Set(input.completedActions||[]);
+    // Permanent fixture changes are NOT baked into full-floor state photos.
+    // They are reported via one-time close-up and operational metrics.
     const ordered=AXES.map((name,i)=>({name,value:input.complaints[i],index:i}))
       .sort((a,b)=>b.value-a.value||a.index-b.index);
     const [worst,second]=ordered;
     const sum=input.complaints.reduce((a,b)=>a+b,0);
     let file,reason;
 
-    if(day===8||String(input.ending||'').startsWith('odd_'))
-      return null; // Keep existing extraordinary-scene rules untouched.
+    if(day===8||input.ending)
+      return null; // Preserve all existing endings and extraordinary scenes.
 
-    if(input.ending==='normal_success'){
-      file='main-outcome-success.webp';reason='weekly-success';
-    }else if(input.ending==='normal_strain'||input.endingReason==='閉店'
-      ||input.endingReason==='店長交代'){
-      file='main-outcome-decline.webp';reason='weekly-decline';
-    }else if(worst.value>=3&&second.value>=3){
+    if(worst.value>=3&&second.value>=3){
       const pair=[worst,second].sort((a,b)=>a.index-b.index);
       const severe=worst.value>=4; // severe means the leading issue is severe; secondary may remain moderate
       file='main-'+pair[0].name+'-'+pair[1].name+'-'+(severe?'severe':'moderate')+'.webp';
@@ -68,14 +74,6 @@
     }else if(worst.value>=2){
       file='main-'+worst.name+'-'+(worst.value>=4?'severe':worst.value===3?'moderate':'mild')+'.webp';
       reason='dominant-current-issue';
-    }else if(actions.has('weekendStore')){
-      file='main-improved-renovated.webp';reason='visible-permanent-renovation';
-    }else if(actions.has('register')||actions.has('self')){
-      file='main-improved-register-added.webp';reason='visible-register-layout';
-    }else if(actions.has('lane')||actions.has('compact')){
-      file='main-improved-aisle-rearranged.webp';reason='visible-aisle-layout';
-    }else if(actions.has('receive')||actions.has('forecast')||actions.has('farmer')){
-      file='main-improved-restocked.webp';reason='visible-refilled-shelves';
     }else if(input.attraction<=3){
       file='main-base-underused.webp';reason='low-footfall';
     }else if(input.attraction>=8){
@@ -85,7 +83,7 @@
     }else{
       file='main-base-neutral.webp';reason='ordinary-floor';
     }
-    if(!FILE_SET.has(file))throw Error('Missing F1 scene target: '+file);
+    if(!MAIN_FILES.includes(file))throw Error('Missing F1 main-scene target: '+file);
     return Object.freeze({file,reason,main:true});
   }
 
@@ -108,6 +106,16 @@
     'main-checkout-mild.webp',
     'main-checkout-aisle-severe.webp'
   ]);
+  const P2_FILES=Object.freeze([
+    'main-checkout-moderate.webp',
+    'main-improved-register-added.webp',
+    'main-noise-severe.webp'
+  ]);
+  const COMPLETED_FILES=Object.freeze([...P1_FILES,...P2_FILES]);
+  const P3_FILES=Object.freeze(MAIN_FILES.filter(x=>!COMPLETED_FILES.includes(x)));
+  if(MAIN_FILES.length!==28||PRODUCTION_FILES.length!==29||
+     P3_FILES.length!==23||new Set(PRODUCTION_FILES).size!==29)
+    throw Error('P3 reduced production manifest is inconsistent');
   function resolveGameState(state){
     if(!state||typeof state!=='object')throw Error('Game state required');
     if(state.day===8||state.day8Active
@@ -125,20 +133,41 @@
     });
     if(!scene)return null;
     const fixtures=[...new Set(completed.filter(id=>FIXTURES[id]).map(id=>FIXTURES[id]))];
-    const matchingImprovement={
-      'main-improved-register-added.webp':'additional-register',
-      'main-improved-renovated.webp':'renovated-layout'
-    }[scene.file];
-    const unverified=fixtures.filter(x=>x!==matchingImprovement);
+    // Main photos are intentionally fixture-neutral. The list below is
+    // retained as disclosure for QA, not a blocker for scene selection.
     return Object.freeze({
-      ...scene,derivedFrom:'applied-visual-history',
-      fixtureReview:Object.freeze(unverified),
-      requiresFixtureQA:unverified.length>0
+      ...scene,derivedFrom:'current-complaint-state',
+      fixtureReview:Object.freeze(fixtures),
+      requiresFixtureQA:false,
+      fixturesReportedSeparately:fixtures.length>0
+    });
+  }
+  function transitionPhotoForGameState(state){
+    if(!state||state.day8Active||state.odd>0||state.finish)return null;
+    // The 4th register is shown once as a tightly framed implementation
+    // report, NOT as the panoramic store scene that changes daily.
+    // The regular scene deliberately remains the fixed-camera shop view.
+    return Array.isArray(state.appliedToday)&&state.appliedToday.some(x=>x.id==='register')
+      ?Object.freeze({file:'main-improved-register-added.webp',
+        context:'result-detail',crop:'extra-register',oneTime:true}):null;
+  }
+  function operationalIndicators(state){
+    const completed=(state?.visuals||[]).filter(x=>x&&
+      Number.isInteger(x.day)&&x.day<=state.day).map(x=>x.id);
+    return Object.freeze({
+      registerInstalled:completed.includes('register'),
+      selfCheckoutInstalled:completed.includes('self'),
+      pickupCounterInstalled:completed.includes('pickup'),
+      // No invented queue wait time: live complaint counts are the data.
+      complaints:Array.isArray(state?.vals)?Object.freeze([...state.vals]):null
     });
   }
   function assetCoverage(present,phase){
-    const requested=phase==='P1'?P1_FILES:phase==='ALL'?FILES:null;
-    if(!requested)throw Error('phase must be P1 or ALL');
+    const requested={
+      P1:P1_FILES,P2:P2_FILES,P3:P3_FILES,MAIN:MAIN_FILES,
+      PRODUCTION:PRODUCTION_FILES,ALL:FILES
+    }[phase];
+    if(!requested)throw Error('phase must be P1, P2, P3, MAIN, PRODUCTION, or ALL');
     if(!Array.isArray(present))throw Error('Available filenames array required');
     const supplied=new Set(present);
     const missing=requested.filter(x=>!supplied.has(x));
@@ -148,7 +177,9 @@
     });
   }
   return Object.freeze({
-    AXES:Object.freeze(AXES),FILES,P1_FILES,
-    FIXTURES,resolve,resolveGameState,assetCoverage
+    AXES:Object.freeze(AXES),FILES,MAIN_FILES,RESULT_FILES,PRODUCTION_FILES,
+    P1_FILES,P2_FILES,P3_FILES,COMPLETED_FILES,
+    FIXTURES,resolve,resolveGameState,transitionPhotoForGameState,
+    operationalIndicators,assetCoverage
   });
 });
