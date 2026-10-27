@@ -42,7 +42,7 @@ function test(html){
   assert(after.vals.every(x=>x>=0&&x<=5)&&after.attraction<=10,'Stat limits');
   assert(after.complaintTickets.filter(x=>x.status==='open').length>=after.vals.reduce((a,b)=>a+b,0),'Official complaint ledger');
   if(!get('dayTransition').classList.contains('hidden')){
-   assert(get('transitionDecision').textContent.includes(chosen.last.name),'Decision shown next morning');
+   assert(after.day8Active?get('transitionDecision').textContent.includes('週報の送信'):get('transitionDecision').textContent.includes(chosen.last.name),'Next morning decision, or week-report acknowledgement on DAY 8');
    d.closeTransition();
   }
   return after;
