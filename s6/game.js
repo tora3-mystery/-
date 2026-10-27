@@ -5,7 +5,7 @@
   const SAVE_KEY = 's6-case-a-v03-save';
   const AUTO_KEY = 's6-case-a-v03-auto';
   const META_KEY = 's6-case-a-v03-meta';
-  const BUILD_AT = '2026-10-27 16:27 JST';
+  const BUILD_AT = '2026-10-27 16:32 JST';
   const DAYS = [
     ['2026-04-06','4月6日 月曜'],['2026-04-07','4月7日 火曜'],
     ['2026-04-08','4月8日 水曜'],['2026-04-09','4月9日 木曜'],
@@ -457,7 +457,7 @@
           (knownName(again.pid)==='名前未確認'?'前に話した人':knownName(again.pid))+
           'は、前に会った「'+gmap[previousGroup].group_title+'」のことを覚えていた。':'';
         S.reunionText=[remembered,baseLine].filter(Boolean).join(' ');
-        ms.forEach(m=>{const p=ps(m.person_id);p.seen=true;p.met=true;p.clearPortrait=true;p.lastGroup=gid;p.encounterCount=(p.encounterCount||0)+1});
+        ms.forEach(m=>{const p=ps(m.person_id);p.seen=true;p.lastGroup=gid;p.encounterCount=(p.encounterCount||0)+1});
         const mention=groupMention(gid);
         if(mention){const p=ps(mention.id);if(!p.introduced)p.heardName=mention.label}
         for(const old of prior)if(old.met)ps(old.pid).affinity+=1;
@@ -498,7 +498,7 @@
     if(act==='back-group'){S.phase='group';saveAndRender();return}
     if(act==='ask-person'){
       const q=D.questions.find(q=>q.group_id===S.activeGroup&&q.target_id===id);if(!q)return;
-      if(S.groupActions[S.activeGroup])return;const respondent=ps(id);respondent.affinity=Math.min(8,respondent.affinity+1);if(q.answer.includes(pmap[id].name))respondent.introduced=true;respondent.lastInteraction='question';S.participationHistory??=[];S.participationHistory.push({group_id:S.activeGroup,action:'question',person_id:id});S.groupActions[S.activeGroup]='question';S.groupResult=q.answer;S.groupResults??={};S.groupResults[S.activeGroup]=S.groupResult;
+      if(S.groupActions[S.activeGroup])return;const respondent=ps(id);respondent.met=true;respondent.clearPortrait=true;respondent.affinity=Math.min(8,respondent.affinity+1);if(q.answer.includes(pmap[id].name))respondent.introduced=true;respondent.lastInteraction='question';S.participationHistory??=[];S.participationHistory.push({group_id:S.activeGroup,action:'question',person_id:id});S.groupActions[S.activeGroup]='question';S.groupResult=q.answer;S.groupResults??={};S.groupResults[S.activeGroup]=S.groupResult;
       S.phase='group';saveAndRender();return;
     }
     if(act==='contact-person'){
@@ -507,7 +507,7 @@
       if(!a||!policy){S.groupResult='この連絡手段では交換できない。';S.phase='group';saveAndRender();return}
       if(S.groupActions[S.activeGroup])return;
       S.participationHistory??=[];S.participationHistory.push({group_id:S.activeGroup,action:'contact',person_id:id});
-      p.contact_requested=true;p.lastInteraction='contact';
+      p.met=true;p.clearPortrait=true;p.contact_requested=true;p.lastInteraction='contact';
       S.groupActions[S.activeGroup]='contact';
       const intro=knownName(id)==='名前未確認'?'相手に声をかけた。':knownName(id)+'に声をかけた。';
       if(p.contacts.includes(platform)){
