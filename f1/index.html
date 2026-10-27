@@ -222,19 +222,19 @@ body.odd-3 #day8Panel[data-stage="2"]{border-color:#987b79;box-shadow:0 4px 18px
  <p><strong>本部の評価は売上だけ。</strong>ただし、ひとつの改善が別の苦情を生むこともあります。</p>
  <p class="help">まずは過去の営業記録を使って、私と練習しましょう。練習した内容は明日からの売上や苦情には影響しません。</p>
  <div class="intro-actions"><button class="widebtn" id="start" type="button">店長から引き継ぎを受ける</button><button class="widebtn hidden" id="resume" type="button">続きから再開</button><button class="button-quiet hidden" id="startOver" type="button">保存記録を消して最初から始める</button><button class="button-quiet hidden" id="backToGame" type="button">営業に戻る</button><button class="button-quiet hidden" id="practiceAgain" type="button">引き継ぎをもう一度体験する</button></div>
- <details class="box detail"><summary>詳しいルール・保存について</summary><p class="help">1日3箇所まで文章を調べられます。同じ箇所の再確認は無料。発見した対応案は次の日も残ります。実行できる施策は1日1件、効果は原則翌朝に反映。日売上0万円で営業停止。グレーな対応は後日に発覚することがあります。進行は自動保存されます。</p></details>
+ <details class="box detail"><summary>詳しいルール・保存について</summary><p class="help">1日3箇所まで文章を調べられます。同じ箇所の再確認は無料。発見した対応案は次の日も残ります。実行できる施策は1日1件、効果は原則翌朝に反映。日売上見込み0万円以下で営業停止。グレーな対応は後日に発覚することがあります。進行は自動保存されます。</p></details>
 </section>
 <section id="day0Panel" class="practice-screen hidden" aria-live="polite">
  <div class="overline">店長からの引き継ぎ｜DAY 0（練習用）</div><h1 class="head" style="font-size:24px">まず一件、対応してみましょう。</h1>
  <div class="practice-coach" id="day0Coach" role="status"><b>店長</b>「下線のあるお客様の声を押してみてください。」</div>
- <div class="metrics"><div class="stat"><label>👥 集客力</label><strong>7/10</strong></div><div class="stat"><label>レジ待ち</label><strong id="day0Queue">2件</strong></div><div class="stat"><label>店内騒音</label><strong id="day0Noise">1件</strong></div><div class="stat"><label>日売上見込み</label><strong id="day0Sales">50万円</strong></div></div>
+ <div class="metrics"><div class="stat"><label>👥 集客力</label><strong>7/10</strong></div><div class="stat"><label>レジ待ち負担度</label><strong id="day0Queue">2/5</strong></div><div class="stat"><label>店内騒音負担度</label><strong id="day0Noise">1/5</strong></div><div class="stat"><label>日売上見込み</label><strong id="day0Sales">50万円</strong></div></div>
  <figure class="store-scene"><img id="day0Image" src="./assets/main-checkout-mild.webp" alt="引き継ぎ用の過去の店内"><figcaption>引き継ぎ記録：レジの行列が目立っています。</figcaption></figure>
  <div class="two"><section class="box issue-card"><div class="issue-meta"><span>📮 お客様の声</span><span class="pill">過去の記録</span></div><article class="complaint-ticket"><div class="complaint-ticket-head"><strong>仕事帰りのお客様</strong><span>レジ待ち</span></div><p class="complaint-letter">「<button id="day0Investigate" class="practice-highlight" type="button">レジの列が長すぎて</button>、夕食の買い物だけで時間がかかりました。」</p><div id="day0Discovery" class="complaint-investigation-result discovery-award hidden" role="status"><strong class="discovery-award-title">対応案を発見！</strong><div class="discovery-award-items"><span>応援スタッフを手配</span></div></div></article></section>
  <section class="box"><h2 style="margin-top:0;font-size:18px">今日できる対応</h2><p class="help" id="day0ActionHint">下線を調べると、対応案がここに現れます。</p><button id="day0Apply" class="practice-policy hidden" type="button">👥 応援スタッフを手配<small>列は短くなるが、案内の声は増えます。</small></button></section></div>
- <div id="day0Outcome" class="practice-completed hidden" role="status"><b>翌朝の記録</b><p>レジ待ち：2件 → 1件 ／ 店内騒音：1件 → 2件</p><p>レジ待ちは改善しましたが、別のお客様から放送や案内の声に苦情が入りました。</p><p class="help">練習はここまで。月曜日は独立した7日間の営業です。今の数字や対応は持ち越しません。</p></div>
+ <div id="day0Outcome" class="practice-completed hidden" role="status"><b>翌朝の記録</b><p>売場負担度：レジ待ち 2/5 → 1/5 ／ 店内騒音 1/5 → 2/5</p><p>レジ待ちは改善しましたが、別のお客様から放送や案内の声に苦情が入りました。</p><p class="help">練習はここまで。月曜日は独立した7日間の営業です。今の数字や対応は持ち越しません。</p></div>
  <button id="day0Finish" class="widebtn hidden" type="button">月曜日の営業を始める</button>
 </section>
-<div id="game" class="gameonly"><div class="metrics"><div class="stat"><label>営業日</label><strong id="day">1/7</strong></div><div class="stat"><label>👥 集客力</label><strong id="cash">7</strong><small>/10</small></div><div class="stat"><label>日売上見込</label><strong id="total">50万円</strong></div><div class="stat"><label>累計売上</label><strong id="revenueTotal">0万円</strong></div></div><section class="operations-board" aria-label="売上とお客様の声"><div id="moneyDetail" class="money-note"></div><div id="meters" class="operational-meters"></div></section><div id="oddMetrics" class="anomaly-grid hidden"><div class="stat"><label>閉店後売上</label><strong id="afterSales">0</strong><small>万円</small></div><div class="stat"><label>未退店客数</label><strong id="remainingCustomers">0</strong><small>名</small></div><div class="stat"><label>閉店許可</label><strong id="closePermit">許可</strong></div></div><figure class="store-scene" id="storeScene"><img id="storeImage" alt="スーパーの現在の店内状況を示す画像" src="./assets/store-queue.jpg"><div class="scene-status" id="sceneStatus">営業中の売場</div><div class="scene-markers" id="sceneMarkers"></div><div class="scene-side" id="sceneSide" hidden><img id="sceneSideImage" alt=""><span id="sceneSideText"></span></div><figcaption id="sceneCaption">店内の状態は選んだ施策によって変わります。</figcaption></figure><div class="actions-head"><div><div class="overline" id="dateLabel">DAY 01 / 07</div><h1 class="head" style="font-size:23px">本日の改善判断</h1></div><span class="pill">本日あと1件</span></div><div class="two"><section class="box issue-card"><div class="issue-meta"><span>📮 お客様の声・店長回答一覧</span><span id="issueTag" class="pill urgent">要対応</span></div><div id="issuePerson" class="hidden"></div><div id="issueText" class="hidden"></div><p id="issueReason" class="issue-tail"></p><div id="complaintSummary" class="complaint-summary" aria-live="polite"></div><p id="investigationCount" class="complaint-investigation">文章を調べる：あと3箇所</p><div id="complaintBoard" class="complaint-board"></div><details id="complaintExtra" class="complaint-extra hidden"><summary id="complaintExtraLabel">ほかのご意見を見る</summary><div id="complaintExtraBody" class="complaint-board"></div></details><details id="complaintArchive" class="complaint-extra"><summary id="complaintArchiveLabel">以前のご意見と店長回答</summary><div id="complaintArchiveBody" class="complaint-board"></div></details><div class="news" id="newNotice"></div><div id="hqBulletin" class="hq-bulletin" aria-live="polite"></div><div class="help" id="pendingMini"></div></section><section class="box"><div class="actions-head"><h2>今日できる対応</h2><span id="choiceCount" class="context">7案から1つ</span></div><div class="effect-key" aria-label="施策カードの数値の読み方"><span>👥 集客力</span><span>🧾 レジ待ち</span><span>↔️ 通路</span><span>📦 品切れ</span><span>🔊 騒音</span></div><p id="actionGuide" class="help">お客様の声の下線をタップすると、対応策が見つかります。</p><div id="actions" class="day-actions"></div><details id="moreActions" class="complaint-extra hidden"><summary id="moreActionsLabel">他の対応案を見る</summary><div id="moreActionsBody" class="day-actions"></div></details><p class="help">選ぶと当日の営業を終えます。施策の効果は翌営業日から。毎朝、新しいご意見も届きます。未解決の苦情が多いと翌朝に連鎖します。施策は、ご意見の下線部分から発見できます。1日3箇所まで調べられます。</p></section></div><details class="box detail" id="breakdown"><summary>詳しく見る：施策・運営履歴</summary><div id="tasks"></div><div class="guidebox"><b>通常経営の判定</b><p>日売上0万円になったら店長解任・営業停止。本部が確認するのは売上です。7日目の施策の効果は最終集計で確認されます。</p></div><div class="overline">最近の動き</div><ul id="history" class="journal"></ul></details></div>
+<div id="game" class="gameonly"><div class="metrics"><div class="stat"><label>営業日</label><strong id="day">1/7</strong></div><div class="stat"><label>👥 集客力</label><strong id="cash">7</strong><small>/10</small></div><div class="stat"><label>日売上見込</label><strong id="total">50万円</strong></div><div class="stat"><label>累計売上</label><strong id="revenueTotal">0万円</strong></div></div><section class="operations-board" aria-label="売上とお客様の声"><div id="moneyDetail" class="money-note"></div><div id="meters" class="operational-meters"></div></section><div id="oddMetrics" class="anomaly-grid hidden"><div class="stat"><label>閉店後売上</label><strong id="afterSales">0</strong><small>万円</small></div><div class="stat"><label>未退店客数</label><strong id="remainingCustomers">0</strong><small>名</small></div><div class="stat"><label>閉店許可</label><strong id="closePermit">許可</strong></div></div><figure class="store-scene" id="storeScene"><img id="storeImage" alt="スーパーの現在の店内状況を示す画像" src="./assets/store-queue.jpg"><div class="scene-status" id="sceneStatus">営業中の売場</div><div class="scene-markers" id="sceneMarkers"></div><div class="scene-side" id="sceneSide" hidden><img id="sceneSideImage" alt=""><span id="sceneSideText"></span></div><figcaption id="sceneCaption">店内の状態は選んだ施策によって変わります。</figcaption></figure><div class="actions-head"><div><div class="overline" id="dateLabel">DAY 01 / 07</div><h1 class="head" style="font-size:23px">本日の改善判断</h1></div><span class="pill">本日あと1件</span></div><div class="two"><section class="box issue-card"><div class="issue-meta"><span>📮 お客様の声・店長回答一覧</span><span id="issueTag" class="pill urgent">要対応</span></div><div id="issuePerson" class="hidden"></div><div id="issueText" class="hidden"></div><p id="issueReason" class="issue-tail"></p><div id="complaintSummary" class="complaint-summary" aria-live="polite"></div><p id="investigationCount" class="complaint-investigation">文章を調べる：あと3箇所</p><div id="complaintBoard" class="complaint-board"></div><details id="complaintExtra" class="complaint-extra hidden"><summary id="complaintExtraLabel">ほかのご意見を見る</summary><div id="complaintExtraBody" class="complaint-board"></div></details><details id="complaintArchive" class="complaint-extra"><summary id="complaintArchiveLabel">以前のご意見と店長回答</summary><div id="complaintArchiveBody" class="complaint-board"></div></details><div class="news" id="newNotice"></div><div id="hqBulletin" class="hq-bulletin" aria-live="polite"></div><div class="help" id="pendingMini"></div></section><section class="box"><div class="actions-head"><h2>今日できる対応</h2><span id="choiceCount" class="context">7案から1つ</span></div><div class="effect-key" aria-label="施策カードの数値の読み方"><span>👥 集客力</span><span>🧾 レジ待ち</span><span>↔️ 通路</span><span>📦 品切れ</span><span>🔊 騒音</span></div><p id="actionGuide" class="help">お客様の声の下線をタップすると、対応策が見つかります。</p><div id="actions" class="day-actions"></div><details id="moreActions" class="complaint-extra hidden"><summary id="moreActionsLabel">他の対応案を見る</summary><div id="moreActionsBody" class="day-actions"></div></details><p class="help">選ぶと当日の営業を終えます。施策の効果は翌営業日から。毎朝、新しいご意見も届きます。未解決の苦情が多いと翌朝に連鎖します。施策は、ご意見の下線部分から発見できます。1日3箇所まで調べられます。</p></section></div><details class="box detail" id="breakdown"><summary>詳しく見る：施策・運営履歴</summary><div id="tasks"></div><div class="guidebox"><b>通常経営の判定</b><p>日売上見込みが0万円以下になったら、その時点で店長解任・営業停止。本部が確認するのは売上です。7日目の施策の効果は最終集計で確認されます。</p></div><div class="overline">最近の動き</div><ul id="history" class="journal"></ul></details></div>
 <section id="finalChoice" class="hidden"></section>
 <section id="day8Panel" class="day8-shell hidden" aria-live="polite">
  <div class="metrics"><div class="stat"><label>営業日</label><strong id="day8Title">DAY 08 / 07</strong></div><div class="stat"><label>👥 集客力</label><strong id="day8Attraction">7/10</strong></div><div class="stat"><label>日売上見込</label><strong id="day8Sales">50万円</strong></div><div class="stat"><label>週間売上累計</label><strong id="day8Revenue">0万円</strong></div></div>
@@ -409,6 +409,11 @@ function reconcileComplaints(){
   if(s.day>1&&severity===5&&!s.complaintSaturationKeys.includes(key)){
    addComplaintTicket(metric,s.day,false);s.complaintSaturationKeys.push(key);
   }
+ });
+ // Fill only missing baseline tickets (older saves or direct-state tests). Never cap real submissions.
+ s.vals.forEach((severity,i)=>{
+  const open=s.complaintTickets.filter(x=>x.metric===i&&x.status==='open').length;
+  for(let n=open;n<severity;n++)addComplaintTicket(i,s.day,false);
  });
  s.complaintLedgerSeverity=[...s.vals];
 }
@@ -1093,7 +1098,7 @@ function play(id){
  const lines=['本日の売上 '+sales+'万円','集客力 '+s.attraction+'/10 ／ 売場負担度 '+s.vals.join(' / ')+'（各0〜5）',
  '今週の売上累計 '+s.revenue+'万円'];
  if(normal||a.kind==='odd')lines.push('施策の効果：DAY '+(s.day+1)+'の開店時に反映');
- if(!s.odd&&sales<=20&&!s.finish)lines.push('警告：日売上が0万円になったら店長解任・営業停止です。');
+ if(!s.odd&&sales<=20&&!s.finish)lines.push('警告：日売上見込みが0万円以下になった時点で、店長解任・営業停止です。');
  if(s.finish)lines.push('本部通知：'+s.endingReason+'（営業終了）');
  if(!s.odd)lines.push('本部速報：本日の売上 '+sales+'万円');
  lines.forEach(line=>{const p=document.createElement('p');p.textContent=line;$('dailyReport').append(p)});
@@ -1170,7 +1175,7 @@ function v11OpenTransition(before){
  const attracted=report.attraction||0;
  const appeared=(report.newComplaints||[]).reduce((sum,x)=>sum+Math.max(0,x),0);
  const effectSummary=[attracted?'集客力'+(attracted>0?'＋':'')+attracted:null,
-   improved?'苦情'+improved+'件改善':null,deteriorated?'副作用で苦情'+deteriorated+'件増加':null].filter(Boolean).join('／');
+   improved?'売場負担度 '+improved+'改善':null,deteriorated?'売場負担度 '+deteriorated+'悪化':null].filter(Boolean).join('／');
  $('transitionDecision').textContent=auditLead+'昨日の判断：「'+before.lastName+'」 → '+(effectSummary||'売場への変化なし')+
   '。'+(report.backlash?'以前の施策の反動あり。':'')+(appeared?'別件で新たなご意見'+appeared+'件。':'新たなご意見なし。');
  const audit=$('transitionAudit');audit.hidden=!report.audits?.length;
@@ -1190,9 +1195,9 @@ function v11OpenTransition(before){
   if(attr)changes.push({text:'集客力 '+(attr>0?'＋':'−')+Math.abs(attr),tone:attr>0?'better':'worse'});
   for(let i=0;i<4;i++){
    const d=after.vals[i]-before.vals[i];
-   if(d)changes.push({text:labels[i]+' '+(d>0?'＋':'−')+Math.abs(d)+'件',tone:d<0?'better':'worse'});
+   if(d)changes.push({text:labels[i]+' 負担度'+(d>0?'＋':'−')+Math.abs(d),tone:d<0?'better':'worse'});
   }
-  if(!changes.length)changes.push({text:'苦情・集客力の変化なし',tone:'neutral'});
+  if(!changes.length)changes.push({text:'売場負担度・集客力の変化なし',tone:'neutral'});
  }
  $('transitionChanges').replaceChildren();
  for(const change of changes){
@@ -1409,7 +1414,7 @@ function startPractice(fromHelp=false){
  $('day0Panel').classList.remove('hidden');$('help').classList.add('hidden');$('restart').classList.add('hidden');
  for(const id of ['day0Discovery','day0Apply','day0Outcome','day0Finish'])$(id).classList.add('hidden');
  $('day0Investigate').disabled=false;$('day0Apply').disabled=false;
- $('day0Queue').textContent='2件';$('day0Noise').textContent='1件';$('day0Sales').textContent='50万円';
+ $('day0Queue').textContent='2/5';$('day0Noise').textContent='1/5';$('day0Sales').textContent='50万円';
  $('day0Image').src='./assets/main-checkout-mild.webp';
  $('day0Coach').textContent='店長：「下線のあるお客様の声を押してみてください。そこから改善案を探します。」';
  $('day0ActionHint').textContent='下線を調べると、対応案がここに現れます。';
@@ -1425,7 +1430,7 @@ function investigatePractice(){
 function applyPractice(){
  if(practiceStage!==1)return;
  practiceStage=2;$('day0Apply').disabled=true;
- $('day0Queue').textContent='1件';$('day0Noise').textContent='2件';$('day0Sales').textContent='50万円';
+ $('day0Queue').textContent='1/5';$('day0Noise').textContent='2/5';$('day0Sales').textContent='50万円';
  $('day0Image').src='./assets/main-noise-mild.webp';
  $('day0Coach').textContent='店長：「翌朝、列は短くなりました。でも声が増え、店内騒音の苦情が増えました。」';
  $('day0Outcome').classList.remove('hidden');$('day0Finish').classList.remove('hidden');
