@@ -5,7 +5,7 @@
   const SAVE_KEY = 's6-case-a-v03-save';
   const AUTO_KEY = 's6-case-a-v03-auto';
   const META_KEY = 's6-case-a-v03-meta';
-  const BUILD_AT = '2026-10-27 11:09 JST';
+  const BUILD_AT = '2026-10-27 11:23 JST';
   const DAYS = [
     ['2026-04-06','4月6日 月曜'],['2026-04-07','4月7日 火曜'],
     ['2026-04-08','4月8日 水曜'],['2026-04-09','4月9日 木曜'],
@@ -32,7 +32,7 @@
   const getMeta=()=>{try{return JSON.parse(localStorage.getItem(META_KEY))||{}}catch{return {}}};
   const makeState=()=>({
     schema:3,caseId:'A',phase:'title',returnPhase:null,day:0,eventId:null,eventHistory:[],
-    visitedGroups:[],groupActions:{},activeGroup:null,groupResult:'',reunionText:'',preEventState:{},
+    visitedGroups:[],groupActions:{},groupReunions:{},activeGroup:null,groupResult:'',reunionText:'',preEventState:{},
     person:{},contactSince:{},replyLog:{},nightUsed:{},nightDone:{},nightMessage:'',lunchSeenDates:[],lunchPreState:{},lunchTalked:{},lunchMessage:'',
     evidence:{},oldNew:false,bridge:false,bridgeAvailable:false,
     discoveredFacts:[],viewedPosts:[],platform:'Photogram',
@@ -91,7 +91,13 @@
   const day=()=>{
     const [date,label]=DAYS[S.day], list=D.events.filter(e=>e.date===date);
     const lunchCount=D.recurring.filter(x=>x.date===date).length;
-    const cards=list.map(e=>'<article class="card event-card"><p class="eyebrow">'+esc(ORG[e.org_id])+'</p><h3>'+esc(e.title)+'</h3><div class="meta">'+esc(e.start)+'–'+esc(e.end)+' / '+esc(e.location)+'</div><p>'+esc(D.orgs.find(o=>o.org_id===e.org_id).focus)+'。会場にいる人を見てから、話す二組を選べます。</p>'+btn('この新歓に参加','event','data-eid="'+esc(e.event_id)+'"','')+'</article>').join('');
+    const cards=list.map(e=>{
+      const familiar=[...new Set(D.members.filter(m=>m.event_id===e.event_id).map(m=>m.person_id))]
+        .filter(pid=>S.person[pid]?.met&&S.person[pid]?.introduced);
+      const reunionBadge=familiar.length?
+        '<p class="subtle">前に話した'+esc(familiar.slice(0,2).map(pid=>pmap[pid].name).join('・'))+
+        (familiar.length>2?'たち':'')+'も参加予定らしい。</p>':'';
+      return '<article class="card event-card"><p class="eyebrow">'+esc(ORG[e.org_id])+'</p><h3>'+esc(e.title)+'</h3><div class="meta">'+esc(e.start)+'–'+esc(e.end)+' / '+esc(e.location)+'</div><p>'+esc(D.orgs.find(o=>o.org_id===e.org_id).focus)+'。会場にいる人を見てから、話す二組を選べます。</p>'+reunionBadge+btn('この新歓に参加','event','data-eid="'+esc(e.event_id)+'"','')+'</article>';}).join('');
     return '<p class="eyebrow">DAY '+(S.day+1)+' / 5</p><h2>'+esc(label)+'：どこへ行こう？</h2><p class="lead">犯人を探すためではなく、今日は音楽を楽しむために選ぶ。</p>'+(lunchCount?'<div class="card soft"><h3>昼休みの学内</h3><p>今日は'+lunchCount+'人の姿がある。顔を見て、気になる人と話せる。夜の調査や新歓の選択には影響しない。</p>'+btn('昼休みに立ち寄る','lunch','','secondary')+'</div>':'')+'<div class="grid2">'+cards+'</div><div class="btnrow">'+btn('学内の公開掲示を読む','board','','secondary')+btn('今日は新歓に参加しない','skip-day','','ghost')+'</div>';
   };
   const lunch=()=>{
@@ -104,7 +110,7 @@
       const ms=D.members.filter(m=>m.group_id===g.group_id);
       const faces=ms.map(m=>'<div class="face-slot">'+photo(m.person_id,{venue:true})+'</div>').join('');
       const visited=S.visitedGroups.includes(g.group_id);
-      return '<article class="card"><p class="eyebrow">'+esc(g.group_title)+'</p><h3>'+esc(g.location.split('／').at(-1))+'</h3><div class="chips"><span class="chip">'+ms.length+'人</span><span class="chip dim">'+esc(g.tone)+'</span></div><div class="faces" aria-label="会場にいる人の顔">'+faces+'</div><p class="subtle">'+esc(g.activity)+'</p>'+btn(visited?'会話を読み返す':'この輪に加わる',visited?'reopen-group':'join-group','data-gid="'+esc(g.group_id)+'"',visited?'ghost':'')+'</article>';
+      return '<article class="card"><p class="eyebrow">'+esc(g.group_title)+'</p><h3>'+esc(g.location.split('／').at(-1))+'</h3><div class="chips"><span class="chip">'+ms.length+'人</span><span class="chip dim">'+esc(g.tone)+'</span></div><div class="faces" aria-label="会場にいる人の顔">'+faces+'</div><p class="subtle">'+esc(g.activity)+'</p>'+(visited?btn('会話を読み返す','reopen-group','data-gid="'+esc(g.group_id)+'"','ghost'):S.visitedGroups.length>=2?'<span class="chip dim">今日はここまで</span>':btn('この輪に加わる','join-group','data-gid="'+esc(g.group_id)+'"',''))+'</article>';
     }).join('');
     return '<p class="eyebrow">'+esc(ORG[e.org_id])+' / '+esc(e.start)+'–'+esc(e.end)+'</p><h2>'+esc(e.title)+'</h2><p class="subtle">会場に入ると全員の顔が見えます。名前は、本人が名乗るか別の資料で確認するまで分かりません。顔だけの記憶は手帳へ残ります。</p><p class="score">交流 '+S.visitedGroups.length+' / 2 組</p><div class="grid2">'+cards+'</div><div class="btnrow">'+btn('会場を出て夜へ','finish-venue','','')+'</div>';
   };
@@ -119,7 +125,7 @@
     const gid=S.activeGroup, g=gmap[gid];
     const candidates=type==='question'?D.questions.filter(q=>q.group_id===gid).map(q=>q.target_id):D.members.filter(m=>m.group_id===gid).map(m=>m.person_id);
     const action=type==='question'?'ask-person':'contact-person';
-    return '<p class="eyebrow">'+esc(g.group_title)+'</p><h2>'+(type==='question'?'誰に、何を聞く？':'誰に交換を頼む？')+'</h2><p class="subtle">この追加行動を選ぶと、同じ輪ではほかの追加行動を選べません。</p><div class="person-list">'+candidates.map(pid=>'<div class="person-card">'+photo(pid,{venue:true})+'<div><div class="name">'+esc(knownName(pid))+'</div><div class="small">'+esc(publicAppearance(pid))+'</div>'+(type==='question'?btn('質問する',action,'data-pid="'+pid+'"','tiny'):['TINE','Photogram'].filter(platform=>!!amap[pid+'|'+platform]).map(platform=>btn(platform+'を頼む',action,'data-pid="'+pid+'" data-platform="'+platform+'"','tiny')).join(' '))+'</div></div>').join('')+'</div><div class="btnrow">'+btn('会話に戻る','back-group','','ghost')+'</div>';
+    return '<p class="eyebrow">'+esc(g.group_title)+'</p><h2>'+(type==='question'?'誰に、何を聞く？':'誰に交換を頼む？')+'</h2><p class="subtle">この追加行動を選ぶと、同じ輪ではほかの追加行動を選べません。</p><div class="person-list">'+candidates.map(pid=>'<div class="person-card">'+photo(pid,{venue:true})+'<div><div class="name">'+esc(knownName(pid))+'</div><div class="small">'+esc(publicAppearance(pid))+'</div>'+(type==='question'?'<p class="subtle">'+esc(D.questions.find(q=>q.group_id===gid&&q.target_id===pid)?.question||'質問する')+'</p>'+btn('この質問をする',action,'data-pid="'+pid+'"','tiny'):['TINE','Photogram'].filter(platform=>!!amap[pid+'|'+platform]).map(platform=>btn(platform+'を頼む',action,'data-pid="'+pid+'" data-platform="'+platform+'"','tiny')).join(' '))+'</div></div>').join('')+'</div><div class="btnrow">'+btn('会話に戻る','back-group','','ghost')+'</div>';
   };
 
   // TINEで交換した知り合いから届く、ゲーム内の日常連絡。推理の証拠は解除しない。
@@ -344,7 +350,7 @@
       S.eventId=el.dataset.eid;
       if(!Array.isArray(S.eventHistory))S.eventHistory=[];
       S.eventHistory.push(S.eventId);
-      S.visitedGroups=[];S.groupActions={};S.preEventState={};
+      S.visitedGroups=[];S.groupActions={};S.groupReunions={};S.preEventState={};
       D.members.filter(m=>m.event_id===S.eventId).forEach(m=>{const x=ps(m.person_id);S.preEventState[m.person_id]={seen:x.seen,met:x.met,contact:x.contact_exchanged};x.seen=true});
       S.phase='venue';saveAndRender();return;
     }
@@ -367,7 +373,10 @@
         ms.forEach(m=>{ps(m.person_id).seen=true;ps(m.person_id).met=true;ps(m.person_id).clearPortrait=true});
         const first=D.lines.find(l=>l.group_id===gid&&l.introduced_effect==='speaker_self_intro');
         if(first)ps(first.speaker_id).introduced=true;
+        S.groupReunions??={};S.groupReunions[gid]=S.reunionText;
         S.visitedGroups.push(gid);S.groupResult='';
+      }else{
+        S.reunionText=S.groupReunions?.[gid]||'';
       }
       S.activeGroup=gid;S.phase='group';saveAndRender();return;
     }
