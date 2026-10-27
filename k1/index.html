@@ -135,11 +135,30 @@ var REVISION={
  R02:{day:6,body:'21時以降の訪問には原則として事前案内を配布します。ただし、4階臨時設備点検には特別な運用が適用されます。'},
  R05:{day:7,body:'臨時点検の担当者は管理番号を提示する場合があります。氏名・所属と訪問目的も併せて確認してください。'}
 };
+/* Resident noticeboard growth: one paper, five papers, then 20. */
+var NOTICE_DAY_MAP={2:3,3:4,4:6,5:7,6:8,7:10};
+EXTRA=EXTRA.map(function(n){return Object.assign({},n,{day:NOTICE_DAY_MAP[n.day]||n.day});});
+RETIRED=Object.keys(RETIRED).reduce(function(out,k){out[NOTICE_DAY_MAP[k]||k]=RETIRED[k];return out;},{});
+Object.keys(REVISION).forEach(function(id){REVISION[id].day=NOTICE_DAY_MAP[REVISION[id].day]||REVISION[id].day;});
+var INTRO_DAY2=['R01','R02','R05','L01','L08'];
+var INTRO_DAY3=['R01','R02','R03','R04','R05','R06','R07','R08','L01','L02','L03','L05','L06','L08','L10'];
+function basePostedDay(id){return id==='R01'?1:INTRO_DAY2.indexOf(id)>=0?2:INTRO_DAY3.indexOf(id)>=0?3:4;}
+EXTRA=EXTRA.concat([
+ {day:5,id:'N05P',title:'呼出音について',body:'昨夜にかけて、4階のインターホン動作について複数のご相談がありました。通話前に相手の様子をご確認ください。',issuer:'管理人室'},
+ {day:5,id:'N05Q',title:'深夜の共用部',body:'402号室・405号室付近で不明な足音の報告がありました。',issuer:'管理事務所'},
+ {day:5,id:'N05R',title:'点検員の確認',body:'設備点検が必要な場合は担当者名と日時を記載した個別案内を配布します。',issuer:'管理組合'},
+ {day:5,id:'N05S',title:'送信記録の確認',body:'個人情報に関わる問い合わせについて、管理組合の書面窓口を利用できます。',issuer:'管理組合'},
+ {day:5,id:'N05T',title:'来週の掲示作業',body:'一部の古い掲示を順次撤去します。掲示の変更にご留意ください。',issuer:'管理事務所'},
+ {day:9,id:'N09A',title:'昨日の点検について',body:'臨時設備点検は終了しました。来訪記録の確認は管理会社が一括して実施します。',issuer:'管理事務所'},
+ {day:9,id:'N09B',title:'申し出の締切',body:'管理組合への異議申立ては明日までに書面でお知らせください。管理会社への申請とは別手続きです。',issuer:'管理組合'},
+ {day:9,id:'N09C',title:'407号室の廊下',body:'空室前の私物について再確認中です。廊下へ出されているものには触れないでください。',issuer:'管理事務所'},
+ {day:9,id:'N09D',title:'4階の連絡',body:'今夜は4階の設備訪問を予定しておりません。',issuer:'管理事務所'},
+ {day:9,id:'N09E',title:'貼り替え作業',body:'管理人室では昨日の掲示の一部を貼り替えました。古い紙は掲示板から撤去します。',issuer:'管理人室'}
+]);
+RETIRED[9]=['N03A','N04A','N05A'];
+REVISION.N05P={day:9,body:'夜間の呼出しについて、今週の相談受付を終了しました。'};
 function retiredIds(day){var ids=new Set();for(var d=2;d<=day;d++)(RETIRED[d]||[]).forEach(function(id){ids.add(id);});return ids;}
-function noticeChangeCounts(day){
- if(day<=1)return {added:0,removed:0,revised:0};
- return {added:EXTRA.filter(function(x){return x.day===day;}).length,removed:(RETIRED[day]||[]).length,revised:Object.keys(REVISION).filter(function(id){return REVISION[id].day===day;}).length};
-}
+function noticeChangeCounts(day){if(day<=1)return {added:0,removed:0,revised:0};return {added:EXTRA.filter(function(x){return x.day===day;}).length+BASE.filter(function(n){return basePostedDay(n[0])===day;}).length,removed:(RETIRED[day]||[]).length,revised:Object.keys(REVISION).filter(function(id){return REVISION[id].day===day;}).length};}
 var EVENTS={
 1:[{id:'E01',time:'19:32',title:'予定外の宅配',scene:'宅配便を名乗る男が訪ねてきた。「406号室の荷物です。中まで運びます」。',monitor:'制服を着た男。送り状は406号室だが差出人は読めない。',hint:'月曜日の配送予定'}],
 2:[
@@ -205,16 +224,26 @@ SIDE_POOL[6]=[
  {id:'E07E',time:'23:34',title:'点検履歴の独立照会',scene:'理事会から「管理会社とは別の窓口で旧点検履歴の照合を受け付けます」と案内が届いた。',monitor:'連絡先は管理組合の掲示と一致する。提出済みの証言と点検控えを照合する目的だ。',hint:'管理会社と管理組合の区別'},
  {id:'E07F',time:'23:36',title:'共用部の異常信号',scene:'自室端末が「4階の共用部感知器に異常。室内の確認ボタンで受信を確定してください」と通知する。',monitor:'画面は入居時からある室内端末。遠隔の訪問者や音声応答ではなく、端末内の確認ボタンだ。',hint:'室内設備の操作と訪問の違い'}
 ];
-var SIDE_SLOT={2:1,3:0,4:1,5:1,6:0};
+var DAY_SCHEDULE={
+ 1:[EVENTS[1][0]],
+ 2:[EVENTS[2][0]],
+ 3:[{pool:2}],
+ 4:[{pool:3}],
+ 5:[EVENTS[3][1]],
+ 6:[EVENTS[4][0],{pool:4}],
+ 7:[EVENTS[5][0],{pool:5}],
+ 8:[{pool:6},EVENTS[6][1]],
+ 9:[],
+ 10:[EVENTS[7][0]]
+};
 function getEvents(day){
- if(!SIDE_POOL[day])return EVENTS[day];
  if(!state.sideChoices)state.sideChoices={};
- var chosen=state.sideChoices[day];
- if(!chosen){var candidates=SIDE_POOL[day];chosen=candidates[Math.floor(Math.random()*candidates.length)].id;state.sideChoices[day]=chosen;}
- var picked=SIDE_POOL[day].find(function(e){return e.id===chosen;})||SIDE_POOL[day][0];
- var schedule=EVENTS[day].slice();
- schedule[SIDE_SLOT[day]]=picked;
- return schedule;
+ return (DAY_SCHEDULE[day]||[]).map(function(item){
+  if(!item.pool)return item;
+  var chosen=state.sideChoices[day],candidates=SIDE_POOL[item.pool];
+  if(!chosen){chosen=candidates[Math.floor(Math.random()*candidates.length)].id;state.sideChoices[day]=chosen;}
+  return candidates.find(function(e){return e.id===chosen;})||candidates[0];
+ });
 }
 function initial(){return{started:false,day:1,index:0,phase:'morning',failure:null,owner:'405',evidence:[],alert:0,trust:0,exposed:false,consent:false,seal:false,letterTaken:false,drawingTarget:null,recordValidated:false,sideChoices:{},history:[],result:'',resultPending:false,ended:false,snapshots:{}};}
 function copy(x){return JSON.parse(JSON.stringify(x));}
@@ -231,7 +260,7 @@ function add(id){if(!has(id)){state.evidence.push(id);save();}}
 function esc(t){return String(t).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 function pad(x){return String(x).padStart(2,'0');}
 function el(id){return document.getElementById(id);}
-function currentNotices(){var retired=retiredIds(state.day);var base=BASE.filter(function(n){return !retired.has(n[0]);}).map(function(n){var r=REVISION[n[0]],updated=r&&r.day<=state.day;return{id:n[0],title:n[1],body:updated?r.body:n[2],issuer:n[3],rev:!!updated,postedDay:updated?r.day:1};});var extras=EXTRA.filter(function(n){return n.day<=state.day&&!retired.has(n.id);}).map(function(n){return{id:n.id,title:n.title,body:n.body,issuer:n.issuer,rev:false,postedDay:n.day};});return base.concat(extras).sort(function(a,b){return b.postedDay-a.postedDay;});}
+function currentNotices(){var retired=retiredIds(state.day);var base=BASE.filter(function(n){return basePostedDay(n[0])<=state.day&&!retired.has(n[0]);}).map(function(n){var r=REVISION[n[0]],updated=r&&r.day<=state.day;return{id:n[0],title:n[1],body:updated?r.body:n[2],issuer:n[3],rev:!!updated,postedDay:updated?r.day:basePostedDay(n[0])};});var extras=EXTRA.filter(function(n){return n.day<=state.day&&!retired.has(n.id);}).map(function(n){var rev=REVISION[n.id],updated=rev&&rev.day<=state.day;return{id:n.id,title:n.title,body:updated?rev.body:n.body,issuer:n.issuer,rev:!!updated,postedDay:updated?rev.day:n.day};});return base.concat(extras).sort(function(a,b){return b.postedDay-a.postedDay;});}
 function items(where){
 var post=[
 {day:1,id:'delivery',name:'配送日時変更のお知らせ',text:'406号室宛ての荷物は配達日が変更されました。変更前：月曜日19:00〜21:00／変更後：火曜日19:00〜21:00。月曜夜の配達予定はありません。配送会社お客様窓口。'},
