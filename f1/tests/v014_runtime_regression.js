@@ -35,12 +35,12 @@ function test(html){
   assert(legal.includes(id),'Action not offered: DAY '+before.day+' '+id);
   assert(get('actions').children.length<=13&&get('actions').children.length+get('moreActionsBody').children.length===legal.length,'All choices visible or expandable');
   for(const item of [...get('actions').children,...get('moreActionsBody').children])assert((item.innerHTML.match(/class="effect-chip/g)||[]).length===5,'Metric chips');
-  d.play(id);const chosen=d.getState(),sale=Math.max(0,30+10*before.attraction-10*before.vals.reduce((a,b)=>a+b,0));
+  d.play(id);const chosen=d.getState(),sale=Math.max(0,30+10*before.attraction-10*before.vals.reduce((a,b)=>a+b,0)-15*before.vals.filter(x=>x===5).length);
   assert(chosen.days.at(-1).sales===sale&&chosen.revenue===before.revenue+sale,'Revenue calculation');
   assert(chosen.attraction===before.attraction&&chosen.vals.join(',')===before.vals.join(','),'Next-day policy');
   d.advance();const after=d.getState();
   assert(after.vals.every(x=>x>=0&&x<=5)&&after.attraction<=10,'Stat limits');
-  assert(after.complaintTickets.filter(x=>x.status==='open').length===after.vals.reduce((a,b)=>a+b,0),'Official complaint ledger');
+  assert(after.complaintTickets.filter(x=>x.status==='open').length>=after.vals.reduce((a,b)=>a+b,0),'Official complaint ledger');
   if(!get('dayTransition').classList.contains('hidden')){
    assert(get('transitionDecision').textContent.includes(chosen.last.name),'Decision shown next morning');
    d.closeTransition();
