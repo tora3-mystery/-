@@ -31,14 +31,14 @@ h2{font-size:17px;line-height:1.4;margin:0 0 8px}h3{font-size:14px;margin:0 0 8p
 .result{border:1px solid #c7c4b7;background:#f0eee7;padding:14px;border-radius:9px;margin:12px 0}
 .ending{background:#232a2d;color:#eff1f1;text-align:center;padding:35px 22px;border-radius:11px}.ending h2{font-size:32px;letter-spacing:.15em}.ending .endingname{font-size:22px;margin:15px 0}.ending p{max-width:540px;margin:10px auto}
 .tag{display:inline-block;border:1px solid #aeb9bd;padding:1px 6px;color:#697477;border-radius:4px;font-size:10px;margin-left:5px}
-.caption{color:var(--muted);font-size:11px;margin-top:9px}.confirm-choice{background:#eef1ef;border:1px solid #9caeb4;border-radius:9px;padding:14px;margin-top:14px}.kid-art{display:block;width:100%;max-width:520px;height:auto;background:#fdfaf4;border:1px solid #ddd1b9;margin:12px auto}
+.caption{color:var(--muted);font-size:11px;margin-top:9px}.confirm-choice{background:#eef1ef;border:1px solid #9caeb4;border-radius:9px;padding:14px;margin-top:14px}.kid-art{display:block;width:100%;max-width:520px;height:auto;background:#fdfaf4;border:1px solid #ddd1b9;margin:12px auto}.answer-line{display:flex;gap:10px;align-items:center;padding:10px;margin:7px 0;background:#fff;border:1px solid #d5dcda;border-radius:8px;font-weight:600;cursor:pointer}.answer-line input{height:19px;width:19px;flex-shrink:0;accent-color:#354e59}.confirm-choice .btn:disabled{opacity:.45}
 .hidden{display:none!important}
 @media(max-width:700px){.notice-summary{grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;padding:7px;border-width:6px}.paper{min-height:79px;padding:7px 5px}.paper b{font-size:11px}.app{padding:9px 10px 56px}.panel{padding:13px}.mast h1{font-size:19px}}
 @media(max-width:390px){.notice-summary{grid-template-columns:repeat(3,minmax(0,1fr))}.history{grid-template-columns:repeat(4,1fr)}.tabs{gap:3px}.tab{font-size:12px}.mast h1{font-size:17px}.mast .home{font-size:10px}}
 </style>
 </head>
 <body><main class="app">
-<header class="mast"><div><div class="sub">短編UIゲーム実験室｜K1 プロトタイプ</div><h1>掲示物をご確認ください。</h1><div class="meta"><b>K1 α0.4.0</b> ｜ 2026-10-28 00:08 JST更新</div></div><a class="home" href="../index.html">作品一覧へ</a></header>
+<header class="mast"><div><div class="sub">短編UIゲーム実験室｜K1 プロトタイプ</div><h1>掲示物をご確認ください。</h1><div class="meta"><b>K1 α0.4.0</b> ｜ 2026-10-28 00:58 JST更新</div></div><a class="home" href="../index.html">作品一覧へ</a></header>
 <section id="intro" class="panel intro">
 <div class="sub">白波レジデンス・406号室</div><h2>掲示物をご確認ください。</h2>
 <p class="lede">あなたは白波レジデンス406号室で一人暮らしをする会社員です。</p><p>入居して3か月。仕事から帰るたび、エントランスの大量の掲示が目に入ります。少し慣れた今も、すべてに目を通すのはひと苦労です。</p>
@@ -106,7 +106,7 @@ var EXTRA=[
 {day:5,id:'N05A',title:'転居扱いのご連絡',body:'402号室の居住者について、夜間の照会後、本人の申出を確認できないまま「不在」として処理しました。現在調査中です。',issuer:'管理事務所'},
 {day:5,id:'N05B',title:'掲示物の適正利用',body:'住民の個人的な注意書きは、管理会社の確認後に掲示してください。無断掲示分は撤去します。',issuer:'管理事務所'},
 {day:5,id:'N05C',title:'検証用の仮登録名',body:'名簿の動作確認には「森本 透」を使用しました。実在する居住者の氏名ではありません。居住者本人との照合には使用しないでください。',issuer:'管理人室'},
-{day:5,id:'N05D',title:'4階の情報保護',body:'金曜日の夜までに名簿情報を第三者へ送った部屋が、その翌朝から「不在」と記録されています。確認への回答は慎重にお願いします。',issuer:'管理組合'},
+{day:5,id:'N05D',title:'4階の情報保護',body:'木曜日までに名簿情報を第三者へ送った402号室が、金曜日の掲示では「不在」とされています。氏名の回答は慎重にお願いします。',issuer:'管理組合'},
 {day:6,id:'N06',title:'夜間設備点検へのご協力',body:'管理番号 A-406。対象住戸へ23時台にご連絡する場合があります。インターホンには必ずご対応ください。お問い合わせは点検終了後に承ります。',issuer:'管理事務所'},
 {day:6,id:'N06A',title:'深夜の確認は特例です',body:'これまでの「21時以降の訪問」については、今週の4階臨時点検に限り特例を適用します。',issuer:'管理事務所'},
 {day:6,id:'N06B',title:'不審な呼出しの旧掲示',body:'過去の注意書きについてのお問い合わせは、現行のN06をご確認ください。旧文書は撤去済みです。',issuer:'管理事務所'},
@@ -270,11 +270,11 @@ function answer(c,extra){
 function advance(){if(!state.resultPending)return;pendingChoice=null;state.resultPending=false;state.result='';state.index++;if(state.index>=EVENTS[state.day].length){if(state.day===7){state.ended=true;state.phase='end';}else{state.day++;state.index=0;state.phase='morning';if(state.day===5)state.drawingTarget=state.owner;snapshot();}}save();render();scrollToTop();}
 function scrollToTop(){try{window.scrollTo({top:0,behavior:'instant'});}catch(e){window.scrollTo(0,0);}}
 function ending(){if(state.failure){return '<div class="ending"><div class="tiny" style="color:#b5c0c2">406号室｜'+state.day+'日目</div><h2>GAME OVER</h2><div class="endingname">'+esc(state.failure.reason)+'</div><p>'+esc(state.result)+'</p><p>'+esc(state.failure.detail)+'</p></div><div class="btnrow"><button class="btn primary" data-restartday="'+state.day+'">同じ日の帰宅時からやり直す</button><button class="btn secondary" data-showrewind="1">別の日を選ぶ</button></div>';}var name,body;
-if(state.exposed&&state.owner==='405'&&!state.consent){name='記録は残りました';body='管理組合は407号室の事故について再調査を始めた。旧掲示の意味も伝わった。あの呼出しへの応答は、今夜もなかった。';}
-else if(state.exposed){name='説明のつかない呼出し';body='黒田の報告は覆された。しかし、406号室の訪問記録には、翌日も02:14の呼出しが追加されている。';}
+if(state.exposed&&state.owner==='405'&&!state.consent){name='記録は残りました';body='旧掲示と点検控え、横田の証言をまとめた書面が管理組合に届いた。廊下が静かになった夜、407号室の灯りだけが消えていた。';}
+else if(state.exposed){name='説明のつかない呼出し';body='管理組合には書面が届いた。けれど午前2時14分、再びあなたの部屋へインターホンが鳴る。どこかで返事をした日を思い出す。';}
 else if(state.owner==='405'&&!state.consent){name='戸締まり';body='406号室は今夜も静かだった。管理会社からは「対応完了」の通知が届く。405号室の前だけ、朝になると濡れている。';}
 else{name='確認済み';body='管理会社の記録では、406号室への説明と点検は完了している。今夜の呼出しについても、回答は必要ないとされている。';}
-return '<div class="ending"><div class="tiny" style="color:#b5c0c2">白波レジデンス｜7日目の翌朝</div><h2>THE END</h2><div class="endingname">'+esc(name)+'</div><p>'+esc(body)+'</p></div><p class="caption">結末は行動と保存資料で変化します。別の日から再挑戦できます。</p><div class="btnrow"><button class="btn primary" data-restartday="1">1日目からやり直す</button><button class="btn secondary" data-showrewind="1">日付を選ぶ</button></div>';
+return '<div class="ending"><div class="tiny" style="color:#b5c0c2">白波レジデンス｜7日目の夜</div><h2>THE END</h2><div class="endingname">'+esc(name)+'</div><p>'+esc(body)+'</p></div><p class="caption">結末は判断と、それまでに得た情報によって変化します。別の日から再挑戦できます。</p><div class="btnrow"><button class="btn primary" data-restartday="1">1日目からやり直す</button><button class="btn secondary" data-showrewind="1">日付を選ぶ</button></div>';
 }
 function renderNight(){var n=el('nightPanel');n.classList.toggle('hidden',state.phase!=='night'||state.ended);if(state.phase!=='night'||state.ended)return;
 var e=eventNow();var shownTime=e.time+(Number(e.time.slice(0,2))<5?'（翌'+WEEKDAYS[state.day%7]+'曜日）':'');var h='<div class="over">'+state.day+'日目｜'+esc(shownTime)+'｜'+(state.index+1)+' / '+EVENTS[state.day].length+'</div><h2>'+esc(e.title)+'</h2><div class="scenario">'+esc(e.scene)+'</div>';
@@ -283,7 +283,7 @@ else{h+='<div class="btnrow"><button class="btn secondary" data-monitor="1">'+(m
 if(monitor)h+='<div class="monitor">'+esc(e.monitor)+'</div>';
 if(pendingChoice){
 var choiceName=pendingChoice==='yes'?'対応する':pendingChoice==='no'?'見送る':'照会する';
-h+='<div class="confirm-choice"><h3>この対応で確定しますか？</h3><strong>'+choiceName+'</strong><p>'+esc(actionPreview(e,pendingChoice))+'</p><div class="btnrow"><button class="btn secondary" data-cancel-choice="1">選び直す</button><button class="btn primary" data-confirm-choice="1">'+(pendingChoice==='verify'?'問い合わせを実行する':'この対応で確定する')+'</button></div></div>';
+var form=pendingChoice==='yes'?responseForm(e):'';var complete=pendingChoice!=='yes'||e.id==='E03B'&&reply.fields.length>0||e.id==='E06B'&&!!reply.number||e.id==='E08'&&!!reply.person||!['E03B','E06B','E08'].includes(e.id);h+='<div class="confirm-choice"><h3>この対応で確定しますか？</h3><strong>'+choiceName+'</strong><p>'+esc(actionPreview(e,pendingChoice))+'</p>'+form+'<div class="btnrow"><button class="btn secondary" data-cancel-choice="1">選び直す</button><button class="btn primary" data-confirm-choice="1" '+(complete?'':'disabled')+'>'+(pendingChoice==='verify'?'問い合わせを実行する':'この対応で確定する')+'</button></div></div>';
 }else{
 h+='<p class="caption">帰宅時に読んだ掲示を思い出して判断してください。照会は別の窓口への問い合わせで、1回の判断として処理します。</p><div class="btnrow"><button class="btn primary" data-judge="yes">対応する</button><button class="btn" data-judge="no">見送る</button><button class="btn" data-judge="verify">照会する</button></div>';
 }}
@@ -299,17 +299,10 @@ h+='</div>';
 var n=currentNotices().filter(function(x){return x.id===selected;})[0];
 if(n){h+='<div class="detail"><div class="issuer">'+esc(n.id)+'｜'+esc(n.issuer)+'</div><h3>'+esc(n.title)+'</h3><p>'+esc(n.body)+'</p>'+(n.id==='L10'?drawingHtml():'')+(n.rev?'<p><b>この掲示物は6日目に撤去されています。</b> 旧文書の写しを探してください。</p>':'')+'</div>';}
 if(state.day>=6)h+='<div class="detail"><h3>掲示の貼替履歴</h3><p>R04「不審な呼出しについて」は6日目に撤去され、N06「夜間設備点検へのご協力」が掲示されています。古い文面を控えていた住民がいるようです。</p></div>';
-}else if(tab==='archive'){
-h='<h2>保存した記録</h2><p class="tiny">保存していない情報は後から失われる場合があります。</p><div class="listing">';
-state.evidence.forEach(function(id){h+='<div class="record"><strong>'+esc(evidenceName(id))+'</strong><span class="tiny">記録保管済み</span></div>';});
-if(!state.evidence.length)h+='<p>まだ保存した記録はありません。</p>';
-h+='</div><h3 style="margin-top:16px">過去の対応</h3><div class="listing">';
-state.history.forEach(function(r){h+='<div class="record"><strong>'+r.day+'日目｜'+esc(r.title)+'</strong><p class="tiny">'+(r.choice==='yes'?'対応':r.choice==='no'?'見送り':'照会')+'：'+esc(r.outcome)+'</p></div>';});
-if(!state.history.length)h+='<p>まだ夜間の対応記録はありません。</p>';h+='</div>';
 }else{
-h='<h2>'+(tab==='post'?'406号室のポスト':'406号室の玄関')+'</h2><p class="tiny">内容を確認し、必要な資料は「記録を残す」で控えられます。</p><div class="listing">';
-items(tab).forEach(function(i){h+='<div class="record"><strong>'+esc(i.name)+(has(i.id)?'<span class="tag">記録済</span>':'')+'</strong><p>'+esc(i.text)+'</p><button class="btn secondary" data-record="'+esc(i.id)+'" '+(has(i.id)?'disabled':'')+'>'+(has(i.id)?'記録済み':'記録を残す')+'</button></div>';});
-h+='</div>';
+ h='<h2>'+(tab==='post'?'406号室のポスト':'406号室の玄関')+'</h2><p class="tiny">帰宅時に内容を確かめてください。この情報が後の判断に役立つ場合があります。</p><div class="listing">';
+ items(tab).forEach(function(i){h+='<div class="record"><strong>'+esc(i.name)+'</strong><p>'+esc(i.text)+'</p></div>';});
+ h+='</div>';
 }
 p.innerHTML=h;
 }
@@ -337,9 +330,9 @@ var rp=el('rewindPanel');if(!rp.classList.contains('hidden'))renderRewind();
 renderNight();renderTab();
 }
 function renderRewind(){var h='';for(var d=1;d<=7;d++){h+='<button class="btn" '+(d>state.day?'disabled':'data-restartday="'+d+'"')+'>'+d+'日目'+(d===state.day?'（現在）':'')+'</button>';}el('days').innerHTML=h;}
-function start(){state=initial();state.started=true;pendingChoice=null;snapshot();save();render();scrollToTop();}
-function rewind(day){day=Number(day);if(!state.snapshots[day]||day>state.day)return;var old=state.snapshots;var snap=copy(old[day]);snap.snapshots={};Object.keys(old).forEach(function(k){if(Number(k)<=day)snap.snapshots[k]=old[k];});state=snap;if(state.day>=5&&!state.drawingTarget)state.drawingTarget=firstDrawingTarget(state.history);state.started=true;tab='board';selected=null;filter='';monitor=false;pendingChoice=null;el('rewindPanel').classList.add('hidden');save();render();scrollToTop();}
-function beginNight(){if(state.phase!=='morning'||state.ended)return;state.phase='night';pendingChoice=null;tab='board';selected=null;save();render();scrollToTop();}
+function start(){state=initial();state.started=true;pendingChoice=null;reply={fields:[],number:'',person:''};snapshot();save();render();scrollToTop();}
+function rewind(day){day=Number(day);if(!state.snapshots[day]||day>state.day)return;var old=state.snapshots;var snap=copy(old[day]);snap.snapshots={};Object.keys(old).forEach(function(k){if(Number(k)<=day)snap.snapshots[k]=old[k];});state=snap;if(state.day>=5&&!state.drawingTarget)state.drawingTarget=firstDrawingTarget(state.history);state.started=true;tab='board';selected=null;filter='';monitor=false;pendingChoice=null;reply={fields:[],number:'',person:''};el('rewindPanel').classList.add('hidden');save();render();scrollToTop();}
+function beginNight(){if(state.phase!=='morning'||state.ended)return;state.phase='night';pendingChoice=null;reply={fields:[],number:'',person:''};tab='board';selected=null;save();render();scrollToTop();}
 document.addEventListener('click',function(ev){
 var b=ev.target.closest('button');if(!b)return;
 if(b.id==='start'||b.id==='new'){if(b.id==='new'&&!confirm('これまでの記録を消して最初から始めますか？'))return;start();return;}
@@ -351,13 +344,13 @@ if(b.dataset.restartday){rewind(b.dataset.restartday);return;}
 if(b.dataset.tab){if(state.phase!=='morning'||state.ended)return;tab=b.dataset.tab;selected=null;renderTab();return;}
 if(b.dataset.gotab){if(state.phase!=='morning'||state.ended)return;tab=b.dataset.gotab;renderTab();el('tabPanel').scrollIntoView({block:'start'});return;}
 if(b.dataset.notice){if(state.phase!=='morning'||state.ended)return;selected=b.dataset.notice;renderTab();var detail=el('tabPanel').querySelector('.detail');if(detail)detail.scrollIntoView({block:'nearest'});return;}
-if(b.dataset.record){if(state.phase!=='morning'||state.ended)return;add(b.dataset.record);renderTab();return;}
 if(b.dataset.monitor){monitor=!monitor;renderNight();return;}
-if(b.dataset.judge){if(state.phase!=='night'||state.resultPending||state.ended)return;pendingChoice=b.dataset.judge;renderNight();return;}
+if(b.dataset.judge){if(state.phase!=='night'||state.resultPending||state.ended)return;pendingChoice=b.dataset.judge;reply={fields:[],number:'',person:''};renderNight();return;}
 if(b.dataset.cancelChoice){pendingChoice=null;renderNight();return;}
-if(b.dataset.confirmChoice){if(pendingChoice)answer(pendingChoice);return;}
+if(b.dataset.confirmChoice){if(pendingChoice)answer(pendingChoice,copy(reply));return;}
 if(b.dataset.next){advance();return;}
 });
+document.addEventListener('change',function(ev){var x=ev.target;if(state.phase!=='night'||state.ended||!pendingChoice)return;if(x.dataset.replyField){reply.fields=x.checked?reply.fields.concat([x.dataset.replyField]):reply.fields.filter(function(y){return y!==x.dataset.replyField;});renderNight();}else if(x.dataset.replyNumber){reply.number=x.dataset.replyNumber;renderNight();}else if(x.dataset.replyPerson){reply.person=x.dataset.replyPerson;renderNight();}});
 document.addEventListener('input',function(ev){if(ev.target.id==='search'&&state.phase==='morning'&&!state.ended){var pos=ev.target.selectionStart;filter=ev.target.value;renderTab();var inp=el('search');inp.focus();inp.setSelectionRange(pos,pos);}});
 load();render();
 })();
