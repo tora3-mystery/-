@@ -270,7 +270,7 @@
         q.truth=chosen.price;q.unit='円';q.type='yen';
         q.imageKey=chosen.imageKey;q.productId=chosen.id;
         q.sceneOverrides=chosen.sceneOverrides||{};q.sceneVariantOverride=chosen.sceneVariant||null;
-        q.speechName=chosen.speechName;q.displayName=chosen.name;
+        q.speechName=chosen.speechName&&chosen.speechName!==chosen.name?chosen.speechName:informalProductName(chosen.name);q.displayName=chosen.name;
         if(q.legacyIndex===1)q.zone=[Math.round(chosen.price*1.25),Math.round(chosen.price*2)];
         else if(q.legacyIndex===5)q.zone=[Math.round(chosen.price*.65),Math.round(chosen.price*.85)];
         else if(q.legacyIndex===11)q.zone=[Math.round(chosen.price*.6),Math.round(chosen.price*.87)];
