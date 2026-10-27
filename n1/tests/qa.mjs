@@ -32,7 +32,7 @@ try {
     page.on('pageerror', error => report.pageErrors.push({ width, text: error.message }));
     await page.goto(baseUrl, { waitUntil: 'networkidle' });
     check(`intro visible ${width}`, await page.getByRole('heading', { name: /正確に/ }).isVisible(), 'intro title');
-    await page.getByRole('button', { name: /1週間を始める/ }).click();
+    await page.locator('#start').click();
     await page.evaluate(() => { state.i = 1; state.phase = 'ask'; render(); });
     await page.locator('.product-zoom img').waitFor({ state: 'visible' });
     const metrics = await page.evaluate(() => ({
@@ -50,17 +50,32 @@ try {
     await page.getByRole('button', { name: '閉じる ×' }).click();
     await page.evaluate(() => window.scrollTo(0, 0));
     await page.waitForTimeout(100);
-    const screenshot = path.join(outputDir, `n1-v051-${width}px.jpg`);
+    const screenshot = path.join(outputDir, `n1-v060-${width}px.jpg`);
     await page.screenshot({ path: screenshot, type: 'jpeg', quality: 78, fullPage: false });
     report.viewports.push({ width, height, screenshot: path.relative('.', screenshot), metrics });
     await page.close();
+  }
+
+  // Independently load every delivered category illustration at its actual browser path.
+  {
+    const catalogPage=await browser.newPage();
+    await catalogPage.goto(baseUrl,{waitUntil:'domcontentloaded'});
+    const images=await catalogPage.evaluate(async()=>Promise.all(window.N1Catalog.deliveredKeys.map(key=>new Promise(resolve=>{
+      const im=new Image();
+      im.onload=()=>resolve({key,ok:im.naturalWidth===800&&im.naturalHeight===600,w:im.naturalWidth,h:im.naturalHeight});
+      im.onerror=()=>resolve({key,ok:false,error:'image-load-failed'});
+      im.src='assets/catalog/'+key+'-neutral.webp';
+    }))));
+    check('all 32 WebP images load at 800x600',images.length===32&&images.every(img=>img.ok),JSON.stringify(images.filter(img=>!img.ok)));
+    report.catalogImages=images;
+    await catalogPage.close();
   }
 
   const page = await browser.newPage({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 2 });
   page.on('console', msg => { if (msg.type() === 'error') report.consoleErrors.push({ width: 390, text: msg.text() }); });
   page.on('pageerror', error => report.pageErrors.push({ width: 390, text: error.message }));
   await page.goto(baseUrl, { waitUntil: 'networkidle' });
-  await page.getByRole('button', { name: /1週間を始める/ }).click();
+  await page.locator('#start').click();
 
   for (const value of ['', '0', '-1', '1.5', '999999999999']) {
     await page.locator('#number').fill(value);
@@ -92,18 +107,29 @@ try {
     }
     check(`run ${run} reaches ending`, await page.getByText('ONE WEEK COMPLETE', { exact: false }).isVisible(), 'ending');
     const recurrence = await page.evaluate(() => ({
-      q2: results[1]?.truth,
-      q9Base: buy[picks[1]].price,
-      q8: results[7]?.truth,
-      q10: results[9]?.truth,
+      q2: results.find(x=>x.legacyIndex===1)?.truth,
+      q9Base: results.find(x=>x.legacyIndex===1)?.truth,
+      q8: results.find(x=>x.legacyIndex===7)?.truth,
+      q10: results.find(x=>x.legacyIndex===11)?.truth,
+      productQ2: plan.questions.find(q=>q.legacyIndex===1)?.productId,
+      productQ9: plan.questions.find(q=>q.legacyIndex===8)?.productId,
+      productQ8: plan.questions.find(q=>q.legacyIndex===7)?.productId,
+      productQ10: plan.questions.find(q=>q.legacyIndex===11)?.productId,
       count: results.length
     }));
-    check(`run ${run} q2 to q9 recurrence`, recurrence.q2 === recurrence.q9Base, JSON.stringify(recurrence));
-    check(`run ${run} q8 to q10 recurrence`, recurrence.q8 === recurrence.q10, JSON.stringify(recurrence));
+    check(`run ${run} q2 to q9 recurrence`, recurrence.q2 === recurrence.q9Base && recurrence.productQ2 === recurrence.productQ9, JSON.stringify(recurrence));
+    check(`run ${run} q8 to q10 recurrence`, recurrence.q8 === recurrence.q10 && recurrence.productQ8 === recurrence.productQ10, JSON.stringify(recurrence));
     check(`run ${run} has 10 answers`, recurrence.count === 10, JSON.stringify(recurrence));
     report.fullRuns.push({ run, seen, recurrence });
     if (run < 3) await page.getByRole('button', { name: /別の数字で/ }).click();
   }
+
+  // Test timeout semantics directly, avoiding a 15-second delay in the QA runner.
+  await page.evaluate(() => { timedMode=true; initRound(); screen='play'; state.phase='ready'; render(); });
+  await page.locator('#beginAnswer').click();
+  await page.evaluate(() => timeoutAnswer());
+  const timeoutResult=await page.evaluate(() => ({phase:state.phase, count:results.length, timeout:results[0]?.timeout, score:results[0]?.score}));
+  check('timed mode: timeout creates one zero-point answer',timeoutResult.phase==='result'&&timeoutResult.count===1&&timeoutResult.timeout&&timeoutResult.score===0,JSON.stringify(timeoutResult));
 
   const matrix = await page.evaluate(() => {
     const rows = [];
@@ -137,7 +163,7 @@ try {
 } finally {
   report.finishedAt = new Date().toISOString();
   report.passed = report.checks.every(row => row.ok);
-  await writeFile('n1/tests/qa-report-v051.json', JSON.stringify(report, null, 2));
+  await writeFile('n1/tests/qa-report-v060.json', JSON.stringify(report, null, 2));
   await browser.close();
 }
 
