@@ -164,7 +164,7 @@ function add(id){if(!has(id)){state.evidence.push(id);save();}}
 function esc(t){return String(t).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 function pad(x){return String(x).padStart(2,'0');}
 function el(id){return document.getElementById(id);}
-function currentNotices(){var retired=retiredIds(state.day);var base=BASE.filter(function(n){return !retired.has(n[0]);}).map(function(n){var r=REVISION[n[0]],updated=r&&r.day<=state.day;return{id:n[0],title:n[1],body:updated?r.body:n[2],issuer:n[3],rev:!!updated,postedDay:updated?r.day:1};});var extras=EXTRA.filter(function(n){return n.day<=state.day&&!retired.has(n.id);}).map(function(n){return{id:n.id,title:n.title,body:n.body,issuer:n.issuer,rev:false,postedDay:n.day};});return base.concat(extras).sort(function(a,b){return b.postedDay-a.postedDay||(a.id<b.id?-1:a.id>b.id?1:0);});}
+function currentNotices(){var retired=retiredIds(state.day);var base=BASE.filter(function(n){return !retired.has(n[0]);}).map(function(n){var r=REVISION[n[0]],updated=r&&r.day<=state.day;return{id:n[0],title:n[1],body:updated?r.body:n[2],issuer:n[3],rev:!!updated,postedDay:updated?r.day:1};});var extras=EXTRA.filter(function(n){return n.day<=state.day&&!retired.has(n.id);}).map(function(n){return{id:n.id,title:n.title,body:n.body,issuer:n.issuer,rev:false,postedDay:n.day};});return base.concat(extras).sort(function(a,b){return b.postedDay-a.postedDay;});}
 function items(where){
 var post=[
 {day:1,id:'delivery',name:'配送日時変更のお知らせ',text:'406号室宛ての荷物は配達日が変更されました。変更前：月曜日19:00〜21:00／変更後：火曜日19:00〜21:00。月曜夜の配達予定はありません。配送会社お客様窓口。'},
