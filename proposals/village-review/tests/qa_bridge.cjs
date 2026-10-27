@@ -175,7 +175,8 @@ for(let seed=1;seed<=120;seed++){
 assert(adverseFound>0,'Evidence-grounded closure ending is unreachable');
 
 // All five-star reviews can preserve small scale past the point of financial
-// viability. This must remain uncommon, not impossible or dominant.
+// viability. Register the full evolution DB so its route-specific economics applies.
+assert.equal(qa.evolutionRegister(JSON.parse(fs.readFileSync(path.join(root,'evolution-db.json'),'utf8'))),true);
 let fiveStarClosures=0;
 for(let seed=1;seed<=220;seed++){
  qa.generate(Math.imul(seed+34019,2654435761)>>>0);
@@ -194,6 +195,7 @@ assert(fiveStarClosures>0&&fiveStarClosures<66,'Five-star financial collapse mus
  s.month=7;s.secrets.ancient=true;s.themes.tradition=3;s.themes.history=1;
  assert(q.villageWhisper()?.includes('役場の人'),'Tradition clue missing');
  s.secrets.ancient=false;s.secrets.robot=true;s.themes.tech=3;
+ s.facilities[0].kind='office';
  assert(q.villageWhisper()?.includes('住民の欄'),'Technology clue missing');
  s.secrets.robot=false;s.secrets.deep=true;s.terrain='island';s.themes.sea=2;
  s.facilities[0].kind='harbor';
