@@ -1,7 +1,7 @@
 (() => {
 'use strict';
 const D=window.S6_DATA, APP=document.getElementById('app'), KEY='s6-origin-beta-010', Dialogue=window.S6_BETA_DIALOGUE;
-const VERSION='0.5.0', BUILD='2026-10-27 23:56 JST';
+const VERSION='0.5.1', BUILD='2026-10-27 23:56 JST';
 const WEEK=['月曜 4月6日','火曜 4月7日','水曜 4月8日','木曜 4月9日','金曜 4月10日'];
 const DATES=['2026-04-06','2026-04-07','2026-04-08','2026-04-09','2026-04-10'];
 const people=Object.fromEntries(D.people.map(p=>[p.person_id,p]));
@@ -25,7 +25,7 @@ const arrange=(items,salt)=>items.slice().sort((a,b)=>{
 const date=()=>DATES[Math.min(S.day,4)];
 const initial=()=>({
  schema:1,phase:'title',day:0,selectedEvent:null,group:null,target:null,presentationSeed:Math.floor(Math.random()*1000000000),
- eventHistory:[],seen:[],introduced:[],flash:[],visitedGroups:[],groupDone:{},groupLog:{},spokenTo:[],photoRequests:[],photoFollows:[],affinity:{},relationshipDays:{},dailyAffinity:{},contacts:[],socialLinked:{},socialCandidates:{},selectedSocial:null,
+ eventHistory:[],seen:[],introduced:[],flash:[],visitedGroups:[],groupDone:{},groupLog:{},spokenTo:[],interacted:[],personalIntroduced:{},photoRequests:[],photoFollows:[],affinity:{},relationshipDays:{},dailyAffinity:{},contacts:[],socialLinked:{},socialCandidates:{},selectedSocial:null,
  guesses:{},note:{},clues:[],crossings:{},knownOrg:{},nightChoice:{},viewedPlatforms:{},viewedBoard:{},pendingContacts:[],
  checks:{},currentNotebook:null,suspect:'',camp:'',shared:false,privateInvite:false,
  report:'',result:'',savedAt:''
@@ -33,11 +33,13 @@ const initial=()=>({
 let S;
 try {const raw=JSON.parse(localStorage.getItem(KEY));S=raw&&raw.schema===1?raw:initial()}catch{S=initial()}
 function hydrate(){
- for(const k of ['eventHistory','seen','introduced','flash','visitedGroups','contacts','clues','spokenTo','pendingContacts','photoRequests','photoFollows'])if(!Array.isArray(S[k]))S[k]=[];
- for(const k of ['groupDone','guesses','note','crossings','knownOrg','nightChoice','viewedPlatforms','viewedBoard','groupLog','affinity','relationshipDays','dailyAffinity','checks','socialLinked','socialCandidates'])if(!S[k]||typeof S[k]!=='object')S[k]={};
+ for(const k of ['eventHistory','seen','introduced','flash','visitedGroups','contacts','clues','spokenTo','interacted','pendingContacts','photoRequests','photoFollows'])if(!Array.isArray(S[k]))S[k]=[];
+ for(const k of ['groupDone','guesses','note','crossings','knownOrg','nightChoice','viewedPlatforms','viewedBoard','groupLog','personalIntroduced','affinity','relationshipDays','dailyAffinity','checks','socialLinked','socialCandidates'])if(!S[k]||typeof S[k]!=='object')S[k]={};
 }
 hydrate();
 if(!Number.isFinite(S.presentationSeed))S.presentationSeed=0;
+// Old saves had a generic "spokenTo" flag, but no separately persisted direct introduction.
+for(const id of S.spokenTo)S.personalIntroduced[id]=true;
 if(S.phase==='flash'&&!S.group){S.phase='venue';localStorage.setItem(KEY,JSON.stringify(S));}
 for(const [gid,result] of Object.entries(S.groupDone))if(result&&!S.groupLog[gid])S.groupLog[gid]=[{pid:null,type:'旧版の交流',text:result}];
 const PEERS=new Set(['P013','P014','P015','P016']);
@@ -401,8 +403,20 @@ function handle(act,id){
       if(!S.pendingContacts.includes(id))S.pendingContacts.push(id);
     }
   }else return;
-  (S.groupLog[S.group]??=[]).push({pid:id,type:kind,text:reply.text,
-    reply:Dialogue.thirdParty(id,S.group,S,type)});
+    // A brief personal introduction is earned when choosing a person to interact with.
+  // The group-wide roll-call alone never fills this flag.
+  if(!S.personalIntroduced[id]){
+    const intro=Dialogue.selfIntroduction(id,S,'direct');
+    if(intro&&!reply.text.includes(people[id].name))reply.text=intro+' '+reply.text;
+    S.personalIntroduced[id]=true;
+  }
+  if(!S.interacted.includes(id))S.interacted.push(id);
+  const bystander=Dialogue.thirdParty(id,S.group,S,type);
+  if(bystander?.selfIntroduced){
+    S.personalIntroduced[bystander.pid]=true;
+    if(!S.introduced.includes(bystander.pid))S.introduced.push(bystander.pid);
+  }
+  (S.groupLog[S.group]??=[]).push({pid:id,type:kind,text:reply.text,reply:bystander});
   S.groupDone[S.group]=reply.text;
   S.report='';go('group');break;
  }
