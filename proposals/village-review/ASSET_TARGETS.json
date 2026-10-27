@@ -687,7 +687,7 @@
       "kind": "clinic",
       "route": "community",
       "stage": 2,
-      "label": "地域連携型の診療所"
+      "label": "問診・自然療法を重視する診療所"
     },
     {
       "id": "facility:clinic:community:3",
@@ -702,7 +702,7 @@
       "kind": "clinic",
       "route": "community",
       "stage": 3,
-      "label": "地域医療総合センター"
+      "label": "地域の養生・診療拠点"
     },
     {
       "id": "facility:clinic:advanced:2",
@@ -1077,7 +1077,7 @@
       "kind": "scenic",
       "route": "conservation",
       "stage": 2,
-      "label": "保護された自然景勝地"
+      "label": "自然回帰が進む散策路"
     },
     {
       "id": "facility:scenic:conservation:3",
@@ -1092,7 +1092,7 @@
       "kind": "scenic",
       "route": "conservation",
       "stage": 3,
-      "label": "自然保護景観エリア"
+      "label": "原生林の景勝地"
     },
     {
       "id": "facility:scenic:park:2",
