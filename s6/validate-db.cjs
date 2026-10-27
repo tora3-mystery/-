@@ -44,6 +44,19 @@ for (const p of D.socialProfiles) {
   hooks.push(p.first_hook);
 }
 check(new Set(hooks).size === hooks.length, 'Duplicate conversation hooks');
+const customReunions = D.socialProfiles.filter(p => typeof p.reunion_hook === 'string' && p.reunion_hook.length >= 10);
+check(new Set(customReunions.map(p => p.reunion_hook)).size === customReunions.length, 'Duplicate individual reunion hooks');
+const eventIdsByPerson = new Map();
+for (const member of D.members) {
+  if (!eventIdsByPerson.has(member.person_id)) eventIdsByPerson.set(member.person_id, new Set());
+  eventIdsByPerson.get(member.person_id).add(member.event_id);
+}
+const multiEventPeople = [...eventIdsByPerson.entries()].filter(([, ids]) => ids.size >= 2).map(([id]) => id);
+for (const id of multiEventPeople) {
+  const profile = D.socialProfiles.find(p => p.person_id === id);
+  check(!!profile?.reunion_hook && profile.reunion_hook.length >= 10, 'Missing reunion hook for multi-event person ' + id);
+}
+
 for (const g of D.groups) check(events.has(g.event_id), 'Orphan group ' + g.group_id);
 for (const m of D.members) {
   check(persons.has(m.person_id), 'Orphan member person ' + m.person_id);
@@ -88,7 +101,7 @@ const overview = {
   version: D.version,
   people: D.people.length, profiles: D.socialProfiles.length,
   firstHookUnique: new Set(hooks).size,
-  customReunions: D.socialProfiles.filter(x => x.reunion_hook).length, peerProgress: (D.peerProgress||[]).length,
+  customReunions: customReunions.length, multiEventPeople: multiEventPeople.length, peerProgress: (D.peerProgress||[]).length,
   groups: D.groups.length, members: D.members.length,
   lines: D.lines.length, questions: D.questions.length,
   contactChannels: D.contactChannels.length, errors: errors.length
