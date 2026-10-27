@@ -1,9 +1,22 @@
 'use strict';
-/* P1 v0.9.4-beta. All content is fictitious. No network calls beyond story.json. */
+/* P1 v0.9.5-beta. All content is fictitious. No network calls beyond story.json. */
 const APP=document.getElementById('app');
 const SAVE='short-ui-games-p1-v090';
 const DAYS=['10月12日（月）','10月13日（火）','10月14日（水）','10月15日（木）','10月16日（金）','10月17日（土）','10月18日（日）'];
 const REPORTERS=[['S','佐伯','行政・予算'],['K','桐谷','経済・企業'],['M','森下','医療・現場'],['O','大野','観光・地域'],['B','黒田','社会問題']];
+const REPORTER_PROFILES={
+ S:{trait:'慎重で寡黙。数字と手続きを突き合わせるのが得意。',reason:'行政の決定が、どんな資料に基づくのかを追う。',voice:['「発表資料の一行目より、脚注を確認したいですね。」','「決まった、で終わらせず。誰が何を決めたのかを残します。」']},
+ K:{trait:'理屈っぽく現実的。企業の言葉を数字に置き換える。',reason:'投資や支援の実現条件を、企業と金融機関に確かめる。',voice:['「『検討中』は、出資したことにはなりませんから。」','「いい話ほど、条件が小さな字で書かれています。」']},
+ M:{trait:'聞き上手で粘り強い。現場の声をじっくり拾う。',reason:'政策で暮らしが変わる人の声と、運営実態を確かめる。',voice:['「数字の向こうに、今日も診察を待つ人がいます。」','「病院の将来も大事です。今日の患者さんも同じくらい。」']},
+ O:{trait:'人懐っこい行動派。立場の違う人をつなぐのが得意。',reason:'観光と住民の暮らしが両立する道を取材する。',voice:['「賛成か反対かの前に、地元の話を聞きませんか。」','「いい計画なら、誰の毎日が変わるのか知りたいです。」']},
+ B:{trait:'疑い深いが早合点はしない。資料の食い違いを見逃さない。',reason:'不審な点を調べ、疑惑と確認済みの事実を分ける。',voice:['「おかしい、だけじゃ記事にはなりません。」','「噂の出どころを確かめてから、書きましょう。」']}
+};
+function reporterRoster(expanded=false){
+ return `<details class="panel reporter-roster" ${expanded?'open':''}><summary>編集部の記者5人｜性格と意気込みを見る</summary><p class="small muted">記者によって取材の切り口が変わります。全員、4つのテーマを担当できます。</p><div class="reporter-grid">${REPORTERS.map(([id,name,skill])=>{const p=REPORTER_PROFILES[id];return `<div class="reporter-bio"><h4>${esc(name)} <span>${esc(skill)}</span></h4><p>${esc(p.trait)}</p><p class="reporter-quote">${esc(p.voice[0])}</p></div>`}).join('')}</div></details>`
+}
+function missionReference(){
+ return `<details class="panel mission-reference"><summary>因果観察室からの任務指示を確認する</summary><p class="small"><b>役割：</b>2026年10月12〜18日の東雲日報・臨時編集担当。紙面に掲載する事実とその大きさを選び、2027年の県の姿を観測する。</p><p class="small"><b>復元する未来：</b>中央病院の存続／霧峰高原の観光開発／千鳥湿原の保護区域維持。</p><p class="small"><b>制約：</b>三分野すべてに公費を投入する余裕はありません。企業や住民の選択も重要です。</p><p class="small muted">事実そのものを書き換えることはできません。掲載しない出来事も、県内では進みます。</p></details>`
+}
 const TOPICS=[['H','医療'],['T','観光'],['E','自然環境'],['G','県政・財政']];
 const NEWS={H:['N01','N02','N03','N04'],T:['N05','N06','N07','N08'],E:['N09','N10','N11','N12'],G:['N13','N14','N15','N16']};
 const AT={I01:'H',I02:'T',I03:'E',I04:'H',I05:'H',I06:'T',I07:'E',I08:'T',I09:'H',I10:'T',I11:'E',I12:'H',I13:'H',I14:'T',I15:'E',I16:'T',I17:'H',I18:'T',I19:'E',I20:'E',N13:'H',N14:'T',N15:'E',N16:'H'};
@@ -66,13 +79,36 @@ function briefingText(){
  if(d===7){t.push(initialSituation());t.push('今日も通常の取材と紙面編集ができます。今夜の最終号までの報道を踏まえ、一年後の姿が決まります。')}
  return t
 }
-function intro(){APP.innerHTML=`<div class="stage">${header('N国・因果観察室｜特別任務','明日の一面を決めてください。','一週間の新聞編集によって、東雲県の一年後を変えてください。')}<div class="paper"><div class="masthead"><h2>東雲日報</h2><time>特別任務資料<br>2026年10月</time></div><h3 class="headline" style="font-size:1.22rem">2027年、県の3つの未来が失われる</h3><p>県立中央病院は縮小。霧峰高原の観光計画は停滞。千鳥湿原の保護区域も変更される見込みです。</p><p>本来は、この3つが両立する未来がありました。あなたには2026年10月12日から18日までの東雲日報の編集権限が与えられます。</p></div><div class="panel"><h3>復元すべき2027年の状態</h3><ul><li>県立中央病院が存続する</li><li>霧峰高原の大型観光計画が実現する</li><li>千鳥湿原の保護区域が維持される</li></ul><p class="small">行政予算は限られています。医療・観光・自然をすべて公費で救うことはできません。</p></div><div class="note">毎朝：反響を読む → 記者2人と取材テーマを選ぶ → 6〜7本の記事から一面トップ・準トップ・小記事2本を指定 → 発行。紙面は自動で組み上がります。SNSの噂は、取材して確認しなければ事実にはなりません。</div><div class="btn-row"><button class="btn" data-do="start">編集室へ向かう</button></div></div>`}
+function intro(){
+ APP.innerHTML=`<div class="stage intro-stage">
+ ${header('N国・因果観察室｜観測記録 P1','明日の一面を決めてください。','2026年10月12日。東雲県の地方紙に、あなたが臨時編集担当として入ります。')}
+ <section class="dossier"><p class="dossier-label">因果観察室／観測差分報告書</p>
+ <p>2027年の東雲県では、県立中央病院が縮小し、霧峰高原の観光計画が止まり、千鳥湿原の保護区域も失われかけている。</p>
+ <p>しかし、因果観察室の記録には、<b>病院・観光・自然がすべて守られた別の未来</b>が残っていた。</p>
+ <p class="dossier-dialogue">「事故が起きたわけではない。誰か一人が間違えたわけでもない。県民と企業と行政が、少しずつ違う判断を積み重ねた結果だ」</p>
+ <p>調査で分かったのは、その判断を左右する大きな接点が、県内最大の新聞『東雲日報』だったということ。</p>
+ <p>あなたに与えられるのは、<b>2026年10月12日から18日までの7日間の編集権限</b>。取材する記者を決め、記事を選び、どのニュースを一面に載せるか決める。</p>
+ <p class="dossier-dialogue">「事実を作る必要はない。ただ、県が何を知るかは、君の紙面で変わる」</p>
+ </section>
+ <section class="panel"><h3>取り戻す、3つの未来</h3>
+ <ul class="objective-list"><li><b>医療</b>　県立中央病院が存続する</li><li><b>観光</b>　霧峰高原の大型観光計画が実現する</li><li><b>自然</b>　千鳥湿原の保護区域が維持される</li></ul>
+ <p class="small">行政の予算は限られています。三つを同時に実現するには、公的支援だけでなく、企業や住民の判断も変わる必要があります。</p>
+ </section>
+ ${reporterRoster(true)}
+ <section class="panel"><h3>あなたの仕事は、毎日2つ</h3>
+ <ol class="intro-steps"><li><b>記者2人に取材テーマを指定する。</b> 5人の記者は、それぞれ異なる切り口で情報を集めます。</li><li><b>集まった記事から紙面の4枠を決める。</b> 一面トップ1本・準トップ1本・小記事2本。新聞は自動で組み上がります。</li></ol>
+ <p class="small">翌朝、読者の投書・SNS・政治家や企業からの反響が届きます。噂はそのまま事実にはできません。必要なら記者に裏取りさせてください。</p>
+ <p class="small muted">7日目の新聞を発行した後、2027年の県の姿を観測します。報じなかった出来事も消えるわけではありません。</p>
+ </section>
+ <div class="btn-row"><button class="btn" data-do="start">10月12日｜最初の編集会議へ</button></div>
+ </div>`
+}
 function reactionEligible(ids){const p=s.lastPaper.map(x=>x.id),counts={H:0,T:0,E:0,G:0},sections={H:0,T:0,E:0,G:0};
 p.forEach(id=>{counts[topic(articles[id])]++;sections[section(articles[id])]++});const top=topic(articles[p[0]]||{}),att=s.att,prior=s.publishedIds,earlierT=prior.filter(id=>topic(articles[id]||{})==='T').length,earlierH=prior.filter(id=>topic(articles[id]||{})==='H').length,day=s.day;const inc=id=>p.includes(id),hasEvidence=k=>s.evidence.includes(k),ever=id=>prior.includes(id),reactionHas=id=>s.reactionsSeen.includes(id);
 const c={R01:counts.H>0&&top==='H',R02:counts.H===0,R03:counts.H>0,R04:counts.T>0,R05:counts.T>=2||att.T>=6,R06:counts.H>0&&counts.T>0,R07:top==='E',R08:counts.E===0,R09:p.some(x=>['I04','I08','I12','I16','I20','N13','N14','N15','N16'].includes(x)),R10:true,R11:top==='H',R12:att.H>=4,R13:att.H>=7,R14:top==='T',R15:earlierT>=4&&att.T>=6,R16:att.T>=6&&att.E<=3,R17:top==='E',R18:inc('I19')||inc('I11'),R19:reactionHas('R22')||reactionHas('R23'),R20:Object.values(sections).filter(x=>x>0).length>=3&&day>=2,R21:inc('I01'),R22:earlierH>=4&&ever('I01'),R23:reactionHas('R22')&&top==='H',R24:inc('I06')||inc('I02'),R25:att.E>=4,R26:day>=3&&att.H>=4&&(att.T>=3||att.E>=3),R27:p.some(x=>['I04','I08','I12','I16','I20','N13','N14','N15','N16'].includes(x)),R28:p.some(x=>x.startsWith('I'))&&day>=2,R29:top==='H',R30:inc('I05'),R31:att.T>=3,R32:att.T>=4&&!hasEvidence('investment_t'),R33:att.T>=3&&att.E>=3,R34:p.some(x=>['I17','I18','I19','I20'].includes(x)),R35:att.E>=5,R36:earlierH>=3&&counts.H>0,R37:earlierT>=4,R38:att.E<=2&&day>=2,R39:s.candidates.some(a=>a.id.startsWith('C')),R40:p.slice(2).some(x=>x.startsWith('I')),R41:att.H>=4,R42:inc('I01'),R43:att.T>=5,R44:att.T>=4&&att.E<=3,R45:day>=4&&att.H>=5&&hasEvidence('public_h'),R46:day>=6&&(reactionHas('R45')||ever('I19')),R47:att.H>=6,R48:day>=5&&att.T>=6&&hasEvidence('investment_t'),R49:att.E>=5,R50:day>=5&&(att.H>=5||att.T>=5||att.E>=5)};return ids.filter(id=>c[id]&&!s.reactionsSeen.includes(id));}
 function reactionText(r){return r.revisionSample?.copy||r.baseCopy||'記事について意見が届きました。'}
 function reactionList(ids,period='今朝'){const important=ids.filter(id=>REACTION_LEADS[id]||id==='R45'||id==='R46');const rest=ids.filter(id=>!important.includes(id));const ordered=[...important,...rest];const first=ordered.slice(0,3),tail=ordered.slice(3);const card=id=>{const r=reactions[id];return `<div class="${(CHANNEL[id]||'').includes('SNS')?'social':'listening'}"><h4>${esc(r.revisionSample?.channel||CHANNEL[id]||'編集部への連絡')}</h4><p>${esc(reactionText(r))}</p></div>`};return `<h3>届いた反響 <span class="muted small">${ids.length}件</span></h3>${ids.length?first.map(card).join(''):'<p class="small muted">${esc(period)}、新しい連絡はありません。</p>'}${tail.length?`<details><summary>その他の投稿・反響 ${tail.length}件を読む</summary>${tail.map(card).join('')}</details>`:''}<p class="small muted">SNS上の言説や投書は未確認情報を含みます。信頼できる記事にするには取材が必要です。</p>`}
-function morning(){const msgs=s.latestReactions;APP.innerHTML=`<div class="stage">${header('東雲日報｜朝の編集会議',`${s.day}日目｜${DAYS[s.day-1]}`,'昨日の報道の反響を確認し、今日の重点取材を決めます。')}${status()}<section class="panel"><h3>編集長からのメモ</h3>${briefingText().map(x=>`<p class="small">・${esc(x)}</p>`).join('')}</section>${s.day>1?`<section class="panel">${reactionList(msgs)}</section>`:''}<section class="panel"><h3>重点取材｜記者とテーマを2組指定</h3><div class="fields">${[0,1].map(i=>`<div class="field"><label class="field-label" for="reporter${i}">派遣記者 ${i+1}</label><select id="reporter${i}" data-reporter="${i}">${REPORTERS.map(([id,name,skill])=>`<option value="${id}" ${id===(i?'B':'S')?'selected':''}>${name}｜${skill}</option>`).join('')}</select><label class="field-label" for="topic${i}" style="margin-top:10px">取材テーマ</label><select id="topic${i}">${TOPICS.map(([id,name])=>`<option value="${id}" ${id===(i?'E':'H')?'selected':''}>${name}</option>`).join('')}</select><p class="small muted" id="hint${i}"></p></div>`).join('')}</div><p id="dispatchError" class="warning" hidden></p><div class="btn-row"><button class="btn" data-do="dispatch">2人を取材に派遣する</button></div></section></div>`;updateHints()}
+function morning(){const msgs=s.latestReactions;APP.innerHTML=`<div class="stage">${header('東雲日報｜朝の編集会議',`${s.day}日目｜${DAYS[s.day-1]}`,'昨日の報道の反響を確認し、今日の重点取材を決めます。')}${status()}${missionReference()}<section class="panel"><h3>編集長からのメモ</h3>${briefingText().map(x=>`<p class="small">・${esc(x)}</p>`).join('')}</section>${s.day>1?`<section class="panel">${reactionList(msgs)}</section>`:''}${reporterRoster(false)}<section class="panel"><h3>重点取材｜記者とテーマを2組指定</h3><div class="fields">${[0,1].map(i=>`<div class="field"><label class="field-label" for="reporter${i}">派遣記者 ${i+1}</label><select id="reporter${i}" data-reporter="${i}">${REPORTERS.map(([id,name,skill])=>`<option value="${id}" ${id===(i?'B':'S')?'selected':''}>${name}｜${skill}</option>`).join('')}</select><label class="field-label" for="topic${i}" style="margin-top:10px">取材テーマ</label><select id="topic${i}">${TOPICS.map(([id,name])=>`<option value="${id}" ${id===(i?'E':'H')?'selected':''}>${name}</option>`).join('')}</select><p class="reporter-mood" id="reporterMood${i}"></p><p class="small muted" id="hint${i}"></p></div>`).join('')}</div><p id="dispatchError" class="warning" hidden></p><div class="btn-row"><button class="btn" data-do="dispatch">2人を取材に派遣する</button></div></section></div>`;updateHints()}
 const ANGLES={
  SH:'病院の救済に使える公費と、予算上の手続きを調べる',
  ST:'観光施設の許認可と、工事を始めるまでの障害を調べる',
@@ -102,6 +138,8 @@ function updateHints(){
   const code=r.value+t.value,id='I'+String(1+REPORTERS.findIndex(x=>x[0]===r.value)*4+TOPICS.findIndex(x=>x[0]===t.value)).padStart(2,'0');
   const done=seen(id),el=document.getElementById('hint'+i);
   if(el)el.textContent=(done?'前回も取材した組み合わせ。引き続き追うと続報になる場合があります。':'取材の切り口：')+(ANGLES[code]||'現地の状況を調べる')+'。';
+  const mood=document.getElementById('reporterMood'+i),profile=REPORTER_PROFILES[r.value];
+  if(mood&&profile)mood.textContent=profile.voice[s.day>=4?1:0];
  }
 }
 
