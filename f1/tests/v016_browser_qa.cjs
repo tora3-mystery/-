@@ -52,7 +52,7 @@ async function select(page,id){
    assert((await page.locator('#intro').innerText()).includes('仕事は2つだけ'));
    await page.screenshot({path:path.join(shots,`intro-${width}.png`),fullPage:true});
    await page.locator('#start').click();await visible(page,'#game');
-   assert.equal(await page.locator('#actions .action').count(),2);
+   assert.equal(await page.locator('#actions .action').count(),1);
    assert.equal(await page.locator('#moneyDetail').innerText(),'本部目標：今週の売上500万円');
    const layout=await page.evaluate(()=>({overflow:document.documentElement.scrollWidth-innerWidth,
     minTap:Math.min(...[...document.querySelectorAll('#actions .action')].map(x=>x.getBoundingClientRect().height)),
