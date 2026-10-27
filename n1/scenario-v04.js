@@ -85,6 +85,18 @@
     }
     return true;
   }
+  function informalProductName(name) {
+    const value=String(name||'');
+    if(/アダプタ/.test(value))return 'Appleの充電器';
+    if(/Alarmo/.test(value))return '任天堂の目覚まし時計';
+    if(/WH-1000XM6/.test(value))return 'ソニーのヘッドホン';
+    if(/ポリッシングクロス/.test(value))return 'Appleの画面拭き';
+    if(/消しゴム/.test(value))return '無印良品の消しゴム';
+    if(/マグカップ/.test(value))return '無印のマグカップ';
+    if(/ディフューザー/.test(value))return '無印のアロマディフューザー';
+    if(/カローラ/.test(value))return 'カローラ';
+    return value.replace(/／[A-Z0-9-]+.*$/,'').replace(/の別店舗価格$/,'');
+  }
   function upgrade(old, position, variation) {
     const q = Object.assign({}, old, {
       index: position,
@@ -105,7 +117,8 @@
     if (q.legacyIndex === 4) {
       const celeb = CELEBRITIES[variation];
       q.truth = celeb.age;
-      q.zone = [celeb.age,celeb.age];
+      q.zone = [celeb.age - 4,celeb.age - 2];
+      q.mode = 'social';
       q.source = celeb.source;
       q.speech = 'ねえ、私って何歳に見える？ 実は' + celeb.name + 'さんと同い年なの。';
       q.context = '相馬「' + celeb.clue + '」 生年は教えずに、表情を見てこちらの答えを待っている。';
@@ -114,7 +127,7 @@
       q.publicDetail = '';
       q.spec = '';
       q.resultDetail = '2026年10月28日（水）時点の満年齢。' + celeb.name + 'さんの公式・人物プロフィールで確認。';
-      q.explain = '有名人についての知識と、実際の相馬さんの見た目の両方が手掛かり。';
+      q.explain = '芸能人の同年代というヒントから推理。正確に答えても、少し若く答えても100点を取れる。';
     }
     if (q.legacyIndex === 3) {
       const w = WAIT_VARIANTS[variation];
@@ -159,8 +172,19 @@
       q.cardType = 'product';
     }
     if (q.legacyIndex === 1) {
-      q.context = '梅田「' + q.item + 'だよ。いい買い物をした気がしてさ」。本人は少し自慢したそう。';
+      q.context = '梅田「' + informalProductName(q.item) + 'を買ったんだ。実物、けっこう良くない？」と満足そう。';
       q.hint = 'この商品のメーカー公式の通常価格を基準にした買い物。梅田は「価格以上の買い物」を褒めてもらいたい。';
+    }
+    q.speechName = informalProductName(q.item);
+    q.displayName = q.item;
+    if (q.legacyIndex === 2) {
+      q.context = '新井「' + q.speechName + 'だよ。普通のお店でいくらくらいだと思う？ セールは考えなくていいからね」';
+    }
+    if (q.legacyIndex === 8) {
+      q.speech = '梅田さんが買った' + informalProductName(q.item) + '、今' + [25,30,40][variation] + '%OFFなんだって。いくらだと思う？';
+    }
+    if (q.legacyIndex === 7) {
+      q.context = '庄司「妻への贈り物に' + q.speechName + 'を考えていまして。少し予算が気になって……」';
     }
     guardPublic(q);
     return q;
@@ -177,7 +201,8 @@
   }
   function tone(q,x,grade) {
     if (x === q.truth || grade.exact) return 'exact';
-    if (grade.air >= 90 || grade.success) return 'social';
+    if (q.mode === 'facts' && grade.score >= 90) return 'near';
+    if (q.mode !== 'facts' && (grade.air >= 90 || grade.success)) return 'social';
     let delta;
     if (q.type === 'yen') {
       const ratio = x / q.truth;
@@ -220,6 +245,7 @@
       },
       2:{
         exact:['正解。','ちなみに僕はまだ持ってないです。買う前に値段を調べるのが趣味なので。'],
+        near:['惜しい、あと少しです。','ここまで近いなら、値札を見たかどうかだけの差ですね。'],
         social:['良い線です。','僕、物を買うより値段を調べている時間の方が長いんですよね。'],
         low:['もっとします。','この業界、素材よりロゴの方が高い瞬間ありますから。'],
         high:['その価格だと、さすがに別の商品が届きます。','でもメーカー名だけで考えると分かります。'],
@@ -252,6 +278,7 @@
       },
       9:{
         exact:['正解。','やっぱり知ってた？ 僕、聞く相手を間違えた。'],
+        near:['惜しい！ ほんの少し年代が違う。','歴史の写真を見比べると、その差が意外と大きいんだよ。'],
         social:['良いところだね。','昔の写真、今の街と並べるとけっこう驚くんだよ。'],
         low:['もう少し古いんだ。','街の見た目、リニューアルすると年代が分からなくなるよね。'],
         high:['もう少し昔からある。','意外と、僕らが思ってるより長くここに立ってるんだ。'],
@@ -260,6 +287,7 @@
       },
       7:{
         exact:['……正解です。','経理としては完璧。夫としての相談相手としては、少々緊張しますね。'],
+        near:['ほぼ正解です。','経理だと端数まで気になりますが、贈り物の相談としては十分ですね。'],
         social:['そのくらいに見えるんですね。','妻が気負わずに受け取ってくれたら、値段は二の次です。'],
         low:['思ったより安く見えますか。','贈り物の評価は減価償却できないので、悩ましいです。'],
         high:['そんなに高そうですか。','決裁の印鑑は誰にもお願いしていないんですが……。'],
@@ -268,6 +296,7 @@
       },
       8:{
         exact:['正解！ あれ、計算できた？','私は梅田さんにどう伝えるか計算できてないけど。'],
+        near:['ほとんど合ってる。','値引きの数字は細かいのに、梅田さんが落ち込むのは一瞬だろうね。'],
         social:['そのくらいになるんだ。','月曜にあんなに嬉しそうだったのに……。'],
         low:['もう少し高いみたい。','それでも梅田さんの顔を想像すると、数字って残酷。'],
         high:['もっと安くなる。','今週、あの人だけ時間の流れが速かったと思う。'],
@@ -288,6 +317,11 @@
     if(q.legacyIndex===1 && q.item.indexOf('アダプタ')>=0 && t==='high')out=lines(speaker,'充電器にその額？','スマホの方が先にびっくりして電源落ちそう。');
     if(q.legacyIndex===1 && q.item.indexOf('Alarmo')>=0 && t==='high')out=lines(speaker,'目覚まし時計にその値段？','その額なら、僕を会社まで起こしに来てほしい。');
     if(q.legacyIndex===1 && q.item.indexOf('ヘッドホン')>=0 && t==='high')out=lines(speaker,'ヘッドホンにそこまで出せないよ！','イヤホンをつけたまま財布の声が聞こえてしまう。');
+    if (t==='near' && q.mode==='facts') {
+      const delta=Math.abs(x-q.truth);
+      if(q.type==='yen' && delta<=1)out=lines(speaker,'あと1円！','この1円だけ、どこに置いてきたんですか？');
+      if(q.type==='year' && delta===1)out=lines(speaker,'惜しい！ 1年違いだよ。','歴史の年号って、その1年が案外大事なんだよね。');
+    }
     if(q.legacyIndex===8){
       const prev=(history||[]).find(r=>r&&r.legacyIndex===1);
       const extra=prev&&prev.air>=90?'月曜は買い物上手だって褒めたのに、金曜は価格差に泣いてる。':'梅田さんには、数字のことは一旦忘れてもらおう。';
