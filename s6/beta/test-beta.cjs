@@ -173,4 +173,30 @@ check('familiarity, club role and personality alter the response while keeping t
  assert.ok(first.text!==met.text&&met.text!==close.text);
  assert.equal(first.voice,met.voice);
 });
+check('all 132 scene lines and 88 questions refer to members of the displayed group',()=>{
+ const memberships=new Map(D.groups.map(g=>[g.group_id,new Set(D.members.filter(m=>m.group_id===g.group_id).map(m=>m.person_id))]));
+ assert.equal(D.lines.length,132);assert.equal(D.questions.length,88);
+ for(const l of D.lines){assert.ok(memberships.get(l.group_id)?.has(l.speaker_id),l.group_id+'/'+l.speaker_id);
+  assert.ok(dataScope.window.S6_BETA_DIALOGUE.sceneLine(l).length>=4)}
+ for(const q of D.questions){assert.ok(memberships.get(q.group_id)?.has(q.target_id),q.group_id+'/'+q.target_id);
+  assert.ok(q.answer.length>0)}
+});
+check('all 125 memberships render first, repeat and contact-stage dialogue without narrator double quotation',()=>{
+ const engine=dataScope.window.S6_BETA_DIALOGUE;
+ assert.equal(D.members.length,125);
+ let scenarios=0;
+ for(const m of D.members){
+  const seen={spokenTo:[],contacts:[],affinity:{},eventHistory:[m.event_id]};
+  const repeat={spokenTo:[m.person_id],contacts:[],affinity:{[m.person_id]:2},eventHistory:[m.event_id]};
+  const linked={spokenTo:[m.person_id],contacts:[m.person_id],affinity:{[m.person_id]:5},eventHistory:[m.event_id]};
+  for(const s of [seen,repeat,linked]){
+   const reply=engine.talk(m.person_id,m.group_id,s);
+   assert.ok(reply.text.length>=8,m.group_id+'/'+m.person_id);
+   assert.doesNotMatch(reply.text,/^「|」$|と声をかけてくれた|と返された/);
+   assert.ok(!reply.text.includes(D.people.find(p=>p.person_id===m.person_id).name),'auto-reveal '+m.person_id);
+   scenarios++;
+  }
+ }
+ assert.equal(scenarios,375);
+});
 console.log(JSON.stringify({passed:total,failed:failures}));if(failures)process.exitCode=1;
