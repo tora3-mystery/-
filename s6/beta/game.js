@@ -297,9 +297,11 @@ function ending(){
   heard?'本人が自ら出した招待だから、答えを急ぐ必要もない。':
   '正解のサークルは一つだった。けれど、ほかのサークルを選んだ時間まで間違いだったわけではない。';
  const peers=['P013','P014','P015','P016'].filter(p=>S.interacted.includes(p)||S.contacts.includes(p));
- const named=peers.filter(p=>S.guesses[p]?.verified);
- const relationships=named.length?'あの週に知り合った'+named.slice(0,2).map(p=>people[p].name).join('や')+'とは、ときどき連絡を取り合っている。':
-  peers.length?'あの週、同じ新入生として話した人と、今も挨拶を交わしている。':
+ const contactPeers=peers.filter(p=>S.contacts.includes(p));
+ const namedContacts=contactPeers.filter(p=>S.guesses[p]?.verified);
+ const relationships=namedContacts.length?'あの週に連絡先を交換した'+namedContacts.slice(0,2).map(p=>people[p].name).join('や')+'と、時々メッセージを交わす。':
+  contactPeers.length?'新歓で出会った同期の連絡先が残っている。':
+  peers.length?'あの週、同じ新入生として話した人の顔を、ときどき思い出す。':
   S.contacts.length?'新歓で交換した連絡先が、何人か残っている。':
   'まだ知らない人も多いけれど、音楽に誘われて別の場所へ行くこともある。';
  const future=found?'一緒に一曲を聴いたことから、音楽の楽しみ方が少し広がった。':
@@ -314,7 +316,6 @@ function ending(){
 }
 function draw(){
  hydrate();APP.innerHTML='<div class="layout">'+header()+'<main>'+site()+'</main><footer>短編UIゲーム実験室 ／ S6 β prototype — 本番版とは別に開発中</footer></div>';
- if(S.phase==='camp'){const s=document.getElementById('suspect');if(s)s.value=S.suspect||'';}
  if(S.phase==='identity'&&S.guesses[S.currentNotebook]?.name){
   const n=document.getElementById('guessName'),o=document.getElementById('guessOrg');if(n)n.value=S.guesses[S.currentNotebook].name;if(o)o.value=S.guesses[S.currentNotebook].org||'';
  }
