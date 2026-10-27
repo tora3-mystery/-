@@ -111,14 +111,12 @@ function test(html){
  step(eerie,'idle');
  assert(eerie.d.getState().day8Active&&eerie.d.getState().day===8,'DAY 8 auto-start');
  assert(eerie.get('day8Title').textContent==='DAY 08 / 07','Impossible DAY 8 counter');
- eerie.d.advanceDay8();
- assert(eerie.get('day8Feedback').children.length===10,'DAY 8 ten comments return');
+ assert(eerie.get('day8Date').textContent.includes('人曜日'),'Human day on first business screen');
+ assert(eerie.get('day8Feedback').children.length===10,'Ten strange customer letters visible immediately');
  const replay=app(eerie.db);replay.d.resumeCurrent();
- assert(replay.d.getState().day8Stage===1&&replay.get('day8Feedback').children.length===10,'DAY 8 progress persists after reload');
+ assert(!replay.d.getState().day8OpeningPending&&replay.get('day8Feedback').children.length===10,'Human day progress survives reload');
  eerie.d.advanceDay8();
- assert(eerie.get('day8Title').textContent==='DAY 08 / 07 / 08','DAY 8 UI glitches');
- eerie.d.advanceDay8();
- assert(eerie.d.getState().ending==='odd_day8'&&eerie.d.getState().finish,'Scripted ending needs no inference');
+ assert(eerie.d.getState().ending==='odd_day8'&&eerie.d.getState().finish,'One decision leads to ordinary-looking report');
  assert(!html.includes('id="inferWho"')&&!html.includes('id="checkCustomer"'),'No deduction controls');
  const undoDb=new Map(),undoBefore=app(undoDb);
  undoBefore.d.restart();undoBefore.d.setState({...undoBefore.d.getState(),discoveredActions:['pickup']});undoBefore.d.play('pickup');

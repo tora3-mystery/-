@@ -142,19 +142,25 @@ day8Pending.api.closeTransition();
 ok(!day8Pending.api.getState().day8OpeningPending,'Closing the overnight panel clears persisted pending flag');
 ok(route.get('day8Meters').children.length===4,'Same four operational indicators');
 ok(route.get('day8Sales').textContent.endsWith('万円'),'Ordinary-looking sales first');
-ok(route.get('day8Feedback').children.length===0,'No premature praise posts at opening');
+ok(route.get('day8Date').textContent==='DAY 08 / 07 ｜ 人曜日','Human day on first business screen');
+ok(route.get('day8Feedback').children.length===10,'Ten strange customer letters appear immediately');
+const firstLetter=route.get('day8Feedback').children[0].children[1];
+ok(firstLetter.textContent.includes('最後尾に戻っています'),'Impossible checkout-loop complaint');
+ok(route.get('day8FeedbackSummary').textContent.includes('新着 10件'),'Ten incoming complaints');
 route.api.closeTransition();
-ok(route.get('dayTransition').classList.contains('hidden')&&!route.api.getState().day8OpeningPending,'Ordinary DAY 8 business UI appears after opening transition');
-ok(route.get('day8Next').textContent==='本日の対応を確定する','DAY 8 does not ask to begin an already begun workday');
-route.api.advanceDay8();
-ok(route.get('day8Feedback').children.length===10,'Ten praise posts in ordinary customer board');
-ok(route.get('day8SceneStatus').textContent==='入店客数 0名','Zero customers with sales');
+ok(route.get('dayTransition').classList.contains('hidden')&&!route.api.getState().day8OpeningPending,
+ 'Opening handoff ends without an intermediate anomalous phase');
+ok(route.get('day8Next').textContent==='本日の対応を確定する','Normal action wording');
 const resume=boot(route.memory);resume.api.resumeCurrent();
-ok(resume.api.getState().day8Stage===1&&resume.get('day8Feedback').children.length===10,'DAY 8 stage persists across resume');
+ok(!resume.api.getState().day8OpeningPending&&resume.get('day8Date').textContent.includes('人曜日'),
+ 'Human day remains on resume');
+ok(resume.get('day8Feedback').children.length===10,'Unusual letters remain on resume');
 resume.api.advanceDay8();
-ok(resume.get('day8Title').textContent==='DAY 08 / 07 / 08','Impossible day label');
-ok(resume.get('day8Attraction').textContent==='88/10'&&resume.get('day8IssueTag').textContent==='未解決 -10件','Impossible statistics');
-ok(resume.get('day8Meters').children.length===4&&resume.get('day8Ledger').textContent.includes('明日：DAY 08'),'Corrupt original-style metrics and HQ bulletin');
-resume.api.advanceDay8();
-ok(resume.api.getState().ending==='odd_day8'&&resume.api.getState().finish,'Anomalous ending reached normally');
+ok(resume.api.getState().ending==='odd_day8'&&resume.api.getState().finish,'One decision directly ends DAY 8');
+ok(resume.get('ending').children[0].textContent==='店舗運営報告','Same header genre as normal endings');
+const report=resume.get('ending').children.find(x=>x.className==='outcome');
+ok(!!report&&report.innerHTML.includes('営業 8/7日間')&&report.innerHTML.includes('集客力 88/10'),
+ 'Ordinary scorecard contains impossible statistics');
+ok(report.children[0].children.some(x=>x.textContent.includes('88/5')),'Impossible metric in regular scorecard');
+ok(resume.get('ending').children.some(x=>x.className==='ending-media'),'Ending retains normal newspaper and forum layout');
 console.log('PASS F1 v019 onboarding + dual-condition shrine + corrupted DAY 8 '+checks+' checks');
