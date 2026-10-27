@@ -17,7 +17,7 @@
 <body>
 <div class="shell">
 <header>
- <div class="brand-area"><div class="kicker">短編UIゲーム実験室 / S7</div><h1>校則を改定してください。</h1><div class="version">α v0.7.3 ｜ 更新：2026年10月27日 11:20 JST</div></div>
+ <div class="brand-area"><div class="kicker">短編UIゲーム実験室 / S7</div><h1>校則を改定してください。</h1><div class="version">α v0.7.4 ｜ 更新：2026年10月27日 11:35 JST</div></div>
  <div class="toolbar"><button id="help" class="secondary small" type="button">あそびかた</button><button id="new" class="secondary small" type="button">新しく始める</button></div>
 </header>
 <main id="root" aria-live="polite"></main>
@@ -27,7 +27,7 @@
 <script>
 // S7 校則を改定してください。 — alpha v0.7.0 | deterministic browser simulation.
 // Game logic is deliberately independent from UI. All display text derives from state/history.
-const VERSION='0.7.3-alpha';
+const VERSION='0.7.4-alpha';
 const MONTHS=['4月','5月','6月','7月','8月','9月','10月','11月','12月','1月','2月','3月'];
 const STAT=['生活','学び','課外','自治','人気'];
 const ACT=['受験','運動','芸術','事業','探究','自治組織','管理'];
@@ -126,7 +126,7 @@ function eventDisplay(s,key,scale,op){const e=EVENT[key];return `${e.name}：${E
 function actionDescription(action){if(!action)return '現行の校則を維持';if(action.type==='rule'){const r=RULES[action.key];return `${r.name}：「${r.options[action.level]}」・${r.scopes[action.scope]}`};if(action.type==='event'){return `${EVENT[action.key].name}：${EVENT_SCALE[action.scale+1]}${action.scale<0?'':`／${EVENT_OP[action.operator]}`}`};if(action.type==='special')return action.key==='charter'?'青葉自治憲章を採択':action.key==='mediation'?'校内紛争調停委員会を設置':'青葉自治共和国の独立を宣言';return '現行維持'}
 function applyAction(s,action){if(!action)return {ok:true,desc:'今月は校則を維持しました。',changed:false};
  if(action.type==='rule'){
-  const r=RULES[action.key];if(!r||!(action.level>=0&&action.level<r.options.length)||![0,1].includes(action.scope))return {ok:false,error:'校則の指定が不正です。'};
+  const r=RULES[action.key];if(!r||!Number.isInteger(action.level)||action.level<0||action.level>=r.options.length||![0,1].includes(action.scope))return {ok:false,error:'校則の指定が不正です。'};
   if(action.key==='civic'&&action.level>s.policies.civic+1)return {ok:false,error:'生徒自治の権限は一段階ずつ拡大してください。'};
   if(action.key==='civic'&&action.level===3&&s.mats.自治組織<25)return {ok:false,error:'裁量予算の編成権には、生徒自治組織の発展が必要です。'};
   const was=s.policies[action.key],prior=s.scopes[action.key];if(was===action.level&&prior===action.scope)return {ok:false,error:'現在と同じ設定です。変更しない場合は「現行維持」を選んでください。'};
@@ -195,7 +195,12 @@ function newsFromReform(s,a,sy,changes,ev){let entries=[];
 
  const unique=[];const seen=new Set();for(const e of entries){if(seen.has(e.headline))continue;seen.add(e.headline);unique.push(e)}
  if(unique.length===0)unique.push({type:'status',source:'school',headline:'学校の近況',detail:s.teacher>=70?'学校の活動が続く一方、教員の負担が高まっています。':'今月は目立った制度変更はなく、校則に沿った活動が続いています。'})
- return unique.slice(0,4)
+ // Major calendar events and a school's actual development must never vanish behind minor reactions.
+ const priority={policy:0,special:1,event:2,development:3,synergy:4,teacher:5,status:6,opinion:7};
+ return unique.map((e,i)=>({...e,_priority:priority[e.type]??7,_position:i}))
+  .sort((a,b)=>a._priority-b._priority||a._position-b._position)
+  .slice(0,4).sort((a,b)=>a._position-b._position)
+  .map(({_priority,_position,...e})=>e)
 }
 function processMonth(s,action){if(s.stage!=='edit')return {ok:false,error:'現在は改定できません。'};
  const start=JSON.parse(JSON.stringify({stats:s.stats,mats:s.mats,teacher:s.teacher,policies:s.policies,scopes:s.scopes}));
@@ -271,7 +276,26 @@ function finalIdentity(s){const mature=ACT.map(k=>({key:k,value:s.mats[k],level:
  let lead=s.special.declared?'青葉自治共和国を宣言した学校':s.stats.学び>=64&&s.mats.受験>=55?'進学指導に特色のある学校':s.mats.芸術>=55?'文化活動に特色のある学校':s.mats.運動>=55?'部活動が盛んな学校':s.mats.事業>=55?'生徒事業が盛んな学校':s.stats.自治>=50?'自治活動に特色のある学校':'変化の途中にある学校';return {lead,tags,mature}
 }
 function compactWorld(s){return {version:s.version,seed:s.seed,year:s.year,month:s.month,stage:s.stage,stats:s.stats,teacher:s.teacher,mat:s.mats,policies:s.policies,scopes:s.scopes,events:s.events,pending:s.pending,history:s.history.length,elections:s.elections,special:s.special}}
-function checkInvariants(s){const reasons=[];if(s.month<0||s.month>12||s.year<1||s.year>3)reasons.push('period');if([...Object.values(s.stats),...Object.values(s.mats),s.teacher].some(v=>!Number.isFinite(v)||v<0||v>100))reasons.push('stat_range');if(Math.abs(s.shares.reduce((a,b)=>a+b,0)-1)>.0001)reasons.push('share_sum');if(s.history.length>(s.year*12))reasons.push('history_count');return reasons}
+function checkInvariants(s){
+ const errors=[];
+ if(!s||typeof s!=='object')return ['missing_state'];
+ const period=Number.isInteger(s.month)&&s.month>=0&&s.month<=12&&Number.isInteger(s.year)&&s.year>=1&&s.year<=3;
+ if(!period)errors.push('period');
+ if(!['edit','report','year-end'].includes(s.stage)||s.stage==='edit'&&s.month===12||s.stage==='year-end'&&s.month!==12)errors.push('stage');
+ if(!s.stats||!s.mats||STAT.some(k=>!Number.isFinite(s.stats?.[k])||s.stats[k]<0||s.stats[k]>100)||ACT.some(k=>!Number.isFinite(s.mats?.[k])||s.mats[k]<0||s.mats[k]>100)||!Number.isFinite(s.teacher)||s.teacher<0||s.teacher>100)errors.push('stat_range');
+ if(!Array.isArray(s.shares)||s.shares.length!==5||s.shares.some(v=>!Number.isFinite(v)||v<0)||Math.abs((s.shares?.reduce((a,b)=>a+b,0)??0)-1)>.0001)errors.push('share_sum');
+ if(!Array.isArray(s.turnouts)||s.turnouts.length!==5||s.turnouts.some(v=>!Number.isFinite(v)||v<0||v>1)||!Array.isArray(s.grudge)||s.grudge.length!==5)errors.push('group_state');
+ if(!s.policies||!s.scopes||keylist.some(k=>!Number.isInteger(s.policies[k])||s.policies[k]<0||s.policies[k]>=RULES[k].options.length||![0,1].includes(s.scopes[k])))errors.push('rules');
+ const eventValid=e=>e&&[-1,0,1,2].includes(e[0])&&[0,1,2].includes(e[1]);
+ if(!s.events||Object.keys(EVENT).some(k=>!eventValid(s.events[k]))||!s.pending||Object.keys(s.pending).some(k=>!EVENT[k]||!eventValid(s.pending[k])))errors.push('event_state');
+ if(!s.special||['charter','mediation','declared'].some(k=>typeof s.special[k]!=='boolean')||!Array.isArray(s.messages)||!Array.isArray(s.elections))errors.push('meta_state');
+ if(!Array.isArray(s.history)||!Array.isArray(s.reforms)||period&&s.history.length!==(s.year-1)*12+s.month||s.history?.length!==s.reforms?.length)errors.push('history_count');
+ if(s.stage==='report'&&(!s.lastReport||s.lastReport.year!==s.year||s.lastReport.month!==s.month-1||!Array.isArray(s.lastReport.news)||!Array.isArray(s.lastReport.stats)||s.lastReport.stats.length!==STAT.length))errors.push('report_state');
+ if(Array.isArray(s.history)&&s.history.some(r=>!r||!Array.isArray(r.stats)||r.stats.length!==STAT.length||!Array.isArray(r.news)||!Array.isArray(r.events)||!Array.isArray(r.developments)))errors.push('history_entries');
+ if(Array.isArray(s.elections)&&s.elections.some(e=>!e||!Number.isInteger(e.year)||e.year<1||e.year>2||!Number.isFinite(e.vote)||!Number.isFinite(e.opponentTop)||!Number.isFinite(e.other)||typeof e.won!=='boolean'))errors.push('ballot_entries');
+ if(!Number.isInteger(s.randomState)||s.randomState<0||s.randomState>0xffffffff)errors.push('random_state');
+ return errors;
+}
 
 const STORAGE='s7-school-alpha-v070';
 const $=(id)=>document.getElementById(id);
@@ -280,7 +304,7 @@ const num=(n)=>Math.round(n*10)/10;
 const displayStat={生活:'学校生活',学び:'学び',課外:'課外活動',自治:'生徒自治',人気:'人気度'};
 let s=null,tab='rule',rk='phone',ek='festival',lv=2,scope=0,scale=1,operator=1,sp='';
 function trySave(){try{localStorage.setItem(STORAGE,JSON.stringify(s))}catch(e){}}
-function tryLoad(){try{const x=JSON.parse(localStorage.getItem(STORAGE));if((x?.version===VERSION||['0.7.0-alpha','0.7.1-alpha','0.7.2-alpha'].includes(x?.version))&&Array.isArray(x.history)&&x.stats&&x.policies&&x.events&&x.randomState!=null&&checkInvariants(x).length===0){x.version=VERSION;return x}}catch(e){}return null}
+function tryLoad(){try{const x=JSON.parse(localStorage.getItem(STORAGE));if((x?.version===VERSION||['0.7.0-alpha','0.7.1-alpha','0.7.2-alpha','0.7.3-alpha'].includes(x?.version))&&Array.isArray(x.history)&&x.stats&&x.policies&&x.events&&x.randomState!=null&&checkInvariants(x).length===0){x.version=VERSION;return x}}catch(e){}return null}
 function fresh(){s=newWorld((Date.now()^(Math.random()*0xffffffff))>>>0);s.stage='edit';tab='rule';rk='phone';setFromRule();trySave();render()}
 function setFromRule(){lv=s.policies[rk];scope=s.scopes[rk]}
 function setFromEvent(){const p=s.pending[ek]||s.events[ek];scale=p[0];operator=p[1]}
@@ -289,7 +313,7 @@ function closeDialog(){$('dialog').hidden=true}
 function help(){showDialog(`<h2 id="dialog-heading">青葉高校へようこそ</h2><p>あなたは1年生の生徒会長です。県立青葉高校では生徒自治の実証制度が始まりました。</p><ol><li>毎月1件、校則または行事規定を改定します。改定せずに次の月へ進んでも構いません。</li><li>規制を変えると、生徒の行動が変わり、複数の校則が組み合わさることで学校の特色が生まれます。</li><li>5つの学校指標を確認してください。生徒の支持はグループごとに異なります。</li><li>3月に選挙。再選すれば翌年度へ。最長3年の学校改革が可能です。</li></ol><p class="note strong">文化祭や体育祭も校則改定枠で変更できます。行事の準備期限を過ぎると翌年度からの適用です。学校の成果は自動的に発生します。</p><div class="dialog-actions"><button id="dialog-ok" class="primary">校務ポータルへ</button></div>`);$('dialog-ok').onclick=closeDialog}
 function meter(name,v,old=null){const diff=old===null?'':`<span class="delta ${v-old>0.04?'pos':v-old<-.04?'neg':''}">${v-old>0.04?'+':''}${num(v-old)}</span>`;return `<div class="meter"><span class="meter-name">${esc(displayStat[name]||name)}</span><div class="bar"><span class="${name==='人気'?'green':''}" style="width:${Math.max(0,Math.min(100,v))}%"></span></div><span class="meter-value">${Math.round(v)}</span></div>${old===null?'':`<div class="tiny" style="text-align:right;margin-top:-9px">前月比 ${diff}</div>`}`}
 function timeName(y,m){return `${2027+y-1+(m>=9?1:0)}年${((m+3)%12)+1}月`}
-function leftPane(){const current=s.year<=3&&s.month<12?timeName(s.year,s.month):`${2027+s.year-1}年度末`;const initial=s.year===1&&s.month===0&&s.history.length===0;
+function leftPane(){const current=s.stage==='report'&&s.lastReport?timeName(s.year,s.lastReport.month):s.month<12?timeName(s.year,s.month):`${2027+s.year-1}年度末`;const initial=s.year===1&&s.month===0&&s.history.length===0;
  return `<section class="panel"><div class="pad"><div class="panel-head"><div><div class="section-label">県立青葉高校 / 第${s.year}期生徒会</div><div class="period">${esc(current)}</div></div><span class="pill">${s.stage==='edit'?'改定受付中':s.stage==='report'?'今月の報告':'年度末'}</span></div>
  <div class="progress-row" aria-label="年度進行">${Array.from({length:12},(_,i)=>`<i class="${(s.stage==='year-end'||i<s.month)?'done':''}"></i>`).join('')}</div>
  <div class="section-label">学校の状況 / 0〜100</div><div class="meter-grid">${STAT.map(k=>meter(k,s.stats[k])).join('')}</div>
@@ -324,7 +348,7 @@ function editor(){let options='';for(const [key,r] of Object.entries(RULES))opti
  if(special.length){side+=`<div class="divider"></div><h2 style="font-size:15px">特別な自治議案</h2><div class="field"><label for="special-type">自治制度に関する提案</label><select id="special-type"><option value="">選択しない</option>${special.map(p=>`<option value="${p.key}">${esc(p.name)}</option>`).join('')}</select></div><p class="tiny">特別な議案も今月の改定1件として数えます。</p>`}
  side+=`<div class="actions"><button class="primary full" id="enact" type="button">改定を確定して結果を見る</button><button class="full muted" id="skip" type="button">今月は改定しない</button></div></div></section>`;return side;
 }
-function report(){const rec=s.lastReport;return `<section class="panel"><div class="pad"><div class="panel-head"><h2>${rec.year}年目 ${MONTHS[rec.month]}｜月次報告</h2><span class="pill">改定完了</span></div><div class="note strong"><b>今月の判断</b><div>${esc(rec.action)}</div></div><div class="divider"></div><h2 style="font-size:16px">学校で起きたこと</h2>${rec.news.map((n,i)=>`<div class="news-item"><div class="news-source">${i===0?'学校からの通知':n.type==='opinion'?'生徒・教員の声':n.type==='teacher'?'職員会議':n.type==='event'?'学校行事':n.type==='synergy'?'校内ニュース':'学校の近況'}</div><h3>${esc(n.headline)}</h3><p>${esc(n.detail)}</p></div>`).join('')}
+function report(){const rec=s.lastReport;return `<section class="panel"><div class="pad"><div class="panel-head"><h2>${rec.year}年目 ${MONTHS[rec.month]}｜月次報告</h2><span class="pill">改定完了</span></div><div class="note strong"><b>今月の判断</b><div>${esc(rec.action)}</div></div><div class="divider"></div><h2 style="font-size:16px">学校で起きたこと</h2>${rec.news.map((n,i)=>`<div class="news-item"><div class="news-source">${n.type==='policy'?'校則改定の通知':n.type==='special'?'特別議案':n.type==='opinion'?'生徒・教員の声':n.type==='teacher'?'職員会議':n.type==='event'?'学校行事':n.type==='synergy'?'校内ニュース':'学校の近況'}</div><h3>${esc(n.headline)}</h3><p>${esc(n.detail)}</p></div>`).join('')}
  <div class="divider"></div><h2 style="font-size:16px">今月のパラメータ変化</h2><table class="data-table"><tbody>${rec.stats.map(p=>`<tr><td>${esc(displayStat[p.name]||p.name)}</td><td>${p.before} → ${p.after}</td><td class="delta ${p.delta>0?'pos':p.delta<0?'neg':''}">${p.delta>0?'+':''}${p.delta}</td></tr>`).join('')}</tbody></table><div class="actions"><button id="next-month" class="primary full">${s.month===12?'年度末へ進む':'次の月へ進む'}</button></div></div></section>`}
 function yearEnd(){const id=finalIdentity(s),ei=s.elections.find(e=>e.year===s.year);const final=s.year===3||ei&&!ei.won;const yearHistory=s.history.filter(x=>x.year===s.year);const notable=yearHistory.flatMap(x=>x.news.filter(n=>n.type==='development'||n.type==='event'&&n.level!=='normal')).slice(-5);
  let html=`<section class="panel"><div class="pad"><div class="report-hero"><div class="section-label">県立青葉高校 ${2027+s.year-1}年度・学校案内</div><div class="hero-text">${esc(id.lead)}</div><div class="hero-sub">校則改革を経て、青葉高校は新しい姿になりました。</div></div>
@@ -342,16 +366,16 @@ function yearEnd(){const id=finalIdentity(s),ei=s.elections.find(e=>e.year===s.y
  return html+`</div></section>`;
 }
 function render(){if(!s)return;document.title=`${s.stage==='year-end'?'年度末｜':''}校則を改定してください。｜S7`;let rhs=s.stage==='edit'?editor():s.stage==='report'?report():yearEnd();$('root').innerHTML=`<div class="dashboard">${leftPane()}${rhs}</div>`;bind();trySave()}
-function bind(){const r=$('root');r.querySelectorAll('[data-recommend]').forEach(b=>b.onclick=()=>{tab='rule';rk=b.dataset.recommend;setFromRule();render()});
+function bind(){const r=$('root');r.querySelectorAll('[data-recommend]').forEach(b=>b.onclick=()=>{sp='';tab='rule';rk=b.dataset.recommend;setFromRule();render()});
  if(s.stage==='edit'){
  $('tab-rule').onclick=()=>{sp='';tab='rule';render()};$('tab-event').onclick=()=>{sp='';tab='event';render()};
- if(tab==='rule'){$('rule-type').onchange=e=>{rk=e.target.value;setFromRule();render()};document.querySelectorAll('[name=rule-level]').forEach(el=>el.onchange=e=>{lv=+e.target.value;render()});document.querySelectorAll('[name=rule-scope]').forEach(el=>el.onchange=e=>{scope=+e.target.value;render()})}
- else{$('event-type').onchange=e=>{ek=e.target.value;setFromEvent();render()};document.querySelectorAll('[name=event-scale]').forEach(el=>el.onchange=e=>{scale=+e.target.value;render()});document.querySelectorAll('[name=event-op]').forEach(el=>el.onchange=e=>{operator=+e.target.value;render()})}
+ if(tab==='rule'){$('rule-type').onchange=e=>{sp='';rk=e.target.value;setFromRule();render()};document.querySelectorAll('[name=rule-level]').forEach(el=>el.onchange=e=>{sp='';lv=+e.target.value;render()});document.querySelectorAll('[name=rule-scope]').forEach(el=>el.onchange=e=>{sp='';scope=+e.target.value;render()})}
+ else{$('event-type').onchange=e=>{sp='';ek=e.target.value;setFromEvent();render()};document.querySelectorAll('[name=event-scale]').forEach(el=>el.onchange=e=>{sp='';scale=+e.target.value;render()});document.querySelectorAll('[name=event-op]').forEach(el=>el.onchange=e=>{sp='';operator=+e.target.value;render()})}
  const special=$('special-type');if(special)special.onchange=e=>{sp=e.target.value};
  $('enact').onclick=()=>{const action=sp?{type:'special',key:sp}:tab==='rule'?{type:'rule',key:rk,level:lv,scope}:{type:'event',key:ek,scale,operator};const ans=processMonth(s,action);if(!ans.ok){showDialog(`<h2 id="dialog-heading">改定できませんでした</h2><p>${esc(ans.error)}</p><div class="dialog-actions"><button id="dialog-ok" class="primary">戻る</button></div>`);$('dialog-ok').onclick=closeDialog;return}sp='';render()};
- $('skip').onclick=()=>{const ans=processMonth(s,null);if(ans.ok)render()};
- }else if(s.stage==='report'){$('next-month').onclick=()=>{completeReport(s);render()}}
- else{if($('count-votes'))$('count-votes').onclick=()=>{election(s);render()};if($('next-year'))$('next-year').onclick=()=>{nextYear(s);rk='phone';setFromRule();render()};if($('replay'))$('replay').onclick=confirmReset}
+ $('skip').onclick=()=>{sp='';const ans=processMonth(s,null);if(ans.ok)render()};
+ }else if(s.stage==='report'){$('next-month').onclick=()=>{sp='';completeReport(s);render()}}
+ else{if($('count-votes'))$('count-votes').onclick=()=>{election(s);render()};if($('next-year'))$('next-year').onclick=()=>{sp='';nextYear(s);rk='phone';setFromRule();render()};if($('replay'))$('replay').onclick=confirmReset}
 }
 function confirmReset(){showDialog(`<h2 id="dialog-heading">新しい学校を始めますか？</h2><p>現在のプレイ記録が消去され、新たな生徒構成の青葉高校で始めます。</p><div class="dialog-actions"><button id="cancel-reset">キャンセル</button><button id="confirm-reset" class="primary">新しく始める</button></div>`);$('cancel-reset').onclick=closeDialog;$('confirm-reset').onclick=()=>{closeDialog();fresh()}}
 $('help').onclick=help;$('new').onclick=confirmReset;$('dialog').onclick=e=>{if(e.target===$('dialog'))closeDialog()};document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('dialog').hidden)closeDialog()});
