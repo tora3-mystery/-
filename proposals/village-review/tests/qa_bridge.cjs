@@ -78,6 +78,42 @@ assert(stageOneResult.includes('facilities/'+facilityForArt.kind+'/base-1.webp')
 facilityForArt.stage=3;
 const historicStageOne=qa.v1ResultVisual({kind:'big',facilityId:facilityForArt.id,stage:1,icon:'🏠'});
 assert(historicStageOne.includes('facilities/'+facilityForArt.kind+'/base-1.webp'),'Historical event artwork must remain tied to recorded stage');
+
+const assetRouteIds=new Set(targets.items.filter(x=>x.category==='facilities'&&x.stage===2).map(x=>x.kind+':'+x.route));
+const kinds=['rail','market','school','shrine','inn','office','clinic','shop','hall','farm','scenic','cafe','museum','lodge','harbor','robot'];
+let polarityCombinations=0;
+for(const kind of kinds)for(let factIndex=0;factIndex<3;factIndex++)for(const high of [false,true]){
+ for(const stars of [1,2,4,5]){
+  const observation={key:factIndex,high,tag:'living',statement:'テスト対象の観察事実です。',good:'この特徴を支持します。',bad:'この特徴を改めたいです。'};
+  const route=qa.routeFor({kind},observation,stars);
+  assert(assetRouteIds.has(kind+':'+route),'Invalid route for '+kind+'/'+factIndex+'/'+high+'/'+stars);
+  const post=qa.reviewText({kind},observation,stars);
+  assert(post.includes(observation.statement),'Review must preserve observed fact');
+  if(stars>=4&&!high)assert(post.includes('この特徴が好きです'),'Praise should endorse sparse condition');
+  polarityCombinations++;
+ }
+}
+assert.equal(polarityCombinations,384);
+for(const scenario of [
+ {kind:'clinic',index:1,high:false,stars:5,route:'community',expected:'問診'},
+ {kind:'clinic',index:1,high:false,stars:1,route:'advanced',expected:'不足していた'},
+ {kind:'scenic',index:1,high:false,stars:5,route:'conservation',expected:'舗装せず'},
+ {kind:'scenic',index:1,high:false,stars:1,route:'park',expected:'不足していた'}
+]){
+ const h=createHarness(),q=h.qa;
+ let f=null;
+ for(let seed=1;seed<=200;seed++){q.generate(seed);f=q.getState().facilities.find(x=>x.kind===scenario.kind);if(f)break}
+ assert(f,'Could not prepare scenario '+scenario.kind);
+ const st=q.getState();
+ st.candidates=[f.id];f.aspectLevels={[scenario.index]:scenario.high?75:25};
+ const fact=q.factsFor(f)[scenario.index],prior=q.aspectLevel(f,scenario.index);
+ assert.equal(q.routeFor(f,fact,scenario.stars),scenario.route);
+ q.post(f.id,scenario.index,scenario.stars);
+ const after=q.getState(),updated=after.facilities.find(x=>x.id===f.id),now=q.aspectLevel(updated,scenario.index);
+ assert(scenario.stars>=4?now<=prior:now>=prior,'Rating reversed the wrong direction');
+ assert(after.result.changes[0].detail.includes(scenario.expected),'Incoherent outcome: '+scenario.kind);
+}
+
 const targetIds = new Set(targets.items.map(x=>x.id));
 const terrain = {},endings={},statistics={villages:0,reviews:0,artIds:0};
 const strategies = [
@@ -158,4 +194,4 @@ assert(tqa.getState().completed,'Reloaded run must finish');
 trial=createHarness(persisted);tqa=trial.qa;
 assert(tqa.getState().completed&&tqa.getState().annualDue,'Final review must be preserved on reload');
 assert(trial.get('modal').innerHTML.includes('口コミが反映'),'Final review modal must reopen');
-console.log(JSON.stringify({status:'PASS',terrain,statistics,endings,saveResume:'PASS',arrivalDate:'PASS',stageArt:'PASS',strictManifest:'PASS',fallback:'PASS',adverseEnding:'PASS'},null,2));
+console.log(JSON.stringify({status:'PASS',terrain,statistics,endings,saveResume:'PASS',arrivalDate:'PASS',stageArt:'PASS',strictManifest:'PASS',fallback:'PASS',polarityCases:polarityCombinations,adverseEnding:'PASS'},null,2));
