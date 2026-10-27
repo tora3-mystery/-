@@ -265,6 +265,7 @@
       if(chosen){
         const origMode=q.mode;
         q.item=chosen.name;q.source=chosen.source;q.spec=chosen.details;
+        q.factDate=chosen.priceCheckedAt;
         q.publicDetail=chosen.details;q.detail='';
         q.resultDetail=chosen.details;q.emoji=chosen.emoji||'🛍️';
         q.truth=chosen.price;q.unit='円';q.type='yen';
