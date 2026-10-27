@@ -37,9 +37,10 @@ function specialCards(){
  })).filter(x=>/レジの近くに、ずっと立っている人|変な客がいます|レジのご案内が丁寧でした/.test(x.body));
 }
 api.restart();
-// Story progression regression: establish the ordinary policy as already discovered.
-api.setState({...api.getState(),discoveredActions:['pickup']});
-advance('pickup');
+// DAY 1 product inspection must precede the rear-shrine choice.
+const product=api.getState().complaintTickets.find(x=>x.body.includes('見掛けない商品'));
+check(!!product&&api.focus(product.id,'見掛けない商品がありました'),'First product discovery');
+advance('productCheck');
 check(api.focus('f17-back-review','裏手の社の周りが暗く'),'DAY 2 phrase inspection');
 advance('inspectBack');advance('audit');
 let posts=specialCards();
