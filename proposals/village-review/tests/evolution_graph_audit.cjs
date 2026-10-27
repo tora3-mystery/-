@@ -66,6 +66,15 @@ for(const final of db.stage3){
  assert(assetIds.has(image),final.id+' lacks an existing image mapping');
  seenImages.add(image);traversals++;
 }
+let ratingImageCases=0;
+for(const kind of db.facilityKinds)for(let facet=0;facet<3;facet++)for(const high of [false,true])for(const stars of [1,2,4,5]){
+ const fac={kind},fact={key:facet,high,tag:'living'};
+ const direction=qa.evolutionTargetId(fac,fact,stars),expected=stage2.get(direction);
+ assert(expected,'Unknown direction '+direction);
+ assert.equal(qa.routeFor(fac,fact,stars),expected.imageRoute,'Image and review direction mismatch');
+ ratingImageCases++;
+}
+assert.equal(ratingImageCases,384);
 let gentle=0;
 for(const kind of db.facilityKinds)for(let facet=0;facet<3;facet++)for(const high of [false,true])for(const rating of [2,4]){
  qa.generate(kind==='harbor'?stageSeeds.island:stageSeeds.plain);const st=qa.getState();
@@ -81,6 +90,6 @@ for(const kind of db.facilityKinds)for(let facet=0;facet<3;facet++)for(const hig
  gentle++;
 }
 const report={status:'PASS',stage2:stage2.size,finalRecords:db.stage3.length,terminalPathsVerified:traversals,
- star2And4Cases:gentle,uniqueImagesReused:seenImages.size,saveCompatibility:'covered by qa_bridge.cjs',
+ star2And4Cases:gentle,ratingImageCases,uniqueImagesReused:seenImages.size,saveCompatibility:'covered by qa_bridge.cjs',
  validation:'Deterministic state/DOM simulation; not physical browser test'};
 console.log(JSON.stringify(report,null,2));
