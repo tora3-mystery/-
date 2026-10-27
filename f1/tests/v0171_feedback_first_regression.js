@@ -23,7 +23,7 @@ function boot(db=new Map()){
 }
 function customer(id,metric,body){return{id,metric,body,customer:id,day:1,status:'open',closedDay:null,replies:[]}}
 const a=boot();a.api.restart();
-check(html.includes('class="playloop-path"')&&html.includes('class="playloop-example-policy"'),'Single illustrated two-step onboarding');
+check(html.includes('id="day0Panel"')&&html.includes('id="day0Investigate"')&&html.includes('id="day0Apply"'),'Interactive DAY 0 onboarding');
 check(!html.includes('<ol class="intro-jobs"><li>ご意見の下線部分をタップ'),'No repeated tutorial instructions');
 check(!html.includes('+(impact?'),'Avoid duplicating textual action impacts next to numeric effect chips');
 check(a.api.availableIds().length===1&&a.api.availableIds()[0]==='idle','No prefilled policy before reading customer feedback');
@@ -73,7 +73,10 @@ const shrineSource=c.api.getState().complaintTickets.find(t=>t.metric===3);
 check(!c.api.availableIds().includes('shrine'),'Ordinary shrine cannot be chosen without examining a complaint');
 check(c.api.focus(shrineSource.id,shrineText),'Discover local shrine from noise-related complaint');
 check(c.api.availableIds().includes('shrine'),'Ordinary shrine available after tapping');
-c.api.play('shrine');c.api.advance();c.api.closeTransition();
+const productSource=c.api.getState().complaintTickets.find(x=>x.body.includes('見掛けない商品'));
+check(!!productSource&&c.api.focus(productSource.id,'見掛けない商品がありました'),'Additional mystery-product investigation');
+check(c.api.availableIds().includes('productCheck'),'Product response is discovered');
+c.api.play('productCheck');c.api.advance();c.api.closeTransition();
 check(c.api.getState().day===2,'Reached DAY2');
 check(!c.api.availableIds().includes('inspectBack'),'The rear inspection is not default');
 check(c.api.focus('f17-back-review','裏手の社の周りが暗く'),'Discover rear of store from ordinary complaint');
