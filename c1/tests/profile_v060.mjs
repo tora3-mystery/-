@@ -6,7 +6,7 @@ const events=JSON.parse(readFileSync(new URL('../events.json',import.meta.url),'
 assert.equal(events.length,15);
 assert.equal(events.reduce((n,e)=>n+1+(e.alternates?.length||0),0),23);
 assert.equal(events.reduce((n,e)=>n+e.choices.length+(e.alternates||[]).reduce((m,v)=>m+v.choices.length,0),0),138);
-assert.equal(Object.keys(ENDING_META).length,16);
+assert.equal(Object.keys(ENDING_META).length,18);
 assert.equal(PROFILE_TYPES.length,12);
 assert.equal(CAMPUS_BACKGROUNDS.length,24);
 assert.equal(CLUBS.length,20);
@@ -43,7 +43,7 @@ for(let i=0;i<24000;i++){
 assert.equal(seen.types.size,12);assert.equal(seen.campus.size,24);assert.equal(seen.clubs.size,20);
 assert.equal(seen.temperaments.size,15);assert.equal(seen.previous.size,11);assert(seen.hobbies.size>=20);
 
-const oldVersions=['0.4.0','0.4.1','0.5.0','0.5.1','0.5.2','0.5.3','0.5.4','0.5.5','0.5.6','0.5.7','0.5.8','0.5.9'];
+const oldVersions=['0.4.0','0.4.1','0.5.0','0.5.1','0.5.2','0.5.3','0.5.4','0.5.5','0.5.6','0.5.7','0.5.8','0.5.9','0.6.0','0.6.1','0.6.2','0.6.3','0.6.4','0.6.5','0.6.6'];
 const legacyProfile={name:'佐藤 花音',gender:'女性',grade:2,previous:'法人営業部',department:'営業企画部',check:'guided',medium:'written',feedback:'batched',strength:'analysis',career:'expert',speech:['途中で確認したいです。'],ambition:'専門性を深めたいです。',skill:'数字の確認が得意です。',photo:'https://old.example.invalid/portrait.jpg'};
 for(const version of oldVersions){
   const saved={...createRun(structuredClone(legacyProfile)),version,index:4,phase:'scene',logs:[],flags:{},cp:3};
@@ -56,7 +56,7 @@ for(const version of oldVersions){
   assert.equal(restored.index,4);
 }
 assert(isValidSave({...createRun(generated[0]),index:0,phase:'briefing'},events));
-assert.equal(VERSION,'0.6.0');
+assert.equal(VERSION,'1.0');
 
 let scoreChecks=0;
 for(const p of generated){
@@ -74,4 +74,4 @@ for(const p of generated){
     }
   }
 }
-console.log(`PASS C1 v0.6.0: 24,000 profiles, 12 types, 24 campuses, 20 clubs, 15 temperaments, 10 prior departments; ${oldVersions.length} old save versions; ${scoreChecks} unchanged scoring comparisons; 15 jobs / 23 scenarios / 138 choices / 16 endings.`);
+console.log(`PASS C1 v1.0: 24,000 profiles, 12 types, 24 campuses, 20 clubs, 15 temperaments, 10 prior departments; ${oldVersions.length} old save versions; ${scoreChecks} unchanged scoring comparisons; 15 jobs / 23 scenarios / 138 choices / 18 endings.`);
