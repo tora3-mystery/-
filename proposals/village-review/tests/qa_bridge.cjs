@@ -129,6 +129,7 @@ for(let seed=1;seed<=250;seed++){
   let state=qa.getState();terrain[state.terrain]=(terrain[state.terrain]||0)+1;
   assert.equal(qa.groundQA().length,0,'Invalid initial terrain');
   assert(get('map').innerHTML.includes('v1Backdrop'),'Missing map background asset');
+ assert(!get('map').innerHTML.includes('assets/tiles/'),'No rendered terrain tiles');
   for(let month=0;month<12;month++){
     state=qa.getState();
     const id=state.candidates[(seed+month)%state.candidates.length];
@@ -137,6 +138,12 @@ for(let seed=1;seed<=250;seed++){
     const facts=qa.factsFor(facility);
     qa.post(id,month%facts.length,strategy(month,seed));
     state=qa.getState();
+    assert.equal(state.result.reviewedId,id,'Result focused the wrong facility');
+    assert(get('modal').innerHTML.includes('あなたが口コミした施設｜'+facility.name),'Result must name reviewed facility');
+    assert.equal(state.reviewHistory[month].name,facility.name,'Review history lost posted name');
+    assert.equal(Number(get('reviewCount').textContent),month+1,'Archive count mismatch');
+    if(state.result.changes.some(e=>e.kind==='big'&&e.facilityId!==id))
+      assert(get('modal').innerHTML.includes('この施設にも変化が！'),'Other facility evolutions must be identified');
     assert.equal(state.month,month+1);
     const periodIndex=month+3;
     assert.equal(qa.timeName(month+1),(2027+Math.floor(periodIndex/12))+'年'+((periodIndex%12)+1)+'月','History month mismatch');
@@ -263,6 +270,7 @@ trial=createHarness(persisted);tqa=trial.qa;
 assert(tqa.getState().completed&&tqa.getState().annualDue,'Final review must be preserved on reload');
 assert(trial.get('modal').innerHTML.includes('投稿した口コミから、ひと月後'),'Final review modal must reopen');
 assert(trial.get('modal').innerHTML.includes('一年の終わりを迎えました'),'Final review must show annual transition');
+assert(trial.get('reviewArchiveList').innerHTML.includes('reviewArchiveItem'),'Archive missing after reload');
 {
  const h=createHarness(),q=h.qa;
  q.generate(718);
@@ -281,4 +289,4 @@ assert(trial.get('modal').innerHTML.includes('一年の終わりを迎えまし�
  assert(magazine.includes('annualPublicationHead'),'Brochure masthead missing');
 }
 
-console.log(JSON.stringify({status:'PASS',terrain,statistics,endings,newFacilityReachable:expansionVillages,evolutionImpact:'PASS',fiveStarClosureCheck:fiveStarClosures,whispers:'PASS',saveResume:'PASS',arrivalDate:'PASS',stageArt:'PASS',strictManifest:'PASS',fallback:'PASS',annualPamphletAndReturnVisit:'PASS',polarityCases:polarityCombinations,adverseEnding:'PASS'},null,2));
+console.log(JSON.stringify({status:'PASS',terrain,statistics,endings,newFacilityReachable:expansionVillages,evolutionImpact:'PASS',fiveStarClosureCheck:fiveStarClosures,whispers:'PASS',saveResume:'PASS',arrivalDate:'PASS',stageArt:'PASS',strictManifest:'PASS',fallback:'PASS',reviewAnchorAndArchive:'PASS',terrainWithoutTiles:'PASS',annualPamphletAndReturnVisit:'PASS',polarityCases:polarityCombinations,adverseEnding:'PASS'},null,2));
