@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>F1 v0.18｜P1店舗写真の差分レビュー（内部検品）</title>
+<style>
+:root{font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN",Meiryo,sans-serif;color:#243b35;background:#eef2ec}
+*{box-sizing:border-box}body{margin:0;padding:16px}main{max-width:1150px;margin:0 auto}
+h1{font-size:20px;margin:0 0 6px}h2{font-size:16px;margin:0 0 10px}
+p{font-size:13px;line-height:1.6;color:#435951}header{margin:0 0 15px}
+.notice{border-left:3px solid #48816d;background:#fff;border-radius:8px;padding:10px 12px;margin:12px 0}
+section{background:white;border:1px solid #ced8cd;border-radius:12px;padding:13px;margin:12px 0}
+.triple{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.photo img{display:block;width:100%;height:auto;aspect-ratio:1100/619;object-fit:contain;background:#dce7db}
+.photo{border:1px solid #cbd5cb;border-radius:9px;overflow:hidden;min-width:0}
+.photo b{display:block;font-size:12px;margin:9px 9px 0}.photo p{font-size:11px;margin:4px 9px 9px}
+.review{display:grid;grid-template-columns:minmax(0,1fr) minmax(190px,.4fr);gap:14px;align-items:start}
+.compare{position:relative;aspect-ratio:1100/619;background:#dce7db;overflow:hidden;border:1px solid #acc5b5;border-radius:9px}
+.compare img{position:absolute;width:100%;height:100%;object-fit:cover;inset:0}
+#targetImage{opacity:.5}label{font-size:13px;font-weight:700;display:block;margin:10px 0 6px}
+select,input[type=range]{width:100%;padding:7px;font:inherit}
+button{font:inherit;border:1px solid #8aaa98;border-radius:8px;background:#e8f1e9;color:#254436;padding:8px 10px;cursor:pointer}
+.metrics{display:grid;gap:8px;margin-top:14px;font-size:12px}
+fieldset{border:1px solid #c6d8cb;border-radius:8px}
+legend{font-size:12px;font-weight:700}fieldset label{font-size:12px;font-weight:400;margin:7px 0}
+.checks{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px 12px}
+@media(max-width:700px){.triple{grid-template-columns:1fr;gap:12px}.review{grid-template-columns:1fr}body{padding:10px}.checks{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<main>
+<header><h1>F1｜店舗写真 P1独立レビュー</h1><p>これは検品用ページです。公開ゲームの画面やゲームロジックは変更しません。Workが3枚を納品するまで画像欠損の表示になります。</p></header>
+<section>
+<h2>3状態を比較する</h2>
+<div class="triple">
+<div class="photo"><b>① 通常の店舗（固定マスター）</b><img src="../assets/main-base-neutral.webp" alt="通常の店舗" onerror="this.alt='画像未納品：通常の店舗'"><p>柱・レジ・棚・通路・照明の座標を基準にする</p></div>
+<div class="photo"><b>② レジ待ち・軽度</b><img src="../assets/main-checkout-mild.webp" alt="レジ待ちがやや増えた売場" onerror="this.alt='画像未納品：レジ待ち軽度'"><p>ほかの設備が変わらず、人と列だけ増えているか</p></div>
+<div class="photo"><b>③ レジ待ち＋通路・深刻</b><img src="../assets/main-checkout-aisle-severe.webp" alt="レジ行列が通路へ波及した売場" onerror="this.alt='画像未納品：レジ通路重度'"><p>②より明らかに混雑し、カート動線が塞がれているか</p></div>
+</div>
+</section>
+<section>
+<h2>同じ位置に重ねる</h2>
+<div class="review">
+<div class="compare"><img src="../assets/main-base-neutral.webp" alt="基準写真"><img id="targetImage" src="../assets/main-checkout-mild.webp" alt="比較する写真"></div>
+<div>
+<label for="sceneSelect">比較する写真</label>
+<select id="sceneSelect">
+<option value="main-checkout-mild.webp">② レジ待ち・軽度</option>
+<option value="main-checkout-aisle-severe.webp">③ レジ＋通路・深刻</option>
+</select>
+<label for="opacity">比較画像の透明度：<output id="opacityText">50%</output></label>
+<input id="opacity" type="range" min="0" max="100" value="50" step="5">
+<button type="button" id="toggle">通常画像と比較画像を交互に表示</button>
+<p>柱・床の目地・レジ台の角・棚の輪郭が二重になったら、差分間で撮影構図がずれている可能性があります。人物や行列の差分は意図どおりの変化です。</p>
+</div>
+</div>
+</section>
+<section>
+<h2>確認事項（レビュー用）</h2>
+<fieldset><legend>合格判断に使う項目</legend><div class="checks">
+<label><input type="checkbox"> 同じ店舗・同じ固定カメラに見える</label>
+<label><input type="checkbox"> 柱、棚、レジ、通路、床の位置が一致</label>
+<label><input type="checkbox"> 通常とレジ軽度の差がスマホで分かる</label>
+<label><input type="checkbox"> 軽度と深刻な複合混雑を一目で区別できる</label>
+<label><input type="checkbox"> 実在商標、崩れた手・足、読めない文字が目立たない</label>
+<label><input type="checkbox"> 一連の写真に写真らしい自然さがある</label>
+</div></fieldset>
+<p>チェックはブラウザ内の一時的な確認用です。チェック状態はGitHub等に送信されません。P1の最終承認は人間レビューで行います。</p>
+</section>
+</main>
+<script>
+const image=document.getElementById('targetImage');
+const select=document.getElementById('sceneSelect');
+const opacity=document.getElementById('opacity');
+const output=document.getElementById('opacityText');
+select.onchange=()=>{image.src='../assets/'+select.value};
+opacity.oninput=()=>{const value=Number(opacity.value);image.style.opacity=value/100;output.textContent=value+'%'};
+document.getElementById('toggle').onclick=()=>{
+  opacity.value=Number(opacity.value)>50?'0':'100';
+  opacity.oninput();
+};
+</script>
+</body></html>
