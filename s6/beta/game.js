@@ -179,7 +179,7 @@ function sns(){
   const face=!anonymous&&a?.avatar_kind==='face';
   const avatar=face?portrait(p.author_id):'<div class="avatar-icon">♪</div>';
   return '<div class="social">'+avatar+'<div><strong>'+esc(anonymous?'匿名アカウント':a?.display_name||'不明')+'</strong>'+
-  '<div class="dim">'+(anonymous?'':esc('@'+a.handle)+' ／ ')+esc(p.published_at)+'</div><p>'+esc(p.text)+'</p>'+
+  '<div class="dim">'+(anonymous?'':esc('@'+a.handle)+' ／ ')+esc(p.published_at)+'</div><p>'+esc(window.S6_BETA_SOCIAL.postTexts[p.post_id]||p.text)+'</p>'+
   (face?'<p class="dim">見覚えがある顔かもしれない。</p>'+(S.seen.includes(p.author_id)?btn((S.socialLinked[p.author_id]||[]).includes(platform)?'照合済み':'顔を見比べる','account-match',p.post_id,'mini'):''):'')+'</div></div>';
  }).join(''):'<p>閲覧できる投稿はありません。</p>')+
  '<div class="actions">'+btn('夜の画面に戻る','back-night','','ghost')+'</div>';
