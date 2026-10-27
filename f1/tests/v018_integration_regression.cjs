@@ -61,4 +61,16 @@ get('storeImage').onerror();
 ok(get('storeImage').src.startsWith('./assets/')&&!get('storeImage').src.includes('/main-'),
  'Missing main WebP switches to an existing old store photo before SVG fallback');
 ok(get('sceneCaption').textContent.includes('代替の店舗写真'),'Fallback is explained correctly');
+// 320px phones show only two overlay markers. A permanent counter must not be
+// appended after multiple generic badges where it would be invisible.
+api.setState({...api.getState(),day:4,odd:0,finish:false,day8Active:false,
+  vals:[2,3,3,0],attraction:6,
+  visuals:[{id:'register',day:2},{id:'lane',day:3},{id:'receive',day:4}],
+  appliedToday:[]});
+const mobileMarkers=get('sceneMarkers').children.map(x=>x.textContent);
+ok(mobileMarkers.length>=3,'Mobile-clipping scenario includes multiple operational badges');
+ok(mobileMarkers[0]==='有人レジ増設済み',
+  'Permanent added-register indicator has priority among mobile-visible badges');
+ok(html.includes('span:nth-child(n+3){display:none}'),
+  '320px mobile cutoff stays covered by this status-order regression');
 console.log('PASS F1 v018 photo integration '+assertions+' assertions');
