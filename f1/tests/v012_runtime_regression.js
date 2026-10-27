@@ -26,6 +26,7 @@ function runRegression(html){
   return {api:window.__F1_DEBUG__,get:document.getElementById,db};
  }
  function step(h,id){
+  if(id==='inspectBack')check(h.api.focus('f17-back-review','裏手の社の周りが暗く'),'DAY 2 phrase investigation');
   const s=h.api.getState(),choices=h.api.availableIds();
   check(choices.includes(id),'Missing action '+id+' on day '+s.day);
   check(choices.length<=(s.day===1?7:s.day<=3?9:s.day<=5?11:13),'Too many choices');
@@ -56,7 +57,7 @@ function runRegression(html){
  const resumed=boot(savedDb);check(resumed.api.getState().needsAdvance,'Report not saved');resumed.api.resumeCurrent();
  check(!resumed.get('overlay').classList.contains('hidden'),'Report not restored');resumed.api.advance();
  check(resumed.api.getState().day===2&&resumed.api.getState().vals[0]===0,'Deferred effect lost on resume');
- const day8=route(['pickup','vibration','audit','camera0','open0','idle','idle']);
+ const day8=route(['pickup','inspectBack','audit','camera0','open0','idle','idle']);
  check(day8.api.getState().day8Active&&day8.api.getState().day===8,'DAY 8 automatic');
  day8.api.advanceDay8();check(day8.get('day8Feedback').children.length===10,'DAY 8 ten regular review cards');
  day8.api.advanceDay8();day8.api.advanceDay8();
@@ -117,7 +118,7 @@ function runRegression(html){
 
  const late=boot();late.api.restart();
  late.api.setState({day:5,odd:0,revenue:200,attraction:7,vals:[2,1,1,1],
-  days:[{day:1,sales:50},{day:2,sales:50},{day:3,sales:50},{day:4,sales:50}]});
+  days:[{day:1,sales:50},{day:2,sales:50},{day:3,sales:50},{day:4,sales:50}],actionCounts:{inspectBack:1}});
  step(late,'audit');step(late,'camera0');step(late,'open0');
  check(late.api.getState().day8Active&&late.api.getState().day===8,'Late unusual route also auto-enters DAY 8');
  return {pass:true,assertions,endingTypes:4,tests:['seven choice cards','deferred effects','sales formula','complaint ledger','four active endings and deterministic DAY 8','resume after close','five-number visual bounds','shrine']};
