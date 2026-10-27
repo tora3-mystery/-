@@ -39,11 +39,16 @@
   gift:{category:'贈答品',prompt:'plain wrapped gift box neutral wrapping paper no logos',ratio:'4:3'},
   car:{category:'乗用車',prompt:'generic modern compact sedan studio side view without company logos or license plates',ratio:'4:3'}
  });
+ // Work-delivered assets (32 keys) are pinned to a verified manifest, not automatically
+ // enabled when a future new imageCatalog category is added.
+ const deliveredKeys=Object.freeze(["eraser","correction_pen","correction_tape","pencil_case","pen","notebook","paper","underlay","earbuds","headphones","charger","cable","smartphone","mouse","keyboard","clock","speaker","mug","tumbler","coffee","kitchen","tableware","beauty","towel","bag","clothing","shoes","furniture","appliance","diffuser","gift","car"]);
+ const deliveredSet=new Set(deliveredKeys);
+ for(const key of deliveredKeys)if(!imageCatalog[key])throw new Error('Missing image category '+key);
  const product=(id,name,speechName,price,category,source,flags={})=>({
    id,name,speechName,price,category,source,brand:flags.brand||'MUJI',
    details:flags.details||'',priceCheckedAt:'2026-10-27',priceBasis:'official_including_tax',
    reviewed:true,
-   assetReady:!!flags.assetReady,
+   assetReady:flags.assetReady===undefined?deliveredSet.has(category):!!flags.assetReady,
    imageKey:category,
    sourceType:flags.sourceType||'official_detail',
    emoji:flags.emoji||'🛍️',
@@ -149,6 +154,6 @@
   return true;
  };
  validate();
- const API=Object.freeze({VERSION:'1.1.0',imageCatalog,confirmedAdditions,mixedBrandAdditions,researchBacklog,newLandmarks,playable,normalizeLegacy,chooseSlots,validate});
+ const API=Object.freeze({VERSION:'1.1.0',imageCatalog,deliveredKeys,confirmedAdditions,mixedBrandAdditions,researchBacklog,newLandmarks,playable,normalizeLegacy,chooseSlots,validate});
  root.N1Catalog=API;if(typeof module!=='undefined'&&module.exports)module.exports=API;
 })(typeof window!=='undefined'?window:globalThis);
