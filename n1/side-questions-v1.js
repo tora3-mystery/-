@@ -89,7 +89,7 @@ const FACTORIES=[
   '企画投票は架空設定。無効票も投票用紙の枚数に含める。',0,1000);
  },
  function occupancy(v,extra){
-  const seats=[24,48,36][v]+extra*2,truth=seats+[-2,1,-1][v];
+  const seats=[24,48,36][v]+extra*2,truth=seats+3;
   return f('occupancy-'+v,'seats','shoji','必要な椅子',
   '庄司さんが取引先との会議室の手配をしている。',
   '椅子は何脚くらい手配しておけばよさそうですか？',
@@ -116,10 +116,10 @@ const FACTORIES=[
   '梅田が週末のフリーマーケットの規模について話している。',
   'このイベント、何人くらい来ると思う？',
   '前回の来場者は約'+Math.round(truth/100)*100+'人。今回は同程度の天気で、出店もほぼ同じ。',
-  truth,'人','estimate',[truth-30,truth+30],30,'梅田とフリーマーケットの来場者を予想した。',
+  truth,'人','estimate',[Math.round(truth/100)*100-70,Math.round(truth/100)*100+40],40,'梅田とフリーマーケットの来場者を予想した。',
   'そのくらい来るよね。今度は早めに行こう。',
   'もっとにぎわうと思うよ。','そこまで大きいイベントだったっけ？',
-  'イベントと来場者は架空設定。おおよその規模を答える。',0,5000);
+  'イベントと来場者は架空設定。前回のおおよその規模から予想する。',0,5000);
  },
  function books(v,extra){
   const a=[42,60,38][v]+extra,b=[33,25,47][v]+extra,returns=[15,22,17][v],truth=a+b-returns;
