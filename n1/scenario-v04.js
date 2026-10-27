@@ -13,7 +13,7 @@
  */
 (function (root) {
   'use strict';
-  const VERSION = '0.5.1';
+  const VERSION = '0.6.0-rc3';
   const ORDER = Object.freeze([0, 1, 2, 3, 4, 5, 9, 7, 8, 11]);
   const DAYS = Object.freeze(['月曜日','火曜日','水曜日','木曜日','金曜日']);
   const SCENES = Object.freeze([
