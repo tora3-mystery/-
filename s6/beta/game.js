@@ -92,25 +92,45 @@ function venue(){
  const gs=D.groups.filter(g=>g.event_id===e.event_id);
  return '<div class="eyebrow">'+esc(WEEK[S.day])+' / '+esc(label(e.org_id))+'</div><h2>'+esc(e.title)+'</h2>'+
  '<p>あちこちで演奏や会話が始まっている。どの二組に混ざろう？</p><div class="status">話したグループ '+S.visitedGroups.length+' / 2</div>'+
- '<div class="two">'+gs.map(g=>'<article class="panel"><h3>'+esc(g.group_title)+'</h3><p>'+esc(g.activity)+'</p><div class="faces small-faces">'+byGroup(g.group_id).map(id=>portrait(id)).join('')+'</div>'+
+ '<div class="two">'+gs.map(g=>'<article class="panel"><h3>'+esc(g.group_title)+'</h3><p>'+esc(g.activity)+'</p><div class="faces small-faces">'+byGroup(g.group_id).map(id=>portrait(id,peerClass(id))).join('')+'</div>'+
  (S.visitedGroups.includes(g.group_id)?'<span class="pill">参加済み</span>':S.visitedGroups.length>=2?'<span class="dim">今日はここまで</span>':btn('この輪に入る','join-group',g.group_id))+'</article>').join('')+'</div>'+
  '<div class="actions">'+btn('会場を出て夜へ','finish-venue')+'</div>';
 }
+function speech(pid,text,tag=''){
+ const ids=byGroup(S.group),index=ids.indexOf(pid);
+ const speaker=S.guesses[pid]?.verified?people[pid].name:'参加者'+String.fromCharCode(65+Math.max(0,index));
+ return '<div class="chat-line">'+portrait(pid,'chat-avatar'+peerClass(pid))+
+ '<div class="chat-content"><div class="chat-speaker">'+esc(speaker)+(PEERS.has(pid)?' <span class="peer-tag">同級生</span>':'')+
+ (tag?' <span class="dim">'+esc(tag)+'</span>':'')+'</div><div class="chat-bubble">'+esc(text)+'</div></div></div>';
+}
 function group(){
- const g=groups[S.group],ids=byGroup(g.group_id),lines=D.lines.filter(l=>l.group_id===g.group_id);
- const result=S.groupDone[g.group_id];
- return '<div class="eyebrow">'+esc(label(events[g.event_id].org_id))+' / '+esc(g.group_title)+'</div><h2>輪の中の顔</h2>'+
- '<p>'+esc(g.activity)+'</p><div class="speech">'+lines.slice(0,3).map(l=>'<p>「'+esc(l.text)+'」</p>').join('')+'</div>'+
- '<p class="dim">誰の名前だったか、もう自信がない。顔を選んで確かめよう。</p>'+
- (result?'<div class="notice">'+esc(result)+'</div>':'<div class="faces">'+ids.map(id=>faceCard(id,'', 'choose-person','この人と関わる')).join('')+'</div>'+
- '<div class="actions">'+btn('輪の雰囲気を見ておく','listen-group')+'</div>')+
- '<div class="actions">'+btn('会場に戻る','back-venue','','ghost')+'</div>';
+ const g=groups[S.group],lines=D.lines.filter(l=>l.group_id===g.group_id).sort((a,b)=>Number(a.order)-Number(b.order));
+ const log=S.groupLog[g.group_id]||[],remaining=Math.max(0,2-log.length);
+ const chats=lines.slice(0,3).map(l=>speech(l.speaker_id,l.text)).join('')+
+ log.map(x=>x.pid&&people[x.pid]?speech(x.pid,x.text,x.type):'<div class="notice">'+esc(x.text)+'</div>').join('');
+ return '<div class="eyebrow">'+esc(label(events[g.event_id].org_id))+' / '+esc(g.group_title)+'</div><h2>輪の会話</h2>'+
+ '<p>'+esc(g.activity)+'</p><div class="chat-thread">'+chats+'</div>'+
+ '<p class="status">あと '+remaining+' 回行動できます</p>'+
+ (remaining?'<div class="paper"><h3>この輪でどう過ごす？</h3><p class="dim">誰と何を話すか決めましょう。交流はこの輪で2回まで。</p>'+
+ '<div class="actions">'+btn('話しかける','action-menu','talk')+btn('質問する','action-menu','question')+
+ btn('連絡先を頼む','action-menu','contact')+btn('聞き耳を立てる','listen-group','','ghost')+'</div></div>':
+ '<div class="notice">この輪では十分に話した。次の輪へ移れます。</div>')+
+ '<div class="actions">'+btn('会場のほかの輪へ戻る','back-venue','','ghost')+'</div>';
 }
 function chooseAction(){
- const id=S.target,p=people[id];
- return '<div class="eyebrow">'+esc(groups[S.group].group_title)+'</div><h2>この人と何を話そう？</h2><div class="chosen">'+portrait(id,'large')+'<div><p>'+esc(p.appearance)+'</p><p class="dim">一つだけ行動を選べます。</p></div></div>'+
- '<div class="actions">'+btn('話しかける','interact','talk')+btn('所属を聞く','interact','club')+btn('連絡先を頼む','interact','contact')+'</div>'+
- btn('選び直す','back-group','','ghost');
+ const mode=S.mode,questionMode=mode==='question';
+ const qmap=Object.fromEntries(D.questions.filter(q=>q.group_id===S.group).map(q=>[q.target_id,q]));
+ const items=byGroup(S.group).map(id=>{
+  const q=qmap[id],name=S.guesses[id]?.verified?people[id].name:PEERS.has(id)?'同期の学生':'名前はまだ曖昧';
+  return '<div class="person-card">'+portrait(id,peerClass(id))+'<div><strong>'+esc(name)+'</strong>'+
+  (questionMode?'<p class="dim">'+esc(q?.question||'所属を尋ねる')+'</p>':'')+
+  btn(questionMode?'この質問をする':mode==='contact'?'交換を頼む':'話しかける','act-target',id,'mini')+
+  (questionMode&&q?btn('所属について聞く','ask-affiliation',id,'mini ghost'):'')+'</div></div>';
+ }).join('');
+ return '<div class="eyebrow">'+esc(groups[S.group].group_title)+'</div><h2>'+
+ (mode==='talk'?'誰に話しかける？':mode==='contact'?'誰に連絡先を頼む？':'誰に何を聞く？')+'</h2>'+
+ '<p>顔を見比べながら話す相手を選びます。会場で聞いた名前を思い出せるでしょうか。</p>'+
+ '<div class="person-list">'+items+'</div>'+btn('輪に戻る','back-group','','ghost');
 }
 function night(){
  return '<div class="eyebrow">'+esc(WEEK[S.day])+' / 夜</div><h2>あの顔、誰だったかな。</h2>'+
@@ -300,25 +320,60 @@ function handle(act,id){
   S.flash=byGroup(id).filter(pid=>!S.introduced.includes(pid));
   go('flash');break;
  }
- case 'choose-person':if(S.phase==='group'&&!S.groupDone[S.group]&&byGroup(S.group).includes(id)){S.target=id;go('choose')}break;
- case 'back-group':go('group');break;
- case 'interact':{
-  if(S.phase!=='choose'||!S.group||S.groupDone[S.group]||!byGroup(S.group).includes(S.target))return;
-  const p=people[S.target],a=accounts[p.person_id+'|TINE'];
-  let msg='';
-  if(id==='talk'){msg='話しかけると「'+(profiles[p.person_id]?.first_hook||'新歓、楽しんでいってね。')+'」と返ってきた。';
-   if(p.person_id==='P001')msg+='「入学前から、きみに合いそうな席を考えていたんだ」と付け足した。';}
-  else if(id==='club'){msg='普段は'+label(p.primary_org)+'で活動しているらしい。'+(p.dual_org?'別の団体にも顔を出していると言う。':'');
-   S.knownOrg[p.person_id]=p.primary_org; if(p.dual_org)S.crossings[p.person_id]=true;
-   if(p.person_id==='P001')msg+='去年の秋にはもう、新入生を迎える席を決めていたらしい。';}
-  else if(id==='contact'){S.contacts.push(p.person_id);msg='TINEの表示名「'+(a?.display_name||'アカウント')+'」を教えてもらった。顔と本名が一致しているかは、自分で覚えておこう。';}
-  else return;
-  S.groupDone[S.group]=msg;go('group');break;
+ case 'action-menu':{
+  if(S.phase!=='group'||!S.group||(S.groupLog[S.group]||[]).length>=2)return;
+  if(!['talk','question','contact'].includes(id))return;
+  S.mode=id;go('choose');break;
+ }
+ case 'back-group':if(S.phase==='choose')go('group');break;
+ case 'act-target':
+ case 'ask-affiliation':{
+  if(S.phase!=='choose'||!S.group||!byGroup(S.group).includes(id)||(S.groupLog[S.group]||[]).length>=2)return;
+  const p=people[id],q=D.questions.find(q=>q.group_id===S.group&&q.target_id===id);
+  const style=p.social_style||'quiet',first=!S.spokenTo.includes(id);
+  let type=S.mode,msg='';
+  if(act==='ask-affiliation'){if(type!=='question')return;type='所属確認';}
+  if(type==='talk'){
+   const pre=first?(style==='open'?'「初めまして、'+p.name+'！ よろしく」':style==='quiet'?'「えっと、'+p.name+'です。よろしく」':'「'+p.name+'です。どうも」'):
+    (style==='open'?'「あ、また会ったね！」':style==='quiet'?'「この前の……」':'「また会ったね」');
+   const hook=profiles[id]?.[first?'first_hook':'reunion_hook']||profiles[id]?.first_hook||'今日も楽しんでね。';
+   msg=pre+'と声をかけてくれた。「'+hook+'」';
+   if(id==='P001'&&first)msg+='「入学前から、きみに合いそうな席を考えていたんだ」と付け足した。';
+   if(!S.spokenTo.includes(id))S.spokenTo.push(id);
+  }else if(type==='question'||type==='所属確認'){
+   if(type==='所属確認'||!q){
+    const org=p.primary_org?label(p.primary_org):'まだ所属先を決めていない';
+    msg='「普段は'+org+'にいるよ。'+(p.dual_org?label(p.dual_org)+'にも顔を出すんだ。':'')+'」と話した。';
+    S.knownOrg[id]=p.primary_org||'N';if(p.dual_org)S.crossings[id]=true;
+    if(id==='P001')msg+='「去年の秋にはもう、新入生を迎える席を決めていたんだ」と続けた。';
+   }else{
+    msg='「'+q.answer+'」と答えてくれた。';
+    if(q.reveals?.includes('self_name')&&q.answer.includes(p.name)&&!S.introduced.includes(id))S.introduced.push(id);
+    if(q.reveals?.includes('group_focus'))S.knownOrg[id]=p.primary_org||'N';
+   }
+  }else if(type==='contact'){
+   const rule=D.contactChannels.find(c=>c.group_id===S.group&&c.person_id===id&&c.platform==='TINE');
+   const acct=accounts[id+'|TINE'];
+   if(!rule||!acct)msg='「連絡先は、また今度でいい？」と返された。';
+   else if(rule.approval_policy==='immediate'){
+    if(!S.contacts.includes(id))S.contacts.push(id);
+    msg='「いいよ。TINEは'+acct.display_name+'だよ」と連絡先を見せてくれた。';
+   }else if(rule.approval_policy==='next_day'){
+    if(!S.pendingContacts.includes(id))S.pendingContacts.push(id);
+    msg='「あとで確認するね」と言ってくれた。申請は保留中だ。';
+   }else msg='「もう少し話してからでもいい？」と返された。';
+  }else return;
+  (S.groupLog[S.group]??=[]).push({pid:id,type,text:msg});
+  S.groupDone[S.group]=msg;
+  S.report='';go('group');break;
  }
  case 'listen-group':{
-  if(S.phase!=='group'||S.groupDone[S.group])return;
-  S.groupDone[S.group]=actions[S.group]?.listen_text||'演奏と雑談を聞いた。';
-  if(actions[S.group]?.trigger_fact_id&&!S.clues.includes(actions[S.group].trigger_fact_id))S.clues.push(actions[S.group].trigger_fact_id);
+  if(S.phase!=='group'||(S.groupLog[S.group]||[]).length>=2)return;
+  const msg=actions[S.group]?.listen_text||'周りの音と会話を聴いた。';
+  (S.groupLog[S.group]??=[]).push({pid:null,type:'聞き耳',text:msg});
+  S.groupDone[S.group]=msg;
+  const fact=actions[S.group]?.trigger_fact_id;
+  if(fact&&!S.clues.includes(fact))S.clues.push(fact);
   go('group');break;
  }
  case 'back-venue':go('venue');break;
