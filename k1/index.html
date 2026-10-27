@@ -158,8 +158,8 @@ if(e.id==='E09'){if(c==='yes'){state.consent=true;msg='黒田は「ご理解あ�
 state.history.push({day:state.day,id:e.id,title:e.title,choice:c,outcome:msg});
 return msg;
 }
-function answer(c){if(state.resultPending||state.ended||state.phase!=='night')return;var e=eventNow();state.result=resultFor(e,c);state.resultPending=true;monitor=false;save();render();scrollToTop();}
-function advance(){if(!state.resultPending)return;state.resultPending=false;state.result='';state.index++;if(state.index>=EVENTS[state.day].length){if(state.day===7){state.ended=true;state.phase='end';}else{state.day++;state.index=0;state.phase='morning';snapshot();}}save();render();scrollToTop();}
+function answer(c){if(state.resultPending||state.ended||state.phase!=='night')return;pendingChoice=null;var e=eventNow();state.result=resultFor(e,c);state.resultPending=true;monitor=false;save();render();scrollToTop();}
+function advance(){if(!state.resultPending)return;pendingChoice=null;state.resultPending=false;state.result='';state.index++;if(state.index>=EVENTS[state.day].length){if(state.day===7){state.ended=true;state.phase='end';}else{state.day++;state.index=0;state.phase='morning';snapshot();}}save();render();scrollToTop();}
 function scrollToTop(){try{window.scrollTo({top:0,behavior:'instant'});}catch(e){window.scrollTo(0,0);}}
 function ending(){var name,body;
 if(state.exposed&&state.owner==='405'&&!state.consent){name='記録は残りました';body='管理組合は407号室の事故について再調査を始めた。旧掲示の意味も伝わった。あの呼出しへの応答は、今夜もなかった。';}
@@ -171,12 +171,17 @@ return '<div class="ending"><div class="tiny" style="color:#b5c0c2">白波レジ
 function renderNight(){var n=el('nightPanel');n.classList.toggle('hidden',state.phase!=='night'||state.ended);if(state.phase!=='night'||state.ended)return;
 var e=eventNow();var h='<div class="over">'+state.day+'日目｜'+esc(e.time)+'｜'+(state.index+1)+' / '+EVENTS[state.day].length+'</div><h2>'+esc(e.title)+'</h2><div class="scenario">'+esc(e.scene)+'</div>';
 if(state.resultPending){h+='<div class="result"><b>その夜の記録</b><p>'+esc(state.result)+'</p></div><button class="btn primary" data-next="1">次へ進む</button>';}
-else{h+='<div class="btnrow"><button class="btn secondary" data-monitor="1">'+(monitor?'観察を閉じる':'相手・状況を確認する')+'</button><button class="btn secondary" data-gotab="board">掲示板を参照</button></div>';
+else{h+='<div class="btnrow"><button class="btn secondary" data-monitor="1">'+(monitor?'観察を閉じる':'相手・状況を確認する')+'</button></div>';
 if(monitor)h+='<div class="monitor">'+esc(e.monitor)+'</div>';
-h+='<p class="caption">手掛かりの例：'+esc(e.hint)+'。照会は訪問者本人との通話ではなく指定窓口への問い合わせです。'+(e.id==='E09'?'この場面での照会先は管理組合理事会です。':'')+'</p><div class="btnrow"><button class="btn primary" data-judge="yes">対応する</button><button class="btn" data-judge="no">見送る</button><button class="btn" data-judge="verify">照会する</button></div>';}
+if(pendingChoice){
+var choiceName=pendingChoice==='yes'?'対応する':pendingChoice==='no'?'見送る':'照会する';
+h+='<div class="confirm-choice"><h3>この対応で確定しますか？</h3><strong>'+choiceName+'</strong><p>'+esc(actionPreview(e,pendingChoice))+'</p><div class="btnrow"><button class="btn secondary" data-cancel-choice="1">選び直す</button><button class="btn primary" data-confirm-choice="1">'+(pendingChoice==='verify'?'問い合わせを実行する':'この対応で確定する')+'</button></div></div>';
+}else{
+h+='<p class="caption">帰宅時に読んだ掲示を思い出して判断してください。照会は別の窓口への問い合わせで、1回の判断として処理します。</p><div class="btnrow"><button class="btn primary" data-judge="yes">対応する</button><button class="btn" data-judge="no">見送る</button><button class="btn" data-judge="verify">照会する</button></div>';
+}}
 n.innerHTML=h;
 }
-function renderTab(){document.querySelectorAll('.tab').forEach(function(e){e.classList.toggle('active',e.dataset.tab===tab);});
+function renderTab(){if(state.phase!=='morning'||state.ended)return;document.querySelectorAll('.tab').forEach(function(e){e.classList.toggle('active',e.dataset.tab===tab);});
 var p=el('tabPanel'),h='';
 if(tab==='board'){
 h='<h2>エントランス掲示板</h2><p class="tiny">掲示の詳細を開き、改訂履歴や他の資料と照合してください。最初から大量の掲示があります。</p><div class="findbar"><input id="search" class="input" placeholder="掲示を検索（文字・番号）" value="'+esc(filter)+'" aria-label="掲示を検索"></div><div class="notice-summary">';
@@ -235,15 +240,17 @@ if(b.id==='showIntro'){state.started=false;render();scrollToTop();return;}
 if(b.id==='toNight'){beginNight();return;}
 if(b.id==='showRewind'||b.dataset.showrewind){el('rewindPanel').classList.toggle('hidden');renderRewind();if(b.dataset.showrewind)el('rewindPanel').scrollIntoView();return;}
 if(b.dataset.restartday){rewind(b.dataset.restartday);return;}
-if(b.dataset.tab){tab=b.dataset.tab;selected=null;renderTab();return;}
-if(b.dataset.gotab){tab=b.dataset.gotab;renderTab();el('tabPanel').scrollIntoView({block:'start'});return;}
-if(b.dataset.notice){selected=b.dataset.notice;renderTab();var detail=el('tabPanel').querySelector('.detail');if(detail)detail.scrollIntoView({block:'nearest'});return;}
-if(b.dataset.record){add(b.dataset.record);renderTab();return;}
+if(b.dataset.tab){if(state.phase!=='morning'||state.ended)return;tab=b.dataset.tab;selected=null;renderTab();return;}
+if(b.dataset.gotab){if(state.phase!=='morning'||state.ended)return;tab=b.dataset.gotab;renderTab();el('tabPanel').scrollIntoView({block:'start'});return;}
+if(b.dataset.notice){if(state.phase!=='morning'||state.ended)return;selected=b.dataset.notice;renderTab();var detail=el('tabPanel').querySelector('.detail');if(detail)detail.scrollIntoView({block:'nearest'});return;}
+if(b.dataset.record){if(state.phase!=='morning'||state.ended)return;add(b.dataset.record);renderTab();return;}
 if(b.dataset.monitor){monitor=!monitor;renderNight();return;}
-if(b.dataset.judge){answer(b.dataset.judge);return;}
+if(b.dataset.judge){if(state.phase!=='night'||state.resultPending||state.ended)return;pendingChoice=b.dataset.judge;renderNight();return;}
+if(b.dataset.cancelChoice){pendingChoice=null;renderNight();return;}
+if(b.dataset.confirmChoice){if(pendingChoice)answer(pendingChoice);return;}
 if(b.dataset.next){advance();return;}
 });
-document.addEventListener('input',function(ev){if(ev.target.id==='search'){var pos=ev.target.selectionStart;filter=ev.target.value;renderTab();var inp=el('search');inp.focus();inp.setSelectionRange(pos,pos);}});
+document.addEventListener('input',function(ev){if(ev.target.id==='search'&&state.phase==='morning'&&!state.ended){var pos=ev.target.selectionStart;filter=ev.target.value;renderTab();var inp=el('search');inp.focus();inp.setSelectionRange(pos,pos);}});
 load();render();
 })();
 </script></body></html>
