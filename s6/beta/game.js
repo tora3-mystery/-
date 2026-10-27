@@ -27,7 +27,7 @@ const initial=()=>({
  schema:1,phase:'title',day:0,selectedEvent:null,group:null,target:null,presentationSeed:Math.floor(Math.random()*1000000000),
  eventHistory:[],seen:[],introduced:[],flash:[],visitedGroups:[],groupDone:{},groupLog:{},spokenTo:[],interacted:[],personalIntroduced:{},photoRequests:[],photoFollows:[],affinity:{},relationshipDays:{},dailyAffinity:{},contacts:[],socialLinked:{},socialCandidates:{},selectedSocial:null,
  guesses:{},note:{},clues:[],crossings:{},knownOrg:{},nightChoice:{},viewedPlatforms:{},viewedBoard:{},pendingContacts:[],
- checks:{},currentNotebook:null,suspect:'',camp:'',shared:false,privateInvite:false,
+ checks:{},currentNotebook:null,camp:'',
  report:'',result:'',savedAt:''
 });
 let S,hydrationChanged=false;
@@ -88,7 +88,7 @@ const site=()=>{
  case 'identity':return identity();
  case 'camp':return camp();
  case 'saturday':return saturday();
- case 'private':return privateRoom();
+ 
  case 'end':return ending();
  default:return '<h2>表示を復元できませんでした</h2>'+btn('最初から','reset');
  }
@@ -365,7 +365,7 @@ function handle(act,id){
   let reply,kind=type;
   if(type==='talk'){
     // Keep acquaintance status from BEFORE this action, and speech warmth from AFTER it.
-    // This preserves first introductions and P001's one-time clue without delaying familiarity.
+    // First encounters retain their distinctive speech cues without becoming reunions.
     const knownBefore=S.spokenTo.includes(id)||S.interacted.includes(id);
     recordConversation(id,'talk');
     reply=Dialogue.talk(id,S.group,S,knownBefore);
@@ -378,7 +378,7 @@ function handle(act,id){
     if(type==='question'&&q?.reveals?.includes('group_focus'))S.knownOrg[id]=people[id].primary_org||'N';
     // Asking somebody explicitly to introduce themself gives a name as an earned answer.
     if(type==='question'&&q?.reveals?.includes('self_name')&&q.answer?.includes(people[id].name)&&!S.introduced.includes(id))S.introduced.push(id);
-    if(id==='P001'&&type==='affiliation')reply.text+=' 昨年の秋にはもう、新入生を迎える席を決めていたんだ。';
+    
   }else if(type==='photo'){
     const account=accounts[id+'|Photogram'];kind='SNSの話';
     if(!account)reply={text:'Photogramは今のところ使ってないんだ。'};
@@ -490,11 +490,9 @@ function handle(act,id){
   if(S.phase!=='camp'||(id!=='N'&&!clubs[id]))return;
   S.camp=id;go('saturday');break;
  }
- case 'share':S.shared=true;go('saturday');break;
- case 'private':if(S.phase==='saturday'&&S.camp==='K'){S.privateInvite=true;go('private')}break;
- case 'finish-safe':if(S.phase==='saturday'){S.result=S.camp==='K'?'DECLINED':'SAFE';go('end')}break;
- case 'escape':if(S.phase==='private'){S.result='RESCUED';go('end')}break;
- case 'stay':if(S.phase==='private'&&!S.shared){S.result='DANGER';go('end')}break;
+ case 'meet-producer':if(S.phase==='saturday'&&S.camp===Story.homeOrg){S.result='FOUND';go('end')}break;
+ case 'listen-only':if(S.phase==='saturday'&&S.camp===Story.homeOrg){S.result='HEARD';go('end')}break;
+ case 'finish-other':if(S.phase==='saturday'&&S.camp!==Story.homeOrg){S.result=S.camp==='N'?'SKIPPED':'OTHER';go('end')}break;
  }
 }
 APP.addEventListener('click',e=>{
