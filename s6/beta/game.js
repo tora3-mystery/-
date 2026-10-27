@@ -1,7 +1,7 @@
 (() => {
 'use strict';
 const D=window.S6_DATA, APP=document.getElementById('app'), KEY='s6-origin-beta-010', Dialogue=window.S6_BETA_DIALOGUE;
-const VERSION='0.3.0', BUILD='2026-10-27 22:48 JST';
+const VERSION='0.3.1', BUILD='2026-10-27 22:48 JST';
 const WEEK=['月曜 4月6日','火曜 4月7日','水曜 4月8日','木曜 4月9日','金曜 4月10日'];
 const DATES=['2026-04-06','2026-04-07','2026-04-08','2026-04-09','2026-04-10'];
 const people=Object.fromEntries(D.people.map(p=>[p.person_id,p]));
@@ -19,7 +19,7 @@ const byGroup=gid=>D.members.filter(m=>m.group_id===gid).map(m=>m.person_id);
 const date=()=>DATES[Math.min(S.day,4)];
 const initial=()=>({
  schema:1,phase:'title',day:0,selectedEvent:null,group:null,target:null,
- eventHistory:[],seen:[],introduced:[],flash:[],visitedGroups:[],groupDone:{},groupLog:{},spokenTo:[],affinity:{},contacts:[],socialLinked:{},selectedSocial:null,
+ eventHistory:[],seen:[],introduced:[],flash:[],visitedGroups:[],groupDone:{},groupLog:{},spokenTo:[],affinity:{},relationshipDays:{},dailyAffinity:{},contacts:[],socialLinked:{},selectedSocial:null,
  guesses:{},note:{},clues:[],crossings:{},knownOrg:{},nightChoice:{},viewedPlatforms:{},viewedBoard:{},pendingContacts:[],
  checks:{},currentNotebook:null,suspect:'',camp:'',shared:false,privateInvite:false,
  report:'',result:'',savedAt:''
@@ -28,7 +28,7 @@ let S;
 try {const raw=JSON.parse(localStorage.getItem(KEY));S=raw&&raw.schema===1?raw:initial()}catch{S=initial()}
 function hydrate(){
  for(const k of ['eventHistory','seen','introduced','flash','visitedGroups','contacts','clues','spokenTo','pendingContacts'])if(!Array.isArray(S[k]))S[k]=[];
- for(const k of ['groupDone','guesses','note','crossings','knownOrg','nightChoice','viewedPlatforms','viewedBoard','groupLog','affinity','checks','socialLinked'])if(!S[k]||typeof S[k]!=='object')S[k]={};
+ for(const k of ['groupDone','guesses','note','crossings','knownOrg','nightChoice','viewedPlatforms','viewedBoard','groupLog','affinity','relationshipDays','dailyAffinity','checks','socialLinked'])if(!S[k]||typeof S[k]!=='object')S[k]={};
 }
 hydrate();
 if(S.phase==='flash'&&!S.group){S.phase='venue';localStorage.setItem(KEY,JSON.stringify(S));}
@@ -36,6 +36,16 @@ for(const [gid,result] of Object.entries(S.groupDone))if(result&&!S.groupLog[gid
 const PEERS=new Set(['P013','P014','P015','P016']);
 const peerClass=id=>PEERS.has(id)?' peer-highlight':'';
 const canEditNotebook=()=>['night','sns','board'].includes(S.returnTo);
+const relationship=id=>Dialogue.relationshipLabel(S,id);
+const contactBadge=id=>S.contacts.includes(id)?' ／ TINE交換済':S.pendingContacts.includes(id)?' ／ 申請確認中':'';
+// Per-person contact develops gradually, with at most two meaningful exchanges per day.
+const recordConversation=id=>{
+ const today=date(),key=id+'|'+today,used=Number(S.dailyAffinity[key]||0);
+ if(used>=2)return;
+ S.dailyAffinity[key]=used+1;
+ S.affinity[id]=Math.min(6,Math.max(0,Number(S.affinity[id])||0)+1);
+ S.relationshipDays[id]=unique([...(S.relationshipDays[id]||[]),today]);
+};
 const remember=()=>{S.savedAt=BUILD;localStorage.setItem(KEY,JSON.stringify(S))};
 const btn=(t,a,v='',klass='')=>'<button class="btn '+klass+'" data-act="'+esc(a)+'" '+(v?'data-id="'+esc(v)+'"':'')+'>'+esc(t)+'</button>';
 const portrait=(id,klass='')=>'<img class="portrait '+klass+'" src="../'+esc(people[id].portrait_path)+'" loading="lazy" decoding="async" alt="学生の顔写真">';
@@ -122,7 +132,7 @@ function chooseAction(){
  const qmap=Object.fromEntries(D.questions.filter(q=>q.group_id===S.group).map(q=>[q.target_id,q]));
  const items=byGroup(S.group).map(id=>{
   const q=qmap[id],name=S.guesses[id]?.verified?people[id].name:PEERS.has(id)?'同期の学生':'名前はまだ曖昧';
-  return '<div class="person-card">'+portrait(id,peerClass(id))+'<div><strong>'+esc(name)+'</strong>'+
+  return '<div class="person-card">'+portrait(id,peerClass(id))+'<div><strong>'+esc(name)+'</strong><p class="dim">'+esc(relationship(id))+esc(contactBadge(id))+'</p>'+
   (questionMode?'<p class="dim">'+esc(q?.question||'所属を尋ねる')+'</p>':'')+
   btn(questionMode?'この質問をする':mode==='contact'?'交換を頼む':'話しかける','act-target',id,'mini')+
   (questionMode&&q?btn('所属について聞く','ask-affiliation',id,'mini ghost'):'')+'</div></div>';
@@ -147,11 +157,20 @@ function night(){
 }
 function sns(){
  const platform=S.snsPlatform;
+ const tineContacts=platform==='TINE'?unique(S.contacts).filter(id=>!!people[id]&&!!accounts[id+'|TINE']):[];
+ const tineMessages=tineContacts.length?'<div class="paper"><h3>交換済みの連絡先</h3><p class="dim">連絡先交換と、相手が安全かどうかは別の話。</p>'+
+  tineContacts.map(id=>{
+    const msg=Dialogue.snsMessage(id,S);
+    if(!msg)return '';
+    const a=accounts[id+'|TINE'];
+    return '<div class="social">'+(a.avatar_kind==='face'?portrait(id):'<div class="avatar-icon">♪</div>')+
+      '<div><strong>'+esc(a.display_name)+'</strong><p>'+esc(msg.text)+'</p></div></div>';
+  }).join('')+'</div>':'';
  const visible=D.posts.filter(p=>p.platform===platform&&p.published_at.slice(0,10)<=date()&&
  (p.visibility==='公開'||p.visibility==='匿名表示'||(p.visibility==='鍵垢・承認制'&&S.contacts.includes(p.author_id))||
  ((p.visibility==='グループ参加者'||p.visibility==='主人公との個別')&&S.contacts.includes(p.author_id))));
  return '<div class="eyebrow">SNS / '+esc(platform)+'</div><h2>タイムライン</h2>'+
- '<p class="dim">写真を出している人も、出していない人もいる。名前の似たアカウントが同じ人とは限らない。</p>'+
+ '<p class="dim">写真を出している人も、出していない人もいる。名前の似たアカウントが同じ人とは限らない。</p>'+tineMessages+
  (visible.length?visible.map(p=>{
   const a=accounts[p.author_id+'|'+platform];
   const anonymous=p.visibility==='匿名表示';
@@ -195,6 +214,7 @@ function notebook(){
  const note=S.note[id]||'';
  return '<div class="person-card">'+portrait(id)+'<div><strong>'+(verified?esc(people[id].name):'名前を思い出せない')+'</strong>'+
  '<p class="dim">'+(verified?'所属：'+esc(label(people[id].primary_org))+(people[id].dual_org?' ／ 他にも所属あり':''):'写真と記憶を照合できます')+'</p>'+
+ '<p class="dim">'+esc(relationship(id))+esc(contactBadge(id))+'</p>'+
  ((S.socialLinked[id]||[]).length?'<p class="dim">顔が一致したSNS：'+esc(S.socialLinked[id].join('、'))+'</p>':'')+
  (S.knownOrg[id]&&!verified?'<p class="dim">話して聞いた所属：'+esc(label(S.knownOrg[id]))+'</p>':'')+
  (note?'<p class="dim">メモ：'+esc(note)+'</p>':'')+
@@ -338,10 +358,10 @@ function handle(act,id){
   if(type==='talk'){
     reply=Dialogue.talk(id,S.group,S);
     if(!S.spokenTo.includes(id))S.spokenTo.push(id);
-    S.affinity[id]=Math.min(8,(S.affinity[id]||0)+2);
+    recordConversation(id);
   }else if(type==='question'||type==='affiliation'){
     reply=Dialogue.answer(id,S.group,type==='affiliation'?'affiliation':'question');
-    S.affinity[id]=Math.min(8,(S.affinity[id]||0)+1);
+    recordConversation(id);
     if(reply.primaryOrg)S.knownOrg[id]=reply.primaryOrg;
     if(reply.dualOrg)S.crossings[id]=true;
     if(type==='question'&&q?.reveals?.includes('group_focus'))S.knownOrg[id]=people[id].primary_org||'N';
@@ -353,7 +373,7 @@ function handle(act,id){
     if(reply.result==='accept'){
       if(!S.contacts.includes(id))S.contacts.push(id);
       reply.text+=' TINEは「'+(reply.accountName||'アカウント')+'」で登録してるよ。';
-      S.affinity[id]=Math.min(8,(S.affinity[id]||0)+1);
+      // Contact exchange is not a shortcut to friendship.
     }else if(reply.result==='pending'){
       if(!S.pendingContacts.includes(id))S.pendingContacts.push(id);
     }
