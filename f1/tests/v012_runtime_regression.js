@@ -96,7 +96,7 @@ function runRegression(html){
  const pending=day2.complaintTickets.filter(x=>x.status==='open');
  const resolved=day2.complaintTickets.filter(x=>x.status==='resolved');
  check(pending.length===4&&resolved.length===3,'Three resolved and four current after new arrivals');
- check(first.get('complaintBoard').children.length===4,'Resolved complaints leaked into visible inbox');
+ check(first.get('complaintBoard').children.length===5,'Four operational complaints plus one DAY 2 neighborhood note');
  check(first.get('complaintArchiveBody').children.length===3,'Archived replies absent');
  check(first.get('complaintArchiveBody').children.every(x=>x.className.includes('resolved')),'Resolved cards not grayed');
  check(first.get('complaintBoard').children.every(x=>!x.children.some(y=>y.className==='complaint-reply')),'Unresolved card received a reply');
