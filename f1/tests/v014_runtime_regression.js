@@ -25,6 +25,7 @@ function test(html){
  }
  function step(ctx,id){
   if(id==='inspectBack')assert(ctx.d.focus('f17-back-review','裏手の社の周りが暗く'),'DAY 2 shrine message discovery');
+   if(id==='productCheck'){const p=ctx.d.getState().complaintTickets.find(t=>t.body.includes('見掛けない商品'));assert(!!p&&ctx.d.focus(p.id,'見掛けない商品がありました'),'DAY 1 product message discovery');}
   // Legacy economic-core tests inject the selected policy; v0171 tests player discovery.
   if(!ctx.d.availableIds().includes(id)&&!['audit','camera0','open0','idle','removeShrine'].includes(id)){
    const previous=ctx.d.getState();ctx.d.setState({...previous,discoveredActions:[...new Set([...(previous.discoveredActions||[]),id])]});
@@ -97,7 +98,7 @@ function test(html){
  step(zero,'idle');
  assert(zero.d.getState().endingReason==='店長解任・営業停止','Zero-day firing');
  const eerie=app();eerie.d.restart();
- for(const id of ['pickup','inspectBack','audit','camera0','open0'])step(eerie,id);
+ for(const id of ['productCheck','inspectBack','audit','camera0','open0'])step(eerie,id);
  assert(eerie.d.getState().day===6&&eerie.d.getState().odd===3,'Ten-comment route reaches DAY 6');
  const six=eerie.get('complaintBoard').children;
  assert(six.length>=10,'Day 6 ten reviews');
