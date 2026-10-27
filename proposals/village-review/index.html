@@ -94,7 +94,7 @@ header{display:flex;gap:16px;justify-content:space-between;align-items:center;pa
 </head>
 <body>
 <div class="shell">
-<header><div><div class="kicker">短編UIゲーム実験室 / α TEST</div><div class="brand">この村の評価をお願いします。</div><div class="sub">V1｜この村の評価をお願いします。・v0.6.15 α ｜ 更新：2026-10-27 22:36 JST</div></div><div class="actions"><button id="helpBtn" class="btn" type="button">あそびかた</button><button id="soundBtn" class="btn sound" type="button" aria-pressed="false">♪ OFF</button><button id="resetBtn" class="btn" type="button">新しい村</button></div></header>
+<header><div><div class="kicker">短編UIゲーム実験室 / α TEST</div><div class="brand">この村の評価をお願いします。</div><div class="sub">V1｜この村の評価をお願いします。・v0.6.16 α ｜ 更新：2026-10-27 22:36 JST</div></div><div class="actions"><button id="helpBtn" class="btn" type="button">あそびかた</button><button id="soundBtn" class="btn sound" type="button" aria-pressed="false">♪ OFF</button><button id="resetBtn" class="btn" type="button">新しい村</button></div></header>
 <main class="layout">
 <section class="panel"><div class="pad"><div class="villageHeader"><div><div class="kicker" id="period">2027年4月</div><div class="villageName" id="villageName">読み込み中...</div></div><span class="terrainTag" id="terrain">山間</span></div><div class="metadata" id="profile"></div><div id="arrivalNote" class="arrivalNote"></div><div class="stats" id="stats"></div><div id="map" class="map" aria-label="村の地図"></div><div class="mapLegend"><span><i class="dot"></i>今月レビューできる</span><span>点線：今月は観察のみ</span><span>灰色：閉業</span></div><div class="news" id="news"></div><div class="residentVoices" id="residentVoices"></div><div class="smallHeading">村の歩み</div><div id="history" class="history"></div><details class="reviewArchive"><summary>あなたの口コミ一覧（<span id="reviewCount">0</span>／12件）</summary><div id="reviewArchiveList"></div></details></div></section>
 <section class="panel"><div class="sideTop"><div class="villageHeader"><div><div class="smallHeading" style="margin:0">今月の訪問先</div><div class="sectionTitle" id="monthTitle"></div></div><div id="monthCount" class="yearCount"></div></div><div class="progress"><span id="progressBar" style="width:0"></span></div><div class="tiny" style="margin-top:6px" id="candidatesNote"></div></div><div class="pad" id="detail"></div></section>
@@ -102,7 +102,7 @@ header{display:flex;gap:16px;justify-content:space-between;align-items:center;pa
 </div><div id="overlay" class="overlay" role="presentation"><div class="modal" id="modal" role="dialog" aria-modal="true" aria-label="ゲームの案内"></div></div>
 <script>
 (function(){'use strict';
-const VERSION='0.6.15-alpha';const STORE='village-review-prototype-v010';
+const VERSION='0.6.16-alpha';const STORE='village-review-prototype-v010';
 const $=id=>document.getElementById(id);
 const V1_ART={ready:false,byId:new Map(),reason:'not loaded'};
 function v1Url(id){const record=V1_ART.ready?V1_ART.byId.get(id):null,u=record&&(record.webp||record.png);return typeof u==='string'&&/^assets\/[a-z0-9_\/-]+\.(webp|png)$/i.test(u)?u:null}
@@ -245,7 +245,7 @@ let S=null;let chosen=null;let currentStars=4;let selectedFact=0;let sound=false
 function rand(){let t=S.rng|0;t^=t<<13;t^=t>>>17;t^=t<<5;S.rng=t>>>0;return (S.rng>>>0)/4294967296}
 function ri(a,b){return Math.floor(a+rand()*(b-a+1))}function pick(a){return a[Math.floor(rand()*a.length)]}function shuffle(a){let b=a.slice();for(let i=b.length-1;i>0;i--){let j=ri(0,i),tmp=b[i];b[i]=b[j];b[j]=tmp}return b}
 function save(){try{localStorage.setItem(STORE,JSON.stringify(S))}catch(e){}}
-function load(){try{const x=JSON.parse(localStorage.getItem(STORE));if(x && [VERSION,'0.6.14-alpha','0.6.13-alpha','0.6.12-alpha','0.6.11-alpha','0.6.10-alpha','0.6.9-alpha','0.6.8-alpha','0.6.7-alpha','0.6.6-alpha','0.6.5-alpha','0.6.4-alpha','0.6.3-alpha','0.6.2-alpha','0.6.1-alpha','0.6.0-alpha','0.5.4-alpha','0.5.3-alpha','0.5.2-alpha','0.5.1-alpha','0.5.0-alpha','0.4.9-alpha','0.4.8-alpha','0.4.7-alpha','0.4.6-alpha','0.4.5-alpha','0.4.4-alpha','0.4.3-alpha','0.4.2-alpha','0.4.1-alpha','0.4.0-alpha','0.3.4-alpha','0.3.3-alpha','0.3.2-alpha','0.3.1-alpha','0.3.0-alpha','0.2.0-alpha','0.1.1-alpha','0.1.0-alpha'].includes(x.version) && Array.isArray(x.facilities) && x.facilities.length){S=x;S.version=VERSION;S.reviewHistory=S.reviewHistory||[];S.reforms=S.reforms||{};S.evolutionImpact=S.evolutionImpact||{visitors:0,economy:0,quiet:0};S.completed=S.month>=12;S.annualDue=S.annualDue||false;S.facilities.forEach(f=>{if(f.name===DEFS[f.kind]?.name)f.name=facilityName(f.kind,f.id,true);if(!f.mode)f.mode='boost';if(f.stageFocus===undefined)f.stageFocus=f.stage>0?f.focus:null;if(!f.stageMode)f.stageMode=f.mode;if(!f.improvedFacets)f.improvedFacets={};if(!f.routeScores)f.routeScores={};if(!f.directionScores)f.directionScores={};if(!f.secondDirectionScores)f.secondDirectionScores={};if(f.firstDirection===undefined)f.firstDirection=null;if(f.secondDirection===undefined)f.secondDirection=null;if(f.evolutionReviews===undefined)f.evolutionReviews=0;if(!f.observedFacts){f.observedFacts={};if(f.improvedFacets){for(let i=0;i<DEFS[f.kind].facts.length;i++){const tag=DEFS[f.kind].facts[i][1];if(Object.prototype.hasOwnProperty.call(f.improvedFacets,tag)&&DEFS[f.kind].facts.filter(row=>row[1]===tag).length===1)f.observedFacts[i]=!!f.improvedFacets[tag]}}}if(!f.revisedFacts)f.revisedFacts={};if(!f.aspectLevels)f.aspectLevels={};if(f.lastPolarity===undefined)f.lastPolarity=null;if(!f.visualRoute&&f.stage>=2){const i=DEFS[f.kind].facts.findIndex(v=>v[1]===f.stageFocus);f.visualRoute=(ROUTE_BY_FACT[f.kind]||[])[Math.max(0,i)]?.[f.stageMode==='reform'?1:0]||preferredRoute(f)}});if(S.completed)S.candidates=[];restoreGround();save();return true}}catch(e){}return false}
+function load(){try{const x=JSON.parse(localStorage.getItem(STORE));if(x && [VERSION,'0.6.15-alpha','0.6.14-alpha','0.6.13-alpha','0.6.12-alpha','0.6.11-alpha','0.6.10-alpha','0.6.9-alpha','0.6.8-alpha','0.6.7-alpha','0.6.6-alpha','0.6.5-alpha','0.6.4-alpha','0.6.3-alpha','0.6.2-alpha','0.6.1-alpha','0.6.0-alpha','0.5.4-alpha','0.5.3-alpha','0.5.2-alpha','0.5.1-alpha','0.5.0-alpha','0.4.9-alpha','0.4.8-alpha','0.4.7-alpha','0.4.6-alpha','0.4.5-alpha','0.4.4-alpha','0.4.3-alpha','0.4.2-alpha','0.4.1-alpha','0.4.0-alpha','0.3.4-alpha','0.3.3-alpha','0.3.2-alpha','0.3.1-alpha','0.3.0-alpha','0.2.0-alpha','0.1.1-alpha','0.1.0-alpha'].includes(x.version) && Array.isArray(x.facilities) && x.facilities.length){S=x;S.version=VERSION;S.reviewHistory=S.reviewHistory||[];S.reforms=S.reforms||{};S.evolutionImpact=S.evolutionImpact||{visitors:0,economy:0,quiet:0};S.completed=S.month>=12;S.annualDue=S.annualDue||false;S.facilities.forEach(f=>{if(f.name===DEFS[f.kind]?.name)f.name=facilityName(f.kind,f.id,true);if(!f.mode)f.mode='boost';if(f.stageFocus===undefined)f.stageFocus=f.stage>0?f.focus:null;if(!f.stageMode)f.stageMode=f.mode;if(!f.improvedFacets)f.improvedFacets={};if(!f.routeScores)f.routeScores={};if(!f.directionScores)f.directionScores={};if(!f.secondDirectionScores)f.secondDirectionScores={};if(f.firstDirection===undefined)f.firstDirection=null;if(f.secondDirection===undefined)f.secondDirection=null;if(f.evolutionReviews===undefined)f.evolutionReviews=0;if(!f.observedFacts){f.observedFacts={};if(f.improvedFacets){for(let i=0;i<DEFS[f.kind].facts.length;i++){const tag=DEFS[f.kind].facts[i][1];if(Object.prototype.hasOwnProperty.call(f.improvedFacets,tag)&&DEFS[f.kind].facts.filter(row=>row[1]===tag).length===1)f.observedFacts[i]=!!f.improvedFacets[tag]}}}if(!f.revisedFacts)f.revisedFacts={};if(!f.aspectLevels)f.aspectLevels={};if(f.lastPolarity===undefined)f.lastPolarity=null;if(!f.visualRoute&&f.stage>=2){const i=DEFS[f.kind].facts.findIndex(v=>v[1]===f.stageFocus);f.visualRoute=(ROUTE_BY_FACT[f.kind]||[])[Math.max(0,i)]?.[f.stageMode==='reform'?1:0]||preferredRoute(f)}});if(S.completed)S.candidates=[];restoreGround();save();return true}}catch(e){}return false}
 function newWorld(seed){S={version:VERSION,rng:seed>>>0||1,month:0,terrain:'',trait:'',name:'',population:0,startPopulation:0,visitors:0,startVisitors:0,economy:0,startEconomy:0,quiet:0,startQuiet:0,facilities:[],reforms:{},themes:{trade:0,tech:0,history:0,tradition:0,strange:0,nature:0,sea:0,living:0,transport:0,tourism:0},secrets:{ancient:false,robot:false,deep:false},achievements:[],usedEvents:[],log:[],candidates:[],lastReview:null,result:null,annualDue:false,completed:false,reviewHistory:[],evolutionImpact:{visitors:0,economy:0,quiet:0},stats:{total:0,closed:0,newFacilities:0,big:0,chain:0},sound:false};
  const terrain=pick(TERRAIN);S.terrain=terrain.id;S.trait=pick(TRAITS).id;S.name=pick(FIRST)+pick(LAST)+'村';S.population=ri(220,580);S.startPopulation=S.population;S.visitors=ri(220,550);S.startVisitors=S.visitors;S.economy=ri(33,55);S.startEconomy=S.economy;S.quiet=ri(63,89);S.startQuiet=S.quiet;S.cityMins=ri(terrain.distance[0],terrain.distance[1]);S.stationMins=terrain.id==='island'?null:ri(8,70);S.secrets.ancient=rand()<.085;S.secrets.robot=rand()<.075;S.secrets.deep=(terrain.id==='coast'||terrain.id==='island')&&rand()<.12;initGround();
  const pool=['rail','market','school','shrine','inn','office','clinic','shop','hall','farm'];const count=ri(4,6);const commerce=['market','shop','farm','inn'];const life=['school','office','clinic','hall'];const chosenKinds=[pick(commerce),pick(life)];for(const k of shuffle(pool)){if(chosenKinds.length>=count)break;if(!chosenKinds.includes(k))chosenKinds.push(k)}
@@ -422,7 +422,7 @@ function evolutionWinner(scores,kind,fallback){
  entries.sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0]));
  return entries[0]?.[0]||fallback||kind+'.0.0'
 }
-function evolutionHistoryHTML(f){
+function evolutionHistoryHTML(f){if(f.stage>=2&&coastalName(f)){const mode=f.coastalMode==='low'?'静けさと素朴さを守る':f.coastalMode==='high'?'海辺の魅力を活かす':'海の安全と暮らしを見直す';return '<div class="evolutionHistory"><div class="smallHeading">この施設が歩んできた道</div><p>海とのつながりに関する口コミを受け、'+mode+'方向へ進みました。</p></div>'}
  if(!V1_EVOLUTION.ready||f.stage<2||!f.firstDirection)return '';
  const first=V1_EVOLUTION.stage2.get(f.firstDirection);
  if(!first)return '';
@@ -487,7 +487,7 @@ function preferredRoute(f){
  const sorted=keys.slice().sort((a,b)=>(weights[b]||0)-(weights[a]||0)||keys.indexOf(a)-keys.indexOf(b));
  return sorted[0]||null;
 }
-function lateRoute(f){const terminal=f.stage>=3?evolutionRecord(f):null;const route=terminal?.imageRoute||f.visualRoute;return route&&VISUAL_ROUTES[f.kind]?.[route]?route:preferredRoute(f)}
+function lateRoute(f){if(coastalName(f))return coastalRoute(f);const terminal=f.stage>=3?evolutionRecord(f):null;const route=terminal?.imageRoute||f.visualRoute;return route&&VISUAL_ROUTES[f.kind]?.[route]?route:preferredRoute(f)}
 const ACTIONS={
  inn:{trade:'地元農家と料理の新メニューを開発しました。',nature:'景色と静けさを活かした新しい宿泊プランを始めました。',history:'古い建物の魅力を残す改修を始めました。'},
  market:{trade:'目玉商品を増やし、売場のレイアウトを変えました。',living:'レジと案内の配置を変え、混雑緩和に取り組みました。'},
@@ -500,7 +500,21 @@ const ACTIONS={
  hall:{tradition:'住民が集まる新しい行事を企画しました。'},
  harbor:{sea:'海の資源を活かした新しい取り組みを始めました。'}
 };
-function phaseName(f){if(!f.open)return f.kind==='scenic'?'立入制限区域':('旧・'+f.name+'（閉業）');if(f.stage===0)return DEFS[f.kind].stages[0];if(f.stage===1)return (f.lastPolarity==='support-low'||f.lastPolarity==='reject-high')?(SMALL_STAGE1[f.kind]||DEFS[f.kind].stages[0]):f.stageMode==='reform'&&REFORM_LABELS[f.kind]?REFORM_LABELS[f.kind][0]:DEFS[f.kind].stages[1];const evolution=evolutionRecord(f);if(evolution)return evolution.name;const visual=VISUAL_ROUTES[f.kind]?.[lateRoute(f)];if(visual)return visual[Math.min(f.stage-2,1)];const mode=f.stageMode||f.mode,focus=f.stageFocus||f.focus;if(mode==='reform'&&REFORM_LABELS[f.kind])return REFORM_LABELS[f.kind][Math.min(f.stage-1,2)];return (EVOLUTION[f.kind]||{})[focus]?.[Math.min(f.stage-1,2)]||DEFS[f.kind].stages[Math.min(f.stage,3)]}
+const COASTAL_FORMS={
+ shrine:{low:['潮待ちの小社','海辺の潮守神社','潮汐を見守る神社'],high:['海風の参道神社','港を見守る神社','海の祭礼拠点'],reform:['海辺の案内を見直した神社','海への参道を整えた神社','海辺の祈りと生活を結ぶ神社']},
+ scenic:{low:['波音の散策路','静かな海岸景勝地','自然のままの海辺'],high:['海辺の遊歩道','潮風の展望公園','大海原を望む景勝地'],reform:['海岸案内を見直した景勝地','海辺の安全と景観を整える公園','海岸再生の散策名所']},
+ inn:{low:['静かな潮騒の旅館','海を望む隠れ家旅館','潮音の静養温泉宿'],high:['海辺の人気旅館','海の幸と温泉の宿','海を望む滞在型旅館'],reform:['海辺の運営を見直した旅館','安全と景色を整えた海辺の宿','海と暮らしを結ぶ温泉宿']},
+ lodge:{low:['潮風の小さな民宿','静かな海辺の民宿','波音だけが聞こえる宿'],high:['海辺の体験民宿','漁村を楽しむ宿','海辺の滞在交流宿'],reform:['海との向き合い方を見直した宿','海岸を整えた民宿','地域と海を結ぶ民宿']}
+};
+function coastalRoute(f){return {shrine:'sanctuary',scenic:'conservation',inn:'retreat',lodge:'retreat'}[f.kind]||null}
+function coastalName(f){
+ if(!['coast','island'].includes(S.terrain)||!COASTAL_FORMS[f.kind])return null;
+ const applies=f.stage>=1&&(f.coastalStage===f.stage||(f.stageFocus==='sea'&&f.lastFactKey===3));
+ if(!applies)return null;
+ const mode=f.coastalStage===f.stage&&f.coastalMode?f.coastalMode:(f.lastPolarity==='support-high'?'high':f.lastPolarity==='support-low'?'low':'reform');
+ return COASTAL_FORMS[f.kind][mode][Math.min(f.stage-1,2)]
+}
+function phaseName(f){const seaName=coastalName(f);if(f.open&&seaName)return seaName;if(!f.open)return f.kind==='scenic'?'立入制限区域':('旧・'+f.name+'（閉業）');if(f.stage===0)return DEFS[f.kind].stages[0];if(f.stage===1)return (f.lastPolarity==='support-low'||f.lastPolarity==='reject-high')?(SMALL_STAGE1[f.kind]||DEFS[f.kind].stages[0]):f.stageMode==='reform'&&REFORM_LABELS[f.kind]?REFORM_LABELS[f.kind][0]:DEFS[f.kind].stages[1];const evolution=evolutionRecord(f);if(evolution)return evolution.name;const visual=VISUAL_ROUTES[f.kind]?.[lateRoute(f)];if(visual)return visual[Math.min(f.stage-2,1)];const mode=f.stageMode||f.mode,focus=f.stageFocus||f.focus;if(mode==='reform'&&REFORM_LABELS[f.kind])return REFORM_LABELS[f.kind][Math.min(f.stage-1,2)];return (EVOLUTION[f.kind]||{})[focus]?.[Math.min(f.stage-1,2)]||DEFS[f.kind].stages[Math.min(f.stage,3)]}
 function textObserver(f){const text=[];if(!f.open)return ['現在、この建物は営業していません。','入口に閉業のお知らせが貼られています。'];if(f.lastChanged>=S.month-2&&f.lastFeedback){text.push('最近の変化：'+f.lastFeedback)}if(facilityStrain(f)&&f.funds<40)text.push('好評な一方、現在の方針で経営を続けるには維持費や収益面で課題があります。');else if(f.funds<22)text.push('施設の維持費が課題になっています。');else if(f.rep>=68)text.push('最近、評判を聞いて訪れる人が増えています。');else if(f.rep<28)text.push('以前より利用者が減ったという話があります。');return text.slice(0,2)}
 function voice(f){
  // Stable across redraws, but different by facility and month.
@@ -626,7 +640,9 @@ function maybeUpgrade(f,changes){
    const rated=Object.values(f.secondDirectionScores||{}).some(v=>Number.isFinite(v)&&v>0);
    f.secondDirection=rated?evolutionWinner(f.secondDirectionScores,f.kind):null
   }
-  const record=evolutionRecord(f);
+  const isCoastal=f.focus==='sea'&&['coast','island'].includes(S.terrain)&&!!COASTAL_FORMS[f.kind];
+  if(isCoastal){f.coastalStage=f.stage;f.coastalMode=f.lastPolarity==='support-high'?'high':f.lastPolarity==='support-low'?'low':'reform';f.coastalHistory=f.coastalHistory||{};f.coastalHistory[f.stage]={mode:f.coastalMode,month:S.month};if(f.stage===2)f.visualRoute=coastalRoute(f)}else f.coastalStage=null;
+  const record=isCoastal?null:evolutionRecord(f);
   const direction=f.stage===3?V1_EVOLUTION.stage2.get(f.secondDirection):record;
   if(direction){
    f.aspectLevels=f.aspectLevels||{};f.observedFacts=f.observedFacts||{};
@@ -640,7 +656,7 @@ function maybeUpgrade(f,changes){
   const strain=facilityStrain(f);
   if(strain){f.funds=clamp(f.funds-strain*(f.stage===3?7:5),0,100);f.pressure=clamp(f.pressure+strain*5,0,100)}
   const label=phaseName(f);
-  f.lastFeedback=record?(f.stage===2?'これまでの見直しが積み重なり、'+record.action+'。「'+label+'」になりました。':'施設の経緯を受けて、'+record.description+' '+record.tradeoff) :'これまでの取り組みが進み、「'+label+'」になりました。';
+  f.lastFeedback=isCoastal?'海との関わりを見直し、'+(f.coastalMode==='low'?'静けさと小さな営みを守る':f.coastalMode==='high'?'海辺の魅力を伸ばす':'海辺の運営と安全を整える')+'取り組みによって「'+label+'」になりました。':record?(f.stage===2?'これまでの見直しが積み重なり、'+record.action+'。「'+label+'」になりました。':'施設の経緯を受けて、'+record.description+' '+record.tradeoff) :'これまでの取り組みが進み、「'+label+'」になりました。';
   if(impact)f.lastFeedback+=' '+impact.summary;if(strain)f.lastFeedback+=' 評判とは別に、今の規模と運営を維持する負担が生まれています。';
   changes.push({kind:'big',facilityId:f.id,stage:f.stage,visualRoute:lateRoute(f),previousVisualRoute,icon:DEFS[f.kind].icon,title:f.name+'が『'+label+'』に進化！',detail:f.lastFeedback});
   S.stats.big++;if(!record)S.economy=clamp(S.economy+1,0,100)
@@ -730,12 +746,12 @@ function getEndings(){
  const stage3=active.filter(f=>f.stage===3).length,opened=S.facilities.filter(f=>f.createdAt>0).length;
  if(opened>=2)add('地図を書き足す村',19+opened,'今年は'+opened+'件の施設が開業し、村の地図に新しい行き先が加わりました。');
  else if(opened===1)add('地図を書き足す村',15,'村に新しい施設が開業し、去年の地図にはない行き先が増えました。');
- if(stage3>=2)add('看板を覚えきれない村',18+stage3,'いくつもの施設が最終形態に至り、一年前とは違う風景が生まれました。');
+ if(stage3>=2)add('看板を覚えきれない村',13+stage3,'いくつもの施設が最終形態に至り、一年前とは違う風景が生まれました。');
  else if(stage3===1)add('昨日の姿を思い出せない村',16,'一つの施設が最終形態まで姿を変え、村の新しい目印になりました。');
- if(S.stats.big>=9)add('四季より変化の早い村',17+Math.min(5,S.stats.big-9),'一年で'+S.stats.big+'回もの施設の大きな転換が起こりました。');
+ if(S.stats.big>=9)add('四季より変化の早い村',16+Math.min(4,S.stats.big-9),'一年で'+S.stats.big+'回もの施設の大きな転換が起こりました。');
  else if(S.stats.big>=6)add('看板を貼り替え続ける村',12+Math.min(4,S.stats.big-6),'村では施設の名前や姿を変える取り組みが続きました。');
  if(negative>=4&&S.stats.big>=4)add('ご意見から建て直す村',18+Math.min(3,negative-4),'改善を求める口コミが'+negative+'件届き、村の施設は何度も運営を見直しました。');
- if(goodLow>=3&&S.quiet>=68)add('足さない贅沢を知る村',19+Math.min(3,goodLow-3),'増やさないことを評価する口コミが届き、静かな暮らしを守る施設が育ちました。');
+ if(goodLow>=3&&S.quiet>=68)add('足さない贅沢を知る村',15+Math.min(2,goodLow-3),'増やさないことを評価する口コミが届き、静かな暮らしを守る施設が育ちました。');
  if(kinds(['scenic','inn','shrine','lodge'])>=2&&S.quiet>=78)add('静けさを持ち帰る村',18,'自然と静養を大切にする施設が育ち、村では落ち着いた時間が流れています。');
  if(kinds(['market','shop','farm','cafe'])>=2&&t.trade>=1)add('買い物のついでに観光する村',17,'複数の商業施設が姿を変え、買い物の寄り道先が増えました。');
  if(kinds(['school','office','clinic','hall','shop'])>=2&&S.economy>=45)add('暮らすほど便利な村',17,'住民の日常を支える施設が複数整備されました。');
@@ -744,6 +760,13 @@ function getEndings(){
  if(t.strange>=1.5&&kinds(['shrine','museum'])>=1)add('噂だけ先に歩く村',18,'不思議な話題をめぐる口コミが、村の観光案内にも影響しました。');
  if(t.history+t.tradition>=2.5&&kinds(['shrine','hall','museum','school'])>=1)add('村史を読み直す村',17,'伝統や歴史の扱いを見直し、村の施設に新しい役割が生まれました。');
  if(closedCount>=1&&S.population<=S.startPopulation)add('灯りが少なくなった村',17+closedCount,'営業を終えた施設が残り、村の暮らしは新しい課題を抱えています。');
+ const positive=journal.filter(r=>r.stars>=4).length;
+ if(positive>=7&&negative<=2)add('ほめ言葉が村を育てた',18+Math.min(4,positive-7),'好意的な口コミが'+positive+'件寄せられ、施設は評価された特色を磨きました。');
+ const visiting={};for(const r of journal)visiting[r.id]=(visiting[r.id]||0)+1;
+ const repeat=Math.max(0,...Object.values(visiting));
+ if(repeat>=3)add('同じ建物を何度も訪ねた村',18+Math.min(4,repeat-3),'一つの施設に何度も口コミが寄せられ、村の変化を見届ける旅になりました。');
+ if(new Set(journal.map(r=>r.id)).size>=7)add('村中に口コミが届いた一年',18,'いくつもの施設を訪ね歩き、異なる場所に口コミを残した一年でした。');
+ if(S.economy>=58&&S.population>=S.startPopulation)add('暮らしに余裕が生まれた村',19,'経済が活発になり、定住する人も減らずに一年を終えました。');
  if(n>=2)add('改装のお知らせが絶えない村',8+n,'複数の施設が新しい姿になりました。');
  if(!candidates.length)add('いつもの暮らしがある村',1,'今年も村には人々の暮らしが続き、小さな変化が重なりました。');
   candidates.sort((a,b)=>b.score-a.score);
@@ -830,7 +853,7 @@ function v1OverlayKeys(f){if(!f.open)return [S.month-f.lastChanged>2?'weeds':'cl
  if(f.kind==='rail'&&S.visitors>S.startVisitors*1.4)a.push('traffic');
  if(['shrine','museum'].includes(f.kind)&&S.themes.strange>=7)a.push('odd-notice');
  if(['inn','lodge','scenic'].includes(f.kind)&&S.themes.nature>=7&&f.stage>=2)a.push('quiet-garden');
- if(f.kind==='harbor'&&S.themes.sea>=7)a.push('tidal');
+ if((f.kind==='harbor'&&S.themes.sea>=7)||coastalName(f))a.push('tidal');
  if(f.rep>=75&&S.visitors>S.startVisitors*1.25)a.push('crowd');
  return [...new Set(a)].slice(0,2)}
 function v1OverlayHTML(f){return v1OverlayKeys(f).filter(k=>v1Url('overlay:'+k)).map(k=>'<span class="v1Overlay">'+v1Art('overlay:'+k,'')+'</span>').join('')}
