@@ -134,15 +134,15 @@ function chooseAction(){
 }
 function night(){
  return '<div class="eyebrow">'+esc(WEEK[S.day])+' / 夜</div><h2>あの顔、誰だったかな。</h2>'+
- '<p>今日、会った人を思い出す。夜はSNSか公開掲示を一つ確認できる。手帳での名前照合は二回まで。</p>'+
- '<div class="status">名前と所属の照合 '+(S.checks[date()]||0)+' / 2</div>'+
+ '<p>今日出会った人を思い出す。SNS・公開掲示はすべて閲覧可能。手帳での照合とメモ編集は夜だけ、回数無制限です。</p>'+
+ '<div class="status">今夜は何度でも調べて照合できます</div>'+
  (S.report?'<div class="notice">'+esc(S.report)+'</div>':'')+
  '<div class="actions">'+btn('人物手帳で照合する','open-notebook')+
- btn('Photogram','night-sns','Photogram',S.nightChoice[date()]?'ghost':'')+
- btn('Zitter','night-sns','Zitter',S.nightChoice[date()]?'ghost':'')+
- btn('TINE','night-sns','TINE',S.nightChoice[date()]?'ghost':'')+
- btn('学内の掲示を見る','night-board','',S.nightChoice[date()]?'ghost':'')+'</div>'+
- (S.nightChoice[date()]?'<p class="dim">今夜確認したもの：'+esc(S.nightChoice[date()])+'</p>':'')+
+ btn('Photogram','night-sns','Photogram')+
+ btn('Zitter','night-sns','Zitter')+
+ btn('TINE','night-sns','TINE')+
+ btn('学内の掲示を見る','night-board')+'</div>'+
+ (S.viewedPlatforms[date()]?.length?'<p class="dim">閲覧済み：'+esc(S.viewedPlatforms[date()].join('、'))+'</p>':'')+
  '<div class="actions">'+btn(S.day===4?'金曜の夜、合宿を決める':'翌日へ','next-day')+'</div>';
 }
 function sns(){
@@ -198,28 +198,31 @@ function notebook(){
  ((S.socialLinked[id]||[]).length?'<p class="dim">顔が一致したSNS：'+esc(S.socialLinked[id].join('、'))+'</p>':'')+
  (S.knownOrg[id]&&!verified?'<p class="dim">話して聞いた所属：'+esc(label(S.knownOrg[id]))+'</p>':'')+
  (note?'<p class="dim">メモ：'+esc(note)+'</p>':'')+
- btn(verified?'メモを見る':'この顔を照合','open-identity',id,'mini')+'</div></div>';
+ btn(verified?'記録を見る':canEditNotebook()?'この顔を照合':'顔を見る','open-identity',id,'mini')+'</div></div>';
  }).join('');
  return '<div class="eyebrow">PERSONAL NOTEBOOK</div><h2>顔と名前の手帳</h2>'+
- '<p>今日までに目にした顔 '+known.length+'人。自己紹介の名前は記録の候補に残っていますが、対応する顔は自分で思い出す必要があります。</p>'+
- '<p class="status">今夜の照合 '+(S.checks[date()]||0)+' / 2</p>'+
+ '<p>今日までに目にした顔 '+known.length+'人。名前と顔の組み合わせは、自分で思い出す必要があります。</p>'+
+ (canEditNotebook()?'<p class="status">夜の照合・メモ編集は何度でもできます</p>':'<p class="status">昼は閲覧のみ。照合・編集は夜にできます</p>')+
  (S.report?'<div class="notice">'+esc(S.report)+'</div>':'')+
  '<div class="person-list">'+(entries||'<p>まだ誰にも会っていません。</p>')+'</div>'+
  btn('戻る','back-from-notebook','','ghost');
 }
 function identity(){
- const id=S.currentNotebook,person=people[id],guess=S.guesses[id],names=unique(S.introduced).map(pid=>people[pid]).sort((a,b)=>a.name.localeCompare(b.name,'ja'));
+ const id=S.currentNotebook,person=people[id],guess=S.guesses[id],editable=canEditNotebook();
+ const names=unique(S.introduced).map(pid=>people[pid]).sort((a,b)=>a.name.localeCompare(b.name,'ja'));
  const options=names.map(p=>'<option value="'+esc(p.person_id)+'">'+esc(p.name)+'</option>').join('');
  const note=S.note[id]||'';
- return '<div class="eyebrow">NOTEBOOK / FACE</div><h2>この人は誰？</h2><div class="chosen">'+portrait(id,'large')+
- '<p class="dim">どこで会ったか、何という名前だったかを思い出してください。</p></div>'+
- (guess?.verified?'<div class="notice">'+esc(person.name)+' ／ '+esc(label(person.primary_org))+'。照合済み。</div>':
- '<div class="paper"><label>名前<select id="guessName"><option value="">選ぶ</option>'+options+'</select></label>'+
+ const form=guess?.verified?'<div class="notice">'+esc(person.name)+' ／ '+esc(label(person.primary_org))+'。照合済み。</div>':
+ editable?'<div class="paper"><label>名前<select id="guessName"><option value="">選ぶ</option>'+options+'</select></label>'+
  '<label>主に所属している団体<select id="guessOrg"><option value="">選ぶ</option>'+D.orgs.map(o=>'<option value="'+esc(o.org_id)+'">'+esc(o.common_name)+'</option>').join('')+
  '<option value="N">まだサークルに所属していない新入生</option></select></label>'+
- '<p class="dim">照合は一日二回まで。答えが違っても記録できますが、確認の機会を一回使います。</p>'+btn('名前と所属を照合','submit-identity')+'</div>')+
- '<div class="paper"><label>自由メモ<textarea id="faceNote" rows="2" maxlength="160" placeholder="髪型、見た場所、会話の印象など">'+esc(note)+'</textarea></label>'+btn('メモを保存','save-note','','mini')+'</div>'+
- btn('人物一覧へ','back-identity','','ghost');
+ '<p class="dim">何度でも照合できます。名前と所属を選んでください。</p>'+btn('名前と所属を照合','submit-identity')+'</div>':
+ '<p class="dim">夜になると、ここで名前と所属を照合できます。</p>';
+ const notes=editable?'<div class="paper"><label>自由メモ<textarea id="faceNote" rows="2" maxlength="160" placeholder="髪型、見た場所、会話の印象など">'+esc(note)+'</textarea></label>'+btn('メモを保存','save-note','','mini')+'</div>':
+ note?'<div class="paper"><p>メモ：'+esc(note)+'</p></div>':'';
+ return '<div class="eyebrow">NOTEBOOK / FACE</div><h2>この人は誰？</h2><div class="chosen">'+portrait(id,'large')+
+ '<p class="dim">どこで会ったか、何という名前だったかを思い出してください。</p></div>'+
+ form+notes+btn('人物一覧へ','back-identity','','ghost');
 }
 function camp(){
  const choices=D.orgs.map(o=>'<article class="panel"><span class="tag">'+esc(o.common_name)+'</span><p>'+esc(o.focus)+'</p>'+
@@ -227,7 +230,7 @@ function camp(){
  const verifiedIds=Object.keys(S.guesses).filter(id=>S.guesses[id]?.verified);
  const targetVerified=!!S.guesses.P001?.verified;
  const hasTalk=Object.values(S.groupDone).some(t=>typeof t==='string'&&(t.includes('入学前から、きみに')||t.includes('去年の秋にはもう')));
- const hasArchive=S.clues.includes('F-COM-01')||S.nightChoice['2026-04-06']==='掲示板';
+ const hasArchive=S.clues.includes('F-COM-01')||S.viewedBoard['2026-04-06'];
  const clueText=targetVerified&&hasTalk&&hasArchive?
    '照合した西園寺紬の顔、こもれびの所属、入学前から準備された受け入れ枠。ばらばらだった情報が、一つの団体につながった。':
    targetVerified?(hasTalk?'あの人が自分のために席を準備していたという言葉は、まだ耳に残っている。':'西園寺紬という名前と、こもれびの所属は確認できた。これだけで危険だとは言い切れない。'):
@@ -378,21 +381,21 @@ function handle(act,id){
  }
  case 'back-venue':go('venue');break;
  case 'finish-venue':if(S.phase==='venue')go('night');break;
- case 'open-notebook':S.returnTo=S.phase;go('notebook');break;
+ case 'open-notebook':if(S.phase==='notebook'||S.phase==='identity')return;S.returnTo=S.phase;go('notebook');break;
  case 'back-from-notebook':go(S.returnTo==='notebook'?'night':(S.returnTo||'night'));break;
  case 'open-identity':if(S.seen.includes(id)){S.currentNotebook=id;go('identity')}break;
  case 'back-identity':go('notebook');break;
  case 'save-note':{
+  if(S.phase!=='identity'||!canEditNotebook())return;
   const t=document.getElementById('faceNote');if(t)S.note[S.currentNotebook]=String(t.value).slice(0,160);
   S.report='この顔のメモを保存した。';go('notebook');break;
  }
  case 'submit-identity':{
-  if(S.phase!=='identity'||(S.checks[date()]||0)>=2)return;
+  if(S.phase!=='identity'||!canEditNotebook())return;
   const n=document.getElementById('guessName')?.value||'';
   const org=document.getElementById('guessOrg')?.value||'';
   if(!n||!org){S.report='名前と所属の両方を選んでください。';go('notebook');return}
   if(!S.introduced.includes(n))return;
-  S.checks[date()]=(S.checks[date()]||0)+1;
   const p=people[S.currentNotebook],correct=p.person_id===n&&(p.primary_org||'N')===org;
   S.guesses[p.person_id]={name:n,org,verified:correct};
   S.report=correct?'顔・名前・所属が一致した。'+(S.crossings[p.person_id]?'別の団体とのつながりにも注意しておこう。':''):
@@ -400,11 +403,9 @@ function handle(act,id){
   go('notebook');break;
  }
  case 'night-sns':{
-  if(S.phase!=='night')return;
-  const used=S.nightChoice[date()];
-  if(used&&used!==id)return;
-  S.nightChoice[date()]=id;S.snsPlatform=id;go('sns');break;
- }
+ if(S.phase!=='night'||!['TINE','Photogram','Zitter'].includes(id))return;
+ S.viewedPlatforms[date()]=unique([...(S.viewedPlatforms[date()]||[]),id]);S.snsPlatform=id;go('sns');break;
+}
  case 'account-match':{
   if(S.phase!=='sns')return;
   const post=D.posts.find(p=>p.post_id===id),acct=post&&accounts[post.author_id+'|'+post.platform];
@@ -421,14 +422,12 @@ function handle(act,id){
  }
  case 'back-sns':go('sns');break;
  case 'night-board':{
-  if(S.phase!=='night')return;
-  const used=S.nightChoice[date()];
-  if(used&&used!=='掲示板')return;
-  S.nightChoice[date()]='掲示板';go('board');break;
- }
+ if(S.phase!=='night')return;S.viewedBoard[date()]=true;go('board');break;
+}
  case 'back-night':go('night');break;
  case 'next-day':{
   if(S.phase!=='night')return;
+  for(const pid of S.pendingContacts)if(!S.contacts.includes(pid))S.contacts.push(pid);S.pendingContacts=[];
   S.report='';if(S.day<4){S.day++;go('day')}else go('camp');break;
  }
  case 'record-suspect':{
