@@ -1,6 +1,6 @@
 (() => {
 'use strict';
-const D=window.S6_DATA,P=window.S6_BETA_PROFILES;
+const D=window.S6_DATA,P=window.S6_BETA_PROFILES,Social=window.S6_BETA_SOCIAL;
 const people=Object.fromEntries(D.people.map(x=>[x.person_id,x]));
 const hooks=Object.fromEntries(D.socialProfiles.map(x=>[x.person_id,x]));
 const events=Object.fromEntries(D.events.map(x=>[x.event_id,x]));
@@ -88,7 +88,7 @@ function answer(id,gid,kind){
 }
 function contact(id,gid,state){
  const c=P.people[id],rule=D.contactChannels.find(x=>x.group_id===gid&&x.person_id===id&&x.platform==='TINE');
- const a=D.accounts.find(x=>x.person_id===id&&x.platform==='TINE');
+ const a=Social.accounts.find(x=>x.person_id===id&&x.platform==='TINE');
  const closeness=level(state,id);
  if(!rule||!a)return {result:'decline',text:'連絡先は、また今度でいい？'};
  if(rule.approval_policy==='after_week')return {result:'decline',text:'もう少し話してからでもいいかな。'};
@@ -110,7 +110,7 @@ const snsMessage=(id,state)=>{
    p.year==='1'?'ほかの新歓にも行ってみる？':
    c.caution>=3?'困ったことがあれば、案内くらいならできるよ。':
    main+'も、見学だけで大丈夫だよ。';
- return {text:opening+' '+continuity,stage:close,accountName:D.accounts.find(a=>a.person_id===id&&a.platform==='TINE')?.display_name||'アカウント'};
+ return {text:opening+' '+continuity,stage:close,accountName:Social.accounts.find(a=>a.person_id===id&&a.platform==='TINE')?.display_name||'アカウント'};
 };
 const sceneLine=line=>P.sceneOverrides[line.group_id+'|'+line.speaker_id]||line.text;
 const chatAudit=()=>({firstYearLines:D.lines.filter(x=>people[x.speaker_id]?.year==='1').length,
