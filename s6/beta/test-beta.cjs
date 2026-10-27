@@ -4,10 +4,11 @@ const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('n
 const root=path.resolve(__dirname,'..');
 const dataCode=fs.readFileSync(path.join(root,'game-data.js'),'utf8');
 const profileCode=fs.readFileSync(path.join(__dirname,'character-profiles.js'),'utf8');
+const socialCode=fs.readFileSync(path.join(__dirname,'social-personas.js'),'utf8');
 const dialogueCode=fs.readFileSync(path.join(__dirname,'dialogue-engine.js'),'utf8');
 const game=fs.readFileSync(path.join(__dirname,'game.js'),'utf8');
 const dataScope={window:{}};vm.runInNewContext(dataCode,dataScope);
-vm.runInNewContext(profileCode,dataScope);vm.runInNewContext(dialogueCode,dataScope);
+vm.runInNewContext(profileCode,dataScope);vm.runInNewContext(socialCode,dataScope);vm.runInNewContext(dialogueCode,dataScope);
 const D=dataScope.window.S6_DATA;
 let total=0, failures=0;
 function check(name,fn){try{fn();total++;console.log('PASS',name)}catch(e){failures++;console.error('FAIL',name,e.stack||e)}}
@@ -16,7 +17,7 @@ function makeSession(cache=new Map()){
  const app={set innerHTML(v){html=v},get innerHTML(){return html},addEventListener(n,f){if(n==='click')onClick=f}};
  const doc={getElementById:id=>id==='app'?app:fields[id]||null};
  const storage={getItem:k=>cache.get(k)||null,setItem:(k,v)=>cache.set(k,v)};
- const win={S6_DATA:D,S6_BETA_PROFILES:dataScope.window.S6_BETA_PROFILES,S6_BETA_DIALOGUE:dataScope.window.S6_BETA_DIALOGUE,scrollTo(){}};
+ const win={S6_DATA:D,S6_BETA_PROFILES:dataScope.window.S6_BETA_PROFILES,S6_BETA_SOCIAL:dataScope.window.S6_BETA_SOCIAL,S6_BETA_DIALOGUE:dataScope.window.S6_BETA_DIALOGUE,scrollTo(){}};
  vm.runInNewContext(game,{window:win,document:doc,localStorage:storage});
  return {
   get html(){return html},
@@ -224,7 +225,7 @@ check('reunion after a separate day unlocks a warmer response with no legal-name
  s.click('back-venue');s.click('finish-venue');s.click('next-day');
  s.click('skip');s.click('next-day');
  visit(s,'E06','E06-A');s.click('action-menu','talk');s.click('act-target','P003');
- assert.equal(s.state.affinity.P003,3);
+ assert.equal(s.state.affinity.P003,3.25);
  assert.equal(B.level(s.state,'P003'),'familiar');
  assert.equal(s.state.relationshipDays.P003.length,2);
  assert.match(s.html,/この前の続きも話せそう/);
