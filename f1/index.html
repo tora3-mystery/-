@@ -911,6 +911,7 @@ if(typeof module !== "undefined" && module.exports) module.exports = {resolveF1S
 })();
 const v09Clamp=(v,l,h)=>Math.max(l,Math.min(h,v));
 const v09Count=()=>s.vals.reduce((x,y)=>x+y,0);
+const openTicketCount=()=>Array.isArray(s.complaintTickets)?s.complaintTickets.filter(x=>x.status==='open').length:0;
 // A single area at 5/5 blocks purchases more sharply than ordinary friction.
 const MAX_SEVERITY_PENALTY=15;
 const rawSales=()=>30+10*s.attraction-10*v09Count()-MAX_SEVERITY_PENALTY*s.vals.filter(x=>x>=5).length;
@@ -998,7 +999,7 @@ function sceneForState(){
    const selected=window.F1StoreSceneV018.resolveGameState(s);
    if(selected?.file){
      file=selected.file;modern=true;
-     caption='現在の店内の様子です。苦情の内訳は下の指標で確認できます。';
+     caption='現在の店内です。負担度は上の指標、投稿されたご意見は下の一覧で確認できます。';
    }
  }
  const effect=s.openingReport?.effect||[];
@@ -1330,8 +1331,8 @@ function v12RenderPress(){
  topic:'【解任】売上が回復したはずのスーパーで何が？',
  posts:['安くなっても不正はいけない','あの表示おかしいと思った','本当に改善していたのかな']};
  if(s.ending==='normal_strain'&&s.endingReason==='店長解任・営業停止')data={...data,
- headline:'売上0万円で店長代理解任、まるまるスーパーが営業停止',
- article:'まるまるスーパーは日売上が0万円となったため、店長代理を解任し営業を停止した。新たな苦情が増える一方で改善が追いつかず、地域住民からは困惑の声が上がった。',
+ headline:'日売上見込み0万円で開店断念、まるまるスーパーが営業停止',
+ article:'まるまるスーパーは開店前の日売上見込みが0万円に達したため、その日の営業を取りやめた。本部は店長代理を解任。対応を待つ近隣の利用客から困惑の声が上がった。',
  quote:'「もっと早く普通の買い物ができる店になってほしかった」――近隣住民',
  topic:'【閉店】まるまるスーパー営業終了のお知らせ',
  posts:['シャッター閉まってた。もう営業しないの？','買いやすくなったと思った時期もあったのに残念']};
@@ -1371,6 +1372,7 @@ function renderEnd(){
  $('finalChoice').classList.add('hidden');$('ending').classList.remove('hidden');$('restart').classList.remove('hidden');$('help').classList.remove('hidden');
  let [flag,name,story]=V09_ENDINGS[s.ending]||V09_ENDINGS.normal_strain;
   if(s.endingReason==='重大な不正発覚による解任'){name='売上は回復。でも、あなたは解任。';story='不正が発覚し、オーナーから店長代理を解任されました。数字だけでは解決できない問題が残りました。'}
+  if(s.endingReason==='店長解任・営業停止'){name='日売上見込み0万円。営業停止。';story='今日の開店を前に、予想売上が0万円になりました。本部は営業停止と店長代理の解任を決定しました。';}
  if(s.ending==='normal_customer'&&s.revenue<500){
   if(v09Count()<=3){
    name='売上はあと一歩。お客様の声は改善。';
@@ -1390,7 +1392,7 @@ function renderEnd(){
  const endingPhoto=v09Resolve({day:s.day,attraction:s.attraction,complaintsByCategory:s.vals,ending:s.ending,endingReason:s.endingReason});
  v09AttachFallback(photo,s.endingReason==='重大な不正発覚による解任'?'scene-owner-inspection.webp':endingPhoto);
  const tab=document.createElement('div');tab.className='outcome';
- tab.innerHTML='<div class="score">今週の売上 '+s.revenue+'万円</div><div class="tiny">集客力 '+s.attraction+'/10／未解決クレーム'+v09Count()+
+ tab.innerHTML='<div class="score">今週の売上 '+s.revenue+'万円</div><div class="tiny">集客力 '+s.attraction+'/10／未解決の投稿'+openTicketCount()+
  '件／営業'+Math.min(7,s.days.length)+'日間</div>';
  const stamps=document.createElement('div');stamps.className='stamps';
  labels.forEach((name,i)=>{const p=document.createElement('span');p.className='stamp';p.textContent=name+' '+s.vals[i]+'件';stamps.append(p)});
@@ -1468,7 +1470,7 @@ function resumeCurrent(){$('day0Panel').classList.add('hidden');
  $('dialogTitle').textContent=s.day+'日目の営業報告（再表示）';
  $('dialogText').textContent='前回の営業判断：'+(s.last?.name||'本日の対応')+'。この日報の確認後、翌営業日へ進んでください。';
  $('dailyReport').replaceChildren();
- ['本日の売上 '+(report?.sales??0)+'万円','集客力 '+s.attraction+'/10／未解決クレーム '+v09Count()+'件',
+ ['本日の売上 '+(report?.sales??0)+'万円','集客力 '+s.attraction+'/10／未解決の投稿 '+openTicketCount()+'件',
   '今週の売上累計 '+s.revenue+'万円'].forEach(line=>{const p=document.createElement('p');p.textContent=line;$('dailyReport').append(p)});
  $('next').textContent=s.day===7?'7日目の閉店処理へ':'翌営業日へ';
  $('overlay').classList.remove('hidden');return
