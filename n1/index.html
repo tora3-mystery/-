@@ -239,7 +239,8 @@ function initRound(){
   firstPerson:round%3===0?'hina':'makabe',
   discountRate:[10,15,20,25,30,35,40][(Math.imul(round,13)>>>0)%7],
   arrivalDelta:(round*7)%11-5,
-  orderDelta:(round*13)%9-4
+  orderDelta:(round*13)%9-4,
+  landmarkIndex:(Math.imul(round,7)>>>0)%13
  };
  plan=window.N1ScenarioV04.createPlan(build,picks,options);
  results=[];hints=3;state={i:0,phase:'ask'};
