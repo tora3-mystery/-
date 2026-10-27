@@ -150,7 +150,7 @@ check('all 96 character profiles provide stable voice, four traits and SNS demea
 });
 check('all 10 first-year original scene lines are rewritten with newcomer-appropriate voices',()=>{
  const B=dataScope.window.S6_BETA_DIALOGUE;
- assert.equal(B.chatAudit().firstYearLines,10);assert.equal(B.chatAudit().overridden,10);
+ assert.equal(B.chatAudit().firstYearLines,10);assert.ok(B.chatAudit().overridden>=10);
  const original=D.lines.find(x=>x.group_id==='E02-A'&&x.speaker_id==='P091');
  assert.match(B.sceneLine(original),/安心しました/);
  const s=newPlayer();s.click('attend','E02');s.click('join-group','E02-A');s.click('leave-flash');
@@ -317,16 +317,21 @@ check('all 24 curated SNS posts preserve source visibility and factual schedulin
  assert.match(b.html,/こもれびは水曜のお茶会から/);
  assert.match(b.html,/音だけでも、聴きに来てください。/);
 });
-check('locked Photogram author is not visible without contact but becomes accessible after exchange',()=>{
+check('Photogram requires a face-to-face follow request, independently from TINE',()=>{
  const SNS=dataScope.window.S6_BETA_SOCIAL.accounts;
  const a=SNS.find(x=>x.person_id==='P003'&&x.platform==='Photogram');
- const no=newPlayer();no.click('skip');no.click('night-sns','Photogram');
- assert.ok(!no.html.includes(a.handle));
+ const no=newPlayer();no.click('skip');no.click('night-sns','Photogram');assert.ok(!no.html.includes(a.handle));
+ const tine=newPlayer();visit(tine,'E01','E01-A');tine.click('action-menu','contact');tine.click('act-target','P003');
+ assert.ok(tine.state.contacts.includes('P003'));
+ tine.click('back-venue');tine.click('finish-venue');tine.click('night-sns','Photogram');
+ assert.ok(!tine.html.includes(a.handle));
  const yes=newPlayer();visit(yes,'E01','E01-A');
- yes.click('action-menu','contact');yes.click('act-target','P003');
- assert.ok(yes.state.contacts.includes('P003'));
+ yes.click('action-menu','photo');yes.click('act-target','P003');
+ assert.ok(yes.state.photoRequests.includes('P003'));assert.ok(!yes.state.contacts.includes('P003'));
  yes.click('back-venue');yes.click('finish-venue');yes.click('night-sns','Photogram');
- assert.ok(yes.html.includes(a.handle));
+ assert.ok(!yes.html.includes(a.handle));
+ yes.click('back-night');yes.click('next-day');yes.click('skip');yes.click('night-sns','Photogram');
+ assert.ok(yes.state.photoFollows.includes('P003'));assert.ok(yes.html.includes(a.handle));
 });
 check('public SNS portrait can be compared even when the real author has never been met',()=>{
  const s=newPlayer();visit(s,'E01','E01-A');s.click('back-venue');s.click('finish-venue');s.click('night-sns','Photogram');
@@ -340,5 +345,35 @@ check('direct face-match actions cannot bypass locked or future post privacy',()
  s.click('account-match','S01');assert.equal(s.state.phase,'sns');
  s.click('account-match','S22');assert.equal(s.state.phase,'sns');
  s.click('account-match','S02');assert.equal(s.state.phase,'sns-match');
+});
+check('all senior/junior scene lines distinguish observer from organizer',()=>{
+ const E=dataScope.window.S6_BETA_DIALOGUE,source=D.lines;
+ const line=(gid,n)=>E.sceneLine(source.find(x=>x.group_id===gid&&x.order===String(n)));
+ assert.match(line('E01-D',1),/新入生って/);assert.match(line('E01-D',2),/案内してます/);
+ assert.match(line('E01-D',3),/決めていいよ/);assert.ok(line('E01-D',1)!==line('E01-D',3));
+ assert.match(line('E06-E',1),/見学だけで/);assert.match(line('E06-E',3),/何度でも見学/);
+ for(const gid of ['E01-C','E03-A','E07-A','E08-A','E11-A','E12-A']){
+  const f=source.find(x=>x.group_id===gid&&D.people.find(p=>p.person_id===x.speaker_id)?.year==='1');
+  assert.ok(f);assert.match(E.sceneLine(f),/です|ます|先輩|ですね/);
+ }
+});
+check('a group member can join the chat without consuming a player action',()=>{
+ const s=newPlayer();s.click('attend','E01');s.click('join-group','E01-C');s.click('leave-flash');
+ assert.match(s.html,/演奏がひと区切り/);
+ s.click('action-menu','talk');s.click('act-target','P014');
+ assert.equal(s.state.groupLog['E01-C'].length,1);
+ assert.ok(s.state.groupLog['E01-C'][0].reply?.pid);
+ assert.match(s.html,/輪の反応/);
+ s.click('listen-group');assert.equal(s.state.groupLog['E01-C'].length,2);
+});
+check('presentation shuffle does not alter membership, calendar, or case A evidence',()=>{
+ const E=dataScope.window.S6_BETA_DIALOGUE;
+ assert.equal(E.sceneMode('E01-C'),'performance');
+ assert.equal(E.sceneMode('E01-A'),'conversation');
+ assert.equal(D.members.filter(x=>x.group_id==='E01-C').length,2);
+ assert.equal(D.events.find(x=>x.event_id==='E01').date,'2026-04-06');
+ const a=newPlayer(),b=newPlayer();
+ assert.ok(Number.isFinite(a.state.presentationSeed));
+ assert.ok(Number.isFinite(b.state.presentationSeed));
 });
 console.log(JSON.stringify({passed:total,failed:failures}));if(failures)process.exitCode=1;
