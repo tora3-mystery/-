@@ -136,14 +136,16 @@ ok(route.api.getState().day8Active,'Conditional DAY 8 begins');
 ok(route.get('day8Title').textContent==='DAY 08 / 07','DAY 8 looks like original business day');
 ok(route.api.getState().day8OpeningPending&&!route.get('dayTransition').classList.contains('hidden'),
  'Seventh-day close leads to a familiar overnight opening panel');
-ok(route.get('transitionScoreLabel').textContent==='本日の日売上見込み'&&
- route.get('transitionContinue').textContent==='今日の営業を確認する','New opening panel foregrounds sales and an ordinary business action');
+ok(route.get('transitionScoreLabel').textContent==='本日の日売上見込'&&
+ route.get('transitionScore').textContent==='88人'&&
+ route.get('transitionContinue').textContent==='今日の営業を確認する',
+ 'DAY 8 opening intentionally corrupts the revenue unit without losing its continue action');
 const day8Pending=boot(route.memory);day8Pending.api.resumeCurrent();
 ok(!day8Pending.get('dayTransition').classList.contains('hidden'),'DAY 8 opening panel survives saving and reloading');
 day8Pending.api.closeTransition();
 ok(!day8Pending.api.getState().day8OpeningPending,'Closing the overnight panel clears persisted pending flag');
 ok(route.get('day8Meters').children.length===4,'Same four operational indicators');
-ok(route.get('day8Sales').textContent.endsWith('万円'),'Ordinary-looking sales first');
+ok(route.get('day8Sales').textContent==='88人','DAY 8 sales is counted as people');
 ok(route.get('day8Date').textContent==='DAY 08 / 07 ｜ 人曜日','Human day on first business screen');
 ok(route.get('day8Feedback').children.length===10,'Ten strange customer letters appear immediately');
 const firstLetter=route.get('day8Feedback').children[0].children[1];
@@ -153,9 +155,12 @@ route.api.closeTransition();
 ok(route.get('dayTransition').classList.contains('hidden')&&!route.api.getState().day8OpeningPending,
  'Opening handoff ends without an intermediate anomalous phase');
 ok(route.get('day8Next').classList.contains('hidden'),'No free next-day choice before inspecting the final complaint');
-ok(route.get('day8Meters').children[1].innerHTML.includes('出口の数'),'Uncanny replacement for ordinary metrics');
-ok(route.get('transitionScore').textContent==='88万円'&&route.get('transitionDecision').textContent.includes('第8営業日'),
- 'Already broken ledger in the opening transition');
+ok(route.get('day8Meters').children[0].innerHTML.includes('石')&&
+ route.get('day8Meters').children[0].innerHTML.includes('88,888/5'),
+ 'Stone metric breaks scale');
+ok(route.get('transitionScore').textContent==='88人'&&route.get('transitionDecision').textContent.includes('第8営業日')&&
+ route.get('transitionTotal').textContent.includes('縺ｧ■繧ｫ件'),
+ 'Opening ledger has crossed units and mojibake');
 const resume=boot(route.memory);resume.api.resumeCurrent();
 ok(!resume.api.getState().day8OpeningPending&&resume.get('day8Date').textContent.includes('人曜日'),
  'Human day remains on resume');

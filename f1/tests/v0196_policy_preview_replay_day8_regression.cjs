@@ -69,9 +69,26 @@ const d=boot();d.api.restart();d.api.setState({...d.api.getState(),day:8,odd:3,d
  day8OpeningPending:true,day8Revealed:false,finish:false,revenue:360,
  days:Array.from({length:7},(_,i)=>({day:i+1,sales:50}))});d.api.resumeCurrent();
 ok(d.get('transitionTitle').innerHTML.includes('人曜日'),'Opening is already corrupted');
-ok(d.get('transitionScore').textContent==='88万円'&&d.get('transitionDecision').textContent.includes('第8営業日'),'Opening ledger contradicts itself');
+ok(d.get('transitionScore').textContent==='88人'&&d.get('transitionDecision').textContent.includes('第8営業日')&&
+ d.get('transitionTotal').textContent.includes('縺ｧ■繧ｫ件'),
+ 'Human-day opening uses the wrong sales unit and an unreadable checkout count');
 d.api.closeTransition();
-ok(d.get('day8Meters').children[1].innerHTML.includes('出口の数'),'Normal metrics use uncanny labels');
+ok(d.get('day8Meters').children[0].innerHTML.includes('石')&&
+ d.get('day8Meters').children[0].innerHTML.includes('88,888/5'),'Stone replaces queue and overflows cap');
+ok(d.get('day8Meters').children[3].innerHTML.includes('818181/5'),'Other indicators exceed the scale');
+ok(d.get('day8Ledger').textContent.includes('繧ｫﾞ■縺ｮ件'),'Business bulletin uses intentional mojibake');
+const voices=d.get('day8Feedback').children.map(x=>x.children[1].textContent);
+ok(new Set(voices).size>=8,'Ten comments contain diverse surreal writing');
+ok(voices[7].includes('譁ｯ縺ｮ'),'One customer letter includes corrupted text');
+ok(d.get('day8Help').classList.contains('hidden'),'Corrupted help does not open automatically');
+const stableDay8=JSON.stringify(d.api.getState());
+d.get('help').onclick();
+ok(!d.get('day8Help').classList.contains('hidden'),'Human-day help button opens corrupted guide');
+ok(html.includes('id="day8HelpHeading"')&&html.includes('遊び方（参照先：譁ｯ縺ｮ人曜日）'),'Help modal markup has scrambled heading');
+ok(html.includes('id="day8HelpClose"')&&html.includes('閉じて売場に戻る'),'Help provides a readable exit');
+d.get('day8HelpClose').onclick();
+ok(d.get('day8Help').classList.contains('hidden')&&JSON.stringify(d.api.getState())===stableDay8,
+ 'Closing broken help preserves state and player can continue');
 ok(d.get('day8Offers').children.length===0,'Choice unavailable before final question');
 d.api.advanceDay8();ok(!d.api.getState().finish,'Cannot bypass customer question');
 const ask=d.get('day8Feedback').children[9].children[1].children.find(x=>x.textContent==='終わりはありますか');
