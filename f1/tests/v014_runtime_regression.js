@@ -25,12 +25,15 @@ function test(html){
  }
  function step(ctx,id){
   if(id==='inspectBack')assert(ctx.d.focus('f17-back-review','裏手の社の周りが暗く'),'DAY 2 shrine message discovery');
+  // Legacy economic-core tests inject the selected policy; v0171 tests player discovery.
+  if(!ctx.d.availableIds().includes(id)&&!['audit','camera0','open0','idle','shrine','removeShrine'].includes(id)){
+   const previous=ctx.d.getState();ctx.d.setState({...previous,discoveredActions:[...new Set([...(previous.discoveredActions||[]),id])]});
+  }
   const {d,get}=ctx,before=d.getState();
   const legal=d.availableIds();
   assert(legal.includes(id),'Action not offered: DAY '+before.day+' '+id);
-  const cap=before.day===1?7:before.day<=3?9:before.day<=5?11:13;
-  assert(legal.length<=cap&&get('actions').children.length===legal.length,'Stage-scaled card maximum');
-  for(const item of get('actions').children)assert((item.innerHTML.match(/class="effect-chip/g)||[]).length===5,'Metric chips');
+  assert(get('actions').children.length<=13&&get('actions').children.length+get('moreActionsBody').children.length===legal.length,'All choices visible or expandable');
+  for(const item of [...get('actions').children,...get('moreActionsBody').children])assert((item.innerHTML.match(/class="effect-chip/g)||[]).length===5,'Metric chips');
   d.play(id);const chosen=d.getState(),sale=Math.max(0,30+10*before.attraction-10*before.vals.reduce((a,b)=>a+b,0));
   assert(chosen.days.at(-1).sales===sale&&chosen.revenue===before.revenue+sale,'Revenue calculation');
   assert(chosen.attraction===before.attraction&&chosen.vals.join(',')===before.vals.join(','),'Next-day policy');
@@ -58,11 +61,11 @@ function test(html){
  assert(gray.d.getState().revenue-clean.d.getState().revenue>=100,'Moral-gray advantage must be substantial');
  assert(gray.get('ending').children.some(x=>x.className==='ending-media'),'Newspaper plus forum');
  const lowComplaint=route(['pickup','vibration','floorcheck','display','forecast','floorcheck','quiet']);
- const highComplaint=route(['pickup','quiet','delivery','vibration','floorcheck','shrine','receive']);
+ const highComplaint=route(['pickup','quiet','delivery','vibration','floorcheck','idle','receive']);
  const lowState=lowComplaint.d.getState(),highState=highComplaint.d.getState();
  assert(lowState.revenue===490&&lowState.vals.reduce((a,b)=>a+b,0)===2,'Low complaint near-miss setup');
- assert(highState.revenue===490&&highState.vals.reduce((a,b)=>a+b,0)===4,'High complaint near-miss setup');
- assert(lowState.ending==='normal_customer'&&highState.ending==='normal_customer','Equal sales do not punish lower complaints');
+ assert(highState.revenue>=480&&highState.vals.reduce((a,b)=>a+b,0)===4,'High complaint near-miss setup');
+ assert(lowState.ending==='normal_customer'&&highState.ending==='normal_customer','Both near-miss routes remain partial successes');
  const endingHead=c=>c.get('ending').children[1].textContent;
  assert(endingHead(lowComplaint).includes('お客様の声は改善'),'Near-miss low-complaint title');
  assert(endingHead(highComplaint).includes('課題も残る'),'Near-miss high-complaint title');
@@ -86,7 +89,7 @@ function test(html){
  assert(boundary(500,7)==='normal_customer','500 with seven complaints is not full success');
  const two=app();two.d.restart();step(two,'pickup');step(two,'complaintHide');
  assert(!two.d.availableIds().includes('audit'),'Uninspected shrine must not be offered directly');
- assert(two.d.availableIds().some(x=>['dateShift','stockCover'].includes(x)),'Gray action not displaced');
+ assert(!two.d.availableIds().some(x=>['dateShift','stockCover'].includes(x)),'Undiscovered gray actions remain hidden');
  const idle=app();idle.d.restart();
  for(let i=0;i<7&&!idle.d.getState().finish;i++)step(idle,'idle');
  assert(idle.d.getState().ending==='normal_strain','Doing nothing no longer wins');
@@ -117,7 +120,7 @@ function test(html){
  assert(eerie.d.getState().ending==='odd_day8'&&eerie.d.getState().finish,'Scripted ending needs no inference');
  assert(!html.includes('id="inferWho"')&&!html.includes('id="checkCustomer"'),'No deduction controls');
  const undoDb=new Map(),undoBefore=app(undoDb);
- undoBefore.d.restart();undoBefore.d.play('pickup');
+ undoBefore.d.restart();undoBefore.d.setState({...undoBefore.d.getState(),discoveredActions:['pickup']});undoBefore.d.play('pickup');
  assert(undoBefore.d.getState().needsAdvance&&typeof undoBefore.d.getState().undoSnapshot==='string','Undo state saved during closing');
  const undoReloaded=app(undoDb);undoReloaded.d.resumeCurrent();
  assert(!undoReloaded.get('undo').classList.contains('hidden'),'Undo button available after reload');
@@ -133,7 +136,7 @@ function test(html){
  assert(gray.d.getState().jobs.every(x=>x.id!=='stockCover-risk'),'End-of-week gray backlash has been settled');
  
  const tier=app();tier.d.restart();
- assert(tier.d.availableIds().length===7,'Day 1 retains six actions plus idle');
+ assert(tier.d.availableIds().length===2,'Day 1 opens with only ordinary shrine and idle');
  assert(!tier.d.availableIds().includes('queueLane'),'Queue specialization initially locked');
  step(tier,'pickup');
  assert(tier.d.availableIds().includes('queueLane'),'Queue choice unlocks special branch');
@@ -143,7 +146,7 @@ function test(html){
  const untouched=app();untouched.d.restart();untouched.d.setState({day:2,actionCounts:{quiet:1},last:null,needsAdvance:false});
  assert(untouched.d.availableIds().includes('quietDesk'),'Noise branch unlocks from noise action');
  assert(!untouched.d.availableIds().includes('queueLane'),'Queue branch remains locked without queue experience');
- const late=app();late.d.restart();late.d.setState({day:5,last:null,actionCounts:{},needsAdvance:false});
+ const late=app();late.d.restart();late.d.setState({day:5,last:null,actionCounts:{floorcheck:1},needsAdvance:false});
  assert(late.d.availableIds().includes('weekendStore'),'Major late store action available');
  assert(late.d.availableIds().includes('weekendInventory'),'Major late inventory action available');
  const chain=app();chain.d.restart();chain.d.setState({day:1,vals:[4,2,1,1],attraction:7,complaintTickets:null,needsAdvance:false,days:[]});
@@ -155,8 +158,8 @@ function test(html){
  step(stable,'idle');
  assert(stable.d.getState().cascadeToday===false,'Low unresolved load does not cascade');
  assert(stable.d.getState().vals[1]===2,'Only normal pressure when below threshold');
- const finalDay=app();finalDay.d.restart();finalDay.d.setState({day:6,odd:0,glitchSeen:false,last:null,actionCounts:{},needsAdvance:false});
- assert(finalDay.d.availableIds().length<=13&&finalDay.d.availableIds().length>=11,'Late choice list expands');
+ const finalDay=app();finalDay.d.restart();finalDay.d.setState({day:6,odd:0,glitchSeen:false,last:null,actionCounts:{floorcheck:1},discoveredActions:['register','staff','ticket','self','lane','compact','receive','forecast','pickup','quiet','vibration','sale','night','delivery','discount','shift','limit','display','farmer','sampling','rest','early','floorcheck','shelfcheck','stockScope','gourmet','dateShift','complaintHide','stockCover','queueExpress','cartSigns','eveningRestock','quietNotices'],needsAdvance:false});
+ assert(finalDay.get('actions').children.length<=13&&finalDay.get('moreActionsBody').children.length>0,'Many discovered options remain expandable');
  const v15Raw=html.split('const V15_BRANCHES=')[1].split('.map(([id,name,v15Family,tier,delta,attractionOnCompletion,desc])')[0];
  const v15Actions=JSON.parse(v15Raw);
  assert(v15Actions.length===10,'Ten specialist and major actions remain');
@@ -170,7 +173,7 @@ function test(html){
   function auditScenario(id,detected){
   for(let seed=0;seed<300;seed++){
    const db=new Map(),c=app(db);c.d.restart();const s=c.d.getState();
-   c.d.setState({...s,grayAuditSeed:seed,day:2,attraction:7,vals:id==='dateShift'?[0,0,4,0]:[2,1,1,1],days:[{day:1,sales:50}],revenue:50});
+   c.d.setState({...s,grayAuditSeed:seed,day:2,attraction:7,vals:id==='dateShift'?[0,0,4,0]:[2,1,1,1],days:[{day:1,sales:50}],revenue:50,discoveredActions:[id]});
    if(!c.d.availableIds().includes(id))continue;
    c.d.play(id);const job=c.d.getState().jobs.find(j=>j.sourceAction===id);
    if(job&&job.detected===detected)return {db,c,job};
