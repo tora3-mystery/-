@@ -38,7 +38,7 @@ h2{font-size:17px;line-height:1.4;margin:0 0 8px}h3{font-size:14px;margin:0 0 8p
 </style>
 </head>
 <body><main class="app">
-<header class="mast"><div><div class="sub">短編UIゲーム実験室｜K1 プロトタイプ</div><h1>掲示物をご確認ください。</h1><div class="meta"><b>K1 α0.6.1</b> ｜ 2026-10-28 02:37 JST更新</div></div><a class="home" href="../index.html">作品一覧へ</a></header>
+<header class="mast"><div><div class="sub">短編UIゲーム実験室｜K1 プロトタイプ</div><h1>掲示物をご確認ください。</h1><div class="meta"><b>K1 α0.6.1</b> ｜ 2026-10-28 02:39 JST更新</div></div><a class="home" href="../index.html">作品一覧へ</a></header>
 <section id="intro" class="panel intro">
 <div class="sub">白波レジデンス・406号室</div><h2>掲示物をご確認ください。</h2>
 <p class="lede">あなたは白波レジデンス406号室で一人暮らしをする会社員です。</p><p>ここに越して3か月。毎日仕事帰りに掲示板へ目を向けています。普段は数えるほどしか紙がありません。けれど最近、貼り替えの回数が増えてきました。</p>
@@ -214,7 +214,7 @@ SIDE_POOL[4]=[
 SIDE_POOL[5]=[
  EVENTS[5][1],
  {id:'E06C',time:'21:11',title:'記録の再照合',scene:'管理組合の文書受付から「訂正後の4階呼出し件数を回答してください」と届いた。',monitor:'送付先は理事会の文書受付。水曜の数値は木曜に訂正され、その訂正紙もすでに撤去されている。',hint:'以前の数値訂正'},
- {id:'E06D',time:'21:16',title:'書面の提出先確認',scene:'管理会社から「事故資料の提出をこちらで代行します。受理しない場合は理事会へ直接ご確認ください」と通知が届いた。',monitor:'管理会社名義の受付と、管理組合理事会の文書受付が併記されている。',hint:'管理組合の提出先'},
+ {id:'E06D',time:'21:16',title:'書面の提出先確認',scene:'管理会社から「405号室の手紙や旧掲示の提出をこちらで代行します。承諾しない場合は理事会へ直接ご確認ください」と通知が届いた。',monitor:'管理会社名義の受付と、管理組合理事会の文書受付が併記されている。',hint:'管理組合の提出先'},
  {id:'E06E',time:'21:22',title:'訂正文書の撤回依頼',scene:'「呼出記録の訂正はなかったことにしてください」と管理会社から通知が届く。「ご理解の場合は対応してください」。',monitor:'水曜日の件数と木曜日の訂正文書は同じ管理会社が掲示したものだ。訂正の撤回を承認する理由は書かれていない。',hint:'訂正の取り扱い'},
  {id:'E06F',time:'21:20',title:'記録照合の本人認証',scene:'理事会の文書受付で「氏名と部屋番号のみを送信し、資料の受付を完了してください」と表示された。',monitor:'受付先は理事会。個人の連絡先や生年月日を求める項目もあるが、必須とは書かれていない。',hint:'本人確認の入力項目'}
 ];
@@ -373,7 +373,7 @@ function resultFor(e,c,extra){
   if(c==='yes'&&extraData.number==='18'){state.recordValidated=true;msg='旧掲示の訂正内容と照合が済んだ。管理組合に受付票が残った。';}
   else fail('一致しない記録','訂正紙はすでに撤去されていた。',c==='yes'?'送られた数字の欄に赤い訂正線が引かれた。':'受付時間が過ぎた。訂正したはずの掲示は見当たらない。');
  }else if(e.id==='E06D'){
-  if(c==='verify'){state.recordValidated=true;msg='理事会の受付で提出先と事故資料の整合が確認された。';}
+  if(c==='verify'){state.recordValidated=true;msg='理事会の受付に直接連絡すると、旧掲示と手元の点検控えを受け取る窓口が確認できた。';}
   else fail('渡してはいけない提出先','管理組合と管理会社は別の窓口だった。',c==='yes'?'送信先を管理会社にした瞬間、資料の受付番号が消えた。':'返答しなかった資料が「管理会社確認済」として戻ってきた。');
  }else if(e.id==='E06E'){
   if(c==='no'){state.recordValidated=true;msg='訂正の撤回には同意しなかった。旧版の記録を含む照合結果は管理組合に残った。';}
