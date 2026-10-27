@@ -1,7 +1,7 @@
 (() => {
 'use strict';
-const D=window.S6_DATA, APP=document.getElementById('app'), KEY='s6-origin-beta-010';
-const VERSION='0.2.0', BUILD='2026-10-27 22:25 JST';
+const D=window.S6_DATA, APP=document.getElementById('app'), KEY='s6-origin-beta-010', Dialogue=window.S6_BETA_DIALOGUE;
+const VERSION='0.3.0', BUILD='2026-10-27 22:25 JST';
 const WEEK=['月曜 4月6日','火曜 4月7日','水曜 4月8日','木曜 4月9日','金曜 4月10日'];
 const DATES=['2026-04-06','2026-04-07','2026-04-08','2026-04-09','2026-04-10'];
 const people=Object.fromEntries(D.people.map(p=>[p.person_id,p]));
@@ -19,7 +19,7 @@ const byGroup=gid=>D.members.filter(m=>m.group_id===gid).map(m=>m.person_id);
 const date=()=>DATES[Math.min(S.day,4)];
 const initial=()=>({
  schema:1,phase:'title',day:0,selectedEvent:null,group:null,target:null,
- eventHistory:[],seen:[],introduced:[],flash:[],visitedGroups:[],groupDone:{},groupLog:{},spokenTo:[],contacts:[],socialLinked:{},selectedSocial:null,
+ eventHistory:[],seen:[],introduced:[],flash:[],visitedGroups:[],groupDone:{},groupLog:{},spokenTo:[],affinity:{},contacts:[],socialLinked:{},selectedSocial:null,
  guesses:{},note:{},clues:[],crossings:{},knownOrg:{},nightChoice:{},viewedPlatforms:{},viewedBoard:{},pendingContacts:[],
  checks:{},currentNotebook:null,suspect:'',camp:'',shared:false,privateInvite:false,
  report:'',result:'',savedAt:''
@@ -28,7 +28,7 @@ let S;
 try {const raw=JSON.parse(localStorage.getItem(KEY));S=raw&&raw.schema===1?raw:initial()}catch{S=initial()}
 function hydrate(){
  for(const k of ['eventHistory','seen','introduced','flash','visitedGroups','contacts','clues','spokenTo','pendingContacts'])if(!Array.isArray(S[k]))S[k]=[];
- for(const k of ['groupDone','guesses','note','crossings','knownOrg','nightChoice','viewedPlatforms','viewedBoard','groupLog','checks','socialLinked'])if(!S[k]||typeof S[k]!=='object')S[k]={};
+ for(const k of ['groupDone','guesses','note','crossings','knownOrg','nightChoice','viewedPlatforms','viewedBoard','groupLog','affinity','checks','socialLinked'])if(!S[k]||typeof S[k]!=='object')S[k]={};
 }
 hydrate();
 if(S.phase==='flash'&&!S.group){S.phase='venue';localStorage.setItem(KEY,JSON.stringify(S));}
@@ -106,7 +106,7 @@ function speech(pid,text,tag=''){
 function group(){
  const g=groups[S.group],lines=D.lines.filter(l=>l.group_id===g.group_id).sort((a,b)=>Number(a.order)-Number(b.order));
  const log=S.groupLog[g.group_id]||[],remaining=Math.max(0,2-log.length);
- const chats=lines.slice(0,3).map(l=>speech(l.speaker_id,l.text)).join('')+
+ const chats=lines.slice(0,3).map(l=>speech(l.speaker_id,Dialogue.sceneLine(l))).join('')+
  log.map(x=>x.pid&&people[x.pid]?speech(x.pid,x.text,x.type):'<div class="notice">'+esc(x.text)+'</div>').join('');
  return '<div class="eyebrow">'+esc(label(events[g.event_id].org_id))+' / '+esc(g.group_title)+'</div><h2>輪の会話</h2>'+
  '<p>'+esc(g.activity)+'</p><div class="chat-thread">'+chats+'</div>'+
@@ -332,42 +332,34 @@ function handle(act,id){
  case 'act-target':
  case 'ask-affiliation':{
   if(S.phase!=='choose'||!S.group||!byGroup(S.group).includes(id)||(S.groupLog[S.group]||[]).length>=2)return;
-  const p=people[id],q=D.questions.find(q=>q.group_id===S.group&&q.target_id===id);
-  const style=p.social_style||'quiet',first=!S.spokenTo.includes(id);
-  let type=S.mode,msg='';
-  if(act==='ask-affiliation'){if(type!=='question')return;type='所属確認';}
+  const type=act==='ask-affiliation'?'affiliation':S.mode;
+  const q=D.questions.find(q=>q.group_id===S.group&&q.target_id===id);
+  let reply,kind=type;
   if(type==='talk'){
-   const pre=first?(style==='open'?'「初めまして！ '+p.name+'です。よろしくね」':style==='quiet'?'「えっと、'+p.name+'です。よろしく」':'「'+p.name+'です。どうも」'):
-    (style==='open'?'「あ、また会ったね！」':style==='quiet'?'「この前の……」':'「また会ったね」');
-   const hook=profiles[id]?.[first?'first_hook':'reunion_hook']||profiles[id]?.first_hook||'今日も楽しんでね。';
-   msg=pre+'と声をかけてくれた。「'+hook+'」';
-   if(id==='P001'&&first)msg+='「入学前から、きみに合いそうな席を考えていたんだ」と付け足した。';
-   if(!S.spokenTo.includes(id))S.spokenTo.push(id);
-  }else if(type==='question'||type==='所属確認'){
-   if(type==='所属確認'||!q){
-    const org=p.primary_org?label(p.primary_org):'まだ所属先を決めていない';
-    msg='「普段は'+org+'にいるよ。'+(p.dual_org?label(p.dual_org)+'にも顔を出すんだ。':'')+'」と話した。';
-    S.knownOrg[id]=p.primary_org||'N';if(p.dual_org)S.crossings[id]=true;
-    if(id==='P001')msg+='「去年の秋にはもう、新入生を迎える席を決めていたんだ」と続けた。';
-   }else{
-    msg='「'+q.answer+'」と答えてくれた。';
-    if(q.reveals?.includes('self_name')&&q.answer.includes(p.name)&&!S.introduced.includes(id))S.introduced.push(id);
-    if(q.reveals?.includes('group_focus'))S.knownOrg[id]=p.primary_org||'N';
-   }
+    reply=Dialogue.talk(id,S.group,S);
+    if(!S.spokenTo.includes(id))S.spokenTo.push(id);
+    S.affinity[id]=Math.min(8,(S.affinity[id]||0)+2);
+  }else if(type==='question'||type==='affiliation'){
+    reply=Dialogue.answer(id,S.group,type==='affiliation'?'affiliation':'question');
+    S.affinity[id]=Math.min(8,(S.affinity[id]||0)+1);
+    if(reply.primaryOrg)S.knownOrg[id]=reply.primaryOrg;
+    if(reply.dualOrg)S.crossings[id]=true;
+    if(type==='question'&&q?.reveals?.includes('group_focus'))S.knownOrg[id]=people[id].primary_org||'N';
+    // Asking somebody explicitly to introduce themself gives a name as an earned answer.
+    if(type==='question'&&q?.reveals?.includes('self_name')&&q.answer?.includes(people[id].name)&&!S.introduced.includes(id))S.introduced.push(id);
+    if(id==='P001'&&type==='affiliation')reply.text+=' 昨年の秋にはもう、新入生を迎える席を決めていたんだ。';
   }else if(type==='contact'){
-   const rule=D.contactChannels.find(c=>c.group_id===S.group&&c.person_id===id&&c.platform==='TINE');
-   const acct=accounts[id+'|TINE'];
-   if(!rule||!acct)msg='「連絡先は、また今度でいい？」と返された。';
-   else if(rule.approval_policy==='immediate'){
-    if(!S.contacts.includes(id))S.contacts.push(id);
-    msg='「いいよ。TINEは'+acct.display_name+'だよ」と連絡先を見せてくれた。';
-   }else if(rule.approval_policy==='next_day'){
-    if(!S.pendingContacts.includes(id))S.pendingContacts.push(id);
-    msg='「あとで確認するね」と言ってくれた。申請は保留中だ。';
-   }else msg='「もう少し話してからでもいい？」と返された。';
+    reply=Dialogue.contact(id,S.group,S);kind='連絡先';
+    if(reply.result==='accept'){
+      if(!S.contacts.includes(id))S.contacts.push(id);
+      reply.text+=' TINEの表示名は「'+(reply.accountName||'アカウント')+'」。';
+      S.affinity[id]=Math.min(8,(S.affinity[id]||0)+1);
+    }else if(reply.result==='pending'){
+      if(!S.pendingContacts.includes(id))S.pendingContacts.push(id);
+    }
   }else return;
-  (S.groupLog[S.group]??=[]).push({pid:id,type,text:msg});
-  S.groupDone[S.group]=msg;
+  (S.groupLog[S.group]??=[]).push({pid:id,type:kind,text:reply.text});
+  S.groupDone[S.group]=reply.text;
   S.report='';go('group');break;
  }
  case 'listen-group':{
