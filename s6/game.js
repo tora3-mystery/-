@@ -5,7 +5,7 @@
   const SAVE_KEY = 's6-case-a-v03-save';
   const AUTO_KEY = 's6-case-a-v03-auto';
   const META_KEY = 's6-case-a-v03-meta';
-  const BUILD_AT = '2026-10-27 16:34 JST';
+  const BUILD_AT = '2026-10-27 17:04 JST';
   const DAYS = [
     ['2026-04-06','4月6日 月曜'],['2026-04-07','4月7日 火曜'],
     ['2026-04-08','4月8日 水曜'],['2026-04-09','4月9日 木曜'],
@@ -32,7 +32,7 @@
   const getMeta=()=>{try{return JSON.parse(localStorage.getItem(META_KEY))||{}}catch{return {}}};
   const makeState=()=>({
     schema:3,caseId:'A',phase:'title',returnPhase:null,day:0,eventId:null,eventHistory:[],participationHistory:[],
-    visitedGroups:[],groupActions:{},groupResults:{},groupReunions:{},activeGroup:null,groupResult:'',reunionText:'',preEventState:{},
+    visitedGroups:[],groupActions:{},groupResults:{},groupReactions:{},groupReunions:{},activeGroup:null,groupResult:'',reunionText:'',preEventState:{},
     person:{},contactSince:{},replyLog:{},musicMemory:[],nightUsed:{},nightDone:{},nightMessage:'',lunchSeenDates:[],lunchPreState:{},lunchTalked:{},lunchMessage:'',
     evidence:{},oldNew:false,bridge:false,bridgeAvailable:false,
     discoveredFacts:[],viewedPosts:[],platform:'Photogram',socialDate:null,socialReturn:null,
@@ -131,13 +131,43 @@
     }).join('');
     return '<p class="eyebrow">'+esc(ORG[e.org_id])+' / '+esc(e.start)+'–'+esc(e.end)+'</p><h2>'+esc(e.title)+'</h2><p class="subtle">会場に入ると全員の顔が見えます。名前は、本人が名乗るか別の資料で確認するまで分かりません。顔だけの記憶は手帳へ残ります。</p><p class="score">交流 '+S.visitedGroups.length+' / 2 組</p><div class="grid2">'+cards+'</div><div class="btnrow">'+btn('会場を出て夜へ','finish-venue','','')+'</div>';
   };
+
+  // C1のアイコン＋短い言葉を参考に、相手の観察可能な反応だけを表現する。
+  // 推理の証拠、好感度表示、フラグ解放条件には使用しない。
+  const REACTIONS={
+    welcome:{icon:'😊',label:'にこやか'},
+    glad:{icon:'😄',label:'嬉しそう'},
+    familiar:{icon:'🙂',label:'親しげ'},
+    shy:{icon:'😳',label:'少し緊張'},
+    busy:{icon:'😐',label:'余裕がなさそう'},
+    interested:{icon:'🙂',label:'乗り気'},
+    thoughtful:{icon:'🤔',label:'考え中'},
+    calm:{icon:'😌',label:'穏やか'},
+    accept:{icon:'😄',label:'快諾'},
+    waiting:{icon:'🤔',label:'返事を検討中'},
+    awkward:{icon:'😶',label:'困った様子'}
+  };
+  const storeReaction=(pid,key)=>{
+    if(!REACTIONS[key]||!S.activeGroup||!pmap[pid])return;
+    const reaction={pid,key,date:currentDate()};
+    S.groupReactions??={};
+    S.groupReactions[S.activeGroup]=reaction;
+    ps(pid).lastReaction={key,date:reaction.date};
+  };
+  const renderReaction=(reaction,withPortrait=true)=>{
+    const spec=REACTIONS[reaction?.key];
+    if(!spec)return '';
+    const portrait=withPortrait&&reaction.pid&&pmap[reaction.pid]?photo(reaction.pid,{venue:true}):'';
+    return '<div class="social-reaction">'+portrait+'<span class="social-reaction-chip" aria-label="相手の反応：'+esc(spec.label)+'"><span aria-hidden="true">'+spec.icon+'</span> '+esc(spec.label)+'</span></div>';
+  };
   const group=()=>{
     const g=gmap[S.activeGroup],e=emap[g.event_id],ms=D.members.filter(m=>m.group_id===g.group_id);
     const lines=D.lines.filter(l=>l.group_id===g.group_id).sort((a,b)=>Number(a.order)-Number(b.order));
     const mention=groupMention(g.group_id);
     const convo=lines.map((l,i)=>'<div class="conversation-line">'+photo(l.speaker_id,{venue:true})+'<div class="conversation-content"><strong>'+esc(faceSpeaker(l.speaker_id,ms))+'</strong><p>'+esc(i===1&&mention?mention.label+'、'+l.text:l.text)+'</p></div></div>').join('');
     const done=!!S.groupActions[g.group_id];
-    return '<p class="eyebrow">'+esc(ORG[e.org_id])+' / '+esc(g.group_title)+'</p><h2>輪の会話</h2><p class="subtle">'+esc(g.activity)+'</p><div class="faces">'+ms.map(m=>'<div class="face-slot">'+photo(m.person_id,{venue:true})+'<div>'+esc(faceSpeaker(m.person_id,ms))+'</div></div>').join('')+'</div>'+(S.reunionText?note(esc(S.reunionText)):'')+'<div class="card">'+convo+'</div><div class="action-panel"><h3>この輪でどう過ごす？</h3>'+(done?'<p>'+esc(S.groupResult)+'</p>':'<p class="subtle">行動は一つ。話しかけると距離が縮まり、聞き耳を立てれば周囲の音や会話を知れます。連絡先を断られる場合もあります。</p><div class="grid2">'+btn('話しかける','approach-menu','','')+btn('質問する','ask-menu','','secondary')+btn('連絡先を交換する','contact-menu','','secondary')+btn('聞き耳を立てる','listen','','ghost')+'</div>')+'</div><div class="btnrow">'+btn('会場の他の輪へ戻る','back-venue','','ghost')+'</div>';
+    const reaction=S.groupReactions?.[g.group_id];
+    return '<p class="eyebrow">'+esc(ORG[e.org_id])+' / '+esc(g.group_title)+'</p><h2>輪の会話</h2><p class="subtle">'+esc(g.activity)+'</p><div class="faces">'+ms.map(m=>'<div class="face-slot">'+photo(m.person_id,{venue:true})+'<div>'+esc(faceSpeaker(m.person_id,ms))+'</div></div>').join('')+'</div>'+(S.reunionText?note(esc(S.reunionText)):'')+'<div class="card">'+convo+'</div><div class="action-panel"><h3>この輪でどう過ごす？</h3>'+(done?renderReaction(reaction)+'<p>'+esc(S.groupResult)+'</p>':'<p class="subtle">行動は一つ。話しかけると距離が縮まり、聞き耳を立てれば周囲の音や会話を知れます。連絡先を断られる場合もあります。</p><div class="grid2">'+btn('話しかける','approach-menu','','')+btn('質問する','ask-menu','','secondary')+btn('連絡先を交換する','contact-menu','','secondary')+btn('聞き耳を立てる','listen','','ghost')+'</div>')+'</div><div class="btnrow">'+btn('会場の他の輪へ戻る','back-venue','','ghost')+'</div>';
   };
   const choiceMenu=type=>{
     const gid=S.activeGroup,g=gmap[gid],members=D.members.filter(m=>m.group_id===gid);
@@ -283,8 +313,9 @@
     const id=S.selectedPerson,p=ps(id),base=pmap[id];
     const autoFacts=D.marks.filter(m=>m.person_id===id&&S.discoveredFacts.includes(m.trigger_fact_id)).map(m=>D.facts.find(f=>f.fact_id===m.trigger_fact_id));
     const reason=autoFacts.length?autoFacts.map(f=>'<div class="notice"><strong>？の理由：</strong>'+esc(f.ambiguous_fact)+'<br><span class="subtle">通常の読み方：'+esc(f.ordinary_reading)+'</span></div>').join(''):'<p class="subtle">自動「？」の理由はありません。</p>';
+    const reaction=p.met&&p.lastReaction?.key&&REACTIONS[p.lastReaction.key]?'<div class="last-reaction"><span class="subtle">最後に話したときの様子</span>'+renderReaction({key:p.lastReaction.key},false)+'</div>':'';
     const st=['見かけた','会話した','名前を聞いた','交換を依頼','連絡先交換','顔・氏名・SNSを照合'].map((x,i)=>'<span class="chip '+([p.seen,p.met,p.introduced,p.contact_requested,p.contact_exchanged,p.identity_confirmed][i]?'':'dim')+'">'+x+'</span>').join('');
-    return '<p class="eyebrow">NOTEBOOK / PERSON</p><h2>'+esc(knownName(id))+'</h2><div class="card"><div style="display:flex;gap:14px;align-items:center">'+photo(id,{large:true})+'<div><div class="chips">'+st+'</div><p class="subtle">'+esc(p.seen?publicAppearance(id):'顔はまだ見ていない')+'</p></div></div>'+reason+'<div class="btnrow">'+btn(p.bookmark?'★を外す':'★を付ける','bookmark','data-pid="'+id+'"','secondary')+(p.introduced&&p.contact_exchanged&&!p.identity_confirmed?btn('顔・氏名・SNSを照合','confirm-identity','data-pid="'+id+'"','secondary'):'')+'</div><div class="form-row"><label for="hypothesis">仮説（事実とは別）</label><select id="hypothesis"><option>未設定</option><option>気になる</option><option>協力を頼める</option><option>保留</option></select></div><div class="form-row"><label for="personNote">自由メモ</label><textarea id="personNote" maxlength="2000" placeholder="覚えておきたいこと">'+esc(p.note)+'</textarea></div>'+btn('メモを保存','save-person','data-pid="'+id+'"','')+'</div><div class="btnrow">'+btn('人物一覧へ','back-notebook','','ghost')+'</div>';
+    return '<p class="eyebrow">NOTEBOOK / PERSON</p><h2>'+esc(knownName(id))+'</h2><div class="card"><div style="display:flex;gap:14px;align-items:center">'+photo(id,{large:true})+'<div><div class="chips">'+st+'</div><p class="subtle">'+esc(p.seen?publicAppearance(id):'顔はまだ見ていない')+'</p></div></div>'+reaction+reason+'<div class="btnrow">'+btn(p.bookmark?'★を外す':'★を付ける','bookmark','data-pid="'+id+'"','secondary')+(p.introduced&&p.contact_exchanged&&!p.identity_confirmed?btn('顔・氏名・SNSを照合','confirm-identity','data-pid="'+id+'"','secondary'):'')+'</div><div class="form-row"><label for="hypothesis">仮説（事実とは別）</label><select id="hypothesis"><option>未設定</option><option>気になる</option><option>協力を頼める</option><option>保留</option></select></div><div class="form-row"><label for="personNote">自由メモ</label><textarea id="personNote" maxlength="2000" placeholder="覚えておきたいこと">'+esc(p.note)+'</textarea></div>'+btn('メモを保存','save-person','data-pid="'+id+'"','')+'</div><div class="btnrow">'+btn('人物一覧へ','back-notebook','','ghost')+'</div>';
   };
   const weekReflection=()=>{
     const visited=Array.isArray(S.eventHistory)?S.eventHistory:[];
@@ -432,7 +463,7 @@
       S.eventId=el.dataset.eid;
       if(!Array.isArray(S.eventHistory))S.eventHistory=[];
       S.eventHistory.push(S.eventId);
-      S.visitedGroups=[];S.groupActions={};S.groupResults={};S.groupReunions={};S.preEventState={};
+      S.visitedGroups=[];S.groupActions={};S.groupResults={};S.groupReactions={};S.groupReunions={};S.preEventState={};
       D.members.filter(m=>m.event_id===S.eventId).forEach(m=>{const x=ps(m.person_id);S.preEventState[m.person_id]={seen:x.seen,met:x.met,contact:x.contact_exchanged};x.seen=true});
       S.phase='venue';saveAndRender();return;
     }
@@ -475,30 +506,33 @@
     if(act==='approach-person'){
       if(S.groupActions[S.activeGroup]||!D.members.some(m=>m.group_id===S.activeGroup&&m.person_id===id))return;
       const p=ps(id),prior=p.affinity;
+      let mood='shy';
       p.met=true;p.affinity=Math.min(8,p.affinity+2);p.lastInteraction='approach';
       S.participationHistory??=[];S.participationHistory.push({group_id:S.activeGroup,action:'approach',person_id:id});S.groupActions[S.activeGroup]='approach';
       const style=pmap[id].social_style||'quiet';
       const introduces=style==='open'||(style==='quiet'&&prior>=1)||(style==='reserved'&&prior>=2);
       if(prior>0&&p.introduced){
+        mood='familiar';
         S.groupResult='「また会ったね」と'+pmap[id].name+'が声をかけてくれた。前に話したことから、音楽の話がもう少し続いた。';
       }else if(introduces){
-        p.introduced=true;
+        p.introduced=true;mood=style==='open'?'welcome':'glad';
         S.groupResult=style==='open'
           ?'「見学に来たの？　'+pmap[id].name+'です。よかったら話そう」と向こうから声をかけてくれた。'
           :'「初めまして。'+pmap[id].name+'です」と自己紹介してくれた。お互いの好きな音楽を少し話した。';
       }else{
+        mood=style==='reserved'?'busy':'shy';
         S.groupResult=style==='reserved'
           ?'「初めまして。今は準備で手が離せなくて」と短い返事。名前は聞けなかったが、次に会えば覚えていてくれそうだ。'
           :'軽く会釈してくれたものの、ちょうど演奏中で長くは話せない。名前を聞くのは次の機会になった。';
       }
-      S.groupResults??={};S.groupResults[S.activeGroup]=S.groupResult;S.phase='group';saveAndRender();return;
+      storeReaction(id,mood);S.groupResults??={};S.groupResults[S.activeGroup]=S.groupResult;S.phase='group';saveAndRender();return;
     }
     if(act==='ask-menu'){S.phase='question';saveAndRender();return}
     if(act==='contact-menu'){S.phase='contact';saveAndRender();return}
     if(act==='back-group'){S.phase='group';saveAndRender();return}
     if(act==='ask-person'){
       const q=D.questions.find(q=>q.group_id===S.activeGroup&&q.target_id===id);if(!q)return;
-      if(S.groupActions[S.activeGroup])return;const respondent=ps(id);respondent.met=true;respondent.clearPortrait=true;respondent.affinity=Math.min(8,respondent.affinity+1);if(q.answer.includes(pmap[id].name))respondent.introduced=true;respondent.lastInteraction='question';S.participationHistory??=[];S.participationHistory.push({group_id:S.activeGroup,action:'question',person_id:id});S.groupActions[S.activeGroup]='question';S.groupResult=q.answer;S.groupResults??={};S.groupResults[S.activeGroup]=S.groupResult;
+      if(S.groupActions[S.activeGroup])return;const respondent=ps(id);respondent.met=true;respondent.clearPortrait=true;respondent.affinity=Math.min(8,respondent.affinity+1);if(q.answer.includes(pmap[id].name))respondent.introduced=true;respondent.lastInteraction='question';storeReaction(id,(pmap[id].social_style==='reserved')?'calm':(pmap[id].social_style==='quiet')?'thoughtful':'interested');S.participationHistory??=[];S.participationHistory.push({group_id:S.activeGroup,action:'question',person_id:id});S.groupActions[S.activeGroup]='question';S.groupResult=q.answer;S.groupResults??={};S.groupResults[S.activeGroup]=S.groupResult;
       S.phase='group';saveAndRender();return;
     }
     if(act==='contact-person'){
@@ -510,20 +544,21 @@
       p.met=true;p.clearPortrait=true;p.contact_requested=true;p.lastInteraction='contact';
       S.groupActions[S.activeGroup]='contact';
       const intro=knownName(id)==='名前未確認'?'相手に声をかけた。':knownName(id)+'に声をかけた。';
+      let mood='waiting';
       if(p.contacts.includes(platform)){
-        S.groupResult=intro+'既に'+platform+'で連絡できる。';
-      }else if(policy==='after_week'&&p.affinity<3){S.groupResult=intro+'「もう少し話してから」と、今回は交換を断られた。';
-      }else if(policy==='next_day'&&p.affinity<1){S.groupResult=intro+'「また話す機会があったら」と、今日は連絡先を渡してもらえなかった。';
+        mood='familiar';S.groupResult=intro+'既に'+platform+'で連絡できる。';
+      }else if(policy==='after_week'&&p.affinity<3){mood='awkward';S.groupResult=intro+'「もう少し話してから」と、今回は交換を断られた。';
+      }else if(policy==='next_day'&&p.affinity<1){mood='awkward';S.groupResult=intro+'「また話す機会があったら」と、今日は連絡先を渡してもらえなかった。';
       }else if(policy==='next_day'||policy==='after_week'){
-        p.contact_pending=true;if(!p.pendingContacts.includes(platform))p.pendingContacts.push(platform);
+        mood='waiting';p.contact_pending=true;if(!p.pendingContacts.includes(platform))p.pendingContacts.push(platform);
         S.groupResult=intro+'「いいよ、あとで承認するね」と返事があった。';
       }else{
-        if(!p.contacts.includes(platform))p.contacts.push(platform);
+        mood='accept';if(!p.contacts.includes(platform))p.contacts.push(platform);
         p.contact_exchanged=true;p.clearPortrait=true;p.introduced=true;
         if(platform==='TINE'){S.contactSince??={};S.contactSince[id]=currentDate()}
         S.groupResult=intro+' '+platform+'の交換を了承してもらえた。表示名「'+a.display_name+'」を確認した。';
       }
-      S.groupResults??={};S.groupResults[S.activeGroup]=S.groupResult;
+      storeReaction(id,mood);S.groupResults??={};S.groupResults[S.activeGroup]=S.groupResult;
       S.phase='group';saveAndRender();return;
     }
     if(act==='reply-contact'){
