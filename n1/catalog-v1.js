@@ -47,7 +47,8 @@
    imageKey:category,
    sourceType:flags.sourceType||'official_detail',
    emoji:flags.emoji||'🛍️',
-   questionRoles:flags.roles||['fact','gift']
+   questionRoles:flags.roles||['fact','gift'],
+   sceneOverrides:flags.sceneOverrides||{},sceneVariant:flags.sceneVariant||null
  });
  // Each price below is copied from an individually opened current official product page.
  const confirmedAdditions=Object.freeze([
@@ -77,7 +78,8 @@
   return {id,name:item.name,speechName:item.speechName||item.name,price:item.price,category:imageKey,
     source:item.url,brand:item.brand,details:item.detail,priceCheckedAt:'2026-10-26',
     priceBasis:'official_including_tax',reviewed:true,assetReady:true,imageKey,
-    sourceType:'official_detail',emoji:item.emoji,questionRoles:roles};
+    sourceType:'official_detail',emoji:item.emoji,questionRoles:roles,
+    sceneOverrides:item.sceneOverrides||{},sceneVariant:item.sceneVariant||null};
  };
  const chooseSlots=(products,seed,avoid=[])=>{
    const pool=playable(products),recent=new Set(avoid),keys=['buy','fact','gift','present'];
