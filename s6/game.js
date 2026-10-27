@@ -5,7 +5,7 @@
   const SAVE_KEY = 's6-case-a-v03-save';
   const AUTO_KEY = 's6-case-a-v03-auto';
   const META_KEY = 's6-case-a-v03-meta';
-  const BUILD_AT = '2026-10-27 15:29 JST';
+  const BUILD_AT = '2026-10-27 15:41 JST';
   const DAYS = [
     ['2026-04-06','4月6日 月曜'],['2026-04-07','4月7日 火曜'],
     ['2026-04-08','4月8日 水曜'],['2026-04-09','4月9日 木曜'],
@@ -35,7 +35,7 @@
     visitedGroups:[],groupActions:{},groupResults:{},groupReunions:{},activeGroup:null,groupResult:'',reunionText:'',preEventState:{},
     person:{},contactSince:{},replyLog:{},musicMemory:[],nightUsed:{},nightDone:{},nightMessage:'',lunchSeenDates:[],lunchPreState:{},lunchTalked:{},lunchMessage:'',
     evidence:{},oldNew:false,bridge:false,bridgeAvailable:false,
-    discoveredFacts:[],viewedPosts:[],platform:'Photogram',
+    discoveredFacts:[],viewedPosts:[],platform:'Photogram',socialDate:null,socialReturn:null,
     campChoice:null,safety:false,risky:false,rescued:false,
     inference:false,deductionMessage:'',ending:null,hintsOpen:0,sundayPreserved:false,
     selectedPerson:null,notebookFilter:'seen',boardMessage:'',
@@ -51,7 +51,8 @@
   const currentDate=()=>DAYS[Math.min(S.day,4)][0];
   const currentLabel=()=>DAYS[Math.min(S.day,4)][1];
   const nightCount=()=>S.nightUsed[currentDate()]||0;
-  const platformPosts=p=>D.posts.filter(x=>x.platform===p&&x.published_at.slice(0,10)<=currentDate());
+  const timelineDate=()=>S.socialDate||currentDate();
+  const platformPosts=p=>D.posts.filter(x=>x.platform===p&&x.published_at.slice(0,10)<=timelineDate());
   const postAccessible=p=>{
     const contacts=ps(p.author_id).contacts;
     return p.visibility==='公開'||p.visibility==='匿名表示'
@@ -206,18 +207,18 @@
     return '<p class="eyebrow">EVENING / '+esc(date)+'</p><h2>夜の時間</h2><p class="lead">今日は誰と話しただろう。調査は残り '+(3-nightCount())+' 回。調べずに眠ることもできる。</p>'+musicTonight()+tineFeed()+'<div class="progress"><span style="width:'+(nightCount()/3*100)+'%"></span></div>'+(S.nightMessage?note(esc(S.nightMessage)):'')+'<h3>気になることを調べる</h3>'+researchItems()+'<h3>SNSを読む</h3><div class="grid3">'+['TINE','Photogram','Zitter'].map(p=>btn(p,platformNeedsAction(p)?'browse-sns':'open-sns','data-platform="'+p+'"',platformNeedsAction(p)?'secondary':'ghost')).join('')+'</div><p class="subtle">新しい投稿の確認は1回。既読投稿の再読は無料。鍵投稿は承認条件を満たさなければ開きません。</p><div class="btnrow">'+btn(S.day===4?'合宿の選択へ':'翌日へ','end-night','','')+'</div>';
   };
   const sns=()=>{
-    const platform=S.platform, date=currentDate();
+    const platform=S.platform, date=timelineDate();
     const posts=D.posts.filter(p=>p.platform===platform&&p.published_at.slice(0,10)<=date);
     const rows=posts.map(p=>{
       const acct=amap[p.author_id+'|'+platform];
       const open=postAccessible(p)&&S.viewedPosts.includes(p.post_id);
-      const label=acct?.display_name||'未確認のアカウント';
+      const label=p.visibility==='匿名表示'?'匿名ユーザー':acct?.display_name||'未確認のアカウント';
       const media=p.media_id?'<p class="subtle">添付写真：'+esc(p.media_id)+'（本文の説明を参照）</p>':'';
       const avatar=(p.visibility==='匿名表示'||!postAccessible(p))?'<span class="face"><span class="silhouette" aria-hidden="true">◇</span></span>':photo(p.author_id,{venue:true});
       return '<article class="post'+(open?'':' locked')+'"><div class="post-head">'+avatar+'<div><div class="meta">'+esc(platform)+' / '+esc(p.published_at)+' / '+esc(p.visibility)+'</div><strong>'+esc(label)+'</strong></div></div><p>'+esc(open?p.text:postAccessible(p)?'この投稿の本文はまだ読んでいません。':'閲覧には本人の承認または参加条件が必要です。')+'</p>'+(open?media:'')+'</article>';
     }).join('');
     const alt=D.publicInfo.map(x=>'<div class="document"><strong>'+esc(x.topic)+'</strong>'+esc(x.confirms)+'<p class="subtle">別経路：'+esc(x.route_1)+'／'+esc(x.route_2)+'</p></div>').join('');
-    return '<p class="eyebrow">SOCIAL / '+esc(platform)+'</p><h2>今夜のタイムライン</h2>'+(platform==='TINE'?tineFeed():'')+'<div class="tabs">'+['TINE','Photogram','Zitter'].map(p=>btn(p,platformNeedsAction(p)?'browse-sns':'sns-tab','data-platform="'+p+'"',p===platform?'':'ghost')).join('')+'</div>'+(rows||'<p class="subtle">今夜までの投稿はありません。</p>')+'<h3>鍵投稿を使わず確認できる案内</h3>'+alt+'<div class="btnrow">'+btn('夜の行動に戻る','back-night','','ghost')+'</div>';
+    return '<p class="eyebrow">SOCIAL / '+esc(platform)+'</p><h2>'+(S.socialDate?'週末のタイムライン':'今夜のタイムライン')+'</h2>'+(!S.socialDate&&platform==='TINE'?tineFeed():'')+'<div class="tabs">'+['TINE','Photogram','Zitter'].map(p=>btn(p,S.socialDate?'sns-tab':platformNeedsAction(p)?'browse-sns':'sns-tab','data-platform="'+p+'"',p===platform?'':'ghost')).join('')+'</div>'+(rows||'<p class="subtle">表示できる投稿はありません。</p>')+'<h3>鍵投稿を使わず確認できる案内</h3>'+alt+'<div class="btnrow">'+btn(S.socialDate?'週末の画面に戻る':'夜の行動に戻る','back-night','','ghost')+'</div>';
   };
   const board=()=>{
     const rows=D.factExposures.filter(x=>x.fact_id!=='F-COM-02'&&x.available_at.slice(0,10)<=currentDate());
@@ -230,14 +231,14 @@
   const camp=()=>'<p class="eyebrow">FRIDAY / 21:00</p><h2>週末の行き先を選ぶ</h2><p class="lead">有志主催の合同新歓体験合宿。どの班にも音楽の時間がある。参加せず、学内で過ごしてもよい。</p>'+note('金曜20:30の匿名追伸が届いている。読んでいなくても、後から保全資料で確認できます。')+'<div class="grid2">'+CAMP.map(c=>'<div class="card"><h3>'+esc(c)+'</h3><p>'+esc(CAMP_STORY[c])+'</p>'+btn(c==='辞退'?'参加せず過ごす':'この班に参加','choose-camp','data-choice="'+esc(c)+'"','')+'</div>').join('')+'</div>';
   const saturday=()=>{
     const risky=S.campChoice!=='辞退';
-    return '<p class="eyebrow">SATURDAY / '+esc(S.campChoice)+'</p><h2>選んだ場所の音</h2><div class="card"><p class="lead">'+esc(CAMP_STORY[S.campChoice])+'</p></div>'+(risky?'<p class="subtle">合同合宿の共用棟に、希望者向けの個別練習案内が出ている。担当者の名前は書かれていない。</p>':'')+(S.safety?note('同行・居場所の共有を済ませた。必要なときは相談できる。'):note('いつでも無料で、同行や居場所の共有を頼めます。'))+'<div class="btnrow">'+(!S.safety?btn('同行・居場所を共有する','share-safety','','secondary'):'')+(risky?btn('共用棟の個別練習に立ち寄る','accept-risk','','secondary'):'')+btn(risky?'個別練習には行かず日曜へ':'日曜へ進む','go-sunday','','')+'</div>';
+    return '<p class="eyebrow">SATURDAY / '+esc(S.campChoice)+'</p><h2>選んだ場所の音</h2><div class="card"><p class="lead">'+esc(CAMP_STORY[S.campChoice])+'</p></div>'+(risky?'<p class="subtle">合同合宿の共用棟に、希望者向けの個別練習案内が出ている。担当者の名前は書かれていない。</p>':'')+(S.safety?note('同行・居場所の共有を済ませた。必要なときは相談できる。'):note('いつでも無料で、同行や居場所の共有を頼めます。'))+'<div class="btnrow">'+(!S.safety?btn('同行・居場所を共有する','share-safety','','secondary'):'')+(risky?btn('共用棟の個別練習に立ち寄る','accept-risk','','secondary'):'')+btn(risky?'個別練習には行かず日曜へ':'日曜へ進む','go-sunday','','')+btn('週末のSNSを読む','weekend-sns','','ghost')+'</div>';
   };
   const risk=()=>'<p class="eyebrow">SATURDAY / EVENING</p><h2>扉の向こう</h2><div class="card warn"><p>共用棟の奥で個別練習が始まる。帰る時刻を伝えると、案内役の先輩が「もう少しだけ」と出口の前に立った。</p></div><p>緊急連絡は調査回数を使いません。</p>'+(S.safety?note('事前に居場所を共有していた同行者が、約束の時刻に迎えに来た。'):note('連絡できる相手はいる。今、どうする？',true))+'<div class="btnrow">'+(S.safety?btn('同行者と会場を離れる','rescue','',''):btn('連絡して助けを求める','rescue','','')+btn('連絡しない','danger-end','','danger'))+'</div>';
   const evidenceCards=()=>['C1','C2','C3'].map(k=>{
     const x=evid[k],st=S.evidence[k]||'unseen',txt=st==='full'?x.full_fact:st==='pre'?x.preliminary_fact:'まだ調べていない。';
     return '<div class="document"><strong>'+esc(x.source_system)+'</strong><span class="chip '+(st==='full'?'':'dim')+'">'+esc(st==='full'?'署名付き保全写し':st==='pre'?'予備情報':'未取得')+'</span><p>'+esc(txt)+'</p>'+(st==='full'?'<p class="subtle">操作ハッシュ '+esc(receipts[k].operation_hash)+' ／ 署名付き匿名照合子 '+esc(S.alias)+'。所有者は非表示。</p>':'')+'</div>';
   }).join('');
-  const sunday=()=>'<p class="eyebrow">SUNDAY / 4月12日</p><h2>相談と照合</h2><p class="lead">大学の週末安全窓口は、現地でも遠隔でも使える。安全相談と証拠の保全は別々に進められる。</p>'+(S.deductionMessage?note(esc(S.deductionMessage),!S.inference):'')+'<div class="btnrow">'+btn(S.safety?'安全相談済み':'安全窓口に相談する','safety','','secondary')+btn('署名付き写しを保全する','preserve','','secondary')+btn('旧文と追伸を照合する','sunday-continuity','','secondary')+'</div><h3>三つの操作</h3>'+evidenceCards()+'<div class="btnrow">'+btn('推理を組み立てる','deduce','','')+btn('犯人は保留して安全に距離を置く','safe-end','','secondary')+btn('今は結論を出さない','unresolved-end','','ghost')+'</div>'+(S.inference?'<div class="card soft"><h3>週明けの正規確認へ</h3><p>日曜の推理を、本人認証・端末・旧鍵の記録を調べられる担当者へ提出する。安全相談も同時に行う。</p>'+btn('正規確認を依頼する','official-review','','')+'</div>':'');
+  const sunday=()=>'<p class="eyebrow">SUNDAY / 4月12日</p><h2>相談と照合</h2><p class="lead">大学の週末安全窓口は、現地でも遠隔でも使える。安全相談と証拠の保全は別々に進められる。</p>'+(S.deductionMessage?note(esc(S.deductionMessage),!S.inference):'')+'<div class="btnrow">'+btn(S.safety?'安全相談済み':'安全窓口に相談する','safety','','secondary')+btn('署名付き写しを保全する','preserve','','secondary')+btn('旧文と追伸を照合する','sunday-continuity','','secondary')+btn('週末のSNSを読む','weekend-sns','','ghost')+'</div><h3>三つの操作</h3>'+evidenceCards()+'<div class="btnrow">'+btn('推理を組み立てる','deduce','','')+btn('犯人は保留して安全に距離を置く','safe-end','','secondary')+btn('今は結論を出さない','unresolved-end','','ghost')+'</div>'+(S.inference?'<div class="card soft"><h3>週明けの正規確認へ</h3><p>日曜の推理を、本人認証・端末・旧鍵の記録を調べられる担当者へ提出する。安全相談も同時に行う。</p>'+btn('正規確認を依頼する','official-review','','')+'</div>':'');
   const deduction=()=>{
     const full=['C1','C2','C3'].every(k=>S.evidence[k]==='full');
     return '<p class="eyebrow">SUNDAY / INFERENCE</p><h2>どこまで言えるだろう</h2><p class="subtle">アクセスの共通者、同じ認証アカウント、過去との継続性は別々に判断する。日曜の推理だけで人物の実行を確定しない。</p>'+(!full?note('三系統の署名付き保全写しがそろっていません。日曜窓口で取得できます。',true):'')+'<div class="card"><div class="form-row"><label for="candidate">三つのアクセス権限の共通候補</label><select id="candidate"><option value="">選択する</option>'+['P001','P002','P003','P004'].map(id=>'<option value="'+id+'">'+esc(pmap[id].name)+'</option>').join('')+'</select></div><div class="form-row"><label for="accountLogic">三つの操作について確かめること</label><select id="accountLogic"><option value="">選択する</option><option value="project">企画番号が同じなら同一人物</option><option value="signed">異なる操作ハッシュと署名付き照合子から同じ認証アカウントを確認</option><option value="person">照合子が同じなら、手を動かした人物も確定</option></select></div><div class="form-row"><label for="legacyLogic">高校時代との関係</label><select id="legacyLogic"><option value="">選択する</option><option value="style">文体が似ていれば確定</option><option value="independent">旧新の鍵指紋と未公表情報で継続性を支持し、漏洩も検討</option><option value="cohort">アクセス権限の交差だけで過去も証明</option></select></div><div class="form-row"><label for="counterLogic">残る反論への対応</label><select id="counterLogic"><option value="">選択する</option><option value="accuse">その場で犯人を断定する</option><option value="official">盗用・共用・資料漏洩を週明けの正規確認へ渡す</option></select></div>'+btn('日曜の推理を提出','submit-deduction','','')+'</div><div class="btnrow">'+btn('窓口に戻る','back-sunday','','ghost')+'</div>';
@@ -500,8 +501,18 @@
       platformPosts(platform).filter(postAccessible).forEach(p=>{if(!S.viewedPosts.includes(p.post_id))S.viewedPosts.push(p.post_id)});
       S.platform=platform;S.phase='sns';saveAndRender();return;
     }
-    if(act==='sns-tab'){S.platform=el.dataset.platform;saveAndRender();return}
-    if(act==='back-night'){S.phase='night';saveAndRender();return}
+    if(act==='weekend-sns'){
+      if(S.phase!=='saturday'&&S.phase!=='sunday')return;
+      S.socialReturn=S.phase;S.socialDate='2026-04-11';S.platform='Zitter';
+      platformPosts('Zitter').filter(postAccessible).forEach(p=>{if(!S.viewedPosts.includes(p.post_id))S.viewedPosts.push(p.post_id)});
+      S.phase='sns';saveAndRender();return;
+    }
+    if(act==='sns-tab'){
+      S.platform=el.dataset.platform;
+      if(S.socialDate)platformPosts(S.platform).filter(postAccessible).forEach(p=>{if(!S.viewedPosts.includes(p.post_id))S.viewedPosts.push(p.post_id)});
+      saveAndRender();return;
+    }
+    if(act==='back-night'){S.phase=S.socialReturn||'night';S.socialReturn=null;S.socialDate=null;saveAndRender();return}
     if(act==='end-night'){
       for(const [pid,p] of Object.entries(S.person)){
         ps(pid);
