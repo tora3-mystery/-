@@ -1,5 +1,5 @@
 {
-  "version": "v0.9.5-beta",
+  "version": "v0.9.6-beta",
   "phase": "browser_prototype",
   "articles": [
     {
@@ -70,7 +70,7 @@
       "topicCode": "H",
       "publicAttentionTopic": "H",
       "headline": "地元企業、病院再建に条件付き出資案",
-      "body": "地元企業の連合体が中央病院の経営再建への出資を検討している。出資条件には医療機関との連携や経営計画の見直しが含まれ、単独で赤字を補填する提案ではない。",
+      "body": "地元企業の連合体が中央病院の経営再建への出資を検討している。出資条件には医療機関との連携や経営計画の見直しが含まれ、単独で赤字を補填する提案ではない。 連合体には地域の観光・交通事業者も参加しており、地域経済への期待も判断材料となっている。",
       "leadVariant": {
         "leadToken": "land_h",
         "body": "病院隣接地に関する投書を裏取りすると、買付を進める企業と医療支援を検討する企業連合は別法人だった。隣接地の売買が病院の出資条件になっているという証拠は確認できない。"
@@ -220,7 +220,7 @@
       "topicCode": "E",
       "publicAttentionTopic": "E",
       "headline": "地元事業者、湿原保全の協定案",
-      "body": "千鳥湿原の維持管理を地元事業者と住民団体が共同で担う協定案が検討されている。行政だけに依存しない仕組みだが、長期的な資金と責任分担が焦点となる。",
+      "body": "千鳥湿原の維持管理を地元事業者と住民団体が共同で担う協定案が検討されている。行政だけに依存しない仕組みだが、地元企業による管理費の分担案もあるが、拠出額や責任の範囲はまだ決まっていない。",
       "leadVariant": {
         "leadToken": "conservation_finance",
         "body": "関係者の協議記録を確認すると、保全基金の拠出先と管理人員の役割分担が具体化しつつある。事業者は観光客の受入規模に上限を設ける案も示した。"
@@ -917,6 +917,7 @@
     "Mobile layout offers in-page navigation between candidate articles and editorial slot selection.",
     "v0.9.4-beta: Fiscal/political source topic remains visible as a newspaper section even where the story's downstream impact is health, tourism or conservation.",
     "Newsroom carry-over articles are explicitly labelled; administrative contacts in R21/R24/R27 avoid incorrect same-day wording when read on the next morning.",
-    "v0.9.5-beta: Add observation-room narrative explaining the seven-day newspaper intervention and five reporter profiles; no changes to the 44-article/50-reaction dataset or state machine."
+    "v0.9.5-beta: Add observation-room narrative explaining the seven-day newspaper intervention and five reporter profiles; no changes to the 44-article/50-reaction dataset or state machine.",
+    "v0.9.6-beta: I05 establishes why medical private investment interacts with regional tourism attention; I15 distinguishes a proposed conservancy funding scheme from the 2027 agreement."
   ]
 }
