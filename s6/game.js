@@ -65,7 +65,7 @@
     const p=pmap[pid],state=ps(pid),blur=opts.venue?false:(state.seen&&!state.met&&!state.clearPortrait);
     if (!p || (!opts.venue&&!state.seen&&!state.clearPortrait)) return '<span class="face"><span class="silhouette" aria-hidden="true">◇</span></span>';
     const cls='face'+(opts.large?' large':'')+(blur?' blurred':'');
-    if(p.portrait_status==='ready')return '<span class="'+cls+'"><img src="'+esc(p.portrait_path)+'" alt="架空人物の顔写真"></span>';
+    if(p.portrait_status==='ready')return '<span class="'+cls+'"><img src="'+esc(p.portrait_path)+'" alt="人物の顔写真" loading="lazy" decoding="async"></span>';
     return '<span class="'+cls+'" role="img" aria-label="顔写真未受領の仮表示"><span class="silhouette" aria-hidden="true">◌</span></span>';
   };
   const publicAppearance=pid=>(pmap[pid]?.appearance||'').replace(/。?顔素材は未制作/g,'').trim();
@@ -75,7 +75,7 @@
     const met=Object.values(S.person).filter(x=>x.met).length;
     const mark=S.discoveredFacts.length;
     const weekend=['camp','saturday','risk','sunday','deduction','ending'].includes(S.phase);
-    return '<aside class="sidebar"><h3>いまの手がかり</h3><div class="side-card"><p><strong>'+esc(S.phase==='title'?'プレイ前':weekend?'週末・その後':currentLabel())+'</strong></p><p>見かけた顔 '+seen+'人／会話した人 '+met+'人</p><p>気づいた違和感 '+mark+'件</p></div><div class="side-card"><p><strong>調査</strong></p><p>'+(weekend?'平日の調査は終了':('今夜 '+nightCount()+'/3 回'))+'</p><p>資料の再読・手帳の編集は無料。</p></div><div class="side-card"><p><strong>顔写真</strong></p><p>別Workの素材を待っています。現在は仮表示です。</p></div></aside>';
+    return '<aside class="sidebar"><h3>いまの手がかり</h3><div class="side-card"><p><strong>'+esc(S.phase==='title'?'プレイ前':weekend?'週末・その後':currentLabel())+'</strong></p><p>見かけた顔 '+seen+'人／会話した人 '+met+'人</p><p>気づいた違和感 '+mark+'件</p></div><div class="side-card"><p><strong>調査</strong></p><p>'+(weekend?'平日の調査は終了':('今夜 '+nightCount()+'/3 回'))+'</p><p>資料の再読・手帳の編集は無料。</p></div><div class="side-card"><p><strong>顔写真</strong></p><p>会場で見た顔も、手帳で振り返ることができます。</p></div></aside>';
   };
   const header=()=>{
     const game=S.phase!=='title'&&S.phase!=='warning';
@@ -85,7 +85,7 @@
   };
   const btn=(label,act,extra='',kind='secondary')=>'<button class="btn '+kind+'" data-act="'+esc(act)+'" '+extra+'>'+esc(label)+'</button>';
   const note=(s,bad=false)=>'<div class="notice'+(bad?' bad':'')+'">'+s+'</div>';
-  const title=()=>'<p class="eyebrow">S6 / 2026 APRIL</p><h1>新歓の<br>ご案内です。</h1><p class="lead">新しい大学、新しい音。まずは、気になる新歓へ。<br>一週間の選択で、出会う人と見えてくる情報が変わります。</p><div class="btnrow">'+btn('最初から','start','','')+btn('保存から続ける','load','','ghost')+'</div>'+note('CASE Aの試遊版です。CASE B〜Dは設計中のため、選択画面には表示しません。')+'<p class="subtle">顔写真は制作中です。仮表示で操作確認はできますが、人物照合の最終試遊には実際の架空人物写真が必要です。</p>';
+  const title=()=>'<p class="eyebrow">S6 / 2026 APRIL</p><h1>新歓の<br>ご案内です。</h1><p class="lead">新しい大学、新しい音。まずは、気になる新歓へ。<br>一週間の選択で、出会う人と見えてくる情報が変わります。</p><div class="btnrow">'+btn('最初から','start','','')+btn('保存から続ける','load','','ghost')+'</div>'+ '<p class="subtle">会った人の顔と名前は、人物手帳から確認できます。</p>';
   const warning=()=>'<p class="eyebrow">PLAY NOTICE</p><h2>始める前に</h2><div class="card warn"><p>この物語は、ストーキングと精神的圧迫を扱います。選択によって、監禁や行動制限を示す危険な結末があります。過度な暴力や性的暴力は描かず、ジャンプスケア中心ではありません。</p></div><p class="lead">不安を感じたら、いつでも中断できます。ゲーム内では犯人が分からなくても相談と安全確保を選べます。</p><div class="btnrow">'+btn('続ける','intro','','')+btn('タイトルへ','title','','ghost')+'</div>';
   const intro=()=>'<p class="eyebrow">APRIL 2026</p><h2>もう一度、音を出す場所を探す。</h2><div class="card"><p class="lead">高校時代、少し名前の知られたバンドで演奏していた。匿名の相手は帰り道に現れ、行動を言い当てる連絡を続けた。音楽をやめ、浪人を経て、今年ようやく大学へ入った。</p><p class="lead">ここにも、あの頃を知る誰かがいるかもしれない。それでも、自分で安心できる場所を選びたい。</p></div><p class="subtle">平日は一日一つまで新歓を選べます。各会場では二つのグループと交流できます。行かない日も選べます。</p><div class="btnrow">'+btn('4月6日へ','begin','','')+'</div>';
   const day=()=>{
@@ -212,8 +212,8 @@
       const acct=amap[p.author_id+'|'+platform];
       const open=postAccessible(p)&&S.viewedPosts.includes(p.post_id);
       const label=acct?.display_name||'未確認のアカウント';
-      const media=p.media_id?'<p class="subtle">写真資料 '+esc(p.media_id)+'：顔画像は別Workから未受領</p>':'';
-      const avatar=platform==='Zitter'&&p.visibility==='匿名表示'?'<span class="face"><span class="silhouette" aria-hidden="true">◇</span></span>':photo(p.author_id,{venue:true});
+      const media=p.media_id?'<p class="subtle">添付写真：'+esc(p.media_id)+'（本文の説明を参照）</p>':'';
+      const avatar=(p.visibility==='匿名表示'||!postAccessible(p))?'<span class="face"><span class="silhouette" aria-hidden="true">◇</span></span>':photo(p.author_id,{venue:true});
       return '<article class="post'+(open?'':' locked')+'"><div class="post-head">'+avatar+'<div><div class="meta">'+esc(platform)+' / '+esc(p.published_at)+' / '+esc(p.visibility)+'</div><strong>'+esc(label)+'</strong></div></div><p>'+esc(open?p.text:postAccessible(p)?'この投稿の本文はまだ読んでいません。':'閲覧には本人の承認または参加条件が必要です。')+'</p>'+(open?media:'')+'</article>';
     }).join('');
     const alt=D.publicInfo.map(x=>'<div class="document"><strong>'+esc(x.topic)+'</strong>'+esc(x.confirms)+'<p class="subtle">別経路：'+esc(x.route_1)+'／'+esc(x.route_2)+'</p></div>').join('');
