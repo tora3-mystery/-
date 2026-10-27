@@ -289,4 +289,23 @@ assert(trial.get('reviewArchiveList').innerHTML.includes('reviewArchiveItem'),'A
  assert(magazine.includes('annualPublicationHead'),'Brochure masthead missing');
 }
 
-console.log(JSON.stringify({status:'PASS',terrain,statistics,endings,newFacilityReachable:expansionVillages,evolutionImpact:'PASS',fiveStarClosureCheck:fiveStarClosures,whispers:'PASS',saveResume:'PASS',arrivalDate:'PASS',stageArt:'PASS',strictManifest:'PASS',fallback:'PASS',reviewAnchorAndArchive:'PASS',terrainWithoutTiles:'PASS',annualPamphletAndReturnVisit:'PASS',polarityCases:polarityCombinations,adverseEnding:'PASS'},null,2));
+// A pre-map-change save must be reinterpreted against the painted background.
+{
+ const oldStore={},h=createHarness(oldStore),q=h.qa;
+ let snapshot;
+ for(let seed=1;seed<250;seed++){
+  q.generate(Math.imul(seed,2654435761)>>>0);
+  if(q.getState().terrain==='coast'){snapshot=JSON.parse(JSON.stringify(q.getState()));break}
+ }
+ assert(snapshot,'Coast fixture not generated');
+ const types={w:'water',c:'coast',l:'land',f:'field'};
+ snapshot.version='0.6.11-alpha';
+ snapshot.ground=['wwwww','ccccc','lllll','flllf'].join('').split('').map(x=>types[x]);
+ snapshot.facilities[0].plot=19;
+ oldStore['village-review-prototype-v010']=JSON.stringify(snapshot);
+ const loaded=createHarness(oldStore).qa.getState();
+ assert.equal(loaded.facilities.length,snapshot.facilities.length,'Legacy load lost buildings');
+ assert.equal(loaded.ground[19],'water','Legacy map mask persisted');
+ assert(loaded.facilities.every(f=>f.plot!=null&&loaded.ground[f.plot]!=='water'),'Old buildings stayed on painted sea');
+}
+console.log(JSON.stringify({status:'PASS',terrain,statistics,endings,newFacilityReachable:expansionVillages,evolutionImpact:'PASS',fiveStarClosureCheck:fiveStarClosures,whispers:'PASS',saveResume:'PASS',arrivalDate:'PASS',stageArt:'PASS',strictManifest:'PASS',fallback:'PASS',reviewAnchorAndArchive:'PASS',terrainWithoutTiles:'PASS',legacyMapMigration:'PASS',annualPamphletAndReturnVisit:'PASS',polarityCases:polarityCombinations,adverseEnding:'PASS'},null,2));
