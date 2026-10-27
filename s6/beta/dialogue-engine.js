@@ -1,6 +1,6 @@
 (() => {
 'use strict';
-const D=window.S6_DATA,P=window.S6_BETA_PROFILES,Social=window.S6_BETA_SOCIAL;
+const D=window.S6_DATA,P=window.S6_BETA_PROFILES,Social=window.S6_BETA_SOCIAL,Story=window.S6_BETA_STORY;
 const people=Object.fromEntries(D.people.map(x=>[x.person_id,x]));
 const hooks=Object.fromEntries(D.socialProfiles.map(x=>[x.person_id,x]));
 const events=Object.fromEntries(D.events.map(x=>[x.event_id,x]));
@@ -23,7 +23,7 @@ const importantAnswers={"E01-E":"初めて聴く人が入りやすい曲を最�
 const politeQuestions={"担当しているパートを教えて。":"担当しているパートを教えてもらえますか？","普段はどんな音楽を聴く？":"普段はどんな音楽を聴きますか？","今、この輪では何をしてるの？":"今はどんなことをしているんですか？","自己紹介してもらってもいい？":"お名前を聞いてもいいですか？","好きなアーティストって誰？":"好きなアーティストは誰ですか？","今日の活動では何が大事？":"今日の活動で大切にしていることは何ですか？"};
 const questionText=q=>!q?'所属を尋ねる':Number(people[q.target_id]?.year)>1?(politeQuestions[q.question]||q.question):q.question;
 const sceneActivity=gid=>gid==='E04-B'?'ギターとドラムの入りを交互に試している。':D.groups.find(x=>x.group_id===gid)?.activity||'';
-const listenText=gid=>listeningCorrections[gid]||D.actions.find(x=>x.group_id===gid)?.listen_text||'周りの音と会話を聴いた。';
+const listenText=gid=>Story.listening[gid]||listeningCorrections[gid]||D.actions.find(x=>x.group_id===gid)?.listen_text||'周りの音と会話を聴いた。';
 const plain=x=>String(x??'').trim().replace(/^「|」$/g,'').replace(/^『|』$/g,'');
 // "Familiarity" is social comfort, not romance or evidence that an NPC is safe.
 const stage=(state,id)=>{
@@ -81,12 +81,12 @@ function talk(id,gid,state,knownBefore){
  const g=D.groups.find(x=>x.group_id===gid),e=events[g?.event_id],theme=sceneContext[e?.org_id];
  const context=!already&&r==='host'&&c.initiative>=3&&c.expressiveness>=3&&Number(id.slice(1))%4===1&&theme?
   '今日は'+theme+'が中心なんだ。':'';
- const special=id==='P001'&&!already?'入学前から、きみに合いそうな席を考えていたんだ。':'';
- return {text:[intro,context,cue,special].filter(Boolean).join(' '),role:r,voice:v,relationship:close,clue:special?'P001-PREPARATION':null};
+ const special=id==='P001'&&!already?'曲って、鳴らしていない一拍も含めて残ると思うんだ。':'';
+ return {text:[intro,context,cue,special].filter(Boolean).join(' '),role:r,voice:v,relationship:close,clue:special?'P001-SILENCE':null};
 }
 function answer(id,gid,kind){
  const p=people[id],q=D.questions.find(x=>x.group_id===gid&&x.target_id===id);
- if(kind==='question'&&q)return {text:plain(importantAnswers[gid]&&/今日の活動では何が大事/.test(q.question)?importantAnswers[gid]:q.answer),reveals:q.reveals||'',kind:'question'};
+ if(kind==='question'&&q)return {text:plain(Story.questionAnswers[gid+'|'+id]||importantAnswers[gid]&&/今日の活動では何が大事/.test(q.question)?importantAnswers[gid]:q.answer),reveals:q.reveals||'',kind:'question'};
  const voice=P.people[id]?.voice||'soft';
  if(p.year==='1'){
   const msg=voice==='reserved'||voice==='precise'?'まだ決めてないんだ。いくつか見比べてる。':
@@ -154,7 +154,7 @@ const selfIntroduction=(id,state,source='direct')=>{
  if(c.voice==='energetic'||c.voice==='friendly')return 'あ、'+p.name+'です。よろしく！';
  return 'そういえばまだ直接話してなかったね。'+base+p.name+'です。';
 };
-const sceneLine=line=>sceneCorrections[line.group_id+'|'+line.speaker_id+'|'+line.order]||P.sceneOverrides[line.group_id+'|'+line.speaker_id+'|'+line.order]||
+const sceneLine=line=>Story.lines[line.group_id+'|'+line.speaker_id+'|'+line.order]||sceneCorrections[line.group_id+'|'+line.speaker_id+'|'+line.order]||P.sceneOverrides[line.group_id+'|'+line.speaker_id+'|'+line.order]||
  P.sceneOverrides[line.group_id+'|'+line.speaker_id]||line.text;
 const performanceGroups=new Set(['E01-C','E03-A','E04-A','E04-B','E04-C','E04-D','E05-C','E06-B','E06-C','E06-D','E07-C','E09-A','E09-B','E10-A','E11-A','E11-B','E11-C','E11-D','E12-C']);
 const sceneMode=gid=>performanceGroups.has(gid)?'performance':'conversation';
