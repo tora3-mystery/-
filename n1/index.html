@@ -257,9 +257,21 @@ function initRound(){
    localStorage.setItem('n1_recent_products',JSON.stringify([...Object.values(chosen).map(x=>x.id),...recent].slice(0,12)));
    localStorage.setItem('n1_recent_categories',JSON.stringify([...Object.values(chosen).map(x=>x.category),...recentCategories].slice(0,8)));
  }catch(e){}
+ const sideScenes=window.N1SideQuestions.draw((Math.imul(round,0x41c64e6d)^(round>>>3))>>>0);
+ // Keep one or two classic side encounters each run. This also ensures
+ // existing building, celebrity, waiting-time, gift and product questions survive.
+ const classics=window.N1SideQuestions.SIDE_IDS.slice();
+ let spinner=(Math.imul(round,0x45d9f3b) ^ (round<<3))>>>0;
+ for(let i=classics.length-1;i>0;i--){
+   spinner=(Math.imul(spinner^(spinner>>>13),0x85ebca6b))>>>0;
+   const j=spinner%(i+1);
+   [classics[i],classics[j]]=[classics[j],classics[i]];
+ }
+ const classicCount=1+(round%2);
+ for(let i=0;i<classicCount;i++)delete sideScenes[classics[i]];
  const options={
   productAssignments:assignments,
-  sideScenes:window.N1SideQuestions.draw((Math.imul(round,0x41c64e6d)^(round>>>3))>>>0),
+  sideScenes,
   daySwapMask:(Math.imul(round,0x9e3779b1)>>>5)&15,
   firstPerson:round%3===0?'hina':'makabe',
   discountRate:[10,15,20,25,30,35,40][(Math.imul(round,13)>>>0)%7],
