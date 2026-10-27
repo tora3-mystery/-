@@ -23,12 +23,21 @@ function boot(db=new Map()){
 }
 function customer(id,metric,body){return{id,metric,body,customer:id,day:1,status:'open',closedDay:null,replies:[]}}
 const a=boot();a.api.restart();
+check(html.includes('class="playloop-path"')&&html.includes('class="playloop-example-policy"'),'Single illustrated two-step onboarding');
+check(!html.includes('<ol class="intro-jobs"><li>ご意見の下線部分をタップ'),'No repeated tutorial instructions');
+check(!html.includes('+(impact?'),'Avoid duplicating textual action impacts next to numeric effect chips');
 check(a.api.availableIds().length===1&&a.api.availableIds()[0]==='idle','No prefilled policy before reading customer feedback');
 const ordinary=a.api.getState().complaintTickets.find(x=>x.metric===3);
 const shrineText='商店街の神社で商売繁盛を祈願したらどうですか';
 check(!!ordinary&&ordinary.body.includes(shrineText),'Day 1 has a normal customer complaint mentioning a local shrine');
 check(a.api.focus(ordinary.id,shrineText),'Tap a customer phrase to discover ordinary shrine visit');
 check(a.api.availableIds().includes('shrine'),'Ordinary shrine is unlocked immediately after investigation');
+const rewarded=a.get('complaintBoard').children.flatMap(c=>c.children).find(c=>c.className?.includes('discovery-award'));
+check(!!rewarded,'New policy triggers an inline visual reward');
+check(rewarded.children[0]?.textContent==='対応案を1件発見！','Reward shows one new policy');
+check(a.get('actions').children.some(c=>c.className?.includes('discovery-new-action')),'Corresponding policy card receives the entrance animation');
+check(a.api.focus(ordinary.id,shrineText),'Repeated phrase review succeeds');
+check(!a.get('complaintBoard').children.some(c=>c.children.some(x=>x.className?.includes('discovery-award'))),'Repeat does not fake a new discovery');
 a.api.restart();
 check(a.get('moneyDetail').textContent==='本部目標：今週の売上500万円','Condensed HUD instead of formulas/fines');
 check(!a.get('moneyDetail').textContent.includes('基礎30'),'No unwanted formula on HUD');
