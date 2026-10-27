@@ -1,6 +1,6 @@
 "use strict";
-const VERSION = "β0.1.4";
-const UPDATED = "2026.10.27 02:51 JST";
+const VERSION = "β0.1.5";
+const UPDATED = "2026.10.27 11:46 JST";
 const people = [
  {name:"大野 彩花",school:"経営学部・2027年3月卒業見込み",initial:"大",tone:"warm",character:"社交的で段取り上手。成果をやや大きく表現するが、自分で確認すると訂正できる。",es:"学園祭実行委員会で協賛交渉を担当しました。企業12社の協力を取りつけ、当日は赤い養生テープで来場者の動線を改善しました。誰も気づかない仕事を先に拾うことを大切にしています。",record:"協賛金を提供したのは11社で、残り1社は機材貸与でした。床に赤い矢印を3本貼り、最後の1本だけ逆向きにして出口を案内しました。"},
  {name:"岡野 直人",school:"理工学研究科・2027年3月修了見込み",initial:"岡",tone:"cool",character:"口下手だが誠実。数字を正確に覚え、記録の裏付けを重視する。",es:"4人の研究チームで環境計測装置の精度改善に取り組みました。測定条件を切り分け、誤差を約15％低減しました。午後6時12分に記録された異常値がきっかけでした。",record:"装置の自動校正が毎日18時12分に作動していました。23回目の条件変更で測定が安定しました。相対誤差は7.8％から6.6％になりました。"},
@@ -53,9 +53,9 @@ function face(i,distort,phase="neutral"){
 function tension(){return state.asked.length>=3?2:0;}
 function mood(){
  if(state.phase==="reverse")return "応募者は全員、こちらの返答を待っている。誰が選ばれるのか、まだ分からない。";
- if(state.round===0)return "4人は少し緊張している。岡野が手元を見つめ、水野が椅子に座り直した。";
+ if(state.round===0)return "4人は少し緊張している。"+people[1].name.split(" ")[0]+"が手元を見つめ、"+people[3].name.split(" ")[0]+"が椅子に座り直した。";
  if(state.round===1)return "ひとりが小さく言い直した。別の候補者は、黙って次の質問を待っている。";
- return "面接の終わりが近づいている。大野が呼吸を整え、澤田が背筋を伸ばした。";
+ return "面接の終わりが近づいている。"+people[0].name.split(" ")[0]+"が呼吸を整え、"+people[2].name.split(" ")[0]+"が背筋を伸ばした。";
 }
 function head(){
  const step={intro:0,"private-select":1,private:1,game:2,reverse:3,decision:4,ending:5}[state.phase]??0;
