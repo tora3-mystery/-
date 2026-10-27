@@ -4,7 +4,7 @@
 **Workへの追加必読：`ASSET_INTEGRATION.md`（asset-manifest.jsonの最終公開順・厳密な受入仕様）。**
 
 ## Workの作業境界
-実装上の正本は `proposals/village-review/index.html` の `VISUAL_ROUTES`, `ROUTE_BY_FACT`, `GROUND`。必ず最新mainを取得。Workは画像素材・軽量WebP・manifest・コンタクトシートのみを `proposals/village-review/assets/` 配下に追加し、ゲーム本体・ルートindex・他作品は変更しない。既存の公開URLは維持。
+実装上の正本は `proposals/village-review/index.html` の `VISUAL_ROUTES`, `ROUTE_BY_STATE`, `GROUND`。必ず最新mainを取得。Workは画像素材・軽量WebP・manifest・コンタクトシートのみを `proposals/village-review/assets/` 配下に追加し、ゲーム本体・ルートindex・他作品は変更しない。既存の公開URLは維持。
 
 ## 数量と最終画風
 **計145マスター画像**：16施設×初期・第1進化＝32、35系統×第2進化・最終形態＝70、地形背景5、地形タイル8、汎用状態差分14、隠しエンド×2＝6、住民アイコン10。
@@ -31,26 +31,60 @@
 |harbor（漁港）|`fishery`：水産物の加工拠点 → 大規模水産加工拠点／`maritime`：観光と海の拠点 → 海洋観光都市拠点|
 |robot（自動化研究センター）|`research`：自動化実験研究所 → 自律技術研究都市／`coexist`：人とロボットの交流棟 → ロボット住民共生地区|
 
-## 48基本観点の分類（★4〜5／★1〜2）
-| 施設 | 観点と分岐キー |
-|---|---|
-|rail|本数：`transport / transport`／風景：`heritage / heritage`／古さ：`heritage / transport`|
-|market|混雑：`tourist / community`／地元の商品：`tourist / community`／価格：`community / community`|
-|school|児童の様子：`education / education`／校舎：`culture / education`／地域行事：`culture / culture`|
-|shrine|静けさ：`sanctuary / sanctuary`／古い行事：`ritual / sanctuary`／不思議な雰囲気：`mystery / sanctuary`|
-|inn|静けさ：`retreat / retreat`／食事：`gourmet / gourmet`／古さ・料金：`heritage / heritage`|
-|office|手続き：`digital / digital`／地域振興：`policy / policy`／村の決まり：`policy / policy`|
-|clinic|待ち時間：`community / community`／設備：`advanced / advanced`／診療日：`community / community`|
-|shop|価格：`daily / daily`／接客：`daily / daily`／品揃え：`specialty / daily`|
-|hall|集まり：`community / community`／静けさ：`community / community`／祭りの準備：`festival / community`|
-|farm|農産物：`brand / brand`／農作業：`automation / automation`／景色：`agritourism / agritourism`|
-|scenic|眺め：`conservation / park`／歩きやすさ：`park / park`／静けさ：`conservation / conservation`|
-|cafe|店の雰囲気：`local / local`／メニュー：`gourmet / gourmet`／静けさ：`local / local`|
-|museum|展示：`history / history`／不思議な資料：`mystery / history`／静けさ：`history / history`|
-|lodge|自然：`retreat / retreat`／料金：`retreat / retreat`／設備：`activity / activity`|
-|harbor|魚：`fishery / fishery`／海との距離：`maritime / fishery`／賑わい：`maritime / fishery`|
-|robot|自動化：`research / coexist`／職員：`coexist / coexist`／教育：`coexist / coexist`|
-★3は原則として現状維持。観点だけでなく観察された事実との整合性を保つ。海沿い・離島の追加観点「海とのつながり」は通常の35ルートを増やさない（旅館／民宿はretreat、景勝地はconservation、神社はsanctuary）。
+## 48基本観点の進化対応（観察状態×評価）
+現行ゲームで使用する正本は `ROUTE_BY_STATE`。旧 `ROUTE_BY_FACT` は旧セーブ移行用であり、Workの進化解釈の根拠にしない。
+
+| 施設ID | 観点 | 初期状態を★5で支持 | 初期状態を★1で否定 | 変化後を★5で支持 | 変化後を★1で否定 |
+|---|---|---|---|---|---|
+| `rail` | 本数 | `heritage` | `transport` | `transport` | `heritage` |
+| `rail` | 風景 | `heritage` | `transport` | `heritage` | `transport` |
+| `rail` | 古さ | `heritage` | `transport` | `heritage` | `transport` |
+| `market` | 混雑 | `community` | `tourist` | `tourist` | `community` |
+| `market` | 地元の商品 | `community` | `tourist` | `tourist` | `community` |
+| `market` | 価格 | `tourist` | `community` | `tourist` | `community` |
+| `school` | 児童の様子 | `culture` | `education` | `education` | `culture` |
+| `school` | 校舎 | `culture` | `education` | `education` | `culture` |
+| `school` | 地域行事 | `culture` | `education` | `culture` | `education` |
+| `shrine` | 静けさ | `sanctuary` | `ritual` | `ritual` | `sanctuary` |
+| `shrine` | 古い行事 | `sanctuary` | `ritual` | `ritual` | `sanctuary` |
+| `shrine` | 不思議な雰囲気 | `mystery` | `sanctuary` | `mystery` | `sanctuary` |
+| `inn` | 静けさ | `retreat` | `gourmet` | `gourmet` | `retreat` |
+| `inn` | 食事 | `heritage` | `gourmet` | `gourmet` | `heritage` |
+| `inn` | 古さ・料金 | `heritage` | `retreat` | `retreat` | `heritage` |
+| `office` | 手続き | `policy` | `digital` | `digital` | `policy` |
+| `office` | 地域振興 | `policy` | `digital` | `policy` | `digital` |
+| `office` | 村の決まり | `policy` | `digital` | `policy` | `digital` |
+| `clinic` | 待ち時間 | `community` | `advanced` | `advanced` | `community` |
+| `clinic` | 設備 | `community` | `advanced` | `advanced` | `community` |
+| `clinic` | 診療日 | `community` | `advanced` | `advanced` | `community` |
+| `shop` | 価格 | `specialty` | `daily` | `specialty` | `daily` |
+| `shop` | 接客 | `daily` | `specialty` | `specialty` | `daily` |
+| `shop` | 品揃え | `daily` | `specialty` | `specialty` | `daily` |
+| `hall` | 集まり | `community` | `festival` | `festival` | `community` |
+| `hall` | 静けさ | `community` | `festival` | `festival` | `community` |
+| `hall` | 祭りの準備 | `community` | `festival` | `festival` | `community` |
+| `farm` | 農産物 | `agritourism` | `brand` | `brand` | `agritourism` |
+| `farm` | 農作業 | `agritourism` | `automation` | `automation` | `agritourism` |
+| `farm` | 景色 | `agritourism` | `brand` | `agritourism` | `brand` |
+| `scenic` | 眺め | `conservation` | `park` | `park` | `conservation` |
+| `scenic` | 歩きやすさ | `conservation` | `park` | `park` | `conservation` |
+| `scenic` | 静けさ | `conservation` | `park` | `park` | `conservation` |
+| `cafe` | 店の雰囲気 | `local` | `gourmet` | `gourmet` | `local` |
+| `cafe` | メニュー | `local` | `gourmet` | `gourmet` | `local` |
+| `cafe` | 静けさ | `local` | `gourmet` | `gourmet` | `local` |
+| `museum` | 展示 | `history` | `history` | `history` | `history` |
+| `museum` | 不思議な資料 | `mystery` | `history` | `mystery` | `history` |
+| `museum` | 静けさ | `history` | `mystery` | `mystery` | `history` |
+| `lodge` | 自然 | `retreat` | `activity` | `activity` | `retreat` |
+| `lodge` | 料金 | `retreat` | `activity` | `activity` | `retreat` |
+| `lodge` | 設備 | `retreat` | `activity` | `activity` | `retreat` |
+| `harbor` | 魚 | `fishery` | `maritime` | `maritime` | `fishery` |
+| `harbor` | 海との距離 | `fishery` | `maritime` | `maritime` | `fishery` |
+| `harbor` | 賑わい | `fishery` | `maritime` | `maritime` | `fishery` |
+| `robot` | 自動化 | `coexist` | `research` | `research` | `coexist` |
+| `robot` | 職員 | `coexist` | `research` | `coexist` | `research` |
+| `robot` | 教育 | `coexist` | `research` | `research` | `coexist` |
+地形限定の「海とのつながり」は既存35ルートからの分岐のみで、追加画像は不要。
 
 ## 個々の施設画像のファイル名
 格納先：`assets/facilities/<kind>/<stage>.png` と同名 `.webp`。初期・第1進化 `base-0`, `base-1`、後半2段階 `<route>-2`, `<route>-3`。
