@@ -272,9 +272,9 @@
         q.imageKey=chosen.imageKey;q.productId=chosen.id;
         q.sceneOverrides=chosen.sceneOverrides||{};q.sceneVariantOverride=chosen.sceneVariant||null;
         q.speechName=chosen.speechName&&chosen.speechName!==chosen.name?chosen.speechName:informalProductName(chosen.name);q.displayName=chosen.name;
-        if(q.legacyIndex===1)q.zone=[Math.round(chosen.price*1.25),Math.round(chosen.price*2)];
-        else if(q.legacyIndex===5)q.zone=[Math.round(chosen.price*.65),Math.round(chosen.price*.85)];
-        else if(q.legacyIndex===11)q.zone=[Math.round(chosen.price*.6),Math.round(chosen.price*.87)];
+        if(q.legacyIndex===1)q.zone=[Math.round(chosen.price*1.12),Math.round(chosen.price*1.4)];
+        else if(q.legacyIndex===5)q.zone=[Math.round(chosen.price*.78),Math.round(chosen.price*.92)];
+        else if(q.legacyIndex===11)q.zone=[Math.round(chosen.price*.8),Math.round(chosen.price*.95)];
         else q.zone=[chosen.price,chosen.price];
         q.mode=[2,7,8].includes(q.legacyIndex)?'facts':'social';
         q.explain='商品カードの正式名称・型番と、回答後に表示する出典を確認。';
@@ -285,12 +285,13 @@
     q.resultTitle = old.item || '';
     q.unit = old.unit;
     if(q.legacyIndex===0) {
+      q.zone=[q.truth-3,q.truth-1];
       q.context='真壁「昔の写真を見返してたら、同期がみんな大人の顔になってたのよ。……私もそう見える？」';
       q.hint=''+[2005,2006,2004][variation]+'年に22歳で入社。今年の誕生日は過ぎたんだって。';
       if(opts.firstPerson==='hina'){
         const age=[27,29,30][variation];
         q.person='hina';q.character='hina';
-        q.truth=age;q.zone=[age+2,age+4];
+        q.truth=age;q.zone=[age+1,age+3];
         q.item='陽菜の年齢';
         q.opening='月曜日。研修会場の前で、後輩の陽菜が新人と間違えられて困っている。';
         q.speech='さっきまで研修の講師をしてたのに、学生扱いされちゃって。私って何歳くらいに見えます？';
