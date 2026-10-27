@@ -138,7 +138,8 @@ var REVISION={
 /* Resident noticeboard growth: one paper, five papers, then 20. */
 var NOTICE_DAY_MAP={2:3,3:4,4:6,5:7,6:8,7:10};
 EXTRA=EXTRA.map(function(n){return Object.assign({},n,{day:NOTICE_DAY_MAP[n.day]||n.day});});
-RETIRED=Object.keys(RETIRED).reduce(function(out,k){out[NOTICE_DAY_MAP[k]||k]=RETIRED[k];return out;},{});
+var RETIRE_DAY_MAP={2:4,3:5,4:6,5:7,6:8,7:10};
+RETIRED=Object.keys(RETIRED).reduce(function(out,k){out[RETIRE_DAY_MAP[k]||k]=RETIRED[k];return out;},{});
 Object.keys(REVISION).forEach(function(id){REVISION[id].day=NOTICE_DAY_MAP[REVISION[id].day]||REVISION[id].day;});
 var INTRO_DAY2=['R01','R02','R05','L01','L08'];
 var INTRO_DAY3=['R01','R02','R03','R04','R05','R06','R07','R08','L01','L02','L03','L05','L06','L08','L10'];
