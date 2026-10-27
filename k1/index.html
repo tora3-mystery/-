@@ -216,7 +216,7 @@ function getEvents(day){
  schedule[SIDE_SLOT[day]]=picked;
  return schedule;
 }
-function initial(){return{started:false,day:1,index:0,phase:'morning',failure:null,owner:'405',evidence:[],alert:0,trust:0,exposed:false,consent:false,seal:false,letterTaken:false,drawingTarget:null,numberVerified:false,sideChoices:{},history:[],result:'',resultPending:false,ended:false,snapshots:{}};}
+function initial(){return{started:false,day:1,index:0,phase:'morning',failure:null,owner:'405',evidence:[],alert:0,trust:0,exposed:false,consent:false,seal:false,letterTaken:false,drawingTarget:null,recordValidated:false,sideChoices:{},history:[],result:'',resultPending:false,ended:false,snapshots:{}};}
 function copy(x){return JSON.parse(JSON.stringify(x));}
 var state=initial(),tab='board',selected=null,monitor=false,pendingChoice=null,reply={fields:[],number:'',person:''};
 var WEEKDAYS=['月','火','水','木','金','土','日'];
@@ -267,7 +267,7 @@ function responseForm(e){
 function drawingHtml(){var target=state.day>=7&&state.drawingTarget&&state.owner!==state.drawingTarget?state.owner:state.day>=5?(state.drawingTarget||firstDrawingTarget(state.history)):'407',px={'405':189,'406':288,'407':387}[target];return '<figure style="margin:12px 0"><svg class="kid-art" role="img" aria-label="子どもが描いた4階の廊下。'+esc(target)+'号室の前に黒い人のようなものがいる。" viewBox="0 0 480 225" xmlns="http://www.w3.org/2000/svg"><rect width="480" height="225" fill="#fff9e8"/><path d="M25 55 L455 54 M25 165 L452 169" stroke="#87b3c9" stroke-width="5" stroke-linecap="round" fill="none"/><path d="M48 76V162h77V76ZM148 76V162h77V76ZM248 76V162h77V76ZM348 76V162h77V76Z" stroke="#a47d55" stroke-width="6" fill="#fff5d9" stroke-linejoin="round"/><g fill="#77664f" font-size="18" font-family="sans-serif"><text x="68" y="105">404</text><text x="168" y="105">405</text><text x="268" y="105">406</text><text x="368" y="105">407</text></g><g fill="#c9aa6a"><circle cx="114" cy="131" r="4"/><circle cx="214" cy="131" r="4"/><circle cx="314" cy="131" r="4"/><circle cx="414" cy="131" r="4"/></g><g fill="#39404b" stroke="#333843" stroke-linecap="round"><ellipse cx="'+px+'" cy="119" rx="11" ry="14"/><path d="M'+(px-11)+' 132Q'+px+' 123 '+(px+11)+' 132L'+(px+17)+' 181H'+(px-17)+'Z" stroke-width="3"/></g><path d="M38 200 Q89 185 126 199T210 201T310 200T446 201" stroke="#95b270" stroke-width="4" fill="none"/><text x="25" y="34" font-family="sans-serif" font-size="17" fill="#5b8199">ぼくのマンション</text></svg><figcaption class="tiny">404号室のお子さんの絵。4階の廊下が描かれている。'+(state.day>=7&&state.owner!==state.drawingTarget?'別の絵に貼り替えられたようだ。':'')+'</figcaption></figure>';}
 
 function evidenceName(id){var map={delivery:'宅配予告',letter:'405号室の警告',old:'旧掲示物',inspection:'個別点検案内',drawing:'子どもの絵',report:'407号室の事故資料',chair:'理事会宛ての案内',doorbase:'玄関の確認',log:'02:14の呼出記録',scratch:'玄関の印',sticker:'点検済シール',finaldoor:'玄関の水滴',technician:'点検員の実施控え',testimony:'横田の証言'};return map[id]||id;}
-function canExpose(){return has('old')&&has('report')&&has('testimony')&&has('technician')&&state.numberVerified;}
+function canExpose(){return has('old')&&has('report')&&has('testimony')&&has('technician')&&state.recordValidated;}
 function resultFor(e,c,extra){
  var msg='',failure=null,extraData=extra||{fields:[],number:'',person:''};
  function fail(reason,detail,scene){failure={reason:reason,detail:detail};msg=scene;}
@@ -334,20 +334,20 @@ function resultFor(e,c,extra){
   if(c==='yes'){state.trust++;add('testimony');msg='横田が407号室の事故と、書き換えられた夜間掲示の経緯を語った。「管理事務所にはまだ言わないで」。';}
   else fail('隣室との連絡','横田は直接の説明を求めていた。管理事務所への照会も彼女の所在を知らせることになる。',c==='verify'?'管理室へ電話した直後、405号室の表札が剥がされた。':'横田は扉を閉めた。翌朝、405号室には居住者不在の紙が貼られていた。');
  }else if(e.id==='E06B'){
-  if(c==='yes'&&extraData.number==='18'){state.numberVerified=true;msg='訂正後の件数「18件」で照合が通った。古い掲示はすでに撤去されている。';}
+  if(c==='yes'&&extraData.number==='18'){state.recordValidated=true;msg='訂正後の件数「18件」で照合が通った。古い掲示はすでに撤去されている。';}
   else fail('訂正されていた件数','火曜日の16件は水曜日に18件へ訂正されていた。正しい件数が必要だった。',c==='yes'?'送った件数は照合に一致しなかった。申立ての受付は保留された。':'確認期限が過ぎ、事故記録と照合する機会を失った。');
  }else if(e.id==='E06C'){
-  if(c==='yes'&&extraData.number==='18'){state.numberVerified=true;msg='旧掲示の訂正内容と照合が済んだ。管理組合に受付票が残った。';}
+  if(c==='yes'&&extraData.number==='18'){state.recordValidated=true;msg='旧掲示の訂正内容と照合が済んだ。管理組合に受付票が残った。';}
   else fail('一致しない記録','訂正紙はすでに撤去されていた。',c==='yes'?'送られた数字の欄に赤い訂正線が引かれた。':'受付時間が過ぎた。訂正したはずの掲示は見当たらない。');
  }else if(e.id==='E06D'){
-  if(c==='verify'){state.numberVerified=true;msg='理事会の受付で提出先と事故資料の整合が確認された。';}
+  if(c==='verify'){state.recordValidated=true;msg='理事会の受付で提出先と事故資料の整合が確認された。';}
   else fail('渡してはいけない提出先','管理組合と管理会社は別の窓口だった。',c==='yes'?'送信先を管理会社にした瞬間、資料の受付番号が消えた。':'返答しなかった資料が「管理会社確認済」として戻ってきた。');
  }else if(e.id==='E06E'){
-  if(c==='no'){state.numberVerified=true;msg='訂正の撤回には同意しなかった。旧版の記録を含む照合結果は管理組合に残った。';}
+  if(c==='no'){state.recordValidated=true;msg='訂正の撤回には同意しなかった。旧版の記録を含む照合結果は管理組合に残った。';}
   else fail('訂正を消す書面','過去に掲示された訂正には意味があった。',c==='yes'?'訂正文書がなかったことになり、管理組合の集計値も空欄になった。':'照会先の黒田は「訂正を消せば済む話です」と繰り返した。');
  }else if(e.id==='E06F'){
   var f=(extraData.fields||[]).slice().sort().join(',');
-  if(c==='yes'&&f==='name,room'){state.numberVerified=true;msg='必要な項目だけを送った。記録の照合と受付が完了した。';}
+  if(c==='yes'&&f==='name,room'){state.recordValidated=true;msg='必要な項目だけを送った。記録の照合と受付が完了した。';}
   else fail('送れなかった照合','本人確認で伝える情報の範囲は以前の掲示に書いてあった。',c==='yes'?'書面の名義が途中で空白に変わり、受付票が戻らなくなった。':'何も送らないまま、受付は終了した。');
  }else if(e.id==='E07'){
   if(c==='no')msg='管理番号を示されても玄関は開けなかった。担当者は立ち去った。';
@@ -369,7 +369,7 @@ function resultFor(e,c,extra){
   else fail('名前を答えた部屋','前日の掲示では、氏名を回答した住民が翌日から「不在」扱いになったと知らせていた。実在しない仮登録名が唯一の抜け道だった。',c==='yes'?'送信した氏名が名簿から消えた。翌朝、その人の部屋は空室として掲示された。':'回答を放置すると、登録されていた406号室の居住者名で処理された。翌朝、あなたの部屋は空室として掲示された。');
  }else if(e.id==='E09'){
   if(c==='yes')fail('対応完了の署名','管理組合への申し出と、管理会社への「対応完了」署名は異なる手続きだった。','署名した途端、黒田は407号室の記録を閉じた。「これで解決です」。翌朝、掲示板に調査完了が貼られた。');
-  else if(c==='verify'){if(canExpose()){state.exposed=true;msg='横田の証言、点検控え、訂正件数と事故資料を管理組合へ送った。送付控えが手元に残った。';}else fail('裏付けのない申立て','管理組合へ提出できる証言・点検記録・訂正の照合がそろっていない。','申立ては裏付け不足で受理されず、黒田の「対応完了」報告が確定した。');}
+  else if(c==='verify'){if(canExpose()){state.exposed=true;msg='横田の証言、点検控え、掲示の訂正履歴と事故資料を管理組合理事会へ送った。送付控えが手元に残った。';}else fail('裏付けのない申立て','管理組合へ提出できる証言・点検記録・訂正の照合がそろっていない。','申立ては裏付け不足で受理されず、黒田の「対応完了」報告が確定した。');}
   else{msg='黒田への同意を断った。管理組合への申立てはしないまま、今週の締切が過ぎた。';}
  }
  if(failure)state.failure=failure;
