@@ -238,7 +238,7 @@
     "openProductTarget": 465,
     "openFacilityTarget": 80
   },
-  "latestAudit": "n1/tests/qa-v060-work-assets.md",
+  "latestAudit": "n1/tests/qa-v060-rc3-incidental.md",
   "assetIntegration": {
     "workBranch": "n1/catalog-assets-batch01",
     "workCommit": "eb32ecb31739f670aafd5e9c894492c378d3c9cc",
@@ -252,9 +252,9 @@
   },
   "releaseStatus": {
     "public": "v0.5.1 unchanged",
-    "development": "v0.6.0-rc1",
-    "simulatedGameQA": "passed",
-    "playwrightQA": "not executed",
+    "development": "v0.6.0-rc3",
+    "simulatedGameQA": "passed: 760 rounds, 7,600 answers, 6,668 range endpoints",
+    "playwrightQA": "script updated but not executed",
     "publicSiteInteractionQA": "not executed"
   }
 }
