@@ -31,6 +31,22 @@ const relationshipLabel=(state,id)=>({
  new:'まだ話したことがない',acquainted:'話したことがある',
  familiar:'少し話しやすくなった',easygoing:'気軽に話せる'
 })[stage(state,id)];
+// Conversational responsiveness is a stable character property, not a moral or safety rating.
+// A guarded character can warm up more through a thoughtful question than through small talk.
+const responseGain=(id,action)=>{
+ const p=P.people[id];if(!p||!['talk','question','affiliation'].includes(action))return 0;
+ const sociallyOpen=p.warmth+p.initiative-p.caution;
+ let gain=1;
+ if(sociallyOpen>=5)gain=1.25;
+ else if(sociallyOpen<=-1)gain=0.5;
+ else if(sociallyOpen<=1)gain=0.75;
+ if(action==='talk'&&p.caution>=4)gain=Math.max(.5,gain-.25);
+ if(action==='question'||action==='affiliation'){
+  if(p.caution>=3&&p.expressiveness<=2)gain=Math.min(1.25,gain+.25);
+  if(p.initiative>=3&&p.caution<=1)gain=Math.max(.75,gain-.25);
+ }
+ return Math.max(.5,Math.min(1.25,gain));
+};
 const role=(id,gid)=>{
  const p=people[id],g=D.groups.find(x=>x.group_id===gid),e=events[g?.event_id];
  if(p.year==='1')return 'newcomer';
@@ -99,5 +115,5 @@ const snsMessage=(id,state)=>{
 const sceneLine=line=>P.sceneOverrides[line.group_id+'|'+line.speaker_id]||line.text;
 const chatAudit=()=>({firstYearLines:D.lines.filter(x=>people[x.speaker_id]?.year==='1').length,
  overridden:Object.keys(P.sceneOverrides).length,allScenes:D.lines.length,profiles:Object.keys(P.people).length});
-window.S6_BETA_DIALOGUE={talk,answer,contact,sceneLine,level,relationshipLabel,snsMessage,role,chatAudit};
+window.S6_BETA_DIALOGUE={talk,answer,contact,sceneLine,level,relationshipLabel,responseGain,snsMessage,role,chatAudit};
 })();
