@@ -1,5 +1,5 @@
 {
-  "version": "v0.9.3-beta",
+  "version": "v0.9.4-beta",
   "phase": "browser_prototype",
   "articles": [
     {
@@ -645,7 +645,7 @@
       "verified": false,
       "revisionSample": {
         "channel": "県医療政策課",
-        "copy": "本日付の記事に掲載された予算額は、決算見込みと補正予算の区別が必要です。照会があれば資料を提供します。",
+        "copy": "貴紙の記事に掲載された予算額は、決算見込みと補正予算の区別が必要です。照会があれば資料を提供します。",
         "editorialNotes": "訂正要求ではなく正当な説明。"
       }
     },
@@ -676,7 +676,7 @@
       "verified": false,
       "revisionSample": {
         "channel": "県観光課",
-        "copy": "許認可に関する本日付の記事は、協議の進捗を示すものであり、着工の承認を意味するものではありません。",
+        "copy": "許認可に関する貴紙の記事は、協議の進捗を示すものであり、着工の承認を意味するものではありません。",
         "editorialNotes": "正当な説明・誤解の防止。"
       }
     },
@@ -697,7 +697,7 @@
     {
       "id": "R27",
       "eligibilityDescription": "県政記事を掲載",
-      "baseCopy": "「本日の議会日程が変更となりました」（議会事務局）",
+      "baseCopy": "「議会の審議日程が変更となりました」（議会事務局）",
       "leadToken": "public_records",
       "verified": false
     },
@@ -914,6 +914,8 @@
     "Unprinted article summaries prioritize unmet goals and missing corroborating reports, without treating omission as the cause of an underlying incident.",
     "v0.9.3-beta: The seventh edition carries no special stability score; final retrospective cites actual top and second page coverage counts for all four domains.",
     "Follow-up article display retains prior reporting and appends fresh lead-variant detail instead of overwriting the follow-up with the initial lead.",
-    "Mobile layout offers in-page navigation between candidate articles and editorial slot selection."
+    "Mobile layout offers in-page navigation between candidate articles and editorial slot selection.",
+    "v0.9.4-beta: Fiscal/political source topic remains visible as a newspaper section even where the story's downstream impact is health, tourism or conservation.",
+    "Newsroom carry-over articles are explicitly labelled; administrative contacts in R21/R24/R27 avoid incorrect same-day wording when read on the next morning."
   ]
 }
