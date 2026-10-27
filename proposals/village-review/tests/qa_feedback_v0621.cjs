@@ -14,7 +14,7 @@ function harness(storage={}){
  const env={document:{getElementById:get,querySelectorAll(){return []}},window:{},console,Date,Math,
   navigator:{},location:{search:'?qa=1',href:'https://example.invalid/v1/'},confirm:()=>true,
   localStorage:{getItem:k=>storage[k]||null,setItem:(k,v)=>{storage[k]=v}}};
- vm.runInNewContext(script,env,{filename:'v1/index.html',timeout:30000});
+ vm.runInNewContext(script.replace('groundQA,visitNote,voice','groundQA,v1OverlayKeys,coastalName,visitNote,voice'),env,{filename:'v1/index.html',timeout:30000});
  const qa=env.window.__VILLAGE_QA__;
  assert(qa&&qa.makeCandidates&&qa.finaleCandidate,'QA hooks missing');
  assert(qa.evolutionRegister(db),'Evolution DB invalid');
@@ -111,4 +111,20 @@ assert.equal(marchFixture('deep','sea','harbor',['coast','island'],null),'海と
  assert(reopened.facilities.find(f=>f.id===shrine.id).coastalStage>=1,'Coastal stage not retained');
 }
 
-console.log(JSON.stringify({status:'PASS',villages:160,reviews,seaReviews,terrain:[...terrains],endingCount:endings.size,quiet:'PASS',march:'3/3'},null,2));
+
+let coastalOverlayCases=0;
+for(const kind of ['shrine','scenic','inn','lodge'])for(const stage of [1,2,3])for(const mode of ['low','high','reform']){
+ const {qa:q}=harness();
+ q.generate(104528);const st=q.getState();
+ st.terrain='coast';st.month=5;st.themes.tradition=9;st.themes.nature=9;st.themes.strange=9;st.startVisitors=200;st.visitors=1000;
+ const f=st.facilities[0];
+ Object.assign(f,{kind,open:true,stage,coastalStage:stage,coastalMode:mode,stageFocus:'sea',lastFactKey:3,lastChanged:5,rep:80});
+ assert(q.coastalName(f),'Coastal state not active');
+ const overlays=q.v1OverlayKeys(f);
+ assert(overlays.includes('tidal'),'Tidal art displaced: '+kind+'/'+stage+'/'+mode);
+ assert(overlays.length<=2,'Overlays exceed layout limit');
+ coastalOverlayCases++;
+}
+assert.equal(coastalOverlayCases,36);
+
+console.log(JSON.stringify({status:'PASS',villages:160,reviews,seaReviews,terrain:[...terrains],endingCount:endings.size,quiet:'PASS',march:'3/3',coastalOverlayCases},null,2));
