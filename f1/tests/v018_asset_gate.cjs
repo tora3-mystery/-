@@ -1,7 +1,8 @@
 /* F1 v0.18 image-asset gate; run after Work commits assets.
  *
  *   node f1/tests/v018_asset_gate.cjs --phase=P1
- *   node f1/tests/v018_asset_gate.cjs --phase=ALL --strict
+ *   node f1/tests/v018_asset_gate.cjs --phase=P3 --strict
+ *   node f1/tests/v018_asset_gate.cjs --phase=PRODUCTION --strict
  *
  * Without --strict, missing files show WAITING (not PASS), exit 0.
  * With --strict, missing/invalid assets fail and exit nonzero.
@@ -11,10 +12,11 @@
 const fs=require('node:fs');
 const path=require('node:path');
 const scene=require(path.join(__dirname,'..','store_scene_v018.js'));
-const phase=process.argv.includes('--phase=ALL')?'ALL':'P1';
+const phase=process.argv.find(x=>x.startsWith('--phase='))?.split('=')[1]||'P1';
 const strict=process.argv.includes('--strict');
 const assetsDir=path.join(__dirname,'..','assets');
-const names=phase==='P1'?scene.P1_FILES:scene.FILES;
+const names=({P1:scene.P1_FILES,P2:scene.P2_FILES,P3:scene.P3_FILES,MAIN:scene.MAIN_FILES,PRODUCTION:scene.PRODUCTION_FILES,ALL:scene.FILES})[phase];
+if(!names)throw Error('Unknown phase '+phase);
 
 function webpDimensions(data){
  if(data.length<30||data.toString('ascii',0,4)!=='RIFF'
