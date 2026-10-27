@@ -167,9 +167,9 @@ check('familiarity, club role and personality alter the response while keeping t
  const B=dataScope.window.S6_BETA_DIALOGUE,pid='P003',gid='E01-A';
  const first=B.talk(pid,gid,{spokenTo:[],contacts:[],affinity:{},eventHistory:['E01']});
  const met=B.talk(pid,gid,{spokenTo:[pid],contacts:[],affinity:{P003:2},eventHistory:['E01','E06']});
- const close=B.talk(pid,gid,{spokenTo:[pid],contacts:[pid],affinity:{P003:4},eventHistory:['E01','E06']});
+ const close=B.talk(pid,gid,{spokenTo:[pid],contacts:[pid],affinity:{P003:4},relationshipDays:{P003:['2026-04-06','2026-04-08']},eventHistory:['E01','E06']});
  assert.equal(first.role,'host');assert.equal(first.relationship,'new');
- assert.equal(met.relationship,'acquainted');assert.equal(close.relationship,'contact');
+ assert.equal(met.relationship,'acquainted');assert.equal(close.relationship,'familiar');
  assert.ok(first.text!==met.text&&met.text!==close.text);
  assert.equal(first.voice,met.voice);
 });
@@ -198,5 +198,61 @@ check('all 125 memberships render first, repeat and contact-stage dialogue witho
   }
  }
  assert.equal(scenarios,375);
+});
+check('meeting someone twice in the same day cannot make them a close friend',()=>{
+ const B=dataScope.window.S6_BETA_DIALOGUE;
+ const s=newPlayer();visit(s,'E01','E01-A');
+ s.click('action-menu','talk');s.click('act-target','P003');
+ s.click('action-menu','question');s.click('ask-affiliation','P003');
+ assert.equal(s.state.affinity.P003,2);
+ assert.equal(s.state.relationshipDays.P003.length,1);
+ assert.equal(B.level(s.state,'P003'),'acquainted');
+});
+check('contact exchange does not grant familiarity even if approved immediately',()=>{
+ const B=dataScope.window.S6_BETA_DIALOGUE;
+ const s=newPlayer();visit(s,'E01','E01-A');
+ s.click('action-menu','contact');s.click('act-target','P003');
+ assert.ok(s.state.contacts.includes('P003'));
+ assert.equal(s.state.affinity.P003||0,0);
+ assert.equal(B.level(s.state,'P003'),'new');
+});
+check('reunion after a separate day unlocks a warmer response with no legal-name leakage',()=>{
+ const B=dataScope.window.S6_BETA_DIALOGUE;
+ const s=newPlayer();visit(s,'E01','E01-A');
+ s.click('action-menu','talk');s.click('act-target','P003');
+ s.click('action-menu','question');s.click('ask-affiliation','P003');
+ s.click('back-venue');s.click('finish-venue');s.click('next-day');
+ s.click('skip');s.click('next-day');
+ visit(s,'E06','E06-A');s.click('action-menu','talk');s.click('act-target','P003');
+ assert.equal(s.state.affinity.P003,3);
+ assert.equal(B.level(s.state,'P003'),'familiar');
+ assert.equal(s.state.relationshipDays.P003.length,2);
+ assert.match(s.html,/この前の続きも話せそう/);
+ assert.doesNotMatch(s.html,/神谷杏奈/);
+});
+check('TINE displays personal messages only for approved contacts, without dating or safety badges',()=>{
+ const B=dataScope.window.S6_BETA_DIALOGUE;
+ const no=newPlayer();no.click('skip');no.click('night-sns','TINE');
+ assert.doesNotMatch(no.html,/交換済みの連絡先/);
+ assert.equal(B.snsMessage('P003',no.state),null);
+ const s=newPlayer();visit(s,'E01','E01-A');
+ s.click('action-menu','contact');s.click('act-target','P003');
+ s.click('back-venue');s.click('finish-venue');s.click('night-sns','TINE');
+ assert.match(s.html,/交換済みの連絡先/);
+ assert.match(s.html,/相手が安全かどうかは別の話/);
+ const msg=B.snsMessage('P003',s.state);
+ assert.ok(msg?.text.includes('新歓'));
+ assert.doesNotMatch(msg.text,/神谷杏奈|好きだよ|付き合って/);
+ assert.equal(s.state.affinity.P003||0,0);
+});
+check('old beta saves missing relationshipDay fields load without error or false intimacy',()=>{
+ const storage=new Map(),s=newPlayer();
+ // Supply an actual legacy shape to the loader and confirm graceful migration.
+ const legacy=s.state;
+ legacy.affinity={P003:4};delete legacy.relationshipDays;delete legacy.dailyAffinity;
+ storage.set('s6-origin-beta-010',JSON.stringify(legacy));
+ const loaded=makeSession(storage);
+ assert.equal(loaded.state.affinity.P003,4);
+ assert.equal(dataScope.window.S6_BETA_DIALOGUE.level(loaded.state,'P003'),'acquainted');
 });
 console.log(JSON.stringify({passed:total,failed:failures}));if(failures)process.exitCode=1;
