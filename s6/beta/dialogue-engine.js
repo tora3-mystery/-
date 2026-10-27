@@ -12,7 +12,7 @@ const words={
  quiet:{host:'ゆっくり聴いていってね。',newcomer:'自分も初めてで。',guest:'今日はこっちの音を聴きに来た。',again:'あ、この前の。'},
  soft:{host:'来てくれてありがとう。',newcomer:'どこにするか悩むよね。',guest:'今日はこっちも気になって。',again:'また会えたね。'},
  precise:{host:'今日は見学の人も多いよ。',newcomer:'ほかも見てから決めようと思ってる。',guest:'今日は普段と違う団体を見学してる。',again:'前にも話したよね。'},
- reserved:{host:'見学ですか。どうぞ。',newcomer:'自分もまだ決めていません。',guest:'今日は、こちらにも寄ってみた。',again:'この前はどうも。'}
+ reserved:{host:'よかったら、ゆっくり見ていって。',newcomer:'自分もまだ迷ってて。',guest:'今日は、こっちも気になって。',again:'この前はどうも。'}
 };
 const sceneContext={
  L:'カバー曲',Z:'オリジナル曲',J:'セッション',K:'弾き語り',W:'DTM',F:'学外ライブ'
@@ -30,7 +30,8 @@ function talk(id,gid,state){
  const p=people[id],c=P.people[id],r=role(id,gid),v=c.voice;
  const already=state.spokenTo.includes(id),close=level(state,id);
  const intro=already?(close==='contact'?'この前は連絡ありがとう。':words[v].again):words[v][r];
- const h=hooks[id],cue=plain(h?.[already?'reunion_hook':'first_hook']||h?.first_hook||'音を聴いていってね。');
+ const h=hooks[id];let cue=plain(h?.[already?'reunion_hook':'first_hook']||h?.first_hook||'音を聴いていってね。');
+ if(!already&&r==='newcomer'&&cue.includes('見学中なんだ'))cue=cue.replace('、見学中なんだ','');
  // Preserve original character hook; add contextual color only when it fits the character.
  const g=D.groups.find(x=>x.group_id===gid),e=events[g?.event_id],theme=sceneContext[e?.org_id];
  const context=!already&&r==='host'&&c.initiative>=3&&c.expressiveness>=3&&Number(id.slice(1))%4===1&&theme?
