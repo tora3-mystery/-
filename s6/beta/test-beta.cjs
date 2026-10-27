@@ -609,6 +609,15 @@ check('Friday recap remembers Wednesday visit even after other days',()=>{
  assert.ok(s.state.groupVisitHistory.includes('E05-A'));
  assert.match(s.html,/こもれびの演奏で、曲の終わりに一拍/);
 });
+check('one-year epilogue never invents ongoing messages without contact exchange',()=>{
+ const s=newPlayer();visit(s,'E01','E01-C');s.click('action-menu','talk');s.click('act-target','P014');
+ assert.ok(s.state.interacted.includes('P014'));assert.ok(!s.state.contacts.includes('P014'));
+ s.click('back-venue');s.click('finish-venue');
+ for(let i=0;i<4;i++){s.click('next-day');s.click('skip')}
+ s.click('next-day');s.click('choose-camp','K');s.click('meet-producer');
+ assert.match(s.html,/同じ新入生として話した人の顔を/);
+ assert.doesNotMatch(s.html,/時々メッセージを交わす/);
+});
 check('old S6 beta saves do not mix stalking and producer narratives',()=>{
  const cache=new Map();
  cache.set('s6-origin-beta-010',JSON.stringify({schema:1,phase:'private',result:'DANGER'}));
