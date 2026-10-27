@@ -14,3 +14,22 @@ label{display:block;font-size:13px;font-weight:700;margin:14px 0}select,textarea
 footer{font-size:10px;color:var(--muted);text-align:center;border-top:1px solid var(--line);padding:14px;margin-top:15px}
 @media(max-width:620px){body{font-size:14px}.layout{padding:0 12px}.top{align-items:flex-start;flex-direction:column;gap:8px;padding:9px 0}.top strong{font-size:13px}.head-actions{justify-content:flex-start}.two{grid-template-columns:1fr}.faces{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}.intro-face{padding:6px}.intro-face .portrait{width:100%;max-height:none}.intro-face strong{font-size:12px}.intro-face span{font-size:10px}.person-list{grid-template-columns:1fr}.face-card{padding:6px}.face-card .btn{font-size:10px}.chosen .portrait.large{width:110px;height:110px}.actions .btn{flex:1 1 42%;font-size:13px;padding:10px 9px}.panel{padding:13px}main{padding:18px 0 28px}}
 @media(max-width:350px){.faces{grid-template-columns:repeat(2,minmax(0,1fr))}.top strong{font-size:12px}.portrait{width:78px;height:78px}}
+
+
+/* β v0.2: member portraits act as chat avatars; peers are recognizable, not identified by name */
+.club-intros{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:13px 0}
+.club-intro{padding:11px 12px;border:1px solid var(--line);border-radius:8px;background:#22333d}
+.club-intro strong{display:block;font-size:14px;color:#efe5cc}
+.club-intro span{display:block;font-size:12px;color:var(--muted);margin-top:3px}
+.chat-thread{border:1px solid var(--line);background:#17252e;border-radius:14px;padding:14px;margin:16px 0;display:flex;flex-direction:column;gap:13px}
+.chat-line{display:flex;align-items:flex-start;gap:10px;max-width:100%}
+.chat-line .chat-avatar{width:46px;height:46px;border-radius:12px;flex:0 0 46px}
+.chat-content{flex:1;min-width:0}
+.chat-speaker{font-size:11px;color:#c2cbd0;display:flex;align-items:center;gap:6px;margin:0 0 4px;font-weight:600}
+.chat-bubble{display:inline-block;background:#2d4450;color:#edf2f3;border-radius:3px 13px 13px 13px;padding:10px 12px;max-width:100%;white-space:pre-wrap;overflow-wrap:anywhere;font-size:13px;line-height:1.6}
+.peer-highlight{border:3px solid #ba7471!important;box-shadow:0 0 0 1px #e7b1a4;background:#372f34}
+.peer-tag{display:inline-block;padding:0 6px;border-radius:99px;border:1px solid #be7774;color:#ffcccc;background:rgba(88,32,33,.4);font-size:10px;white-space:nowrap}
+.chat-speaker .peer-tag{font-size:10px;font-weight:500}
+.person-card .btn{margin:3px 5px 3px 0}
+.intro-face .peer-tag{font-size:10px}
+@media(max-width:620px){.club-intros{grid-template-columns:1fr}.chat-thread{padding:10px}.chat-line{gap:8px}.chat-line .chat-avatar{width:38px;height:38px;flex-basis:38px}.chat-bubble{padding:9px 10px;font-size:12px}.club-intro{padding:9px 11px}}
