@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#244f46"><title>すべてのご意見に対応してください。｜7日間の店長代理 v0.19.3</title><style>
+<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#244f46"><title>すべてのご意見に対応してください。｜7日間の店長代理 v0.19.7</title><style>
 :root{--bg:#f2f4ec;--ink:#243735;--muted:#627470;--line:#d8e1d7;--deep:#244f46;--surface:#fffdfa;--accent:#f0b967}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,'Hiragino Kaku Gothic ProN','Noto Sans JP',Meiryo,sans-serif;line-height:1.55;transition:background .5s,color .5s}button{font:inherit;cursor:pointer}button:disabled{opacity:.42;cursor:not-allowed}button:focus-visible,summary:focus-visible{outline:3px solid #ba7730;outline-offset:3px}.container{max-width:980px;margin:auto;padding:14px 14px 80px}.mast{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:9px}.brand{display:flex;align-items:center;gap:9px;font-size:14px;font-weight:800;color:#315d50}.brand-icon{font-size:24px}.tiny{font-size:12px;color:var(--muted)}.overline{font-size:11px;font-weight:850;letter-spacing:.08em;color:#648274}.head{margin:4px 0;font-size:clamp(24px,4vw,37px);line-height:1.3;letter-spacing:-.04em}.box{background:var(--surface);border:1px solid var(--line);border-radius:15px;padding:16px;box-shadow:0 4px 18px #2245340a}.widebtn{display:block;width:100%;text-align:center;background:#285f4f;color:#fff;border:none;border-radius:10px;padding:13px 15px;font-size:15px;font-weight:800}.widebtn:hover:not(:disabled){filter:brightness(1.12)}.button-quiet{background:none;border:1px solid #aebfb4;border-radius:9px;color:#36594f;padding:8px 12px;font-weight:700;font-size:12px}.version-top{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin:3px 0 13px;font-size:11px;color:#536b61;padding-bottom:10px;border-bottom:1px solid #d6ded4}.version-top b{background:#285f4f;color:#fff;border-radius:5px;padding:2px 7px}.metrics{position:sticky;top:0;z-index:5;background:#f2f4ecf2;backdrop-filter:blur(7px);border-bottom:1px solid #d6e0d7;display:grid;grid-template-columns:repeat(3,1fr);gap:7px;padding:8px 0;margin-bottom:14px}.stat{background:#fff;border:1px solid #dde3d9;border-radius:9px;padding:7px 8px;text-align:center}.stat label{font-size:10px;display:block;color:#61746e;font-weight:700}.stat strong{font-size:19px;line-height:1.3;font-variant-numeric:tabular-nums;white-space:nowrap}.stat small{font-size:10px;color:#637972}.cash-low{color:#b4423f}.anomaly-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:-5px 0 14px;padding:10px;border:1px solid #9a7776;border-radius:12px;background:#efe7e1}.anomaly-grid .stat{background:#f7f1eb;border-color:#ccb5ad}.two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;align-items:start}.issue-card{background:#fff7ec;border-color:#eccfaa}.issue-body{font-weight:700;font-size:17px;margin:12px 0 8px}.issue-meta{display:flex;justify-content:space-between;gap:7px;align-items:center;font-size:11px;color:#7d684b}.pill{display:inline-block;border-radius:99px;background:#e8efe8;color:#346154;padding:3px 9px;font-weight:800;font-size:11px}.pill.urgent{background:#fce7cc;color:#a3532c}.issue-tail{font-size:12px;color:#795f47;margin:8px 0 0}.help{font-size:12px;color:#6b7b70;margin:7px 0 0}.news{background:#f1f6f2;border:1px solid #d7e4d9;border-radius:9px;padding:9px 11px;font-size:12px;margin:9px 0}.news.odd{background:#eee4e1;border-color:#c5a9a5;color:#66484e}.actions-head{display:flex;justify-content:space-between;align-items:center;gap:8px;margin:0 0 8px}.actions-head h2{font-size:16px;margin:0}.context{font-size:12px;color:#567468}.day-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.action{display:flex;flex-direction:column;gap:4px;padding:12px;text-align:left;border-radius:11px;border:1px solid #cbdad0;background:#fff;min-height:116px;transition:border-color .15s,transform .15s}.action:hover:not(:disabled){border-color:#318367;transform:translateY(-1px)}.action b{font-size:13px;line-height:1.4}.action small{font-size:11px;color:#5d7168;line-height:1.45}.action .cost{color:#ad5736;font-size:11px;font-weight:800}.action.odd-action{border-style:dashed;border-color:#a7a4a0;background:#faf8f1}
 .action.odd-action.odd-tier-2{border-color:#a78a93;background:#f8f1f0}
 .action.odd-action.odd-tier-3{border-color:#674a54;background:#372c33;color:#fff0e8}
@@ -209,6 +209,13 @@ body.odd-3 #day8Panel[data-stage="2"]{border-color:#987b79;box-shadow:0 4px 18px
 .practice-highlight:focus-visible{outline:3px solid #ae7838;outline-offset:3px}.practice-policy{border:2px solid #8aaf91;border-radius:10px;padding:13px;background:#f0f8ed;color:#234b39;display:block;width:100%;text-align:left;font-weight:850;cursor:pointer}.practice-policy small{display:block;font-weight:500;margin-top:5px}
 .practice-completed{border:1px solid #d5c48b;background:#fffbef;color:#394b38;border-radius:12px;padding:14px;margin-top:12px}.practice-completed p{margin:6px 0}.practice-completed .practice-end-banner{font-size:clamp(17px,4.4vw,21px);font-weight:900;line-height:1.7;color:#263b30;margin:14px 0 11px}.practice-completed .practice-limit-note{font-size:clamp(14px,3.5vw,16px);line-height:1.75;margin:7px 0 2px}.practice-completed .practice-limit-note strong{font-weight:900;text-decoration:underline;text-decoration-color:#ba7d25;text-decoration-thickness:2px;text-underline-offset:3px}.practice-change-line{font-weight:850;font-size:clamp(14px,3.6vw,17px);line-height:1.8}.practice-screen [hidden],.day8-shell [hidden]{display:none!important}
 .day8-shell .operations-board{margin-top:10px}.day8-shell .two{margin-top:14px}.day8-shell .day8-action-card{display:block;width:100%;padding:14px;border-radius:11px;border:2px solid #b4c8ba;background:#eef4ed;color:#29483f;text-align:left;font-size:14px;font-weight:800;cursor:pointer}.day8-shell .day8-action-card small{display:block;font-size:11px;font-weight:500;margin-top:5px}.day8-shell .day8-action-card:focus-visible{outline:3px solid #b87d36;outline-offset:3px}.day8-shell #day8IssueTag{color:#463834;background:#ebe5d8}
+.day8-shell .meterrow .bar{overflow:visible;position:relative}
+.day8-shell .meterrow .fill{opacity:.8;background:repeating-linear-gradient(90deg,#7a5f6b 0,#7a5f6b 11px,#a48a75 12px,#a48a75 16px);box-shadow:0 0 4px #51454b66}
+.day8-shell .meterrow{position:relative;z-index:0}
+.day8-shell .meterrow b{position:relative;font-size:12px;white-space:nowrap;z-index:1;color:#733f53}
+#day8Help .dialog{border:2px solid #6c515c;background:#f2eee7;max-width:540px}
+#day8Help .glitch-help-line{font-size:13px;margin:9px 0;color:#433942;line-height:1.85;overflow-wrap:anywhere}
+#day8Help .glitch-help-code{font-size:12px;color:#83566b;letter-spacing:.11em;overflow-wrap:anywhere}
 .day8-offers{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
 .day8-offers .day8-action-card{min-height:58px;border-color:#b6a9ac;background:#f4f0ec;color:#463b42;text-align:center}
 .day8-offers .day8-action-card:hover{border-color:#80515c;background:#eee2e1}
@@ -228,7 +235,7 @@ body.odd-3 #day8Panel[data-stage="2"]{border-color:#987b79;box-shadow:0 4px 18px
 .operations-board .meterrow.severity-max .fill{background:linear-gradient(90deg,#a81025,#f52b45)!important}
 .operations-board .meterrow.severity-max .meter-name::before{content:'⚠';color:#ff6f7d;margin-right:2px}
 @media(max-width:550px){.operations-board .meterrow.severity-max{padding:6px}}
-</style></head><body><main class="container"><header class="mast"><div class="brand"><span class="brand-icon" id="brandIcon">🛒</span><span id="brandName">まるまるスーパー<br><small class="tiny">お客様改善センター</small></span></div><div class="header-actions"><button id="help" class="button-quiet hidden">遊び方</button><button id="restart" class="button-quiet hidden">最初から</button></div></header><div class="version-top"><b>F1 v0.19.6</b><span>2026-10-28 01:02:31 JST更新</span></div>
+</style></head><body><main class="container"><header class="mast"><div class="brand"><span class="brand-icon" id="brandIcon">🛒</span><span id="brandName">まるまるスーパー<br><small class="tiny">お客様改善センター</small></span></div><div class="header-actions"><button id="help" class="button-quiet hidden">遊び方</button><button id="restart" class="button-quiet hidden">最初から</button></div></header><div class="version-top"><b>F1 v0.19.7</b><span>2026-10-28 01:28:16 JST更新</span></div>
 <section id="intro" class="focus box">
  <div class="overline">日曜日 17:30｜まるまるスーパー 店長室</div><h1 class="head">すべてのご意見に対応してください。</h1>
  <div class="intro-note"><b>【店長からの引き継ぎ】</b>明日から私が一週間不在になります。7日間、お客様の声を確認しながら、この店の営業を任せます。</div>
@@ -257,7 +264,7 @@ body.odd-3 #day8Panel[data-stage="2"]{border-color:#987b79;box-shadow:0 4px 18px
  <div class="two"><section class="box issue-card"><div class="issue-meta"><span>📮 お客様の声・店長回答一覧</span><span id="day8IssueTag" class="pill">未解決 0件</span></div><div id="day8FeedbackSummary" class="complaint-summary">本日の新着 0件</div><div id="day8Feedback" class="complaint-board"></div><div id="day8Message" class="news"></div></section>
  <section class="box"><div class="actions-head"><h2>今日できる対応</h2><span id="day8ActionCount" class="context">1案から1つ</span></div><p class="help" id="day8ActionGuide">本日の売場を確認し、対応を選んでください。</p><div id="day8Offers" class="day8-offers" aria-live="polite"></div><button id="day8Next" class="day8-action-card hidden" type="button">本日の対応を確定する</button><div class="hq-bulletin"><b>📈 本部速報</b><span id="day8Ledger">売上データを照合中です。</span></div></section></div>
 </section>
-<section id="ending" class="focus box hidden" aria-live="polite"></section><div id="policyConfirm" class="veil hidden" role="dialog" aria-modal="true" aria-labelledby="policyConfirmTitle"><div class="dialog"><div class="overline">本日の対応</div><h2 id="policyConfirmTitle">この施策でよいですか？</h2><p id="policyConfirmText"></p><div id="policyConfirmImpacts" class="preview-table"></div><p id="policyConfirmForecast"></p><button class="widebtn" id="policyConfirmYes" type="button">この施策に決める</button><button class="button-quiet preview-cancel" id="policyConfirmNo" type="button">戻って選び直す</button></div></div><div id="overlay" class="veil hidden" role="dialog" aria-modal="true" aria-labelledby="dialogTitle"><div class="dialog"><div id="dialogLabel" class="overline">DAY RESULT</div><h2 id="dialogTitle">営業結果</h2><p id="dialogText"></p><img id="buildProgress" class="ending-photo hidden" alt="設備の工事中の店内" loading="lazy"><div id="dailyReport" class="report"></div><button id="next" class="widebtn">翌営業日へ</button><button id="undo" class="button-quiet" style="width:100%;margin-top:8px">この日の施策を選び直す</button></div></div><div id="dayTransition" class="veil opening-curtain hidden" role="dialog" aria-modal="true" aria-labelledby="transitionTitle" aria-describedby="transitionSubtitle"><section class="opening-card steady" id="transitionCard"><div class="opening-sparks" aria-hidden="true"><i style="--x:8%;--delay:0s;--c:#f2c36c"></i><i style="--x:19%;--delay:.12s;--c:#74be9c"></i><i style="--x:32%;--delay:.03s;--c:#f4d88a"></i><i style="--x:44%;--delay:.17s;--c:#e9ae5b"></i><i style="--x:57%;--delay:.1s;--c:#86cdb2"></i><i style="--x:69%;--delay:.23s;--c:#ffe1a0"></i><i style="--x:80%;--delay:.05s;--c:#f6b984"></i><i style="--x:92%;--delay:.18s;--c:#a8d6ba"></i></div><div class="opening-kicker" id="transitionKicker">まるまるスーパー　開店準備</div><div class="opening-progress" id="transitionProgress" aria-hidden="true"></div><h2 class="opening-day" id="transitionTitle">DAY 02 <small>/ 07</small></h2><div class="opening-title" id="transitionHeadline">開店準備が整いました！</div><p class="opening-subtitle" id="transitionSubtitle">昨日の施策が売場に反映されました。</p><p class="transition-decision" id="transitionDecision"></p><div class="audit-letter" id="transitionAudit" hidden></div><div class="opening-score"><div class="score-label" id="transitionScoreLabel">本日の日売上見込み</div><strong id="transitionScore">60万円</strong><small id="transitionTotal">前日比 ＋10万円</small></div><div class="opening-changes" id="transitionChanges" aria-label="施策による変化"></div><img class="opening-photo" id="transitionImage" alt="翌営業日のスーパーの店内写真" loading="eager"><p class="opening-caption" id="transitionCaption">昨日の選択が売場に反映されています。</p><button id="transitionContinue" class="widebtn opening-go" type="button">今日の営業を始める</button></section></div><footer class="footer">フィクションの短編Webゲーム F1 v0.19.6｜進行状況は端末内だけに保存。実在の企業・商品・個人とは無関係です。</footer></main>
+<section id="ending" class="focus box hidden" aria-live="polite"></section><div id="day8Help" class="veil hidden" role="dialog" aria-modal="true" aria-labelledby="day8HelpHeading"><div class="dialog"><div class="overline">利用手順　/　08・07・??</div><h2 id="day8HelpHeading">遊び方（参照先：譁ｯ縺ｮ人曜日）</h2><p class="glitch-help-code">HELP_CODE: 200 / 404 / 88人 / ▣▣</p><p class="glitch-help-line">① ご意見を読む。読んだ人から順に、出口の石に戻してください。</p><p class="glitch-help-line">② 下線を一箇所調べる。調べた箇所はまだ調べていません。受付番号はお名前です。</p><p class="glitch-help-line">③ 会計は終わりです。終わりは翌営業日です。翌営業日はこの画面の内側にあります。</p><p class="glitch-help-line">④ 繧ｶﾖ■縺ｵ｡ → 今日を取り消すには、今日を捧げてください。</p><button id="day8HelpClose" class="widebtn" type="button">閉じて売場に戻る</button></div></div><div id="policyConfirm" class="veil hidden" role="dialog" aria-modal="true" aria-labelledby="policyConfirmTitle"><div class="dialog"><div class="overline">本日の対応</div><h2 id="policyConfirmTitle">この施策でよいですか？</h2><p id="policyConfirmText"></p><div id="policyConfirmImpacts" class="preview-table"></div><p id="policyConfirmForecast"></p><button class="widebtn" id="policyConfirmYes" type="button">この施策に決める</button><button class="button-quiet preview-cancel" id="policyConfirmNo" type="button">戻って選び直す</button></div></div><div id="overlay" class="veil hidden" role="dialog" aria-modal="true" aria-labelledby="dialogTitle"><div class="dialog"><div id="dialogLabel" class="overline">DAY RESULT</div><h2 id="dialogTitle">営業結果</h2><p id="dialogText"></p><img id="buildProgress" class="ending-photo hidden" alt="設備の工事中の店内" loading="lazy"><div id="dailyReport" class="report"></div><button id="next" class="widebtn">翌営業日へ</button><button id="undo" class="button-quiet" style="width:100%;margin-top:8px">この日の施策を選び直す</button></div></div><div id="dayTransition" class="veil opening-curtain hidden" role="dialog" aria-modal="true" aria-labelledby="transitionTitle" aria-describedby="transitionSubtitle"><section class="opening-card steady" id="transitionCard"><div class="opening-sparks" aria-hidden="true"><i style="--x:8%;--delay:0s;--c:#f2c36c"></i><i style="--x:19%;--delay:.12s;--c:#74be9c"></i><i style="--x:32%;--delay:.03s;--c:#f4d88a"></i><i style="--x:44%;--delay:.17s;--c:#e9ae5b"></i><i style="--x:57%;--delay:.1s;--c:#86cdb2"></i><i style="--x:69%;--delay:.23s;--c:#ffe1a0"></i><i style="--x:80%;--delay:.05s;--c:#f6b984"></i><i style="--x:92%;--delay:.18s;--c:#a8d6ba"></i></div><div class="opening-kicker" id="transitionKicker">まるまるスーパー　開店準備</div><div class="opening-progress" id="transitionProgress" aria-hidden="true"></div><h2 class="opening-day" id="transitionTitle">DAY 02 <small>/ 07</small></h2><div class="opening-title" id="transitionHeadline">開店準備が整いました！</div><p class="opening-subtitle" id="transitionSubtitle">昨日の施策が売場に反映されました。</p><p class="transition-decision" id="transitionDecision"></p><div class="audit-letter" id="transitionAudit" hidden></div><div class="opening-score"><div class="score-label" id="transitionScoreLabel">本日の日売上見込み</div><strong id="transitionScore">60万円</strong><small id="transitionTotal">前日比 ＋10万円</small></div><div class="opening-changes" id="transitionChanges" aria-label="施策による変化"></div><img class="opening-photo" id="transitionImage" alt="翌営業日のスーパーの店内写真" loading="eager"><p class="opening-caption" id="transitionCaption">昨日の選択が売場に反映されています。</p><button id="transitionContinue" class="widebtn opening-go" type="button">今日の営業を始める</button></section></div><footer class="footer">フィクションの短編Webゲーム F1 v0.19.7｜進行状況は端末内だけに保存。実在の企業・商品・個人とは無関係です。</footer></main>
 <script src="./store_scene_v018.js"></script><script>
 (()=>{'use strict';
 const $=id=>document.getElementById(id),initialMoney=120,labels=['レジ待ち','通路混雑','品切れ','店内騒音'],clamp=v=>Math.min(5,Math.max(0,v)),fmt=n=>(n>=0?'+':'')+n+'万円';
@@ -582,16 +589,28 @@ function renderComplaints(){
  $('complaintArchive').classList.toggle('hidden',!archived.length);
 }
 function ordinaryUnusualComplaints(){
-  if(!s.odd||seventhDayNormal())return [];
-  const count=s.odd>=3?10:s.odd===2?5:1;
-  const body=s.odd>=3?(s.day===8?'レジを出たのに、また最後尾に戻っています。いつになれば店を出られますか。':'レジのご案内が丁寧でした。ありがとうございました。'):
-    s.odd===2?'変な客がいます。':'レジの近くに、ずっと立っている人がいました。';
-  const names=s.odd>=3?
-    ['山本さん','松田さん','長谷川さん','山下さん','小林さん','池田さん','橋本さん','藤井さん','石川さん','前田さん']:
-    s.odd===2?['田村さん','山崎さん','木村さん','森さん','石井さん']:['仕事帰りの田村さん'];
-  return Array.from({length:count},(_,i)=>({id:'guest-'+s.day+'-'+i,customer:names[i],
-    body:s.day===8&&i===count-1?body+' 終わりはありますか。':body,
-    day:s.day,status:'open',metric:-1,replies:[],oddReview:true}));
+ if(!s.odd||seventhDayNormal())return [];
+ const count=s.odd>=3?10:s.odd===2?5:1;
+ const ordinary=s.odd>=3?'レジのご案内が丁寧でした。ありがとうございました。':
+   s.odd===2?'変な客がいます。':'レジの近くに、ずっと立っている人がいました。';
+ const humanDayLetters=[
+  'レジを出たのに、また最後尾に戻っています。いつになれば店を出られますか。',
+  '先ほどから番号札が私の名前を呼んでいます。名前は石に返したはずです。',
+  'おつりに昨日が四枚混ざっています。昨日は現金で数えられますか。',
+  'カートは空です。計量結果は八十八人と表示されています。',
+  '出口を出るとレジの内側に出ます。入口の裏側に入口はありますか。',
+  '冷凍食品が私の出勤時刻を冷やしています。溶けたらまた出勤ですか。',
+  '購入商品：石。数量：昨日。請求先：あなたの次の名前。',
+  '会計票：譁ｯ縺ｮ▣繧ｫ｡ ﾚｼﾞﾉｳﾗ▒▒　買った覚えはありません。',
+  '店内放送が私の声を先に使いました。私はまだ話していません。ﾓﾄﾞ□ﾅｲ',
+  'レジを出たのに、また最後尾に戻っています。まだ今日ですか。終わりはありますか。'
+ ];
+ const names=s.odd>=3?
+  ['山本さん','松田さん','長谷川さん','山下さん','小林さん','池田さん','橋本さん','藤井さん','石川さん','前田さん']:
+  s.odd===2?['田村さん','山崎さん','木村さん','森さん','石井さん']:['仕事帰りの田村さん'];
+ return Array.from({length:count},(_,i)=>({id:'guest-'+s.day+'-'+i,customer:names[i],
+  body:s.day===8?humanDayLetters[i]:ordinary,
+  day:s.day,status:'open',metric:-1,replies:[],oddReview:true}));
 }
 function renderAnomalyComplaints(target='finalAnomalyComplaints'){
  $(target).replaceChildren(...ordinaryUnusualComplaints().map(complaintNode));
@@ -743,15 +762,15 @@ function showDay8Opening(){
  for(let n=1;n<=7;n++){const tick=document.createElement('span');tick.className='done';$('transitionProgress').append(tick)}
  $('transitionDecision').textContent='週報の送信：完了 ／ 第8営業日（全7日）';
  $('transitionAudit').hidden=true;
- $('transitionScoreLabel').textContent='本日の日売上見込み';
- $('transitionScore').textContent='88万円';
- $('transitionTotal').textContent='今週の売上累計：'+(s.revenue+88)+'万円 ／ 入店客数0名';
+ $('transitionScoreLabel').textContent='本日の日売上見込';
+ $('transitionScore').textContent='88人';
+ $('transitionTotal').textContent='今週の売上累計：'+(s.revenue+88)+'人 ／ 来店客0名 ／ 会計：縺ｧ■繧ｫ件';
  $('transitionChanges').replaceChildren();
- for(const msg of ['会計88件','来店客0名']){const b=document.createElement('span');b.className='neutral';b.textContent=msg;$('transitionChanges').append(b)}
+ for(const msg of ['会計：譁ｯ繧ｶ??件','来店客：0名','石：88,888/5']){const b=document.createElement('span');b.className='neutral';b.textContent=msg;$('transitionChanges').append(b)}
  $('transitionImage').classList.remove('register-result');
  v09AttachFallback($('transitionImage'),'scene-day8-strange.webp');
  $('transitionImage').alt='新しい営業日のスーパーの店内';
- $('transitionCaption').textContent='本日の売場の状況を確認してください。';
+ $('transitionCaption').textContent='本日は営業しています。店の外に入らないでください。';
  $('transitionContinue').textContent='今日の営業を確認する';
  $('dayTransition').classList.remove('hidden');$('transitionContinue').focus();
 }
@@ -767,18 +786,18 @@ function renderDay8(preserveScroll=false){
  // A normal-looking work screen, but 人曜日 and the letters are already wrong.
  $('day8Title').textContent='DAY 08 / 07';
  $('day8Date').textContent='DAY 08 / 07 ｜ 人曜日';
- $('day8Attraction').textContent='10/10';
- $('day8Sales').textContent='88万円';
- $('day8Revenue').textContent=(s.revenue+88)+'万円';
- $('day8SceneStatus').textContent='営業中の売場';
- $('day8SceneCaption').textContent='本日の営業を確認してください。';
- $('day8FeedbackSummary').textContent='本日の新着 10件 ｜ 未解決 10件';
- $('day8IssueTag').textContent='未解決 10件';
+ $('day8Attraction').textContent='88,888/10';
+ $('day8Sales').textContent='88人';
+ $('day8Revenue').textContent=(s.revenue+88)+'人';
+ $('day8SceneStatus').textContent='営業中／退出済／営業中';
+ $('day8SceneCaption').textContent='お客様は0名です。お客様は全員、最後尾に並んでいます。';
+ $('day8FeedbackSummary').textContent='本日の新着 10件 ｜ 未解決 10件 ｜ 対応済み 88,888件';
+ $('day8IssueTag').textContent='未解決 −88件';
  $('day8ChoicePill').textContent='本日あと1件';
  $('day8ActionCount').textContent=s.day8Revealed?'10案から1つ':'まだ対応案がありません';
  $('day8ActionGuide').textContent=s.day8Revealed?'本日の対応を選んでください。':'届いたご意見の下線部分を調べてください。';
- $('day8Message').textContent='店内のレジは稼働していません。';
- $('day8Ledger').textContent='本部速報：売上88万円 ／ 会計88件 ／ 入店客数0名';
+ $('day8Message').textContent='レジはお客様に使われています。お客様は存在しません。閉店後は開店前です。';
+ $('day8Ledger').textContent='本部速報：日売上88人 ／ 会計 繧ｫﾞ■縺ｮ件 ／ 来店客0名 ／ 石 88,888';
  $('day8Next').classList.add('hidden');
  $('day8Offers').replaceChildren();
  if(s.day8Revealed){
@@ -788,13 +807,17 @@ function renderDay8(preserveScroll=false){
      b.onclick=advanceDay8;$('day8Offers').append(b);
    }
  }
- $('day8MoneyDetail').textContent='本部評価：売上のみ ／ 本日の入店客数0名';
+ $('day8MoneyDetail').textContent='本部評価：売上（単位：人） ／ 来店客0名 ／ 石は返品できません。';
  $('day8Panel').setAttribute('data-stage','0');
  $('brandIcon').textContent='🛒';
+ $('help').textContent='遊び方';
  $('day8Meters').replaceChildren();
- ['🧾','↔️','📦','🔊'].forEach((symbol,i)=>{
+ ['🪨','↔️','📦','🔊'].forEach((symbol,i)=>{
   const item=document.createElement('div');item.className='meterrow';
-  item.innerHTML='<span class="meter-name">'+symbol+' '+['最後尾','出口の数','供物の残数','呼び声'][i]+'</span><div class="bar"><div class="fill" style="width:'+[100,0,0,100][i]+'%"></div></div><b>'+['∞/5','−1/5','0/5','88/5'][i]+'</b>';
+  const names=['石','出口の内側','おつりの骨','呼び声'];
+  const values=['88,888/5','−∞/5','4444/5','818181/5'];
+  const widths=[340,0,225,410];
+  item.innerHTML='<span class="meter-name">'+symbol+' '+names[i]+'</span><div class="bar"><div class="fill" style="width:'+widths[i]+'%"></div></div><b>'+values[i]+'</b>';
   $('day8Meters').append(item);
  });
  $('day8Markers').replaceChildren();
@@ -803,8 +826,11 @@ function renderDay8(preserveScroll=false){
  $('day8Feedback').replaceChildren(...ordinaryUnusualComplaints().map(complaintNode));
  if(!preserveScroll)scrollTo(0,0);
 }
+function showDay8Help(){$('day8Help').classList.remove('hidden');$('day8HelpClose').focus()}
+function closeDay8Help(){$('day8Help').classList.add('hidden')}
 function advanceDay8(){
  if(!s.day8Active||s.finish||s.day8OpeningPending||!s.day8Revealed)return;
+ closeDay8Help();
  s.days.push({day:8,sales:0,bookSales:88});
  s.afterSales+=88;s.remaining+=8;
  s.day8Stage=1;s.day8Active=false;s.day8OpeningPending=false;
@@ -1541,7 +1567,7 @@ function finishPractice(){
  scrollTo(0,0);
 }
 function restart(){$('day0Panel').classList.add('hidden');$('dayTransition').classList.add('hidden');s=fresh();rollback=null;persist();$('intro').classList.add('hidden');$('overlay').classList.add('hidden');$('breakdown').open=false;render();scrollTo(0,0)}
-function showLanding(saved,review=false){$('day0Panel').classList.add('hidden');
+function showLanding(saved,review=false){$('day8Help').classList.add('hidden');$('help').textContent='遊び方';$('day0Panel').classList.add('hidden');
  $('dayTransition').classList.add('hidden');$('intro').classList.remove('hidden');$('game').classList.add('hidden');$('finalChoice').classList.add('hidden');$('day8Panel').classList.add('hidden');$('ending').classList.add('hidden');$('overlay').classList.add('hidden');$('help').classList.add('hidden');$('restart').classList.add('hidden');
  $('practiceAgain').classList.add('hidden');
  $('start').classList.remove('hidden');
@@ -1579,7 +1605,7 @@ function resumeCurrent(){$('day0Panel').classList.add('hidden');
  if(s.day===7&&s.days.length===7){if(s.odd>=3)beginDay8();else{normalEnding();persist();renderEnd()}return}
  render()
 }
-$('policyConfirmYes').onclick=acceptPlay;$('policyConfirmNo').onclick=cancelPlay;$('transitionContinue').onclick=v11CloseTransition;$('start').onclick=()=>startPractice(false);$('practiceAgain').onclick=()=>startPractice(true);$('day0Investigate').onclick=investigatePractice;$('day0Apply').onclick=applyPractice;$('day0Finish').onclick=finishPractice;$('resume').onclick=resumeCurrent;$('backToGame').onclick=resumeCurrent;$('help').onclick=()=>showLanding(true,true);$('startOver').onclick=()=>{if(!localStorage.getItem('f1-v10')||confirm('保存された営業記録を更新して、DAY 1から始めますか？'))restart()};$('restart').onclick=()=>showLanding(true,true);$('next').onclick=advance;$('undo').onclick=()=>{if(!rollback)return;s=JSON.parse(rollback);s.undoSnapshot=null;rollback=null;$('overlay').classList.add('hidden');persist();render()};$('day8Next').onclick=advanceDay8;window.__F1_DEBUG__={startPractice,investigatePractice,applyPractice,finishPractice,practiceStatus:()=>practiceStage,focus:(ticketId,excerpt)=>{
+$('policyConfirmYes').onclick=acceptPlay;$('policyConfirmNo').onclick=cancelPlay;$('transitionContinue').onclick=v11CloseTransition;$('start').onclick=()=>startPractice(false);$('practiceAgain').onclick=()=>startPractice(true);$('day0Investigate').onclick=investigatePractice;$('day0Apply').onclick=applyPractice;$('day0Finish').onclick=finishPractice;$('resume').onclick=resumeCurrent;$('backToGame').onclick=resumeCurrent;$('day8HelpClose').onclick=closeDay8Help;$('help').onclick=()=>{if(s.day8Active){showDay8Help();return}showLanding(true,true)};$('startOver').onclick=()=>{if(!localStorage.getItem('f1-v10')||confirm('保存された営業記録を更新して、DAY 1から始めますか？'))restart()};$('restart').onclick=()=>showLanding(true,true);$('next').onclick=advance;$('undo').onclick=()=>{if(!rollback)return;s=JSON.parse(rollback);s.undoSnapshot=null;rollback=null;$('overlay').classList.add('hidden');persist();render()};$('day8Next').onclick=advanceDay8;window.__F1_DEBUG__={startPractice,investigatePractice,applyPractice,finishPractice,practiceStatus:()=>practiceStage,focus:(ticketId,excerpt)=>{
   const tickets=[...f17ShrineComplaint(),...f19ProductComplaint(),...ordinaryUnusualComplaints(),...(s.complaintTickets||[])];
   const ticket=tickets.find(t=>t.id===ticketId);
   const segment=ticket&&focusSegments(ticket).find(p=>p.text===excerpt);
