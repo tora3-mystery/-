@@ -334,7 +334,7 @@ function reporterEndingNote(){
   }
  }
  const byPerson=Object.fromEntries(REPORTERS.map(([id])=>[id,appearances.filter(x=>x.person===id)]));
- const successes=appearances.filter(x=>x.rule).map(x=>({
+ const successes=appearances.filter(x=>x.rule&&(x.weight===3||new Set(byPerson[x.person].map(y=>y.day)).size>=2)).map(x=>({
   ...x,score:x.weight+byPerson[x.person].reduce((sum,item)=>sum+item.weight,0)*.3+x.day*.02
  }));
  successes.sort((a,b)=>b.score-a.score||b.day-a.day||a.person.localeCompare(b.person));
@@ -343,9 +343,9 @@ function reporterEndingNote(){
   const unfinished=[];
   for(const [person,items] of Object.entries(byPerson)){
    const failed=items.filter(x=>s.outcomes[x.domain]==='failed');
-   if(failed.length<2||new Set(failed.map(x=>x.day)).size<2)continue;
+   if(failed.length<3||new Set(failed.map(x=>x.day)).size<3)continue;
    const score=failed.reduce((v,x)=>v+x.weight,0);
-   if(score>=5)unfinished.push({person,score,...failed[failed.length-1]});
+   if(score>=8)unfinished.push({person,score,...failed[failed.length-1]});
   }
   unfinished.sort((a,b)=>b.score-a.score||b.day-a.day||a.person.localeCompare(b.person));
   picked=unfinished[0];
