@@ -169,18 +169,26 @@ const thirdParty=(targetId,gid,state,action)=>{
  const introRoll=(((Math.imul(seed^0x2b992ddf,3266489917)>>>0)%1000)/1000);
  const spontaneousIntro=introEligible&&introRoll<Math.min(.6,.13+trait.expressiveness*.1);
  let words;
- if(sceneMode(gid)==='performance'){
-  words=yr===1&&targetYear>1?'今のところ、自分ももう一回聴いてみたいです。':
-   yr===1?'今のところ、もう一回聴きたいね。':
-   action==='question'?'今の演奏の話なら、私も少し聞いてみたいな。':'今の一小節、もう一度合わせてみようか。';
+ if(action==='photo'){
+  words=yr===1&&targetYear>1?'先輩、写真を上げるときって公開範囲も決められるんですね。':
+   yr===1?'あ、私も写真を見ることはあるよ。':
+   '投稿を見るだけの人もいるし、使い方はそれぞれだよね。';
+ }else if(action==='contact'){
+  words=yr===1&&targetYear>1?'自分も、もう少し話してから聞いてみようと思います。':
+   yr===1?'連絡先、交換するかまだ迷ってるんだよね。':
+   '連絡先の交換って、急いで決めなくても大丈夫だよ。';
+ }else if(sceneMode(gid)==='performance'){
+  words=yr===1&&targetYear>1?'さっきの演奏、自分ももう一度聴いてみたいです。':
+   yr===1?'今のところ、もう一回聴いてみたいね。':
+   action==='question'?'演奏についてなら、私も少し聞いてみたいな。':'今の一小節、もう一度合わせてみようか。';
  }else if(yr===1&&targetYear>1){
   words=action==='question'?nickname+'、自分もそこが気になってました。':
-   'あ、自分も今の話、聞いてみたかったです。';
+   'そうなんですね。自分も話を聞いてみたかったです。';
  }else if(yr===1){
   words=action==='question'?'それ、私も気になってた。':'あ、同じこと考えてた。';
  }else if(targetYear===1){
-  words=action==='question'?'最初は分からないよね。聞いてくれて大丈夫だよ。':
-   'そうそう、無理に今日決めなくていいよ。';
+  words=action==='question'?'初めてだと分からないよね。聞いてくれて大丈夫だよ。':
+   'そうそう、気になったことは聞いていいんだよ。';
  }else words=action==='question'?nickname+'、そこは私も確認しておきたい。':
   'なるほど。それは少し気になるね。';
  const nameLine=spontaneousIntro?selfIntroduction(id,state,'bystander'):'';
