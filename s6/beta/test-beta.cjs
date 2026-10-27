@@ -325,7 +325,7 @@ check('all 24 curated SNS posts preserve source visibility and factual schedulin
  }
  const b=newPlayer();b.click('skip');b.click('night-sns','Photogram');
  assert.match(b.html,/こもれびは水曜のお茶会から/);
- assert.match(b.html,/曲が終わったあとの一拍/);
+ assert.match(b.html,/今日は静かな曲/);
 });
 check('Photogram requires a face-to-face follow request, independently from TINE',()=>{
  const SNS=dataScope.window.S6_BETA_SOCIAL.accounts;
@@ -574,7 +574,7 @@ check('vocaloid clues are available without visiting the correct circle',()=>{
  s.click('skip');s.click('night-board');
  assert.match(s.html,/普段の音楽活動と/);
  s.click('back-night');s.click('night-sns','Photogram');
- assert.match(s.html,/一拍/);
+ assert.match(s.html,/静かな曲/);
  assert.doesNotMatch(s.html,/余白ラムネ.*西園寺紬/);
 });
 check('producer line and listening clue are heard only in the actual circle',()=>{
@@ -597,6 +597,17 @@ check('found ending reflects real peer contact and prior identity match',()=>{
  s.click('choose-camp','K');s.click('meet-producer');
  assert.match(s.html,/覚えていた顔と名前/);
  assert.match(s.html,/新歓でも会話した相手/);
+});
+check('Friday recap remembers Wednesday visit even after other days',()=>{
+ const s=newPlayer();
+ for(let i=0;i<2;i++){s.click('skip');s.click('next-day')}
+ visit(s,'E05','E05-A');
+ s.click('back-venue');s.click('finish-venue');
+ s.click('next-day');s.click('skip');s.click('next-day');
+ s.click('skip');s.click('next-day');
+ assert.equal(s.state.phase,'camp');
+ assert.ok(s.state.groupVisitHistory.includes('E05-A'));
+ assert.match(s.html,/こもれびの演奏で、曲の終わりに一拍/);
 });
 check('old S6 beta saves do not mix stalking and producer narratives',()=>{
  const cache=new Map();
