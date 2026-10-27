@@ -472,4 +472,60 @@ check('a second conversation in the same circle is not a same-day accidental reu
  assert.match(s.state.groupLog['E01-A'][1].text,/さっきの話|そうそう/);
  assert.doesNotMatch(s.state.groupLog['E01-A'][1].text,/前に来たとき|また会ったね/);
 });
+
+check('first direct talk is a real first meeting, not an accidental reunion',()=>{
+ const s=newPlayer();visit(s,'E01','E01-A');
+ s.click('action-menu','talk');s.click('act-target','P003');
+ const first=s.state.groupLog['E01-A'][0].text;
+ assert.match(first,/神谷杏奈/);
+ assert.doesNotMatch(first,/あ、また会ったね|あ、また会えた|この前はどうも|この前もいたよね|前にも話したよね/);
+ assert.ok(s.state.interacted.includes('P003'));
+});
+check('P001 pre-entry clue appears on first talk and is not repeated',()=>{
+ const s=newPlayer();
+ for(let i=0;i<2;i++){s.click('skip');s.click('next-day')}
+ visit(s,'E05','E05-A');
+ s.click('action-menu','talk');s.click('act-target','P001');
+ const first=s.state.groupLog['E05-A'][0].text;
+ assert.match(first,/西園寺紬/);assert.match(first,/入学前から/);
+ s.click('action-menu','talk');s.click('act-target','P001');
+ const second=s.state.groupLog['E05-A'][1].text;
+ assert.doesNotMatch(second,/入学前から/);
+});
+check('all 88 questions match the seniority of the target',()=>{
+ const E=dataScope.window.S6_BETA_DIALOGUE;
+ const people=new Map(D.people.map(p=>[p.person_id,p]));
+ let seniors=0,peers=0;
+ for(const q of D.questions){
+  const rendered=E.questionText(q);
+  assert.ok(rendered.length>5);
+  if(Number(people.get(q.target_id).year)>1){
+   seniors++;assert.match(rendered,/ですか？|ますか？/);
+   assert.doesNotMatch(rendered,/何が大事？|してるの？|って誰？|を聴く？|教えて。/);
+  }else{peers++;assert.equal(rendered,q.question)}
+ }
+ assert.equal(seniors,87);assert.equal(peers,1);
+});
+check('all fourteen value questions receive an actual meaningful answer',()=>{
+ const E=dataScope.window.S6_BETA_DIALOGUE;
+ const items=D.questions.filter(q=>q.question.includes('何が大事'));
+ assert.equal(items.length,14);
+ for(const q of items){
+  const answer=E.answer(q.target_id,q.group_id,'question').text;
+  assert.ok(answer.length>=20,q.group_id);
+  assert.doesNotMatch(answer,/中心かな。.*担当|中心かな。.*やってるよ/);
+ }
+});
+check('the mismatched performance descriptions match the actual instruments',()=>{
+ const E=dataScope.window.S6_BETA_DIALOGUE;
+ assert.match(E.sceneActivity('E04-B'),/ギターとドラム/);
+ assert.match(E.sceneLine(D.lines.find(x=>x.group_id==='E04-B'&&x.speaker_id==='P009')),/ギターから/);
+ assert.match(E.listenText('E04-B'),/ギター/);
+ assert.match(E.listenText('E06-C'),/ベース/);
+ assert.match(E.listenText('E07-C'),/ベース/);
+ assert.match(E.listenText('E11-B'),/ギターとサックス/);
+ assert.match(E.listenText('E11-C'),/ドラム/);
+ assert.match(E.sceneLine(D.lines.find(x=>x.group_id==='E03-C'&&x.speaker_id==='P027')),/伴奏の余白/);
+});
+
 console.log(JSON.stringify({passed:total,failed:failures}));if(failures)process.exitCode=1;
