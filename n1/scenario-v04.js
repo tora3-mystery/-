@@ -131,6 +131,26 @@
       publicDetail: old.spec || '',
       spec: old.spec || ''
     });
+    if(opts.productAssignments){
+      const products=opts.productAssignments;
+      const sourceId=q.legacyIndex===8?1:q.legacyIndex===11?7:q.legacyIndex;
+      const chosen=products[sourceId];
+      if(chosen){
+        const origMode=q.mode;
+        q.item=chosen.name;q.source=chosen.source;q.spec=chosen.details;
+        q.publicDetail=chosen.details;q.detail='';
+        q.resultDetail=chosen.details;q.emoji=chosen.emoji||'🛍️';
+        q.truth=chosen.price;q.unit='円';q.type='yen';
+        q.imageKey=chosen.imageKey;q.productId=chosen.id;
+        q.speechName=chosen.speechName;q.displayName=chosen.name;
+        if(q.legacyIndex===1)q.zone=[Math.round(chosen.price*1.25),Math.round(chosen.price*2)];
+        else if(q.legacyIndex===5)q.zone=[Math.round(chosen.price*.65),Math.round(chosen.price*.85)];
+        else if(q.legacyIndex===11)q.zone=[Math.round(chosen.price*.6),Math.round(chosen.price*.87)];
+        else q.zone=[chosen.price,chosen.price];
+        q.mode=[2,7,8].includes(q.legacyIndex)?'facts':'social';
+        q.explain='商品カードの正式名称・型番と、回答後に表示する出典を確認。';
+      }
+    }
     // Important: content stored in .detail must never be reused by a pre-answer UI.
     q.detail = '';
     q.resultTitle = old.item || '';
@@ -183,32 +203,26 @@
       q.cardType = 'none';
     }
     if (q.legacyIndex === 9) {
-      // Public history card: no answer year, no year-bearing official detail.
-      q.cardType = 'history';
+      q.cardType='history';
+      q.detail='';q.spec='';
       if(Number.isInteger(opts.landmarkIndex)){
-        const l=LANDMARKS_POOL[opts.landmarkIndex%LANDMARKS_POOL.length];
-        q.item=l.name;
-        q.truth=l.year;q.zone=[l.year,l.year];
-        q.emoji=l.emoji;q.source=l.source;
-        q.speech='これって何年に'+l.event+'したと思う？';
-        q.context=l.clue;
-        q.hint='ヒント：'+l.clue+' 建設や開業した時代を考えてみよう。';
-        q.explain='完成・開通・開業など、質問で指定した出来事の年が正解。';
-        q.resultDetail=l.detail;
-        q.resultTitle=q.item;
-        q.slot='街の歴史';
-        q.publicDetail='施設名と会話を手掛かりに考えてみよう。';
+        const pool=LANDMARKS_POOL.concat(root.N1Catalog?.newLandmarks||[]);
+        const l=pool[opts.landmarkIndex%pool.length];
+        q.item=l.name;q.truth=l.year;q.zone=[l.year,l.year];q.emoji=l.emoji;
+        q.source=l.source;q.speech='これって何年に'+l.event+'したと思う？';
+        q.context=l.clue;q.hint='ヒント：'+l.clue+'。年月を絞り込む追加資料は残っていない。';
+        q.explain='完成・開通・開業など、指定した出来事の年を答える。';
+        q.resultDetail=l.detail;q.resultTitle=l.name;q.slot='街の歴史';
+        q.publicDetail='施設名と会話を手掛かりに年代を考えてみよう。';
+      }else{
+        q.publicDetail='施設名と会話を手掛かりに、竣工・開業の時代を推理してみよう。';
+        q.hint=[
+          '赤レンガ駅舎の開業は大正時代。復原工事とは別。',
+          '工期は長く完成は昭和初期。',
+          '東京オリンピックより前の高度成長期。'
+        ][variation];
+        q.resultDetail=old.detail||'回答後に史実を表示。';
       }
-      q.publicDetail = '建物の名前と会話を手掛かりに、竣工・開業の時代を推理してみよう。';
-      q.detail = '';
-      q.spec = '';
-      q.hint = [
-        '赤レンガ駅舎の開業は大正時代。近年の復原工事の年ではない。',
-        '着工は大正時代。工事期間は長く、完成は昭和初期。',
-        '高度経済成長の入口に完成。東京オリンピックより前。'
-      ][variation];
-      q.resultDetail = old.detail || '回答後に史実の詳細を表示。';
-      q.explain = '開業・竣工・復原を混同しないこと。年を答えた後で施設の公式説明を確認できる。';
     }
     if (q.legacyIndex === 8) {
       const discount = opts.discountRate||[25,30,40][variation];
@@ -235,16 +249,16 @@
     }
     if(q.legacyIndex===5) q.context='藤野さんは紙袋を何種類も手に取り、「これ、箱に入れた方がいいかな」と迷っている。';
     if (q.legacyIndex === 1) {
-      q.context = '梅田「' + informalProductName(q.item) + 'を買ったんだ。実物、けっこう良くない？」と満足そう。';
+      q.context = '梅田「' + q.speechName + 'を買ったんだ。実物、けっこう良くない？」と満足そう。';
       q.hint = 'この商品のメーカー公式の通常価格を基準にした買い物。梅田は「価格以上の買い物」を褒めてもらいたい。';
     }
-    q.speechName = informalProductName(q.item);
+    q.speechName = q.speechName || informalProductName(q.item);
     q.displayName = q.item;
     if (q.legacyIndex === 2) {
       q.context = '新井「' + q.speechName + 'だよ。セールとかポイント還元はナシでね」';
     }
     if (q.legacyIndex === 8) {
-      q.speech = '梅田さんが買った' + informalProductName(q.item) + '、今' + q.discountRate + '%OFFなんだって。いくらだと思う？';
+      q.speech = '梅田さんが買った' + q.speechName + '、今' + q.discountRate + '%OFFなんだって。いくらだと思う？';
     }
     if (q.legacyIndex === 7) {
       q.context = '庄司「妻への贈り物に' + q.speechName + 'を考えていまして。少し予算が気になって……」';
@@ -260,7 +274,7 @@
     for(let day=0;day<4;day++)if((opts.daySwapMask||0)&(1<<day)){
       const i=2*day;[order[i],order[i+1]]=[order[i+1],order[i]];
     }
-    const purchasePrice=legacyBuild(1,legacyPicks[1],legacyPicks).truth;
+    const purchasePrice=opts.productAssignments?.[1]?.price ?? legacyBuild(1,legacyPicks[1],legacyPicks).truth;
     const questions=order.map((id,i)=>upgrade(legacyBuild(id,legacyPicks[id],legacyPicks),i,legacyPicks[id],{...opts,purchasePrice}));
     const pairs = [];
     for (let i = 0; i < 5; i++) pairs.push(questions.slice(2*i,2*i+2));
