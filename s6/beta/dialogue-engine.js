@@ -86,7 +86,7 @@ function talk(id,gid,state,knownBefore){
 }
 function answer(id,gid,kind){
  const p=people[id],q=D.questions.find(x=>x.group_id===gid&&x.target_id===id);
- if(kind==='question'&&q)return {text:plain(Story.questionAnswers[gid+'|'+id]||importantAnswers[gid]&&/今日の活動では何が大事/.test(q.question)?importantAnswers[gid]:q.answer),reveals:q.reveals||'',kind:'question'};
+ if(kind==='question'&&q)return {text:plain(Story.questionAnswers[gid+'|'+id]||(importantAnswers[gid]&&/今日の活動では何が大事/.test(q.question)?importantAnswers[gid]:q.answer)),reveals:q.reveals||'',kind:'question'};
  const voice=P.people[id]?.voice||'soft';
  if(p.year==='1'){
   const msg=voice==='reserved'||voice==='precise'?'まだ決めてないんだ。いくつか見比べてる。':
