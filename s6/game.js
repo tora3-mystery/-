@@ -5,7 +5,7 @@
   const SAVE_KEY = 's6-case-a-v03-save';
   const AUTO_KEY = 's6-case-a-v03-auto';
   const META_KEY = 's6-case-a-v03-meta';
-  const BUILD_AT = '2026-10-27 11:23 JST';
+  const BUILD_AT = '2026-10-27 11:33 JST';
   const DAYS = [
     ['2026-04-06','4月6日 月曜'],['2026-04-07','4月7日 火曜'],
     ['2026-04-08','4月8日 水曜'],['2026-04-09','4月9日 木曜'],
@@ -102,7 +102,7 @@
   };
   const lunch=()=>{
     const date=currentDate(),list=D.recurring.filter(x=>x.date===date),talked=S.lunchTalked[date]||[],prior=S.lunchPreState[date]||{};
-    return '<p class="eyebrow">LUNCH / '+esc(date)+'</p><h2>学食前ですれ違う</h2><p class="subtle">この場では顔が見える。まだ紹介されていない人の名前は表示しない。今日は二人まで話せる。</p>'+(S.lunchMessage?note(esc(S.lunchMessage)):'')+'<p class="score">会話 '+talked.length+' / 2 人</p><div class="person-list">'+list.map(x=>'<div class="person-card">'+photo(x.person_id,{venue:true})+'<div><div class="name">'+esc(knownName(x.person_id))+'</div><div class="small">'+esc(pmap[x.person_id].appearance)+'</div>'+(talked.includes(x.person_id)?'<span class="chip">会話済み</span>':talked.length<2?btn('話しかける','lunch-talk','data-pid="'+x.person_id+'"','tiny'):'<span class="chip dim">今日は見かけた</span>')+'</div></div>').join('')+'</div><div class="btnrow">'+btn('新歓を選ぶ','back-lunch','','')+'</div>';
+    return '<p class="eyebrow">LUNCH / '+esc(date)+'</p><h2>学食前ですれ違う</h2><p class="subtle">この場では顔が見える。まだ紹介されていない人の名前は表示しない。今日は二人まで話せる。</p>'+(S.lunchMessage?note(esc(S.lunchMessage)):'')+'<p class="score">会話 '+talked.length+' / 2 人</p><div class="person-list">'+list.map(x=>'<div class="person-card">'+photo(x.person_id,{venue:true})+'<div><div class="name">'+esc(knownName(x.person_id))+'</div><div class="small">'+esc(publicAppearance(x.person_id))+'</div>'+(talked.includes(x.person_id)?'<span class="chip">会話済み</span>':talked.length<2?btn('話しかける','lunch-talk','data-pid="'+x.person_id+'"','tiny'):'<span class="chip dim">今日は見かけた</span>')+'</div></div>').join('')+'</div><div class="btnrow">'+btn('新歓を選ぶ','back-lunch','','')+'</div>';
   };
   const venue=()=>{
     const e=emap[S.eventId], groups=D.groups.filter(g=>g.event_id===e.event_id);
@@ -138,14 +138,41 @@
     F:['機材の扱いは細かく確認するけど、見学は自由だよ。','知らない曲でも、ライブで聴くと印象が変わるよ。','次に音を出すときは、耳を守る準備も忘れずに。'],
     N:['今週は新しい顔をたくさん見たね。','どこの新歓が気になった？','またどこかで会えたら話そう。']
   };
+
+  // 人物本人の関心事を軸にした、短い日常の連絡。特定CASEの真相の証拠には使わない。
+  const PERSON_TINE={
+    P001:['飲み物、温かいものと冷たいものならどちらがいい？','こもれびの人数は少ないけど、見学はいつでも大丈夫だよ。'],
+    P002:['今作っている曲、まだサビの入りが決まらなくて。','未完成の曲を人に聴かせるの、少し緊張するね。'],
+    P003:['昨日の受付、案内が多くて慌ただしかったね。','見学の日程がかぶっていたら遠慮なく相談して。'],
+    P004:['デモの公開範囲は各自で選ぶ方針だよ。','制作の途中を誰かに聴かせるのも勉強になるね。'],
+    P005:['セッション、途中からでも入ってよかったんだよ。','ドラムのテンポに合わせなくても、ゆっくり戻せるよ。'],
+    P006:['あっちのサークルで聴く鍵盤と、こっちでは印象が違う。','同じ曲でも編成が変わると面白いね。'],
+    P007:['ギターの音作り、団体が違うと結構変わるんだよ。','知っている曲でも別のメンバーと弾くと違うね。'],
+    P008:['ベースを少し引くだけで、曲の雰囲気が変わるんだ。','次はリズム隊の音も聴いてみて。'],
+    P009:['404もJAMBOXも、音を合わせるときはよく聴くのが大事。','ドラムの席から見ると、みんな結構違って見えるよ。'],
+    P010:['歌いたい曲が決まらなかったら、一緒に探そう。','声を出さずに音を聴く日があってもいいと思う。'],
+    P011:['こもれびでは、弾く前に少し話してもいいんだ。','アコースティックだと、手元の音がよく聴こえるね。'],
+    P012:['打楽器は派手じゃなくても曲を支えられるよ。','小さな音を重ねるのも好きなんだ。'],
+    P013:['まだどの団体にするか迷ってる。そっちはどう？','同期でまた会えると、ちょっと安心するね。'],
+    P014:['ドラムが置いてある会場、どこも少しずつ違うね。','今日、ほかの新歓も見に行った？'],
+    P015:['鍵盤のある部屋、もう少し見てみたいな。','まだ決めないで見学するのもありだよね。'],
+    P016:['ベースを始めたばかりだけど、続けてみたい。','次に会ったら、どの音がよかったか教えて。'],
+    P018:['会場の噂は気にしなくていいから、音を聴いて判断して。','学外の練習でも安全確認はちゃんとするよ。']
+  };
   const tineMessages=()=>{
     const ids=Object.entries(S.person).filter(([id,p])=>p.met&&p.introduced&&Array.isArray(p.contacts)&&p.contacts.includes('TINE')&&amap[id+'|TINE']).map(([id])=>id);
     if(!ids.length)return [];
-    const start=S.day%ids.length;
-    return Array.from({length:Math.min(2,ids.length)},(_,i)=>{
-      const pid=ids[(start+i)%ids.length];
-      const lines=TINE_LINES[pmap[pid].primary_org]||TINE_LINES.N;
-      return {pid,text:lines[S.day%lines.length]};
+    const priorReplies=new Set(Object.entries(S.replyLog||{}).filter(([date])=>date<currentDate()).map(([,pid])=>pid));
+    const order=ids.sort((a,b)=>Number(priorReplies.has(b))-Number(priorReplies.has(a))||a.localeCompare(b));
+    const selected=order.slice(S.day%order.length).concat(order.slice(0,S.day%order.length)).slice(0,2);
+    return selected.map(pid=>{
+      const p=ps(pid), lines=PERSON_TINE[pid]||TINE_LINES[pmap[pid].primary_org]||TINE_LINES.N;
+      const main=lines[S.day%lines.length];
+      const lastGroup=p.lastGroup&&gmap[p.lastGroup];
+      const reminder=lastGroup&&p.lastInteraction==='question'&&S.contactSince?.[pid]!==currentDate()?
+        '前に「'+lastGroup.group_title+'」で聞いてくれた話、覚えているよ。 ':'';
+      const followUp=priorReplies.has(pid)?'この前は返信ありがとう。 ':S.contactSince?.[pid]===currentDate()?'連絡先ありがとう。 ':'';
+      return {pid,text:followUp+reminder+main};
     });
   };
   const tineFeed=()=>{
@@ -154,7 +181,7 @@
     const replied=S.replyLog?.[currentDate()];
     const rows=messages.map(({pid,text:body})=>
       '<div class="document"><strong>'+esc(knownName(pid))+' / TINE</strong><p>'+esc(body)+'</p>'+
-      (replied===pid?'<span class="chip">返信済み</span>':replied?'':
+      (replied===pid?'<span class="chip">返信しました</span>':replied?'':
         btn('短く返信する','reply-contact','data-pid="'+esc(pid)+'"','tiny'))+'</div>'
     ).join('');
     return '<div class="card soft"><h3>知り合いからの連絡</h3><p class="subtle">連絡先を交換した人との日常のやり取り。返信は今夜一人まで、調査回数には含まれません。</p>'+rows+'</div>';
@@ -237,7 +264,7 @@
     const autoFacts=D.marks.filter(m=>m.person_id===id&&S.discoveredFacts.includes(m.trigger_fact_id)).map(m=>D.facts.find(f=>f.fact_id===m.trigger_fact_id));
     const reason=autoFacts.length?autoFacts.map(f=>'<div class="notice"><strong>？の理由：</strong>'+esc(f.ambiguous_fact)+'<br><span class="subtle">通常の読み方：'+esc(f.ordinary_reading)+'</span></div>').join(''):'<p class="subtle">自動「？」の理由はありません。</p>';
     const st=['見かけた','会話した','名前を聞いた','交換を依頼','連絡先交換','顔・氏名・SNSを照合'].map((x,i)=>'<span class="chip '+([p.seen,p.met,p.introduced,p.contact_requested,p.contact_exchanged,p.identity_confirmed][i]?'':'dim')+'">'+x+'</span>').join('');
-    return '<p class="eyebrow">NOTEBOOK / PERSON</p><h2>'+esc(knownName(id))+'</h2><div class="card"><div style="display:flex;gap:14px;align-items:center">'+photo(id,{large:true})+'<div><div class="chips">'+st+'</div><p class="subtle">'+esc(p.seen?base.appearance:'顔はまだ見ていない')+'</p></div></div>'+reason+'<div class="btnrow">'+btn(p.bookmark?'★を外す':'★を付ける','bookmark','data-pid="'+id+'"','secondary')+(p.introduced&&p.contact_exchanged&&!p.identity_confirmed?btn('顔・氏名・SNSを照合','confirm-identity','data-pid="'+id+'"','secondary'):'')+'</div><div class="form-row"><label for="hypothesis">仮説（事実とは別）</label><select id="hypothesis"><option>未設定</option><option>気になる</option><option>協力を頼める</option><option>保留</option></select></div><div class="form-row"><label for="personNote">自由メモ</label><textarea id="personNote" maxlength="2000" placeholder="覚えておきたいこと">'+esc(p.note)+'</textarea></div>'+btn('メモを保存','save-person','data-pid="'+id+'"','')+'</div><div class="btnrow">'+btn('人物一覧へ','back-notebook','','ghost')+'</div>';
+    return '<p class="eyebrow">NOTEBOOK / PERSON</p><h2>'+esc(knownName(id))+'</h2><div class="card"><div style="display:flex;gap:14px;align-items:center">'+photo(id,{large:true})+'<div><div class="chips">'+st+'</div><p class="subtle">'+esc(p.seen?publicAppearance(id):'顔はまだ見ていない')+'</p></div></div>'+reason+'<div class="btnrow">'+btn(p.bookmark?'★を外す':'★を付ける','bookmark','data-pid="'+id+'"','secondary')+(p.introduced&&p.contact_exchanged&&!p.identity_confirmed?btn('顔・氏名・SNSを照合','confirm-identity','data-pid="'+id+'"','secondary'):'')+'</div><div class="form-row"><label for="hypothesis">仮説（事実とは別）</label><select id="hypothesis"><option>未設定</option><option>気になる</option><option>協力を頼める</option><option>保留</option></select></div><div class="form-row"><label for="personNote">自由メモ</label><textarea id="personNote" maxlength="2000" placeholder="覚えておきたいこと">'+esc(p.note)+'</textarea></div>'+btn('メモを保存','save-person','data-pid="'+id+'"','')+'</div><div class="btnrow">'+btn('人物一覧へ','back-notebook','','ghost')+'</div>';
   };
   const weekReflection=()=>{
     const visited=Array.isArray(S.eventHistory)?S.eventHistory:[];
@@ -337,7 +364,7 @@
       const date=currentDate(),talked=(S.lunchTalked[date]??=[]),x=D.recurring.find(x=>x.date===date&&x.person_id===id);
       if(!x||talked.includes(id)||talked.length>=2)return;
       const prior=S.lunchPreState[date]?.[id]||{seen:false,met:false};
-      const p=ps(id);p.seen=true;p.met=true;p.introduced=true;p.clearPortrait=true;
+      const p=ps(id);p.seen=true;p.met=true;p.introduced=true;p.clearPortrait=true;p.encounterCount=(p.encounterCount||0)+1;
       S.lunchMessage=prior.met?x.reunion_line:prior.seen?x.seen_only_line+' '+pmap[id].name+'です。'+x.new_contact_line:pmap[id].name+'です。'+x.new_contact_line;
       talked.push(id);saveAndRender();return;
     }
@@ -369,8 +396,13 @@
         const prior=ms.map(m=>({pid:m.person_id,...(S.preEventState[m.person_id]||{seen:false,met:false,contact:false})}));
         const again=prior.find(x=>x.contact)||prior.find(x=>x.met)||prior.find(x=>x.seen);
         const condition=again?.contact?'contact_exchanged_before_this_event':again?.met?'met_before_this_event':again?.seen?'seen_only_before_this_event':'';
-        S.reunionText=condition?D.reunions.find(r=>r.group_id===gid&&r.person_id===again.pid&&r.condition===condition)?.line||'':'';
-        ms.forEach(m=>{ps(m.person_id).seen=true;ps(m.person_id).met=true;ps(m.person_id).clearPortrait=true});
+        const baseLine=condition?D.reunions.find(r=>r.group_id===gid&&r.person_id===again.pid&&r.condition===condition)?.line||'':'';
+        const previousGroup=again&&S.person[again.pid]?.lastGroup;
+        const remembered=previousGroup&&previousGroup!==gid&&again.met?
+          (knownName(again.pid)==='名前未確認'?'前に話した人':knownName(again.pid))+
+          'は、前に会った「'+gmap[previousGroup].group_title+'」のことを覚えていた。':'';
+        S.reunionText=[remembered,baseLine].filter(Boolean).join(' ');
+        ms.forEach(m=>{const p=ps(m.person_id);p.seen=true;p.met=true;p.clearPortrait=true;p.lastGroup=gid;p.encounterCount=(p.encounterCount||0)+1});
         const first=D.lines.find(l=>l.group_id===gid&&l.introduced_effect==='speaker_self_intro');
         if(first)ps(first.speaker_id).introduced=true;
         S.groupReunions??={};S.groupReunions[gid]=S.reunionText;
@@ -387,14 +419,14 @@
     if(act==='back-group'){S.phase='group';saveAndRender();return}
     if(act==='ask-person'){
       const q=D.questions.find(q=>q.group_id===S.activeGroup&&q.target_id===id);if(!q)return;
-      ps(id).introduced=true;S.groupActions[S.activeGroup]='question';S.groupResult=q.answer;
+      ps(id).introduced=true;ps(id).lastInteraction='question';S.groupActions[S.activeGroup]='question';S.groupResult=q.answer;
       S.phase='group';saveAndRender();return;
     }
     if(act==='contact-person'){
       const platform=el.dataset.platform||'TINE',a=amap[id+'|'+platform],p=ps(id);
       const policy=D.contactChannels.find(c=>c.group_id===S.activeGroup&&c.person_id===id&&c.platform===platform)?.approval_policy;
       if(!a||!policy){S.groupResult='この連絡手段では交換できない。';S.phase='group';saveAndRender();return}
-      p.contact_requested=true;p.introduced=true;
+      p.contact_requested=true;p.introduced=true;p.lastInteraction='contact';
       S.groupActions[S.activeGroup]='contact';
       const intro=pmap[id].name+'と名前を確かめた。';
       if(p.contacts.includes(platform)){
