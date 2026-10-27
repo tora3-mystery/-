@@ -17,7 +17,7 @@ function auditHumanDecisions(html){
   const document={body:node(),createElement:node,getElementById:id=>{if(!nodes.has(id))nodes.set(id,node());return nodes.get(id)}};
   const localStorage={getItem:k=>memory.get(k)||null,setItem:(k,v)=>memory.set(k,v)},window={};
   new Function('document','window','localStorage','scrollTo','confirm',game)(document,window,localStorage,()=>{},()=>true);
-  return window.__F1_DEBUG__;
+  window.__F1_DEBUG__.getTestNode=document.getElementById;return window.__F1_DEBUG__;
  }
  const api=init(),personas=[
   {name:'売上の改善幅を最優先',gray:false,rev:1.15,cust:.3,risks:.3},
@@ -44,11 +44,34 @@ function auditHumanDecisions(html){
     return {action:a,score};
    }).sort((a,b)=>b.score-a.score||a.action.id.localeCompare(b.action.id));
  }
+ function inspectFeedback(state,tried){
+  const names=['レジ待ち','通路','品切れ','店内騒音'],inspected=new Set();
+  for(let attempt=0;attempt<3;attempt++){
+   const cards=[...api.getTestNode('complaintBoard').children,...api.getTestNode('complaintExtraBody').children];
+   const candidates=[];
+   for(const card of cards){
+    const label=card.children[0]?.children[1]?.textContent||'';
+    const metric=names.findIndex(name=>label.startsWith(name));
+    const elems=(card.children[1]?.children||[]).filter(x=>x.className==='complaint-focus'&&!x.disabled);
+    for(const btn of elems){
+     const key=label+':'+btn.textContent;
+     if(tried.has(key))continue;
+     const urgency=metric<0?0:state.vals[metric],diversity=inspected.has(metric)?-60:0;
+     candidates.push({btn,key,metric,score:urgency*10+diversity});
+    }
+   }
+   if(!candidates.length)break;
+   candidates.sort((a,b)=>b.score-a.score||a.key.localeCompare(b.key));
+   const chosen=candidates[0];tried.add(chosen.key);inspected.add(chosen.metric);
+   chosen.btn.onclick();
+  }
+ }
  function run(p,alternateDay){
-  api.restart();const decisions=[];
+  api.restart();const decisions=[],tried=new Set();
   for(let day=1;day<=7;day++){
    const state=api.getState();if(state.finish)break;
-   const choices=ranked(state,p);if(!choices.length)throw Error('No plausible action for '+p.name);
+   inspectFeedback(state,tried);
+   const choices=ranked(api.getState(),p);if(!choices.length)throw Error('No plausible action for '+p.name);
    const selected=choices[alternateDay===day&&choices.length>=2?1:0].action;
    if(!api.availableIds().includes(selected.id))throw Error('Policy chose unavailable card');
    api.play(selected.id);decisions.push(selected.id);
@@ -67,7 +90,7 @@ function auditHumanDecisions(html){
    endingTypes:[...new Set([main.ending,...alternatives.map(a=>a.ending)])]};
  });
  if(report.some(x=>!x.baseline.ending||x.secondBestByDay.length!==7))throw Error('Incomplete decision audit');
- return {method:'Five rational decision styles; compare each top-scoring card with the second-ranked card on one day. Not random and not observed human success.',games:40,profiles:report};
+ return {method:'Five heuristic decision styles. Each day inspects up to three customer phrases before selecting a policy; one-day second-choice perturbations. DOM-model, not observed human success.',games:40,profiles:report};
 }
 if(require.main===module){
  const html=fs.readFileSync(path.join(__dirname,'..','index.html'),'utf8');
