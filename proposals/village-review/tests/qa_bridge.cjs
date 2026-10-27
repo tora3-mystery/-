@@ -37,6 +37,38 @@ assert.equal((get('map').innerHTML.match(/data-v1src/g)||[]).length,0,'Assets re
 assert.equal(qa.v1AcceptManifest({items:targets.items.slice(0,144)}),false,'Incomplete manifest accepted');
 assert.equal(qa.v1AcceptManifest({items:targets.items}),true,'Valid manifest rejected');
 assert.equal(qa.artStatus().size,145);
+
+assert.equal(qa.v1ExpectedAssets().size,145,'Expected inventory must match artifact contract');
+for(const [label,mutate] of [
+ ['duplicate ID',a=>a[0]=a[1]],
+ ['unknown ID',a=>{a[0].id='facility:unknown:base:0'}],
+ ['wrong filename',a=>{a[0].webp='assets/facilities/unknown.webp'}],
+ ['wrong category',a=>{a[0].category='overlays'}],
+ ['wrong dimensions',a=>{a[0].width=256}],
+ ['wrong opacity',a=>{a.find(x=>x.category==='tiles').alpha=false}]
+]){
+ const corrupted=JSON.parse(JSON.stringify(targets.items));mutate(corrupted);
+ assert.equal(qa.v1AcceptManifest({items:corrupted}),false,'Accepted bad manifest: '+label);
+}
+// Real image-fallback event sequence: missing WebP -> PNG master -> emoji if both fail.
+function fakeImage(){
+ const listeners={},seen=new Set(),image={dataset:{v1src:'assets/example.webp',v1png:'assets/example.png'},src:'',naturalWidth:0,complete:false,
+  addEventListener:(name,cb)=>{listeners[name]=cb},classList:{add:k=>seen.add(k),contains:k=>seen.has(k)},
+  parentElement:{classList:{add:k=>seen.add('parent-'+k)}}};
+ return {image,listeners,seen}
+}
+{
+ const {image,listeners,seen}=fakeImage();qa.v1LoadImages({querySelectorAll:()=>[image]});
+ assert.equal(image.src,'assets/example.webp');
+ listeners.error();assert.equal(image.src,'assets/example.png','Missing WebP must try PNG');
+ image.naturalWidth=512;listeners.load();assert(seen.has('ready'),'PNG fallback did not become visible');
+}
+{
+ const {image,listeners,seen}=fakeImage();qa.v1LoadImages({querySelectorAll:()=>[image]});
+ listeners.error();listeners.error();
+ assert(seen.has('failed'),'Missing PNG and WebP should preserve emoji fallback');
+}
+
 qa.generate(718);
 assert.equal(qa.timeName(0),'2027年4月','Arrival must not be displayed in March');
 const facilityForArt=qa.getState().facilities[0];
@@ -107,4 +139,4 @@ assert(tqa.getState().completed,'Reloaded run must finish');
 trial=createHarness(persisted);tqa=trial.qa;
 assert(tqa.getState().completed&&tqa.getState().annualDue,'Final review must be preserved on reload');
 assert(trial.get('modal').innerHTML.includes('口コミが反映'),'Final review modal must reopen');
-console.log(JSON.stringify({status:'PASS',terrain,statistics,endings,saveResume:'PASS',arrivalDate:'PASS',stageArt:'PASS'},null,2));
+console.log(JSON.stringify({status:'PASS',terrain,statistics,endings,saveResume:'PASS',arrivalDate:'PASS',stageArt:'PASS',strictManifest:'PASS',fallback:'PASS'},null,2));
