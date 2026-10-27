@@ -5,7 +5,7 @@
   const SAVE_KEY = 's6-case-a-v03-save';
   const AUTO_KEY = 's6-case-a-v03-auto';
   const META_KEY = 's6-case-a-v03-meta';
-  const BUILD_AT = '2026-10-27 15:41 JST';
+  const BUILD_AT = '2026-10-27 15:48 JST';
   const DAYS = [
     ['2026-04-06','4月6日 月曜'],['2026-04-07','4月7日 火曜'],
     ['2026-04-08','4月8日 水曜'],['2026-04-09','4月9日 木曜'],
@@ -406,7 +406,7 @@
     }
     if(act==='back-lunch'){S.lunchMessage='';S.phase='day';saveAndRender();return}
     if(act==='save'){localStorage.setItem(SAVE_KEY,JSON.stringify(S));alert('この端末に保存しました。');return}
-    if(act==='load'){try{const x=JSON.parse(localStorage.getItem(SAVE_KEY)||localStorage.getItem(AUTO_KEY));if(x?.schema===3&&x.caseId==='A'){S=x;render()}else alert('この版で読み込める保存データがありません。')}catch{alert('保存データを読み込めませんでした。')}return}
+    if(act==='load'){try{const x=JSON.parse(localStorage.getItem(SAVE_KEY)||localStorage.getItem(AUTO_KEY));if(x?.schema===3&&x.caseId==='A'){S=x;saveAndRender()}else alert('この版で読み込める保存データがありません。')}catch{alert('保存データを読み込めませんでした。')}return}
     if(act==='notebook'||act==='dossier'){if(S.phase!=='notebook'&&S.phase!=='person'&&S.phase!=='dossier')S.returnPhase=S.phase;S.phase=act;saveAndRender();return}
     if(act==='back-overlay'){S.phase=S.returnPhase||'day';S.returnPhase=null;saveAndRender();return}
     if(act==='event'){
