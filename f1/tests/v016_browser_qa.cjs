@@ -1,4 +1,4 @@
-/* F1 v0.16 real-Chrome acceptance QA. Run with NODE_PATH pointing to Playwright. */
+/* F1 v0.16 business-engine browser acceptance QA (adapted for v0.17+ phrase-first choices). Run with Playwright. */
 'use strict';
 const assert=require('node:assert/strict');
 const http=require('node:http');
@@ -18,13 +18,26 @@ const browserErrors=[];
 const visible=async(page,sel)=>assert(await page.locator(sel).isVisible(),sel+' should be visible');
 const state=page=>page.evaluate(()=>window.__F1_DEBUG__.getState());
 async function select(page,id){
- if(id==='inspectBack')assert(await page.evaluate(()=>window.__F1_DEBUG__.focus('f17-back-review','裏手の社の周りが暗く')));
- const actions=await page.evaluate(()=>window.__F1_DEBUG__.getAvailableActions());
- const index=actions.findIndex(x=>x.id===id);assert(index>=0,`DAY ${(await state(page)).day}: ${id} unavailable`);
- await page.locator('#actions .action').nth(index).click();
- await visible(page,'#overlay');
- await page.locator('#next').click();
- if(await page.locator('#dayTransition').isVisible())await page.locator('#transitionContinue').click();
+  // Older scenario tests isolate business and horror mechanics; v0171 checks true complaint discovery.
+  await page.evaluate(id=>{
+   const d=window.__F1_DEBUG__;
+   if(id==='inspectBack')d.focus('f17-back-review','裏手の社の周りが暗く');
+   if(!d.availableIds().includes(id)&&!['audit','camera0','open0','shrine','removeShrine','idle'].includes(id)){
+    const st=d.getState();d.setState({...st,discoveredActions:[...new Set([...(st.discoveredActions||[]),id])]});
+   }
+  },id);
+  const actions=await page.evaluate(()=>window.__F1_DEBUG__.getAvailableActions());
+  const action=actions.find(a=>a.id===id);assert(action,`DAY ${(await state(page)).day}: ${id} unavailable`);
+  const main=page.locator('#actions .action').filter({hasText:action.name}).first();
+  const extra=page.locator('#moreActionsBody .action').filter({hasText:action.name}).first();
+  if(await main.count())await main.click();
+  else{
+    assert(await extra.count(),`Discovered action ${id} missing from DOM`);
+    await page.locator('#moreActions summary').click();
+    await extra.click();
+  }
+  await visible(page,'#overlay');await page.locator('#next').click();
+  if(await page.locator('#dayTransition').isVisible())await page.locator('#transitionContinue').click();
 }
 (async()=>{
  await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
@@ -39,7 +52,8 @@ async function select(page,id){
    assert((await page.locator('#intro').innerText()).includes('仕事は2つだけ'));
    await page.screenshot({path:path.join(shots,`intro-${width}.png`),fullPage:true});
    await page.locator('#start').click();await visible(page,'#game');
-   assert.equal(await page.locator('#actions .action').count(),7);
+   assert.equal(await page.locator('#actions .action').count(),2);
+   assert.equal(await page.locator('#moneyDetail').innerText(),'本部目標：今週の売上500万円');
    const layout=await page.evaluate(()=>({overflow:document.documentElement.scrollWidth-innerWidth,
     minTap:Math.min(...[...document.querySelectorAll('#actions .action')].map(x=>x.getBoundingClientRect().height)),
     image:document.querySelector('#storeImage').naturalWidth,src:document.querySelector('#storeImage').getAttribute('src')}));
@@ -66,7 +80,7 @@ async function select(page,id){
   const graySeeds=await page.evaluate(()=>{
    const d=window.__F1_DEBUG__,seeds={};
    for(let seed=0;seed<200&&Object.keys(seeds).length<2;seed++){
-    d.restart();d.play('pickup');d.advance();d.closeTransition();
+    d.restart();d.setState({...d.getState(),discoveredActions:['pickup','complaintHide']});d.play('pickup');d.advance();d.closeTransition();
     d.setState({...d.getState(),grayAuditSeed:seed});d.play('complaintHide');
     const detected=d.getState().jobs.find(x=>x.grayAudit)?.detected;
     seeds[detected?'detected':'undetected']??=seed;
@@ -79,7 +93,7 @@ async function select(page,id){
    await page.evaluate(seed=>window.__F1_DEBUG__.setState({...window.__F1_DEBUG__.getState(),grayAuditSeed:seed}),graySeeds[outcome]);
    await select(page,'complaintHide');
    const actions=await page.evaluate(()=>window.__F1_DEBUG__.getAvailableActions());
-   await page.locator('#actions .action').nth(actions.findIndex(x=>x.id==='idle')).click();
+   await page.locator('#actions .action').filter({hasText:'何も対策しない'}).click();
    await page.locator('#next').click();await visible(page,'#dayTransition');
    assert.equal(await page.locator('#transitionAudit').isVisible(),outcome==='detected');
    const result=await state(page);assert.equal(result.auditEvents.length,outcome==='detected'?1:0);
