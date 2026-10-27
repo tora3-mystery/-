@@ -229,7 +229,7 @@ function camp(){
  btn('この団体の合宿へ','choose-camp',o.org_id)+'</article>').join('');
  const verifiedIds=Object.keys(S.guesses).filter(id=>S.guesses[id]?.verified);
  const targetVerified=!!S.guesses.P001?.verified;
- const hasTalk=Object.values(S.groupDone).some(t=>typeof t==='string'&&(t.includes('入学前から、きみに')||t.includes('去年の秋にはもう')));
+ const hasTalk=Object.values(S.groupLog).flat().some(x=>typeof x?.text==='string'&&(x.text.includes('入学前から、きみに')||x.text.includes('去年の秋にはもう')));
  const hasArchive=S.clues.includes('F-COM-01')||S.viewedBoard['2026-04-06'];
  const clueText=targetVerified&&hasTalk&&hasArchive?
    '照合した西園寺紬の顔、こもれびの所属、入学前から準備された受け入れ枠。ばらばらだった情報が、一つの団体につながった。':
@@ -337,7 +337,7 @@ function handle(act,id){
   let type=S.mode,msg='';
   if(act==='ask-affiliation'){if(type!=='question')return;type='所属確認';}
   if(type==='talk'){
-   const pre=first?(style==='open'?'「初めまして、'+p.name+'！ よろしく」':style==='quiet'?'「えっと、'+p.name+'です。よろしく」':'「'+p.name+'です。どうも」'):
+   const pre=first?(style==='open'?'「初めまして！ '+p.name+'です。よろしくね」':style==='quiet'?'「えっと、'+p.name+'です。よろしく」':'「'+p.name+'です。どうも」'):
     (style==='open'?'「あ、また会ったね！」':style==='quiet'?'「この前の……」':'「また会ったね」');
    const hook=profiles[id]?.[first?'first_hook':'reunion_hook']||profiles[id]?.first_hook||'今日も楽しんでね。';
    msg=pre+'と声をかけてくれた。「'+hook+'」';
