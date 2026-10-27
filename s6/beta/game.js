@@ -1,7 +1,7 @@
 (() => {
 'use strict';
 const D=window.S6_DATA, APP=document.getElementById('app'), KEY='s6-origin-beta-010', Dialogue=window.S6_BETA_DIALOGUE;
-const VERSION='0.3.1', BUILD='2026-10-27 23:05 JST';
+const VERSION='0.4.0', BUILD='2026-10-27 23:11 JST';
 const WEEK=['月曜 4月6日','火曜 4月7日','水曜 4月8日','木曜 4月9日','金曜 4月10日'];
 const DATES=['2026-04-06','2026-04-07','2026-04-08','2026-04-09','2026-04-10'];
 const people=Object.fromEntries(D.people.map(p=>[p.person_id,p]));
@@ -39,11 +39,13 @@ const canEditNotebook=()=>['night','sns','board'].includes(S.returnTo);
 const relationship=id=>Dialogue.relationshipLabel(S,id);
 const contactBadge=id=>S.contacts.includes(id)?' ／ TINE交換済':S.pendingContacts.includes(id)?' ／ 申請確認中':'';
 // Per-person contact develops gradually, with at most two meaningful exchanges per day.
-const recordConversation=id=>{
- const today=date(),key=id+'|'+today,used=Number(S.dailyAffinity[key]||0);
+const recordConversation=(id,action)=>{
+ const today=date(),key=id+'|'+today,used=Math.max(0,Number(S.dailyAffinity[key])||0);
  if(used>=2)return;
- S.dailyAffinity[key]=used+1;
- S.affinity[id]=Math.min(6,Math.max(0,Number(S.affinity[id])||0)+1);
+ const gain=Math.min(2-used,Dialogue.responseGain(id,action));
+ if(gain<=0)return;
+ S.dailyAffinity[key]=used+gain;
+ S.affinity[id]=Math.min(6,Math.max(0,Number(S.affinity[id])||0)+gain);
  S.relationshipDays[id]=unique([...(S.relationshipDays[id]||[]),today]);
 };
 const remember=()=>{S.savedAt=BUILD;localStorage.setItem(KEY,JSON.stringify(S))};
@@ -357,12 +359,12 @@ function handle(act,id){
   let reply,kind=type;
   if(type==='talk'){
     // Apply today's conversation before choosing the response, so the change is felt immediately.
-    recordConversation(id);
+    recordConversation(id,'talk');
     reply=Dialogue.talk(id,S.group,S);
     if(!S.spokenTo.includes(id))S.spokenTo.push(id);
   }else if(type==='question'||type==='affiliation'){
     reply=Dialogue.answer(id,S.group,type==='affiliation'?'affiliation':'question');
-    recordConversation(id);
+    recordConversation(id,type);
     if(reply.primaryOrg)S.knownOrg[id]=reply.primaryOrg;
     if(reply.dualOrg)S.crossings[id]=true;
     if(type==='question'&&q?.reveals?.includes('group_focus'))S.knownOrg[id]=people[id].primary_org||'N';
