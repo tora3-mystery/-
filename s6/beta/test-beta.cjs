@@ -376,4 +376,32 @@ check('presentation shuffle does not alter membership, calendar, or case A evide
  assert.ok(Number.isFinite(a.state.presentationSeed));
  assert.ok(Number.isFinite(b.state.presentationSeed));
 });
+check('new rounds shuffle first-day visual circle order but keep event/group membership fixed',()=>{
+ const cache=new Map(),first=makeSession(cache);
+ for(const act of ['start','show-campus','show-intro','begin'])first.click(act);
+ first.click('attend','E01');assert.equal(first.state.phase,'venue');
+ const layouts=new Set();
+ for(let seed=0;seed<24;seed++){
+  const st={...first.state,presentationSeed:seed};cache.set('s6-origin-beta-010',JSON.stringify(st));
+  const same=makeSession(cache);
+  const layout=(same.html.match(/data-id="E01-[A-E]"/g)||[]).join('|');
+  layouts.add(layout);
+  assert.equal(same.state.seen.length,11);
+  assert.equal(same.state.eventHistory.length,1);
+  assert.equal(same.state.clues.length,0);
+ }
+ assert.ok(layouts.size>1,'at least two layouts should differ across replay seeds');
+});
+check('first-year dialogue to senior players stays polite in every authored freshman scene line',()=>{
+ const lines=D.lines.filter(l=>D.people.find(p=>p.person_id===l.speaker_id)?.year==='1');
+ assert.equal(lines.length,10);
+ const engine=dataScope.window.S6_BETA_DIALOGUE;
+ for(const l of lines){
+  const rendered=engine.sceneLine(l);
+  assert.ok(rendered.length>8);
+  assert.match(rendered,/です|ます|先輩|ですね/);
+ }
+ assert.match(engine.sceneLine(D.lines.find(x=>x.group_id==='E04-A'&&x.speaker_id==='P015')),/です/);
+ assert.match(engine.sceneLine(D.lines.find(x=>x.group_id==='E05-A'&&x.speaker_id==='P013')),/ですね/);
+});
 console.log(JSON.stringify({passed:total,failed:failures}));if(failures)process.exitCode=1;
