@@ -181,6 +181,7 @@
     }
     if (q.legacyIndex === 8) {
       const discount = opts.discountRate||[25,30,40][variation];
+      q.discountRate=discount;
       const purchasePrice=opts.purchasePrice;
       if(!Number.isSafeInteger(purchasePrice))throw new Error('Missing Q2 purchase amount');
       q.truth=Math.round(purchasePrice*(100-discount)/100);
@@ -212,7 +213,7 @@
       q.context = '新井「' + q.speechName + 'だよ。セールとかポイント還元はナシでね」';
     }
     if (q.legacyIndex === 8) {
-      q.speech = '梅田さんが買った' + informalProductName(q.item) + '、今' + discount + '%OFFなんだって。いくらだと思う？';
+      q.speech = '梅田さんが買った' + informalProductName(q.item) + '、今' + q.discountRate + '%OFFなんだって。いくらだと思う？';
     }
     if (q.legacyIndex === 7) {
       q.context = '庄司「妻への贈り物に' + q.speechName + 'を考えていまして。少し予算が気になって……」';
