@@ -32,9 +32,25 @@ function restore(){try{const old=JSON.parse(localStorage.getItem(SAVE));if(old?.
 function seen(id){return s.publishedIds.includes(id)}
 function previouslyPrinted(id){return s.history.some(h=>h.day<s.day&&h.published.includes(id))}
 function newspaper(slots,small=false){const pieces=slots.map(id=>id&&articles[id]);return `<section class="paper" aria-label="組版済み新聞プレビュー"><div class="masthead"><h2>東雲日報</h2><time>2026年<br>${esc(DAYS[s.day-1])}</time></div>${pieces.map((a,i)=>i<2?`<div class="front ${i?'second':'top'}"><small>${i?'準トップ':'一面トップ'}　${a?esc(sectionCaption(a)):'未設定'}</small><h3>${a?esc(previouslyPrinted(a.id)?'続報｜'+(s.candidates.find(z=>z.id===a.id)?.displayHeadline||a.headline):(s.candidates.find(z=>z.id===a.id)?.displayHeadline||a.headline)):'記事を選択してください'}</h3>${a?`<p class="brief">${esc((s.candidates.find(z=>z.id===a.id)?.displayBody||a.body||'').slice(0,i?72:110))}${small?'': '…'}</p>`:''}</div>`:'').join('')}<div class="mini-grid">${pieces.slice(2).map((a,i)=>`<div class="front mini"><small>小記事${i+1}</small><h3>${a?esc(s.candidates.find(z=>z.id===a.id)?.displayHeadline||a.headline):'未設定'}</h3></div>`).join('')}</div></section>`}
+function initialSituation(){
+ return {
+  H:'県内情勢：病院の再建を巡り住民の意見が分かれています。支援の必要性を広く伝えるには丁寧な報道が求められます。',
+  T:'県内情勢：観光開発の採算性に慎重な企業が多く、投資への支持を広げるには追加の説明が必要です。',
+  E:'県内情勢：湿原保護の重要性は地域外では十分に知られておらず、県全体へ議論を広げる必要があります。',
+  none:'県内情勢：医療・観光・自然の各課題に関心が分かれ、どの論点が議題になるかは今後の報道次第です。'
+ }[s.variant]||'';
+}
+function requiredAttention(k){
+ const corroboration={
+  H:['hospital_budget','hospital_staff','land_h'],
+  T:['tourism_capital','eco_joint','tourism_levy'],
+  E:['wetland_map','ecology_data','conservation_finance']
+ };
+ return 6+(s.variant===k?1:0)-(corroboration[k].some(t=>(s.verifiedReactionLeads||[]).includes(t))?1:0);
+}
 function briefingText(){
  const d=s.day,t=[],a=s.att,ev=s.evidence,has=x=>ev.includes(x);
- if(d===1)return ['中央病院では人員不足が続き、霧峰高原では観光計画、千鳥湿原では保護指定の行方が問題です。','取材で見つけた事実は、紙面に載せて初めて広く知られます。三分野すべてを公費だけで支えることはできません。'];
+ if(d===1)return ['中央病院では人員不足が続き、霧峰高原では観光計画、千鳥湿原では保護指定の行方が問題です。','取材で見つけた事実は、紙面に載せて初めて広く知られます。三分野すべてを公費だけで支えることはできません。',initialSituation()];
  if(!has('public_h')&&!has('private_h'))t.push('病院：存続に向けた具体的な資金支援案が、まだ広く報じられていません。');
  else if(a.H<5)t.push('病院：支援案は報じられましたが、地域での議論はまだ広がりきっていません。');
  else if(has('private_h')&&!has('reform_h'))t.push('病院：企業の支援案は知られ始めました。医療機関同士の連携も論点になっています。');
@@ -46,7 +62,8 @@ function briefingText(){
  if(a.E<5)t.push('湿原：保護を求める声は、県全体の大きな議論にはなっていません。');
  else if(!has('survey_e')&&!has('public_e'))t.push('湿原：自然への関心が増えています。保護区域の根拠と管理計画を確かめる必要があります。');
  else t.push('湿原：保全の根拠は知られ始めました。継続的な管理費と担い手が問われています。');
- if(d===7)t.push('今日も通常の取材と紙面編集ができます。今夜の最終号までの報道を踏まえ、一年後の姿が決まります。');
+ if(d===4)t.push(initialSituation());
+ if(d===7){t.push(initialSituation());t.push('今日も通常の取材と紙面編集ができます。今夜の最終号までの報道を踏まえ、一年後の姿が決まります。')}
  return t
 }
 function intro(){APP.innerHTML=`<div class="stage">${header('N国・因果観察室｜特別任務','明日の一面を決めてください。','一週間の新聞編集によって、東雲県の一年後を変えてください。')}<div class="paper"><div class="masthead"><h2>東雲日報</h2><time>特別任務資料<br>2026年10月</time></div><h3 class="headline" style="font-size:1.22rem">2027年、県の3つの未来が失われる</h3><p>県立中央病院は縮小。霧峰高原の観光計画は停滞。千鳥湿原の保護区域も変更される見込みです。</p><p>本来は、この3つが両立する未来がありました。あなたには2026年10月12日から18日までの東雲日報の編集権限が与えられます。</p></div><div class="panel"><h3>復元すべき2027年の状態</h3><ul><li>県立中央病院が存続する</li><li>霧峰高原の大型観光計画が実現する</li><li>千鳥湿原の保護区域が維持される</li></ul><p class="small">行政予算は限られています。医療・観光・自然をすべて公費で救うことはできません。</p></div><div class="note">毎朝：反響を読む → 記者2人と取材テーマを選ぶ → 6〜7本の記事から一面トップ・準トップ・小記事2本を指定 → 発行。紙面は自動で組み上がります。SNSの噂は、取材して確認しなければ事実にはなりません。</div><div class="btn-row"><button class="btn" data-do="start">編集室へ向かう</button></div></div>`}
@@ -162,8 +179,7 @@ function chooseEvidence(a,i){const ev=EVIDENCE[a.id];if(!ev)return null;if(i<2){
 function decide(){
  if(s.day!==7)return {};
  const e=new Set(s.evidence),a=s.att,has=k=>e.has(k);
- const confirmation={H:['hospital_budget','hospital_staff','land_h'],T:['tourism_capital','eco_joint','tourism_levy'],E:['wetland_map','ecology_data','conservation_finance']};
- const req=k=>6+(s.variant===k?1:0)-(confirmation[k].some(token=>(s.verifiedReactionLeads||[]).includes(token))?1:0);
+ const req=requiredAttention;
  const result={H:'failed',T:'failed',E:'failed'};
  const privateRoutes={
   H:a.H>=req('H')&&has('private_h')&&has('reform_h')&&a.T>=3,
@@ -202,24 +218,28 @@ function publicationFeedback(){
 function published(){const last=s.history.at(-1);APP.innerHTML=`<div class="stage">${header('東雲日報｜朝刊発行',`${s.day}日目の新聞が発行されました。`,s.day===7?'最終号までの報道が出そろいました。届いた反響を確認し、1年後を観測してください。':'一面に何を載せたかが、翌日以降の判断を変えていきます。')}<div class="columns"><div>${newspaper(last.published)}</div><div><div class="panel"><h3>発行後の県内</h3><p class="small">県内の関心：医療 ${s.att.H} ／ 観光 ${s.att.T} ／ 自然 ${s.att.E}</p><p class="small muted">これは新聞社の推定指標です。具体的な政策判断には取材で得た根拠も必要です。</p><div class="note">${publicationFeedback().map(x=>`<p class="small">${esc(x)}</p>`).join('')}</div>${s.day===3?'<div class="note">中間観測：3日間の報道が県内の議論に影響しています。ただし、記事が注目されたことと、政策や投資が決まったことは別です。</div>':''}<p class="small">未掲載 ${last.unprinted.length}本。報道しなかった問題も県内では進行しています。</p></div><div class="panel">${s.day===7?reactionList(s.latestReactions,'発行後は'):`<h3>初動の反響</h3>${s.latestReactions.length?`<p class="small">新しい連絡 ${s.latestReactions.length}件。${esc(reactionText(reactions[s.latestReactions[0]]))}</p>`:'<p class="small muted">今のところ目立った連絡はありません。</p>'}<p class="small muted">翌朝の編集部受信箱で確認できます。</p>`}</div></div></div><div class="btn-row"><button class="btn" data-do="next">${s.day===7?'1年後の東雲県を観測する':'翌朝の編集会議へ'}</button></div></div>`}
 function outcomeText(k){const v=s.outcomes[k];return ({H:{public:'公的支援を受け、中央病院は地域の総合医療を維持しています。',private:'県内企業の支援と診療連携により、中央病院の経営は立て直されました。',failed:'中央病院は機能を縮小し、県北部の通院負担が増えました。'},T:{public:'県が整備を支援した大規模観光拠点が開業し、県内の雇用を生み出しています。',private_eco:'湿原を避けた民間主導の観光拠点が開業し、地域資源を生かした観光が進んでいます。',failed:'投資と事業条件がまとまらず、霧峰高原の開発計画は凍結されました。'},E:{public:'県による保全体制が整い、千鳥湿原の保護区域は維持されました。',private:'住民と企業による保全協定が成立し、保護区域が維持されました。',failed:'管理財源と保護方針がまとまらず、湿原の保護区域は一部変更されました。'}})[k][v]}
 function outcomeReason(k){
- const v=s.outcomes[k],e=s.evidence,a=s.att;
+ const v=s.outcomes[k],e=s.evidence,a=s.att,req=requiredAttention(k);
+ const eligibleForPublic=k==='H'?e.includes('public_h'):k==='T'?e.includes('investment_t')&&e.includes('permits_t'):e.includes('public_e')||e.includes('survey_e');
  if(k==='H'){
   if(v==='public')return '県費活用の取材が広く報じられ、病院支援をめぐる行政の判断を後押ししました。';
   if(v==='private')return '企業の出資条件と医療機関の連携案が伝わり、民間による病院再建につながりました。';
+  if(a.H>=req&&eligibleForPublic)return '病院の公的支援に必要な根拠と関心は整いましたが、限られた行政支援枠が他の事業へ配分され、存続には届きませんでした。';
   if(!e.includes('public_h')&&!e.includes('private_h'))return '経営危機は続きましたが、行政や企業が動くための具体的な支援策は十分に知られませんでした。';
-  if(a.H<6)return '支援策は記事になったものの、県内で継続的な議論になるほどの関心は集まりませんでした。';
+  if(a.H<req)return '支援策は記事になったものの、県内で継続的な議論になるほどの関心は集まりませんでした。';
   return '支援策への関心は高まりましたが、資金や診療連携の条件が最後までそろいませんでした。';
  }
  if(k==='T'){
   if(v==='public')return '投資条件と許認可の調査が伝わり、行政の事業支援につながりました。';
   if(v==='private_eco')return '企業の投資条件と湿原を避ける代替案が広く報じられ、民間主導の開発が実現しました。';
+  if(a.T>=req&&eligibleForPublic)return '観光への投資・許認可は報じられましたが、行政支援の余力が他分野に使われ、民間だけでは開発を実現できませんでした。';
   if(!e.includes('investment_t'))return '開発への期待はあっても、誰がどの条件で投資するのかが十分に報じられませんでした。';
-  if(a.T<6)return '投資条件は明らかになりましたが、事業を後押しするほどの関心は集まりませんでした。';
+  if(a.T<req)return '投資条件は明らかになりましたが、事業を後押しするほどの関心は集まりませんでした。';
   return '開発への関心は高まりましたが、許認可と自然保護を両立させる方式を確立できませんでした。';
  }
  if(v==='public')return '保護区域の根拠を示す記事が広まり、公的な保全体制が整いました。';
  if(v==='private')return '湿原の調査と地域の保全協定案が知られ、住民と企業の管理体制が成立しました。';
- if(a.E<6)return '保護区域をめぐる動きは続いていましたが、県全体の議論には十分広がりませんでした。';
+ if(a.E>=req&&eligibleForPublic)return '保護の根拠と県内の支持は整いましたが、公的管理に必要な行政支援枠が他分野に配分され、維持できませんでした。';
+ if(a.E<req)return '保護区域をめぐる動きは続いていましたが、県全体の議論には十分広がりませんでした。';
  return '保護への関心は高まりましたが、区域維持の根拠と継続的な管理体制が十分に整いませんでした。';
 }
 function ending(){const complete=[...'HTE'].filter(k=>s.outcomes[k]!=='failed').length;const h=s.history;
