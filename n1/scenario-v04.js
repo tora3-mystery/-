@@ -29,8 +29,8 @@
     {id:'fri_final',legacyIndex:11,character:'shoji',day:4}
   ]);
   const CELEBRITIES = Object.freeze([
-    {name:'大久保佳代子',age:55,source:'https://www.p-jinriki.com/sp/talent/oasiz/',clue:'「めちゃイケ」に出演していた頃から知っている人には、だいたいの世代が分かると思うの。',hint:'1990年代にはオアシズとして活動を始めていて、2000年代にはOLと芸人の二足のわらじでも知られていた。'},
-    {name:'仲間由紀恵',age:46,source:'https://ogipro.com/talent/nakama/',clue:'「TRICK」が始まった頃は、まだ随分若かったわよね。',hint:'「TRICK」の連続ドラマは2000年から、「ごくせん」は2002年から。どちらも若い頃の主演作。'},
+    {name:'大久保佳代子',age:55,source:'https://www.p-jinriki.com/sp/talent/oasiz/',clue:'『めちゃイケ』に出演していた頃から知っている人には、だいたいの世代が分かると思うの。',hint:'1990年代にはオアシズとして活動を始めていて、2000年代にはOLと芸人の二足のわらじでも知られていた。'},
+    {name:'仲間由紀恵',age:46,source:'https://ogipro.com/talent/nakama/',clue:'『TRICK』が始まった頃は、まだ随分若かったわよね。',hint:'「TRICK」の連続ドラマは2000年から、「ごくせん」は2002年から。どちらも若い頃の主演作。'},
     {name:'久本雅美',age:68,source:'https://www.talent-databank.co.jp/search/profile/2000041015',clue:'ずっとテレビで見てきたけど、昔は舞台が中心だったのよね。',hint:'1984年にWAHAHA本舗の設立に参加し、1990年代には「笑っていいとも！」でもおなじみだった。'}
   ]);
   const WAIT_VARIANTS = Object.freeze([
@@ -205,6 +205,11 @@
   function tone(q,x,grade) {
     if (x === q.truth || grade.exact) return 'exact';
     if (q.mode === 'facts' && grade.score >= 90) return 'near';
+    // A price within 1% of its true amount should not trigger an overly harsh
+    // over/under-estimate reaction even when social tact, not accuracy, was requested.
+    if (q.mode !== 'facts' && q.type === 'yen' &&
+        [1,5,11].includes(q.legacyIndex) &&
+        Math.abs(x - q.truth) <= Math.max(1,Math.round(q.truth*.01))) return 'near';
     if (q.mode !== 'facts' && (grade.air >= 90 || grade.success)) return 'social';
     let delta;
     if (q.type === 'yen') {
@@ -240,6 +245,7 @@
       },
       1:{
         exact:['え、なんでピタリなの？','今までで一番どうでもいいところを見抜かれてしまった。'],
+        near:['え、ほぼピッタリじゃん！','そこまで分かるなら、もう少しだけ得した気分を味わわせてよ。'],
         social:['でしょ？ いいものに見えるよね！','でも実はもう少し安かったんだよ。今日、これだけは聞いてほしかった。'],
         low:['いや、ちょっと待って。','それ言われると「買い物上手」じゃなくて「選ぶ目がない人」になるから。'],
         high:['さすがにそこまではしないよ。','欲しかったのは商品であって、住宅ローンじゃない。'],
@@ -273,6 +279,7 @@
       },
       5:{
         exact:['すごい、正解です。','値段は合ってます。でも、送別品で「正確に当てられる」のも少し怖いですね。'],
+        near:['ほぼ値札と同じです。','……これ、渡すときには値札を外した方がよさそうですね。'],
         social:['そう、そのくらいに見えてほしくて！','お返しを気にさせない包装、ありますかね……？'],
         low:['安っぽい……ですか。','包装紙を二重にすれば変わりますかね。変わらないか。'],
         high:['えっ、高そうに見えます？','贈る前に「お返し不要です」って紙を入れようかな。'],
@@ -283,7 +290,7 @@
         exact:['正解。','やっぱり知ってた？ 僕、聞く相手を間違えた。'],
         near:['惜しい！ ほんの少し年代が違う。','街の歴史って、数年の違いで雰囲気が変わるんだよ。'],
         social:['良いところだね。','昔の写真、今の街と並べるとけっこう驚くんだよ。'],
-        low:['もう少し古いんだ。','街の見た目、リニューアルすると年代が分からなくなるよね。'],
+        low:['もう少し新しい時代にできたんだ。','街の見た目、リニューアルすると年代が分からなくなるよね。'],
         high:['もう少し昔からある。','意外と、僕らが思ってるより長くここに立ってるんだ。'],
         extremeLow:['そんなに昔だと、別の国の地図を持ってきたい。','でもその想像力は好きだな。'],
         extremeHigh:['それ、まだ未来じゃない？','完成予定を聞いてるんじゃないからね。']
@@ -308,6 +315,7 @@
       },
       11:{
         exact:['……そこまで正確に答えますか。','妻にもそう言われるのが少し心配でして。ありがとうございます。'],
+        near:['ほとんど実際の値段と同じですね。','数字は近いんですが、妻には値段を気にせず受け取ってほしいんですよね。'],
         social:['そのくらいに見えるんですね。','よかった。値札を気にせず渡せそうです。'],
         low:['少し控えめに見えましたか。','……まあ、気持ちで選んだので。そう言ってみます。'],
         high:['そんなに高そうですか。','次は包装紙の色を変えましょうか。値段は変わりませんが。'],
