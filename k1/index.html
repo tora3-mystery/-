@@ -18,7 +18,7 @@ h2{font-size:17px;line-height:1.4;margin:0 0 8px}h3{font-size:14px;margin:0 0 8p
 .paper{background:#fdfbf3;border:1px solid #d5cfc2;padding:9px 8px;min-height:86px;text-align:left;border-radius:1px;box-shadow:0 2px 2px #3a302433;line-height:1.4;width:100%}
 .paper small{display:block;color:#807c75;font-size:10px;margin-bottom:6px}.paper b{font-size:12px;font-weight:700;word-break:break-word}.paper .stamp{color:#7c7770;font-size:10px;display:block;margin-top:6px}
 .paper:hover{filter:brightness(.97)}.paper:focus-visible{outline-offset:0}.paper.fresh{transform:rotate(-.6deg);box-shadow:0 2px 4px #3a30244d;border-top:3px solid #afa9a0}.notice-delta{background:#f0eee8;border:1px solid #d7d2c7;border-radius:7px;padding:8px 10px;font-size:12px;color:#555957}
-.tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin:13px 0}
+.tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin:13px 0}
 .tab{border:1px solid var(--line);background:#fff;border-radius:8px;padding:10px 3px;font-weight:700}.tab.active{background:var(--dark);color:#fff}
 .detail{background:#f9f9f5;border:1px solid var(--line);border-radius:8px;padding:14px;margin-top:12px;line-height:1.85}
 .detail .issuer{font-size:11px;color:var(--muted);border-bottom:1px solid #d7dbd6;padding-bottom:6px;margin-bottom:7px}.detail h3{font-size:16px}
@@ -38,7 +38,7 @@ h2{font-size:17px;line-height:1.4;margin:0 0 8px}h3{font-size:14px;margin:0 0 8p
 </style>
 </head>
 <body><main class="app">
-<header class="mast"><div><div class="sub">短編UIゲーム実験室｜K1 プロトタイプ</div><h1>掲示物をご確認ください。</h1><div class="meta"><b>K1 α0.4.0</b> ｜ 2026-10-28 00:58 JST更新</div></div><a class="home" href="../index.html">作品一覧へ</a></header>
+<header class="mast"><div><div class="sub">短編UIゲーム実験室｜K1 プロトタイプ</div><h1>掲示物をご確認ください。</h1><div class="meta"><b>K1 α0.4.0</b> ｜ 2026-10-28 01:00 JST更新</div></div><a class="home" href="../index.html">作品一覧へ</a></header>
 <section id="intro" class="panel intro">
 <div class="sub">白波レジデンス・406号室</div><h2>掲示物をご確認ください。</h2>
 <p class="lede">あなたは白波レジデンス406号室で一人暮らしをする会社員です。</p><p>入居して3か月。仕事から帰るたび、エントランスの大量の掲示が目に入ります。少し慣れた今も、すべてに目を通すのはひと苦労です。</p>
@@ -119,18 +119,19 @@ var EXTRA=[
 {day:7,id:'N07D',title:'管理組合の書面窓口',body:'管理会社の対応に疑義がある場合、書面で事実関係をお知らせください。',issuer:'管理組合'}
 ];
 var RETIRED={
- 2:['L02','L03','L09'],
- 3:['N02A','L05','L07'],
+ 2:['L09','L06','B04'],
+ 3:['N02A','L02','L03','L07'],
  4:['L06','L08','B01','B04'],
  5:['L04','B05','N02B','N03C'],
  6:['R04','R03','N04C','N05C','N03B'],
  7:['N02','N03','N04B','N05B']
 };
 var REVISION={
- R01:{day:2,body:'管理人室の受付は9時から17時までです。閉室後に管理人が各住戸を訪問する予定はありません。'},
+ R01:{day:2,body:'管理人室の受付は9時から17時までです。受付時間外の用件は翌営業日に受け付けます。緊急時は時間外窓口をご利用ください。'},
  R07:{day:3,body:'住民間での文書配布や直接の注意は、管理会社へ事前にご連絡ください。'},
  R08:{day:4,body:'番号が付いた管理会社の掲示を最新の案内として扱います。住民配布の文書は管理会社が確認します。'},
  B06:{day:5,body:'管理会社の対応に関する申し出は、管理組合理事会宛てに書面で提出できます。資料の写しを添えてください。'},
+ L10:{day:5,body:'404号室の「ぼくのマンション」を新しい作品に差し替えました。廊下を描いた絵をご覧いただけます。'},
  R02:{day:6,body:'21時以降の訪問には原則として事前案内を配布します。ただし、4階臨時設備点検には特別な運用が適用されます。'},
  R05:{day:7,body:'臨時点検の担当者は管理番号を提示する場合があります。氏名・所属と訪問目的も併せて確認してください。'}
 };
