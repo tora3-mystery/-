@@ -50,7 +50,7 @@ try {
     await page.getByRole('button', { name: '閉じる ×' }).click();
     await page.evaluate(() => window.scrollTo(0, 0));
     await page.waitForTimeout(100);
-    const screenshot = path.join(outputDir, `n1-v040-${width}px.jpg`);
+    const screenshot = path.join(outputDir, `n1-v051-${width}px.jpg`);
     await page.screenshot({ path: screenshot, type: 'jpeg', quality: 78, fullPage: false });
     report.viewports.push({ width, height, screenshot: path.relative('.', screenshot), metrics });
     await page.close();
@@ -75,9 +75,9 @@ try {
 
   for (let run = 1; run <= 3; run++) {
     const seen = [];
-    for (let question = 0; question < 12; question++) {
+    for (let question = 0; question < 10; question++) {
       const data = await page.evaluate(() => {
-        const q = build(state.i, picks[state.i], picks);
+        const q = plan.questions[state.i];
         return { item: q.item, truth: q.truth, unit: q.unit, zone: q.zone, person: q.person };
       });
       seen.push(data.item);
@@ -85,39 +85,50 @@ try {
       await page.locator('#submit').click();
       check(`run ${run} q${question + 1} exact score`, (await page.locator('.score').innerText()).includes('100'), data.item);
       await page.locator('#next').click();
+      if (question % 2 === 1 && question < 9) {
+        check(`run ${run} daybreak ${question}`, await page.getByText('本日の合計').isVisible(), 'daybreak');
+        await page.locator('#nextDay').click();
+      }
     }
     check(`run ${run} reaches ending`, await page.getByText('ONE WEEK COMPLETE', { exact: false }).isVisible(), 'ending');
     const recurrence = await page.evaluate(() => ({
       q2: results[1]?.truth,
       q9Base: buy[picks[1]].price,
       q8: results[7]?.truth,
-      q12: results[11]?.truth,
+      q10: results[9]?.truth,
       count: results.length
     }));
     check(`run ${run} q2 to q9 recurrence`, recurrence.q2 === recurrence.q9Base, JSON.stringify(recurrence));
-    check(`run ${run} q8 to q12 recurrence`, recurrence.q8 === recurrence.q12, JSON.stringify(recurrence));
-    check(`run ${run} has 12 answers`, recurrence.count === 12, JSON.stringify(recurrence));
+    check(`run ${run} q8 to q10 recurrence`, recurrence.q8 === recurrence.q10, JSON.stringify(recurrence));
+    check(`run ${run} has 10 answers`, recurrence.count === 10, JSON.stringify(recurrence));
     report.fullRuns.push({ run, seen, recurrence });
     if (run < 3) await page.getByRole('button', { name: /別の数字で/ }).click();
   }
 
   const matrix = await page.evaluate(() => {
     const rows = [];
-    for (let i = 0; i < 12; i++) for (let k = 0; k < 3; k++) {
-      const testPicks = Array(12).fill(k);
-      testPicks[1] = k; testPicks[7] = k; testPicks[8] = k; testPicks[11] = k;
-      const q = build(i, k, testPicks);
-      const exact = score(q.truth, q);
-      const airValue = Math.round((q.zone[0] + q.zone[1]) / 2);
-      const air = score(airValue, q);
-      rows.push({ i: i + 1, k, truth: q.truth, zone: q.zone, exact: exact.score, air: air.score, min: q.min, max: q.max, opening: q.opening, item: q.item, source: q.source });
+    for (let k = 0; k < 3; k++) {
+      const keys = Array(12).fill(k);
+      const questions = window.N1ScenarioV04.createPlan(build, keys).questions;
+      for (const q of questions) {
+        const exact = score(q.truth, q);
+        const airValue = Math.round((q.zone[0] + q.zone[1]) / 2);
+        const air = score(airValue, q);
+        const below = score(Math.max(q.min, q.truth - 1), q);
+        const above = score(Math.min(q.max, q.truth + 1), q);
+        rows.push({ index: q.index + 1, legacyIndex: q.legacyIndex, variation: k,
+          truth: q.truth, zone: q.zone, mode: q.mode, exact: exact.score,
+          socialScore: air.score, below: below.score, above: above.score,
+          min: q.min, max: q.max, opening: q.opening, item: q.item, source: q.source });
+      }
     }
     return rows;
   });
-  check('36 variants produced', matrix.length === 36, String(matrix.length));
-  check('36 exact answers score 100', matrix.every(row => row.exact === 100), JSON.stringify(matrix.filter(row => row.exact !== 100)));
-  check('36 air-zone answers score 100', matrix.every(row => row.air === 100), JSON.stringify(matrix.filter(row => row.air !== 100)));
-  check('36 variants have openings', matrix.every(row => row.opening && row.opening.length >= 10), 'opening presence');
+  check('30 variants produced', matrix.length === 30, String(matrix.length));
+  check('30 exact answers score 100', matrix.every(row => row.exact === 100), JSON.stringify(matrix.filter(row => row.exact !== 100)));
+  check('social air-zone answers score 100', matrix.filter(row=>row.mode !== 'facts').every(row => row.socialScore === 100), 'social-band score');
+  check('fact one-off answers never score 100', matrix.filter(row=>row.mode === 'facts').every(row => row.below < 100 && row.above < 100), 'strict fact quiz grade');
+  check('30 variants have openings', matrix.every(row => row.opening && row.opening.length >= 10), 'opening presence');
   report.variantMatrix = matrix;
   await page.close();
 
@@ -126,7 +137,7 @@ try {
 } finally {
   report.finishedAt = new Date().toISOString();
   report.passed = report.checks.every(row => row.ok);
-  await writeFile('n1/tests/qa-report.json', JSON.stringify(report, null, 2));
+  await writeFile('n1/tests/qa-report-v051.json', JSON.stringify(report, null, 2));
   await browser.close();
 }
 
