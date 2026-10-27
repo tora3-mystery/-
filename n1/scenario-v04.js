@@ -13,7 +13,7 @@
  */
 (function (root) {
   'use strict';
-  const VERSION = '0.5.0';
+  const VERSION = '0.5.1';
   const ORDER = Object.freeze([0, 1, 2, 3, 4, 5, 9, 7, 8, 11]);
   const DAYS = Object.freeze(['月曜日','火曜日','水曜日','木曜日','金曜日']);
   const SCENES = Object.freeze([
@@ -145,7 +145,7 @@
     if (q.legacyIndex === 9) {
       // Public history card: no answer year, no year-bearing official detail.
       q.cardType = 'history';
-      q.publicDetail = '建物の名称と写真を見て、竣工・開業の時代を推理してみよう。';
+      q.publicDetail = '建物の名前と会話を手掛かりに、竣工・開業の時代を推理してみよう。';
       q.detail = '';
       q.spec = '';
       q.hint = [
@@ -280,7 +280,7 @@
       },
       9:{
         exact:['正解。','やっぱり知ってた？ 僕、聞く相手を間違えた。'],
-        near:['惜しい！ ほんの少し年代が違う。','歴史の写真を見比べると、その差が意外と大きいんだよ。'],
+        near:['惜しい！ ほんの少し年代が違う。','街の歴史って、数年の違いで雰囲気が変わるんだよ。'],
         social:['良いところだね。','昔の写真、今の街と並べるとけっこう驚くんだよ。'],
         low:['もう少し古いんだ。','街の見た目、リニューアルすると年代が分からなくなるよね。'],
         high:['もう少し昔からある。','意外と、僕らが思ってるより長くここに立ってるんだ。'],
