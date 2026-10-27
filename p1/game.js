@@ -21,7 +21,7 @@ const header=(small,big,description='')=>`<p class="kicker">${esc(small)}</p><h1
 const status=()=>`<div class="status"><span>第 ${s.day} 日／7日</span><span>公的支援上限：2分野</span><span>発行済 ${s.history.length} 紙</span></div>`;
 function random(){s.random=(s.random+0x6D2B79F5)>>>0;let t=s.random;t=Math.imul(t^(t>>>15),t|1);t^=t+Math.imul(t^(t>>>7),t|61);return ((t^(t>>>14))>>>0)/4294967296}
 function choice(a){return a[Math.floor(random()*a.length)]}
-function init(seed){s={version:9,stage:'intro',day:1,random:seed>>>0,variant:'none',att:{H:0,T:0,E:0},evidence:[],small:{},budget:2,leads:[],verified:[],reactionsSeen:[],latestReactions:[],history:[],publishedIds:[],outcomes:{},carry:null,research:[],candidates:[],slots:[null,null,null,null],trace:[],lastDecisions:[],lastAttention:{H:0,T:0,E:0},lastPaper:[]};s.variant=choice(['none','H','T','E']);save()}
+function init(seed){s={version:9,stage:'intro',day:1,random:seed>>>0,variant:'none',att:{H:0,T:0,E:0},evidence:[],small:{},budget:2,leads:[],verified:[],reactionsSeen:[],latestReactions:[],history:[],publishedIds:[],outcomes:{},carry:null,research:[],candidates:[],slots:[null,null,null,null],trace:[],lastDecisions:[],lastAttention:{H:0,T:0,E:0},lastPaper:[]};s.variant=choice(['none','H','T','E']);s.newsOrder={};for(const k of 'HTEG'){const list=NEWS[k].slice();for(let i=list.length-1;i>0;i--){const j=Math.floor(random()*(i+1));[list[i],list[j]]=[list[j],list[i]]}s.newsOrder[k]=list}save()}
 function save(){try{localStorage.setItem(SAVE,JSON.stringify(s))}catch(e){/* private mode */}}
 function restore(){try{const old=JSON.parse(localStorage.getItem(SAVE));if(old?.version===9&&old.day>=1&&old.day<=7&&['intro','morning','newsroom','published','ending'].includes(old.stage))return old}catch(e){}return null}
 function seen(id){return s.publishedIds.includes(id)}
@@ -124,9 +124,9 @@ function displayArticle(a){
 function makeCandidates(pairs){
  const articleCode=([r,t])=>`I${String(1+REPORTERS.findIndex(x=>x[0]===r)*4+TOPICS.findIndex(x=>x[0]===t)).padStart(2,'0')}`;
  const codes=pairs.map(articleCode);
- let ids=['H','T','E','G'].map(t=>NEWS[t][(s.day-1)%4]).concat(codes);
+ const scheduled=t=>(s.newsOrder?.[t]||NEWS[t])[(s.day-1)%4];let ids=['H','T','E','G'].map(scheduled).concat(codes);
  const carry=s.carry;s.carry=null;
- if(carry&&!ids.includes(carry.id)){ids=ids.filter(x=>x!==NEWS.G[(s.day-1)%4]);ids.push(carry.id)}
+ if(carry&&!ids.includes(carry.id)){ids=ids.filter(x=>x!==scheduled('G'));ids.push(carry.id)}
  const chain=chainEligible();if(chain.length)ids.push(choice(chain));ids=arrUnique(ids);
  s.candidates=ids.map(id=>{
   const a=articles[id];const pair=pairs.find(p=>articleCode(p)===id);
