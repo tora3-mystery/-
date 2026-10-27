@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>K1｜掲示物をご確認ください。（試作）</title>
+<style>
+:root{color-scheme:light;--paper:#f5f3ed;--ink:#262a2d;--muted:#647079;--line:#cdd0c9;--dark:#25333a;--accent:#476a72}
+*{box-sizing:border-box}html{scroll-behavior:auto}body{margin:0;background:#e9eae6;color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif;font-size:14px;line-height:1.7}
+button,input{font:inherit}button{cursor:pointer}button:disabled{cursor:not-allowed;opacity:.42}button:focus-visible,input:focus-visible{outline:3px solid #4185ab;outline-offset:2px}
+a{color:inherit} .app{max-width:1060px;margin:auto;padding:12px 16px 64px}
+.mast{display:flex;align-items:start;justify-content:space-between;gap:12px;margin-bottom:11px}.mast h1{font-size:21px;line-height:1.35;margin:3px 0}.sub,.tiny{font-size:11px;color:var(--muted)}.meta{font-size:11px;color:var(--muted)}.home{white-space:nowrap;font-size:12px;margin-top:5px}
+.panel{border:1px solid var(--line);background:#fff;border-radius:12px;padding:17px;margin:12px 0;box-shadow:0 2px 8px #18202608}
+h2{font-size:17px;line-height:1.4;margin:0 0 8px}h3{font-size:14px;margin:0 0 8px}p{margin:7px 0}.intro{max-width:690px;margin:24px auto}.intro h2{font-size:26px;margin-bottom:12px}.intro .lede{font-size:16px}.rules-note{background:#f2f3ed;border-left:4px solid #80909a;padding:12px;border-radius:5px;margin:14px 0}
+.btn{border:1px solid #89979c;border-radius:9px;background:#fff;padding:10px 13px;font-weight:700;color:var(--dark);min-height:42px}.btn.primary{background:var(--dark);color:#fff;border-color:var(--dark)}.btn.secondary{background:#edf0ee}.btn.warn{border-color:#a78b87;color:#79473f}
+.btnrow{display:flex;gap:8px;flex-wrap:wrap}.btnrow .btn{flex:1;min-width:115px}
+.status{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between}.status strong{font-size:19px}.status .hint{font-size:12px;color:var(--muted)}
+.notice-summary{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:7px;background:#9b9386;padding:10px;border:8px solid #776e62;border-radius:8px}
+.paper{background:#fdfbf3;border:1px solid #d5cfc2;padding:9px 8px;min-height:86px;text-align:left;border-radius:1px;box-shadow:0 2px 2px #3a302433;line-height:1.4;width:100%}
+.paper small{display:block;color:#807c75;font-size:10px;margin-bottom:6px}.paper b{font-size:12px;font-weight:700;word-break:break-word}.paper .stamp{color:#7c7770;font-size:10px;display:block;margin-top:6px}
+.paper:hover{filter:brightness(.97)}.paper:focus-visible{outline-offset:0}
+.tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin:13px 0}
+.tab{border:1px solid var(--line);background:#fff;border-radius:8px;padding:10px 3px;font-weight:700}.tab.active{background:var(--dark);color:#fff}
+.detail{background:#f9f9f5;border:1px solid var(--line);border-radius:8px;padding:14px;margin-top:12px;line-height:1.85}
+.detail .issuer{font-size:11px;color:var(--muted);border-bottom:1px solid #d7dbd6;padding-bottom:6px;margin-bottom:7px}.detail h3{font-size:16px}
+.input{width:100%;border:1px solid var(--line);border-radius:8px;padding:10px;background:#fff;color:#222}
+.findbar{display:flex;gap:8px;margin-bottom:10px}.findbar .input{flex:1;min-width:0}
+.listing{display:grid;gap:9px}.record{border:1px solid #d4d9d8;border-radius:9px;padding:12px;background:#fbfbf8}.record strong{display:block}
+.event{border-color:#77838a;background:#f5f7f7}.event .over{color:#596a75;letter-spacing:.08em;font-size:11px;font-weight:800}.event h2{font-size:20px}.event .scenario{padding:12px;background:#fff;border:1px solid #dce0df;border-radius:8px;margin:10px 0}
+.meter{border-top:1px solid #d7dbd9;padding-top:10px;margin-top:10px}.monitor{background:#1f272c;color:#e6ecef;border-radius:8px;padding:15px;white-space:pre-line;font-size:13px}
+.history{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}.history .btn{min-width:0;padding:10px 2px;font-size:12px}
+.result{border:1px solid #c7c4b7;background:#f0eee7;padding:14px;border-radius:9px;margin:12px 0}
+.ending{background:#232a2d;color:#eff1f1;text-align:center;padding:35px 22px;border-radius:11px}.ending h2{font-size:32px;letter-spacing:.15em}.ending .endingname{font-size:22px;margin:15px 0}.ending p{max-width:540px;margin:10px auto}
+.tag{display:inline-block;border:1px solid #aeb9bd;padding:1px 6px;color:#697477;border-radius:4px;font-size:10px;margin-left:5px}
+.caption{color:var(--muted);font-size:11px;margin-top:9px}
+.hidden{display:none!important}
+@media(max-width:700px){.notice-summary{grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;padding:7px;border-width:6px}.paper{min-height:79px;padding:7px 5px}.paper b{font-size:11px}.app{padding:9px 10px 56px}.panel{padding:13px}.mast h1{font-size:19px}}
+@media(max-width:390px){.notice-summary{grid-template-columns:repeat(3,minmax(0,1fr))}.history{grid-template-columns:repeat(4,1fr)}.tabs{gap:3px}.tab{font-size:12px}.mast h1{font-size:17px}.mast .home{font-size:10px}}
+</style>
+</head>
+<body><main class="app">
+<header class="mast"><div><div class="sub">短編UIゲーム実験室｜K1 プロトタイプ</div><h1>掲示物をご確認ください。</h1><div class="meta"><b>K1 α0.1.0</b> ｜ 2026-10-27 15:37 JST更新</div></div><a class="home" href="../index.html">作品一覧へ</a></header>
+<section id="intro" class="panel intro">
+<div class="sub">白波レジデンス・406号室</div><h2>掲示物をご確認ください。</h2>
+<p class="lede">入居して間もないあなたに、管理事務所からお願いがあります。</p>
+<p>エントランスには、ゴミ出しから夜間訪問まで、たくさんの注意書きが貼られています。よく確認し、夜の出来事に対応してください。</p>
+<div class="rules-note"><strong>操作は3つだけ</strong><p>昼は「掲示板・ポスト・玄関」を自由に確認。夜はその日の出来事に、毎回同じ <b>対応／見送り／照会</b> で判断します。掲示板は夜も参照できます。</p><p>対応を間違えても、到達した日の朝から何度でもやり直せます。</p></div>
+<p class="tiny">7日間／夜の判断10件／1プレイ10〜15分を目標とした仮素材版。セーブはこのブラウザ内だけです。</p>
+<div class="btnrow"><button class="btn primary" id="start">入居生活を始める</button><button class="btn secondary hidden" id="resume">保存した続きから</button><button class="btn warn hidden" id="new">記録を消して最初から</button></div>
+</section>
+<div id="game" class="hidden">
+<section class="panel status"><div><strong id="dayLabel"></strong><div class="hint" id="phaseLabel"></div></div><div class="btnrow"><button class="btn secondary" id="showRewind">日付からやり直す</button><button class="btn secondary" id="showIntro">説明</button></div></section>
+<section id="rewindPanel" class="panel hidden"><h2>何日目からやり直しますか</h2><p class="tiny">指定日の朝の状態へ戻ります。以降の判断・証拠・出来事はその時点から再計算されます。</p><div id="days" class="history"></div><p class="tiny">※未来の分岐にジャンプすることはできません。</p></section>
+<section id="endingPanel" class="panel hidden"></section>
+<section id="nightPanel" class="panel event hidden"></section>
+<section id="morningPanel" class="panel hidden"><h2>朝の掲示を確認してください</h2><p id="morningText"></p><button class="btn primary" id="toNight">夜の対応を始める</button><p class="caption">掲示板・ポスト・玄関は夜になってからも確認できます。</p></section>
+<nav class="tabs" aria-label="調べる場所"><button class="tab active" data-tab="board">掲示板</button><button class="tab" data-tab="post">ポスト</button><button class="tab" data-tab="door">玄関</button><button class="tab" data-tab="archive">保存記録</button></nav>
+<section id="tabPanel" class="panel"></section>
+</div>
+</main>
+<script>
+(function(){
+'use strict';
+var KEY='short-ui-k1-alpha010';
+var BASE=[
+['R01','管理人室の受付','管理人室の通常受付は9時から17時までです。時間外のご用件は指定窓口へお願いいたします。','管理事務所'],
+['R02','夜間の訪問について','21時以降、管理事務所および委託業者が訪問する場合は、原則として事前に案内を配布します。','管理事務所'],
+['R03','住戸内点検のご案内','室内への立入点検が必要な場合、対象住戸へ日付・担当者を記載した個別案内を配布します。','管理事務所'],
+['R04','不審な呼出しについて','心当たりのない夜間の訪問・呼出しには応答せず、翌朝、管理人室までお知らせください。','管理事務所'],
+['R05','訪問者の確認','訪問時は、氏名・所属・作業内容を確認してください。腕章や管理番号の提示だけで本人確認が完了するわけではありません。','管理事務所'],
+['R06','時間外の設備異常','漏水・異臭・警報等の緊急時は、掲示している時間外窓口へ速やかにご連絡ください。','管理事務所'],
+['R07','住民間のご意見','住民間での直接の注意はトラブルの原因となります。共用部の苦情は管理人室で取りまとめます。','管理事務所'],
+['R08','管理番号について','管理会社名義の正式な掲示物には発行番号を記載します。ただし個人情報を含む連絡は個別配布します。','管理事務所'],
+['B01','共用部の清掃','各階共用廊下の通常清掃は毎週水曜10時から14時を予定しています。','管理人室'],
+['B02','宅配便のご案内','宅配業者の通常配送は21時までを目安としています。受取前に差出人をご確認ください。','管理人室'],
+['B03','点検予定の変更','点検日程を変更する場合は、変更後の日時が記載された新たな案内を配布します。','管理事務所'],
+['B04','郵便物の取り扱い','誤配郵便物の開封はお控えください。宛先を確認のうえ管理室へお問い合わせください。','管理人室'],
+['B05','掲示物の改訂','有効期間を過ぎた掲示物は撤去します。必要な方は、掲示されている間に写しをお手元にお控えください。','管理事務所'],
+['B06','管理組合へのご意見','管理会社の対応についてのご意見は、管理組合理事会宛ての書面でも受け付けています。','管理組合'],
+['L01','資源ごみの収集日','資源ごみは毎週火曜日の朝8時までにお出しください。','管理人室'],
+['L02','駐輪場の使用','登録区画以外への駐輪はご遠慮ください。','管理人室'],
+['L03','放置自転車について','持ち主の分からない自転車に札を取り付けています。','管理人室'],
+['L04','夜間の生活音','共用部を含め、夜間の大きな生活音にはご配慮ください。','管理人室'],
+['L05','エレベーター点検','今月の定期点検は終了しました。ご協力ありがとうございました。','管理人室'],
+['L06','共用廊下の私物','廊下への私物の放置は避難の妨げになります。','管理人室'],
+['L07','防災訓練のご案内','今週末に防災訓練を予定しています。詳細は後日ご連絡いたします。','管理組合'],
+['L08','消防設備の扱い','非常ベルの作動時は避難経路を確認し、必要な通報を行ってください。','管理人室'],
+['L09','落とし物のお知らせ','灰色の手袋をお預かりしています。心当たりの方は管理人室まで。','管理人室'],
+['L10','こども作品展','404号室のお子さんが描いた「ぼくのマンション」を掲示しています。廊下の絵をよく見てください。','管理組合']
+];
+var EXTRA=[
+{day:2,id:'N02',title:'4階廊下の通行音',body:'深夜における足音についてご意見をいただきました。夜間は周囲へのご配慮をお願いいたします。',issuer:'管理事務所'},
+{day:3,id:'N03',title:'405号室付近について',body:'4階共用部への夜間滞留について調査しています。居住者同士での訪問はお控えください。',issuer:'管理事務所'},
+{day:4,id:'N04',title:'文書の配布について',body:'発行元が不明な文書が一部住戸に投函されています。管理会社の案内に従ってご提出ください。',issuer:'管理事務所'},
+{day:5,id:'N05',title:'夜間設備点検の予告',body:'4階の一部住戸で夜間の設備確認を行う予定です。対象となる住戸には別途ご案内します。',issuer:'管理事務所'},
+{day:6,id:'N06',title:'夜間設備点検へのご協力',body:'管理番号 A-406。対象住戸へ23時台にご連絡する場合があります。インターホンには必ずご対応ください。お問い合わせは点検終了後に承ります。',issuer:'管理事務所'},
+{day:7,id:'N07',title:'4階のお問い合わせについて',body:'設備確認はおおむね完了しており、対象住戸への説明も実施済みです。同様のお問い合わせには個別回答を差し控えます。',issuer:'管理事務所'}
+];
+var EVENTS={
+1:[{id:'E01',time:'19:32',title:'宅配便',scene:'宅配業者から荷物のお届けです。宛名は406号室。今朝、配送予定のお知らせが届いています。',monitor:'制服の配達員が小包を持っている。送り状と事前の通知が一致している。',hint:'B02、ポストの配送案内'}],
+2:[{id:'E02',time:'23:16',title:'管理人室からの訪問',scene:'「管理人です。共用廊下の件でお聞きしたいことがあります」。',monitor:'男性が立っているが名札は読めない。事前の案内は見当たらない。',hint:'R01、R02'}],
+3:[{id:'E03',time:'02:14',title:'インターホン',scene:'短い呼出し。しばらくして「……点検です」と小さな声がした。',monitor:'照明は点いている。人影は判然としない。\nトン、トン。……トン。',hint:'R04、呼出時刻'}],
+4:[{id:'E04',time:'19:21',title:'文書の回収',scene:'管理会社の黒田を名乗る者が「405号室からのお手紙をお預かりします」と言っている。',monitor:'黒田の名札が見える。掲示N04は確かに存在する。',hint:'N04、405号室から届いた文書'},
+{ id:'E05',time:'20:03',title:'予定されていた点検',scene:'本日予定されていた設備業者が来訪した。昼に対象住戸・担当者を記した案内が届いている。',monitor:'訪問者が示した会社名・氏名・訪問時刻は個別案内と一致する。',hint:'R03、B03、本日の個別案内'}],
+5:[{id:'E06',time:'20:25',title:'405号室からの訪問',scene:'「405の横田です。直接お話ししておきたいことがあります」。',monitor:'廊下には405号室の住民が立っている。ポストの手紙に書かれた名前と一致する。',hint:'R07、これまでの投函物'}],
+6:[{id:'E07',time:'23:37',title:'臨時の夜間点検',scene:'「管理会社です。406号室は特別点検の対象です。インターホンでご対応ください」。',monitor:'作業服の男性が立っている。管理番号はN06と一致する。過去の訪問時間と整合していない。',hint:'R02、旧R04、N06'},
+{ id:'E08',time:'02:14',title:'同じ呼出し',scene:'先ほどの担当者は引き上げたはずだ。再びインターホンが鳴る。',monitor:'廊下に人は見えない。\nトン、トン。……トン。',hint:'旧管理人の引継事項、3日目の呼出し'}],
+7:[{id:'E09',time:'19:10',title:'対応完了の確認',scene:'黒田が言う。「407号室の件は既に処理済みです。406号室にも問題がないということでよろしいですね」',monitor:'確認書には管理番号がある。報告先は管理会社で、管理組合理事会ではない。',hint:'B06、保管した資料、405号室の証言'},
+{ id:'E10',time:'02:14',title:'最後の訪問',scene:'インターホンが鳴る。「管理事務所です。昨日のお問い合わせの件で参りました」。',monitor:'廊下の照明だけが映る。\nトン、トン。……トン。',hint:'初日の掲示、古い掲示、夜間の記録'}]
+};
+function initial(){return{started:false,day:1,index:0,phase:'morning',owner:'405',evidence:[],alert:0,trust:0,exposed:false,consent:false,seal:false,history:[],result:'',resultPending:false,ended:false,snapshots:{}};}
+function copy(x){return JSON.parse(JSON.stringify(x));}
+var state=initial(),tab='board',selected=null,monitor=false,filter='';
+function snapshot(){var s=copy(state);delete s.snapshots;s.result='';s.resultPending=false;s.phase='morning';state.snapshots[state.day]=s;}
+function load(){try{var v=JSON.parse(localStorage.getItem(KEY));if(v&&v.day>=1&&v.day<=7&&v.snapshots&&typeof v.started==='boolean')state=v;}catch(e){}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(state));}catch(e){}}
+function has(id){return state.evidence.indexOf(id)>=0;}
+function add(id){if(!has(id)){state.evidence.push(id);save();}}
+function esc(t){return String(t).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function pad(x){return String(x).padStart(2,'0');}
+function el(id){return document.getElementById(id);}
+function currentNotices(){return BASE.map(function(n){return{id:n[0],title:n[1],body:n[2],issuer:n[3],rev:state.day>=6&&n[0]==='R04'};}).concat(EXTRA.filter(function(n){return n.day<=state.day;}));}
+function items(where){
+var post=[
+{day:1,id:'delivery',name:'宅配のお届け予定',text:'406号室宛て。1日目の19時〜21時に到着予定です。'},
+{day:2,id:'letter',name:'405号室からの短い手紙',text:'「407号室は空室と説明されています。夜中の呼出しには気をつけてください。私の手紙を管理室に渡さないでください」。横田'},
+{day:4,id:'old',name:'旧掲示物のコピー',text:'「夜間、心当たりのない呼出しには応答しないでください」。欄外に手書きで「返事をした部屋で翌日も同じことが起きる」。旧管理人・藤井。'},
+{day:4,id:'inspection',name:'本日の個別点検案内',text:'406号室の設備確認。20:00〜20:30。担当：東洋設備・大野。日付と管理番号の記載あり。'},
+{day:5,id:'drawing',name:'子どもの絵の写し',text:'404号室の子どもの絵。黒い人物が立つ場所は「'+state.owner+'号室」の前。'},
+{day:6,id:'report',name:'2023年の事故に関する資料',text:'407号室・高瀬奈津美の死亡事故。当日の異常通報と点検済記録の日付には食い違いがある。405号室から投函された写し。'},
+{day:7,id:'chair',name:'管理組合への意見送付案内',text:'異議申立ては管理会社ではなく理事会でも受付。保管済み資料を添えて提出できる。'}
+];
+var door=[
+{day:1,id:'doorbase',name:'406号室の玄関',text:'ドアノブ、インターホン、表札。特に変わったところはない。'},
+{day:3,id:'log',name:'呼出記録',text:'02:14の呼出しが履歴に残っている。録音には三度のノックのような音。'},
+{day:4,id:'scratch',name:'玄関横の印',text:'壁に鉛筆で書いたような印がある。以前は気づかなかった。'},
+{day:6,id:'sticker',name:'点検済のシール',text:'「確認済」。あなたが点検に応じていなくても、406号室の扉に貼られている。'},
+{day:7,id:'finaldoor',name:'今朝の玄関',text:'床に小さな水滴がある。隣室の前にも同じような跡が続いている。'}
+];
+return (where==='post'?post:door).filter(function(i){return i.day<=state.day;});
+}
+function eventNow(){return EVENTS[state.day][state.index];}
+function evidenceName(id){var map={delivery:'宅配予告',letter:'405号室の警告',old:'旧掲示物',inspection:'個別点検案内',drawing:'子どもの絵',report:'407号室の事故資料',chair:'理事会宛ての案内',doorbase:'玄関の確認',log:'02:14の呼出記録',scratch:'玄関の印',sticker:'点検済シール',finaldoor:'玄関の水滴',technician:'点検員の実施控え',testimony:'横田の証言'};return map[id]||id;}
+function canExpose(){return has('old')&&has('report')&&(has('letter')||has('technician')||has('testimony'));}
+function resultFor(e,c){
+var msg='';
+if(e.id==='E01'){msg=c==='yes'?'予定された荷物が届いた。':c==='no'?'荷物は持ち帰りになった。':'配達予定を確認できたが、荷物は持ち帰りになった。';}
+if(e.id==='E02'){msg=c==='no'?'訪問者はしばらくして立ち去った。':c==='verify'?'時間外窓口には、そのような巡回予定は登録されていない。':'男性は要件を曖昧にしたまま廊下の奥へ消えた。';if(c==='verify'||c==='yes')state.alert++;}
+if(e.id==='E03'||e.id==='E08'||e.id==='E10'){if(c==='yes'){state.owner='406';msg='「はい」と声を出した瞬間、通話が切れた。廊下で、もう一度だけノックがした。';}else if(c==='verify'){state.alert++;msg='時間外窓口は訪問予定を把握していなかった。呼出しは止んだ。';}else msg='応答せずにいると、呼出しは止んだ。';}
+if(e.id==='E04'){if(c==='yes'){state.trust--;msg='文書は回収された。黒田は封筒を確認すると、すぐに帰った。';}else if(c==='verify'){state.alert++;msg='管理会社は、あなたが405号室の文書を持っていることを確認した。';}else{state.trust++;msg='文書は手元に残った。翌朝、405号室のポストに新しいメモが差し込まれている。';}}
+if(e.id==='E05'){if(c==='yes'){add('technician');msg='大野が設備を確認し、実施控えを渡した。記録に書かれた以前の点検日だけが少し気になる。';}else if(c==='verify'){msg='連絡先と予定が一致した。再予約が必要になる。';}else msg='業者は帰った。点検の実施控えは得られなかった。';}
+if(e.id==='E06'){if(c==='yes'){state.trust++;add('testimony');msg='横田は407号室の過去の事故を話した。「旧管理人は、返事をするなと言っていた」と。';}else if(c==='verify'){state.trust--;state.alert++;msg='管理室へ問い合わせた後、横田は話をやめてしまった。';}else msg='横田は戻っていった。扉の下に「旧掲示を見て」とだけ書かれた紙がある。';}
+if(e.id==='E07'){if(c==='yes'){state.seal=true;state.alert++;msg='担当者は玄関の設備収納を確認し、何かを記録した。「406号室も確認済みです」。';}else if(c==='verify'){state.alert++;msg='黒田は「管理番号は正しいでしょう」と繰り返した。訪問理由は説明しなかった。';}else msg='点検への応答を見送った。翌朝、玄関に「確認済」のシールだけが残った。';}
+if(e.id==='E09'){if(c==='yes'){state.consent=true;msg='黒田は「ご理解ありがとうございます」と言い、確認書を持ち帰った。';}else if(c==='verify'){if(canExpose()){state.exposed=true;msg='手元の旧掲示・事故記録を管理組合に示した。黒田の報告書は再調査の対象となった。';}else{state.alert++;msg='手元の資料だけでは、管理組合に正式な異議を残せなかった。黒田は対応済みだと繰り返す。';}}else msg='確認書への同意はしなかった。黒田は後日連絡すると言って引き下がった。';}
+state.history.push({day:state.day,id:e.id,title:e.title,choice:c,outcome:msg});
+return msg;
+}
+function answer(c){if(state.resultPending||state.ended||state.phase!=='night')return;var e=eventNow();state.result=resultFor(e,c);state.resultPending=true;monitor=false;save();render();scrollToTop();}
+function advance(){if(!state.resultPending)return;state.resultPending=false;state.result='';state.index++;if(state.index>=EVENTS[state.day].length){if(state.day===7){state.ended=true;state.phase='end';}else{state.day++;state.index=0;state.phase='morning';snapshot();}}save();render();scrollToTop();}
+function scrollToTop(){try{window.scrollTo({top:0,behavior:'instant'});}catch(e){window.scrollTo(0,0);}}
+function ending(){var name,body;
+if(state.exposed&&state.owner==='405'&&!state.consent){name='記録は残りました';body='管理組合は407号室の事故について再調査を始めた。旧掲示の意味も伝わった。あの呼出しへの応答は、今夜もなかった。';}
+else if(state.exposed){name='説明のつかない呼出し';body='黒田の報告は覆された。しかし、406号室の訪問記録には、翌日も02:14の呼出しが追加されている。';}
+else if(state.owner==='405'&&!state.consent){name='戸締まり';body='406号室は今夜も静かだった。管理会社からは「対応完了」の通知が届く。405号室の前だけ、朝になると濡れている。';}
+else{name='確認済み';body='管理会社の記録では、406号室への説明と点検は完了している。今夜の呼出しについても、回答は必要ないとされている。';}
+return '<div class="ending"><div class="tiny" style="color:#b5c0c2">白波レジデンス｜7日目の翌朝</div><h2>THE END</h2><div class="endingname">'+esc(name)+'</div><p>'+esc(body)+'</p></div><p class="caption">結末は行動と保存資料で変化します。別の日から再挑戦できます。</p><div class="btnrow"><button class="btn primary" data-restartday="1">1日目からやり直す</button><button class="btn secondary" data-showrewind="1">日付を選ぶ</button></div>';
+}
+function renderNight(){var n=el('nightPanel');n.classList.toggle('hidden',state.phase!=='night'||state.ended);if(state.phase!=='night'||state.ended)return;
+var e=eventNow();var h='<div class="over">'+state.day+'日目｜'+esc(e.time)+'｜'+(state.index+1)+' / '+EVENTS[state.day].length+'</div><h2>'+esc(e.title)+'</h2><div class="scenario">'+esc(e.scene)+'</div>';
+if(state.resultPending){h+='<div class="result"><b>その夜の記録</b><p>'+esc(state.result)+'</p></div><button class="btn primary" data-next="1">次へ進む</button>';}
+else{h+='<div class="btnrow"><button class="btn secondary" data-monitor="1">'+(monitor?'観察を閉じる':'相手・状況を確認する')+'</button><button class="btn secondary" data-gotab="board">掲示板を参照</button></div>';
+if(monitor)h+='<div class="monitor">'+esc(e.monitor)+'</div>';
+h+='<p class="caption">手掛かりの例：'+esc(e.hint)+'。照会は訪問者本人に通話する行為ではなく、指定窓口への問い合わせです。</p><div class="btnrow"><button class="btn primary" data-judge="yes">対応する</button><button class="btn" data-judge="no">見送る</button><button class="btn" data-judge="verify">照会する</button></div>';}
+n.innerHTML=h;
+}
+function renderTab(){document.querySelectorAll('.tab').forEach(function(e){e.classList.toggle('active',e.dataset.tab===tab);});
+var p=el('tabPanel'),h='';
+if(tab==='board'){
+h='<h2>エントランス掲示板</h2><p class="tiny">掲示の詳細を開き、改訂履歴や他の資料と照合してください。最初から大量の掲示があります。</p><div class="findbar"><input id="search" class="input" placeholder="掲示を検索（文字・番号）" value="'+esc(filter)+'" aria-label="掲示を検索"></div><div class="notice-summary">';
+var ns=currentNotices().filter(function(x){return(x.id+' '+x.title+' '+x.body).toLowerCase().indexOf(filter.toLowerCase())>=0;});
+ns.forEach(function(x){h+='<button class="paper" data-notice="'+esc(x.id)+'"><small>'+esc(x.id)+'</small><b>'+esc(x.title)+'</b><span class="stamp">'+(x.rev?'撤去':x.id.charAt(0)==='N'?'追加掲示':'お知らせ')+'</span></button>';});
+h+='</div>';
+var n=currentNotices().filter(function(x){return x.id===selected;})[0];
+if(n){h+='<div class="detail"><div class="issuer">'+esc(n.id)+'｜'+esc(n.issuer)+'</div><h3>'+esc(n.title)+'</h3><p>'+esc(n.body)+'</p>'+(n.rev?'<p><b>この掲示物は6日目に撤去されています。</b> 旧文書の写しを探してください。</p>':'')+'</div>';}
+if(state.day>=6)h+='<div class="detail"><h3>掲示の改訂履歴</h3><p>R04「不審な呼出しについて」は撤去され、N06「夜間設備点検へのご協力」が追加されました。古い文面を残している住民がいるようです。</p></div>';
+}else if(tab==='archive'){
+h='<h2>保存した記録</h2><p class="tiny">保存していない情報は後から失われる場合があります。</p><div class="listing">';
+state.evidence.forEach(function(id){h+='<div class="record"><strong>'+esc(evidenceName(id))+'</strong><span class="tiny">記録保管済み</span></div>';});
+if(!state.evidence.length)h+='<p>まだ保存した記録はありません。</p>';
+h+='</div><h3 style="margin-top:16px">過去の対応</h3><div class="listing">';
+state.history.forEach(function(r){h+='<div class="record"><strong>'+r.day+'日目｜'+esc(r.title)+'</strong><p class="tiny">'+(r.choice==='yes'?'対応':r.choice==='no'?'見送り':'照会')+'：'+esc(r.outcome)+'</p></div>';});
+if(!state.history.length)h+='<p>まだ夜間の対応記録はありません。</p>';h+='</div>';
+}else{
+h='<h2>'+(tab==='post'?'406号室のポスト':'406号室の玄関')+'</h2><p class="tiny">内容を確認し、必要な資料は「記録を残す」で控えられます。</p><div class="listing">';
+items(tab).forEach(function(i){h+='<div class="record"><strong>'+esc(i.name)+(has(i.id)?'<span class="tag">記録済</span>':'')+'</strong><p>'+esc(i.text)+'</p><button class="btn secondary" data-record="'+esc(i.id)+'" '+(has(i.id)?'disabled':'')+'>'+(has(i.id)?'記録済み':'記録を残す')+'</button></div>';});
+h+='</div>';
+}
+p.innerHTML=h;
+}
+function render(){el('intro').classList.toggle('hidden',state.started);el('game').classList.toggle('hidden',!state.started);
+el('resume').classList.toggle('hidden',!state.started);el('new').classList.toggle('hidden',!state.started);
+if(!state.started)return;
+el('dayLabel').textContent=state.day+'日目 / 7日間';
+el('phaseLabel').textContent=state.ended?'翌朝：終了':state.phase==='morning'?'朝｜掲示板・郵便・玄関を確認':'夜｜掲示のルールに従って判断';
+el('endingPanel').classList.toggle('hidden',!state.ended);if(state.ended)el('endingPanel').innerHTML=ending();
+el('morningPanel').classList.toggle('hidden',state.phase!=='morning'||state.ended);
+el('morningText').textContent=(['','エントランスには多くの注意書きが貼られている。','4階の生活音に関する掲示が増えた。','405号室付近の苦情が続いている。','手紙の回収を求める掲示が追加された。','子どもの絵が新しく貼り替えられている。','夜間点検の特例通知が届いた。','管理会社は「対応完了」と報告している。'])[state.day];
+var rp=el('rewindPanel');if(!rp.classList.contains('hidden'))renderRewind();
+renderNight();renderTab();
+}
+function renderRewind(){var h='';for(var d=1;d<=7;d++){h+='<button class="btn" '+(d>state.day?'disabled':'data-restartday="'+d+'"')+'>'+d+'日目'+(d===state.day?'（現在）':'')+'</button>';}el('days').innerHTML=h;}
+function start(){state=initial();state.started=true;snapshot();save();render();scrollToTop();}
+function rewind(day){day=Number(day);if(!state.snapshots[day]||day>state.day)return;var old=state.snapshots;var snap=copy(old[day]);snap.snapshots={};Object.keys(old).forEach(function(k){if(Number(k)<=day)snap.snapshots[k]=old[k];});state=snap;state.started=true;tab='board';selected=null;filter='';monitor=false;el('rewindPanel').classList.add('hidden');save();render();scrollToTop();}
+function beginNight(){state.phase='night';save();render();scrollToTop();}
+document.addEventListener('click',function(ev){
+var b=ev.target.closest('button');if(!b)return;
+if(b.id==='start'||b.id==='new'){if(b.id==='new'&&!confirm('これまでの記録を消して最初から始めますか？'))return;start();return;}
+if(b.id==='resume'){state.started=true;render();scrollToTop();return;}
+if(b.id==='showIntro'){state.started=false;render();scrollToTop();return;}
+if(b.id==='toNight'){beginNight();return;}
+if(b.id==='showRewind'||b.dataset.showrewind){el('rewindPanel').classList.toggle('hidden');renderRewind();if(b.dataset.showrewind)el('rewindPanel').scrollIntoView();return;}
+if(b.dataset.restartday){rewind(b.dataset.restartday);return;}
+if(b.dataset.tab){tab=b.dataset.tab;selected=null;renderTab();return;}
+if(b.dataset.gotab){tab=b.dataset.gotab;renderTab();el('tabPanel').scrollIntoView({block:'start'});return;}
+if(b.dataset.notice){selected=b.dataset.notice;renderTab();var detail=el('tabPanel').querySelector('.detail');if(detail)detail.scrollIntoView({block:'nearest'});return;}
+if(b.dataset.record){add(b.dataset.record);renderTab();return;}
+if(b.dataset.monitor){monitor=!monitor;renderNight();return;}
+if(b.dataset.judge){answer(b.dataset.judge);return;}
+if(b.dataset.next){advance();return;}
+});
+document.addEventListener('input',function(ev){if(ev.target.id==='search'){var pos=ev.target.selectionStart;filter=ev.target.value;renderTab();var inp=el('search');inp.focus();inp.setSelectionRange(pos,pos);}});
+load();render();
+})();
+</script></body></html>
