@@ -26,6 +26,7 @@ function runRegression(html){
   return {api:window.__F1_DEBUG__,get:document.getElementById,db};
  }
  function step(h,id){
+  if(id==='audit')h.api.setState({...h.api.getState(),policySeed:0});
   if(id==='inspectBack')check(h.api.focus('f17-back-review','裏手の社の周りが暗く'),'DAY 2 phrase investigation');
    if(id==='productCheck'){const p=h.api.getState().complaintTickets.find(t=>t.body.includes('見掛けない商品'));check(!!p&&h.api.focus(p.id,'見掛けない商品がありました'),'DAY 1 product inspection');}
   // For legacy numeric assertions only, expose the requested action. User-facing discovery has its own regression.

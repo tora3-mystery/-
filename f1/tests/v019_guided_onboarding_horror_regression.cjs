@@ -28,6 +28,7 @@ function boot(memory=new Map()){
  return {api:win.__F1_DEBUG__,get:doc.getElementById,memory};
 }
 function step(app,id){
+ if(id==='audit')app.api.setState({...app.api.getState(),policySeed:0});
  ok(app.api.availableIds().includes(id),'Action available: '+id+' on DAY '+app.api.getState().day);
  app.api.play(id);app.api.advance();
  if(!app.get('dayTransition').classList.contains('hidden'))app.api.closeTransition();

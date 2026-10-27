@@ -46,7 +46,7 @@ for(const p of policies){
  const s=x.api.getState();
  x.api.setState({...s,day,vals:[2,2,2,2],attraction:9,days:Array.from({length:day-1},(_,i)=>({day:i+1,sales:65})),
  revenue:65*(day-1),jobs:[],last:null,actionCounts:counts,discoveredActions:all,
- odd:p.kind==='odd'?p.oddReq:0,complaintTickets:null});
+ odd:p.kind==='odd'?p.oddReq:0,complaintTickets:null,policySeed:0});
  ok(x.api.availableIds().includes(p.id),'Can unlock '+p.id);
  const before=x.api.getState();
  x.api.play(p.id);

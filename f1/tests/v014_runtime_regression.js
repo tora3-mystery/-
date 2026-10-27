@@ -24,6 +24,7 @@ function test(html){
   return {d:window.__F1_DEBUG__,get:document.getElementById,db};
  }
  function step(ctx,id){
+  if(id==='audit')ctx.d.setState({...ctx.d.getState(),policySeed:0});
   if(id==='inspectBack')assert(ctx.d.focus('f17-back-review','裏手の社の周りが暗く'),'DAY 2 shrine message discovery');
    if(id==='productCheck'){const p=ctx.d.getState().complaintTickets.find(t=>t.body.includes('見掛けない商品'));assert(!!p&&ctx.d.focus(p.id,'見掛けない商品がありました'),'DAY 1 product message discovery');}
   // Legacy economic-core tests inject the selected policy; v0171 tests player discovery.
