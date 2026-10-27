@@ -17,7 +17,7 @@
 <body>
 <div class="shell">
 <header>
- <div class="brand-area"><div class="kicker">短編UIゲーム実験室 / S7</div><h1>校則を改定してください。</h1><div class="version">α v0.7.0 ｜ 更新：2026年10月27日 10:39 JST</div></div>
+ <div class="brand-area"><div class="kicker">短編UIゲーム実験室 / S7</div><h1>校則を改定してください。</h1><div class="version">α v0.7.1 ｜ 更新：2026年10月27日 10:55 JST</div></div>
  <div class="toolbar"><button id="help" class="secondary small" type="button">あそびかた</button><button id="new" class="secondary small" type="button">新しく始める</button></div>
 </header>
 <main id="root" aria-live="polite"></main>
@@ -27,7 +27,7 @@
 <script>
 // S7 校則を改定してください。 — alpha v0.7.0 | deterministic browser simulation.
 // Game logic is deliberately independent from UI. All display text derives from state/history.
-const VERSION='0.7.0-alpha';
+const VERSION='0.7.1-alpha';
 const MONTHS=['4月','5月','6月','7月','8月','9月','10月','11月','12月','1月','2月','3月'];
 const STAT=['生活','学び','課外','自治','人気'];
 const ACT=['受験','運動','芸術','事業','探究','自治組織','管理'];
@@ -172,13 +172,13 @@ function newsFromReform(s,a,sy,changes,ev){let entries=[];
  if(a&&a.changed){entries.push({type:'policy',source:a.key||a.special||'rule',headline:'校則の改定が承認されました',detail:a.desc})}
  const syn=sy.filter(x=>!s.messages.includes(x.id));
  if(syn.length){const pickOne=choose(s,syn);entries.push({type:'synergy',source:pickOne.id,headline:'校則の組み合わせに新しい動き',detail:pickOne.desc+'。'});s.messages.push(pickOne.id)}
- for(const c of changes){entries.push({type:'development',source:c.key,headline:`${ASSET_MAP[c.key]}が発展`,detail:`「${c.from}」から「${c.to}」へ変化しました。`})}
+ for(const c of changes){entries.push({type:'development',source:c.key,headline:`${ASSET_MAP[c.key]}が${c.direction==='down'?'縮小':'発展'}`,detail:`「${c.from}」から「${c.to}」へ変化しました。`})}
  for(const x of ev){if(EVENT[x.key].major||x.level!=='normal')entries.push({type:'event',source:x.key,headline:x.headline,detail:x.detail})}
  if(s.teacher>=78)entries.push({type:'teacher',source:'teacher',headline:'職員会議で業務負担を懸念',detail:'学校改革の実施と通常業務の両立が課題になっています。'});
- if(s.policies.jobs>=2&&s.policies.clubs>=2)entries.push({type:'opinion',source:'clubs',headline:'部活動の新入部員減少が話題に',detail:'「アルバイトと両立したかったけれど、練習の日程が合わなくなりました」（2年生）'});
- if(s.mats.事業>=25)entries.push({type:'opinion',source:'shop',headline:'購買の生徒企画に新しい提案',detail:'「地域のお店と商品を作ってみたいです」（購買委員）'});
- if(s.policies.exams===3&&s.policies.lessons<2)entries.push({type:'opinion',source:'exams',headline:'評価方法に疑問の声',detail:'「テストがなくなりましたが、進路指導はどうなるのでしょうか」（保護者）'});
- if(s.special.declared)entries.push({type:'special',source:'republic',headline:'県教委、独立宣言を受領',detail:'県立青葉高校の法的な位置付けに変更はありません。'});
+ if(s.policies.jobs>=2&&s.policies.clubs>=2&&s.month%4===2)entries.push({type:'opinion',source:'clubs',headline:'部活動の新入部員減少が話題に',detail:'「アルバイトと両立したかったけれど、練習の日程が合わなくなりました」（2年生）'});
+ if(s.mats.事業>=25&&s.month%4===1)entries.push({type:'opinion',source:'shop',headline:'購買の生徒企画に新しい提案',detail:'「地域のお店と商品を作ってみたいです」（購買委員）'});
+ if(s.policies.exams===3&&s.policies.lessons<2&&s.month%4===1)entries.push({type:'opinion',source:'exams',headline:'評価方法に疑問の声',detail:'「テストがなくなりましたが、進路指導はどうなるのでしょうか」（保護者）'});
+ if(s.special.declared&&a.special==='declaration')entries.push({type:'special',source:'republic',headline:'県教委、独立宣言を受領',detail:'県立青葉高校の法的な位置付けに変更はありません。'});
  // Small situational reactions vary between schools, but do not override the rules-driven outcomes.
  const incidentPool=[
   {type:'opinion',source:'bulletin',headline:'生徒会への意見箱が更新されました',detail:'「良い面も不安な面もあります。これから学校がどうなるのか見ています」（2年生）'},
@@ -192,7 +192,7 @@ function newsFromReform(s,a,sy,changes,ev){let entries=[];
  if(rng(s)<.32)entries.push(choose(s,incidentPool));
 
  const unique=[];const seen=new Set();for(const e of entries){if(seen.has(e.headline))continue;seen.add(e.headline);unique.push(e)}
- if(unique.length<2){const fallback=[{type:'opinion',source:'student',headline:'校内意見箱に投稿',detail:'「来月も学校がどう変わるか楽しみです」（1年生）'},{type:'opinion',source:'teacher',headline:'職員室から近況報告',detail:'「学校の様子を見ながら、必要なことを考えていきます」（担当教員）'}];unique.push(...fallback.slice(0,2-unique.length))}
+ if(unique.length===0)unique.push({type:'status',source:'school',headline:'学校の近況',detail:s.teacher>=70?'学校の活動が続く一方、教員の負担が高まっています。':'今月は目立った制度変更はなく、校則に沿った活動が続いています。'})
  return unique.slice(0,4)
 }
 function processMonth(s,action){if(s.stage!=='edit')return {ok:false,error:'現在は改定できません。'};
@@ -216,10 +216,10 @@ function processMonth(s,action){if(s.stage!=='edit')return {ok:false,error:'現�
  const statDelta=STAT.map(k=>({name:k,before:calc(start.stats[k]),after:calc(s.stats[k]),delta:calc(s.stats[k]-start.stats[k])}));
  const rec={year:s.year,month:s.month,action:applied.desc,news:entries,stats:statDelta,teacher:calc(s.teacher),synergies:sy.map(x=>x.id),developments:dev,events:eventUpdates};
  s.history.push(rec);s.reforms.push({year:s.year,month:s.month,action:applied.desc});s.lastReport=rec;
- s.month++;if(s.month>=12)s.stage='year-end';else s.stage='report';
+ s.month++;s.stage='report';
  return {ok:true,record:rec}
 }
-function completeReport(s){if(s.stage!=='report')return false;s.stage='edit';return true}
+function completeReport(s){if(s.stage!=='report')return false;s.stage=s.month>=12?'year-end':'edit';return true}
 function election(s){if(s.stage!=='year-end')return null;if(s.year===3)return {final:true,graduation:true};
  const supports=groupSupport(s);
  const dissent=s.shares.map((v,i)=>v*(65-supports[i]));const opponent=dissent.indexOf(Math.max(...dissent));
@@ -252,7 +252,7 @@ const num=(n)=>Math.round(n*10)/10;
 const displayStat={生活:'学校生活',学び:'学び',課外:'課外活動',自治:'生徒自治',人気:'人気度'};
 let s=null,tab='rule',rk='phone',ek='festival',lv=2,scope=0,scale=1,operator=1,sp='';
 function trySave(){try{localStorage.setItem(STORAGE,JSON.stringify(s))}catch(e){}}
-function tryLoad(){try{const x=JSON.parse(localStorage.getItem(STORAGE));if(x?.version===VERSION&&Array.isArray(x.history)&&x.stats&&x.policies&&x.events&&x.randomState!=null&&checkInvariants(x).length===0)return x}catch(e){}return null}
+function tryLoad(){try{const x=JSON.parse(localStorage.getItem(STORAGE));if((x?.version===VERSION||x?.version==='0.7.0-alpha')&&Array.isArray(x.history)&&x.stats&&x.policies&&x.events&&x.randomState!=null&&checkInvariants(x).length===0){x.version=VERSION;return x}}catch(e){}return null}
 function fresh(){s=newWorld((Date.now()^(Math.random()*0xffffffff))>>>0);s.stage='edit';tab='rule';rk='phone';setFromRule();trySave();render()}
 function setFromRule(){lv=s.policies[rk];scope=s.scopes[rk]}
 function setFromEvent(){const p=s.pending[ek]||s.events[ek];scale=p[0];operator=p[1]}
@@ -294,7 +294,7 @@ function editor(){let options='';for(const [key,r] of Object.entries(RULES))opti
  <div class="tiny footer-note">現在有効：${esc(EVENT_SCALE[s.events[ek][0]+1])}。${s.pending[ek]?'翌年度の変更予約が登録されています。':''}</div>`
  }
  if(special.length){side+=`<div class="divider"></div><h2 style="font-size:15px">特別な自治議案</h2><div class="field"><label for="special-type">自治制度に関する提案</label><select id="special-type"><option value="">選択しない</option>${special.map(p=>`<option value="${p.key}">${esc(p.name)}</option>`).join('')}</select></div><p class="tiny">特別な議案も今月の改定1件として数えます。</p>`}
- side+=`<div class="actions"><button class="primary full" id="enact" type="button">改定を確定して翌月へ</button><button class="full muted" id="skip" type="button">今月は改定しない</button></div></div></section>`;return side;
+ side+=`<div class="actions"><button class="primary full" id="enact" type="button">改定を確定して結果を見る</button><button class="full muted" id="skip" type="button">今月は改定しない</button></div></div></section>`;return side;
 }
 function report(){const rec=s.lastReport;return `<section class="panel"><div class="pad"><div class="panel-head"><h2>${rec.year}年目 ${MONTHS[rec.month]}｜月次報告</h2><span class="pill">改定完了</span></div><div class="note strong"><b>今月の判断</b><div>${esc(rec.action)}</div></div><div class="divider"></div><h2 style="font-size:16px">学校で起きたこと</h2>${rec.news.map((n,i)=>`<div class="news-item"><div class="news-source">${i===0?'学校からの通知':n.type==='opinion'?'生徒・教員の声':n.type==='teacher'?'職員会議':n.type==='event'?'学校行事':n.type==='synergy'?'校内ニュース':'学校の近況'}</div><h3>${esc(n.headline)}</h3><p>${esc(n.detail)}</p></div>`).join('')}
  <div class="divider"></div><h2 style="font-size:16px">今月のパラメータ変化</h2><table class="data-table"><tbody>${rec.stats.map(p=>`<tr><td>${esc(displayStat[p.name]||p.name)}</td><td>${p.before} → ${p.after}</td><td class="delta ${p.delta>0?'pos':p.delta<0?'neg':''}">${p.delta>0?'+':''}${p.delta}</td></tr>`).join('')}</tbody></table><div class="actions"><button id="next-month" class="primary full">${s.month===12?'年度末へ進む':'次の月へ進む'}</button></div></div></section>`}
