@@ -33,6 +33,23 @@
     {name:'仲間由紀恵',age:46,source:'https://ogipro.com/talent/nakama/',clue:'『TRICK』が始まった頃は、まだ随分若かったわよね。',hint:'「TRICK」の連続ドラマは2000年から、「ごくせん」は2002年から。どちらも若い頃の主演作。'},
     {name:'久本雅美',age:68,source:'https://www.talent-databank.co.jp/search/profile/2000041015',clue:'ずっとテレビで見てきたけど、昔は舞台が中心だったのよね。',hint:'1984年にWAHAHA本舗の設立に参加し、1990年代には「笑っていいとも！」でもおなじみだった。'}
   ]);
+  // Year-question pool: construction/renovation/opening dates must be named precisely.
+  // Dates and sources verified against the operators, municipalities or heritage registry.
+  const LANDMARKS_POOL=Object.freeze([
+    {name:'東京駅',event:'開業',year:1914,emoji:'🚉',source:'https://www.jreast.co.jp/estation/station/info.aspx?StationCd=1039',detail:'東京駅の開業は1914年。現存する駅舎の復原工事が完了した年ではない。',clue:'丸の内側の赤レンガ駅舎。大正時代に営業を始めた駅だ。'},
+    {name:'国会議事堂',event:'竣工',year:1936,emoji:'🏛️',source:'https://www.sangiin.go.jp/japanese/goiken_gositumon/faq/index.html',detail:'国会議事堂は1936年に竣工。着工年ではない。',clue:'現在の国会議事堂。昭和初期に完成した建物だ。'},
+    {name:'東京タワー',event:'竣工',year:1958,emoji:'🗼',source:'https://www.japantowers.jp/tokyo_tower/',detail:'東京タワーは1958年に竣工。',clue:'戦後の高度成長を象徴する赤白の電波塔だ。'},
+    {name:'東京スカイツリー',event:'開業',year:2012,emoji:'🗼',source:'https://www.tokyo-skytree.jp/about/timeline/',detail:'東京スカイツリータウンのグランドオープンは2012年5月22日。',clue:'高さ634m。東日本大震災の翌年に開業した新しい電波塔だ。'},
+    {name:'東京ドーム',event:'開場',year:1988,emoji:'🏟️',source:'https://www.tokyo-dome.jp/company/history/',detail:'東京ドームは1988年3月17日に開場した。',clue:'日本初の全天候型多目的スタジアム。昭和の終わりに開場した。'},
+    {name:'レインボーブリッジ',event:'開通',year:1993,emoji:'🌉',source:'https://www.shutoko.co.jp/activities/database/bridge/rainbow-bridge/',detail:'レインボーブリッジは1993年8月26日に開通した。',clue:'東京湾の吊橋。東京臨海副都心の開発が進んだ平成初期に開通した。'},
+    {name:'横浜赤レンガ倉庫２号館',event:'竣工',year:1911,emoji:'🧱',source:'https://www.city.yokohama.lg.jp/kanko-bunka/minato/taikan/asobu/spot/red-renga/rekishi/history.html',detail:'横浜赤レンガ倉庫2号館は1911年に竣工。1号館は1913年なので混同しない。',clue:'横浜の新港ふ頭。商業施設としての再オープンよりずっと前に完成していた。'},
+    {name:'京都駅ビル（現在の４代目）',event:'開業',year:1997,emoji:'🚉',source:'https://www.kyoto-station-building.co.jp/about/',detail:'京都駅ビルは1997年9月11日にグランドオープン。駅そのものの初代開業年ではない。',clue:'原広司設計の大規模な駅ビル。平成の半ばに新しい姿になった。'},
+    {name:'明石海峡大橋',event:'開通',year:1998,emoji:'🌉',source:'https://www.jb-honshi.co.jp/corp_index/technology/introduction/introduction_akashi.html',detail:'明石海峡大橋は1998年4月5日に供用開始。',clue:'神戸と淡路島を結ぶ大きな吊橋。平成の終わりよりずっと前に開通した。'},
+    {name:'大阪城天守閣（現在の復興天守）',event:'完成',year:1931,emoji:'🏯',source:'https://www.city.osaka.lg.jp/toshikeikaku/page/0000594239.html',detail:'現在の大阪城天守閣は1931年に市民の寄付で再建された復興天守。豊臣期の築城年とは異なる。',clue:'豊臣秀吉が建てた初代ではなく、現在も残る鉄筋コンクリートの復興天守のこと。'},
+    {name:'通天閣（現在の２代目）',event:'完成',year:1956,emoji:'🗼',source:'https://www.city.osaka.lg.jp/toshiseibi/page/0000643945.html',detail:'現在の2代目通天閣は1956年に完成。初代の完成年ではない。',clue:'新世界のシンボル。初代が解体された後、戦後に再建された鉄塔だ。'},
+    {name:'日本橋（現在の石造アーチ橋）',event:'完成',year:1911,emoji:'🌉',source:'https://www.city.chuo.lg.jp/miryoku/imamukashi/nihonbashi.html',detail:'現在の日本橋は1911年に完成した石造アーチ橋。江戸時代の最初の橋ではない。',clue:'五街道の起点として知られる日本橋。現在の石造の橋について尋ねている。'},
+    {name:'東京ミッドタウン（六本木）',event:'開業',year:2007,emoji:'🏙️',source:'https://www.tokyo-midtown.com/jp/about/',detail:'東京ミッドタウンは2007年3月30日にグランドオープン。',clue:'防衛庁檜町庁舎の跡地に生まれた大型複合施設だ。'}
+  ]);
   const WAIT_VARIANTS = Object.freeze([
     {promise:'18:00',arrival:'18:21',checkin:'17:53',wait:28,delay:21},
     {promise:'18:00',arrival:'18:27',checkin:'17:55',wait:32,delay:27},
@@ -168,6 +185,20 @@
     if (q.legacyIndex === 9) {
       // Public history card: no answer year, no year-bearing official detail.
       q.cardType = 'history';
+      if(Number.isInteger(opts.landmarkIndex)){
+        const l=LANDMARKS_POOL[opts.landmarkIndex%LANDMARKS_POOL.length];
+        q.item=l.name+'（'+l.event+'年）';
+        q.truth=l.year;q.zone=[l.year,l.year];
+        q.emoji=l.emoji;q.source=l.source;
+        q.speech='これって何年に'+l.event+'したと思う？';
+        q.context=l.clue;
+        q.hint='ヒント：'+l.clue+' 建設や開業した時代を考えてみよう。';
+        q.explain='完成・開通・開業など、質問で指定した出来事の年が正解。';
+        q.resultDetail=l.detail;
+        q.resultTitle=q.item;
+        q.slot='街の歴史';
+        q.publicDetail='施設名と会話を手掛かりに考えてみよう。';
+      }
       q.publicDetail = '建物の名前と会話を手掛かりに、竣工・開業の時代を推理してみよう。';
       q.detail = '';
       q.spec = '';
@@ -440,7 +471,7 @@
   }
   const api=Object.freeze({
     VERSION,ORDER,DAYS,SCENES,CELEBRITIES,WAIT_VARIANTS,
-    createPlan,react,dayBreak,epilogue,guardPublic
+    createPlan,react,dayBreak,epilogue,guardPublic,LANDMARKS_POOL
   });
   root.N1ScenarioV04=api;
   if(typeof module!=='undefined' && module.exports)module.exports=api;
