@@ -8,7 +8,11 @@ const path=require('node:path');
 const lib=require(path.join(__dirname,'..','store_scene_v018.js'));
 let checks=0;
 const test=(value,why)=>{checks++;assert(value,why)};
-test(lib.FILES.length===34,'34 planned full-store photos');
+test(lib.FILES.length===34,'34 archived initial candidates');
+test(lib.MAIN_FILES.length===28,'28 state photos for regular panorama');
+test(lib.PRODUCTION_FILES.length===29,'28 panorama photos and 1 installation report');
+test(lib.P3_FILES.length===23,'23 remaining P3 photos');
+test(lib.PRODUCTION_FILES.every(x=>lib.FILES.includes(x)),'Production files must be in legacy manifest');
 test(new Set(lib.FILES).size===34,'No duplicate filenames');
 test(lib.FILES.every(x=>/^main-[a-z-]+\.webp$/.test(x)),'Filename conventions');
 
@@ -33,13 +37,14 @@ test(resolve([4,3,1,0])==='main-checkout-aisle-severe.webp','Dominant issue seve
 test(resolve([4,4,1,0])==='main-checkout-aisle-severe.webp','Two severe issues');
 test(resolve([3,3,1,0])==='main-checkout-aisle-moderate.webp','Two moderate issues');
 test(resolve([3,4,1,0])==='main-checkout-aisle-severe.webp','Pair order stable with severe second index');
-test(resolve([0,0,0,0],7,{completedActions:['register']})==='main-improved-register-added.webp','Visible checkout layout improvement');
-test(resolve([0,0,0,0],7,{completedActions:['weekendStore']})==='main-improved-renovated.webp','Major renovation visible');
+test(resolve([0,0,0,0],7,{completedActions:['register']})==='main-base-orderly.webp','Permanent register cannot replace panoramic photo');
+test(resolve([0,0,0,0],7,{completedActions:['weekendStore']})==='main-base-orderly.webp','Permanent renovation cannot replace panoramic photo');
 test(resolve([5,5,0,0],7,{completedActions:['weekendStore']})==='main-checkout-aisle-severe.webp','Unresolved severe issue cannot be covered by renovation');
 test(resolve([2,4,0,0],7,{completedActions:['register']})==='main-aisle-severe.webp','Current issue more important than prior action');
-test(resolve([0,0,0,0],7,{ending:'normal_success'})==='main-outcome-success.webp','Weekly outcome');
-test(resolve([0,0,0,0],7,{ending:'normal_strain'})==='main-outcome-decline.webp','Decline outcome');
+test(resolve([0,0,0,0],7,{ending:'normal_success'})===undefined,'Weekly success retains existing photo');
+test(resolve([0,0,0,0],7,{ending:'normal_strain'})===undefined,'Weekly decline retains existing photo');
 test(lib.resolve({complaints:[0,0,0,0],attraction:5,day:8})===null,'Dedicated DAY 8 image retained');
+test(hit.size<=lib.MAIN_FILES.length,'All generated references are main scene images');
 test(lib.resolve({complaints:[0,0,0,0],attraction:5,day:7,ending:'odd_day8'})===null,'Uncanny route not overridden');
 
 for(const [arr,attraction] of [[[6,0,0,0],5],[[1,-1,0,0],5],[[1,1.2,0,0],5],[[0,0,0],5],[[0,0,0,0],11]]){
