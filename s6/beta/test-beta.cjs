@@ -325,7 +325,7 @@ check('all 24 curated SNS posts preserve source visibility and factual schedulin
  }
  const b=newPlayer();b.click('skip');b.click('night-sns','Photogram');
  assert.match(b.html,/こもれびは水曜のお茶会から/);
- assert.match(b.html,/音だけでも、聴きに来てください。/);
+ assert.match(b.html,/曲が終わったあとの一拍/);
 });
 check('Photogram requires a face-to-face follow request, independently from TINE',()=>{
  const SNS=dataScope.window.S6_BETA_SOCIAL.accounts;
@@ -572,7 +572,7 @@ check('all story clues match real performers and the deliberate red herrings',()
 check('vocaloid clues are available without visiting the correct circle',()=>{
  const s=newPlayer();
  s.click('skip');s.click('night-board');
- assert.match(s.html,/ネットで曲を作る人/);
+ assert.match(s.html,/普段の音楽活動と/);
  s.click('back-night');s.click('night-sns','Photogram');
  assert.match(s.html,/一拍/);
  assert.doesNotMatch(s.html,/余白ラムネ.*西園寺紬/);
@@ -602,8 +602,8 @@ check('old S6 beta saves do not mix stalking and producer narratives',()=>{
  const cache=new Map();
  cache.set('s6-origin-beta-010',JSON.stringify({schema:1,phase:'private',result:'DANGER'}));
  const s=makeSession(cache);
- assert.equal(s.state.phase,'title');
  assert.match(s.html,/サークルは/);
+ s.click('start');assert.equal(s.state.phase,'warning');
 });
 
 console.log(JSON.stringify({passed:total,failed:failures}));if(failures)process.exitCode=1;
