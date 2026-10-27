@@ -1,0 +1,53 @@
+{
+  "generatedAt": "2026-10-27T15:05:00+09:00",
+  "status": "PASS",
+  "expectedPng": 145,
+  "actualPng": 145,
+  "expectedWebp": 145,
+  "actualWebp": 145,
+  "missingPng": [],
+  "extraPng": [],
+  "missingWebp": [],
+  "extraWebp": [],
+  "failures": [],
+  "contactSheets": {
+    "assets/contact-sheet-png.png": true,
+    "assets/contact-sheet-webp.png": true
+  },
+  "facilityAnchorSummary": {
+    "checked": 102,
+    "maxCenterDeviation": 0.5,
+    "bottomEdges": [
+      440
+    ]
+  },
+  "receiverContract": {
+    "briefVersion": "1.2",
+    "manifestSchemaVersion": "1.0",
+    "manifestMatchesTargetLedger": true,
+    "targetRecordCount": 145,
+    "pngWebpPairsPresentAndDecoded": true,
+    "dimensionsAndAlphaMatch": true
+  },
+  "visualReviewV12": {
+    "status": "PASS",
+    "assets": [
+      {
+        "path": "assets/facilities/clinic/community-2.png",
+        "note": "庭を備えた地域診療所。検査棟の拡大や自然療法のみを勧める表現なし。"
+      },
+      {
+        "path": "assets/facilities/clinic/community-3.png",
+        "note": "静かな地域の診療拠点。巨大病院・先進検査棟の外観ではない。"
+      },
+      {
+        "path": "assets/facilities/scenic/conservation-2.png",
+        "note": "植生が戻る散策路。舗装・大型看板を増やさず表現。"
+      },
+      {
+        "path": "assets/facilities/scenic/conservation-3.png",
+        "note": "繁茂した植生と安全に通れる小径を持つ原生林景勝地。"
+      }
+    ]
+  }
+}
