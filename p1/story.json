@@ -904,10 +904,11 @@
     }
   ],
   "modelNotes": [
-    "Article lead variants only become public when the article is printed.",
-    "Same article ID appearing again must render fresh follow-up copy; not yet populated in this JSON.",
-    "50 reaction copy entries are inherited from v0.6; only 16 are rewritten in v0.7.",
-    "No real-business or real-person names are used.",
-    "Source catalogue from v0.7; UI implementation and balance QA are v0.8.1-beta."
+    "P1 v0.9.1-beta: Three future outcomes are finalized only after the seventh newspaper is published.",
+    "Regular articles are delivered in a seeded shuffled order, one of each topic's four articles during days 1–4. Older saved games without a newsOrder retain their original schedule.",
+    "Repeated articles use contextual follow-up headlines and bodies in game.js; this JSON stores canonical source stories.",
+    "Reader or social-media tips must be investigated by a matching reporter-topic pair. Publishing corroborated coverage in a major slot can strengthen the final policy conditions.",
+    "The early-policy-decision wording in C08 was corrected so that it does not imply a decision before day seven.",
+    "All people, organizations, social-media accounts, and places in the story are fictional."
   ]
 }
