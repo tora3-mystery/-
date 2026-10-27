@@ -117,7 +117,7 @@ function venue(){
  const ambience=['どこかでアンプの音がして、廊下には別の輪の笑い声が漏れている。','少し遅れて来た見学者が、空いた席を探している。','隣の机から短いフレーズが聞こえ、誰かが拍手した。'];
  return '<div class="eyebrow">'+esc(WEEK[S.day])+' / '+esc(label(e.org_id))+'</div><h2>'+esc(e.title)+'</h2><p class="dim">'+esc(ambience[(S.presentationSeed+S.day)%ambience.length])+'</p>'+
  '<p>あちこちで演奏や会話が始まっている。どの二組に混ざろう？</p><div class="status">話したグループ '+S.visitedGroups.length+' / 2</div>'+
- '<div class="two">'+arrange(gs,'circles-'+S.day).map(g=>'<article class="panel"><h3>'+esc(g.group_title)+'</h3><p>'+esc(g.activity)+'</p><div class="faces small-faces">'+arrange(byGroup(g.group_id),'faces-'+g.group_id).map(id=>portrait(id,peerClass(id))).join('')+'</div>'+
+ '<div class="two">'+arrange(gs,'circles-'+S.day).map(g=>'<article class="panel"><h3>'+esc(g.group_title)+'</h3><p>'+esc(Dialogue.sceneActivity(g.group_id))+'</p><div class="faces small-faces">'+arrange(byGroup(g.group_id),'faces-'+g.group_id).map(id=>portrait(id,peerClass(id))).join('')+'</div>'+
  (S.visitedGroups.includes(g.group_id)?'<span class="pill">参加済み</span>':S.visitedGroups.length>=2?'<span class="dim">今日はここまで</span>':btn('この輪に入る','join-group',g.group_id))+'</article>').join('')+'</div>'+
  '<div class="actions">'+btn('会場を出て夜へ','finish-venue')+'</div>';
 }
@@ -137,7 +137,7 @@ function group(){
   return primary+(x.reply&&people[x.reply.pid]?speech(x.reply.pid,x.reply.text,'輪の反応'):'');
  }).join('');
  return '<div class="eyebrow">'+esc(label(events[g.event_id].org_id))+' / '+esc(g.group_title)+'</div><h2>輪の会話</h2>'+
- '<p>'+esc(g.activity)+'</p>'+(Dialogue.sceneMode(S.group)==='performance'?'<p class="dim">演奏がひと区切りつき、音が止んだところで短い会話が始まる。</p>':'')+
+ '<p>'+esc(Dialogue.sceneActivity(g.group_id))+'</p>'+(Dialogue.sceneMode(S.group)==='performance'?'<p class="dim">演奏がひと区切りつき、音が止んだところで短い会話が始まる。</p>':'')+
  '<div class="chat-thread">'+chats+'</div>'+
  '<p class="status">あと '+remaining+' 回行動できます</p>'+
  (remaining?'<div class="paper"><h3>この輪でどう過ごす？</h3><p class="dim">誰と何を話すか決めましょう。交流はこの輪で2回まで。</p>'+
@@ -152,7 +152,7 @@ function chooseAction(){
  const items=byGroup(S.group).map(id=>{
   const q=qmap[id],name=S.guesses[id]?.verified?people[id].name:PEERS.has(id)?'同期の学生':'名前はまだ曖昧';
   return '<div class="person-card">'+portrait(id,peerClass(id))+'<div><strong>'+esc(name)+'</strong><p class="dim">'+esc(relationship(id))+esc(contactBadge(id))+'</p>'+
-  (questionMode?'<p class="dim">'+esc(q?.question||'所属を尋ねる')+'</p>':'')+
+  (questionMode?'<p class="dim">'+esc(Dialogue.questionText(q))+'</p>':'')+
   btn(questionMode?'この質問をする':mode==='contact'?'交換を頼む':mode==='photo'?'Photogramを聞く':'話しかける','act-target',id,'mini')+
   (questionMode&&q?btn('所属について聞く','ask-affiliation',id,'mini ghost'):'')+'</div></div>';
  }).join('');
@@ -376,9 +376,10 @@ function handle(act,id){
   const q=D.questions.find(q=>q.group_id===S.group&&q.target_id===id);
   let reply,kind=type;
   if(type==='talk'){
-    // Apply today's conversation before choosing the response, so the change is felt immediately.
-    recordConversation(id,'talk');
+    // Determine first-contact speech before the action updates relationship state.
+    // Updating first would force a reunion greeting and suppress P001's initial clue.
     reply=Dialogue.talk(id,S.group,S);
+    recordConversation(id,'talk');
     if(!S.spokenTo.includes(id))S.spokenTo.push(id);
   }else if(type==='question'||type==='affiliation'){
     reply=Dialogue.answer(id,S.group,type==='affiliation'?'affiliation':'question');
@@ -425,7 +426,7 @@ function handle(act,id){
  }
  case 'listen-group':{
   if(S.phase!=='group'||(S.groupLog[S.group]||[]).length>=2)return;
-  const msg=actions[S.group]?.listen_text||'周りの音と会話を聴いた。';
+  const msg=Dialogue.listenText(S.group);
   (S.groupLog[S.group]??=[]).push({pid:null,type:'聞き耳',text:msg});
   S.groupDone[S.group]=msg;
   const fact=actions[S.group]?.trigger_fact_id;
