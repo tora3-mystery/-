@@ -79,11 +79,22 @@ header{display:flex;gap:16px;justify-content:space-between;align-items:center;pa
 .reviewOtherChange{background:#f7f8f3;border-left:3px solid #9dab9d;padding:10px 11px;border-radius:5px;margin:8px 0;font-size:12px}
 .reviewOwnChange strong,.reviewOtherChange strong{display:block;font-size:13px}
 .reviewOwnChange p,.reviewOtherChange p{margin:4px 0}
+.reviewQuote{border:1px solid #b8ceb9;background:#f5f9f0;border-radius:12px;padding:13px 14px;margin:12px 0 15px;text-align:left;box-shadow:inset 4px 0 0 #61946e}
+.reviewQuote .quoteLabel{font-size:11px;color:#526d59;font-weight:800;margin-bottom:5px}
+.reviewQuote .quoteStars{color:#a77820;font-size:19px;font-weight:900;letter-spacing:1px}
+.reviewQuote .quoteText{font-size:14px;font-weight:650;line-height:1.8;overflow-wrap:anywhere}
+.map.terrainGrid .site.plot.eligible:not(.selected){border-color:transparent;background:transparent!important}
+.map.terrainGrid .site.plot.selected{border:3px solid #28583e;background:#fffefa7d!important}
+.map.terrainGrid .site.plot.eligible .marker{background:#286d42;color:#fff;font-weight:900;font-size:10px;line-height:1.2;padding:4px 5px;border-radius:5px}
+.map.terrainGrid .site.plot.selected .marker{background:#f8d989;color:#3c351e}
+.map.terrainGrid .site.plot.notEligible .marker{background:#e8ebe2db;color:#617365}
+.map.terrainGrid .site.plot.eligible.changed:not(.selected){outline:0;box-shadow:none}
+@media(max-width:370px){.map.terrainGrid .site.plot.eligible .marker{font-size:9px;padding:3px 2px}}
 </style>
 </head>
 <body>
 <div class="shell">
-<header><div><div class="kicker">短編UIゲーム実験室 / α TEST</div><div class="brand">この村の評価をお願いします。</div><div class="sub">V1｜村レビュー（仮）・v0.6.14 α ｜ 更新：2026-10-27 22:11 JST</div></div><div class="actions"><button id="helpBtn" class="btn" type="button">あそびかた</button><button id="soundBtn" class="btn sound" type="button" aria-pressed="false">♪ OFF</button><button id="resetBtn" class="btn" type="button">新しい村</button></div></header>
+<header><div><div class="kicker">短編UIゲーム実験室 / α TEST</div><div class="brand">この村の評価をお願いします。</div><div class="sub">V1｜この村の評価をお願いします。・v0.6.15 α ｜ 更新：2026-10-27 22:36 JST</div></div><div class="actions"><button id="helpBtn" class="btn" type="button">あそびかた</button><button id="soundBtn" class="btn sound" type="button" aria-pressed="false">♪ OFF</button><button id="resetBtn" class="btn" type="button">新しい村</button></div></header>
 <main class="layout">
 <section class="panel"><div class="pad"><div class="villageHeader"><div><div class="kicker" id="period">2027年4月</div><div class="villageName" id="villageName">読み込み中...</div></div><span class="terrainTag" id="terrain">山間</span></div><div class="metadata" id="profile"></div><div id="arrivalNote" class="arrivalNote"></div><div class="stats" id="stats"></div><div id="map" class="map" aria-label="村の地図"></div><div class="mapLegend"><span><i class="dot"></i>今月レビューできる</span><span>点線：今月は観察のみ</span><span>灰色：閉業</span></div><div class="news" id="news"></div><div class="residentVoices" id="residentVoices"></div><div class="smallHeading">村の歩み</div><div id="history" class="history"></div><details class="reviewArchive"><summary>あなたの口コミ一覧（<span id="reviewCount">0</span>／12件）</summary><div id="reviewArchiveList"></div></details></div></section>
 <section class="panel"><div class="sideTop"><div class="villageHeader"><div><div class="smallHeading" style="margin:0">今月の訪問先</div><div class="sectionTitle" id="monthTitle"></div></div><div id="monthCount" class="yearCount"></div></div><div class="progress"><span id="progressBar" style="width:0"></span></div><div class="tiny" style="margin-top:6px" id="candidatesNote"></div></div><div class="pad" id="detail"></div></section>
@@ -91,7 +102,7 @@ header{display:flex;gap:16px;justify-content:space-between;align-items:center;pa
 </div><div id="overlay" class="overlay" role="presentation"><div class="modal" id="modal" role="dialog" aria-modal="true" aria-label="ゲームの案内"></div></div>
 <script>
 (function(){'use strict';
-const VERSION='0.6.14-alpha';const STORE='village-review-prototype-v010';
+const VERSION='0.6.15-alpha';const STORE='village-review-prototype-v010';
 const $=id=>document.getElementById(id);
 const V1_ART={ready:false,byId:new Map(),reason:'not loaded'};
 function v1Url(id){const record=V1_ART.ready?V1_ART.byId.get(id):null,u=record&&(record.webp||record.png);return typeof u==='string'&&/^assets\/[a-z0-9_\/-]+\.(webp|png)$/i.test(u)?u:null}
@@ -234,7 +245,7 @@ let S=null;let chosen=null;let currentStars=4;let selectedFact=0;let sound=false
 function rand(){let t=S.rng|0;t^=t<<13;t^=t>>>17;t^=t<<5;S.rng=t>>>0;return (S.rng>>>0)/4294967296}
 function ri(a,b){return Math.floor(a+rand()*(b-a+1))}function pick(a){return a[Math.floor(rand()*a.length)]}function shuffle(a){let b=a.slice();for(let i=b.length-1;i>0;i--){let j=ri(0,i),tmp=b[i];b[i]=b[j];b[j]=tmp}return b}
 function save(){try{localStorage.setItem(STORE,JSON.stringify(S))}catch(e){}}
-function load(){try{const x=JSON.parse(localStorage.getItem(STORE));if(x && [VERSION,'0.6.13-alpha','0.6.12-alpha','0.6.11-alpha','0.6.10-alpha','0.6.9-alpha','0.6.8-alpha','0.6.7-alpha','0.6.6-alpha','0.6.5-alpha','0.6.4-alpha','0.6.3-alpha','0.6.2-alpha','0.6.1-alpha','0.6.0-alpha','0.5.4-alpha','0.5.3-alpha','0.5.2-alpha','0.5.1-alpha','0.5.0-alpha','0.4.9-alpha','0.4.8-alpha','0.4.7-alpha','0.4.6-alpha','0.4.5-alpha','0.4.4-alpha','0.4.3-alpha','0.4.2-alpha','0.4.1-alpha','0.4.0-alpha','0.3.4-alpha','0.3.3-alpha','0.3.2-alpha','0.3.1-alpha','0.3.0-alpha','0.2.0-alpha','0.1.1-alpha','0.1.0-alpha'].includes(x.version) && Array.isArray(x.facilities) && x.facilities.length){S=x;S.version=VERSION;S.reviewHistory=S.reviewHistory||[];S.reforms=S.reforms||{};S.evolutionImpact=S.evolutionImpact||{visitors:0,economy:0,quiet:0};S.completed=S.month>=12;S.annualDue=S.annualDue||false;S.facilities.forEach(f=>{if(f.name===DEFS[f.kind]?.name)f.name=facilityName(f.kind,f.id,true);if(!f.mode)f.mode='boost';if(f.stageFocus===undefined)f.stageFocus=f.stage>0?f.focus:null;if(!f.stageMode)f.stageMode=f.mode;if(!f.improvedFacets)f.improvedFacets={};if(!f.routeScores)f.routeScores={};if(!f.directionScores)f.directionScores={};if(!f.secondDirectionScores)f.secondDirectionScores={};if(f.firstDirection===undefined)f.firstDirection=null;if(f.secondDirection===undefined)f.secondDirection=null;if(f.evolutionReviews===undefined)f.evolutionReviews=0;if(!f.observedFacts){f.observedFacts={};if(f.improvedFacets){for(let i=0;i<DEFS[f.kind].facts.length;i++){const tag=DEFS[f.kind].facts[i][1];if(Object.prototype.hasOwnProperty.call(f.improvedFacets,tag)&&DEFS[f.kind].facts.filter(row=>row[1]===tag).length===1)f.observedFacts[i]=!!f.improvedFacets[tag]}}}if(!f.revisedFacts)f.revisedFacts={};if(!f.aspectLevels)f.aspectLevels={};if(f.lastPolarity===undefined)f.lastPolarity=null;if(!f.visualRoute&&f.stage>=2){const i=DEFS[f.kind].facts.findIndex(v=>v[1]===f.stageFocus);f.visualRoute=(ROUTE_BY_FACT[f.kind]||[])[Math.max(0,i)]?.[f.stageMode==='reform'?1:0]||preferredRoute(f)}});if(S.completed)S.candidates=[];restoreGround();save();return true}}catch(e){}return false}
+function load(){try{const x=JSON.parse(localStorage.getItem(STORE));if(x && [VERSION,'0.6.14-alpha','0.6.13-alpha','0.6.12-alpha','0.6.11-alpha','0.6.10-alpha','0.6.9-alpha','0.6.8-alpha','0.6.7-alpha','0.6.6-alpha','0.6.5-alpha','0.6.4-alpha','0.6.3-alpha','0.6.2-alpha','0.6.1-alpha','0.6.0-alpha','0.5.4-alpha','0.5.3-alpha','0.5.2-alpha','0.5.1-alpha','0.5.0-alpha','0.4.9-alpha','0.4.8-alpha','0.4.7-alpha','0.4.6-alpha','0.4.5-alpha','0.4.4-alpha','0.4.3-alpha','0.4.2-alpha','0.4.1-alpha','0.4.0-alpha','0.3.4-alpha','0.3.3-alpha','0.3.2-alpha','0.3.1-alpha','0.3.0-alpha','0.2.0-alpha','0.1.1-alpha','0.1.0-alpha'].includes(x.version) && Array.isArray(x.facilities) && x.facilities.length){S=x;S.version=VERSION;S.reviewHistory=S.reviewHistory||[];S.reforms=S.reforms||{};S.evolutionImpact=S.evolutionImpact||{visitors:0,economy:0,quiet:0};S.completed=S.month>=12;S.annualDue=S.annualDue||false;S.facilities.forEach(f=>{if(f.name===DEFS[f.kind]?.name)f.name=facilityName(f.kind,f.id,true);if(!f.mode)f.mode='boost';if(f.stageFocus===undefined)f.stageFocus=f.stage>0?f.focus:null;if(!f.stageMode)f.stageMode=f.mode;if(!f.improvedFacets)f.improvedFacets={};if(!f.routeScores)f.routeScores={};if(!f.directionScores)f.directionScores={};if(!f.secondDirectionScores)f.secondDirectionScores={};if(f.firstDirection===undefined)f.firstDirection=null;if(f.secondDirection===undefined)f.secondDirection=null;if(f.evolutionReviews===undefined)f.evolutionReviews=0;if(!f.observedFacts){f.observedFacts={};if(f.improvedFacets){for(let i=0;i<DEFS[f.kind].facts.length;i++){const tag=DEFS[f.kind].facts[i][1];if(Object.prototype.hasOwnProperty.call(f.improvedFacets,tag)&&DEFS[f.kind].facts.filter(row=>row[1]===tag).length===1)f.observedFacts[i]=!!f.improvedFacets[tag]}}}if(!f.revisedFacts)f.revisedFacts={};if(!f.aspectLevels)f.aspectLevels={};if(f.lastPolarity===undefined)f.lastPolarity=null;if(!f.visualRoute&&f.stage>=2){const i=DEFS[f.kind].facts.findIndex(v=>v[1]===f.stageFocus);f.visualRoute=(ROUTE_BY_FACT[f.kind]||[])[Math.max(0,i)]?.[f.stageMode==='reform'?1:0]||preferredRoute(f)}});if(S.completed)S.candidates=[];restoreGround();save();return true}}catch(e){}return false}
 function newWorld(seed){S={version:VERSION,rng:seed>>>0||1,month:0,terrain:'',trait:'',name:'',population:0,startPopulation:0,visitors:0,startVisitors:0,economy:0,startEconomy:0,quiet:0,startQuiet:0,facilities:[],reforms:{},themes:{trade:0,tech:0,history:0,tradition:0,strange:0,nature:0,sea:0,living:0,transport:0,tourism:0},secrets:{ancient:false,robot:false,deep:false},achievements:[],usedEvents:[],log:[],candidates:[],lastReview:null,result:null,annualDue:false,completed:false,reviewHistory:[],evolutionImpact:{visitors:0,economy:0,quiet:0},stats:{total:0,closed:0,newFacilities:0,big:0,chain:0},sound:false};
  const terrain=pick(TERRAIN);S.terrain=terrain.id;S.trait=pick(TRAITS).id;S.name=pick(FIRST)+pick(LAST)+'村';S.population=ri(220,580);S.startPopulation=S.population;S.visitors=ri(220,550);S.startVisitors=S.visitors;S.economy=ri(33,55);S.startEconomy=S.economy;S.quiet=ri(63,89);S.startQuiet=S.quiet;S.cityMins=ri(terrain.distance[0],terrain.distance[1]);S.stationMins=terrain.id==='island'?null:ri(8,70);S.secrets.ancient=rand()<.085;S.secrets.robot=rand()<.075;S.secrets.deep=(terrain.id==='coast'||terrain.id==='island')&&rand()<.12;initGround();
  const pool=['rail','market','school','shrine','inn','office','clinic','shop','hall','farm'];const count=ri(4,6);const commerce=['market','shop','farm','inn'];const life=['school','office','clinic','hall'];const chosenKinds=[pick(commerce),pick(life)];for(const k of shuffle(pool)){if(chosenKinds.length>=count)break;if(!chosenKinds.includes(k))chosenKinds.push(k)}
@@ -254,7 +265,22 @@ const find=id=>S.facilities.find(f=>f.id===id);
 function terrain(){return TERRAIN.find(t=>t.id===S.terrain)||TERRAIN[0]}
 function trait(){return TRAITS.find(t=>t.id===S.trait)||TRAITS[0]}
 function period(offset=0){let t=S.month+offset;return {year:2027+Math.floor((3+t)/12),month:(3+t)%12+1,fy:2027+Math.floor(t/12)}}
-function makeCandidates(){const eligible=S.facilities.filter(f=>f.open);const candidates=[];while(candidates.length<Math.min(3,eligible.length)){let bag=eligible.filter(f=>!candidates.includes(f));let weights=bag.map(f=>{let w=2+clamp((S.month-f.lastVisited)/2,0,6);if(f.lastChanged>=S.month-1)w+=4;if(f.id===S.lastReview?.id)w+=(f.lastChanged===S.month?4:-2);if(f.kind==='scenic'&&bag.length>3)w*=.35;return Math.max(.3,w)});let total=weights.reduce((a,b)=>a+b,0),r=rand()*total,index=0;for(;index<bag.length-1;index++){r-=weights[index];if(r<0)break}candidates.push(bag[index])}S.candidates=candidates.map(f=>f.id)}
+// March guarantees a required visit when the secret-ending prerequisites
+// can actually be completed by the final review. No flags or answers are shown.
+function finaleCandidate(){
+ if(S.month!==11)return null;
+ const reviews=S.reviewHistory||[];
+ const count=tag=>new Set(reviews.filter(r=>r.tag===tag&&r.stars>=4).map(r=>r.id));
+ const possible=(kind,tag)=>S.facilities.find(f=>f.open&&f.kind===kind&&factsFor(f).some(fact=>fact.tag===tag));
+ const office=possible('office','tradition'),ancient=count('tradition');
+ if(office&&S.secrets.ancient&&S.themes.tradition>=4.8&&S.themes.history>=2.5&&S.facilities.some(f=>['shrine','hall'].includes(f.kind))&&(ancient.size>=2||(ancient.size===1&&!ancient.has(office.id))))return office;
+ const robot=possible('robot','tech'),technology=count('tech');
+ if(robot&&S.secrets.robot&&S.themes.tech>=7.8&&(technology.size>=2||(technology.size===1&&!technology.has(robot.id))))return robot;
+ const harbor=possible('harbor','sea'),sea=count('sea');
+ if(harbor&&S.secrets.deep&&['coast','island'].includes(S.terrain)&&S.themes.sea>=6.8&&(sea.size>=2||(sea.size===1&&!sea.has(harbor.id))))return harbor;
+ return null
+}
+function makeCandidates(){const eligible=S.facilities.filter(f=>f.open);const candidates=[];while(candidates.length<Math.min(3,eligible.length)){let bag=eligible.filter(f=>!candidates.includes(f));let weights=bag.map(f=>{let w=2+clamp((S.month-f.lastVisited)/2,0,6);if(f.lastChanged>=S.month-1)w+=4;if(f.id===S.lastReview?.id)w+=(f.lastChanged===S.month?4:-2);if(f.kind==='scenic'&&bag.length>3)w*=.35;return Math.max(.3,w)});let total=weights.reduce((a,b)=>a+b,0),r=rand()*total,index=0;for(;index<bag.length-1;index++){r-=weights[index];if(r<0)break}candidates.push(bag[index])}const finale=finaleCandidate();if(finale&&!candidates.includes(finale)){if(candidates.length>=3)candidates[2]=finale;else candidates.push(finale)}S.candidates=candidates.map(f=>f.id)}
 function signal(f,facet,index){return Object.prototype.hasOwnProperty.call(f.observedFacts||{},index)?!!f.observedFacts[index]:false}
 const PRICE_REVISIONS={market:[2],shop:[0],lodge:[1],inn:[2]};
 function factsFor(f){let rows=DEFS[f.kind].facts.slice();if(['coast','island'].includes(S.terrain)&&['scenic','shrine','inn','lodge'].includes(f.kind))rows.push(['海とのつながり','sea','沖合には不思議な潮目が見えます。','港の近くで見慣れない魚が見つかるようになりました。','海の景色を大切にしていて素敵です。','海と暮らす村の姿が魅力的です。','海の特徴が活かされていない気がします。','海を優先しすぎていて不安です。']);return rows.map((row,i)=>{const high=aspectLevel(f,i)>=55,revision=f.revisedFacts?.[i];return {key:i,label:row[0],tag:row[1],high,statement:revision|| (high?row[3]:row[2]),good:revision?'改善に向けた対応が見られて良かったです。':(high?row[5]:row[4]),bad:revision?'改善後も気になる点が残っています。':(high?row[7]:row[6])}})}
@@ -584,7 +610,7 @@ function applyEvolutionConsequences(f,record){
 }
 function maybeUpgrade(f,changes){
  if(!f.open||f.stage>=3)return;
- let threshold=3.25+f.stage*1.65;
+ let threshold=2.7+f.stage*1.45;
  if(f.stage===2){const i=f.plot,row=Math.floor(i/GRID_WIDTH),col=i%GRID_WIDTH;if(S.facilities.some(o=>{if(o===f||!o.open||o.stage<3)return false;const j=o.plot;return Math.abs(Math.floor(j/GRID_WIDTH)-row)+Math.abs(j%GRID_WIDTH-col)<=2}))threshold=Math.max(3.5,threshold-2.2)}
  if(f.progress>=threshold&&f.funds>12){
   const previousVisualRoute=lateRoute(f);
@@ -641,7 +667,7 @@ function chainEvent(changes){const t=S.themes;
    fn:()=>['防災無線が新しくなりました','放送の聞こえにくさなどの意見が集まり、村は設備を見直しました。一部の住民は、昨日だけ二度鳴ったと話しています。',null]},
   {id:'fish',when:()=>['coast','island'].includes(S.terrain)&&interest('sea')>=2.4&&canAdd('harbor'),
    fn:()=>{const f=addFacility('harbor');return ['漁港が整備されました','海の資源をめぐる意見や需要を受け、漁港設備が新設されました。',f]}}
- ];const eligible=events.filter(e=>!S.usedEvents.includes(e.id)&&e.when());if(eligible.length){const event=eligible[0];S.usedEvents.push(event.id);const [title,detail,f]=event.fn();S.stats.chain++;S.economy=clamp(S.economy+1,0,100);changes.push({kind:'chain',icon:f?DEFS[f.kind].icon:'🎊',title,detail});return true}return false}
+ ];const eligible=events.filter(e=>!S.usedEvents.includes(e.id)&&e.when());if(eligible.length){const event=eligible[0];S.usedEvents.push(event.id);const [title,detail,f]=event.fn();S.stats.chain++;S.economy=clamp(S.economy+1,0,100);changes.push({kind:'chain',facilityId:f?.id||null,icon:f?DEFS[f.kind].icon:'🎊',title,detail});return true}return false}
 function autonomousChanges(reviewedId,changes){
  let shown=false;
  for(const f of S.facilities){
@@ -649,13 +675,13 @@ function autonomousChanges(reviewedId,changes){
   const kind=DEFS[f.kind].kind;
   let demand=(kind==='trade'&&S.visitors>=530)||(kind==='tourism'&&S.visitors>=650)||(kind==='living'&&S.population>=320&&S.economy>=49)||(kind==='nature'&&S.quiet>=70)||(kind==='culture'&&S.themes.tradition+S.themes.history>=5)||(kind==='tech'&&S.themes.tech>=5);
   let constrained=S.economy<27||f.funds<19;
-  if(demand&&!constrained){f.progress=Math.min(22,f.progress+.65+(S.economy>=65?.25:0));f.funds=clamp(f.funds+1,0,100);}
+  if(demand&&!constrained){f.progress=Math.min(22,f.progress+.95+(S.economy>=65?.25:0));f.funds=clamp(f.funds+1,0,100);}
   else if(constrained&&kind!=='nature'){f.funds=clamp(f.funds-1,0,100);}
   const priorStage=f.stage;
   if(demand&&!constrained){maybeUpgrade(f,changes);if(f.stage>priorStage){f.lastFeedback='村全体の状況を受けて、施設が自主的に整備されました。';continue;}}
   if(demand&&!constrained&&!shown&&(S.month+Number(f.id.slice(1)))%4===0){
    const note=kind==='trade'?'観光客の増加を受けて売場や商品を見直しました。':kind==='tourism'?'宿泊需要の変化に合わせて新しいプランを始めました。':kind==='living'?'村民の暮らしに合わせて利用方法を改善しました。':kind==='nature'?'景観を活かした案内が増えました。':'村の関心が高まり自主的な活動が始まりました。';
-   f.lastChanged=S.month;f.lastFeedback=note;changes.push({kind:'auto',icon:DEFS[f.kind].icon,title:f.name+'も変化しました',detail:note});shown=true;
+   f.lastChanged=S.month;f.lastFeedback=note;changes.push({kind:'auto',facilityId:f.id,icon:DEFS[f.kind].icon,title:f.name+'も変化しました',detail:note});shown=true;
   }
  }
 }
@@ -671,7 +697,7 @@ function rippleMilestones(changes){
  }
 }
 function incidental(changes){if(rand()>.14)return;const pool=[{title:'週末の臨時市が開かれました',detail:'住民たちが小さな朝市を始めました。口コミとは別に、村の日常も少しずつ動いています。'},{title:'村の古い案内板が見つかりました',detail:'草むらから古い地図が見つかり、住民の間で話題になっています。'},{title:'観光客が村の景色を紹介しました',detail:'写真がSNSで紹介され、村の散策路が少し話題になっています。'}];let p=pick(pool);changes.push({kind:'small',icon:'📰',...p})}
-function evolve(f,star,fa){const changes=[];const prevFunds=f.funds;f.visits++;f.lastVisited=S.month;let mod=(f.kind==='scenic'?.8:1),strength=(star===5?3.65:star===1?3.3:(star===4||star===2?1.8:.65))*mod;let rating=star-3;f.rep=clamp(f.rep+rating*2,0,100);f.focus=fa.tag;if(star!==3){rememberRoute(f,fa,star,strength);evolutionReview(f,fa,star,strength)}f.mode=star<=2?'reform':star>=4?'boost':(f.mode||'boost');f.progress=clamp(f.progress+strength+(S.themes[fa.tag]>5?.35:0),0,22);let effect='';if(star===5){f.funds=clamp(f.funds+5,0,100);f.pressure=clamp(f.pressure+2,0,100);effect=fa.high?'評価された『'+fa.label+'』の現状をさらに発展。'+((ACTIONS[f.kind]||{})[fa.tag]||'今の特徴をさらに磨きました。'):'『'+fa.label+'』の現在の姿を支持する声が集まり、'+(SMALL_IDENTITY[f.kind]?.[fa.key]||'今の特徴を守る')+'方針を進めました。'}else if(star===4){f.funds=clamp(f.funds+4,0,100);f.pressure=clamp(f.pressure-3,0,100);effect=fa.high?'好意的な声を受け、現在の特徴を着実に発展。'+((ACTIONS[f.kind]||{})[fa.tag]||'今の方針を磨きました。'):'好意的な声を受け、'+(SMALL_IDENTITY[f.kind]?.[fa.key]||'従来の特徴を守る')+'方針を継続しました。'}else if(star===3){f.funds=clamp(f.funds+1,0,100);f.pressure=clamp(f.pressure-2,0,100);effect='大がかりな投資は控え、日々の運営を見直しました。目立たないところで小さな工夫が続いています。'}else if(star===2){f.funds=clamp(f.funds+2,0,100);f.pressure=clamp(f.pressure-4,0,100);effect='『'+fa.label+'』への不満を受けて、改善策を実行。'+(fa.high?'行き過ぎたサービスや運用を抑え、利用者の負担を減らしました。':'不足していた設備・案内を優先的に整えました。')}else{f.funds=clamp(f.funds-9,0,100);f.pressure=clamp(f.pressure+13,0,100);effect='厳しい指摘で『'+fa.label+'』を抜本改革。'+(fa.high?'過剰な施策を縮小し、運営の優先順位を見直しました。':'不足していたサービスの立て直しに着手しました。')+' 経営への負担も増えています。'}
+function evolve(f,star,fa){const changes=[];const prevFunds=f.funds;f.visits++;f.lastVisited=S.month;let mod=(f.kind==='scenic'?.8:1),strength=(star===5?4.1:star===1?3.8:(star===4?2.8:star===2?2.2:.65))*mod;let rating=star-3;f.rep=clamp(f.rep+rating*2,0,100);f.focus=fa.tag;if(star!==3){rememberRoute(f,fa,star,strength);evolutionReview(f,fa,star,strength)}f.mode=star<=2?'reform':star>=4?'boost':(f.mode||'boost');f.progress=clamp(f.progress+strength+(S.themes[fa.tag]>5?.35:0),0,22);let effect='';if(star===5){f.funds=clamp(f.funds+5,0,100);f.pressure=clamp(f.pressure+2,0,100);effect=fa.high?'評価された『'+fa.label+'』の現状をさらに発展。'+((ACTIONS[f.kind]||{})[fa.tag]||'今の特徴をさらに磨きました。'):'『'+fa.label+'』の現在の姿を支持する声が集まり、'+(SMALL_IDENTITY[f.kind]?.[fa.key]||'今の特徴を守る')+'方針を進めました。'}else if(star===4){f.funds=clamp(f.funds+4,0,100);f.pressure=clamp(f.pressure-3,0,100);effect=fa.high?'好意的な声を受け、現在の特徴を着実に発展。'+((ACTIONS[f.kind]||{})[fa.tag]||'今の方針を磨きました。'):'好意的な声を受け、'+(SMALL_IDENTITY[f.kind]?.[fa.key]||'従来の特徴を守る')+'方針を継続しました。'}else if(star===3){f.funds=clamp(f.funds+1,0,100);f.pressure=clamp(f.pressure-2,0,100);effect='大がかりな投資は控え、日々の運営を見直しました。目立たないところで小さな工夫が続いています。'}else if(star===2){f.funds=clamp(f.funds+2,0,100);f.pressure=clamp(f.pressure-4,0,100);effect='『'+fa.label+'』への不満を受けて、改善策を実行。'+(fa.high?'行き過ぎたサービスや運用を抑え、利用者の負担を減らしました。':'不足していた設備・案内を優先的に整えました。')}else{f.funds=clamp(f.funds-9,0,100);f.pressure=clamp(f.pressure+13,0,100);effect='厳しい指摘で『'+fa.label+'』を抜本改革。'+(fa.high?'過剰な施策を縮小し、運営の優先順位を見直しました。':'不足していたサービスの立て直しに着手しました。')+' 経営への負担も増えています。'}
  if(star>=4)themeAdd(fa.tag,(star===5?2.2:1.4)*(fa.high?1:.35));else if(star===3)themeAdd(fa.tag,.15);else{S.reforms[fa.tag]=(S.reforms[fa.tag]||0)+(star===1?2.1:1.15);themeAdd(fa.tag,.1)}
  if(fa.tag==='trade')S.visitors=clamp(S.visitors+(star>=4?(fa.high?ri(18,45):ri(-3,10)):star===1?ri(-30,10):4),40,18000);
  if(fa.tag==='nature'){const delta=star>=4?(fa.high?-2:3):star<=2?(fa.high?2:-1):0;S.quiet=clamp(S.quiet+delta,0,100)}
@@ -699,12 +725,28 @@ function getEndings(){
  if(['coast','island'].includes(S.terrain)&&t.sea>=7&&has('harbor',1))add('海の恵みの村',t.sea+4,'港の整備が進み、海の資源が村の魅力になりました。');
  const closedCount=S.facilities.filter(f=>!f.open).length;if(closedCount>=2&&S.population<=S.startPopulation)add('灯りが減った村',19+closedCount*2,'最初に訪れた頃から人口は増えず、営業を終えた施設が複数残りました。');
  if(S.visitors>=S.startVisitors*1.8)add('観光客の村',12+S.visitors/S.startVisitors,'旅行者の増加が村の風景を変えています。');
- if(n>=3)add('施設が姿を変えた村',10+n*2,'いくつもの建物が新しい用途やサービスを取り入れました。');
- if(active.some(f=>f.stage===3))add('村の風景が変わった村',9+active.filter(f=>f.stage===3).length*3,'村では施設の役割や姿が変わり、一年前と違う風景になりました。');
- if(S.facilities.some(f=>!f.open))add('変わり目の村',6+S.facilities.filter(f=>!f.open).length*3,'村で施設の転換が進む一方、営業を終えた建物も残されています。');
- if(!candidates.length&&S.stats.big>=2)add('変化の途中にある村',2+S.stats.big,'いくつかの施設で改装や転換が起きました。村はまだ新しい方向を探しています。');
- if(!candidates.length)add('いつもの暮らしがある村',1,'施設と暮らしはおおむね従来どおりですが、村の日常には小さな出来事が続いています。');
- candidates.sort((a,b)=>b.score-a.score);
+ const journal=S.reviewHistory||[],goodLow=journal.filter(r=>r.stars>=4&&r.observedHigh===false).length,negative=journal.filter(r=>r.stars<=2).length;
+ const kinds=(items)=>active.filter(f=>items.includes(f.kind)&&f.stage>=1).length;
+ const stage3=active.filter(f=>f.stage===3).length,opened=S.facilities.filter(f=>f.createdAt>0).length;
+ if(opened>=2)add('地図を書き足す村',19+opened,'今年は'+opened+'件の施設が開業し、村の地図に新しい行き先が加わりました。');
+ else if(opened===1)add('地図を書き足す村',15,'村に新しい施設が開業し、去年の地図にはない行き先が増えました。');
+ if(stage3>=2)add('看板を覚えきれない村',18+stage3,'いくつもの施設が最終形態に至り、一年前とは違う風景が生まれました。');
+ else if(stage3===1)add('昨日の姿を思い出せない村',16,'一つの施設が最終形態まで姿を変え、村の新しい目印になりました。');
+ if(S.stats.big>=9)add('四季より変化の早い村',17+Math.min(5,S.stats.big-9),'一年で'+S.stats.big+'回もの施設の大きな転換が起こりました。');
+ else if(S.stats.big>=6)add('看板を貼り替え続ける村',12+Math.min(4,S.stats.big-6),'村では施設の名前や姿を変える取り組みが続きました。');
+ if(negative>=4&&S.stats.big>=4)add('ご意見から建て直す村',18+Math.min(3,negative-4),'改善を求める口コミが'+negative+'件届き、村の施設は何度も運営を見直しました。');
+ if(goodLow>=3&&S.quiet>=68)add('足さない贅沢を知る村',19+Math.min(3,goodLow-3),'増やさないことを評価する口コミが届き、静かな暮らしを守る施設が育ちました。');
+ if(kinds(['scenic','inn','shrine','lodge'])>=2&&S.quiet>=78)add('静けさを持ち帰る村',18,'自然と静養を大切にする施設が育ち、村では落ち着いた時間が流れています。');
+ if(kinds(['market','shop','farm','cafe'])>=2&&t.trade>=1)add('買い物のついでに観光する村',17,'複数の商業施設が姿を変え、買い物の寄り道先が増えました。');
+ if(kinds(['school','office','clinic','hall','shop'])>=2&&S.economy>=45)add('暮らすほど便利な村',17,'住民の日常を支える施設が複数整備されました。');
+ if(kinds(['office','clinic','robot','farm'])>=1&&t.tech>=2)add('村の仕事を機械に任せる村',19,'技術を活かす施設が育ち、仕事や暮らしのあり方が変わりました。');
+ if(['coast','island'].includes(S.terrain)&&active.some(f=>f.stage>=1&&f.stageFocus==='sea'))add('潮の満ち引きに合わせる村',19,'海との付き合い方を見直した施設が、村の新しい目印になりました。');
+ if(t.strange>=1.5&&kinds(['shrine','museum'])>=1)add('噂だけ先に歩く村',18,'不思議な話題をめぐる口コミが、村の観光案内にも影響しました。');
+ if(t.history+t.tradition>=2.5&&kinds(['shrine','hall','museum','school'])>=1)add('村史を読み直す村',17,'伝統や歴史の扱いを見直し、村の施設に新しい役割が生まれました。');
+ if(closedCount>=1&&S.population<=S.startPopulation)add('灯りが少なくなった村',17+closedCount,'営業を終えた施設が残り、村の暮らしは新しい課題を抱えています。');
+ if(n>=2)add('改装のお知らせが絶えない村',8+n,'複数の施設が新しい姿になりました。');
+ if(!candidates.length)add('いつもの暮らしがある村',1,'今年も村には人々の暮らしが続き、小さな変化が重なりました。');
+  candidates.sort((a,b)=>b.score-a.score);
  let hidden=null;const ids=S.facilities.map(f=>f.kind),reviews=S.reviewHistory||[],last=reviews[reviews.length-1];
  const distinct=tag=>new Set(reviews.filter(r=>r.tag===tag&&r.stars>=4).map(r=>r.id)).size;
  if(S.month===12&&S.secrets.ancient&&t.tradition>=7&&t.history>=3&&distinct('tradition')>=2&&ids.some(x=>['shrine','hall'].includes(x))&&ids.includes('office')&&last?.kind==='office'&&last?.tag==='tradition'&&last?.stars>=4)hidden='因習村';
@@ -821,7 +863,7 @@ function render(){const p=period(S.completed?-1:0),d=terrain();$('period').textC
  let map=$('map');map.className='map terrainGrid '+S.terrain;const contents=new Map(S.facilities.map(f=>[f.plot,f]));
  const hiddenSpot=v1HiddenPlace();
  map.innerHTML=(v1Url('background:'+S.terrain)?'<img class="v1Backdrop" data-v1src="'+v1Url('background:'+S.terrain)+'" data-v1png="'+v1Png('background:'+S.terrain)+'" alt="">':'')+S.ground.map((tile,i)=>{const f=contents.get(i),base='plot '+tile;if(!f)return '<div class="groundPlot '+base+'">'+v1HiddenPlotArt(hiddenSpot,i)+'</div>';
- return '<button type="button" class="site '+base+' '+(!f.open?'closed':S.candidates.includes(f.id)?'eligible':'notEligible')+(f.id===chosen?' selected':'')+' stage'+f.stage+(f.lastChanged>=S.month-1&&S.month>0?' changed':'')+'" data-id="'+f.id+'" aria-label="'+f.name+(f.open?'':' 閉業')+'"><span class="emoji">'+v1Facility(f)+v1OverlayHTML(f)+v1HiddenPlotArt(hiddenSpot,i)+'</span><span class="siteName">'+f.name+'</span><span class="newStage">'+(f.stage>=3?'★ 最終形態｜':'')+(f.stage>0?phaseName(f):'')+'</span><span class="marker">'+(!f.open?'閉業':S.completed?'1年の記録':S.candidates.includes(f.id)?'今月訪問可':'観察のみ')+'</span></button>';
+ return '<button type="button" class="site '+base+' '+(!f.open?'closed':S.candidates.includes(f.id)?'eligible':'notEligible')+(f.id===chosen?' selected':'')+' stage'+f.stage+(f.lastChanged>=S.month-1&&S.month>0?' changed':'')+'" data-id="'+f.id+'" aria-label="'+f.name+(f.open?'':' 閉業')+'"><span class="emoji">'+v1Facility(f)+v1OverlayHTML(f)+v1HiddenPlotArt(hiddenSpot,i)+'</span><span class="siteName">'+f.name+'</span><span class="newStage">'+(f.stage>=3?'★ 最終形態｜':'')+(f.stage>0?phaseName(f):'')+'</span><span class="marker">'+(!f.open?'閉業':S.completed?'1年の記録':S.candidates.includes(f.id)?(f.id===chosen?'✓ 選択中':'今月訪問可'):'観察のみ')+'</span></button>';
  }).join('');v1LoadImages(map);map.querySelectorAll('.site').forEach(el=>el.addEventListener('click',()=>{chosen=el.dataset.id;selectedFact=0;currentStars=4;render()}));
  $('residentVoices').innerHTML='<strong>💬 村民の声｜'+(S.month===0?'訪問前':villageMood())+'</strong>'+villageVoices().map(v1Quote).join('');v1LoadImages($('residentVoices'));$('news').textContent=(S.lastReview?'最近の村ニュース：'+finalPunctuation(S.log[0].title):'村の近況：観光客の口コミを参考に、施設が少しずつ姿を変えているようです。');$('history').innerHTML=S.log.slice(0,8).map(l=>'<div class="historyItem"><strong>'+timeName(l.month)+'｜'+l.title+'</strong>'+l.detail+'</div>').join('');$('reviewCount').textContent=(S.reviewHistory||[]).length;$('reviewArchiveList').innerHTML=reviewArchiveHTML();$('monthTitle').textContent=S.completed?'1年間の口コミが完了':'候補 '+S.candidates.length+'施設';$('monthCount').innerHTML=Array.from({length:12},(_,i)=>'<span class="'+(i<(S.completed?12:S.month%12)?'filled':'')+'"></span>').join('');$('progressBar').style.width=((S.completed?12:S.month%12)/12*100)+'%';$('candidatesNote').textContent=S.completed?'1年分の口コミが終わりました。施設の変化を見返したり、新しい村で遊べます。':'緑枠の施設から今月のレビューを1件選べます。地図の他施設も観察可能です。';renderDetail();}
 function reviewArchiveHTML(){
@@ -849,25 +891,28 @@ function hideModal(){$('overlay').classList.remove('show')}
 function chg(n){return(n>0?'+':'')+safe(n)}
 function showResults(){
  const r=S.result;if(!r)return;
- // Never let a simultaneous autonomous upgrade replace the reviewed facility.
  const reviewedId=r.reviewedId||S.lastReview?.id;
- const primary=r.changes.find(e=>e.kind==='direct'&&(!reviewedId||e.facilityId===reviewedId))||r.changes[0];
- const own=r.changes.filter(e=>e!==primary&&e.facilityId===reviewedId);
- const other=r.changes.filter(e=>e!==primary&&!own.includes(e));
+ const ownEvents=(r.changes||[]).filter(e=>e.facilityId===reviewedId);
+ const f=find(reviewedId);
+ const primary=(!f?.open?ownEvents.find(e=>e.kind==='closed'):null)||ownEvents.find(e=>e.kind==='big')||ownEvents.find(e=>e.kind==='direct')||ownEvents[0]||r.changes[0];
+ if(!primary)return;
+ const own=ownEvents.filter(e=>e!==primary),other=r.changes.filter(e=>!ownEvents.includes(e));
+ const fromElsewhere=other.filter(e=>e.facilityId||e.kind==='auto');
+ const community=other.filter(e=>!fromElsewhere.includes(e));
  const resultCard=(e,cls)=>'<div class="'+cls+'"><strong>'+e.icon+' '+e.title+'</strong><p>'+e.detail+'</p></div>';
  const nextPeriod=period(0),nextLabel=nextPeriod.year+'年'+nextPeriod.month+'月';
  const content='<div class="modalHead">'+r.date+'に投稿した口コミから、ひと月後</div>'
   +'<div class="revisitHeadline">'+(r.annual?'一年の終わりを迎えました':nextLabel+'、村を再訪しました')+'</div>'
   +'<div class="reviewSubject">あなたが口コミした施設｜'+r.facility+'</div>'
-  +'<div class="resultArt"><div class="headline">あなたの口コミを受けて</div>'
+  +'<div class="reviewQuote"><div class="quoteLabel">あなたが投稿した口コミ</div><div class="quoteStars">'+('★'.repeat(r.stars))+'</div><div class="quoteText">'+r.post+'</div></div>'
+  +'<div class="resultArt'+(primary.kind==='big'?' major':'')+'"><div class="headline">'+(primary.kind==='big'?'あなたの口コミから、施設が進化！':'あなたの口コミを受けて')+'</div>'
   +v1ResultVisual(primary)+'<div class="type">'+primary.title+'</div><div class="heroDetail">'+primary.detail+'</div></div>'
-  +'<div class="tiny">あなたが投稿した口コミ</div>'
-  +'<div style="font-weight:700;margin:5px 0 13px">'+('★'.repeat(r.stars))+' '+r.post+'</div>'
-  +(own.length?'<div class="cascadeHeader">この施設のその後</div>'+own.map(e=>resultCard(e,'reviewOwnChange')).join(''):'')
-  +(other.length?'<div class="cascadeHeader">この施設にも変化が！</div><p class="tiny">ここからは別の施設や村全体の出来事です。</p>'+other.map(e=>resultCard(e,'reviewOtherChange')).join(''):'')
+  +(own.length?'<div class="cascadeHeader">この施設で起きたこと</div>'+own.map(e=>resultCard(e,'reviewOwnChange')).join(''):'')
+  +(fromElsewhere.length?'<div class="cascadeHeader">この施設にも変化が！</div><p class="tiny">こちらは、口コミ先とは別の施設で起きた変化です。</p>'+fromElsewhere.map(e=>resultCard(e,'reviewOtherChange')).join(''):'')
+  +(community.length?'<div class="cascadeHeader">村で起きた出来事</div>'+community.map(e=>resultCard(e,'reviewOtherChange')).join(''):'')
   +'<div class="resultStats">'+[['人口','人',r.after.population-r.prev.population],['観光客','人',r.after.visitors-r.prev.visitors],['経済','pt',r.after.economy-r.prev.economy],['静けさ','pt',r.after.quiet-r.prev.quiet]].map(a=>'<div class="resultStat">'+a[0]+'<strong>'+chg(a[2])+a[1]+'</strong></div>').join('')+'</div>'
   +'<button id="nextBtn" class="btn primary" type="button">'+(r.annual?'年末の観光パンフレットを見る':nextLabel+'の村を歩く')+'</button>';
- showModal(content);if(sound)beep(own.some(e=>e.kind==='big')||other.some(e=>e.kind==='big'));
+ showModal(content);if(sound)beep(r.changes.some(e=>e.kind==='big'));
  $('nextBtn').addEventListener('click',()=>{hideModal();S.result=null;save();if(S.annualDue){S.annualDue=false;showAnnual()}else{document.getElementById('period').scrollIntoView({behavior:'smooth',block:'start'})}})
 }
 function evolutionSpecialHTML(hidden){
@@ -929,7 +974,7 @@ function showHelp(first=false){const examples=[
 function beep(big){try{const C=window.AudioContext||window.webkitAudioContext;if(!C)return;const ctx=new C();const now=ctx.currentTime;[523,659,big?1046:784].forEach((freq,i)=>{const osc=ctx.createOscillator(),g=ctx.createGain();osc.type='sine';osc.frequency.setValueAtTime(freq,now+i*.085);g.gain.setValueAtTime(.0001,now+i*.085);g.gain.exponentialRampToValueAtTime(.095,now+i*.085+.01);g.gain.exponentialRampToValueAtTime(.0001,now+i*.085+.24);osc.connect(g);g.connect(ctx.destination);osc.start(now+i*.085);osc.stop(now+i*.085+.26)});setTimeout(()=>ctx.close(),1000)}catch(e){}}
 $('helpBtn').addEventListener('click',()=>showHelp(false));$('resetBtn').addEventListener('click',()=>{if(confirm('この村の記録を終了して、新しい村を生成しますか？\n（現在の村の記録は上書きされます）')){newWorld((Date.now()^Math.floor(Math.random()*0xffffffff))>>>0);render();showHelp(true)}});$('soundBtn').addEventListener('click',()=>{sound=!sound;$('soundBtn').textContent=sound?'♪ ON':'♪ OFF';$('soundBtn').setAttribute('aria-pressed',String(sound))});if(load()){chosen=S.candidates[0];render();if(S.result)showResults();else if(S.annualDue||S.completed)showAnnual()}else{newWorld((Date.now()^Math.floor(Math.random()*0xffffffff))>>>0);render();showHelp(true)}
 // Test harness is exposed in local QA only, not in user controls.
-evolutionFetch();v1Probe();if(location.search.includes('qa=1'))window.__VILLAGE_QA__={evolutionRegister,evolutionTargetId,evolutionRecord,evolutionStatus:()=>({ready:V1_EVOLUTION.ready,second:V1_EVOLUTION.stage2.size,third:V1_EVOLUTION.stage3.size,specials:V1_EVOLUTION.specials.length}),routeFor,aspectLevel,reviewText,timeName,v1ResultVisual,v1ExpectedAssets,v1AcceptManifest,v1LoadImages,artStatus:()=>({ready:V1_ART.ready,size:V1_ART.byId.size}),v1FacilityId,groundQA,visitNote,voice,facilityStrain,villageWhisper,evolutionMetricsValid,applyEvolutionConsequences,getState:()=>S,generate:(seed)=>{newWorld(seed);render()},post:(id,factIndex,stars)=>{chosen=id;selectedFact=factIndex;currentStars=stars;nextReview();hideModal()},annual:getEndings,report:()=>{showAnnual();return $('modal').innerHTML},voices:villageVoices,factsFor};
+evolutionFetch();v1Probe();if(location.search.includes('qa=1'))window.__VILLAGE_QA__={evolutionRegister,evolutionTargetId,evolutionRecord,evolutionStatus:()=>({ready:V1_EVOLUTION.ready,second:V1_EVOLUTION.stage2.size,third:V1_EVOLUTION.stage3.size,specials:V1_EVOLUTION.specials.length}),routeFor,aspectLevel,reviewText,timeName,finaleCandidate,makeCandidates,v1ResultVisual,v1ExpectedAssets,v1AcceptManifest,v1LoadImages,artStatus:()=>({ready:V1_ART.ready,size:V1_ART.byId.size}),v1FacilityId,groundQA,visitNote,voice,facilityStrain,villageWhisper,evolutionMetricsValid,applyEvolutionConsequences,getState:()=>S,generate:(seed)=>{newWorld(seed);render()},post:(id,factIndex,stars)=>{chosen=id;selectedFact=factIndex;currentStars=stars;nextReview();hideModal()},annual:getEndings,report:()=>{showAnnual();return $('modal').innerHTML},voices:villageVoices,factsFor};
 })();
 </script>
 </body></html>
