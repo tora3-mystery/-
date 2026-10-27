@@ -172,7 +172,8 @@ function sns(){
  (p.visibility==='公開'||p.visibility==='匿名表示'||(p.visibility==='鍵垢・承認制'&&S.contacts.includes(p.author_id))||
  ((p.visibility==='グループ参加者'||p.visibility==='主人公との個別')&&S.contacts.includes(p.author_id))));
  return '<div class="eyebrow">SNS / '+esc(platform)+'</div><h2>タイムライン</h2>'+
- '<p class="dim">写真を出している人も、出していない人もいる。名前の似たアカウントが同じ人とは限らない。</p>'+tineMessages+
+ '<p class="dim">写真を出している人も、出していない人もいる。名前の似たアカウントが同じ人とは限らない。</p>'+
+ (S.report?'<div class="notice">'+esc(S.report)+'</div>':'')+tineMessages+
  (visible.length?visible.map(p=>{
   const a=accounts[p.author_id+'|'+platform];
   const anonymous=p.visibility==='匿名表示';
