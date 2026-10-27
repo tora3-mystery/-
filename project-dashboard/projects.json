@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "asOf": "2026-10-27 JST（初期スナップショット。版数とGitHubは随時変化）",
+  "asOf": "2026-10-27 JST／初期登録。コードと人間レビューは独立に更新する。",
   "baseCommit": "739362d95e31d8cf9b9d64599fa2308d1c266735",
   "progressMeaning": "バーは到達した工程の位置（Phase番号/8）を示す目安。完成率、レビュー合格率ではない。進捗は資料上の暫定推定を含む。",
   "limitations": "人間レビューは実施版が明示されていない場合は最新版の確認済みと扱わない。GitHubの更新を自動監視しているわけではない。",
@@ -19,7 +19,9 @@
       "assets": "ゲーム組込済",
       "owner": "Chat",
       "next": "正式版のスマホ実操作・公開ページ確認",
-      "work": "横断実ブラウザQA"
+      "work": "横断実ブラウザQA",
+      "sourceFile": "c1/index.html",
+      "sourceSha": "0f21416e89ae87de7e8c51abbee6c789c64375bb"
     },
     {
       "id": "H1",
@@ -35,7 +37,9 @@
       "assets": "人物素材あり",
       "owner": "人間",
       "next": "ESタブ・逆質問・GOOD/HORRORを初見確認",
-      "work": "C1・M2との独立QA"
+      "work": "C1・M2との独立QA",
+      "sourceFile": "h1/index.html",
+      "sourceSha": "0f823e21e09c9a82125eb18af9b148b9dbeb5b0a"
     },
     {
       "id": "M2",
@@ -51,7 +55,9 @@
       "assets": "追加一括制作なし",
       "owner": "人間",
       "next": "人名参照・メール読解・誤操作の初見確認",
-      "work": "C1・H1との独立QA"
+      "work": "C1・H1との独立QA",
+      "sourceFile": "m2/index.html",
+      "sourceSha": "e3f072f263bb140dac79cc18262f8fa1f7c52a97"
     },
     {
       "id": "D3",
@@ -67,7 +73,9 @@
       "assets": "一部本素材あり",
       "owner": "人間",
       "next": "正解の推測容易性・導入・エンディング再確認",
-      "work": "対象外（Chat優先）"
+      "work": "対象外（Chat優先）",
+      "sourceFile": "d3/pretest/index.html",
+      "sourceSha": "f0d9c92c949ad1bbeda56ab1f7acd4194ef0147c"
     },
     {
       "id": "D3-R",
@@ -83,7 +91,9 @@
       "assets": "仮SVG／専用写真未制作",
       "owner": "Chat→Work",
       "next": "証拠6枚・駅の未来4差分の構図を確定後、一括素材制作",
-      "work": "最優先候補（写真素材10点前後）"
+      "work": "最優先候補（写真素材10点前後）",
+      "sourceFile": "d3/rail/index.html",
+      "sourceSha": "0e1f26df771c2ac3e603432243ac1349353bef1e"
     },
     {
       "id": "F1",
@@ -99,7 +109,9 @@
       "assets": "画像Work実施中（ユーザー申告）",
       "owner": "Work→Chat",
       "next": "スーパーの状態差分素材を保存・統合後に初見確認",
-      "work": "実施中・重複発注禁止"
+      "work": "実施中・重複発注禁止",
+      "sourceFile": "f1/index.html",
+      "sourceSha": "8c026ac3ddcb763590c95a148b048667452da378"
     },
     {
       "id": "M1",
@@ -115,7 +127,9 @@
       "assets": "一括制作予定なし",
       "owner": "人間",
       "next": "交換直後の変化・エンディングのわかりやすさ再確認",
-      "work": "対象外（Chat優先）"
+      "work": "対象外（Chat優先）",
+      "sourceFile": "m1/index.html",
+      "sourceSha": "7b07ecf608badb90b934b7da5ec039c7a90c600f"
     },
     {
       "id": "N1",
@@ -131,7 +145,9 @@
       "assets": "商品・人物素材Work実施中（ユーザー申告）",
       "owner": "Work→Chat",
       "next": "素材統合・正確性と空気読みのゲーム初見テスト",
-      "work": "実施中・重複発注禁止"
+      "work": "実施中・重複発注禁止",
+      "sourceFile": "n1/index.html",
+      "sourceSha": "fab2374ac4b3511b1ef5d61ee8e30c804e34b476"
     },
     {
       "id": "B1",
@@ -147,7 +163,9 @@
       "assets": "11人写真制作済み",
       "owner": "人間",
       "next": "面接・仮シフト・日次状態表示の改修を再テスト",
-      "work": "対象外（Chat優先）"
+      "work": "対象外（Chat優先）",
+      "sourceFile": "b1/index.html",
+      "sourceSha": "2bef1eac6db9cba85c036e231af3d8d3c1346b63"
     },
     {
       "id": "P1",
@@ -163,7 +181,9 @@
       "assets": "大量画像仕様未確定",
       "owner": "人間",
       "next": "記者人物像・導入・7日目→1年後の整合を確認",
-      "work": "横断QA後の候補"
+      "work": "横断QA後の候補",
+      "sourceFile": "p1/index.html",
+      "sourceSha": "9d8b686a28332bb63c09266f5928404820ad0c54"
     },
     {
       "id": "V1",
@@ -179,7 +199,9 @@
       "assets": "最終画像一覧未確定",
       "owner": "Chat",
       "next": "672進化ノードの表示集約・素材方針を確定",
-      "work": "次点（仕様凍結後に大量素材）"
+      "work": "次点（仕様凍結後に大量素材）",
+      "sourceFile": "proposals/village-review/index.html",
+      "sourceSha": "9bcb10e14165a0af053c6facfe80d12427dd528d"
     },
     {
       "id": "S7",
@@ -195,7 +217,9 @@
       "assets": "大量画像要件なし",
       "owner": "人間",
       "next": "行事選択・校則改定・年度末選挙の初見テスト",
-      "work": "対象外（Chat優先）"
+      "work": "対象外（Chat優先）",
+      "sourceFile": "s7/index.html",
+      "sourceSha": "aef0a820ad4672b530cac999c569a587b494a751"
     },
     {
       "id": "S6",
@@ -211,7 +235,9 @@
       "assets": "人物画像Work実施中（ユーザー申告）",
       "owner": "Work→Chat",
       "next": "顔写真統合・自由行動の楽しさを人間初見確認",
-      "work": "実施中・重複発注禁止"
+      "work": "実施中・重複発注禁止",
+      "sourceFile": "s6/game-data.js",
+      "sourceSha": "c5f85b51a4c5e4263420456aa412412540b2196a"
     },
     {
       "id": "K1",
@@ -227,7 +253,9 @@
       "assets": "掲示画像制作は時期尚早",
       "owner": "Chat→人間",
       "next": "事故・証拠入手経路の因果整合を確定",
-      "work": "後回し（仕様確定前）"
+      "work": "後回し（仕様確定前）",
+      "sourceFile": "k1/index.html",
+      "sourceSha": "34d1d2961a98b9919cb1fa5bdee5b5a1e80e96ce"
     }
   ]
 }
