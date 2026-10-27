@@ -1,0 +1,230 @@
+{
+  "project": "N1 large verified-question catalog",
+  "version": "1.0",
+  "asOf": "2026-10-27",
+  "plan": {
+    "products": 500,
+    "facilities": 100,
+    "imageCategories": 32
+  },
+  "publishedMainUnchanged": true,
+  "categoryTargets": [
+    {
+      "category": "eraser",
+      "name": "消しゴム",
+      "target": 10
+    },
+    {
+      "category": "correction_pen",
+      "name": "修正ペン",
+      "target": 7
+    },
+    {
+      "category": "correction_tape",
+      "name": "修正テープ",
+      "target": 8
+    },
+    {
+      "category": "pencil_case",
+      "name": "筆箱",
+      "target": 12
+    },
+    {
+      "category": "pen",
+      "name": "筆記具",
+      "target": 24
+    },
+    {
+      "category": "notebook",
+      "name": "ノート",
+      "target": 19
+    },
+    {
+      "category": "paper",
+      "name": "文具・紙",
+      "target": 15
+    },
+    {
+      "category": "underlay",
+      "name": "下敷き",
+      "target": 6
+    },
+    {
+      "category": "earbuds",
+      "name": "完全ワイヤレスイヤホン",
+      "target": 27
+    },
+    {
+      "category": "headphones",
+      "name": "ヘッドホン",
+      "target": 21
+    },
+    {
+      "category": "charger",
+      "name": "充電器",
+      "target": 21
+    },
+    {
+      "category": "cable",
+      "name": "ケーブル",
+      "target": 15
+    },
+    {
+      "category": "smartphone",
+      "name": "スマートフォン",
+      "target": 23
+    },
+    {
+      "category": "mouse",
+      "name": "マウス",
+      "target": 13
+    },
+    {
+      "category": "keyboard",
+      "name": "キーボード",
+      "target": 15
+    },
+    {
+      "category": "clock",
+      "name": "置き時計",
+      "target": 12
+    },
+    {
+      "category": "speaker",
+      "name": "スピーカー",
+      "target": 15
+    },
+    {
+      "category": "mug",
+      "name": "マグカップ",
+      "target": 19
+    },
+    {
+      "category": "tumbler",
+      "name": "タンブラー",
+      "target": 18
+    },
+    {
+      "category": "coffee",
+      "name": "コーヒー器具",
+      "target": 15
+    },
+    {
+      "category": "kitchen",
+      "name": "キッチン用品",
+      "target": 16
+    },
+    {
+      "category": "tableware",
+      "name": "食器",
+      "target": 13
+    },
+    {
+      "category": "beauty",
+      "name": "美容用品",
+      "target": 15
+    },
+    {
+      "category": "towel",
+      "name": "タオル",
+      "target": 12
+    },
+    {
+      "category": "bag",
+      "name": "バッグ",
+      "target": 14
+    },
+    {
+      "category": "clothing",
+      "name": "衣類",
+      "target": 17
+    },
+    {
+      "category": "shoes",
+      "name": "シューズ",
+      "target": 19
+    },
+    {
+      "category": "furniture",
+      "name": "家具",
+      "target": 14
+    },
+    {
+      "category": "appliance",
+      "name": "家電",
+      "target": 19
+    },
+    {
+      "category": "diffuser",
+      "name": "アロマディフューザー",
+      "target": 11
+    },
+    {
+      "category": "gift",
+      "name": "贈答品",
+      "target": 17
+    },
+    {
+      "category": "car",
+      "name": "乗用車",
+      "target": 18
+    }
+  ],
+  "facilityTargets": [
+    {
+      "category": "rail_station",
+      "target": 14
+    },
+    {
+      "category": "public_building",
+      "target": 12
+    },
+    {
+      "category": "tower",
+      "target": 10
+    },
+    {
+      "category": "bridge",
+      "target": 12
+    },
+    {
+      "category": "museum",
+      "target": 10
+    },
+    {
+      "category": "historic_site",
+      "target": 14
+    },
+    {
+      "category": "stadium",
+      "target": 8
+    },
+    {
+      "category": "commercial_facility",
+      "target": 10
+    },
+    {
+      "category": "amusement",
+      "target": 10
+    }
+  ],
+  "admission": [
+    "unique product/facility ID",
+    "official primary URL resolves",
+    "official listed price or exact opening completion year checked",
+    "checked date",
+    "category image passed QA or disabled",
+    "no source answer leaks into question text",
+    "natural spoken name plus formal display name"
+  ],
+  "statusCodes": {
+    "verified_asset_ready": "playable",
+    "verified_asset_pending": "not playable",
+    "unverified": "not playable"
+  },
+  "cadence": {
+    "firstBatch": "3 trial category images + source-backed catalogue extensions",
+    "next": "add 40-60 products and 10-15 facilities per independent sourcing/QA batch",
+    "target": "500 products +100 facilities, not fabricated or generated without verification"
+  }
+}
