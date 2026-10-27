@@ -30,16 +30,19 @@ const initial=()=>({
  checks:{},currentNotebook:null,suspect:'',camp:'',shared:false,privateInvite:false,
  report:'',result:'',savedAt:''
 });
-let S;
+let S,hydrationChanged=false;
 try {const raw=JSON.parse(localStorage.getItem(KEY));S=raw&&raw.schema===1?raw:initial()}catch{S=initial()}
 function hydrate(){
- for(const k of ['eventHistory','seen','introduced','flash','visitedGroups','contacts','clues','spokenTo','interacted','pendingContacts','photoRequests','photoFollows'])if(!Array.isArray(S[k]))S[k]=[];
- for(const k of ['groupDone','guesses','note','crossings','knownOrg','nightChoice','viewedPlatforms','viewedBoard','groupLog','personalIntroduced','affinity','relationshipDays','dailyAffinity','checks','socialLinked','socialCandidates'])if(!S[k]||typeof S[k]!=='object')S[k]={};
+ for(const k of ['eventHistory','seen','introduced','flash','visitedGroups','contacts','clues','spokenTo','interacted','pendingContacts','photoRequests','photoFollows'])
+  if(!Array.isArray(S[k])){S[k]=[];hydrationChanged=true}
+ for(const k of ['groupDone','guesses','note','crossings','knownOrg','nightChoice','viewedPlatforms','viewedBoard','groupLog','personalIntroduced','affinity','relationshipDays','dailyAffinity','checks','socialLinked','socialCandidates'])
+  if(!S[k]||typeof S[k]!=='object'){S[k]={};hydrationChanged=true}
 }
 hydrate();
-if(!Number.isFinite(S.presentationSeed))S.presentationSeed=0;
+if(!Number.isFinite(S.presentationSeed)){S.presentationSeed=0;hydrationChanged=true}
 // Old saves had a generic "spokenTo" flag, but no separately persisted direct introduction.
-for(const id of S.spokenTo)S.personalIntroduced[id]=true;
+for(const id of S.spokenTo)if(!S.personalIntroduced[id]){S.personalIntroduced[id]=true;hydrationChanged=true}
+if(hydrationChanged)localStorage.setItem(KEY,JSON.stringify(S));
 if(S.phase==='flash'&&!S.group){S.phase='venue';localStorage.setItem(KEY,JSON.stringify(S));}
 for(const [gid,result] of Object.entries(S.groupDone))if(result&&!S.groupLog[gid])S.groupLog[gid]=[{pid:null,type:'旧版の交流',text:result}];
 const PEERS=new Set(['P013','P014','P015','P016']);
