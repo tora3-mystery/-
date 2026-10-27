@@ -48,7 +48,7 @@ ok(newGame.get('day0Apply').classList.contains('hidden'),'Practice response init
 newGame.get('day0Investigate').onclick();
 ok(newGame.api.practiceStatus()===1&&!newGame.get('day0Discovery').classList.contains('hidden'),'Actual underlined phrase yields a policy');
 newGame.get('day0Apply').onclick();
-ok(newGame.api.practiceStatus()===2&&newGame.get('day0Queue').textContent==='1件'&&newGame.get('day0Noise').textContent==='2件','Practice shows both improvement and side effect');
+ok(newGame.api.practiceStatus()===2&&newGame.get('day0Queue').textContent==='1/5'&&newGame.get('day0Noise').textContent==='2/5','Practice shows both improvement and side effect');
 ok(!newGame.get('day0Finish').classList.contains('hidden'),'Practice has a completion action');
 newGame.get('day0Finish').onclick();
 let state=newGame.api.getState();
