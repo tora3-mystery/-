@@ -5,7 +5,7 @@
   const SAVE_KEY = 's6-case-a-v03-save';
   const AUTO_KEY = 's6-case-a-v03-auto';
   const META_KEY = 's6-case-a-v03-meta';
-  const BUILD_AT = '2026-10-27 15:16 JST';
+  const BUILD_AT = '2026-10-27 15:29 JST';
   const DAYS = [
     ['2026-04-06','4月6日 月曜'],['2026-04-07','4月7日 火曜'],
     ['2026-04-08','4月8日 水曜'],['2026-04-09','4月9日 木曜'],
@@ -31,7 +31,7 @@
   const esc = x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const getMeta=()=>{try{return JSON.parse(localStorage.getItem(META_KEY))||{}}catch{return {}}};
   const makeState=()=>({
-    schema:3,caseId:'A',phase:'title',returnPhase:null,day:0,eventId:null,eventHistory:[],
+    schema:3,caseId:'A',phase:'title',returnPhase:null,day:0,eventId:null,eventHistory:[],participationHistory:[],
     visitedGroups:[],groupActions:{},groupResults:{},groupReunions:{},activeGroup:null,groupResult:'',reunionText:'',preEventState:{},
     person:{},contactSince:{},replyLog:{},musicMemory:[],nightUsed:{},nightDone:{},nightMessage:'',lunchSeenDates:[],lunchPreState:{},lunchTalked:{},lunchMessage:'',
     evidence:{},oldNew:false,bridge:false,bridgeAvailable:false,
@@ -283,12 +283,45 @@
     const music=(S.musicMemory||[]).slice(-1)[0];const musicLine=music?'あの週、'+music.note:'';
     return [activity,social,musicLine,weekend].filter(Boolean).join(' ');
   };
+  // 1年後の描写は実際の参加・交流の履歴から導出する。未選択の所属・入会は確定しない。
+  const oneYearLater=()=>{
+    const history=Array.isArray(S.eventHistory)?S.eventHistory:[];
+    const orgVisits={};
+    for(const eid of history){const oid=emap[eid]?.org_id;if(oid)orgVisits[oid]=(orgVisits[oid]||0)+1}
+    const groups=Array.isArray(S.participationHistory)?S.participationHistory:[];
+    const orgActions={};
+    for(const a of groups){const oid=emap[gmap[a.group_id]?.event_id]?.org_id;if(oid)orgActions[oid]=(orgActions[oid]||0)+1}
+    const ranking=Object.keys(orgVisits).sort((a,b)=>
+      (orgVisits[b]+(orgActions[b]||0)*2)-(orgVisits[a]+(orgActions[a]||0)*2)||
+      history.findIndex(eid=>emap[eid]?.org_id===a)-history.findIndex(eid=>emap[eid]?.org_id===b)
+    );
+    let music;
+    if(!ranking.length){
+      music='新歓に行かずに過ごした一週間から、音楽との距離は自分で決めてきた。今も、何を聴き、いつ演奏するかはあなた次第だ。';
+    }else if(ranking.length>1&&
+      orgVisits[ranking[0]]+2*(orgActions[ranking[0]]||0)===orgVisits[ranking[1]]+2*(orgActions[ranking[1]]||0)){
+      music=ORG[ranking[0]]+'と'+ORG[ranking[1]]+'。違う音楽に出会ったことが、今も次の一曲を選ぶ楽しみになっている。';
+    }else if(orgVisits[ranking[0]]>=2&&(orgActions[ranking[0]]||0)>=2){
+      music=ORG[ranking[0]]+'の練習室は、何度か通って少しなじみのある場所になった。今も時々、そこで鳴る音を聴きに行く。';
+    }else{
+      music=ORG[ranking[0]]+'で出会った音が、ときどき耳によみがえる。あの週の見学が、音楽の選択肢を一つ増やしてくれた。';
+    }
+    const replies=[...new Set(Object.values(S.replyLog||{}))].filter(pid=>S.person[pid]?.introduced&&pmap[pid]);
+    const contacts=Object.keys(S.person).filter(pid=>S.person[pid]?.met&&S.person[pid]?.contacts?.length&&pmap[pid]);
+    const met=Object.keys(S.person).filter(pid=>S.person[pid]?.met&&S.person[pid]?.introduced&&pmap[pid]);
+    let people;
+    if(replies.length)people='あの週に返信した'+replies.slice(0,2).map(pid=>pmap[pid].name).join('と')+'とのやり取りが、連絡先に残っている。';
+    else if(contacts.length)people=contacts.slice(0,2).map(pid=>pmap[pid].name).join('と')+'と、連絡できるようになったのもあの春だ。';
+    else if(met.length)people='会場で話した'+met.slice(0,2).map(pid=>pmap[pid].name).join('と')+'の顔を、ふと思い出すことがある。';
+    else people='まだ知らない人も場所も多い。これからどこへ行くか、決める余地は残っている。';
+    return '<div class="card soft"><h3>2027年4月｜あれから一年</h3><p>'+esc(music)+'</p><p>'+esc(people)+'</p></div>';
+  };
   const ending=()=>{
     const texts={
-      'A-TRUE-SAFE':['音を選び直す','日曜の資料から紬が最有力となった。週明け、権限ある担当者が認証端末、委任・復旧履歴、旧匿名鍵の移転と送信記録を照合し、盗用や伝聞の反論を退けた。真相は西園寺紬だった。','2027年4月。支援と接触制限の中で、あなたは自分で選んだ場所で再び演奏する。'],
-      'A-TRUE-RISK':['帰るための音','個別練習の場から助けを求めた。日曜の保全と週明けの正規確認で、紬の行為が裏付けられた。','2027年4月。回復を急ぐ必要はない。あなたのペースで、もう一度音を出す。'],
-      'A-SAFE-UNSOLVED':['答えを急がない','相手を断定できなくても、安全窓口に相談し、同行と記録の保全を選べた。調査は続く。','2027年4月。真相が保留でも、安心できる人との演奏は続いている。'],
-      'A-UNRESOLVED':['今週はここまで','音を楽しむ一週間を過ごした。気になる記録は残るが、今は結論を出さない。','2027年4月。必要になれば資料を持って相談できる。'],
+      'A-TRUE-SAFE':['音を選び直す','日曜の資料から紬が最有力となった。週明け、権限ある担当者が認証端末、委任・復旧履歴、旧匿名鍵の移転と送信記録を照合し、盗用や伝聞の反論を退けた。真相は西園寺紬だった。','支援と接触制限が整い、音楽とどう関わるかを自分で選べるようになった。'],
+      'A-TRUE-RISK':['帰るための音','個別練習の場から助けを求めた。日曜の保全と週明けの正規確認で、紬の行為が裏付けられた。','回復を急ぐ必要はない。音楽を続ける場所と距離は、自分で決められる。'],
+      'A-SAFE-UNSOLVED':['答えを急がない','相手を断定できなくても、安全窓口に相談し、同行と記録の保全を選べた。調査は続く。','真相が保留でも、安全な距離を選ぶことができた。音楽をどう続けるかは、これから決められる。'],
+      'A-UNRESOLVED':['今週はここまで','大学生活の最初の一週間を過ごした。気になる記録は残るが、今は結論を出さない。','必要になれば資料を持って相談できる。音楽との付き合い方も、まだ決めなくていい。'],
       'A-DANGER':['途切れた帰り道','個別練習の場所で退室を妨げられた。画面はここで暗転する。','ここから再挑戦できる。次は同行や緊急連絡を選んでよい。']
     };
     const [head,body,epi]=texts[S.ending];
@@ -297,7 +330,7 @@
       '三つの作業者照合子と異なる操作ハッシュを比べよう。旧匿名文は別の線で確認する。',
       'C1・C2・C3の共通者は紬。ただし日曜は最有力にとどまる。週明けの認証と旧鍵の確認が必要。'
     ].slice(0,S.hintsOpen).map((h,i)=>'<p><strong>ヒント '+(i+1)+'</strong> '+esc(h)+'</p>').join('')+(S.hintsOpen<3?btn('次のヒントを見る','hint','','secondary'):'')+'</div>':'';
-    return '<p class="eyebrow">ENDING / CASE A</p><h2>'+esc(head)+'</h2><div class="card"><p class="lead">'+esc(body)+'</p><hr class="divider"><p>'+esc(epi)+'</p></div>'+(S.ending==='A-DANGER'?'':'<div class="card soft"><h3>この一週間の記憶</h3><p>'+esc(weekReflection())+'</p></div>')+hints+'<div class="btnrow">'+btn('最初から遊ぶ','replay','','')+btn('人物手帳を読む','notebook','','ghost')+'</div>';
+    return '<p class="eyebrow">APRIL / AFTER THE WEEK</p><h2>'+esc(head)+'</h2><div class="card"><p class="lead">'+esc(body)+'</p><hr class="divider"><p>'+esc(epi)+'</p></div>'+(S.ending==='A-DANGER'?'':'<div class="card soft"><h3>この一週間の記憶</h3><p>'+esc(weekReflection())+'</p></div>'+oneYearLater())+hints+'<div class="btnrow">'+btn('最初から遊ぶ','replay','','')+btn('人物手帳を読む','notebook','','ghost')+'</div>';
   };
   function render(){
     let content;
@@ -416,19 +449,21 @@
       S.activeGroup=gid;S.phase='group';saveAndRender();return;
     }
     if(act==='back-venue'){S.phase='venue';saveAndRender();return}
-    if(act==='listen'){const a=D.actions.find(a=>a.group_id===S.activeGroup);S.groupActions[S.activeGroup]='listen';S.groupResult=a.listen_text;S.groupResults??={};S.groupResults[S.activeGroup]=S.groupResult;S.musicMemory??=[];if(a.music_note&&!S.musicMemory.some(m=>m.group_id===S.activeGroup))S.musicMemory.push({group_id:S.activeGroup,date:currentDate(),note:a.music_note});if(a.trigger_fact_id)discoverFact(a.trigger_fact_id);saveAndRender();return}
+    if(act==='listen'){if(S.groupActions[S.activeGroup])return;const a=D.actions.find(a=>a.group_id===S.activeGroup);S.participationHistory??=[];S.participationHistory.push({group_id:S.activeGroup,action:'listen'});S.groupActions[S.activeGroup]='listen';S.groupResult=a.listen_text;S.groupResults??={};S.groupResults[S.activeGroup]=S.groupResult;S.musicMemory??=[];if(a.music_note&&!S.musicMemory.some(m=>m.group_id===S.activeGroup))S.musicMemory.push({group_id:S.activeGroup,date:currentDate(),note:a.music_note});if(a.trigger_fact_id)discoverFact(a.trigger_fact_id);saveAndRender();return}
     if(act==='ask-menu'){S.phase='question';saveAndRender();return}
     if(act==='contact-menu'){S.phase='contact';saveAndRender();return}
     if(act==='back-group'){S.phase='group';saveAndRender();return}
     if(act==='ask-person'){
       const q=D.questions.find(q=>q.group_id===S.activeGroup&&q.target_id===id);if(!q)return;
-      ps(id).introduced=true;ps(id).lastInteraction='question';S.groupActions[S.activeGroup]='question';S.groupResult=q.answer;S.groupResults??={};S.groupResults[S.activeGroup]=S.groupResult;
+      if(S.groupActions[S.activeGroup])return;ps(id).introduced=true;ps(id).lastInteraction='question';S.participationHistory??=[];S.participationHistory.push({group_id:S.activeGroup,action:'question',person_id:id});S.groupActions[S.activeGroup]='question';S.groupResult=q.answer;S.groupResults??={};S.groupResults[S.activeGroup]=S.groupResult;
       S.phase='group';saveAndRender();return;
     }
     if(act==='contact-person'){
       const platform=el.dataset.platform||'TINE',a=amap[id+'|'+platform],p=ps(id);
       const policy=D.contactChannels.find(c=>c.group_id===S.activeGroup&&c.person_id===id&&c.platform===platform)?.approval_policy;
       if(!a||!policy){S.groupResult='この連絡手段では交換できない。';S.phase='group';saveAndRender();return}
+      if(S.groupActions[S.activeGroup])return;
+      S.participationHistory??=[];S.participationHistory.push({group_id:S.activeGroup,action:'contact',person_id:id});
       p.contact_requested=true;p.introduced=true;p.lastInteraction='contact';
       S.groupActions[S.activeGroup]='contact';
       const intro=pmap[id].name+'と名前を確かめた。';
