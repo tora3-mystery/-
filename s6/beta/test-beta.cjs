@@ -220,7 +220,7 @@ check('contact exchange does not grant familiarity even if approved immediately'
  s.click('action-menu','contact');s.click('act-target','P003');
  assert.ok(s.state.contacts.includes('P003'));
  assert.equal(s.state.affinity.P003||0,0);
- assert.equal(B.level(s.state,'P003'),'new');
+ assert.equal(B.level(s.state,'P003'),'acquainted');
 });
 check('reunion after a separate day unlocks a warmer response with no legal-name leakage',()=>{
  const B=dataScope.window.S6_BETA_DIALOGUE;
@@ -362,8 +362,9 @@ check('a group member can join the chat without consuming a player action',()=>{
  assert.match(s.html,/演奏がひと区切り/);
  s.click('action-menu','talk');s.click('act-target','P014');
  assert.equal(s.state.groupLog['E01-C'].length,1);
- assert.ok(s.state.groupLog['E01-C'][0].reply?.pid);
- assert.match(s.html,/輪の反応/);
+ const response=s.state.groupLog['E01-C'][0].reply;
+ if(response){assert.ok(response.pid);assert.match(s.html,/輪の反応/);}
+ else assert.doesNotMatch(s.html,/輪の反応/);
  s.click('listen-group');assert.equal(s.state.groupLog['E01-C'].length,2);
 });
 check('presentation shuffle does not alter membership, calendar, or case A evidence',()=>{
@@ -403,5 +404,72 @@ check('first-year dialogue to senior players stays polite in every authored fres
  }
  assert.match(engine.sceneLine(D.lines.find(x=>x.group_id==='E04-A'&&x.speaker_id==='P015')),/です/);
  assert.match(engine.sceneLine(D.lines.find(x=>x.group_id==='E05-A'&&x.speaker_id==='P013')),/ですね/);
+});
+
+check('a 0.5-point conversation is immediately marked as an interaction',()=>{
+ const s=newPlayer();visit(s,'E02','E02-A');
+ s.click('action-menu','talk');s.click('act-target','P004');
+ assert.equal(s.state.affinity.P004,0.5);
+ assert.ok(s.state.interacted.includes('P004'));
+ assert.equal(dataScope.window.S6_BETA_DIALOGUE.relationshipLabel(s.state,'P004'),'話したことがある');
+ assert.ok(s.state.personalIntroduced.P004);
+ assert.match(s.html,/有村遥です/);
+});
+check('group introduction and personal introduction are independent one-time flags',()=>{
+ const s=newPlayer();s.click('attend','E01');s.click('join-group','E01-A');s.click('leave-flash');
+ assert.ok(s.state.introduced.includes('P003'));
+ assert.equal(s.state.personalIntroduced.P003,undefined);
+ s.click('action-menu','talk');s.click('act-target','P003');
+ assert.ok(s.state.personalIntroduced.P003);
+ assert.equal((s.state.groupLog['E01-A'][0].text.match(/神谷杏奈です/g)||[]).length,1);
+ s.click('action-menu','talk');s.click('act-target','P003');
+ assert.doesNotMatch(s.state.groupLog['E01-A'][1].text,/神谷杏奈です/);
+ assert.doesNotMatch(s.state.groupLog['E01-A'][1].text,/また会ったね/);
+});
+check('contact/photo interaction also counts as having talked but never boosts friendship',()=>{
+ const s=newPlayer();visit(s,'E01','E01-A');
+ s.click('action-menu','contact');s.click('act-target','P003');
+ assert.equal(s.state.affinity.P003||0,0);
+ assert.ok(s.state.interacted.includes('P003'));
+ assert.equal(dataScope.window.S6_BETA_DIALOGUE.relationshipLabel(s.state,'P003'),'話したことがある');
+ assert.ok(s.state.personalIntroduced.P003);
+});
+check('interpersonal addresses honor grade and remain stable for each pair',()=>{
+ const B=dataScope.window.S6_BETA_DIALOGUE,P=dataScope.window.S6_BETA_PROFILES;
+ assert.equal(B.addressFor('P014','P017'),'斉藤先輩');
+ assert.equal(B.addressFor('P015','P001'),'西園寺先輩');
+ assert.equal(P.people.P018.nameParts.family,'橘');
+ assert.equal(P.people.P065.nameParts.family,'林');
+ assert.equal(B.addressFor('P014','P013'),B.addressFor('P014','P013'));
+ assert.ok(!B.addressFor('P014','P013').includes('先輩'));
+});
+check('probabilistic secondary dialogue includes silence, comments and voluntary introductions',()=>{
+ const E=dataScope.window.S6_BETA_DIALOGUE;
+ const state={personalIntroduced:{},groupLog:{},interacted:[],spokenTo:[]};
+ let silent=0,talked=0,introduced=0;
+ for(let seed=0;seed<300;seed++){
+  const reply=E.thirdParty('P014','E01-C',{...state,presentationSeed:seed},'talk');
+  if(!reply)silent++;
+  else {talked++;if(reply.selfIntroduced){introduced++;assert.match(reply.text,/です/)}}
+ }
+ assert.ok(silent>0&&talked>0&&introduced>0);
+ assert.deepEqual(E.thirdParty('P014','E01-C',{...state,presentationSeed:23},'talk'),
+ E.thirdParty('P014','E01-C',{...state,presentationSeed:23},'talk'));
+});
+check('personal name flags from old beta saves survive reload without invented affinity',()=>{
+ const cache=new Map(),s=makeSession(cache);
+ for(const a of ['start','show-campus','show-intro','begin'])s.click(a);
+ const legacy=s.state;legacy.spokenTo=['P003'];delete legacy.personalIntroduced;delete legacy.interacted;
+ cache.set('s6-origin-beta-010',JSON.stringify(legacy));
+ const loaded=makeSession(cache);
+ assert.ok(loaded.state.personalIntroduced.P003);
+ assert.equal(loaded.state.affinity.P003||0,0);
+});
+check('a second conversation in the same circle is not a same-day accidental reunion',()=>{
+ const s=newPlayer();visit(s,'E01','E01-A');
+ s.click('action-menu','talk');s.click('act-target','P003');
+ s.click('action-menu','talk');s.click('act-target','P003');
+ assert.match(s.state.groupLog['E01-A'][1].text,/さっきの話|そうそう/);
+ assert.doesNotMatch(s.state.groupLog['E01-A'][1].text,/前に来たとき|また会ったね/);
 });
 console.log(JSON.stringify({passed:total,failed:failures}));if(failures)process.exitCode=1;
