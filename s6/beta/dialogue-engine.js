@@ -62,9 +62,10 @@ const role=(id,gid)=>{
  if(p.primary_org===e?.org_id||p.dual_org===e?.org_id)return 'host';
  return 'guest';
 };
-function talk(id,gid,state){
+function talk(id,gid,state,knownBefore){
  const p=people[id],c=P.people[id],r=role(id,gid),v=c.voice;
- const already=!!(state.spokenTo?.includes(id)||state.interacted?.includes(id)),close=level(state,id);
+ // knownBefore is evaluated before the action, while close uses the updated affinity.
+ const already=typeof knownBefore==='boolean'?knownBefore:!!(state.spokenTo?.includes(id)||state.interacted?.includes(id)),close=level(state,id);
  const sameCircle=!!state.groupLog?.[gid]?.some(x=>x.pid===id);
  const intro=sameCircle?(v==='reserved'||v==='precise'?'さっきの話だけど。':'そうそう、もう少し話していい？'):
   already?(
