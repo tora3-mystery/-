@@ -1,5 +1,5 @@
 {
-  "version": "v0.9.1-beta",
+  "version": "v0.9.2-beta",
   "phase": "browser_prototype",
   "articles": [
     {
@@ -909,6 +909,8 @@
     "Repeated articles use contextual follow-up headlines and bodies in game.js; this JSON stores canonical source stories.",
     "Reader or social-media tips must be investigated by a matching reporter-topic pair. Publishing corroborated coverage in a major slot can strengthen the final policy conditions.",
     "The early-policy-decision wording in C08 was corrected so that it does not imply a decision before day seven.",
-    "All people, organizations, social-media accounts, and places in the story are fictional."
+    "All people, organizations, social-media accounts, and places in the story are fictional.",
+    "P1 v0.9.2-beta: Newspaper first editions are distinguished from real follow-ups using prior-day publication history; final-day reactions are readable before 2027 results.",
+    "Unprinted article summaries prioritize unmet goals and missing corroborating reports, without treating omission as the cause of an underlying incident."
   ]
 }
