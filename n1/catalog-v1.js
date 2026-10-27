@@ -106,20 +106,27 @@
     sourceType:'official_detail',emoji:item.emoji,questionRoles:roles,
     sceneOverrides:item.sceneOverrides||{},sceneVariant:item.sceneVariant||null};
  };
- const chooseSlots=(products,seed,avoid=[])=>{
-   const pool=playable(products),recent=new Set(avoid),keys=['buy','fact','gift','present'];
+ const chooseSlots=(products,seed,avoid=[],avoidCategories=[])=>{
+   const pool=playable(products),recent=new Set(avoid),priorCategories=new Set(avoidCategories),keys=['buy','fact','gift','present'];
    const hash=(id,salt)=>{
      let x=(seed ^ Math.imul(salt+1,0x9e3779b9))>>>0;
      for(let i=0;i<id.length;i++){x=Math.imul(x^id.charCodeAt(i),0x01000193)>>>0;}
      x=Math.imul(x^(x>>>16),0x85ebca6b);x=Math.imul(x^(x>>>13),0xc2b2ae35);
      return (x^(x>>>16))>>>0;
    };
-   const used=new Set(),out={};
+   const used=new Set(),usedCategories=new Set(),out={};
    for(let i=0;i<keys.length;i++){
      const role=keys[i],options=pool.filter(x=>x.questionRoles.includes(role)&&!used.has(x.id));
      if(!options.length)throw new Error('Insufficient playable image-covered products for '+role);
-     options.sort((a,b)=>Number(recent.has(a.id))-Number(recent.has(b.id)) || hash(a.id,i)-hash(b.id,i) || a.id.localeCompare(b.id));
-     const pick=options[0];out[role]=pick;used.add(pick.id);
+     // Prioritize different silhouettes within the same round: an all-notebook
+     // round feels repetitive even when all SKUs differ. Avoid recently shown
+     // items, then categories, but permit reuse when a role has few candidates.
+     options.sort((a,b)=>
+       Number(usedCategories.has(a.category))-Number(usedCategories.has(b.category)) ||
+       Number(recent.has(a.id))-Number(recent.has(b.id)) ||
+       Number(priorCategories.has(a.category))-Number(priorCategories.has(b.category)) ||
+       hash(a.id,i)-hash(b.id,i) || a.id.localeCompare(b.id));
+     const pick=options[0];out[role]=pick;used.add(pick.id);usedCategories.add(pick.category);
    }
    return out;
  };
