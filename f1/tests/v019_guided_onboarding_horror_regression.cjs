@@ -63,6 +63,38 @@ newGame.get('day0Investigate').onclick();newGame.get('day0Apply').onclick();
 newGame.get('day0Finish').onclick();
 ok(JSON.stringify(newGame.api.getState())===preserved,'Repeatable rehearsal does not overwrite ongoing state');
 
+// Navigation regression: users with existing saves must not be locked out of DAY 0.
+const savedSeed=boot();savedSeed.api.restart();
+savedSeed.api.setState({...savedSeed.api.getState(),day:4,revenue:180,
+ days:[{day:1,sales:60},{day:2,sales:60},{day:3,sales:60}],
+ discoveredActions:['register'],actionCounts:{register:1}});
+const saved=boot(savedSeed.memory);
+ok(!saved.get('resume').classList.contains('hidden'),'Existing-save resume button remains visible');
+ok(!saved.get('practiceAgain').classList.contains('hidden'),'Existing-save DAY 0 practice button is visible');
+ok(!saved.get('startOver').classList.contains('hidden'),'Existing-save new-game DAY 0 button is visible');
+saved.get('practiceAgain').onclick();
+ok(saved.api.practiceStatus()===0&&!saved.get('day0Panel').classList.contains('hidden'),
+ 'Existing-save rehearsal enters DAY 0');
+saved.get('day0Investigate').onclick();saved.get('day0Apply').onclick();saved.get('day0Finish').onclick();
+ok(saved.api.getState().day===4&&saved.api.getState().revenue===180,
+ 'Rehearsal preserves saved day and sales');
+saved.api.showLanding(true,false);saved.get('startOver').onclick();
+ok(!saved.get('day0Panel').classList.contains('hidden'),'New game from saved data enters DAY 0');
+ok(saved.api.getState().day===4,'Entering new DAY 0 does not immediately erase previous save');
+saved.get('day0Investigate').onclick();saved.get('day0Apply').onclick();saved.get('day0Finish').onclick();
+ok(saved.api.getState().day===1&&saved.api.getState().revenue===0,
+ 'After DAY 0 a new, clean DAY 1 is created');
+saved.get('restart').onclick();
+ok(saved.api.practiceStatus()===0&&!saved.get('day0Panel').classList.contains('hidden'),
+ 'In-game restart now begins at DAY 0, not DAY 1');
+saved.api.setState({...saved.api.getState(),day:7,revenue:510,finish:true,ending:'normal_success',
+ days:Array.from({length:7},(_,i)=>({day:i+1,sales:70}))});
+const replayButton=saved.get('ending').children.find(x=>x.textContent==='もう一度営業する');
+ok(!!replayButton&&typeof replayButton.onclick==='function','Ending has replay button');
+replayButton.onclick();
+ok(saved.api.practiceStatus()===0&&!saved.get('day0Panel').classList.contains('hidden'),
+ 'Ending replay enters DAY 0');
+
 const blocked=boot();blocked.api.restart();
 step(blocked,'idle');
 ok(blocked.api.focus('f17-back-review','裏手の社の周りが暗く'),'Rear alley investigated');
