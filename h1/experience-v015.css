@@ -1,0 +1,42 @@
+/* H1 β0.1.5: legible ending identity and immediate screen-top navigation. */
+html{scroll-behavior:auto!important}
+#main .h113-report .h011-end-mark{
+  font-size:clamp(32px,7vw,46px);
+  line-height:1.16;
+  letter-spacing:.12em;
+  margin:5px 0 15px;
+  font-weight:950;
+}
+#main .h113-report .h115-end-kind{
+  display:block;
+  width:fit-content;
+  max-width:100%;
+  margin:0 auto 22px;
+  padding:10px 17px;
+  border:2px solid currentColor;
+  border-radius:8px;
+  text-align:center;
+  font-size:clamp(16px,3.5vw,22px);
+  font-weight:900;
+  letter-spacing:.045em;
+  line-height:1.5;
+}
+#main .h113-report .h115-end-kind span{font-size:.75em;letter-spacing:0;white-space:normal}
+body.h113-outcome-good .h115-end-kind{color:#28634f;background:#e0efe5}
+body.h113-outcome-bad .h115-end-kind{color:#85374b;background:#f4e5e6}
+body.h113-outcome-horror .h115-end-kind{color:#ffe0eb;background:#493647}
+#main .h1-story-ending>.eyebrow{
+  display:inline-block;
+  padding:6px 11px;
+  border:1px solid currentColor;
+  border-radius:6px;
+  font-size:clamp(15px,3vw,20px);
+  font-weight:900;
+  letter-spacing:.04em;
+  line-height:1.45;
+  margin:3px 0 12px;
+}
+@media(max-width:540px){
+ #main .h113-report .h011-end-mark{letter-spacing:.08em}
+ #main .h113-report .h115-end-kind{padding:9px 11px}
+}
