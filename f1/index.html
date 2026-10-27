@@ -922,7 +922,7 @@ function render(){
   const note=a.kind==='gray'?'⚠ 発覚リスク '+grayChance(a.id)+'％／後日、是正費用・解任の可能性':a.f17Only?'お客様の声を確認して検討した対応':a.f17Followup?'裏手の状況を確認して検討した対応':a.v15Family?'解禁：過去の施策から発展した対応':a.kind==='major'?'週末の大型改善策':a.kind==='odd'?'':a.kind==='gray'?'⚠ 後日、苦情が再発するおそれ':a.id==='idle'?'新しい対策なし':a.repeat&&previous>=2?'繰返しによる改善効果減少':'';
   const badge=(a.f17Only||a.f17Followup)?'追加の対応':a.v15Family?'新規解禁':a.kind==='major'?'大型施策':'';
   const impact=impacts.map((v,i)=>v===0?'':('<span class="'+((i===0?v>0:v<0)?'better':'worse')+'">'+names[i]+(i===0?(v>0?'増':'減'):(v<0?'改善':'悪化'))+'</span>')).filter(Boolean).join(' ／ ');
-  b.innerHTML='<div class="choice-title"><span class="choice-icon" aria-hidden="true">'+iconFor(a)+'</span><b>'+a.name+'</b>'+(badge?'<span class="choice-badge">'+badge+'</span>':'')+'</div><small>'+a.desc+'</small>'+(impact?'<div class="action-impact">'+impact+'</div>':'')+'<div class="effect-line" aria-label="翌営業日の効果">'+chips+'</div>'+(note?'<div class="action-note">'+note+'</div>':'');
+  b.innerHTML='<div class="choice-title"><span class="choice-icon" aria-hidden="true">'+iconFor(a)+'</span><b>'+a.name+'</b>'+(badge?'<span class="choice-badge">'+badge+'</span>':'')+'</div><small>'+a.desc+'</small>'+'<div class="effect-line" aria-label="翌営業日の効果">'+chips+'</div>'+(note?'<div class="action-note">'+note+'</div>':'');
   b.onclick=()=>play(a.id);(a.id==='idle'||mainActionIds.has(a.id)?$('actions'):$('moreActionsBody')).append(b);
  });
  $('meters').replaceChildren();s.vals.forEach((n,i)=>{
