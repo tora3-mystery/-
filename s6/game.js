@@ -5,7 +5,7 @@
   const SAVE_KEY = 's6-case-a-v03-save';
   const AUTO_KEY = 's6-case-a-v03-auto';
   const META_KEY = 's6-case-a-v03-meta';
-  const BUILD_AT = '2026-10-27 16:14 JST';
+  const BUILD_AT = '2026-10-27 16:27 JST';
   const DAYS = [
     ['2026-04-06','4月6日 月曜'],['2026-04-07','4月7日 火曜'],
     ['2026-04-08','4月8日 水曜'],['2026-04-09','4月9日 木曜'],
@@ -477,9 +477,20 @@
       const p=ps(id),prior=p.affinity;
       p.met=true;p.affinity=Math.min(8,p.affinity+2);p.lastInteraction='approach';
       S.participationHistory??=[];S.participationHistory.push({group_id:S.activeGroup,action:'approach',person_id:id});S.groupActions[S.activeGroup]='approach';
-      const introduces=Number(id.slice(1))%4!==0||prior>=1;
-      if(introduces){p.introduced=true;S.groupResult='「初めまして。'+pmap[id].name+'です。」と名乗ってくれた。'+(prior?'「また会ったね」と':'少し')+'音楽の話が続いた。'}
-      else S.groupResult='「初めまして。今日は少し忙しくて」と会釈が返る。名前までは聞けなかったが、顔は覚えた。';
+      const style=pmap[id].social_style||'quiet';
+      const introduces=style==='open'||(style==='quiet'&&prior>=1)||(style==='reserved'&&prior>=2);
+      if(prior>0&&p.introduced){
+        S.groupResult='「また会ったね」と'+pmap[id].name+'が声をかけてくれた。前に話したことから、音楽の話がもう少し続いた。';
+      }else if(introduces){
+        p.introduced=true;
+        S.groupResult=style==='open'
+          ?'「見学に来たの？　'+pmap[id].name+'です。よかったら話そう」と向こうから声をかけてくれた。'
+          :'「初めまして。'+pmap[id].name+'です」と自己紹介してくれた。お互いの好きな音楽を少し話した。';
+      }else{
+        S.groupResult=style==='reserved'
+          ?'「初めまして。今は準備で手が離せなくて」と短い返事。名前は聞けなかったが、次に会えば覚えていてくれそうだ。'
+          :'軽く会釈してくれたものの、ちょうど演奏中で長くは話せない。名前を聞くのは次の機会になった。';
+      }
       S.groupResults??={};S.groupResults[S.activeGroup]=S.groupResult;S.phase='group';saveAndRender();return;
     }
     if(act==='ask-menu'){S.phase='question';saveAndRender();return}
