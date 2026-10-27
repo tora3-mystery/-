@@ -150,7 +150,9 @@
     const role=q.legacyIndex===5?'fujino':'shoji';
     const type=productSituation(q,role);
     q.situationType=type;
-    q.sceneVariant=productSceneVariant(q);
+    const allowedVariants=new Set(['device_care','breakroom_item','event_token','office_trial','training_handout']);
+    if(q.sceneVariantOverride && !allowedVariants.has(q.sceneVariantOverride))throw new Error('Invalid product scene variant '+q.productId);
+    q.sceneVariant=q.sceneVariantOverride||productSceneVariant(q);
     const name=q.speechName;
     if(q.legacyIndex===5) {
       if(type==='office_supplies'){
@@ -267,6 +269,7 @@
         q.resultDetail=chosen.details;q.emoji=chosen.emoji||'🛍️';
         q.truth=chosen.price;q.unit='円';q.type='yen';
         q.imageKey=chosen.imageKey;q.productId=chosen.id;
+        q.sceneOverrides=chosen.sceneOverrides||{};q.sceneVariantOverride=chosen.sceneVariant||null;
         q.speechName=chosen.speechName;q.displayName=chosen.name;
         if(q.legacyIndex===1)q.zone=[Math.round(chosen.price*1.25),Math.round(chosen.price*2)];
         else if(q.legacyIndex===5)q.zone=[Math.round(chosen.price*.65),Math.round(chosen.price*.85)];
