@@ -23,7 +23,7 @@ const level=(state,id)=>state.contacts?.includes(id)?'contact':(state.affinity?.
 const role=(id,gid)=>{
  const p=people[id],g=D.groups.find(x=>x.group_id===gid),e=events[g?.event_id];
  if(p.year==='1')return 'newcomer';
- if(p.primary_org===e?.org_id)return 'host';
+ if(p.primary_org===e?.org_id||p.dual_org===e?.org_id)return 'host';
  return 'guest';
 };
 function talk(id,gid,state){
