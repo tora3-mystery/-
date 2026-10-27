@@ -38,7 +38,7 @@ h2{font-size:17px;line-height:1.4;margin:0 0 8px}h3{font-size:14px;margin:0 0 8p
 </style>
 </head>
 <body><main class="app">
-<header class="mast"><div><div class="sub">短編UIゲーム実験室｜K1 プロトタイプ</div><h1>掲示物をご確認ください。</h1><div class="meta"><b>K1 α0.4.1</b> ｜ 2026-10-28 01:29 JST更新</div></div><a class="home" href="../index.html">作品一覧へ</a></header>
+<header class="mast"><div><div class="sub">短編UIゲーム実験室｜K1 プロトタイプ</div><h1>掲示物をご確認ください。</h1><div class="meta"><b>K1 α0.5.0</b> ｜ 2026-10-28 01:57 JST更新</div></div><a class="home" href="../index.html">作品一覧へ</a></header>
 <section id="intro" class="panel intro">
 <div class="sub">白波レジデンス・406号室</div><h2>掲示物をご確認ください。</h2>
 <p class="lede">あなたは白波レジデンス406号室で一人暮らしをする会社員です。</p><p>入居して3か月。仕事から帰るたび、エントランスの大量の掲示が目に入ります。少し慣れた今も、すべてに目を通すのはひと苦労です。</p>
@@ -59,7 +59,7 @@ h2{font-size:17px;line-height:1.4;margin:0 0 8px}h3{font-size:14px;margin:0 0 8p
 <script>
 (function(){
 'use strict';
-var KEY='short-ui-k1-alpha041';
+var KEY='short-ui-k1-alpha050';
 var BASE=[
 ['R01','管理人室の受付','管理人室の通常受付は9時から17時までです。時間外のご用件は指定窓口へお願いいたします。','管理事務所'],
 ['R02','夜間の訪問について','21時以降、管理事務所および委託業者が訪問する場合は、原則として事前に案内を配布します。','管理事務所'],
@@ -251,16 +251,16 @@ var door=[
 return (where==='post'?post:door).filter(function(i){return i.day<=state.day&&!(where==='post'&&i.id==='letter'&&state.letterTaken)&&(!i.requiresTrust||state.trust>0);});
 }
 function eventNow(){return getEvents(state.day)[state.index];}
-function inquiryTarget(e){var m={E01:'配送会社のお客様窓口',E02:'管理会社の時間外窓口',E02B:'管理会社の時間外窓口',E02C:'配送会社の確認窓口',E02D:'管理会社の時間外窓口',E02E:'管理組合理事会の書面受付',E02F:'防火設備の時間外コールセンター',E03B:'警報連動の受付',E03:'管理会社の時間外窓口',E04:'管理会社の受付窓口',E05:'設備点検会社の受付窓口',E06:'管理会社の受付窓口',E06B:'管理会社の受付窓口',E07:'管理会社の時間外窓口',E08:'管理会社の入居者窓口',E09:'管理組合理事会'};return m[e.id]||'指定窓口';}
+function inquiryTarget(e){var m={E01:'配送会社のお客様窓口',E02:'管理会社の時間外窓口',E02B:'管理会社の時間外窓口',E02C:'配送会社の確認窓口',E02D:'管理会社の時間外窓口',E02E:'管理組合理事会の書面受付',E02F:'防火設備の時間外コールセンター',E03B:'警報連動の受付',E03C:'管理会社の一斉配信窓口',E03D:'管理組合の連絡受付',E03E:'設備警報の時間外窓口',E03F:'警報連動の受付',E03:'管理会社の時間外窓口',E04:'管理会社の受付窓口',E05:'設備点検会社の受付窓口',E05C:'設備点検会社の受付窓口',E05D:'東洋設備の受付窓口',E05E:'管理会社の書類受付',E05F:'東洋設備の受付窓口',E06:'管理会社の受付窓口',E06B:'管理組合の書面受付',E06C:'管理組合の書面受付',E06D:'管理組合理事会',E06E:'管理会社の書類受付',E06F:'管理組合の認証窓口',E07:'管理会社の時間外窓口',E07C:'管理会社の時間外窓口',E07D:'管理会社の受付窓口',E07E:'管理組合理事会',E07F:'設備警報の時間外窓口',E08:'管理会社の入居者窓口',E09:'管理組合理事会'};return m[e.id]||'指定窓口';}
 function actionPreview(e,c){
- if(c==='no'){if(e.id==='E02B')return '止水弁の操作を見送り、警報を放置します。';if(e.id==='E02F')return '防火扉の閉鎖を見送りします。';if(e.id==='E02E')return '確認書への異議を出さず、期限経過まで何もしません。';if(e.id==='E02C')return '到着した荷物を受け取りません。';if(e.id==='E03B')return '本人確認の期限までに登録を完了しません。';if(e.id==='E06B')return '訂正後の件数を回答せず、管理組合への申し出を保留します。';if(e.id==='E08')return '名簿照会には回答せず、登録されている406号室の居住者名で処理されます。';return '今回の訪問・要求には応じません。';}
+ if(c==='no'){if(e.id==='E02B')return '止水弁の操作を見送り、警報を放置します。';if(e.id==='E02F')return '防火扉の閉鎖を見送りします。';if(e.id==='E02E')return '確認書への異議を出さず、期限経過まで何もしません。';if(e.id==='E02C')return '到着した荷物を受け取りません。';if(['E03B','E03F','E06F'].includes(e.id))return '必要な項目を送らず、確認期限まで対応しません。';if(['E06B','E06C'].includes(e.id))return '訂正後の件数を回答せず、管理組合への申し出を保留します。';if(e.id==='E08')return '名簿照会には回答せず、登録されている406号室の居住者名で処理されます。';return '今回の訪問・要求には応じません。';}
  if(c==='verify'){if(e.id==='E09')return '管理組合理事会宛てに、入手した書面と証言を添えた申立書を送信します。';return inquiryTarget(e)+'に問い合わせます。問い合わせ先には、連絡した事実と内容が伝わります。実行後はその夜の判断が確定します。';}
- var detail={E02B:'玄関収納の緊急止水弁を閉じます。',E02F:'防火扉を閉じる操作をします。',E02E:'管理会社からの確認書に同意します。',E02C:'配送業者から荷物を受け取ります。',E02D:'407号室の鍵を預かるために玄関を開けます。',E03B:'選択した項目を本人確認窓口に送ります。',E06B:'選択した件数を管理組合の臨時受付へ送信します。',E08:'選択した氏名を管理会社の名簿照会へ送ります。',E09:'管理会社の「対応完了」確認書へ同意して署名します。'};
+ var detail={E03E:'室内装置の試験終了を確定します。',E07F:'室内端末の確認ボタンを押します。',E05E:'点検控えを管理会社へ返送します。',E06E:'管理会社による訂正撤回へ同意します。',E02B:'玄関収納の緊急止水弁を閉じます。',E02F:'防火扉を閉じる操作をします。',E02E:'管理会社からの確認書に同意します。',E02C:'配送業者から荷物を受け取ります。',E02D:'407号室の鍵を預かるために玄関を開けます。',E03B:'選択した項目を本人確認窓口に送ります。',E06B:'選択した件数を管理組合の臨時受付へ送信します。',E08:'選択した氏名を管理会社の名簿照会へ送ります。',E09:'管理会社の「対応完了」確認書へ同意して署名します。'};
  return detail[e.id]||'訪問者の要求に応じます。玄関を開けるよう求められた場合は開き、呼出しの場合は通話を開始します。';
 }
 function responseForm(e){
- if(e.id==='E03B'){return '<p><b>送信する項目を選択</b></p>'+[{id:'name',t:'氏名（水野 凪）'},{id:'room',t:'部屋番号（406号室）'},{id:'phone',t:'電話番号'},{id:'birth',t:'生年月日'}].map(function(x){return '<label class="answer-line"><input type="checkbox" data-reply-field="'+x.id+'" '+(reply.fields.includes(x.id)?'checked':'')+'> '+x.t+'</label>';}).join('');}
- if(e.id==='E06B'){return '<p><b>訂正後の件数</b></p>'+['16','18','20'].map(function(x){return '<label class="answer-line"><input type="radio" name="replyCount" data-reply-number="'+x+'" '+(reply.number===x?'checked':'')+'> '+x+'件</label>';}).join('');}
+ if(['E03B','E03F','E06F'].includes(e.id)){return '<p><b>送信する項目を選択</b></p>'+[{id:'name',t:'氏名（水野 凪）'},{id:'room',t:'部屋番号（406号室）'},{id:'phone',t:'電話番号'},{id:'birth',t:'生年月日'}].map(function(x){return '<label class="answer-line"><input type="checkbox" data-reply-field="'+x.id+'" '+(reply.fields.includes(x.id)?'checked':'')+'> '+x.t+'</label>';}).join('');}
+ if(['E06B','E06C'].includes(e.id)){return '<p><b>訂正後の件数</b></p>'+['16','18','20'].map(function(x){return '<label class="answer-line"><input type="radio" name="replyCount" data-reply-number="'+x+'" '+(reply.number===x?'checked':'')+'> '+x+'件</label>';}).join('');}
  if(e.id==='E08'){return '<p><b>照合する氏名</b></p>'+[{id:'水野 凪',label:'水野 凪（406号室）'},{id:'横田',label:'横田（405号室）'},{id:'高瀬 奈津美',label:'高瀬 奈津美（407号室・過去の居住者）'},{id:'森本 透',label:'森本 透（照合に出てきた名称）'}].map(function(x){return '<label class="answer-line"><input type="radio" name="replyPerson" data-reply-person="'+esc(x.id)+'" '+(reply.person===x.id?'checked':'')+'> '+esc(x.label)+'</label>';}).join('');}
  return '';
 }
@@ -292,6 +292,19 @@ function resultFor(e,c,extra){
  }else if(e.id==='E02F'){
   if(c==='yes')msg='廊下に煙がないことを確認し、扉の障害物を除いて閉鎖操作をした。警報は止まった。';
   else fail('閉じられない扉','防火扉の警報時の手順を記した案内があった。','警報の音が止まった。代わりに館内放送が流れた。「4階の防火区画を解除しました」。扉の奥は暗いままだった。');
+ }else if(e.id==='E03C'){
+  if(c==='no')msg='再送依頼には応じなかった。翌朝、管理組合から個人情報の再送は求めていないと連絡が届いた。';
+  else fail('書き換えられた情報','以前の掲示には本人確認で答える項目が限られていた。',c==='yes'?'入力した個人情報の一覧が、406号室の外側から貼り直された。':'問い合わせ先から「送らなくても構いません。所在だけ確認しました」と返事があった。');
+ }else if(e.id==='E03D'){
+  if(c==='verify')msg='理事会宛てに照会を送ると、警報連動の停止は誤処理だったと分かった。';
+  else fail('解除された警報連動','確認先は管理組合の独立した窓口だった。',c==='yes'?'端末の承認画面に触れた途端、連絡先は管理会社へ差し替わった。':'何も送らなかった。翌朝、あなたの部屋だけ警報が鳴らなくなっていた。');
+ }else if(e.id==='E03E'){
+  if(c==='yes')msg='室内装置の試験終了ボタンを押した。赤いランプは消えた。';
+  else fail('消えない試験灯','以前の試験の案内には、室内端末での操作が記されていた。',c==='no'?'赤い光は扉の隙間から漏れ、廊下の床に小さな点を作った。':'受付には「操作履歴がありません」とだけ記録され、ランプは消えなかった。');
+ }else if(e.id==='E03F'){
+  var f=(extraData.fields||[]).slice().sort().join(',');
+  if(c==='yes'&&f==='name,room')msg='必要な2項目だけを送ると、本人確認が完了した。';
+  else fail('受け取られなかった認証','本人確認に必要な情報は初日の掲示に記されていた。',c==='yes'?'入力した情報が多いのか少ないのか、端末は何も教えなかった。':'期限が過ぎても確認状態が変わらなかった。');
  }else if(e.id==='E03B'){
   var f=(extraData.fields||[]).slice().sort().join(',');
   if(c!=='yes'||f!=='name,room')fail('登録できなかった連絡先','本人確認の掲示では、氏名と部屋番号の2項目のみを求めていた。',c==='yes'?'余計な情報または不足した情報が送られた。認証画面には「連携対象外」と表示された。':'回答期限が過ぎ、警報連動の解除通知が届いた。');
@@ -305,15 +318,52 @@ function resultFor(e,c,extra){
  }else if(e.id==='E05'){
   if(c==='yes'){add('technician');msg='予定どおり設備業者が点検を終え、実施控えを渡した。以前の点検記録の日付には不自然な点が残る。';}
   else fail('見送った正規点検','個別の点検通知と担当者名・時間は一致していた。',c==='verify'?'問い合わせを続けるうちに作業時間は終わった。正式な実施控えを得られなくなった。':'設備業者は帰っていった。後から必要と分かった点検控えは、もう取得できなかった。');
+ }else if(e.id==='E05C'){
+  if(c==='yes'){add('technician');msg='大野は室内を点検し、実施控えを置いて帰った。';}
+  else fail('点検を受けなかった部屋','点検日時と担当者名が個別案内と一致していた。',c==='verify'?'確認の返答が来たとき、点検員はもう別の階へ移っていた。':'点検予定の時刻は過ぎた。実施控えは空欄のままだった。');
+ }else if(e.id==='E05D'){
+  if(c==='verify'){add('technician');msg='東洋設備が点検員と時刻を確認し、実施控えを送ってきた。';}
+  else fail('消された点検控え','実施控えの送り主を確かめる必要があった。',c==='yes'?'差出人を見ずに承認した。管理会社の手元には「点検不要」と記載された。':'返信の期限を過ぎ、点検控えの発行は保留された。');
+ }else if(e.id==='E05E'){
+  if(c==='no'){add('technician');msg='点検控えを返送せず手元に残した。黒田からの連絡はそれきりだった。';}
+  else fail('控えの行方','実施控えは管理会社と別の窓口へ提出できる資料だった。',c==='yes'?'控えを返送すると、管理会社の画面には「保管なし」と表示された。':'保管先を問い合わせると、黒田は「こちらへお持ちください」と答えた。');
+ }else if(e.id==='E05F'){
+  if(c==='yes'){add('technician');msg='大野に室内を点検してもらった。日付と担当者の記された控えが残った。';}
+  else fail('未発行の点検控え','個別の点検案内と担当者の氏名は一致していた。',c==='verify'?'照会を終える頃には、点検員は帰っていた。':'大野は名刺だけを郵便受けに残して帰った。');
  }else if(e.id==='E06'){
   if(c==='yes'){state.trust++;add('testimony');msg='横田が407号室の事故と、書き換えられた夜間掲示の経緯を語った。「管理事務所にはまだ言わないで」。';}
   else fail('隣室との連絡','横田は直接の説明を求めていた。管理事務所への照会も彼女の所在を知らせることになる。',c==='verify'?'管理室へ電話した直後、405号室の表札が剥がされた。':'横田は扉を閉めた。翌朝、405号室には居住者不在の紙が貼られていた。');
  }else if(e.id==='E06B'){
   if(c==='yes'&&extraData.number==='18'){state.numberVerified=true;msg='訂正後の件数「18件」で照合が通った。古い掲示はすでに撤去されている。';}
   else fail('訂正されていた件数','火曜日の16件は水曜日に18件へ訂正されていた。正しい件数が必要だった。',c==='yes'?'送った件数は照合に一致しなかった。申立ての受付は保留された。':'確認期限が過ぎ、事故記録と照合する機会を失った。');
+ }else if(e.id==='E06C'){
+  if(c==='yes'&&extraData.number==='18'){state.numberVerified=true;msg='旧掲示の訂正内容と照合が済んだ。管理組合に受付票が残った。';}
+  else fail('一致しない記録','訂正紙はすでに撤去されていた。',c==='yes'?'送られた数字の欄に赤い訂正線が引かれた。':'受付時間が過ぎた。訂正したはずの掲示は見当たらない。');
+ }else if(e.id==='E06D'){
+  if(c==='verify'){state.numberVerified=true;msg='理事会の受付で提出先と事故資料の整合が確認された。';}
+  else fail('渡してはいけない提出先','管理組合と管理会社は別の窓口だった。',c==='yes'?'送信先を管理会社にした瞬間、資料の受付番号が消えた。':'返答しなかった資料が「管理会社確認済」として戻ってきた。');
+ }else if(e.id==='E06E'){
+  if(c==='no'){state.numberVerified=true;msg='訂正の撤回には同意しなかった。旧版の記録を含む照合結果は管理組合に残った。';}
+  else fail('訂正を消す書面','過去に掲示された訂正には意味があった。',c==='yes'?'訂正文書がなかったことになり、管理組合の集計値も空欄になった。':'照会先の黒田は「訂正を消せば済む話です」と繰り返した。');
+ }else if(e.id==='E06F'){
+  var f=(extraData.fields||[]).slice().sort().join(',');
+  if(c==='yes'&&f==='name,room'){state.numberVerified=true;msg='必要な項目だけを送った。記録の照合と受付が完了した。';}
+  else fail('送れなかった照合','本人確認で伝える情報の範囲は以前の掲示に書いてあった。',c==='yes'?'書面の名義が途中で空白に変わり、受付票が戻らなくなった。':'何も送らないまま、受付は終了した。');
  }else if(e.id==='E07'){
   if(c==='no')msg='管理番号を示されても玄関は開けなかった。担当者は立ち去った。';
   else fail('撤去された規則','前の日まであった「個別通知のない室内点検は行わない」という規則は掲示板から消えている。',c==='yes'?'扉を開けると黒田は設備より先に居住者名簿を取り出した。「これで406号室も確認できました」。':'管理会社の時間外窓口に情報が渡り、406号室は「立入確認予定」に書き換えられた。');
+ }else if(e.id==='E07C'){
+  if(c==='no')msg='管理番号があっても玄関は開けなかった。足音は407号室の方へ遠ざかった。';
+  else fail('番号の付いた訪問者','管理番号だけでは訪問の正当性は判断できなかった。',c==='yes'?'男が室内を見渡して言った。「406号室も調査終了です」。':'受付に伝えた氏名が、閉じたはずの扉の向こうから聞こえた。');
+ }else if(e.id==='E07D'){
+  if(c==='no')msg='旧掲示の控えは渡さなかった。黒田から再び催促が来ることはなかった。';
+  else fail('戻らなかった旧掲示','旧掲示は管理会社とは別に、405号室から渡されたものだった。',c==='yes'?'渡した紙の文字が一行ずつ消えた。':'提出先を問い合わせると、黒田はすぐに部屋番号を復唱した。');
+ }else if(e.id==='E07E'){
+  if(c==='verify')msg='管理組合の独立した窓口が旧点検履歴を受け付けた。管理会社に情報は渡らなかった。';
+  else fail('消された点検履歴','案内は管理組合の独立した窓口からだった。',c==='yes'?'承認先が管理会社へ切り替わった。受理の表示はすぐ消えた。':'回答期限を過ぎると、提出済みの点検履歴が閲覧できなくなった。');
+ }else if(e.id==='E07F'){
+  if(c==='yes')msg='室内端末の確認ボタンを押すと、共用部からの異常信号が停止した。玄関を開けずに済んだ。';
+  else fail('消えない異常信号','室内の確認ボタンと外部への応答は別の操作だった。',c==='no'?'異常信号が鳴り続け、最後にはあなたの部屋番号を読み上げた。':'受付の呼出音に重なり、端末から三度のノックが聞こえた。');
  }else if(e.id==='E08'){
   if(c==='yes'&&extraData.person==='森本 透'){msg='仮登録名を返すと、管理会社の画面には「一致する居住者なし」と出た。406号室への名簿更新は行われなかった。';}
   else fail('名前を答えた部屋','前日の掲示では、氏名を回答した住民が翌日から「不在」扱いになったと知らせていた。実在しない仮登録名が唯一の抜け道だった。',c==='yes'?'送信した氏名が名簿から消えた。翌朝、その人の部屋は空室として掲示された。':'回答を放置すると、登録されていた406号室の居住者名で処理された。翌朝、あなたの部屋は空室として掲示された。');
@@ -348,7 +398,7 @@ else{h+='<div class="btnrow"><button class="btn secondary" data-monitor="1">'+(m
 if(monitor)h+='<div class="monitor">'+esc(e.monitor)+'</div>';
 if(pendingChoice){
 var choiceName=pendingChoice==='yes'?'対応する':pendingChoice==='no'?'見送る':'照会する';
-var form=pendingChoice==='yes'?responseForm(e):'';var complete=pendingChoice!=='yes'||e.id==='E03B'&&reply.fields.length>0||e.id==='E06B'&&!!reply.number||e.id==='E08'&&!!reply.person||!['E03B','E06B','E08'].includes(e.id);h+='<div class="confirm-choice"><h3>この対応で確定しますか？</h3><strong>'+choiceName+'</strong><p>'+esc(actionPreview(e,pendingChoice))+'</p>'+form+'<div class="btnrow"><button class="btn secondary" data-cancel-choice="1">選び直す</button><button class="btn primary" data-confirm-choice="1" '+(complete?'':'disabled')+'>'+(pendingChoice==='verify'?'問い合わせを実行する':'この対応で確定する')+'</button></div></div>';
+var form=pendingChoice==='yes'?responseForm(e):'';var complete=pendingChoice!=='yes'||['E03B','E03F','E06F'].includes(e.id)&&reply.fields.length>0||['E06B','E06C'].includes(e.id)&&!!reply.number||e.id==='E08'&&!!reply.person||!['E03B','E03F','E06B','E06C','E06F','E08'].includes(e.id);h+='<div class="confirm-choice"><h3>この対応で確定しますか？</h3><strong>'+choiceName+'</strong><p>'+esc(actionPreview(e,pendingChoice))+'</p>'+form+'<div class="btnrow"><button class="btn secondary" data-cancel-choice="1">選び直す</button><button class="btn primary" data-confirm-choice="1" '+(complete?'':'disabled')+'>'+(pendingChoice==='verify'?'問い合わせを実行する':'この対応で確定する')+'</button></div></div>';
 }else{
 h+='<p class="caption">帰宅時に読んだ掲示を思い出して判断してください。照会は別の窓口への問い合わせで、1回の判断として処理します。</p><div class="btnrow"><button class="btn primary" data-judge="yes">対応する</button><button class="btn" data-judge="no">見送る</button><button class="btn" data-judge="verify">照会する</button></div>';
 }}
