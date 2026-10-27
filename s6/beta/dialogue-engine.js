@@ -17,6 +17,13 @@ const words={
 const sceneContext={
  L:'カバー曲',Z:'オリジナル曲',J:'セッション',K:'弾き語り',W:'DTM',F:'学外ライブ'
 };
+const sceneCorrections={"E01-A|P003|1":"演奏する人と聴くだけの人、同じ入口でどう案内しようか？","E03-C|P027|2":"言葉を詰めると、伴奏の余白が消えるんだよね。","E04-A|P031|2":"音を外しても大丈夫。次の小節で戻る合図を出すね。","E04-B|P009|1":"次はギターから入る？　ドラムから入る？","E04-B|P032|2":"低い弦の音を先に出すから、上は自由に遊んで。","E08-D|P044|2":"片方が音を止めると、もう片方のフレーズがはっきり聴こえるね。","E11-A|P016|3":"先輩、さっき間違えたところ、次の小節は意外とうまく合いました。","E11-C|P035|2":"歌の返事を少し遅らせると、ドラムとの掛け合いが面白くなるね。"};
+const listeningCorrections={"E04-B":"ギターの低い弦の音をドラムが追いかけ、次はドラムが先に拍を置く。交代してもテンポは崩れなかった。","E06-C":"ベースが二拍のカウントを取り、歌が重なる。最初は少しずれた入りが、二回目にはそろった。","E07-C":"ベースの短い合図に合わせて、歌声と電子音が一斉に入る。止まるタイミングまでぴたりと重なった。","E11-B":"ギターとサックスが目線を合わせ、フレーズの受け渡しをする。言葉がなくても次の入りが伝わった。","E11-C":"短いドラムのフレーズへ歌声が少し遅れて応える。返事を待つ間も、演奏の一部になっていた。","E12-C":"短いリハーサルを終えると、最後の音の余韻をみんなで確かめた。拍手は一呼吸遅れて起きた。"};
+const importantAnswers={"E01-E":"初めて聴く人が入りやすい曲を最初に置くことかな。でも、知らない曲も一曲は聴いてほしい。","E02-A":"作った本人が公開範囲を決められること。未完成の音を勝手に外へ出さないようにしてる。","E03-B":"作者の意図を確かめてから版を選ぶことかな。声の残し方でも印象が変わるから。","E03-C":"歌詞を詰め込みすぎないことかな。ドラムの間も聴いてもらえるといい。","E05-A":"上手に弾けるかより、安心して一曲聴いて帰れること。無理に歌ってもらわなくていいんだ。","E05-B":"譜面も写真も、記録する前に相手へ確認すること。残したくない人もいるからね。","E06-D":"歌う人が無理なく入れること。ギターが大きすぎたら、こっちで音量を下げるよ。","E06-E":"その場で入会を決めさせないことかな。来週も見学できるって分かると、選びやすいでしょ。","E08-B":"素材を交換しても、元の作者が分かるようにすること。あとで音を直すときにも役立つ。","E08-C":"名義を自分で選べること。匿名にするなら、公開範囲も一緒に決めたいな。","E10-A":"一曲が終わるまで、話を挟まずに聴くこと。弾くのが不安な人もいるから。","E10-B":"撮りたい人の都合より、写る人の意思を優先すること。譜面だけ残す方法もあるよ。","E11-D":"演奏しない人も、耳で次の入りを考えられること。聴く役にも発見があるから。","E12-A":"音量だけじゃなく、帰り道まで確認しておくこと。安心して演奏したいからね。"};
+const politeQuestions={"担当しているパートを教えて。":"担当しているパートを教えてもらえますか？","普段はどんな音楽を聴く？":"普段はどんな音楽を聴きますか？","今、この輪では何をしてるの？":"今はどんなことをしているんですか？","自己紹介してもらってもいい？":"お名前を聞いてもいいですか？","好きなアーティストって誰？":"好きなアーティストは誰ですか？","今日の活動では何が大事？":"今日の活動で大切にしていることは何ですか？"};
+const questionText=q=>!q?'所属を尋ねる':Number(people[q.target_id]?.year)>1?(politeQuestions[q.question]||q.question):q.question;
+const sceneActivity=gid=>gid==='E04-B'?'ギターとドラムの入りを交互に試している。':D.groups.find(x=>x.group_id===gid)?.activity||'';
+const listenText=gid=>listeningCorrections[gid]||D.actions.find(x=>x.group_id===gid)?.listen_text||'周りの音と会話を聴いた。';
 const plain=x=>String(x??'').trim().replace(/^「|」$/g,'').replace(/^『|』$/g,'');
 // "Familiarity" is social comfort, not romance or evidence that an NPC is safe.
 const stage=(state,id)=>{
@@ -78,7 +85,7 @@ function talk(id,gid,state){
 }
 function answer(id,gid,kind){
  const p=people[id],q=D.questions.find(x=>x.group_id===gid&&x.target_id===id);
- if(kind==='question'&&q)return {text:plain(q.answer),reveals:q.reveals||'',kind:'question'};
+ if(kind==='question'&&q)return {text:plain(importantAnswers[gid]&&/今日の活動では何が大事/.test(q.question)?importantAnswers[gid]:q.answer),reveals:q.reveals||'',kind:'question'};
  const voice=P.people[id]?.voice||'soft';
  if(p.year==='1'){
   const msg=voice==='reserved'||voice==='precise'?'まだ決めてないんだ。いくつか見比べてる。':
@@ -146,7 +153,7 @@ const selfIntroduction=(id,state,source='direct')=>{
  if(c.voice==='energetic'||c.voice==='friendly')return 'あ、'+p.name+'です。よろしく！';
  return 'そういえばまだ直接話してなかったね。'+base+p.name+'です。';
 };
-const sceneLine=line=>P.sceneOverrides[line.group_id+'|'+line.speaker_id+'|'+line.order]||
+const sceneLine=line=>sceneCorrections[line.group_id+'|'+line.speaker_id+'|'+line.order]||P.sceneOverrides[line.group_id+'|'+line.speaker_id+'|'+line.order]||
  P.sceneOverrides[line.group_id+'|'+line.speaker_id]||line.text;
 const performanceGroups=new Set(['E01-C','E03-A','E04-A','E04-B','E04-C','E04-D','E05-C','E06-B','E06-C','E06-D','E07-C','E09-A','E09-B','E10-A','E11-A','E11-B','E11-C','E11-D','E12-C']);
 const sceneMode=gid=>performanceGroups.has(gid)?'performance':'conversation';
@@ -164,6 +171,8 @@ const thirdParty=(targetId,gid,state,action)=>{
  const roll=(((Math.imul(seed^0x9e3779b9,2246822519)>>>0)%1000)/1000);
  if(roll>=probability)return null;
  const yr=Number(people[id].year),targetYear=Number(people[targetId].year);
+  const question=D.questions.find(q=>q.group_id===gid&&q.target_id===targetId)?.question||'';
+  const aboutIdentity=/自己紹介/.test(question),aboutMusic=/音楽|アーティスト/.test(question);
  const nickname=addressFor(id,targetId);
  const introEligible=!state.personalIntroduced?.[id]&&trait.initiative>=3&&trait.warmth>=3;
  const introRoll=(((Math.imul(seed^0x2b992ddf,3266489917)>>>0)%1000)/1000);
@@ -180,7 +189,7 @@ const thirdParty=(targetId,gid,state,action)=>{
  }else if(sceneMode(gid)==='performance'){
   words=yr===1&&targetYear>1?'さっきの演奏、自分ももう一度聴いてみたいです。':
    yr===1?'今のところ、もう一回聴いてみたいね。':
-   action==='question'?'演奏についてなら、私も少し聞いてみたいな。':'今の一小節、もう一度合わせてみようか。';
+   action==='question'?(aboutIdentity?'あ、お名前なら私も聞いてみたかった。':aboutMusic?'どんな音楽が好きか、私も気になるな。':'その話、私も聞いてみたいな。'):'今の一小節、もう一度合わせてみようか。';
  }else if(yr===1&&targetYear>1){
   words=action==='question'?nickname+'、自分もそこが気になってました。':
    'そうなんですね。自分も話を聞いてみたかったです。';
@@ -197,5 +206,5 @@ const thirdParty=(targetId,gid,state,action)=>{
 };
 const chatAudit=()=>({firstYearLines:D.lines.filter(x=>people[x.speaker_id]?.year==='1').length,
  overridden:Object.keys(P.sceneOverrides).length,allScenes:D.lines.length,profiles:Object.keys(P.people).length});
-window.S6_BETA_DIALOGUE={talk,answer,contact,sceneLine,sceneMode,thirdParty,selfIntroduction,addressFor,level,relationshipLabel,responseGain,snsMessage,role,chatAudit};
+window.S6_BETA_DIALOGUE={talk,answer,contact,sceneLine,sceneActivity,listenText,questionText,sceneMode,thirdParty,selfIntroduction,addressFor,level,relationshipLabel,responseGain,snsMessage,role,chatAudit};
 })();
