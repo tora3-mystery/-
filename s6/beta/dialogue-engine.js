@@ -57,12 +57,14 @@ const role=(id,gid)=>{
 };
 function talk(id,gid,state){
  const p=people[id],c=P.people[id],r=role(id,gid),v=c.voice;
- const already=state.spokenTo?.includes(id)||false,close=level(state,id);
- const intro=already?(
-  close==='easygoing'?(v==='reserved'||v==='quiet'?'今日も来てたんだね。':'お、また会えたね。'):
-  close==='familiar'?(v==='precise'||v==='reserved'?'この前の話、覚えてるよ。':'また会ったね。この前の続きも話せそう。'):
-  words[v].again):words[v][r];
- const h=hooks[id];let cue=plain(h?.[already?'reunion_hook':'first_hook']||h?.first_hook||'音を聴いていってね。');
+ const already=!!(state.spokenTo?.includes(id)||state.interacted?.includes(id)),close=level(state,id);
+ const sameCircle=!!state.groupLog?.[gid]?.some(x=>x.pid===id);
+ const intro=sameCircle?(v==='reserved'||v==='precise'?'さっきの話だけど。':'そうそう、もう少し話していい？'):
+  already?(
+   close==='easygoing'?(v==='reserved'||v==='quiet'?'今日も来てたんだね。':'お、また会えたね。'):
+   close==='familiar'?(v==='precise'||v==='reserved'?'この前の話、覚えてるよ。':'また会ったね。この前の続きも話せそう。'):
+   words[v].again):words[v][r];
+ const h=hooks[id];let cue=plain(sameCircle?'今の話、どう思った？':h?.[already?'reunion_hook':'first_hook']||h?.first_hook||'音を聴いていってね。');
  if(id==='P003'&&gid!=='E01-A'&&!already)cue='次の演奏順を確認してたんだ。みんなが迷わないといいな。';
  if(sceneMode(gid)==='performance'&&r==='host'&&/(受付|入会届|今日決め)/.test(cue))
   cue='曲が一区切りついたところ。よかったら、今の演奏の感想を聞かせて。';
@@ -126,8 +128,8 @@ const addressFor=(speakerId,targetId)=>{
  const names=cb.nameParts||{family:b.name.slice(0,2),given:b.name.slice(2)};
  if(Number(a.year)<Number(b.year))return names.family+'先輩';
  const sameYear=a.year===b.year;
- const shared=a.primary_org===b.primary_org||a.primary_org===b.dual_org||
-  (a.dual_org&&a.dual_org===b.primary_org);
+ const shared=a.primary_org!=='N'&&(a.primary_org===b.primary_org||a.primary_org===b.dual_org||
+  (a.dual_org&&a.dual_org===b.primary_org));
  const relaxed=sameYear&&shared&&ca.addressStyle==='casual'&&cb.addressStyle!=='formal';
  if(relaxed)return names.nickname||names.given;
  return names.family+(sameYear?'さん':'さん');
