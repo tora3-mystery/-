@@ -47,7 +47,7 @@ h2{font-size:17px;line-height:1.4;margin:0 0 8px}h3{font-size:14px;margin:0 0 8p
 </section>
 <div id="game" class="hidden">
 <section class="panel status"><div><strong id="dayLabel"></strong><div class="hint" id="phaseLabel"></div></div><div class="btnrow"><button class="btn secondary" id="showRewind">日付からやり直す</button><button class="btn secondary" id="showIntro">説明</button></div></section>
-<section id="rewindPanel" class="panel hidden"><h2>何日目からやり直しますか</h2><p class="tiny">指定日の朝の状態へ戻ります。以降の判断・証拠・出来事はその時点から再計算されます。</p><div id="days" class="history"></div><p class="tiny">※未来の分岐にジャンプすることはできません。</p></section>
+<section id="rewindPanel" class="panel hidden"><h2>何日目からやり直しますか</h2><p class="tiny">指定日の帰宅時（掲示を確認する前）へ戻ります。以降の判断・証拠・出来事は、その時点から再計算されます。</p><div id="days" class="history"></div><p class="tiny">※未来の分岐にジャンプすることはできません。</p></section>
 <section id="endingPanel" class="panel hidden"></section>
 <section id="nightPanel" class="panel event hidden"></section>
 <section id="morningPanel" class="panel hidden"><h2>帰宅時｜エントランス</h2><p id="morningText"></p><p class="caption">今のうちに掲示板・ポスト・玄関先を確認してください。自室に入ると戻れません。</p></section>
@@ -206,7 +206,7 @@ h+='</div>';
 p.innerHTML=h;
 }
 function render(){el('intro').classList.toggle('hidden',state.started);el('game').classList.toggle('hidden',!state.started);
-el('resume').classList.toggle('hidden',!state.started&&!state.snapshots[1]);el('new').classList.toggle('hidden',!state.started&&!state.snapshots[1]);
+el('start').classList.toggle('hidden',!!state.snapshots[1]);el('resume').classList.toggle('hidden',!state.snapshots[1]);el('new').classList.toggle('hidden',!state.snapshots[1]);
 if(!state.started)return;
 el('dayLabel').textContent=state.day+'日目（'+WEEKDAYS[state.day-1]+'曜日） / 7日間｜406号室';
 el('phaseLabel').textContent=state.ended?'翌朝：終了':state.phase==='morning'?'帰宅時｜共用部の掲示を確認':'自室｜今夜の出来事に対応';
