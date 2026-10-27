@@ -210,7 +210,9 @@
         const l=pool[opts.landmarkIndex%pool.length];
         q.item=l.name;q.truth=l.year;q.zone=[l.year,l.year];q.emoji=l.emoji;
         q.source=l.source;q.speech='これって何年に'+l.event+'したと思う？';
-        q.context=l.clue;q.hint='ヒント：'+l.clue+'。年月を絞り込む追加資料は残っていない。';
+        q.context=l.clue;
+        const era=l.year>=2019?'令和':l.year>=1989?'平成':l.year>=1926?'昭和':l.year>=1912?'大正':'明治';
+        q.hint='時代で考えると、'+era+'の出来事だよ。';
         q.explain='完成・開通・開業など、指定した出来事の年を答える。';
         q.resultDetail=l.detail;q.resultTitle=l.name;q.slot='街の歴史';
         q.publicDetail='施設名と会話を手掛かりに年代を考えてみよう。';
