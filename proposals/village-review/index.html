@@ -43,7 +43,7 @@ header{display:flex;gap:16px;justify-content:space-between;align-items:center;pa
 </head>
 <body>
 <div class="shell">
-<header><div><div class="kicker">短編UIゲーム実験室 / α TEST</div><div class="brand">この村の評価をお願いします。</div><div class="sub">V1｜村レビュー（仮）・v0.4.9 α ｜ 更新：2026-10-27 11:22 JST</div></div><div class="actions"><button id="helpBtn" class="btn" type="button">あそびかた</button><button id="soundBtn" class="btn sound" type="button" aria-pressed="false">♪ OFF</button><button id="resetBtn" class="btn" type="button">新しい村</button></div></header>
+<header><div><div class="kicker">短編UIゲーム実験室 / α TEST</div><div class="brand">この村の評価をお願いします。</div><div class="sub">V1｜村レビュー（仮）・v0.5.0 α ｜ 更新：2026-10-27 11:35 JST</div></div><div class="actions"><button id="helpBtn" class="btn" type="button">あそびかた</button><button id="soundBtn" class="btn sound" type="button" aria-pressed="false">♪ OFF</button><button id="resetBtn" class="btn" type="button">新しい村</button></div></header>
 <main class="layout">
 <section class="panel"><div class="pad"><div class="villageHeader"><div><div class="kicker" id="period">2027年4月</div><div class="villageName" id="villageName">読み込み中...</div></div><span class="terrainTag" id="terrain">山間</span></div><div class="metadata" id="profile"></div><div class="stats" id="stats"></div><div id="map" class="map" aria-label="村の地図"></div><div class="mapLegend"><span><i class="dot"></i>今月レビューできる</span><span>点線：今月は観察のみ</span><span>灰色：閉業</span></div><div class="news" id="news"></div><div class="residentVoices" id="residentVoices"></div><div class="smallHeading">村の歩み</div><div id="history" class="history"></div></div></section>
 <section class="panel"><div class="sideTop"><div class="villageHeader"><div><div class="smallHeading" style="margin:0">今月の訪問先</div><div class="sectionTitle" id="monthTitle"></div></div><div id="monthCount" class="yearCount"></div></div><div class="progress"><span id="progressBar" style="width:0"></span></div><div class="tiny" style="margin-top:6px" id="candidatesNote"></div></div><div class="pad" id="detail"></div></section>
@@ -51,19 +51,57 @@ header{display:flex;gap:16px;justify-content:space-between;align-items:center;pa
 </div><div id="overlay" class="overlay" role="presentation"><div class="modal" id="modal" role="dialog" aria-modal="true" aria-label="ゲームの案内"></div></div>
 <script>
 (function(){'use strict';
-const VERSION='0.4.9-alpha';const STORE='village-review-prototype-v010';
+const VERSION='0.5.0-alpha';const STORE='village-review-prototype-v010';
 const $=id=>document.getElementById(id);
 const V1_ART={ready:false,byId:new Map(),reason:'not loaded'};
 function v1Url(id){const record=V1_ART.ready?V1_ART.byId.get(id):null,u=record&&(record.webp||record.png);return typeof u==='string'&&/^assets\/[a-z0-9_\/-]+\.(webp|png)$/i.test(u)?u:null}
-function v1Art(id,emoji){const u=v1Url(id);return u?'<span class="v1Sprite"><img data-v1src="'+u+'" class="v1ArtImage" alt="" loading="lazy" decoding="async"><span class="v1Fallback">'+emoji+'</span></span>':'<span class="v1Fallback">'+emoji+'</span>'}
+function v1Png(id){const u=V1_ART.ready?V1_ART.byId.get(id)?.png:null;return typeof u==='string'&&/^assets\/[a-z0-9_\/-]+\.png$/i.test(u)?u:null}
+function v1Art(id,emoji){const u=v1Url(id);return u?'<span class="v1Sprite"><img data-v1src="'+u+'" data-v1png="'+v1Png(id)+'" class="v1ArtImage" alt="" loading="lazy" decoding="async"><span class="v1Fallback">'+emoji+'</span></span>':'<span class="v1Fallback">'+emoji+'</span>'}
 function v1FacilityId(f){return 'facility:'+f.kind+':'+(f.stage<2?'base':lateRoute(f))+':'+f.stage}
 function v1Facility(f){return v1Art(v1FacilityId(f),DEFS[f.kind].icon)}
 function v1LoadImages(root){if(!root||!root.querySelectorAll)return;root.querySelectorAll('img[data-v1src]').forEach(el=>{if(el.dataset.v1Bound)return;el.dataset.v1Bound='1';
  const ready=()=>{if(el.naturalWidth>0){el.classList.add('ready');if(el.classList.contains('v1Backdrop'))$('map').classList.add('artReady');else el.parentElement?.classList.add('ready')}};
- el.addEventListener('load',ready);el.addEventListener('error',()=>el.classList.add('failed'));el.src=el.dataset.v1src;if(el.complete)ready()})}
-function v1AcceptManifest(m){const items=Array.isArray(m?.items)?m.items:Array.isArray(m?.assets)?m.assets:null;if(!items||items.length!==145)return false;const refs=new Map();
- for(const item of items){if(typeof item?.id!=='string'||refs.has(item.id)||typeof (item.webp||item.png)!=='string')return false;refs.set(item.id,item)}
- if([...refs.values()].filter(x=>x.category==='facilities').length!==102)return false;V1_ART.byId=refs;V1_ART.ready=true;V1_ART.reason='ready';return true}
+ el.addEventListener('load',ready);
+ el.addEventListener('error',()=>{const png=el.dataset.v1png;
+   if(!el.dataset.v1PngTried&&png&&png!==el.src){el.dataset.v1PngTried='1';el.src=png}
+   else el.classList.add('failed')});
+ el.src=el.dataset.v1src;if(el.complete)ready()})}
+// Build the expected inventory from the actual game definitions, not from the supplied manifest.
+// A swapped image ID, missing route, incorrect category or path must fail closed.
+function v1ExpectedAssets(){
+ const expected=new Map();
+ const add=(id,category,relative,width,height,alpha)=>{
+   expected.set(id,{id,category,png:'assets/'+category+'/'+relative+'.png',webp:'assets/'+category+'/'+relative+'.webp',width,height,alpha})
+ };
+ for(const kind of Object.keys(VISUAL_ROUTES)){
+   for(let stage=0;stage<=1;stage++)add('facility:'+kind+':base:'+stage,'facilities',kind+'/base-'+stage,512,512,true);
+   for(const route of Object.keys(VISUAL_ROUTES[kind]))for(let stage=2;stage<=3;stage++)add('facility:'+kind+':'+route+':'+stage,'facilities',kind+'/'+route+'-'+stage,512,512,true);
+ }
+ for(const terrain of ['mountain','river','plain','coast','island'])add('background:'+terrain,'backgrounds',terrain,1600,1280,false);
+ for(const tile of ['land','field','forest','hill','coast','sea','river','bridge'])add('tile:'+tile,'tiles',tile,320,320,true);
+ for(const name of ['closed-sign','boarded-door','weeds','scaffolding','reopening','crowd','traffic','market-stall','festival','quiet-garden','automation','robot-citizens','odd-notice','tidal'])add('overlay:'+name,'overlays',name,512,512,true);
+ for(const kind of ['ancient','robot','deepsea']){
+   add('ending:'+kind+':map','endings',kind+'-map',512,512,true);
+   add('ending:'+kind+':final','endings',kind+'-ending',1600,900,false);
+ }
+ for(const name of ['guide','shopkeeper','farmer','fisher','inn-staff','parent','family','elderly','official','villager'])add('person:'+name,'people',name,256,256,true);
+ return expected
+}
+function v1AcceptManifest(m){
+ const items=Array.isArray(m?.items)?m.items:Array.isArray(m?.assets)?m.assets:null;
+ if(!items)return false;
+ const expected=v1ExpectedAssets();
+ if(expected.size!==145||items.length!==expected.size)return false;
+ const refs=new Map();
+ for(const item of items){
+   const def=expected.get(item?.id);
+   if(!def||refs.has(item.id))return false;
+   if(item.category!==def.category||item.png!==def.png||item.webp!==def.webp)return false;
+   if(item.width!==def.width||item.height!==def.height||item.alpha!==def.alpha)return false;
+   refs.set(item.id,item)
+ }
+ V1_ART.byId=refs;V1_ART.ready=true;V1_ART.reason='ready';return true
+}
 function v1Probe(){if(typeof fetch!=='function')return;fetch('assets/asset-manifest.json',{cache:'no-store'}).then(r=>{if(!r.ok)throw Error('not yet available');return r.json()}).then(m=>{if(v1AcceptManifest(m)){render();if(S.result)showResults()}}).catch(()=>{V1_ART.reason='awaiting assets'})}
 
 const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
@@ -155,7 +193,7 @@ let S=null;let chosen=null;let currentStars=4;let selectedFact=0;let sound=false
 function rand(){let t=S.rng|0;t^=t<<13;t^=t>>>17;t^=t<<5;S.rng=t>>>0;return (S.rng>>>0)/4294967296}
 function ri(a,b){return Math.floor(a+rand()*(b-a+1))}function pick(a){return a[Math.floor(rand()*a.length)]}function shuffle(a){let b=a.slice();for(let i=b.length-1;i>0;i--){let j=ri(0,i),tmp=b[i];b[i]=b[j];b[j]=tmp}return b}
 function save(){try{localStorage.setItem(STORE,JSON.stringify(S))}catch(e){}}
-function load(){try{const x=JSON.parse(localStorage.getItem(STORE));if(x && [VERSION,'0.4.8-alpha','0.4.7-alpha','0.4.6-alpha','0.4.5-alpha','0.4.4-alpha','0.4.3-alpha','0.4.2-alpha','0.4.1-alpha','0.4.0-alpha','0.3.4-alpha','0.3.3-alpha','0.3.2-alpha','0.3.1-alpha','0.3.0-alpha','0.2.0-alpha','0.1.1-alpha','0.1.0-alpha'].includes(x.version) && Array.isArray(x.facilities) && x.facilities.length){S=x;S.version=VERSION;S.reviewHistory=S.reviewHistory||[];S.reforms=S.reforms||{};S.completed=S.month>=12;S.annualDue=S.annualDue||false;S.facilities.forEach(f=>{if(f.name===DEFS[f.kind]?.name)f.name=facilityName(f.kind,f.id,true);if(!f.mode)f.mode='boost';if(f.stageFocus===undefined)f.stageFocus=f.stage>0?f.focus:null;if(!f.stageMode)f.stageMode=f.mode;if(!f.improvedFacets)f.improvedFacets={};if(!f.routeScores)f.routeScores={};if(!f.observedFacts){f.observedFacts={};if(f.improvedFacets){for(let i=0;i<DEFS[f.kind].facts.length;i++){const tag=DEFS[f.kind].facts[i][1];if(Object.prototype.hasOwnProperty.call(f.improvedFacets,tag)&&DEFS[f.kind].facts.filter(row=>row[1]===tag).length===1)f.observedFacts[i]=!!f.improvedFacets[tag]}}}if(!f.revisedFacts)f.revisedFacts={};if(!f.visualRoute&&f.stage>=2){const i=DEFS[f.kind].facts.findIndex(v=>v[1]===f.stageFocus);f.visualRoute=(ROUTE_BY_FACT[f.kind]||[])[Math.max(0,i)]?.[f.stageMode==='reform'?1:0]||preferredRoute(f)}});if(S.completed)S.candidates=[];restoreGround();save();return true}}catch(e){}return false}
+function load(){try{const x=JSON.parse(localStorage.getItem(STORE));if(x && [VERSION,'0.4.9-alpha','0.4.8-alpha','0.4.7-alpha','0.4.6-alpha','0.4.5-alpha','0.4.4-alpha','0.4.3-alpha','0.4.2-alpha','0.4.1-alpha','0.4.0-alpha','0.3.4-alpha','0.3.3-alpha','0.3.2-alpha','0.3.1-alpha','0.3.0-alpha','0.2.0-alpha','0.1.1-alpha','0.1.0-alpha'].includes(x.version) && Array.isArray(x.facilities) && x.facilities.length){S=x;S.version=VERSION;S.reviewHistory=S.reviewHistory||[];S.reforms=S.reforms||{};S.completed=S.month>=12;S.annualDue=S.annualDue||false;S.facilities.forEach(f=>{if(f.name===DEFS[f.kind]?.name)f.name=facilityName(f.kind,f.id,true);if(!f.mode)f.mode='boost';if(f.stageFocus===undefined)f.stageFocus=f.stage>0?f.focus:null;if(!f.stageMode)f.stageMode=f.mode;if(!f.improvedFacets)f.improvedFacets={};if(!f.routeScores)f.routeScores={};if(!f.observedFacts){f.observedFacts={};if(f.improvedFacets){for(let i=0;i<DEFS[f.kind].facts.length;i++){const tag=DEFS[f.kind].facts[i][1];if(Object.prototype.hasOwnProperty.call(f.improvedFacets,tag)&&DEFS[f.kind].facts.filter(row=>row[1]===tag).length===1)f.observedFacts[i]=!!f.improvedFacets[tag]}}}if(!f.revisedFacts)f.revisedFacts={};if(!f.visualRoute&&f.stage>=2){const i=DEFS[f.kind].facts.findIndex(v=>v[1]===f.stageFocus);f.visualRoute=(ROUTE_BY_FACT[f.kind]||[])[Math.max(0,i)]?.[f.stageMode==='reform'?1:0]||preferredRoute(f)}});if(S.completed)S.candidates=[];restoreGround();save();return true}}catch(e){}return false}
 function newWorld(seed){S={version:VERSION,rng:seed>>>0||1,month:0,terrain:'',trait:'',name:'',population:0,startPopulation:0,visitors:0,startVisitors:0,economy:0,startEconomy:0,quiet:0,startQuiet:0,facilities:[],reforms:{},themes:{trade:0,tech:0,history:0,tradition:0,strange:0,nature:0,sea:0,living:0,transport:0,tourism:0},secrets:{ancient:false,robot:false,deep:false},achievements:[],usedEvents:[],log:[],candidates:[],lastReview:null,result:null,annualDue:false,completed:false,reviewHistory:[],stats:{total:0,closed:0,newFacilities:0,big:0,chain:0},sound:false};
  const terrain=pick(TERRAIN);S.terrain=terrain.id;S.trait=pick(TRAITS).id;S.name=pick(FIRST)+pick(LAST)+'村';S.population=ri(220,580);S.startPopulation=S.population;S.visitors=ri(220,550);S.startVisitors=S.visitors;S.economy=ri(33,55);S.startEconomy=S.economy;S.quiet=ri(63,89);S.startQuiet=S.quiet;S.cityMins=ri(terrain.distance[0],terrain.distance[1]);S.stationMins=terrain.id==='island'?null:ri(8,70);S.secrets.ancient=rand()<.085;S.secrets.robot=rand()<.075;S.secrets.deep=(terrain.id==='coast'||terrain.id==='island')&&rand()<.12;initGround();
  const pool=['rail','market','school','shrine','inn','office','clinic','shop','hall','farm'];const count=ri(4,6);const commerce=['market','shop','farm','inn'];const life=['school','office','clinic','hall'];const chosenKinds=[pick(commerce),pick(life)];for(const k of shuffle(pool)){if(chosenKinds.length>=count)break;if(!chosenKinds.includes(k))chosenKinds.push(k)}
@@ -420,7 +458,7 @@ function v1EndingVisual(name){const k={因習村:'ancient',近未来の村:'robo
 function render(){const p=period(S.completed?-1:0),d=terrain();$('period').textContent=p.year+'年'+p.month+'月 ｜ '+(S.completed?'1年間の記録・完了':'1年目');$('villageName').textContent=S.name;$('terrain').textContent=d.label;$('profile').textContent=d.qualifier+'村。都市から約'+Math.round(S.cityMins/60*10)/10+'時間 / '+(S.stationMins===null?'鉄道なし・船便利用':'最寄駅から車で約'+S.stationMins+'分')+'。'+trait().intro;$('stats').innerHTML=[['人口',safe(S.population)+'人','定住者'],['観光客',safe(S.visitors)+'人','月間推定'],['経済',S.economy+'/100','村の活力'],['静けさ',S.quiet+'/100','高いほど静か']].map(a=>'<div class="stat"><span>'+a[0]+'</span><b>'+a[1]+'</b><small>'+a[2]+'</small></div>').join('');
  let map=$('map');map.className='map terrainGrid '+S.terrain;const contents=new Map(S.facilities.map(f=>[f.plot,f])),roads=roadPlots();
  const ic={water:S.terrain==='river'?'💧':'🌊',bridge:'🌉',land:'🌱',field:'🌾',hill:'⛰️',forest:'🌲',coast:'🏖️'};const hiddenSpot=v1HiddenPlace();
- map.innerHTML=(v1Url('background:'+S.terrain)?'<img class="v1Backdrop" data-v1src="'+v1Url('background:'+S.terrain)+'" alt="">':'')+S.ground.map((tile,i)=>{const f=contents.get(i),base='plot '+tile+(roads.has(i)?' linked':'');const tileKey=tile==='water'?(S.terrain==='river'?'river':'sea'):tile;if(!f)return '<div class="groundPlot '+base+'" role="img" aria-label="'+(tile==='water'?(S.terrain==='river'?'川':'海'):tile==='coast'?'海岸':tile==='bridge'?'橋':'土地')+'">'+v1Art('tile:'+tileKey,ic[tile])+v1HiddenPlotArt(hiddenSpot,i)+'</div>';
+ map.innerHTML=(v1Url('background:'+S.terrain)?'<img class="v1Backdrop" data-v1src="'+v1Url('background:'+S.terrain)+'" data-v1png="'+v1Png('background:'+S.terrain)+'" alt="">':'')+S.ground.map((tile,i)=>{const f=contents.get(i),base='plot '+tile+(roads.has(i)?' linked':'');const tileKey=tile==='water'?(S.terrain==='river'?'river':'sea'):tile;if(!f)return '<div class="groundPlot '+base+'" role="img" aria-label="'+(tile==='water'?(S.terrain==='river'?'川':'海'):tile==='coast'?'海岸':tile==='bridge'?'橋':'土地')+'">'+v1Art('tile:'+tileKey,ic[tile])+v1HiddenPlotArt(hiddenSpot,i)+'</div>';
  return '<button type="button" class="site '+base+' '+(!f.open?'closed':S.candidates.includes(f.id)?'eligible':'notEligible')+(f.id===chosen?' selected':'')+' stage'+f.stage+(f.lastChanged>=S.month-1&&S.month>0?' changed':'')+'" data-id="'+f.id+'" aria-label="'+f.name+(f.open?'':' 閉業')+'"><span class="emoji">'+v1Facility(f)+v1OverlayHTML(f)+v1HiddenPlotArt(hiddenSpot,i)+'</span><span class="siteName">'+f.name+'</span><span class="newStage">'+(f.stage>=3?'★ 最終形態｜':'')+(f.stage>0?phaseName(f):'')+'</span><span class="marker">'+(!f.open?'閉業':S.completed?'1年の記録':S.candidates.includes(f.id)?'今月訪問可':'観察のみ')+'</span></button>';
  }).join('');v1LoadImages(map);map.querySelectorAll('.site').forEach(el=>el.addEventListener('click',()=>{chosen=el.dataset.id;selectedFact=0;currentStars=4;render()}));
  $('residentVoices').innerHTML='<strong>💬 村民の声｜'+(S.month===0?'訪問前':villageMood())+'</strong>'+villageVoices().map(v1Quote).join('');v1LoadImages($('residentVoices'));$('news').textContent=(S.lastReview?'最近の村ニュース：'+finalPunctuation(S.log[0].title):'村の近況：観光客の口コミを参考に、施設が少しずつ姿を変えているようです。');$('history').innerHTML=S.log.slice(0,8).map(l=>'<div class="historyItem"><strong>'+timeName(l.month)+'｜'+l.title+'</strong>'+l.detail+'</div>').join('');$('monthTitle').textContent=S.completed?'1年間の口コミが完了':'候補 '+S.candidates.length+'施設';$('monthCount').innerHTML=Array.from({length:12},(_,i)=>'<span class="'+(i<(S.completed?12:S.month%12)?'filled':'')+'"></span>').join('');$('progressBar').style.width=((S.completed?12:S.month%12)/12*100)+'%';$('candidatesNote').textContent=S.completed?'1年分の口コミが終わりました。施設の変化を見返したり、新しい村で遊べます。':'緑枠の施設から今月のレビューを1件選べます。地図の他施設も観察可能です。';renderDetail();}
@@ -496,7 +534,7 @@ function showHelp(first=false){const examples=[
 function beep(big){try{const C=window.AudioContext||window.webkitAudioContext;if(!C)return;const ctx=new C();const now=ctx.currentTime;[523,659,big?1046:784].forEach((freq,i)=>{const osc=ctx.createOscillator(),g=ctx.createGain();osc.type='sine';osc.frequency.setValueAtTime(freq,now+i*.085);g.gain.setValueAtTime(.0001,now+i*.085);g.gain.exponentialRampToValueAtTime(.095,now+i*.085+.01);g.gain.exponentialRampToValueAtTime(.0001,now+i*.085+.24);osc.connect(g);g.connect(ctx.destination);osc.start(now+i*.085);osc.stop(now+i*.085+.26)});setTimeout(()=>ctx.close(),1000)}catch(e){}}
 $('helpBtn').addEventListener('click',()=>showHelp(false));$('resetBtn').addEventListener('click',()=>{if(confirm('この村の記録を終了して、新しい村を生成しますか？\n（現在の村の記録は上書きされます）')){newWorld((Date.now()^Math.floor(Math.random()*0xffffffff))>>>0);render();showHelp(true)}});$('soundBtn').addEventListener('click',()=>{sound=!sound;$('soundBtn').textContent=sound?'♪ ON':'♪ OFF';$('soundBtn').setAttribute('aria-pressed',String(sound))});if(load()){chosen=S.candidates[0];render();if(S.result)showResults();else if(S.annualDue||S.completed)showAnnual()}else{newWorld((Date.now()^Math.floor(Math.random()*0xffffffff))>>>0);render();showHelp(true)}
 // Test harness is exposed in local QA only, not in user controls.
-v1Probe();if(location.search.includes('qa=1'))window.__VILLAGE_QA__={timeName,v1ResultVisual,v1AcceptManifest,artStatus:()=>({ready:V1_ART.ready,size:V1_ART.byId.size}),v1FacilityId,groundQA,getState:()=>S,generate:(seed)=>{newWorld(seed);render()},post:(id,factIndex,stars)=>{chosen=id;selectedFact=factIndex;currentStars=stars;nextReview();hideModal()},annual:getEndings,report:()=>{showAnnual();return $('modal').innerHTML},voices:villageVoices,factsFor};
+v1Probe();if(location.search.includes('qa=1'))window.__VILLAGE_QA__={timeName,v1ResultVisual,v1ExpectedAssets,v1AcceptManifest,v1LoadImages,artStatus:()=>({ready:V1_ART.ready,size:V1_ART.byId.size}),v1FacilityId,groundQA,getState:()=>S,generate:(seed)=>{newWorld(seed);render()},post:(id,factIndex,stars)=>{chosen=id;selectedFact=factIndex;currentStars=stars;nextReview();hideModal()},annual:getEndings,report:()=>{showAnnual();return $('modal').innerHTML},voices:villageVoices,factsFor};
 })();
 </script>
 </body></html>
