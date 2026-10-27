@@ -1,7 +1,7 @@
 (() => {
 'use strict';
 const D=window.S6_DATA, APP=document.getElementById('app'), KEY='s6-origin-beta-010';
-const VERSION='0.1.0', BUILD='2026-10-27 21:50 JST';
+const VERSION='0.2.0', BUILD='2026-10-27 22:07 JST';
 const WEEK=['月曜 4月6日','火曜 4月7日','水曜 4月8日','木曜 4月9日','金曜 4月10日'];
 const DATES=['2026-04-06','2026-04-07','2026-04-08','2026-04-09','2026-04-10'];
 const people=Object.fromEntries(D.people.map(p=>[p.person_id,p]));
@@ -19,18 +19,23 @@ const byGroup=gid=>D.members.filter(m=>m.group_id===gid).map(m=>m.person_id);
 const date=()=>DATES[Math.min(S.day,4)];
 const initial=()=>({
  schema:1,phase:'title',day:0,selectedEvent:null,group:null,target:null,
- eventHistory:[],seen:[],introduced:[],flash:[],visitedGroups:[],groupDone:{},contacts:[],socialLinked:{},selectedSocial:null,
- guesses:{},note:{},clues:[],crossings:{},knownOrg:{},nightChoice:{},
+ eventHistory:[],seen:[],introduced:[],flash:[],visitedGroups:[],groupDone:{},groupLog:{},spokenTo:[],contacts:[],socialLinked:{},selectedSocial:null,
+ guesses:{},note:{},clues:[],crossings:{},knownOrg:{},nightChoice:{},viewedPlatforms:{},viewedBoard:{},pendingContacts:[],
  checks:{},currentNotebook:null,suspect:'',camp:'',shared:false,privateInvite:false,
  report:'',result:'',savedAt:''
 });
 let S;
 try {const raw=JSON.parse(localStorage.getItem(KEY));S=raw&&raw.schema===1?raw:initial()}catch{S=initial()}
 function hydrate(){
- for(const k of ['eventHistory','seen','introduced','flash','visitedGroups','contacts','clues'])if(!Array.isArray(S[k]))S[k]=[];
- for(const k of ['groupDone','guesses','note','crossings','knownOrg','nightChoice','checks','socialLinked'])if(!S[k]||typeof S[k]!=='object')S[k]={};
+ for(const k of ['eventHistory','seen','introduced','flash','visitedGroups','contacts','clues','spokenTo','pendingContacts'])if(!Array.isArray(S[k]))S[k]=[];
+ for(const k of ['groupDone','guesses','note','crossings','knownOrg','nightChoice','viewedPlatforms','viewedBoard','groupLog','checks','socialLinked'])if(!S[k]||typeof S[k]!=='object')S[k]={};
 }
 hydrate();
+if(S.phase==='flash'&&!S.group)S.phase='venue';
+for(const [gid,result] of Object.entries(S.groupDone))if(result&&!S.groupLog[gid])S.groupLog[gid]=[{pid:null,type:'旧版の交流',text:result}];
+const PEERS=new Set(['P013','P014','P015','P016']);
+const peerClass=id=>PEERS.has(id)?' peer-highlight':'';
+const canEditNotebook=()=>['night','sns','board'].includes(S.returnTo);
 const remember=()=>{S.savedAt=BUILD;localStorage.setItem(KEY,JSON.stringify(S))};
 const btn=(t,a,v='',klass='')=>'<button class="btn '+klass+'" data-act="'+esc(a)+'" '+(v?'data-id="'+esc(v)+'"':'')+'>'+esc(t)+'</button>';
 const portrait=(id,klass='')=>'<img class="portrait '+klass+'" src="../'+esc(people[id].portrait_path)+'" loading="lazy" decoding="async" alt="学生の顔写真">';
@@ -43,7 +48,9 @@ function faceCard(id,sub='',act='',extra=''){
 const site=()=>{
  switch(S.phase){
  case 'title':return '<div class="hero"><div class="eyebrow">青嶺大学 / 2026年4月</div><h1>サークルは、<br>星の数ほどありますから。</h1><p>新歓の一週間。大勢の先輩と同期の顔、名前、所属は、なかなか覚えられない。</p><p>けれど、あなたには、どうしても人を見間違えたくない理由がある。</p>'+btn('はじめる','start')+'<p class="dim">β版：初期企画のゲーム性を独立して再構築中。公開中の旧版とは別の保存データです。</p></div>';
- case 'intro':return '<div class="eyebrow">4月、入学</div><h2>知っている顔は、まだいない。</h2><div class="paper"><p>高校時代、バンドをやっていた。匿名の誰かが帰り道を知り、あなたの行動を言い当てるようになった。音楽から離れ、浪人生活を経て大学に入った。</p><p>ここでは、安心して演奏できる場所を探したい。だが、あの人がまた近くにいるかもしれない。</p></div><h3>一週間の流れ</h3><p>平日は新歓を一日一つまで選べます。会場では二組だけに参加できます。自己紹介の顔と名前が並ぶのは最初の一度だけ。覚えきれないこともあります。</p><p>夜には公開SNSと掲示を確認し、手帳で「この顔は誰だった？」と照合できます。週末には、安全だと思うサークルの合宿先を一つ選びます。</p>'+btn('月曜日へ','begin');
+ case 'warning':return '<div class="eyebrow">PLAY NOTICE</div><h2>始める前に</h2><div class="paper tense"><p>この物語はストーキングと精神的圧迫を扱います。選択によって退室を妨げられる場面があります。</p><p><strong>過度な暴力・性的暴力・ジャンプスケアは含みません。</strong></p></div><p>不安を感じたらいつでも中断できます。犯人が分からなくても同行・緊急連絡による安全確保は可能です。</p>'+btn('続ける','show-campus')+btn('タイトルへ','back-title','','ghost');
+case 'campus':return '<div class="eyebrow">CAMPUS / WELCOME</div><h2>青嶺大学へようこそ。</h2><p>春のキャンパスには新歓のチラシと音楽があふれています。六つの音楽サークルは雰囲気も活動もそれぞれ違います。</p><div class="paper"><h3>見学できるサークル</h3><div class="club-intros">'+D.orgs.map(o=>'<div class="club-intro"><strong>'+esc(o.formal_name)+'</strong><span>'+esc(o.focus)+'</span></div>').join('')+'</div><p class="dim">見学だけでも構いません。掛け持ちで活動している先輩もいます。</p></div><div class="paper"><h3>一週間の過ごし方</h3><p><strong>平日：</strong>1日1新歓、会場で2つの輪まで参加できます。輪に入ると、初めて会った相手が自己紹介します。</p><p><strong>交流：</strong>話す・質問する・連絡先を頼む・聞き耳を立てる。同じ輪で2回まで行動できます。</p><p><strong>夜：</strong>SNSや掲示は自由に読めます。手帳での顔・名前・所属の照合やメモ編集は夜だけ、回数制限はありません。</p><p><strong>週末：</strong>人間関係と情報を整理し、合宿に行くか・どこに行くか決めます。</p></div>'+btn('主人公について読む','show-intro');
+case 'intro':return '<div class="eyebrow">4月、入学</div><h2>もう一度、音を出す場所を探す。</h2><div class="paper"><p>高校時代、少し名前の知られたバンドで演奏していた。SNSで見知らぬ相手から執拗につきまとわれ、公開していない居場所や行動まで言い当てられるようになった。</p><p>怖くなって音楽をやめ、浪人生活を経て大学に入った。あの相手がまた近くにいるかもしれない。それでも安心して演奏できる場所を選びたい。</p></div><p class="dim">全員の顔と名前を覚える必要はありません。覚えていた顔が、選択を助けることがあります。</p>'+btn('4月6日へ','begin');
  case 'day':return daily();
  case 'flash':return firstIntroductions();
  case 'venue':return venue();
@@ -69,13 +76,16 @@ function daily(){
  '<div class="actions">'+btn('今日は参加しない','skip','','ghost')+btn('人物手帳を見る','open-notebook','','ghost')+'</div>';
 }
 function firstIntroductions(){
- const newcomers=S.flash;
- return '<div class="eyebrow">'+esc(WEEK[S.day])+' / '+esc(label(events[S.selectedEvent].org_id))+'</div><h2>一度きりの自己紹介</h2><p>受付が、次々に名前を呼んでいく。顔と名前が並ぶのはここだけ。必要なら今、覚えたりメモしたりしてください。</p>'+
- '<p class="status">'+newcomers.length+'人の新しい顔 ／ 会場全体 '+byEvent(S.selectedEvent).length+'人</p>'+
- '<div class="faces">'+newcomers.map(id=>'<div class="intro-face">'+portrait(id)+
+ const newcomers=S.flash,all=byGroup(S.group);
+ return '<div class="eyebrow">'+esc(WEEK[S.day])+' / '+esc(groups[S.group].group_title)+'</div><h2>輪の自己紹介</h2>'+
+ '<p>初めて会った人が名乗る。顔と名前が並ぶのは初回だけです。同期の新入生には赤い目印を付けています。</p>'+
+ '<p class="status">新しく聞く名前 '+newcomers.length+'人 ／ この輪には '+all.length+'人</p>'+
+ (newcomers.length?'<div class="faces">'+newcomers.map(id=>'<div class="intro-face'+peerClass(id)+'">'+portrait(id)+
  '<strong>'+esc(people[id].name)+'</strong><span>'+esc(people[id].year)+'年 ／ '+esc(label(people[id].primary_org))+
- (people[id].dual_org?'・'+esc(label(people[id].dual_org))+'も参加':'')+'</span></div>').join('')+'</div>'+
- '<div class="actions">'+btn('自己紹介を聞き終えて会場へ','leave-flash')+'</div>';
+ (people[id].dual_org?'・'+esc(label(people[id].dual_org))+'も活動':'')+'</span>'+
+ (PEERS.has(id)?'<span class="peer-tag">同期の新入生</span>':'')+'</div>').join('')+'</div>':
+ '<p>この輪に、初めて自己紹介する人はいません。</p>')+
+ '<div class="actions">'+btn('自己紹介を聞き終える','leave-flash')+'</div>';
 }
 function venue(){
  const e=events[S.selectedEvent];
@@ -262,29 +272,33 @@ function draw(){
 function go(phase){S.phase=phase;remember();draw()}
 function handle(act,id){
  switch(act){
- case 'start':go('intro');break;
+ case 'start':go('warning');break;
+ case 'back-title':go('title');break;
+ case 'show-campus':go('campus');break;
+ case 'show-intro':go('intro');break;
  case 'begin':go('day');break;
  case 'reset':S=initial();go('title');break;
  case 'save':remember();S.report='この端末に記録しました。';draw();break;
  case 'attend':{
   if(S.phase!=='day'||!events[id]||events[id].date!==date())return;
   S.selectedEvent=id;S.eventHistory.push(id);S.visitedGroups=[];S.group=null;
-  const full=byEvent(id);
-  S.flash=full.filter(pid=>!S.introduced.includes(pid));
-  for(const pid of full){if(!S.seen.includes(pid))S.seen.push(pid);
-    const inOther=D.members.filter(m=>m.person_id===pid&&events[m.event_id].org_id!==events[id].org_id&&S.eventHistory.includes(m.event_id));
-    if(inOther.length)S.crossings[pid]=true;
+  // The event hall offers face recognition but no free name reveal.
+  for(const pid of byEvent(id)){if(!S.seen.includes(pid))S.seen.push(pid);
+   if(D.members.some(m=>m.person_id===pid&&events[m.event_id].org_id!==events[id].org_id&&S.eventHistory.includes(m.event_id)))S.crossings[pid]=true;
   }
-  go('flash');break;
+  go('venue');break;
  }
  case 'leave-flash':{
+  if(S.phase!=='flash'||!S.group)return;
   for(const pid of S.flash)if(!S.introduced.includes(pid))S.introduced.push(pid);
-  S.flash=[];go('venue');break;
+  S.flash=[];go('group');break;
  }
  case 'skip':if(S.phase==='day')go('night');break;
  case 'join-group':{
   if(S.phase!=='venue'||!groups[id]||groups[id].event_id!==S.selectedEvent||S.visitedGroups.length>=2||S.visitedGroups.includes(id))return;
-  S.group=id;S.visitedGroups.push(id);go('group');break;
+  S.group=id;S.visitedGroups.push(id);
+  S.flash=byGroup(id).filter(pid=>!S.introduced.includes(pid));
+  go('flash');break;
  }
  case 'choose-person':if(S.phase==='group'&&!S.groupDone[S.group]&&byGroup(S.group).includes(id)){S.target=id;go('choose')}break;
  case 'back-group':go('group');break;
