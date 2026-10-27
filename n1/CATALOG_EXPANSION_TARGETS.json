@@ -226,5 +226,17 @@
     "firstBatch": "3 trial category images + source-backed catalogue extensions",
     "next": "add 40-60 products and 10-15 facilities per independent sourcing/QA batch",
     "target": "500 products +100 facilities, not fabricated or generated without verification"
-  }
+  },
+  "currentAsOf": "2026-10-27",
+  "currentActuals": {
+    "priceRegisteredProducts": 35,
+    "readyProducts": 8,
+    "stagedWithoutImages": 27,
+    "knownFacilities": 20,
+    "categoryKeys": 32,
+    "newGeneratedImages": 0,
+    "openProductTarget": 465,
+    "openFacilityTarget": 80
+  },
+  "latestAudit": "n1/tests/catalog-batch-02-20261027.md"
 }
