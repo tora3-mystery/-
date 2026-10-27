@@ -1,7 +1,7 @@
 'use strict';
-/* P1 v0.9.0-beta. All content is fictitious. No network calls beyond story.json. */
+/* P1 v0.9.1-beta. All content is fictitious. No network calls beyond story.json. */
 const APP=document.getElementById('app');
-const SAVE='short-ui-games-p1-v090';
+const SAVE='short-ui-games-p1-v091';
 const DAYS=['10月12日（月）','10月13日（火）','10月14日（水）','10月15日（木）','10月16日（金）','10月17日（土）','10月18日（日）'];
 const REPORTERS=[['S','佐伯','行政・予算'],['K','桐谷','経済・企業'],['M','森下','医療・現場'],['O','大野','観光・地域'],['B','黒田','社会問題']];
 const TOPICS=[['H','医療'],['T','観光'],['E','自然環境'],['G','県政・財政']];
@@ -18,24 +18,30 @@ const esc=(v)=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':
 const arrUnique=a=>[...new Set(a)];
 const topic=a=>AT[a.id]||a.publicAttentionTopic||a.topicCode||('H');
 const header=(small,big,description='')=>`<p class="kicker">${esc(small)}</p><h1 class="headline">${esc(big)}</h1>${description?`<p class="lede">${esc(description)}</p>`:''}`;
-const status=()=>`<div class="status"><span>第 ${s.day} 日／7日</span><span>公的支援余力 ${s.budget}／2</span><span>発行済 ${s.history.length} 紙</span></div>`;
+const status=()=>`<div class="status"><span>第 ${s.day} 日／7日</span><span>公的支援上限：2分野</span><span>発行済 ${s.history.length} 紙</span></div>`;
 function random(){s.random=(s.random+0x6D2B79F5)>>>0;let t=s.random;t=Math.imul(t^(t>>>15),t|1);t^=t+Math.imul(t^(t>>>7),t|61);return ((t^(t>>>14))>>>0)/4294967296}
 function choice(a){return a[Math.floor(random()*a.length)]}
-function init(seed){s={version:9,stage:'intro',day:1,random:seed>>>0,variant:'none',att:{H:0,T:0,E:0},evidence:[],small:{},budget:2,leads:[],verified:[],reactionsSeen:[],latestReactions:[],history:[],publishedIds:[],outcomes:{},carry:null,research:[],candidates:[],slots:[null,null,null,null],trace:[],lastDecisions:[],lastAttention:{H:0,T:0,E:0},lastPaper:[]};s.variant=choice(['none','H','T','E']);save()}
+function init(seed){s={version:91,stage:'intro',day:1,random:seed>>>0,variant:'none',att:{H:0,T:0,E:0},evidence:[],small:{},budget:2,leads:[],verified:[],reactionsSeen:[],latestReactions:[],history:[],publishedIds:[],outcomes:{},carry:null,research:[],candidates:[],slots:[null,null,null,null],trace:[],lastDecisions:[],lastAttention:{H:0,T:0,E:0},lastPaper:[]};s.variant=choice(['none','H','T','E']);save()}
 function save(){try{localStorage.setItem(SAVE,JSON.stringify(s))}catch(e){/* private mode */}}
-function restore(){try{const old=JSON.parse(localStorage.getItem(SAVE));if(old?.version===9&&old.day>=1&&old.day<=7&&['intro','morning','newsroom','published','ending'].includes(old.stage))return old}catch(e){}return null}
+function restore(){try{const old=JSON.parse(localStorage.getItem(SAVE));if(old?.version===91&&old.day>=1&&old.day<=7&&['intro','morning','newsroom','published','ending'].includes(old.stage))return old}catch(e){}return null}
 function seen(id){return s.publishedIds.includes(id)}
 function newspaper(slots,small=false){const pieces=slots.map(id=>id&&articles[id]);return `<section class="paper" aria-label="組版済み新聞プレビュー"><div class="masthead"><h2>東雲日報</h2><time>2026年<br>${esc(DAYS[s.day-1])}</time></div>${pieces.map((a,i)=>i<2?`<div class="front ${i?'second':'top'}"><small>${i?'準トップ':'一面トップ'}　${a?esc(LABEL[topic(a)]):'未設定'}</small><h3>${a?esc(seen(a.id)?'続報｜'+(s.candidates.find(z=>z.id===a.id)?.displayHeadline||a.headline):(s.candidates.find(z=>z.id===a.id)?.displayHeadline||a.headline)):'記事を選択してください'}</h3>${a?`<p class="brief">${esc((s.candidates.find(z=>z.id===a.id)?.displayBody||a.body||'').slice(0,i?72:110))}${small?'': '…'}</p>`:''}</div>`:'').join('')}<div class="mini-grid">${pieces.slice(2).map((a,i)=>`<div class="front mini"><small>小記事${i+1}</small><h3>${a?esc(s.candidates.find(z=>z.id===a.id)?.displayHeadline||a.headline):'未設定'}</h3></div>`).join('')}</div></section>`}
 function briefingText(){
- const d=s.day,t=[],a=s.att,ev=s.evidence;
- if(!ev.includes('public_h')&&!ev.includes('private_h'))t.push('中央病院：県民の不安は高まっていますが、具体的な救済手段の報道は十分ではありません。');
- else t.push('中央病院：救済策が報じられています。社会の支持と実行体制が課題です。');
- if(d>=2){if(!ev.includes('investment_t'))t.push('観光開発：投資を検討する企業の条件がまだ十分に伝わっていません。');
- else t.push('観光開発：投資条件が報じられています。環境対策や許認可との両立が焦点です。')}
- if(d>=3){if(a.E<4)t.push('千鳥湿原：自然保護を求める声は、まだ大きく広がっていません。');
- else t.push('千鳥湿原：保全を求める意見が増えています。財源と管理の担い手も注目されています。')}
- if(d===7)t.push('今日も通常どおり取材・編集を行います。今夜の最終号までの報道履歴を踏まえ、1年後の県の姿が確定します。');
- return t.slice(0,4)
+ const d=s.day,t=[],a=s.att,ev=s.evidence,has=x=>ev.includes(x);
+ if(d===1)return ['中央病院では人員不足が続き、霧峰高原では観光計画、千鳥湿原では保護指定の行方が問題です。','取材で見つけた事実は、紙面に載せて初めて広く知られます。三分野すべてを公費だけで支えることはできません。'];
+ if(!has('public_h')&&!has('private_h'))t.push('病院：存続に向けた具体的な資金支援案が、まだ広く報じられていません。');
+ else if(a.H<5)t.push('病院：支援案は報じられましたが、地域での議論はまだ広がりきっていません。');
+ else if(has('private_h')&&!has('reform_h'))t.push('病院：企業の支援案は知られ始めました。医療機関同士の連携も論点になっています。');
+ else t.push('病院：救済案への関心が広がり、実行体制が議論されています。');
+ if(!has('investment_t'))t.push('観光：開発への期待だけでなく、誰がどの条件で出資するかの確認が必要です。');
+ else if(a.T<5)t.push('観光：出資の条件は知られていますが、実現に向けた支持の広がりはまだ限定的です。');
+ else if(!has('eco_tour')&&!has('permits_t'))t.push('観光：資金の議論は進んでいます。許認可や自然との両立は未解決です。');
+ else t.push('観光：投資条件と開発方式について議論が進んでいます。');
+ if(a.E<5)t.push('湿原：保護を求める声は、県全体の大きな議論にはなっていません。');
+ else if(!has('survey_e')&&!has('public_e'))t.push('湿原：自然への関心が増えています。保護区域の根拠と管理計画を確かめる必要があります。');
+ else t.push('湿原：保全の根拠は知られ始めました。継続的な管理費と担い手が問われています。');
+ if(d===7)t.push('今日も通常の取材と紙面編集ができます。今夜の最終号までの報道を踏まえ、一年後の姿が決まります。');
+ return t
 }
 function intro(){APP.innerHTML=`<div class="stage">${header('N国・因果観察室｜特別任務','明日の一面を決めてください。','一週間の新聞編集によって、東雲県の一年後を変えてください。')}<div class="paper"><div class="masthead"><h2>東雲日報</h2><time>特別任務資料<br>2026年10月</time></div><h3 class="headline" style="font-size:1.22rem">2027年、県の3つの未来が失われる</h3><p>県立中央病院は縮小。霧峰高原の観光計画は停滞。千鳥湿原の保護区域も変更される見込みです。</p><p>本来は、この3つが両立する未来がありました。あなたには2026年10月12日から18日までの東雲日報の編集権限が与えられます。</p></div><div class="panel"><h3>復元すべき2027年の状態</h3><ul><li>県立中央病院が存続する</li><li>霧峰高原の大型観光計画が実現する</li><li>千鳥湿原の保護区域が維持される</li></ul><p class="small">行政予算は限られています。医療・観光・自然をすべて公費で救うことはできません。</p></div><div class="note">毎朝：反響を読む → 記者2人と取材テーマを選ぶ → 6〜7本の記事から一面トップ・準トップ・小記事2本を指定 → 発行。紙面は自動で組み上がります。SNSの噂は、取材して確認しなければ事実にはなりません。</div><div class="btn-row"><button class="btn" data-do="start">編集室へ向かう</button></div></div>`}
 function reactionEligible(ids){const p=s.lastPaper.map(x=>x.id),counts={H:0,T:0,E:0,G:0};p.forEach(id=>counts[topic(articles[id])]++);const top=topic(articles[p[0]]||{}),att=s.att,prior=s.publishedIds,earlierT=prior.filter(id=>topic(articles[id]||{})==='T').length,earlierH=prior.filter(id=>topic(articles[id]||{})==='H').length,day=s.day;const inc=id=>p.includes(id),hasEvidence=k=>s.evidence.includes(k),ever=id=>prior.includes(id),reactionHas=id=>s.reactionsSeen.includes(id);
