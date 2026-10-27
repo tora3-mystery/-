@@ -119,6 +119,25 @@ for(let seed=1;seed<=250;seed++){
   statistics.villages++;
 }
 assert.equal(Object.keys(terrain).length,5,'Not all terrain kinds were sampled');
+
+// Evidence-grounded adverse ending: multiple closures without invented population decline.
+let adverseFound=0;
+for(let seed=1;seed<=120;seed++){
+ qa.generate(Math.imul(seed,2654435761)>>>0);
+ for(let month=0;month<12;month++){
+  const st=qa.getState(),id=st.candidates[(seed+month)%st.candidates.length];
+  const f=st.facilities.find(x=>x.id===id);
+  qa.post(id,month%qa.factsFor(f).length,1);
+ }
+ const state=qa.getState(),e=qa.annual();
+ if(e.main.name==='灯りが減った村'){
+  adverseFound++;
+  assert(state.facilities.filter(x=>!x.open).length>=2,'Adverse ending without two closures');
+  assert(state.population<=state.startPopulation,'Adverse ending without population stagnation');
+ }
+}
+assert(adverseFound>0,'Evidence-grounded closure ending is unreachable');
+
 // Save/reload regression: keep an in-progress 6-month game, then finish it.
 const persisted={};
 let trial=createHarness(persisted),tqa=trial.qa;
@@ -139,4 +158,4 @@ assert(tqa.getState().completed,'Reloaded run must finish');
 trial=createHarness(persisted);tqa=trial.qa;
 assert(tqa.getState().completed&&tqa.getState().annualDue,'Final review must be preserved on reload');
 assert(trial.get('modal').innerHTML.includes('口コミが反映'),'Final review modal must reopen');
-console.log(JSON.stringify({status:'PASS',terrain,statistics,endings,saveResume:'PASS',arrivalDate:'PASS',stageArt:'PASS',strictManifest:'PASS',fallback:'PASS'},null,2));
+console.log(JSON.stringify({status:'PASS',terrain,statistics,endings,saveResume:'PASS',arrivalDate:'PASS',stageArt:'PASS',strictManifest:'PASS',fallback:'PASS',adverseEnding:'PASS'},null,2));
