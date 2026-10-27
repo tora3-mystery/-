@@ -27,6 +27,7 @@ function runRegression(html){
  }
  function step(h,id){
   if(id==='inspectBack')check(h.api.focus('f17-back-review','裏手の社の周りが暗く'),'DAY 2 phrase investigation');
+   if(id==='productCheck'){const p=h.api.getState().complaintTickets.find(t=>t.body.includes('見掛けない商品'));check(!!p&&h.api.focus(p.id,'見掛けない商品がありました'),'DAY 1 product inspection');}
   // For legacy numeric assertions only, expose the requested action. User-facing discovery has its own regression.
   if(!h.api.availableIds().includes(id)&&!['audit','camera0','open0','idle','removeShrine'].includes(id)){
     const prev=h.api.getState();
@@ -62,7 +63,7 @@ function runRegression(html){
  const resumed=boot(savedDb);check(resumed.api.getState().needsAdvance,'Report not saved');resumed.api.resumeCurrent();
  check(!resumed.get('overlay').classList.contains('hidden'),'Report not restored');resumed.api.advance();
  check(resumed.api.getState().day===2&&resumed.api.getState().vals[0]===0,'Deferred effect lost on resume');
- const day8=route(['pickup','inspectBack','audit','camera0','open0','idle','idle']);
+ const day8=route(['productCheck','inspectBack','audit','camera0','open0','idle','idle']);
  check(day8.api.getState().day8Active&&day8.api.getState().day===8,'DAY 8 automatic');
  day8.api.advanceDay8();check(day8.get('day8Feedback').children.length===10,'DAY 8 ten regular review cards');
  day8.api.advanceDay8();day8.api.advanceDay8();
@@ -123,7 +124,7 @@ function runRegression(html){
 
  const late=boot();late.api.restart();
  late.api.setState({day:5,odd:0,revenue:200,attraction:7,vals:[2,1,1,1],
-  days:[{day:1,sales:50},{day:2,sales:50},{day:3,sales:50},{day:4,sales:50}],actionCounts:{inspectBack:1}});
+  days:[{day:1,sales:50},{day:2,sales:50},{day:3,sales:50},{day:4,sales:50}],actionCounts:{inspectBack:1,productCheck:1}});
  step(late,'audit');step(late,'camera0');step(late,'open0');
  check(late.api.getState().day8Active&&late.api.getState().day===8,'Late unusual route also auto-enters DAY 8');
  return {pass:true,assertions,endingTypes:4,tests:['seven choice cards','deferred effects','sales formula','complaint ledger','four active endings and deterministic DAY 8','resume after close','five-number visual bounds','shrine']};
