@@ -3,8 +3,11 @@
 const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),vm=require('node:vm');
 const root=path.resolve(__dirname,'..');
 const dataCode=fs.readFileSync(path.join(root,'game-data.js'),'utf8');
+const profileCode=fs.readFileSync(path.join(__dirname,'character-profiles.js'),'utf8');
+const dialogueCode=fs.readFileSync(path.join(__dirname,'dialogue-engine.js'),'utf8');
 const game=fs.readFileSync(path.join(__dirname,'game.js'),'utf8');
 const dataScope={window:{}};vm.runInNewContext(dataCode,dataScope);
+vm.runInNewContext(profileCode,dataScope);vm.runInNewContext(dialogueCode,dataScope);
 const D=dataScope.window.S6_DATA;
 let total=0, failures=0;
 function check(name,fn){try{fn();total++;console.log('PASS',name)}catch(e){failures++;console.error('FAIL',name,e.stack||e)}}
@@ -13,7 +16,7 @@ function makeSession(cache=new Map()){
  const app={set innerHTML(v){html=v},get innerHTML(){return html},addEventListener(n,f){if(n==='click')onClick=f}};
  const doc={getElementById:id=>id==='app'?app:fields[id]||null};
  const storage={getItem:k=>cache.get(k)||null,setItem:(k,v)=>cache.set(k,v)};
- const win={S6_DATA:D,scrollTo(){}};
+ const win={S6_DATA:D,S6_BETA_PROFILES:dataScope.window.S6_BETA_PROFILES,S6_BETA_DIALOGUE:dataScope.window.S6_BETA_DIALOGUE,scrollTo(){}};
  vm.runInNewContext(game,{window:win,document:doc,localStorage:storage});
  return {
   get html(){return html},
@@ -61,7 +64,7 @@ check('freshman peers show highlighted photo and identity hint without permanent
 check('the four actions offer two attempts per group',()=>{
  const s=newPlayer();visit(s,'E01','E01-A');
  for(const q of ['話しかける','質問する','連絡先を頼む','聞き耳を立てる'])assert.ok(s.html.includes(q));
- s.click('action-menu','talk');s.click('act-target','P003');assert.match(s.html,/初めまして/);
+ s.click('action-menu','talk');s.click('act-target','P003');assert.match(s.html,/受付にいると/);assert.doesNotMatch(s.html,/と声をかけてくれた/);
  s.click('action-menu','question');assert.match(s.html,/担当しているパート/);
  s.click('ask-affiliation','P003');assert.equal(s.state.knownOrg.P003,'L');
  assert.equal(s.state.groupLog['E01-A'].length,2);
@@ -128,5 +131,46 @@ check('separate save and legacy beta migration',()=>{
  assert.equal(cache.has('s6-case-a-v03-auto'),false);
  const data=s.state;data.phase='flash';data.group=null;cache.set('s6-origin-beta-010',JSON.stringify(data));
  const reread=makeSession(cache);assert.equal(reread.state.phase,'venue');
+});
+check('all 96 character profiles provide stable voice, four traits and SNS demeanor',()=>{
+ const profiles=dataScope.window.S6_BETA_PROFILES;
+ assert.equal(Object.keys(profiles.people).length,96);
+ for(const p of D.people){
+  const c=profiles.people[p.person_id];assert.ok(c);
+  for(const k of ['initiative','warmth','caution','expressiveness'])assert.ok(Number.isInteger(c[k])&&c[k]>=0&&c[k]<=4);
+  assert.ok(['friendly','energetic','casual','quiet','soft','precise','reserved'].includes(c.voice));
+  assert.ok(['active','quiet','private','curated'].includes(c.snsTone));
+ }
+});
+check('all 10 first-year original scene lines are rewritten with newcomer-appropriate voices',()=>{
+ const B=dataScope.window.S6_BETA_DIALOGUE;
+ assert.equal(B.chatAudit().firstYearLines,10);assert.equal(B.chatAudit().overridden,10);
+ const original=D.lines.find(x=>x.group_id==='E02-A'&&x.speaker_id==='P091');
+ assert.match(B.sceneLine(original),/安心しました/);
+ const s=newPlayer();s.click('attend','E02');s.click('join-group','E02-A');s.click('leave-flash');
+ assert.match(s.html,/顔を出さずに投稿してもいいんですね/);
+ assert.doesNotMatch(s.html,/自分で決めていいんだ/);
+});
+check('character responses are plain spoken dialogue without double quotation or name leakage',()=>{
+ const B=dataScope.window.S6_BETA_DIALOGUE;
+ for(const p of D.people){
+  const state={spokenTo:[],contacts:[],affinity:{},eventHistory:['E01']};
+  const gid=D.members.find(m=>m.person_id===p.person_id)?.group_id||'E01-A';
+  const first=B.talk(p.person_id,gid,state);
+  assert.ok(first.text.length>6);
+  assert.doesNotMatch(first.text,/^[「『]|[」』]$/);
+  assert.doesNotMatch(first.text,/と声をかけてくれた|と返してくれた|と話し始めた/);
+  assert.ok(!first.text.includes(p.name),'identity leaked via auto-generated greeting '+p.person_id);
+ }
+});
+check('familiarity, club role and personality alter the response while keeping the same person voice',()=>{
+ const B=dataScope.window.S6_BETA_DIALOGUE,pid='P003',gid='E01-A';
+ const first=B.talk(pid,gid,{spokenTo:[],contacts:[],affinity:{},eventHistory:['E01']});
+ const met=B.talk(pid,gid,{spokenTo:[pid],contacts:[],affinity:{P003:2},eventHistory:['E01','E06']});
+ const close=B.talk(pid,gid,{spokenTo:[pid],contacts:[pid],affinity:{P003:4},eventHistory:['E01','E06']});
+ assert.equal(first.role,'host');assert.equal(first.relationship,'new');
+ assert.equal(met.relationship,'acquainted');assert.equal(close.relationship,'contact');
+ assert.ok(first.text!==met.text&&met.text!==close.text);
+ assert.equal(first.voice,met.voice);
 });
 console.log(JSON.stringify({passed:total,failed:failures}));if(failures)process.exitCode=1;
