@@ -17,7 +17,7 @@
 <body>
 <div class="shell">
 <header>
- <div class="brand-area"><div class="kicker">短編UIゲーム実験室 / S7</div><h1>校則を改定してください。</h1><div class="version">α v0.7.2 ｜ 更新：2026年10月27日 10:59 JST</div></div>
+ <div class="brand-area"><div class="kicker">短編UIゲーム実験室 / S7</div><h1>校則を改定してください。</h1><div class="version">α v0.7.3 ｜ 更新：2026年10月27日 11:20 JST</div></div>
  <div class="toolbar"><button id="help" class="secondary small" type="button">あそびかた</button><button id="new" class="secondary small" type="button">新しく始める</button></div>
 </header>
 <main id="root" aria-live="polite"></main>
@@ -27,7 +27,7 @@
 <script>
 // S7 校則を改定してください。 — alpha v0.7.0 | deterministic browser simulation.
 // Game logic is deliberately independent from UI. All display text derives from state/history.
-const VERSION='0.7.2-alpha';
+const VERSION='0.7.3-alpha';
 const MONTHS=['4月','5月','6月','7月','8月','9月','10月','11月','12月','1月','2月','3月'];
 const STAT=['生活','学び','課外','自治','人気'];
 const ACT=['受験','運動','芸術','事業','探究','自治組織','管理'];
@@ -118,7 +118,9 @@ function groupSupport(s){return GROUPS.map((g,i)=>{
  const burden=Math.max(0,s.teacher-62)*((i===0||i===1)?.37:.20);
  const special=i===0?(s.mats.探究-8)*.09:i===1?(s.mats.運動-20)*.11:i===3?(s.mats.芸術-10)*.10:i===4?s.mats.事業*.09:0;
  const orderly=(i<=1&&s.mats.受験>=35&&s.mats.運動>=43)?Math.min(8,Math.max(0,(s.mats.管理-45)*.22)):0;
- return CLAMP(53+policies*.54+eventScore+outcome+special+orderly-burden-s.friction*.32+s.grudge[i],17,84);
+ const achievement=i===1?Math.max(0,s.mats.運動-35)*.16:i===3?Math.max(0,s.mats.芸術-30)*.06:0;
+ const reliability=Math.max(0,s.mats.管理-40)*(i<=1?.09:.065);
+ return CLAMP(53+policies*.54+eventScore+outcome+special+orderly+achievement+reliability-burden-s.friction*.32+s.grudge[i],17,84);
 })}
 function eventDisplay(s,key,scale,op){const e=EVENT[key];return `${e.name}：${EVENT_SCALE[scale+1]}${scale<0?'':`／${EVENT_OP[op]}`}`}
 function actionDescription(action){if(!action)return '現行の校則を維持';if(action.type==='rule'){const r=RULES[action.key];return `${r.name}：「${r.options[action.level]}」・${r.scopes[action.scope]}`};if(action.type==='event'){return `${EVENT[action.key].name}：${EVENT_SCALE[action.scale+1]}${action.scale<0?'':`／${EVENT_OP[action.operator]}`}`};if(action.type==='special')return action.key==='charter'?'青葉自治憲章を採択':action.key==='mediation'?'校内紛争調停委員会を設置':'青葉自治共和国の独立を宣言';return '現行維持'}
@@ -220,17 +222,43 @@ function processMonth(s,action){if(s.stage!=='edit')return {ok:false,error:'現�
  return {ok:true,record:rec}
 }
 function completeReport(s){if(s.stage!=='report')return false;s.stage=s.month>=12?'year-end':'edit';return true}
-function election(s){if(s.stage!=='year-end')return null;if(s.year===3)return {final:true,graduation:true};
+function election(s){
+ if(s.stage!=='year-end')return null;
+ if(s.year===3)return {final:true,graduation:true};
+ // Idempotent: page refreshes or repeated clicks must not reroll the same election.
+ const previous=s.elections.find(e=>e.year===s.year);
+ if(previous)return previous;
  const supports=groupSupport(s);
- const dissent=s.shares.map((v,i)=>v*(65-supports[i]));const opponent=dissent.indexOf(Math.max(...dissent));
- const t=s.turnouts.map((v,i)=>CLAMP(v+.007*Math.abs(supports[i]-50)+(i===opponent?.10:0),.38,.89));
- const challenger=range(s,0,8.2)+Math.max(0,s.teacher-65)*.27;const votes=supports.map((v,i)=>CLAMP(v-(i===opponent?4.5:1.4)-challenger,4,96));
- const swing=range(s,-1.8,1.8);const turnoutTotal=s.shares.reduce((a,v,i)=>a+v*t[i],0);
- const share=CLAMP(s.shares.reduce((a,v,i)=>a+v*t[i]*votes[i],0)/turnoutTotal+swing,0,100);
- const split=rng(s)<(Math.max(...supports)-Math.min(...supports)>22?.25:.13);
- const opponentTop=split?(100-share)*range(s,.54,.79):100-share;const other=split?100-share-opponentTop:0;
- const won=share>=opponentTop&&share>=other;
- const out={year:s.year,won,vote:calc(share),opponent:GROUPS[opponent],opponentTop:calc(opponentTop),other:calc(other),candidateCount:split?3:2,turnout:calc(turnoutTotal*100),supports:supports.map(calc),share:s.shares.slice()};
+ const dissent=s.shares.map((v,i)=>v*Math.max(0,65-supports[i]));
+ const opponent=dissent.indexOf(Math.max(...dissent));
+ const sorted=[...dissent.keys()].sort((a,b)=>dissent[b]-dissent[a]);
+ const second=sorted[1];
+ const dissatisfied=Math.max(0,65-supports[opponent]);
+ const turnout=s.turnouts.map((v,i)=>CLAMP(v+.006*Math.abs(supports[i]-50)+(i===opponent?.12:0),.38,.89));
+ const challenger=range(s,2,5.6)+Math.min(5.0,dissatisfied*.19)+Math.max(0,s.teacher-65)*.20;
+ const votes=supports.map((v,i)=>CLAMP(v-(i===opponent?4.5:1.4)-challenger,4,96));
+ const swing=range(s,-1.6,1.6);
+ const turnoutTotal=s.shares.reduce((a,v,i)=>a+v*turnout[i],0);
+ // Publicly visible school achievements can earn broad, cross-group confidence.
+ const schoolwidePride=CLAMP(Math.max(0,s.mats.運動-40)*.10+Math.max(0,s.mats.芸術-40)*.08+Math.max(0,s.mats.事業-50)*.06+Math.max(0,s.stats.生活-66)*.12,0,6);
+ // Centralized rulemaking without mature oversight, and rapid business expansion,
+ // can mobilize students seeking independent supervision of the new institutions.
+ const authorityScrutiny=s.policies.civic===3?(3.8+Math.max(0,70-s.mats.自治組織)*.22):0;
+ const enterpriseScrutiny=s.mats.事業>=50?Math.min(s.policies.shop>=3?3.2:1.8,(s.mats.事業-45)*(s.policies.shop>=3?.16:.075)):0;
+ const share=CLAMP(s.shares.reduce((a,v,i)=>a+v*turnout[i]*votes[i],0)/turnoutTotal+swing+schoolwidePride-authorityScrutiny-enterpriseScrutiny,0,100);
+ // Two distinct groups of dissatisfied students may each field a candidate.
+ const split=second!==opponent&&dissent[second]>1.8&&dissent[second]>=dissent[opponent]*.62&&rng(s)<.34;
+ const ratio=split?CLAMP(.54+.19*dissent[opponent]/(dissent[opponent]+dissent[second]),.55,.79):1;
+ const opponentTop=split?(100-share)*ratio:100-share;
+ const other=split?100-share-opponentTop:0;
+ const incumbentVote=calc(share),rivalVote=calc(opponentTop),smallerVote=split?calc(100-incumbentVote-rivalVote):0;
+ const won=incumbentVote>=rivalVote&&incumbentVote>=smallerVote;
+ const pledge={0:'進学指導と学習環境の立て直し',1:'部活動・学校行事の再建',2:'生徒の自由と選択肢の拡大',3:'文化活動・生徒行事への支援',4:'暮らしやアルバイト制度の改善'};
+ const issues=[];
+ if(authorityScrutiny>0)issues.push('自治権限と監督体制');
+ if(enterpriseScrutiny>0)issues.push('生徒事業の会計・運営');
+ if(s.teacher>=67)issues.push('教員の業務負担');
+ const out={year:s.year,won,vote:incumbentVote,opponent:GROUPS[opponent],opponentTop:rivalVote,other:smallerVote,candidateCount:split?3:2,turnout:calc(turnoutTotal*100),supports:supports.map(calc),share:s.shares.slice(),opponentPledge:pledge[opponent],otherPledge:split?pledge[second]:null,issues};
  s.elections.push(out);return out;
 }
 function nextYear(s){if(s.stage!=='year-end'||s.year===3)return false;const result=s.elections.at(-1);if(!result||result.year!==s.year||!result.won)return false;
@@ -252,7 +280,7 @@ const num=(n)=>Math.round(n*10)/10;
 const displayStat={生活:'学校生活',学び:'学び',課外:'課外活動',自治:'生徒自治',人気:'人気度'};
 let s=null,tab='rule',rk='phone',ek='festival',lv=2,scope=0,scale=1,operator=1,sp='';
 function trySave(){try{localStorage.setItem(STORAGE,JSON.stringify(s))}catch(e){}}
-function tryLoad(){try{const x=JSON.parse(localStorage.getItem(STORAGE));if((x?.version===VERSION||['0.7.0-alpha','0.7.1-alpha'].includes(x?.version))&&Array.isArray(x.history)&&x.stats&&x.policies&&x.events&&x.randomState!=null&&checkInvariants(x).length===0){x.version=VERSION;return x}}catch(e){}return null}
+function tryLoad(){try{const x=JSON.parse(localStorage.getItem(STORAGE));if((x?.version===VERSION||['0.7.0-alpha','0.7.1-alpha','0.7.2-alpha'].includes(x?.version))&&Array.isArray(x.history)&&x.stats&&x.policies&&x.events&&x.randomState!=null&&checkInvariants(x).length===0){x.version=VERSION;return x}}catch(e){}return null}
 function fresh(){s=newWorld((Date.now()^(Math.random()*0xffffffff))>>>0);s.stage='edit';tab='rule';rk='phone';setFromRule();trySave();render()}
 function setFromRule(){lv=s.policies[rk];scope=s.scopes[rk]}
 function setFromEvent(){const p=s.pending[ek]||s.events[ek];scale=p[0];operator=p[1]}
@@ -308,7 +336,7 @@ function yearEnd(){const id=finalIdentity(s),ei=s.elections.find(e=>e.year===s.y
  if(s.year===3){html+=`<div class="note strong"><b>会長任期満了・卒業</b><p>あなたは青葉高校を卒業します。次の生徒会が、この学校の未来を引き継ぎます。</p></div>`}
  else if(!ei){html+=`<p>翌年度の生徒会長を決める選挙が行われます。各生徒集団の評価や対立候補の公約が結果を左右します。</p><button id="count-votes" class="primary full">生徒会長選挙を開票する</button>`}
  else{html+=`<div class="stat-pair"><div><span class="tiny">現職会長の得票率</span><strong>${ei.vote}%</strong></div><div><span class="tiny">有効投票率</span><strong>${ei.turnout}%</strong></div></div><div class="election-bar"><span style="width:${ei.vote}%"></span><span class="other" style="width:${ei.opponentTop}%"></span>${ei.candidateCount===3?`<span class="last" style="width:${ei.other}%"></span>`:''}</div><p class="tiny">現職 ${ei.vote}% ／ 主な対立候補 ${ei.opponentTop}%${ei.candidateCount===3?` ／ 第2対立候補 ${ei.other}%`:''}</p><p><span class="stamp ${ei.won?'':'fail'}">${ei.won?'再選':'落選'}</span></p><p class="subtitle">${ei.won?'学校改革は翌年度へ続きます。':`「${esc(ei.opponent)}」の支持を集めた対立候補が現職を上回りました。これまでの改革は学校に残ります。`}</p>
- <div class="tiny">主な対立軸：${esc(ei.opponent)}／候補者${ei.candidateCount}人</div>
+ <div class="tiny">主な対立軸：${esc(ei.opponent)}／候補者${ei.candidateCount}人</div><div class="note">対立候補の公約：${esc(ei.opponentPledge||"校則と学校運営の見直し")}${ei.candidateCount===3&&ei.otherPledge?`<br>第2対立候補：${esc(ei.otherPledge)}`:""}${ei.issues?.length?`<br>校内で争点となったこと：${ei.issues.map(esc).join("・")}`:""}</div>
  <div class="actions">${ei.won?`<button id="next-year" class="primary full">${s.year+1}年目へ進む</button>`:''}<button id="replay" class="full muted">別の青葉高校で遊ぶ</button></div>`}
  if(s.year===3){html+=`<div class="actions"><button id="replay" class="primary full">別の青葉高校で遊ぶ</button></div>`}
  return html+`</div></section>`;
