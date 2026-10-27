@@ -256,4 +256,49 @@ check('old beta saves missing relationshipDay fields load without error or false
  assert.equal(loaded.state.affinity.P003,4);
  assert.equal(dataScope.window.S6_BETA_DIALOGUE.level(loaded.state,'P003'),'acquainted');
 });
+check('trait-specific response: 96 profiles give distinct talk/question gains',()=>{
+ const E=dataScope.window.S6_BETA_DIALOGUE;
+ assert.equal(E.responseGain('P003','talk'),1.25);
+ assert.equal(E.responseGain('P004','talk'),0.5);
+ assert.equal(E.responseGain('P004','question'),0.75);
+ assert.equal(E.responseGain('P001','contact'),0);
+ for(const p of D.people)for(const kind of ['talk','question','affiliation']){
+  const x=E.responseGain(p.person_id,kind);assert.ok(x>=0.5&&x<=1.25);
+ }
+});
+check('outgoing/cautious students react differently without skipping event dates',()=>{
+ const a=newPlayer();visit(a,'E01','E01-A');a.click('action-menu','talk');a.click('act-target','P003');
+ const b=newPlayer();visit(b,'E02','E02-A');b.click('action-menu','talk');b.click('act-target','P004');
+ assert.equal(a.state.affinity.P003,1.25);assert.equal(b.state.affinity.P004,0.5);
+ assert.equal(b.state.relationshipDays.P004.length,1);
+});
+check('235 persona SNS accounts have unique handles with original platform visibility and avatar rights',()=>{
+ const list=dataScope.window.S6_BETA_SOCIAL.accounts;
+ assert.equal(list.length,235);assert.equal(new Set(list.map(a=>a.handle)).size,235);
+ assert.equal(new Set(list.map(a=>a.platform+'|'+a.person_id)).size,235);
+ for(const original of D.accounts){
+  const a=list.find(x=>x.account_id===original.account_id);
+  assert.ok(a,original.account_id);assert.doesNotMatch(a.handle,/^(tine_|pg_|zt_)[0-9]{3}$/);
+  assert.equal(a.visibility,original.visibility);assert.equal(a.avatar_kind,original.avatar_kind);
+  assert.equal(a.platform,original.platform);assert.equal(a.person_id,original.person_id);
+ }
+});
+check('anonymous Zitter author never displays persona name, handle or photo',()=>{
+ const a=dataScope.window.S6_BETA_SOCIAL.accounts.find(x=>x.platform==='Zitter'&&x.person_id==='P004');
+ const s=newPlayer();for(let i=0;i<3;i++){s.click('skip');s.click('next-day')}
+ s.click('skip');s.click('night-sns','Zitter');
+ assert.match(s.html,/匿名アカウント/);
+ assert.ok(!s.html.includes(a.display_name));assert.ok(!s.html.includes(a.handle));
+ assert.doesNotMatch(s.html,/p004.webp/);
+});
+check('public posts and approved TINE message use beta handles not source database handles',()=>{
+ const list=dataScope.window.S6_BETA_SOCIAL.accounts;
+ const s=newPlayer();s.click('skip');s.click('night-sns','Photogram');
+ const pub=list.find(a=>a.person_id==='P001'&&a.platform==='Photogram');
+ assert.ok(s.html.includes(pub.handle));assert.ok(s.html.includes(pub.display_name));
+ const t=newPlayer();visit(t,'E01','E01-A');t.click('action-menu','contact');t.click('act-target','P003');
+ assert.ok(t.state.contacts.includes('P003'));t.click('back-venue');t.click('finish-venue');t.click('night-sns','TINE');
+ const tine=list.find(a=>a.person_id==='P003'&&a.platform==='TINE');
+ assert.ok(t.html.includes(tine.handle));assert.ok(t.html.includes(tine.display_name));
+});
 console.log(JSON.stringify({passed:total,failed:failures}));if(failures)process.exitCode=1;
