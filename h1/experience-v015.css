@@ -40,3 +40,12 @@ body.h113-outcome-horror .h115-end-kind{color:#ffe0eb;background:#493647}
  #main .h113-report .h011-end-mark{letter-spacing:.08em}
  #main .h113-report .h115-end-kind{padding:9px 11px}
 }
+
+/* Longer session-generated names must not overflow four-across seats on 320px phones. */
+.room-inner .seat b{
+  white-space:normal;
+  overflow-wrap:anywhere;
+  word-break:normal;
+  line-height:1.35;
+  max-width:100%;
+}
