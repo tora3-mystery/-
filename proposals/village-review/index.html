@@ -445,7 +445,10 @@ function evolutionFetch(){
 }
 function routeFor(f,fa,stars){
  if(fa.key>=3&&fa.tag==='sea')return ({inn:'retreat',lodge:'retreat',scenic:'conservation',shrine:'sanctuary'}[f.kind]||Object.keys(VISUAL_ROUTES[f.kind]||{})[0]);
- return ROUTE_BY_STATE[f.kind]?.[fa.key]?.[(fa.high?2:0)+(stars<=2?1:0)]||Object.keys(VISUAL_ROUTES[f.kind]||{})[0]
+ // The staged evolution DB is authoritative for the image, not a parallel
+ // list of route guesses that can contradict the selected observed feature.
+ const record=V1_EVOLUTION.ready?V1_EVOLUTION.stage2.get(evolutionTargetId(f,fa,stars)):null;
+ return record?.imageRoute||ROUTE_BY_STATE[f.kind]?.[fa.key]?.[(fa.high?2:0)+(stars<=2?1:0)]||Object.keys(VISUAL_ROUTES[f.kind]||{})[0]
 }
 function rememberRoute(f,fa,stars,weight){
  const id=routeFor(f,fa,stars);
