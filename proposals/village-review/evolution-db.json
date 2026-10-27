@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "workstream": "V1 village review",
   "generation": "2026-10-27",
-  "description": "History-preserving evolution graph. 16 types × 3 review facets × 2 desired polarity outcomes × 3 facets × 2 outcomes. Stage 2=96, stage3=576.",
+  "description": "History-preserving evolution graph. 16 types × 3 review facets × 2 desired polarity outcomes × 3 facets × 2 outcomes. Stage 2=96, stage3=576. Nine exceptional variants apply only after a corresponding village-wide hidden ending.",
   "criteria": {
     "targetMeaning": "less/more describe intended characteristic intensity, not the number of stars",
     "star2": "incremental compromise",
@@ -19049,5 +19049,88 @@
       ]
     }
   ],
-  "auditNote": "Same-facet reversal paths explicitly acknowledge reversal; earlier attributes are not simultaneously asserted as current."
+  "auditNote": "Same-facet reversal paths explicitly acknowledge reversal; earlier attributes are not simultaneously asserted as current.",
+  "specialEvolutions": [
+    {
+      "id": "ancient.shrine",
+      "hidden": "因習村",
+      "kind": "shrine",
+      "minStage": 2,
+      "name": "参道の届出所",
+      "description": "参拝の案内札がいつからか通行の許可証になり、村民は誰も不思議に思わなくなった。",
+      "overlayId": "ending:ancient:map"
+    },
+    {
+      "id": "ancient.hall",
+      "hidden": "因習村",
+      "kind": "hall",
+      "minStage": 2,
+      "name": "昨日から続く祭礼会館",
+      "description": "公民館の祭りの記録には、まだ開催されていない翌年の写真が綴じられている。",
+      "overlayId": "ending:ancient:map"
+    },
+    {
+      "id": "ancient.office",
+      "hidden": "因習村",
+      "kind": "office",
+      "minStage": 2,
+      "name": "慣習受付の村役場",
+      "description": "役場の申請窓口では、住民がいつからこの村にいたかを尋ねられるようになった。",
+      "overlayId": "ending:ancient:map"
+    },
+    {
+      "id": "robot.robot",
+      "hidden": "近未来の村",
+      "kind": "robot",
+      "minStage": 2,
+      "name": "住民登録ができる研究棟",
+      "description": "研究所の受付台帳に人間とロボットが同じ形式で登録されている。",
+      "overlayId": "ending:robot:map"
+    },
+    {
+      "id": "robot.clinic",
+      "hidden": "近未来の村",
+      "kind": "clinic",
+      "minStage": 2,
+      "name": "いつも開いている無人診療室",
+      "description": "診療室の担当者は交代していないはずなのに、毎日少しずつ名前が違う。",
+      "overlayId": "ending:robot:map"
+    },
+    {
+      "id": "robot.office",
+      "hidden": "近未来の村",
+      "kind": "office",
+      "minStage": 2,
+      "name": "自律行政の相談窓口",
+      "description": "住民への返事だけが、誰かが相談を送るより少し早く届く。",
+      "overlayId": "ending:robot:map"
+    },
+    {
+      "id": "deepsea.harbor",
+      "hidden": "海とつながりすぎた村",
+      "kind": "harbor",
+      "minStage": 2,
+      "name": "海面下へ続く船着場",
+      "description": "桟橋の案内図が新しくなり、海面の下にもいくつかの行先が記されている。",
+      "overlayId": "ending:deepsea:map"
+    },
+    {
+      "id": "deepsea.lodge",
+      "hidden": "海とつながりすぎた村",
+      "kind": "lodge",
+      "minStage": 2,
+      "name": "満潮時だけ予約できる民宿",
+      "description": "満室の日付を確かめると、潮位表にだけ存在する日が含まれている。",
+      "overlayId": "ending:deepsea:map"
+    },
+    {
+      "id": "deepsea.scenic",
+      "hidden": "海とつながりすぎた村",
+      "kind": "scenic",
+      "minStage": 2,
+      "name": "海の住所が見える展望路",
+      "description": "海岸から見えるはずのない屋根が、干潮になると水面の向こうに現れる。",
+      "overlayId": "ending:deepsea:map"
+    }
+  ]
 }
