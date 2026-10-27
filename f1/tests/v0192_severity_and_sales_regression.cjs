@@ -78,4 +78,20 @@ b.get('transitionContinue').onclick();
 ok(!b.get('ending').classList.contains('hidden'),'Final screen shown after notice');
 ok(b.get('ending').children[1].textContent.includes('営業停止'),
  'Game over cause explicit in ending title');
+// A save created under the old formula must not allow trading after loading at zero.
+const oldGame=boot();oldGame.api.restart();
+const oldState={...oldGame.api.getState(),day:4,attraction:5,vals:[5,4,3,2],
+ days:[{day:1,sales:50},{day:2,sales:40},{day:3,sales:30}],
+ revenue:120,complaintTickets:null,finish:false,needsAdvance:false};
+delete oldState.complaintLedgerSeverity;
+const oldDb=new Map([['f1-v10',JSON.stringify(oldState)]]);
+const loaded=boot(oldDb);
+ok(!loaded.api.getState().finish,'Legacy save can load without immediate data mutation');
+loaded.api.resumeCurrent();
+ok(loaded.api.getState().finish&&loaded.api.getState().endingReason==='店長解任・営業停止',
+ 'Legacy save at 0 forecast is closed on resume');
+ok(!loaded.get('ending').classList.contains('hidden'),
+ 'Legacy resume shows closed store rather than a live action panel');
+ok(JSON.parse(oldDb.get('f1-v10')).finish===true,'Forced closure persists to save');
+
 console.log('PASS F1 v0.19.2 severity and zero forecast '+count+' checks');
