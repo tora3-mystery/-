@@ -61,7 +61,7 @@ function marchFixture(flag,tag,kind,base,others){
  const {qa:q}=harness();
  let st,subject;
  for(let seed=1;seed<=500;seed++){
-  q.generate(seed);st=q.getState();
+  q.generate(Math.imul(seed,2654435761)>>>0);st=q.getState();
   subject=st.facilities.find(f=>f.kind===kind);
   if(subject&&(!others||st.facilities.some(f=>others.includes(f.kind)))&&(!base||base.includes(st.terrain)))break;
  }
