@@ -27,6 +27,20 @@ body.odd-3 .choice-icon{background:#3a4445}
 .complaint-focus[disabled]{cursor:default;text-decoration-color:#aab4ad;text-decoration-style:dotted}
 .complaint-investigation{font-size:11px;color:#596d61;margin:5px 0 8px}
 .complaint-investigation-result{margin:8px 0 0;padding:8px 10px;border-radius:6px;background:#f0f3ed;font-size:12px;line-height:1.6;color:#344a3f}
+/* New policy discovery: short visual reward, no modal or sound. */
+.complaint-investigation-result.discovery-award{position:relative;background:linear-gradient(125deg,#e3f5d9,#fffbe8 68%,#e6f6e5);border:2px solid #d7b45e;box-shadow:0 6px 17px #a88c452e;animation:f1-found-pop .48s cubic-bezier(.2,1.2,.3,1) both}
+.discovery-award::after{content:'✦';position:absolute;right:8px;top:4px;font-size:21px;color:#c49b35;animation:f1-found-star .6s ease-out both}
+.discovery-award-title{display:block;font-size:15px;font-weight:950;color:#285540;margin-bottom:6px;letter-spacing:.02em}
+.discovery-award-items{display:grid;gap:4px}
+.discovery-award-items span{position:relative;display:block;padding-left:13px;color:#344d3c;font-size:12px;font-weight:750}
+.discovery-award-items span::before{content:'◆';position:absolute;left:0;top:6px;font-size:7px;color:#4b9a75}
+.discovery-new-action{border-color:#d6af4c!important;box-shadow:0 0 0 3px #ffe7a79c,0 8px 16px #b1a05345;animation:f1-action-enter .56s cubic-bezier(.2,1.3,.3,1) both}
+@keyframes f1-found-pop{0%{transform:translateY(6px) scale(.94);opacity:.15}70%{transform:translateY(-2px) scale(1.02);opacity:1}100%{transform:none;opacity:1}}
+@keyframes f1-found-star{0%{opacity:0;transform:translateY(12px) scale(.4)}70%{opacity:1;transform:translateY(-4px) scale(1.2)}100%{opacity:1;transform:none}}
+@keyframes f1-action-enter{0%{transform:translateY(9px) scale(.97);opacity:.3}70%{transform:translateY(-2px) scale(1.012);opacity:1}100%{transform:none;opacity:1}}
+@media(prefers-reduced-motion:reduce){.discovery-award,.discovery-award::after,.discovery-new-action{animation:none!important;transform:none!important}}
+body.odd-3 .discovery-award{background:#313c32;border-color:#a2b18f;box-shadow:none}
+body.odd-3 .discovery-award-title,body.odd-3 .discovery-award-items span{color:#e1e8d9}
 .complaint-ticket.resolved .complaint-letter{color:#66746c}.complaint-ticket.resolved .complaint-ticket-head strong{color:#6a786f}
 .anomaly-inbox{border:1px solid #b18b9d;background:#252128;border-radius:11px;padding:12px;margin:12px 0;color:#f0e7eb}
 .anomaly-inbox .anomaly-head{font-size:12px;font-weight:900;color:#efc9d5;margin-bottom:9px}
@@ -388,8 +402,10 @@ function focusSegments(ticket){
  }
  return found.sort((a,b)=>a.start-b.start);
 }
+let discoveryFlashIds=[];
 function focusReview(ticket,segment){
  if(s.finish||s.needsAdvance||s.day>=8)return false;
+ const previouslyAvailable=new Set(available().map(a=>a.id));
  const key=ticket.id+':'+segment.start,chosen=focusedToday();
  if(!focusKnown(key)&&!chosen.includes(key)){
    if(chosen.length>=3)return false;
@@ -399,8 +415,10 @@ function focusReview(ticket,segment){
  }
  if(!Array.isArray(s.discoveredActions))s.discoveredActions=[];
  for(const id of segment.ids)if(!s.discoveredActions.includes(id))s.discoveredActions.push(id);
- s.focusedNote={day:s.day,key,ids:[...segment.ids]};
- persist();render();return true;
+ const newOptions=available().filter(a=>a.id!=='idle'&&!previouslyAvailable.has(a.id));
+ discoveryFlashIds=newOptions.map(a=>a.id);
+ s.focusedNote={day:s.day,key,ids:[...segment.ids],newIds:[...discoveryFlashIds]};
+ persist();render();discoveryFlashIds=[];return true;
 }
 function complaintNode(ticket){
  const card=document.createElement('article');card.className='complaint-ticket'+(ticket.status==='resolved'?' resolved':'');
@@ -430,9 +448,17 @@ function complaintNode(ticket){
  }
  card.append(head,note);
  if(s.focusedNote?.day===s.day&&parts.some(p=>ticket.id+':'+p.start===s.focusedNote.key)){
-   const matched=(s.focusedNote.ids||[]).map(id=>options.find(a=>a.id===id)?.name).filter(Boolean);
-   const memo=document.createElement('div');memo.className='complaint-investigation-result';
-   memo.textContent='対応メモ：'+matched.join('／');card.append(memo);
+   const ids=s.focusedNote.newIds||[],memo=document.createElement('div');
+   memo.className='complaint-investigation-result'+(ids.length&&discoveryFlashIds.length?' discovery-award':'');
+   memo.setAttribute('role','status');memo.setAttribute('aria-live','polite');
+   if(ids.length){
+     const title=document.createElement('strong');title.className='discovery-award-title';
+     title.textContent='対応案を'+ids.length+'件発見！';
+     const found=document.createElement('div');found.className='discovery-award-items';
+     for(const id of ids){const item=document.createElement('span');item.textContent=options.find(a=>a.id===id)?.name||id;found.append(item)}
+     memo.append(title,found);
+   }else memo.textContent='この文章は確認済みです。';
+   card.append(memo);
  }
  const answer=ticket.status==='resolved'?(ticket.replies||[]).filter(x=>x.visibleFrom<=s.day).at(-1):null;
  if(answer){const area=document.createElement('div');area.className='complaint-reply';
@@ -885,7 +911,7 @@ function render(){
  const mainActionIds=new Set(normalChoices.slice(0,12).map(a=>a.id));
  choices.forEach(a=>{
   const b=document.createElement('button');
-  b.className='action'+(a.id==='idle'?' idle-action':'')+(a.kind==='gray'?' gray-action':'')+(a.v15Family?' branch-action':'')+(a.kind==='major'?' major-action':'')+(a.kind==='odd'?' odd-action odd-tier-'+Math.min(3,s.odd+1):'');
+  b.className='action'+(discoveryFlashIds.includes(a.id)?' discovery-new-action':'')+(a.id==='idle'?' idle-action':'')+(a.kind==='gray'?' gray-action':'')+(a.v15Family?' branch-action':'')+(a.kind==='major'?' major-action':'')+(a.kind==='odd'?' odd-action odd-tier-'+Math.min(3,s.odd+1):'');
   const previous=s.actionCounts[a.id]||0;
   const delta=a.delta.map(x=>x<0&&a.repeat&&previous>=2?0:x);
   const impacts=[v09Clamp(s.attraction+(a.attractionOnCompletion||0),0,10)-s.attraction,...delta.map((v,i)=>clamp(s.vals[i]+v)-s.vals[i])],symbols=['👥','🧾','↔️','📦','🔊'],names=['集客力','レジ待ち','通路','品切れ','店内騒音'];
