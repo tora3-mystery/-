@@ -38,7 +38,7 @@ h2{font-size:17px;line-height:1.4;margin:0 0 8px}h3{font-size:14px;margin:0 0 8p
 </style>
 </head>
 <body><main class="app">
-<header class="mast"><div><div class="sub">短編UIゲーム実験室｜K1 プロトタイプ</div><h1>掲示物をご確認ください。</h1><div class="meta"><b>K1 α0.6.1</b> ｜ 2026-10-28 02:36 JST更新</div></div><a class="home" href="../index.html">作品一覧へ</a></header>
+<header class="mast"><div><div class="sub">短編UIゲーム実験室｜K1 プロトタイプ</div><h1>掲示物をご確認ください。</h1><div class="meta"><b>K1 α0.6.1</b> ｜ 2026-10-28 02:37 JST更新</div></div><a class="home" href="../index.html">作品一覧へ</a></header>
 <section id="intro" class="panel intro">
 <div class="sub">白波レジデンス・406号室</div><h2>掲示物をご確認ください。</h2>
 <p class="lede">あなたは白波レジデンス406号室で一人暮らしをする会社員です。</p><p>ここに越して3か月。毎日仕事帰りに掲示板へ目を向けています。普段は数えるほどしか紙がありません。けれど最近、貼り替えの回数が増えてきました。</p>
@@ -271,6 +271,7 @@ var post=[
 {day:6,id:'inspection',name:'本日の個別点検案内',text:'406号室の設備確認。20:00〜20:30。担当：東洋設備・大野。日付と管理番号の記載あり。'},
 
 {day:8,id:'report',name:'横田が渡した2023年の事故記録',text:'2023年11月9日・407号室／高瀬奈津美。02:14「室内に水、配電盤から火花。助けて」と非常呼出し。管理会社の報告書は02:06に「安全点検完了」と記載。一方、元管理人・藤井の入館控えでは設備業者の到着は09:22。407号室は漏水による漏電事故として処理された。',requiresTrust:true},
+{day:9,id:'afterword',name:'405号室・横田からの追伸',text:'「藤井さんは私に、あの日の時刻を書いた紙を残してくれました。私は怖くて開けなかった扉のことを、何度も思い出します。高瀬さんの声をなかったことにしないでください」。封筒には小さな水染みがある。',requiresTrust:true},
 {day:10,id:'chair',name:'管理組合への意見送付案内',text:'異議申立ては管理会社ではなく理事会でも受付。保管済み資料を添えて提出できる。'}
 ];
 var door=[
@@ -417,12 +418,40 @@ function answer(c,extra){
 function advanceQuiet(){if(state.phase!=='night'||state.day!==9||state.ended)return;state.day=10;state.index=0;state.phase='morning';snapshot();save();render();scrollToTop();}
 function advance(){if(!state.resultPending)return;pendingChoice=null;state.resultPending=false;state.result='';state.index++;if(state.index>=getEvents(state.day).length){if(state.day===10){state.ended=true;state.phase='end';}else{state.day++;state.index=0;state.phase='morning';if(state.day===7)state.drawingTarget=state.owner;snapshot();}}save();render();scrollToTop();}
 function scrollToTop(){try{window.scrollTo({top:0,behavior:'instant'});}catch(e){window.scrollTo(0,0);}}
-function ending(){if(state.failure){return '<div class="ending"><div class="tiny" style="color:#b5c0c2">406号室｜'+state.day+'日目</div><h2>GAME OVER</h2><div class="endingname">'+esc(state.failure.reason)+'</div><p>'+esc(state.result)+'</p></div><div class="btnrow"><button class="btn primary" data-restartday="'+state.day+'">同じ日の帰宅時からやり直す</button><button class="btn secondary" data-showrewind="1">別の日を選ぶ</button></div>';}var name,body;
-if(state.exposed&&state.owner==='405'&&!state.consent){name='記録は残りました';body='旧掲示と点検控え、横田の証言をまとめた書面が管理組合に届いた。廊下が静かになった夜、407号室の灯りだけが消えていた。';}
-else if(state.exposed){name='説明のつかない呼出し';body='管理組合には書面が届いた。けれど午前2時14分、再びあなたの部屋へインターホンが鳴る。どこかで返事をした日を思い出す。';}
-else if(state.owner==='405'&&!state.consent){name='戸締まり';body='406号室は今夜も静かだった。管理会社からは「対応完了」の通知が届く。405号室の前だけ、朝になると濡れている。';}
-else{name='確認済み';body='管理会社の記録では、406号室への説明と点検は完了している。今夜の呼出しについても、回答は必要ないとされている。';}
-return '<div class="ending"><div class="tiny" style="color:#b5c0c2">白波レジデンス｜10日目の夜</div><h2>THE END</h2><div class="endingname">'+esc(name)+'</div><p>'+esc(body)+'</p></div><p class="caption">結末は判断と、それまでに得た情報によって変化します。別の日から再挑戦できます。</p><div class="btnrow"><button class="btn primary" data-restartday="1">1日目からやり直す</button><button class="btn secondary" data-showrewind="1">日付を選ぶ</button></div>';
+function ending(){
+ if(state.failure){return '<div class="ending"><div class="tiny" style="color:#b5c0c2">406号室｜'+state.day+'日目</div><h2>GAME OVER</h2><div class="endingname">'+esc(state.failure.reason)+'</div><p>'+esc(state.result)+'</p></div><div class="btnrow"><button class="btn primary" data-restartday="'+state.day+'">同じ日の帰宅時からやり直す</button><button class="btn secondary" data-showrewind="1">別の日を選ぶ</button></div>';}
+ var name,paragraphs;
+ if(state.exposed&&state.owner==='405'){
+  name='記録は残りました';
+  paragraphs=[
+   '理事会へ送った書面には、407号室の高瀬奈津美が最後に助けを求めた、2023年11月9日午前2時14分の呼出しが記されていた。管理会社の事故報告書からは、その行だけが抜けていた。',
+   '黒田が「点検完了」としていたのは午前2時6分。だが藤井の入館控えでは、設備業者が現場に着いたのは午前9時22分だった。漏水が配電盤に達し、高瀬は助けを待ったまま亡くなった。管理会社は救助の遅れと点検記録の矛盾を伏せ、405号室の横田の訴えまで「解決済」にしようとしていた。',
+   '数日後、理事会から再調査の通知が届いた。横田は「今度は、誰かが読んでくれましたね」とだけ言った。407号室の前で三回のノックを聞くことは、それからなかった。'
+  ];
+ }else if(state.exposed){
+  name='説明のつかない呼出し';
+  paragraphs=[
+   '横田の証言と藤井の入館控えが理事会へ届き、407号室で何が隠されたのかが、ようやく調べ直されることになった。点検完了とされた時刻より後に、高瀬奈津美は助けを呼んでいた。',
+   'しかし、あの夜、あなたはインターホンの声に返事をしてしまった。水曜日が終わり、時計が午前2時14分を示す。',
+   'モニターには、誰もいない406号室の玄関が映っている。トン、トン。……トン。「今度こそ、聞こえていますか」。'
+  ];
+ }else if(state.owner==='405'){
+  name='戸締まり';
+  paragraphs=[
+   '黒田の確認書には署名しなかった。けれど、横田が渡した事故の資料も理事会には送らなかった。「405号室の申し出は解決済」とする管理会社の記録だけが残った。',
+   '407号室に住んでいた高瀬奈津美が、午前2時14分に何を訴えたのか。藤井の控えと管理会社の点検報告書は矛盾したままだ。',
+   'あなたの部屋は静かだった。翌朝、405号室の前に小さな水滴が三つ並んでいる。横田の表札はまだある。けれど、返事はない。'
+  ];
+ }else{
+  name='確認済み';
+  paragraphs=[
+   '管理会社の記録では、407号室の事故も405号室の苦情も「対応完了」となっていた。あなたは署名を拒んだが、藤井の控えも横田の証言も、誰にも送らなかった。',
+   '事故の夜に助けを求めた高瀬奈津美の呼出しは、公式の資料には載っていない。そして406号室の入居者名まで、名簿から少しずつ薄くなっていく。',
+   '午前2時14分。扉の向こうから三度のノックがする。「確認しました」。今度の声は、あなた自身のものだった。'
+  ];
+ }
+ var body=paragraphs.map(function(p){return '<p>'+esc(p)+'</p>';}).join('');
+ return '<div class="ending"><div class="tiny" style="color:#b5c0c2">白波レジデンス｜10日間の記録</div><h2>THE END</h2><div class="endingname">'+esc(name)+'</div>'+body+'</div><div class="btnrow"><button class="btn primary" data-restartday="1">1日目からやり直す</button><button class="btn secondary" data-showrewind="1">日付を選ぶ</button></div>';
 }
 function renderNight(){var n=el('nightPanel');n.classList.toggle('hidden',state.phase!=='night'||state.ended);if(state.phase!=='night'||state.ended)return;
 if(state.day===9){n.innerHTML='<div class="over">9日目｜夜</div><h2>何も起こらない夜</h2><div class="scenario">訪問も呼出しもない。廊下で誰かが紙を剥がす音がする。横田の『あの夜をなかったことにしたくない』という声が頭から離れない。407号室のあった方角は、今夜も暗い。</div><button class="btn primary" data-quietnext="1">翌日へ進む</button>';return;}
