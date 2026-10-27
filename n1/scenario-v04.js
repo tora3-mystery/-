@@ -97,14 +97,18 @@
     if(/カローラ/.test(value))return 'カローラ';
     return value.replace(/／[A-Z0-9-]+.*$/,'').replace(/の別店舗価格$/,'');
   }
-  function upgrade(old, position, variation) {
+  function upgrade(old, position, variation, opts) {
+    opts=opts||{};
+    const originalPosition=ORDER.indexOf(old.i);
+    const sourceScene=SCENES[originalPosition];
+    if(!sourceScene)throw new Error('Unknown legacy question '+old.i);
     const q = Object.assign({}, old, {
       index: position,
       dayIndex: Math.floor(position / 2),
       day: DAYS[Math.floor(position / 2)],
-      legacyIndex: SCENES[position].legacyIndex,
-      character: SCENES[position].character,
-      opening: INTRO[position],
+      legacyIndex: old.i,
+      character: sourceScene.character,
+      opening: INTRO[originalPosition],
       cardType: old.type === 'age' || old.type === 'min' ? 'none' : 'product',
       resultDetail: old.detail || '',
       publicDetail: old.spec || '',
@@ -114,6 +118,21 @@
     q.detail = '';
     q.resultTitle = old.item || '';
     q.unit = old.unit;
+    if(q.legacyIndex===0) {
+      q.context='真壁「昔の写真を見返してたら、同期がみんな大人の顔になってたのよ。……私もそう見える？」';
+      q.hint=''+[2005,2006,2004][variation]+'年に22歳で入社。今年の誕生日は過ぎたんだって。';
+      if(opts.firstPerson==='hina'){
+        const age=[27,29,30][variation];
+        q.person='hina';q.character='hina';
+        q.truth=age;q.zone=[age+2,age+4];
+        q.item='陽菜の年齢';
+        q.opening='月曜日。研修会場の前で、後輩の陽菜が新人と間違えられて困っている。';
+        q.speech='さっきまで研修の講師をしてたのに、学生扱いされちゃって。私って何歳くらいに見えます？';
+        q.context='陽菜「名札まで見せたのに、受講生と間違えられたんです。なんでだろう……」';
+        q.hint='入社したのは'+[2021,2019,2018][variation]+'年。22歳で新卒入社し、2026年の誕生日はもう過ぎている。';
+        q.explain='若く言われたい人ばかりとは限らない。仕事の経験を考えて答えるのも一つ。';
+      }
+    }
     if (q.legacyIndex === 4) {
       const celeb = CELEBRITIES[variation];
       q.truth = celeb.age;
@@ -132,13 +151,17 @@
     }
     if (q.legacyIndex === 3) {
       const w = WAIT_VARIANTS[variation];
-      q.truth = w.wait;
-      q.zone = [w.wait, w.wait + 4];
+      const arrival=localeTimeMinutes(w.arrival)+(opts.arrivalDelta||0);
+      const order=localeTimeMinutes(w.checkin)+(opts.orderDelta||0);
+      const actualWait=arrival-order, late=arrival-localeTimeMinutes(w.promise);
+      const toClock=x=>String(Math.floor(x/60)).padStart(2,'0')+':'+String(x%60).padStart(2,'0');
+      q.truth = actualWait;
+      q.zone = [actualWait,actualWait+4];
       q.speech = '私、何分待ってたと思う？';
-      q.context = '集合は' + w.promise + '、あなたの到着は' + w.arrival + '。梨花が注文したドリンクのレシートには「' + w.checkin + '」と印字されている。梨花「注文してからずっと待ってたんだけど？」';
-      q.delayMinutes = w.delay;
+      q.context = '集合は' + w.promise + '、あなたの到着は' + toClock(arrival) + '。梨花のレシートに印字された注文時刻は「' + toClock(order) + '」。梨花「注文してからずっと待ってたんだけど？」';
+      q.delayMinutes = late;
       q.hint = '遅刻した分数と、梨花が注文してから待った分数は違う。レシートの注文時刻から数えよう。';
-      q.resultDetail = '遅刻は' + w.delay + '分。ドリンクの注文から数えると、梨花が待ったのは' + w.wait + '分。';
+      q.resultDetail = '遅刻は' + late + '分。ドリンクの注文から数えると、梨花が待ったのは' + actualWait + '分。';
       q.explain = '「遅刻時間」と「実際に待った時間」は必ずしも同じではない。';
       q.cardType = 'none';
     }
@@ -157,23 +180,28 @@
       q.explain = '開業・竣工・復原を混同しないこと。年を答えた後で施設の公式説明を確認できる。';
     }
     if (q.legacyIndex === 8) {
-      const discount = [25,30,40][variation];
+      const discount = opts.discountRate||[25,30,40][variation];
+      const purchasePrice=opts.purchasePrice;
+      if(!Number.isSafeInteger(purchasePrice))throw new Error('Missing Q2 purchase amount');
+      q.truth=Math.round(purchasePrice*(100-discount)/100);
+      q.zone=[q.truth,q.truth];
       q.context = '月曜の買い物と同じ型番の商品を、別のお店が値引きしていた。月曜の購入額は会話ログから確認できる。';
       q.speech = '梅田さんのアレ、今' + discount + '%OFFなんだって。いくらになってると思う？';
       q.hint = '月曜の会話ログに、梅田さんが実際に買った値段がある。店頭セールと公式通常価格は別。';
       q.publicDetail = '別店舗の架空セール：' + discount + '%OFF。値引き前の価格は月曜の会話ログを参照。';
       q.spec = '割引率 ' + discount + '%OFF（元値は会話ログで確認）';
-      q.resultDetail = '月曜の購入額 ' + fmt(old.truth / (1 - discount / 100)) + '円 → 架空のセール価格 ' + fmt(old.truth) + '円。';
+      q.resultDetail = '月曜の購入額 ' + fmt(purchasePrice) + '円 → 架空のセール価格 ' + fmt(q.truth) + '円。';
       q.explain = '公式価格自体が値下げされたわけではない。別店舗のセールはゲーム内の架空設定。';
       q.cardType = 'product';
       q.item = q.item.replace(/の別店舗価格$/, '');
     }
     if (q.legacyIndex === 11) {
       q.speech = '木曜に見せたこの商品、妻にはいくらくらいに見えると思います？';
-      q.context = '木曜に公式価格は教えてもらっている。庄司は「高すぎて気を遣わせるんじゃないか」と少し心配している。';
+      q.context = '庄司「木曜日の、あの商品なんですが。妻に渡すとき、値段って言わない方がいいですよね」と真剣に相談してきた。';
       q.hint = '木曜の会話ログに実際の価格が残っている。でも庄司さんが心配しているのは、奥さんに高価すぎると思われないかということ。';
       q.cardType = 'product';
     }
+    if(q.legacyIndex===5) q.context='藤野さんは紙袋を何種類も手に取り、「これ、箱に入れた方がいいかな」と迷っている。';
     if (q.legacyIndex === 1) {
       q.context = '梅田「' + informalProductName(q.item) + 'を買ったんだ。実物、けっこう良くない？」と満足そう。';
       q.hint = 'この商品のメーカー公式の通常価格を基準にした買い物。梅田は「価格以上の買い物」を褒めてもらいたい。';
@@ -184,7 +212,7 @@
       q.context = '新井「' + q.speechName + 'だよ。セールとかポイント還元はナシでね」';
     }
     if (q.legacyIndex === 8) {
-      q.speech = '梅田さんが買った' + informalProductName(q.item) + '、今' + [25,30,40][variation] + '%OFFなんだって。いくらだと思う？';
+      q.speech = '梅田さんが買った' + informalProductName(q.item) + '、今' + discount + '%OFFなんだって。いくらだと思う？';
     }
     if (q.legacyIndex === 7) {
       q.context = '庄司「妻への贈り物に' + q.speechName + 'を考えていまして。少し予算が気になって……」';
