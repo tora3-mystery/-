@@ -528,4 +528,20 @@ check('the mismatched performance descriptions match the actual instruments',()=
  assert.match(E.sceneLine(D.lines.find(x=>x.group_id==='E03-C'&&x.speaker_id==='P027')),/伴奏の余白/);
 });
 
+
+check('third-party question responses follow the question subject across every circle',()=>{
+ const E=dataScope.window.S6_BETA_DIALOGUE;
+ let spoken=0,silent=0;
+ for(const q of D.questions){
+  for(let seed=0;seed<32;seed++){
+   const result=E.thirdParty(q.target_id,q.group_id,{presentationSeed:seed,groupLog:{},personalIntroduced:{}},'question');
+   if(!result){silent++;continue}
+   spoken++;
+   assert.doesNotMatch(result.text,/さっきの演奏|今の一小節/);
+   assert.match(result.text,/お名前|好きな音楽|担当パート|大切にしていること|今の活動/);
+  }
+ }
+ assert.ok(spoken>0&&silent>0);
+});
+
 console.log(JSON.stringify({passed:total,failed:failures}));if(failures)process.exitCode=1;
