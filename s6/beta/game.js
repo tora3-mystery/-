@@ -356,9 +356,10 @@ function handle(act,id){
   const q=D.questions.find(q=>q.group_id===S.group&&q.target_id===id);
   let reply,kind=type;
   if(type==='talk'){
+    // Apply today's conversation before choosing the response, so the change is felt immediately.
+    recordConversation(id);
     reply=Dialogue.talk(id,S.group,S);
     if(!S.spokenTo.includes(id))S.spokenTo.push(id);
-    recordConversation(id);
   }else if(type==='question'||type==='affiliation'){
     reply=Dialogue.answer(id,S.group,type==='affiliation'?'affiliation':'question');
     recordConversation(id);
