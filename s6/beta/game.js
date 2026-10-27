@@ -19,7 +19,7 @@ const byGroup=gid=>D.members.filter(m=>m.group_id===gid).map(m=>m.person_id);
 const date=()=>DATES[Math.min(S.day,4)];
 const initial=()=>({
  schema:1,phase:'title',day:0,selectedEvent:null,group:null,target:null,
- eventHistory:[],seen:[],introduced:[],flash:[],visitedGroups:[],groupDone:{},groupLog:{},spokenTo:[],affinity:{},relationshipDays:{},dailyAffinity:{},contacts:[],socialLinked:{},selectedSocial:null,
+ eventHistory:[],seen:[],introduced:[],flash:[],visitedGroups:[],groupDone:{},groupLog:{},spokenTo:[],affinity:{},relationshipDays:{},dailyAffinity:{},contacts:[],socialLinked:{},socialCandidates:{},selectedSocial:null,
  guesses:{},note:{},clues:[],crossings:{},knownOrg:{},nightChoice:{},viewedPlatforms:{},viewedBoard:{},pendingContacts:[],
  checks:{},currentNotebook:null,suspect:'',camp:'',shared:false,privateInvite:false,
  report:'',result:'',savedAt:''
@@ -28,7 +28,7 @@ let S;
 try {const raw=JSON.parse(localStorage.getItem(KEY));S=raw&&raw.schema===1?raw:initial()}catch{S=initial()}
 function hydrate(){
  for(const k of ['eventHistory','seen','introduced','flash','visitedGroups','contacts','clues','spokenTo','pendingContacts'])if(!Array.isArray(S[k]))S[k]=[];
- for(const k of ['groupDone','guesses','note','crossings','knownOrg','nightChoice','viewedPlatforms','viewedBoard','groupLog','affinity','relationshipDays','dailyAffinity','checks','socialLinked'])if(!S[k]||typeof S[k]!=='object')S[k]={};
+ for(const k of ['groupDone','guesses','note','crossings','knownOrg','nightChoice','viewedPlatforms','viewedBoard','groupLog','affinity','relationshipDays','dailyAffinity','checks','socialLinked','socialCandidates'])if(!S[k]||typeof S[k]!=='object')S[k]={};
 }
 hydrate();
 if(S.phase==='flash'&&!S.group){S.phase='venue';localStorage.setItem(KEY,JSON.stringify(S));}
@@ -180,7 +180,7 @@ function sns(){
   const avatar=face?portrait(p.author_id):'<div class="avatar-icon">♪</div>';
   return '<div class="social">'+avatar+'<div><strong>'+esc(anonymous?'匿名アカウント':a?.display_name||'不明')+'</strong>'+
   '<div class="dim">'+(anonymous?'':esc('@'+a.handle)+' ／ ')+esc(p.published_at)+'</div><p>'+esc(window.S6_BETA_SOCIAL.postTexts[p.post_id]||p.text)+'</p>'+
-  (face?'<p class="dim">見覚えがある顔かもしれない。</p>'+(S.seen.includes(p.author_id)?btn((S.socialLinked[p.author_id]||[]).includes(platform)?'照合済み':'顔を見比べる','account-match',p.post_id,'mini'):''):'')+'</div></div>';
+  (face?'<p class="dim">見覚えがある顔かもしれない。</p>'+(S.seen.length?btn(S.socialCandidates[p.post_id]?'紐付けメモを見直す':'顔を見比べる','account-match',p.post_id,'mini'):''):'')+'</div></div>';
  }).join(''):'<p>閲覧できる投稿はありません。</p>')+
  '<div class="actions">'+btn('夜の画面に戻る','back-night','','ghost')+'</div>';
 }
@@ -191,7 +191,7 @@ function snsMatch(){
  const entries=S.seen.map(id=>faceCard(id,S.guesses[id]?.verified?people[id].name:'名前は未確認','match-social-face','この顔かな'));
  return '<div class="eyebrow">'+esc(post.platform)+' / PHOTO</div><h2>この顔、会場で見た？</h2>'+
  '<div class="chosen">'+portrait(post.author_id,'large')+'<div><strong>'+esc(a?.display_name||'アカウント')+'</strong><p class="dim">'+esc('@'+(a?.handle||''))+' ／ 写真を公開しているアカウント</p></div></div>'+
- '<p>新歓で見た顔と比べてみよう。合致しても本名や所属が自動的に分かるわけではありません。</p>'+
+ '<p>新歓で見た顔から、同じ人だと思う写真を選んでください。これは推測のメモで、正誤は自動判定されません。</p>'+
  (S.report?'<div class="notice">'+esc(S.report)+'</div>':'')+
  '<div class="faces">'+entries.join('')+'</div>'+
  btn('SNSに戻る','back-sns','','ghost');
@@ -217,7 +217,7 @@ function notebook(){
  return '<div class="person-card">'+portrait(id)+'<div><strong>'+(verified?esc(people[id].name):'名前を思い出せない')+'</strong>'+
  '<p class="dim">'+(verified?'所属：'+esc(label(people[id].primary_org))+(people[id].dual_org?' ／ 他にも所属あり':''):'写真と記憶を照合できます')+'</p>'+
  '<p class="dim">'+esc(relationship(id))+esc(contactBadge(id))+'</p>'+
- ((S.socialLinked[id]||[]).length?'<p class="dim">顔が一致したSNS：'+esc(S.socialLinked[id].join('、'))+'</p>':'')+
+ ((S.socialLinked[id]||[]).length?'<p class="dim">自分のSNS照合メモ：'+esc(S.socialLinked[id].join('、'))+'</p>':'')+
  (S.knownOrg[id]&&!verified?'<p class="dim">話して聞いた所属：'+esc(label(S.knownOrg[id]))+'</p>':'')+
  (note?'<p class="dim">メモ：'+esc(note)+'</p>':'')+
  btn(verified?'記録を見る':canEditNotebook()?'この顔を照合':'顔を見る','open-identity',id,'mini')+'</div></div>';
@@ -424,16 +424,20 @@ function handle(act,id){
  case 'account-match':{
   if(S.phase!=='sns')return;
   const post=D.posts.find(p=>p.post_id===id),acct=post&&accounts[post.author_id+'|'+post.platform];
-  if(!post||post.platform!==S.snsPlatform||post.visibility==='匿名表示'||acct?.avatar_kind!=='face'||!S.seen.includes(post.author_id))return;
+  const readable=post&&(post.visibility==='公開'||(post.visibility==='鍵垢・承認制'&&S.contacts.includes(post.author_id))||((post.visibility==='グループ参加者'||post.visibility==='主人公との個別')&&S.contacts.includes(post.author_id)));
+  if(!readable||post.platform!==S.snsPlatform||post.published_at.slice(0,10)>date()||acct?.avatar_kind!=='face'||!S.seen.length)return;
   S.selectedSocial=id;S.report='';go('sns-match');break;
  }
  case 'match-social-face':{
   if(S.phase!=='sns-match'||!S.seen.includes(id))return;
   const post=D.posts.find(p=>p.post_id===S.selectedSocial);
   if(!post)return;
-  if(id!==post.author_id){S.report='似ているが、別人だったようだ。';go('sns-match');return}
-  S.socialLinked[id]=unique([...(S.socialLinked[id]||[]),post.platform]);
-  S.report='SNSの写真と新歓で見た顔が一致した。';go('sns');break;
+  const previous=S.socialCandidates[post.post_id];
+  S.socialCandidates[post.post_id]=id;
+  for(const pid of unique([previous,id]).filter(Boolean)){
+   S.socialLinked[pid]=unique(D.posts.filter(p=>S.socialCandidates[p.post_id]===pid).map(p=>p.platform));
+  }
+  S.report='この顔と同じ人かもしれない。手帳に推測を記録した。';go('sns');break;
  }
  case 'back-sns':go('sns');break;
  case 'night-board':{
