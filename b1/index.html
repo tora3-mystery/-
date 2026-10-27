@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#20372f">
-<title>B1｜採用結果をお知らせします。｜α0.4.4</title>
+<title>B1｜採用結果をお知らせします。｜α0.4.5</title>
 <style>
 :root{--bg:#f5f4ef;--paper:#fffdf8;--ink:#24332f;--muted:#64736e;--line:#d9ddd5;--green:#26684c;--soft:#e7f0e7;--red:#a34639;--redbg:#fff0e9;--amber:#82570e;--amberbg:#fff2d5}
 *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;line-height:1.65}
@@ -74,7 +74,7 @@ progress::-webkit-progress-bar{background:#e5e7e0}progress::-webkit-progress-val
 .day-review .matrix{margin:10px 0}.day-review .btn-row{margin-top:14px}
 @media(max-width:420px){.status-grid{grid-template-columns:1fr}.daily-grid{gap:6px}.daily-grid .mini{padding:9px}}</style>
 </head><body>
-<header><div class="brand">喫茶まどか <small>B1｜採用結果をお知らせします。</small></div><div class="version">α0.4.4<br>更新 2026.10.27 11:55 JST</div></header>
+<header><div class="brand">喫茶まどか <small>B1｜採用結果をお知らせします。</small></div><div class="version">α0.4.5<br>更新 2026.10.27 11:57 JST</div></header>
 <main id="app" class="wrap"></main>
 <script>
 "use strict";
@@ -540,7 +540,8 @@ function applicantView(id){
  else controls='<div class="note '+(s==="withdrawn"?"danger":"")+'">'+esc(labelV(id))+(s==="offered"?"。返答は翌朝届きます。":"")+'</div>';
  return '<div class="card" id="candidate-detail"><div class="profile"><span class="face">'+face(p)+'</span><div><div class="namebig">'+esc(p.name)+'</div><p class="small muted">'+p.age+'歳・'+esc(p.history)+'</p><span class="tag">'+esc(labelV(id))+'</span><p class="small">'+esc(p.bio)+'</p></div></div>'+
  '<div class="memo"><b>応募者のコメント</b><p>「'+esc(p.intro)+'」</p><b>応募書類に記載された勤務日</b><p>'+p.known.map(shortSlot).join("・")+' ほか</p><b>他店応募・連絡希望</b><p>'+esc(LIMITS[id][3])+'</p><span class="tiny muted">面接期限：'+DNAME[LIMITS[id][1]-1]+'曜 ／ 採用通知：'+DNAME[LIMITS[id][2]-1]+'曜まで</span></div>'+
- (st.asked[id]?.length?'<h3>面接メモ</h3>'+st.asked[id].map(i=>'<div class="answer">'+esc(p.qs[i][0])+'<br>「'+esc(p.qs[i][1])+'」</div>').join(""):"")+controls+'</div>';
+ (st.asked[id]?.length?'<h3>面接メモ</h3>'+st.asked[id].map(i=>'<div class="answer">'+esc(p.qs[i][0])+'<br>「'+esc(p.qs[i][1])+'」</div>').join(""):"")+controls+
+ '<div class="rule"></div><button class="btn" data-action="back-to-list">応募者一覧へ戻る</button></div>';
 }
 
 function advisorV(){
@@ -553,7 +554,7 @@ function deskV(){
  const list=P.filter(p=>arrived(p.id)),urgent=list.filter(p=>(status(p.id)==="applicant"&&LIMITS[p.id][1]===st.day)||(status(p.id)==="interviewed"&&LIMITS[p.id][2]===st.day));
  return progressV()+'<div class="card"><div class="eyebrow">RECRUITMENT DESK / 応募者一覧</div><h2>面接する人を選ぶ</h2><p class="small muted">書類を確認 → 1日2人まで面接 → 採用候補に登録 → 正式な採用通知。面接後はいつでも候補を見直せますが、通知後は取り消せません。</p>'+
  (urgent.length && (st.picked.length<4 || st.picked.some(id=>!lockedV(id)))?'<div class="note warn">今日が期限：'+urgent.map(p=>esc(nameV(p.id))).join("・")+'</div>':"")+
- '<div class="persons recruits">'+list.map(p=>'<button class="person '+(st.selected===p.id?"active ":"")+(status(p.id)==="withdrawn"?"lost":"")+'" data-action="select" data-id="'+p.id+'"><span class="face">'+face(p)+'</span><span class="name">'+esc(p.name)+'</span><span class="pstate">'+p.age+'歳｜'+p.known.map(shortSlot).join("・")+' ほか</span><span class="pstate">'+esc(labelV(p.id))+'</span><span class="pstate">面接 '+DNAME[LIMITS[p.id][1]-1]+'曜まで</span></button>').join("")+'</div></div>'+applicantView(st.selected)+advisorV()+
+ '<div class="persons recruits" id="applicant-list">'+list.map(p=>'<button class="person '+(st.selected===p.id?"active ":"")+(status(p.id)==="withdrawn"?"lost":"")+'" data-action="select" data-id="'+p.id+'"><span class="face">'+face(p)+'</span><span class="name">'+esc(p.name)+'</span><span class="pstate">'+p.age+'歳｜'+p.known.map(shortSlot).join("・")+' ほか</span><span class="pstate">'+esc(labelV(p.id))+'</span><span class="pstate">面接 '+DNAME[LIMITS[p.id][1]-1]+'曜まで</span></button>').join("")+'</div></div>'+applicantView(st.selected)+advisorV()+
  '<div class="card"><h3>本日の採用活動を終了する</h3><p class="small muted">今日の採用状況と来週の仮シフトを確認してから、翌朝へ進みます。</p>'+
  '<button class="btn primary" data-action="advance" '+(st.active?"disabled":"")+'>本日のまとめを確認する</button></div>';
 }
@@ -636,13 +637,13 @@ function renderV3(){
  '</div><p class="small muted">再挑戦では一部の応募者の勤務希望が変わります。前回と同じ顔ぶれでも、その週の書類を確認してください。</p>'+
  '<div class="btn-row"><button class="btn" data-action="intro-back">設定に戻る</button><button class="btn primary" data-action="start">月曜の応募を確認する</button></div></div>';return;
  }
- if(st.screen==="day-review"){root.innerHTML=dayReviewV()+'<div class="footer">B1 α0.4.4｜喫茶まどか</div>';return;}
- if(st.screen==="morning"){root.innerHTML=morningView()+'<div class="footer">B1 α0.4.4｜5日間の採用テスト版</div>';return;}
+ if(st.screen==="day-review"){root.innerHTML=dayReviewV()+'<div class="footer">B1 α0.4.5｜喫茶まどか</div>';return;}
+ if(st.screen==="morning"){root.innerHTML=morningView()+'<div class="footer">B1 α0.4.5｜5日間の採用テスト版</div>';return;}
  if(st.screen==="result"){
  let old=renderResult();old=old.replace("営業成功｜喫茶まどか",st.gameSuccess?"営業成功｜喫茶まどか":"採用活動の結果").replace("営業に課題が残りました","採用活動の結果");
  const replies=st.messages.filter(m=>m.kind==="answer"||m.kind==="withdraw");
  const lastMail=replies.length?'<div class="card"><div class="eyebrow">SATURDAY MAIL / 最終の採用返答</div><h2>土曜朝のご連絡</h2>'+replies.map(m=>'<details class="letter important" open><summary>'+esc(m.title)+'</summary><div class="mailbody">'+esc(m.body)+'</div></details>').join("")+'</div>':"";
- root.innerHTML=lastMail+'<div class="card"><div class="eyebrow">SATURDAY / 採用結果</div><h2>5日間の採用活動が終了しました</h2><p class="small">採用確定：'+(st.confirmed.map(nameV).join("・")||"なし")+'</p><p class="small muted">勤務条件が成立しない仮承諾者は、採用確定として数えません。</p></div>'+old+'<div class="footer">B1 α0.4.4</div>';return;
+ root.innerHTML=lastMail+'<div class="card"><div class="eyebrow">SATURDAY / 採用結果</div><h2>5日間の採用活動が終了しました</h2><p class="small">採用確定：'+(st.confirmed.map(nameV).join("・")||"なし")+'</p><p class="small muted">勤務条件が成立しない仮承諾者は、採用確定として数えません。</p></div>'+old+'<div class="footer">B1 α0.4.5</div>';return;
  }
 
  if(st.screen==="records"){
@@ -654,14 +655,14 @@ function renderV3(){
  }).join("");
  root.innerHTML='<div class="card"><div class="eyebrow">INTERVIEW RECORD / 面接記録</div><h2>採用活動を振り返る</h2><p class="small muted">5日間で面接した人と回答の記録です。ここから採用結果を変更することはできません。</p>'+
  (entries||'<p>面接の記録はありません。</p>')+
- '<button class="btn primary" data-action="result-back">営業結果へ戻る</button></div><div class="footer">B1 α0.4.4</div>';
+ '<button class="btn primary" data-action="result-back">営業結果へ戻る</button></div><div class="footer">B1 α0.4.5</div>';
  return;
  }
  const view=st.active?"interview":st.view;
  const nav='<nav class="topnav"><button class="tab '+(view==="desk"?"on":"")+'" data-action="desk" '+(st.active?"disabled":"")+'>応募・面接</button><button class="tab '+(view==="board"?"on":"")+'" data-action="board" '+(st.active?"disabled":"")+'>仮シフト</button><button class="tab '+(view==="mail"?"on":"")+'" data-action="mail" '+(st.active?"disabled":"")+'>メール</button></nav>';
  const content=view==="interview"?interviewView():view==="board"?boardV():view==="mail"?archiveV():deskV();
  const desktop=!window.matchMedia("(max-width:780px)").matches;
- root.innerHTML=nav+'<div class="layout '+(view==="board"?"board-alone":"")+'"><section class="main">'+content+'</section><aside class="side">'+(desktop&&view!=="board"?boardV():"")+'</aside></div><div class="footer">B1 α0.4.4｜架空の人物・店舗</div>'+
+ root.innerHTML=nav+'<div class="layout '+(view==="board"?"board-alone":"")+'"><section class="main">'+content+'</section><aside class="side">'+(desktop&&view!=="board"?boardV():"")+'</aside></div><div class="footer">B1 α0.4.5｜架空の人物・店舗</div>'+
  '<div class="mobilebar"><button data-action="desk" '+(st.active?"disabled":"")+'>面接</button><button data-action="board" '+(st.active?"disabled":"")+'>仮シフト</button><button data-action="mail" '+(st.active?"disabled":"")+'>メール</button></div>';
 }
 function handleV3(e){
@@ -687,9 +688,11 @@ function handleV3(e){
  else if(a==="records"&&st.screen==="result")st.screen="records";
  else if(a==="result-back"&&st.screen==="records")st.screen="result";
  else if(a==="advice")st.advice=b.dataset.who;
+ else if(a==="back-to-list")st.view="desk";
  else if(["desk","board","mail"].includes(a)&&!st.active)st.view=a;
  renderV3();
  if(a==="select")document.getElementById("candidate-detail")?.scrollIntoView?.({behavior:"instant",block:"start"});
+ else if(a==="back-to-list")document.getElementById("applicant-list")?.scrollIntoView?.({behavior:"instant",block:"start"});
  else if(["tutorial","intro-back","start","continue","interview","end-interview","advance","review-back","advance-confirm","desk","board","mail","restart","records","result-back"].includes(a))window.scrollTo({top:0,behavior:"instant"});
 }
 st=loadV3();
