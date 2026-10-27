@@ -86,4 +86,29 @@ assert.equal(marchFixture('deep','sea','harbor',['coast','island'],null),'海と
  q.post(robot.id,q.factsFor(robot).findIndex(f=>f.tag==='tech'),5);
  assert.equal(q.annual().hidden,'近未来の村');
 }
+// Legacy saved sea-themed evolution is migrated without losing past reviews.
+{
+ const store={},h=harness(store),q=h.qa;
+ let shrine=null;
+ for(let seed=1;seed<=400;seed++){
+  q.generate(Math.imul(seed,2654435761)>>>0);
+  const st=q.getState();
+  shrine=['coast','island'].includes(st.terrain)?st.facilities.find(f=>f.kind==='shrine'):null;
+  if(shrine)break;
+ }
+ assert(shrine,'No coastal legacy fixture');
+ q.getState().candidates=[shrine.id];
+ q.post(shrine.id,3,5);
+ const st=q.getState(),event=st.result.changes.find(e=>e.kind==='big'&&e.facilityId===shrine.id);
+ assert(event,'No big evolution from sea review');
+ delete shrine.coastalStage;delete shrine.coastalMode;delete shrine.coastalHistory;
+ event.title='森に守られた静かな聖域';event.detail='森の特徴を維持しました。';
+ st.version='0.6.14-alpha';
+ store['village-review-prototype-v010']=JSON.stringify(st);
+ const reopened=harness(store).qa.getState();
+ const migrated=reopened.result.changes.find(e=>e.kind==='big'&&e.facilityId===shrine.id);
+ assert(/海|潮|港|波/.test(migrated.title),'Legacy sea title not corrected');
+ assert(reopened.facilities.find(f=>f.id===shrine.id).coastalStage>=1,'Coastal stage not retained');
+}
+
 console.log(JSON.stringify({status:'PASS',villages:160,reviews,seaReviews,terrain:[...terrains],endingCount:endings.size,quiet:'PASS',march:'3/3'},null,2));
