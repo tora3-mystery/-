@@ -8,7 +8,7 @@ const people=Object.fromEntries(D.people.map(p=>[p.person_id,p]));
 const clubs=Object.fromEntries(D.orgs.map(o=>[o.org_id,o]));
 const events=Object.fromEntries(D.events.map(e=>[e.event_id,e]));
 const groups=Object.fromEntries(D.groups.map(g=>[g.group_id,g]));
-const accounts=Object.fromEntries(D.accounts.map(a=>[a.person_id+'|'+a.platform,a]));
+const accounts=Object.fromEntries(window.S6_BETA_SOCIAL.accounts.map(a=>[a.person_id+'|'+a.platform,a]));
 const profiles=Object.fromEntries(D.socialProfiles.map(p=>[p.person_id,p]));
 const actions=Object.fromEntries(D.actions.map(a=>[a.group_id,a]));
 const esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -166,7 +166,7 @@ function sns(){
     if(!msg)return '';
     const a=accounts[id+'|TINE'];
     return '<div class="social">'+(a.avatar_kind==='face'?portrait(id):'<div class="avatar-icon">♪</div>')+
-      '<div><strong>'+esc(a.display_name)+'</strong><p>'+esc(msg.text)+'</p></div></div>';
+      '<div><strong>'+esc(a.display_name)+'</strong><p class="dim">'+esc('@'+a.handle)+'</p><p>'+esc(msg.text)+'</p></div></div>';
   }).join('')+'</div>':'';
  const visible=D.posts.filter(p=>p.platform===platform&&p.published_at.slice(0,10)<=date()&&
  (p.visibility==='公開'||p.visibility==='匿名表示'||(p.visibility==='鍵垢・承認制'&&S.contacts.includes(p.author_id))||
@@ -179,7 +179,7 @@ function sns(){
   const face=!anonymous&&a?.avatar_kind==='face';
   const avatar=face?portrait(p.author_id):'<div class="avatar-icon">♪</div>';
   return '<div class="social">'+avatar+'<div><strong>'+esc(anonymous?'匿名アカウント':a?.display_name||'不明')+'</strong>'+
-  '<div class="dim">'+esc(p.published_at)+'</div><p>'+esc(p.text)+'</p>'+
+  '<div class="dim">'+(anonymous?'':esc('@'+a.handle)+' ／ ')+esc(p.published_at)+'</div><p>'+esc(p.text)+'</p>'+
   (face?'<p class="dim">見覚えがある顔かもしれない。</p>'+(S.seen.includes(p.author_id)?btn((S.socialLinked[p.author_id]||[]).includes(platform)?'照合済み':'顔を見比べる','account-match',p.post_id,'mini'):''):'')+'</div></div>';
  }).join(''):'<p>閲覧できる投稿はありません。</p>')+
  '<div class="actions">'+btn('夜の画面に戻る','back-night','','ghost')+'</div>';
@@ -190,7 +190,7 @@ function snsMatch(){
  const a=accounts[post.author_id+'|'+post.platform];
  const entries=S.seen.map(id=>faceCard(id,S.guesses[id]?.verified?people[id].name:'名前は未確認','match-social-face','この顔かな'));
  return '<div class="eyebrow">'+esc(post.platform)+' / PHOTO</div><h2>この顔、会場で見た？</h2>'+
- '<div class="chosen">'+portrait(post.author_id,'large')+'<div><strong>'+esc(a?.display_name||'アカウント')+'</strong><p class="dim">写真を公開しているアカウント</p></div></div>'+
+ '<div class="chosen">'+portrait(post.author_id,'large')+'<div><strong>'+esc(a?.display_name||'アカウント')+'</strong><p class="dim">'+esc('@'+(a?.handle||''))+' ／ 写真を公開しているアカウント</p></div></div>'+
  '<p>新歓で見た顔と比べてみよう。合致しても本名や所属が自動的に分かるわけではありません。</p>'+
  (S.report?'<div class="notice">'+esc(S.report)+'</div>':'')+
  '<div class="faces">'+entries.join('')+'</div>'+
