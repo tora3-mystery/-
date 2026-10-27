@@ -125,4 +125,28 @@ check('16 existing important faces are not changed, and first-club links for the
  for(const id of ids){assert.ok(D.people.find(p=>p.person_id===id));assert.ok(D.accounts.find(a=>a.person_id===id))}
  assert.equal(D.people.find(p=>p.person_id==='P001').primary_org,'K');
 });
+check('public-profile photo can link to a remembered face without exposing names',()=>{
+ const s=newPlayer();s.click('skip');s.click('next-day');s.click('skip');s.click('next-day');
+ s.click('attend','E05');s.click('leave-flash');s.click('finish-venue');
+ s.click('night-sns','Photogram');assert.match(s.html,/つむ/);
+ s.click('account-match','S02');assert.equal(s.state.phase,'sns-match');
+ s.click('match-social-face','P013');assert.equal(s.state.socialLinked.P001,undefined);
+ s.click('match-social-face','P001');assert.equal(s.state.phase,'sns');
+ assert.ok(s.state.socialLinked.P001.includes('Photogram'));
+ assert.equal(s.state.guesses.P001,undefined);
+});
+check('a verified suspect and earlier records produce decision-time, club-specific evidence',()=>{
+ const s=newPlayer();s.click('skip');s.click('night-board');s.click('back-night');s.click('next-day');
+ s.click('skip');s.click('next-day');
+ s.click('attend','E05');s.click('leave-flash');s.click('join-group','E05-A');
+ s.click('choose-person','P001');s.click('interact','talk');assert.match(s.html,/入学前から/);
+ s.click('back-venue');s.click('finish-venue');s.click('open-notebook');s.click('open-identity','P001');
+ s.field('guessName','P001');s.field('guessOrg','K');s.click('submit-identity');
+ assert.equal(s.state.guesses.P001.verified,true);
+ s.click('back-from-notebook');s.click('next-day');
+ s.click('skip');s.click('next-day');s.click('skip');s.click('next-day');
+ assert.equal(s.state.phase,'camp');
+ assert.match(s.html,/ばらばらだった情報が、一つの団体につながった/);
+ assert.match(s.html,/こもれび/);
+});
 console.log(JSON.stringify({passed:total,failed:failures}));if(failures)process.exitCode=1;
