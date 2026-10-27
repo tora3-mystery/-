@@ -27,11 +27,16 @@ function runRegression(html){
  }
  function step(h,id){
   if(id==='inspectBack')check(h.api.focus('f17-back-review','裏手の社の周りが暗く'),'DAY 2 phrase investigation');
+  // For legacy numeric assertions only, expose the requested action. User-facing discovery has its own regression.
+  if(!h.api.availableIds().includes(id)&&!['audit','camera0','open0','idle','shrine','removeShrine'].includes(id)){
+    const prev=h.api.getState();
+    h.api.setState({...prev,discoveredActions:[...new Set([...(prev.discoveredActions||[]),id])]});
+  }
   const s=h.api.getState(),choices=h.api.availableIds();
   check(choices.includes(id),'Missing action '+id+' on day '+s.day);
-  check(choices.length<=(s.day===1?7:s.day<=3?9:s.day<=5?11:13),'Too many choices');
-  check(h.get('actions').children.length===choices.length,'Visible option count mismatch');
-  for(const b of h.get('actions').children)check((b.innerHTML.match(/class="effect-chip/g)||[]).length===5,'Metric chips not five');
+  check(h.get('actions').children.length<=13,'Too many cards without expanding');
+  check(h.get('actions').children.length+h.get('moreActionsBody').children.length===choices.length,'Visible and expanded option count mismatch');
+  for(const b of [...h.get('actions').children,...h.get('moreActionsBody').children])check((b.innerHTML.match(/class="effect-chip/g)||[]).length===5,'Metric chips not five');
   h.api.play(id);const post=h.api.getState();
   const sales=Math.max(0,30+10*s.attraction-10*s.vals.reduce((a,b)=>a+b,0));
   check(post.days.at(-1).sales===sales,'Daily sales mismatch '+id);
@@ -48,12 +53,12 @@ function runRegression(html){
  check(none.api.getState().ending==='normal_strain'&&none.api.getState().days.length<7,'All idle must fail before 7 days');
  const best=route(['pickup','vibration','floorcheck','delivery','quiet','display','discount']);
  check(best.api.getState().revenue===500&&best.api.getState().ending==='normal_success','Hard clean route');
- const mixed=route(['pickup','complaintHide','delivery','vibration','floorcheck','stockCover','shrine']);
+ const mixed=route(['pickup','complaintHide','delivery','vibration','floorcheck','stockCover','idle']);
  check(mixed.api.getState().revenue>=500&&mixed.api.getState().ending==='normal_success'&&mixed.api.getState().grayUsed.length>=2,'Gray strategy wins');
  const shrine=boot();shrine.api.restart();step(shrine,'shrine');check(shrine.api.getState().attraction===8,'Shrine deferred boost');
  const closure=boot();closure.api.restart();closure.api.setState({day:2,lowDays:1,attraction:0,vals:[5,5,5,5],days:[{day:1,sales:0}],revenue:0});
  step(closure,'idle');check(closure.api.getState().finish&&closure.api.getState().endingReason==='店長解任・営業停止','Immediate close on zero sales');
- const savedDb=new Map(),original=boot(savedDb);original.api.restart();original.api.play('register');
+ const savedDb=new Map(),original=boot(savedDb);original.api.restart();original.api.setState({...original.api.getState(),discoveredActions:['register']});original.api.play('register');
  const resumed=boot(savedDb);check(resumed.api.getState().needsAdvance,'Report not saved');resumed.api.resumeCurrent();
  check(!resumed.get('overlay').classList.contains('hidden'),'Report not restored');resumed.api.advance();
  check(resumed.api.getState().day===2&&resumed.api.getState().vals[0]===0,'Deferred effect lost on resume');
@@ -72,7 +77,7 @@ function runRegression(html){
 
  const repeated=boot();repeated.api.restart();
  repeated.api.setState({day:4,attraction:7,vals:[2,1,1,2],revenue:150,
-  actionCounts:{quiet:2},days:[{day:1,sales:50},{day:2,sales:50},{day:3,sales:50}]});
+  actionCounts:{quiet:2},discoveredActions:['quiet'],days:[{day:1,sales:50},{day:2,sales:50},{day:3,sales:50}]});
  check(repeated.api.availableIds().includes('quiet'),'Repeated quiet action unavailable in test');
  repeated.api.play('quiet');
  check(repeated.api.getState().complaintTickets.filter(x=>x.status==='open').every(x=>(x.replies||[]).length===0),
