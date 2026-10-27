@@ -227,16 +227,34 @@
     "next": "add 40-60 products and 10-15 facilities per independent sourcing/QA batch",
     "target": "500 products +100 facilities, not fabricated or generated without verification"
   },
-  "currentAsOf": "2026-10-27",
+  "currentAsOf": "2026-10-27 20:04 JST",
   "currentActuals": {
     "priceRegisteredProducts": 35,
-    "readyProducts": 8,
-    "stagedWithoutImages": 27,
+    "readyProducts": 35,
+    "stagedWithoutImages": 0,
     "knownFacilities": 20,
     "categoryKeys": 32,
-    "newGeneratedImages": 0,
+    "newGeneratedImages": 32,
     "openProductTarget": 465,
     "openFacilityTarget": 80
   },
-  "latestAudit": "n1/tests/catalog-batch-02-20261027.md"
+  "latestAudit": "n1/tests/qa-v060-work-assets.md",
+  "assetIntegration": {
+    "workBranch": "n1/catalog-assets-batch01",
+    "workCommit": "eb32ecb31739f670aafd5e9c894492c378d3c9cc",
+    "developmentBranch": "n1/dialogue-qa-20261027",
+    "assetCopyCommit": "acab230463e0f589bf4c447b6205f8ff872679cd",
+    "filesCopied": 34,
+    "webpImagesCopied": 32,
+    "sourceIsolated": true,
+    "genericIllustration": true,
+    "humanReviewStatus": "3 representative images approved; 29 batch images require human final review"
+  },
+  "releaseStatus": {
+    "public": "v0.5.1 unchanged",
+    "development": "v0.6.0-rc1",
+    "simulatedGameQA": "passed",
+    "playwrightQA": "not executed",
+    "publicSiteInteractionQA": "not executed"
+  }
 }
