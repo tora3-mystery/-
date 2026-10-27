@@ -22,7 +22,7 @@
 .reaction-turn{padding:7px 0;line-height:1.7}.reaction-turn+.reaction-turn{border-top:1px solid #b49b6a66}.reaction-turn strong{display:block;font-size:12px;color:#715364}.reaction{background:#fff0cc;color:#343040;border-left:6px solid var(--pink);border-radius:11px;padding:13px 17px;margin:14px 0;font-weight:800}.note{background:#262e41;color:var(--sub);padding:12px;border-radius:9px;font-size:13px;overflow-wrap:anywhere}.review{list-style:none;padding:0;margin:10px 0}.review li{padding:12px 0;border-bottom:1px solid var(--line);display:flex;gap:10px;align-items:center;justify-content:space-between}.review .left{min-width:0}.review strong{display:block}.review .right{font-weight:900;color:var(--yellow);white-space:nowrap}.stamp{font-size:12px;background:#344255;border:1px solid #647c90;border-radius:99px;padding:2px 8px;white-space:nowrap;display:inline-block}.endstat{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.endstat>div{border:1px solid var(--line);border-radius:13px;background:var(--panel);padding:12px 7px;text-align:center}.endstat strong{display:block;font-size:27px;color:var(--yellow)}.endstat span{font-size:11px;color:var(--sub)}.log-overlay,.product-overlay{position:fixed;inset:0;background:#070912e8;display:flex;align-items:flex-end;justify-content:center;z-index:30;padding-top:30px}.logbox,.productbox{background:#1f2538;border:1px solid #68728a;border-radius:20px 20px 0 0;width:min(760px,100%);padding:20px;max-height:92vh;overflow:auto;box-shadow:0 -6px 28px #0008}.productbox img{width:100%;max-height:72vh;object-fit:contain;border-radius:14px;background:#e9eef2;margin-top:10px}.productbox h2{font-size:16px;margin:0;max-width:80%;overflow-wrap:anywhere}.logitem{padding:10px 0;border-bottom:1px solid var(--line)}.logitem small{display:block;color:var(--sub)}.confetti{animation:pop .5s both}@keyframes pop{0%{transform:scale(.82);opacity:0}70%{transform:scale(1.04)}100%{transform:scale(1);opacity:1}}@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}@media(max-width:420px){.shell{padding:12px 12px 45px}.top{align-items:flex-start}.panel{padding:15px}.portrait{width:104px;height:104px}.scene-head{gap:12px}.person{font-size:20px}.scene{padding:15px}.entry{font-size:27px}.flexbuttons{flex-direction:column}.endstat strong{font-size:23px}.product-zoom{width:100%}}
 </style></head>
 <body><main class="shell"><header class="top"><div><div class="logo">N1 / NUMBER & NUANCE</div><div class="ver">v0.5.1｜更新 2026/10/27 10:49 JST</div></div><nav class="topnav"><button id="logButton" class="tiny" style="display:none">会話ログ</button><a class="tiny" href="../" style="text-decoration:none">作品一覧</a></nav></header><div id="app" aria-live="polite"></div></main><div id="logMount"></div><div id="productMount"></div>
-<script src="./scenario-v04.js"></script>
+<script src="./catalog-v1.js"></script><script src="./scenario-v04.js"></script>
 <script>
 'use strict';
 const VERSION='v0.5.1', PRICE_DATE='2026-10-26';
@@ -76,6 +76,23 @@ const q3Products=[vetted.cloth,vetted.eraser,vetted.adapter];
 const q6Products=[vetted.mugMuji,vetted.diffuser,vetted.cloth];
 const q7Products=[vetted.car,vetted.alarmo,vetted.eraser];
 const q8Products=[vetted.sony,vetted.alarmo,vetted.diffuser];
+// A single factual database feeds role-specific question selection.
+// Legacy illustrations are provisional reference visuals until Work provides category masters.
+const productCatalog=(()=>{
+ const api=window.N1Catalog;
+ return [
+  api.normalizeLegacy('apple-adapter',vetted.adapter,'charger',['buy','fact','present']),
+  api.normalizeLegacy('nintendo-alarmo',vetted.alarmo,'clock',['buy','fact','present']),
+  api.normalizeLegacy('sony-wh1000xm6',vetted.sony,'headphones',['buy','fact','present']),
+  api.normalizeLegacy('apple-polishing',vetted.cloth,'paper',['fact','gift']),
+  api.normalizeLegacy('muji-eraser-black-large',vetted.eraser,'eraser',['fact']),
+  api.normalizeLegacy('muji-mug-gray',vetted.mugMuji,'mug',['fact','gift','present']),
+  api.normalizeLegacy('muji-diffuser',vetted.diffuser,'diffuser',['fact','gift','present']),
+  api.normalizeLegacy('toyota-corolla',vetted.car,'car',['fact']),
+  ...api.confirmedAdditions
+ ];
+})();
+
 if([buy,q3Products,q6Products,q7Products,q8Products].flat().some(x=>!knownBrand(x)))throw new Error('Brand screening failed');
 const landmarks=[
  {name:'東京駅（開業年）',price:1914,emoji:'🚉',url:'https://www.jreast.co.jp/estation/station/info.aspx?StationCd=1039',detail:'1914年12月20日開業（JR東日本）'},
@@ -192,11 +209,22 @@ const productImages=[
  ['コードレス超音波アロマディフューザー','assets/products/muji-diffuser-mjcad2.svg'],
  ['カローラ G','assets/products/toyota-corolla-g-2wd.svg']
 ];
+const categoryArtwork={
+ charger:'assets/products/apple-20w-adapter.svg',
+ headphones:'assets/products/sony-wh1000xm6.svg',
+ clock:'assets/products/nintendo-alarmo.svg',
+ paper:'assets/products/apple-polishing-cloth.svg',
+ eraser:'assets/products/muji-eraser-black-large.svg',
+ mug:'assets/products/muji-mug-gray-380.svg',
+ diffuser:'assets/products/muji-diffuser-mjcad2.svg',
+ car:'assets/products/toyota-corolla-g-2wd.svg'
+};
 function productDrawing(q){
- const found=productImages.find(([token])=>q.item.includes(token));
+ const picture=q.imageKey&&categoryArtwork[q.imageKey];
+ const found=picture?[q.imageKey,picture]:productImages.find(([token])=>q.item.includes(token));
  if(!found)return '<div class="emoji" aria-hidden="true">'+q.emoji+'</div><div class="itemsub">画像のない数値問題です。</div>';
- const src=found[1],label=q.item+'の独自制作・高解像度参考イラスト';
- return '<button type="button" class="product-zoom" data-product-src="'+src+'" data-product-label="'+escapeHtml(label)+'" aria-label="'+escapeHtml(q.item)+'の画像を拡大"><img src="'+src+'" width="800" height="600" alt="'+escapeHtml(label)+'" decoding="async"></button><div class="itemsub">独自制作の参考イラスト（公式写真ではありません）。タップで拡大。</div>';
+ const src=found[1],label=q.item+'のカテゴリ参考イラスト（実製品と完全一致する写真ではありません）';
+ return '<button type="button" class="product-zoom" data-product-src="'+src+'" data-product-label="'+escapeHtml(label)+'" aria-label="'+escapeHtml(q.item)+'の画像を拡大"><img src="'+src+'" width="800" height="600" alt="'+escapeHtml(label)+'" decoding="async"></button><div class="itemsub">カテゴリ共通の参考画像（実製品の写真ではありません）。タップで拡大。</div>';
 }
 function portrait(id){return '<img src="assets/portraits/'+id+'.webp" width="1024" height="1024" alt="'+escapeHtml(faces[id].name)+'のポートレート" decoding="async" draggable="false">'}
 function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
@@ -234,13 +262,19 @@ function initRound(){
  }
  if(!choose(0,new Set()))throw new Error('Cannot generate distinct products');
  picks[8]=picks[1];picks[11]=picks[7];
+ let recent=[];
+ try{const previous=JSON.parse(localStorage.getItem('n1_recent_products')||'[]');recent=Array.isArray(previous)?previous.filter(x=>typeof x==='string').slice(0,12):[]}catch(e){}
+ const chosen=window.N1Catalog.chooseSlots(productCatalog,round,recent);
+ const assignments={1:chosen.buy,2:chosen.fact,5:chosen.gift,7:chosen.present};
+ try{localStorage.setItem('n1_recent_products',JSON.stringify([...Object.values(chosen).map(x=>x.id),...recent].slice(0,12)))}catch(e){}
  const options={
+  productAssignments:assignments,
   daySwapMask:(Math.imul(round,0x9e3779b1)>>>5)&15,
   firstPerson:round%3===0?'hina':'makabe',
   discountRate:[10,15,20,25,30,35,40][(Math.imul(round,13)>>>0)%7],
   arrivalDelta:(round*7)%11-5,
   orderDelta:(round*13)%9-4,
-  landmarkIndex:(Math.imul(round,7)>>>0)%13
+  landmarkIndex:(Math.imul(round,7)>>>0)%(window.N1ScenarioV04.LANDMARKS_POOL.length+window.N1Catalog.newLandmarks.length)
  };
  plan=window.N1ScenarioV04.createPlan(build,picks,options);
  results=[];hints=3;state={i:0,phase:'ask'};
