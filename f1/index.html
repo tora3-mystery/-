@@ -264,7 +264,7 @@ const options=[
 {id:'gourmet',name:'地元の名物フェア',cost:16,delta:[0,1,-1,1],desc:'売上+28万円、追加導線が必要',kind:'sales',min:3,max:6,bonus:28},{id:'audit',name:'スーパー裏手の不気味な社にお参りする',cost:0,delta:[0,0,0,1],desc:'「商売繁盛に効く」と聞いた古い社を訪ねます。',attractionOnCompletion:1,kind:'odd',min:3,max:5,oddReq:0,bonus:18,after:18,remain:1},{id:'camera0',name:'客がいない時間も会計を受け付ける',cost:0,delta:[-1,-1,0,-1],desc:'閉店後も会計を続けます。防犯映像に客の姿はありません。',attractionOnCompletion:1,kind:'odd',min:4,max:6,oddReq:1,bonus:28,after:28,remain:3},{id:'open0',name:'裏手の社に生贄を捧げる',cost:0,delta:[-1,-1,-1,-1],desc:'社から届いた紙には「供物を捧げよ」とだけ記されています。閉店後に従います。',kind:'odd',min:5,max:7,oddReq:2,bonus:45,after:45,remain:5}
 ];
 const issueBase=['レジの列が長すぎます。','カートがすれ違えません。','欲しい商品が品切れです。','放送が多くて落ち着きません。'];
-const fresh=()=>({version:11,complaintLedgerSeverity:null,complaintSaturationKeys:[],grayAuditSeed:Math.floor(Math.random()*4294967296)>>>0,legacyShrineAccess:false,grayFines:0,grayStrikes:0,auditEvents:[],undoSnapshot:null,grayUsed:[],attraction:7,lowDays:0,endingReason:null,visuals:[],issueEvents:[],complaintTickets:null,complaintSequence:0,focusDay:0,focusKeys:[],focusHistory:[],focusedNote:null,discoveredActions:[],customerDiary:[],hqHistory:[],actionCounts:{},clueViewed:[],inferencePending:false,inferenceAttempts:0,day8Active:false,day8Stage:0,glitchSeen:false,sundayRevealed:false,oddGain:0,forfeitedGain:0,auditStatus:'未照合',day:1,cash:120,vals:[2,1,1,1],revenue:0,days:[],used:[],jobs:[],benefits:[],last:null,news:'今週だけ、店舗改善を任されました。',odd:0,afterSales:0,remaining:0,permit:'許可',clues:0,history:[],finish:false,needsAdvance:false,ending:null});let s=fresh(),rollback=null;
+const fresh=()=>({version:11,complaintLedgerSeverity:null,complaintSaturationKeys:[],grayAuditSeed:Math.floor(Math.random()*4294967296)>>>0,legacyShrineAccess:false,grayFines:0,grayStrikes:0,auditEvents:[],undoSnapshot:null,grayUsed:[],attraction:7,lowDays:0,endingReason:null,visuals:[],issueEvents:[],complaintTickets:null,complaintSequence:0,focusDay:0,focusKeys:[],focusHistory:[],focusedNote:null,discoveredActions:[],customerDiary:[],hqHistory:[],actionCounts:{},clueViewed:[],inferencePending:false,inferenceAttempts:0,day8Active:false,day8Stage:0,day8OpeningPending:false,glitchSeen:false,sundayRevealed:false,oddGain:0,forfeitedGain:0,auditStatus:'未照合',day:1,cash:120,vals:[2,1,1,1],revenue:0,days:[],used:[],jobs:[],benefits:[],last:null,news:'今週だけ、店舗改善を任されました。',odd:0,afterSales:0,remaining:0,permit:'許可',clues:0,history:[],finish:false,needsAdvance:false,ending:null});let s=fresh(),rollback=null;
 function support(){return Math.max(0,Math.min(100,100-8*s.vals.reduce((a,b)=>a+b,0)))}
 const weekdayNames=['月曜日','火曜日','水曜日','木曜日','金曜日','土曜日','日曜日','人曜日'];
 function weekday(n){return weekdayNames[Math.max(0,Math.min(7,n-1))]}
@@ -696,9 +696,31 @@ function iconFor(a){
   return special[a.id]||({queue:'🧾',aisle:'🛒',stock:'📦',noise:'🔉',sales:'🏷️',finance:'📊',staff:'👥',mix:'🧰'})[a.kind]||'📋';
 }
 function change(delta){s.vals=s.vals.map((v,i)=>clamp(v+delta[i]))}
+function showDay8Opening(){
+ const card=$('transitionCard');card.className='opening-card steady';
+ $('transitionKicker').textContent='まるまるスーパー ／ 開店準備';
+ $('transitionTitle').innerHTML='DAY 08 <small>/ 07</small>';
+ $('transitionHeadline').textContent='開店準備が整いました';
+ $('transitionSubtitle').textContent='昨日の週報は受理されました。本日の売場を確認してください。';
+ $('transitionProgress').replaceChildren();
+ for(let n=1;n<=7;n++){const tick=document.createElement('span');tick.className='done';$('transitionProgress').append(tick)}
+ $('transitionDecision').textContent='週報の送信：完了';
+ $('transitionAudit').hidden=true;
+ $('transitionScoreLabel').textContent='本日の日売上見込み';
+ $('transitionScore').textContent=v09Sales()+'万円';
+ $('transitionTotal').textContent='今週の売上累計：'+s.revenue+'万円';
+ $('transitionChanges').replaceChildren();
+ $('transitionImage').classList.remove('register-result');
+ v09AttachFallback($('transitionImage'),'scene-day8-floor.webp');
+ $('transitionImage').alt='新しい営業日のスーパーの店内';
+ $('transitionCaption').textContent='本日の売場の状況を確認してください。';
+ $('transitionContinue').textContent='今日の営業を確認する';
+ $('dayTransition').classList.remove('hidden');$('transitionContinue').focus();
+}
 function beginDay8(){
  if(s.odd<3){normalEnding();persist();renderEnd();return}
- s.day=8;s.day8Active=true;s.day8Stage=0;s.permit='不許可';persist();renderDay8();
+ s.day=8;s.day8Active=true;s.day8Stage=0;s.day8OpeningPending=true;s.permit='不許可';
+ persist();renderDay8();showDay8Opening();
 }
 function renderDay8(){
  for(const id of ['game','day0Panel','finalChoice','ending','intro'])$(id).classList.add('hidden');
@@ -854,7 +876,8 @@ function v14DailyPressure(day){
  const delta=V14_PRESSURE[day]||[0,0,0,0],before=[...s.vals];
  change(delta);
  recordSideEffects('dailyPressure',before,day);
- if(s.vals.some((v,i)=>v>before[i]))s.history.unshift('DAY '+day+'：前日の改善とは別に、新たなご意見が届きました。');
+ const increases=s.vals.map((v,i)=>v>before[i]?labels[i]:null).filter(Boolean);
+ if(increases.length)s.history.unshift('DAY '+day+' 開店前：前日の施策とは別に「'+increases.join('・')+'」の不満度が悪化しました。');
 }
 const v09Resolve=(()=>{
  const module={exports:{}};/* F1 scene resolver proposal v0.9, pure helper.
@@ -1213,7 +1236,7 @@ function v11OpenTransition(before){
  $('dayTransition').classList.remove('hidden');
  $('transitionContinue').focus();
 }
-function v11CloseTransition(){$('dayTransition').classList.add('hidden');if(s.finish){renderEnd();return}scrollTo(0,0)}
+function v11CloseTransition(){$('dayTransition').classList.add('hidden');if(s.day8Active&&s.day8OpeningPending){s.day8OpeningPending=false;persist()}if(s.finish){renderEnd();return}scrollTo(0,0)}
 function advance(){
  if($('overlay').classList.contains('hidden'))return;
  const openingBefore=v11Snapshot();
@@ -1457,7 +1480,7 @@ function showLanding(saved,review=false){$('day0Panel').classList.add('hidden');
 function resumeCurrent(){$('day0Panel').classList.add('hidden');
  $('dayTransition').classList.add('hidden');
  if(s.finish){renderEnd();return}
- if(s.day8Active){renderDay8();return}
+ if(s.day8Active){renderDay8();if(s.day8OpeningPending)showDay8Opening();return}
  // Existing saves from an older balance model can already have a zero forecast.
  if(!s.needsAdvance&&s.day<=7&&s.days.length<7&&rawSales()<=0){
   s.finish=true;s.ending='normal_strain';s.endingReason='店長解任・営業停止';
