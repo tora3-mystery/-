@@ -78,7 +78,14 @@ for (const c of D.contactChannels) {
   check(accountPairs.has(c.person_id + '|' + c.platform), 'Missing account for contact ' + c.person_id);
 }
 for (const x of D.reunions) check(memberPairs.has(x.group_id + '|' + x.person_id), 'Orphan reunion ' + x.group_id);
-for (const x of D.posts) check(persons.has(x.author_id), 'Orphan post author ' + x.post_id);
+for (const a of D.accounts) check(['face','icon'].includes(a.avatar_kind), 'Invalid SNS avatar configuration ' + a.account_id);
+for (const x of D.posts) {
+  check(persons.has(x.author_id), 'Orphan post author ' + x.post_id);
+  check(accountPairs.has(x.author_id + '|' + x.platform), 'Missing SNS account for post ' + x.post_id);
+}
+check(D.accounts.filter(a => a.avatar_kind === 'face').length > 0, 'No face-exposed SNS profiles');
+check(D.accounts.some(a => a.platform === 'Photogram' && a.avatar_kind === 'face'), 'No face-exposed Photogram profiles');
+check(D.accounts.some(a => a.platform === 'Zitter' && a.avatar_kind === 'face'), 'No face-exposed Zitter profiles');
 for (const x of D.marks) {
   check(persons.has(x.person_id), 'Orphan mark person ' + x.mark_rule_id);
   check(validFactIds.has(x.trigger_fact_id), 'Orphan mark fact ' + x.mark_rule_id);
