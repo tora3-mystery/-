@@ -28,7 +28,7 @@ function runRegression(html){
  function step(h,id){
   if(id==='inspectBack')check(h.api.focus('f17-back-review','裏手の社の周りが暗く'),'DAY 2 phrase investigation');
   // For legacy numeric assertions only, expose the requested action. User-facing discovery has its own regression.
-  if(!h.api.availableIds().includes(id)&&!['audit','camera0','open0','idle','shrine','removeShrine'].includes(id)){
+  if(!h.api.availableIds().includes(id)&&!['audit','camera0','open0','idle','removeShrine'].includes(id)){
     const prev=h.api.getState();
     h.api.setState({...prev,discoveredActions:[...new Set([...(prev.discoveredActions||[]),id])]});
   }
