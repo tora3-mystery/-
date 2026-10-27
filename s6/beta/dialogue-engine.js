@@ -61,6 +61,9 @@ function talk(id,gid,state){
   close==='familiar'?(v==='precise'||v==='reserved'?'この前の話、覚えてるよ。':'また会ったね。この前の続きも話せそう。'):
   words[v].again):words[v][r];
  const h=hooks[id];let cue=plain(h?.[already?'reunion_hook':'first_hook']||h?.first_hook||'音を聴いていってね。');
+ if(id==='P003'&&gid!=='E01-A'&&!already)cue='次の演奏順を確認してたんだ。みんなが迷わないといいな。';
+ if(sceneMode(gid)==='performance'&&r==='host'&&/(受付|入会届|今日決め)/.test(cue))
+  cue='曲が一区切りついたところ。よかったら、今の演奏の感想を聞かせて。';
  if(!already&&r==='newcomer'&&cue.includes('見学中なんだ'))cue=cue.replace('、見学中なんだ','');
  // Preserve original character hook; add contextual color only when it fits the character.
  const g=D.groups.find(x=>x.group_id===gid),e=events[g?.event_id],theme=sceneContext[e?.org_id];
@@ -112,8 +115,32 @@ const snsMessage=(id,state)=>{
    main+'も、見学だけで大丈夫だよ。';
  return {text:opening+' '+continuity,stage:close,accountName:Social.accounts.find(a=>a.person_id===id&&a.platform==='TINE')?.display_name||'アカウント'};
 };
-const sceneLine=line=>P.sceneOverrides[line.group_id+'|'+line.speaker_id]||line.text;
+// Scene-specific dialogue must override per (group, speaker, order), because a single member may speak twice.
+const sceneLine=line=>P.sceneOverrides[line.group_id+'|'+line.speaker_id+'|'+line.order]||
+ P.sceneOverrides[line.group_id+'|'+line.speaker_id]||line.text;
+const performanceGroups=new Set(['E01-C','E03-A','E04-A','E04-B','E04-C','E04-D','E05-C','E06-B','E06-C','E06-D','E07-C','E09-A','E09-B','E10-A','E11-A','E11-B','E11-C','E11-D','E12-C']);
+const sceneMode=gid=>performanceGroups.has(gid)?'performance':'conversation';
+const thirdParty=(targetId,gid,state,action)=>{
+ const peers=D.members.filter(m=>m.group_id===gid&&m.person_id!==targetId).map(m=>m.person_id);
+ if(!peers.length)return null;
+ const history=(state.groupLog?.[gid]||[]).filter(e=>e.type!=='相づち').length;
+ const seed=Number(state.presentationSeed)||0;
+ const index=Math.abs(seed+Number(targetId.slice(1))*11+gid.charCodeAt(gid.length-1)*13+history*19)%peers.length;
+ const id=peers[index],year=Number(people[id].year),targetYear=Number(people[targetId].year);
+ let text;
+ if(sceneMode(gid)==='performance'){
+   text=year===1&&targetYear>1?'さっきの音、すごく分かりやすかったです。':
+     year===1?'今のところ、もう一回聴いてみたいね。':'今の一小節、もう一度合わせてみようか。';
+ }else if(year===1&&targetYear>1){
+   text=action==='question'?'先輩、自分もそこが気になってました。':'そうなんですね。自分も聞いてみたかったです。';
+ }else if(year===1){
+   text='あ、それ自分も気になってた。';
+ }else if(targetYear===1){
+   text='最初は分からないこともあるよね。聞いてくれて大丈夫だよ。';
+ }else text='それ、さっきも少し話してたね。';
+ return {pid:id,text,type:'相づち'};
+};
 const chatAudit=()=>({firstYearLines:D.lines.filter(x=>people[x.speaker_id]?.year==='1').length,
  overridden:Object.keys(P.sceneOverrides).length,allScenes:D.lines.length,profiles:Object.keys(P.people).length});
-window.S6_BETA_DIALOGUE={talk,answer,contact,sceneLine,level,relationshipLabel,responseGain,snsMessage,role,chatAudit};
+window.S6_BETA_DIALOGUE={talk,answer,contact,sceneLine,sceneMode,thirdParty,level,relationshipLabel,responseGain,snsMessage,role,chatAudit};
 })();
