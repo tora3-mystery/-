@@ -2394,8 +2394,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:rail:heritage:3",
-      "imageRoute": "heritage",
+      "imageId": "facility:rail:transport:3",
+      "imageRoute": "transport",
       "continuity": "reversal",
       "tags": [
         "本数",
@@ -2539,8 +2539,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:rail:transport:3",
-      "imageRoute": "transport",
+      "imageId": "facility:rail:heritage:3",
+      "imageRoute": "heritage",
       "continuity": "reversal",
       "tags": [
         "本数",
@@ -2800,8 +2800,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:rail:heritage:3",
-      "imageRoute": "heritage",
+      "imageId": "facility:rail:transport:3",
+      "imageRoute": "transport",
       "continuity": "reversal",
       "tags": [
         "風景",
@@ -2945,8 +2945,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:rail:transport:3",
-      "imageRoute": "transport",
+      "imageId": "facility:rail:heritage:3",
+      "imageRoute": "heritage",
       "continuity": "reversal",
       "tags": [
         "風景",
@@ -3206,8 +3206,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:rail:heritage:3",
-      "imageRoute": "heritage",
+      "imageId": "facility:rail:transport:3",
+      "imageRoute": "transport",
       "continuity": "reversal",
       "tags": [
         "古さ",
@@ -3351,8 +3351,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:rail:transport:3",
-      "imageRoute": "transport",
+      "imageId": "facility:rail:heritage:3",
+      "imageRoute": "heritage",
       "continuity": "reversal",
       "tags": [
         "古さ",
@@ -3438,8 +3438,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:market:community:3",
-      "imageRoute": "community",
+      "imageId": "facility:market:tourist:3",
+      "imageRoute": "tourist",
       "continuity": "reversal",
       "tags": [
         "混雑",
@@ -3583,8 +3583,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:market:tourist:3",
-      "imageRoute": "tourist",
+      "imageId": "facility:market:community:3",
+      "imageRoute": "community",
       "continuity": "reversal",
       "tags": [
         "混雑",
@@ -3844,8 +3844,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:market:community:3",
-      "imageRoute": "community",
+      "imageId": "facility:market:tourist:3",
+      "imageRoute": "tourist",
       "continuity": "reversal",
       "tags": [
         "地元の商品",
@@ -3989,8 +3989,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:market:tourist:3",
-      "imageRoute": "tourist",
+      "imageId": "facility:market:community:3",
+      "imageRoute": "community",
       "continuity": "reversal",
       "tags": [
         "地元の商品",
@@ -4250,8 +4250,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:market:tourist:3",
-      "imageRoute": "tourist",
+      "imageId": "facility:market:community:3",
+      "imageRoute": "community",
       "continuity": "reversal",
       "tags": [
         "価格",
@@ -4395,8 +4395,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:market:community:3",
-      "imageRoute": "community",
+      "imageId": "facility:market:tourist:3",
+      "imageRoute": "tourist",
       "continuity": "reversal",
       "tags": [
         "価格",
@@ -4482,8 +4482,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:school:culture:3",
-      "imageRoute": "culture",
+      "imageId": "facility:school:education:3",
+      "imageRoute": "education",
       "continuity": "reversal",
       "tags": [
         "児童の様子",
@@ -4627,8 +4627,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:school:education:3",
-      "imageRoute": "education",
+      "imageId": "facility:school:culture:3",
+      "imageRoute": "culture",
       "continuity": "reversal",
       "tags": [
         "児童の様子",
@@ -4888,8 +4888,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:school:culture:3",
-      "imageRoute": "culture",
+      "imageId": "facility:school:education:3",
+      "imageRoute": "education",
       "continuity": "reversal",
       "tags": [
         "校舎",
@@ -5033,8 +5033,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:school:education:3",
-      "imageRoute": "education",
+      "imageId": "facility:school:culture:3",
+      "imageRoute": "culture",
       "continuity": "reversal",
       "tags": [
         "校舎",
@@ -5294,8 +5294,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:school:culture:3",
-      "imageRoute": "culture",
+      "imageId": "facility:school:education:3",
+      "imageRoute": "education",
       "continuity": "reversal",
       "tags": [
         "地域行事",
@@ -5439,8 +5439,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:school:education:3",
-      "imageRoute": "education",
+      "imageId": "facility:school:culture:3",
+      "imageRoute": "culture",
       "continuity": "reversal",
       "tags": [
         "地域行事",
@@ -5526,8 +5526,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:shrine:sanctuary:3",
-      "imageRoute": "sanctuary",
+      "imageId": "facility:shrine:ritual:3",
+      "imageRoute": "ritual",
       "continuity": "reversal",
       "tags": [
         "静けさ",
@@ -5671,8 +5671,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:shrine:ritual:3",
-      "imageRoute": "ritual",
+      "imageId": "facility:shrine:sanctuary:3",
+      "imageRoute": "sanctuary",
       "continuity": "reversal",
       "tags": [
         "静けさ",
@@ -5932,8 +5932,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:shrine:sanctuary:3",
-      "imageRoute": "sanctuary",
+      "imageId": "facility:shrine:ritual:3",
+      "imageRoute": "ritual",
       "continuity": "reversal",
       "tags": [
         "古い行事",
@@ -6077,8 +6077,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:shrine:ritual:3",
-      "imageRoute": "ritual",
+      "imageId": "facility:shrine:sanctuary:3",
+      "imageRoute": "sanctuary",
       "continuity": "reversal",
       "tags": [
         "古い行事",
@@ -6338,8 +6338,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:shrine:mystery:3",
-      "imageRoute": "mystery",
+      "imageId": "facility:shrine:sanctuary:3",
+      "imageRoute": "sanctuary",
       "continuity": "reversal",
       "tags": [
         "不思議な雰囲気",
@@ -6483,8 +6483,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:shrine:sanctuary:3",
-      "imageRoute": "sanctuary",
+      "imageId": "facility:shrine:mystery:3",
+      "imageRoute": "mystery",
       "continuity": "reversal",
       "tags": [
         "不思議な雰囲気",
@@ -6570,8 +6570,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:inn:retreat:3",
-      "imageRoute": "retreat",
+      "imageId": "facility:inn:gourmet:3",
+      "imageRoute": "gourmet",
       "continuity": "reversal",
       "tags": [
         "静けさ",
@@ -6715,8 +6715,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:inn:gourmet:3",
-      "imageRoute": "gourmet",
+      "imageId": "facility:inn:retreat:3",
+      "imageRoute": "retreat",
       "continuity": "reversal",
       "tags": [
         "静けさ",
@@ -6976,8 +6976,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:inn:heritage:3",
-      "imageRoute": "heritage",
+      "imageId": "facility:inn:gourmet:3",
+      "imageRoute": "gourmet",
       "continuity": "reversal",
       "tags": [
         "食事",
@@ -7121,8 +7121,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:inn:gourmet:3",
-      "imageRoute": "gourmet",
+      "imageId": "facility:inn:heritage:3",
+      "imageRoute": "heritage",
       "continuity": "reversal",
       "tags": [
         "食事",
@@ -7382,8 +7382,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:inn:heritage:3",
-      "imageRoute": "heritage",
+      "imageId": "facility:inn:retreat:3",
+      "imageRoute": "retreat",
       "continuity": "reversal",
       "tags": [
         "古さ・料金",
@@ -7527,8 +7527,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:inn:retreat:3",
-      "imageRoute": "retreat",
+      "imageId": "facility:inn:heritage:3",
+      "imageRoute": "heritage",
       "continuity": "reversal",
       "tags": [
         "古さ・料金",
@@ -7614,8 +7614,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:office:policy:3",
-      "imageRoute": "policy",
+      "imageId": "facility:office:digital:3",
+      "imageRoute": "digital",
       "continuity": "reversal",
       "tags": [
         "手続き",
@@ -7759,8 +7759,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:office:digital:3",
-      "imageRoute": "digital",
+      "imageId": "facility:office:policy:3",
+      "imageRoute": "policy",
       "continuity": "reversal",
       "tags": [
         "手続き",
@@ -8020,8 +8020,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:office:policy:3",
-      "imageRoute": "policy",
+      "imageId": "facility:office:digital:3",
+      "imageRoute": "digital",
       "continuity": "reversal",
       "tags": [
         "地域振興",
@@ -8165,8 +8165,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:office:digital:3",
-      "imageRoute": "digital",
+      "imageId": "facility:office:policy:3",
+      "imageRoute": "policy",
       "continuity": "reversal",
       "tags": [
         "地域振興",
@@ -8426,8 +8426,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:office:policy:3",
-      "imageRoute": "policy",
+      "imageId": "facility:office:digital:3",
+      "imageRoute": "digital",
       "continuity": "reversal",
       "tags": [
         "村の決まり",
@@ -8571,8 +8571,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:office:digital:3",
-      "imageRoute": "digital",
+      "imageId": "facility:office:policy:3",
+      "imageRoute": "policy",
       "continuity": "reversal",
       "tags": [
         "村の決まり",
@@ -8658,8 +8658,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:clinic:community:3",
-      "imageRoute": "community",
+      "imageId": "facility:clinic:advanced:3",
+      "imageRoute": "advanced",
       "continuity": "reversal",
       "tags": [
         "待ち時間",
@@ -8803,8 +8803,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:clinic:advanced:3",
-      "imageRoute": "advanced",
+      "imageId": "facility:clinic:community:3",
+      "imageRoute": "community",
       "continuity": "reversal",
       "tags": [
         "待ち時間",
@@ -9064,8 +9064,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:clinic:community:3",
-      "imageRoute": "community",
+      "imageId": "facility:clinic:advanced:3",
+      "imageRoute": "advanced",
       "continuity": "reversal",
       "tags": [
         "設備",
@@ -9209,8 +9209,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:clinic:advanced:3",
-      "imageRoute": "advanced",
+      "imageId": "facility:clinic:community:3",
+      "imageRoute": "community",
       "continuity": "reversal",
       "tags": [
         "設備",
@@ -9470,8 +9470,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:clinic:community:3",
-      "imageRoute": "community",
+      "imageId": "facility:clinic:advanced:3",
+      "imageRoute": "advanced",
       "continuity": "reversal",
       "tags": [
         "診療日",
@@ -9615,8 +9615,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:clinic:advanced:3",
-      "imageRoute": "advanced",
+      "imageId": "facility:clinic:community:3",
+      "imageRoute": "community",
       "continuity": "reversal",
       "tags": [
         "診療日",
@@ -9702,8 +9702,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:shop:specialty:3",
-      "imageRoute": "specialty",
+      "imageId": "facility:shop:daily:3",
+      "imageRoute": "daily",
       "continuity": "reversal",
       "tags": [
         "価格",
@@ -9847,8 +9847,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:shop:daily:3",
-      "imageRoute": "daily",
+      "imageId": "facility:shop:specialty:3",
+      "imageRoute": "specialty",
       "continuity": "reversal",
       "tags": [
         "価格",
@@ -10108,8 +10108,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:shop:daily:3",
-      "imageRoute": "daily",
+      "imageId": "facility:shop:specialty:3",
+      "imageRoute": "specialty",
       "continuity": "reversal",
       "tags": [
         "接客",
@@ -10253,8 +10253,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:shop:specialty:3",
-      "imageRoute": "specialty",
+      "imageId": "facility:shop:daily:3",
+      "imageRoute": "daily",
       "continuity": "reversal",
       "tags": [
         "接客",
@@ -10514,8 +10514,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:shop:daily:3",
-      "imageRoute": "daily",
+      "imageId": "facility:shop:specialty:3",
+      "imageRoute": "specialty",
       "continuity": "reversal",
       "tags": [
         "品揃え",
@@ -10659,8 +10659,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:shop:specialty:3",
-      "imageRoute": "specialty",
+      "imageId": "facility:shop:daily:3",
+      "imageRoute": "daily",
       "continuity": "reversal",
       "tags": [
         "品揃え",
@@ -10746,8 +10746,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:hall:community:3",
-      "imageRoute": "community",
+      "imageId": "facility:hall:festival:3",
+      "imageRoute": "festival",
       "continuity": "reversal",
       "tags": [
         "集まり",
@@ -10891,8 +10891,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:hall:festival:3",
-      "imageRoute": "festival",
+      "imageId": "facility:hall:community:3",
+      "imageRoute": "community",
       "continuity": "reversal",
       "tags": [
         "集まり",
@@ -11152,8 +11152,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:hall:community:3",
-      "imageRoute": "community",
+      "imageId": "facility:hall:festival:3",
+      "imageRoute": "festival",
       "continuity": "reversal",
       "tags": [
         "静けさ",
@@ -11297,8 +11297,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:hall:festival:3",
-      "imageRoute": "festival",
+      "imageId": "facility:hall:community:3",
+      "imageRoute": "community",
       "continuity": "reversal",
       "tags": [
         "静けさ",
@@ -11558,8 +11558,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:hall:community:3",
-      "imageRoute": "community",
+      "imageId": "facility:hall:festival:3",
+      "imageRoute": "festival",
       "continuity": "reversal",
       "tags": [
         "祭りの準備",
@@ -11703,8 +11703,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:hall:festival:3",
-      "imageRoute": "festival",
+      "imageId": "facility:hall:community:3",
+      "imageRoute": "community",
       "continuity": "reversal",
       "tags": [
         "祭りの準備",
@@ -11790,8 +11790,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:farm:agritourism:3",
-      "imageRoute": "agritourism",
+      "imageId": "facility:farm:brand:3",
+      "imageRoute": "brand",
       "continuity": "reversal",
       "tags": [
         "農産物",
@@ -11935,8 +11935,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:farm:brand:3",
-      "imageRoute": "brand",
+      "imageId": "facility:farm:agritourism:3",
+      "imageRoute": "agritourism",
       "continuity": "reversal",
       "tags": [
         "農産物",
@@ -12196,8 +12196,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:farm:agritourism:3",
-      "imageRoute": "agritourism",
+      "imageId": "facility:farm:automation:3",
+      "imageRoute": "automation",
       "continuity": "reversal",
       "tags": [
         "農作業",
@@ -12341,8 +12341,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:farm:automation:3",
-      "imageRoute": "automation",
+      "imageId": "facility:farm:agritourism:3",
+      "imageRoute": "agritourism",
       "continuity": "reversal",
       "tags": [
         "農作業",
@@ -12602,8 +12602,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:farm:agritourism:3",
-      "imageRoute": "agritourism",
+      "imageId": "facility:farm:brand:3",
+      "imageRoute": "brand",
       "continuity": "reversal",
       "tags": [
         "景色",
@@ -12747,8 +12747,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:farm:brand:3",
-      "imageRoute": "brand",
+      "imageId": "facility:farm:agritourism:3",
+      "imageRoute": "agritourism",
       "continuity": "reversal",
       "tags": [
         "景色",
@@ -12834,8 +12834,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:scenic:conservation:3",
-      "imageRoute": "conservation",
+      "imageId": "facility:scenic:park:3",
+      "imageRoute": "park",
       "continuity": "reversal",
       "tags": [
         "眺め",
@@ -12979,8 +12979,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:scenic:park:3",
-      "imageRoute": "park",
+      "imageId": "facility:scenic:conservation:3",
+      "imageRoute": "conservation",
       "continuity": "reversal",
       "tags": [
         "眺め",
@@ -13240,8 +13240,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:scenic:conservation:3",
-      "imageRoute": "conservation",
+      "imageId": "facility:scenic:park:3",
+      "imageRoute": "park",
       "continuity": "reversal",
       "tags": [
         "歩きやすさ",
@@ -13385,8 +13385,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:scenic:park:3",
-      "imageRoute": "park",
+      "imageId": "facility:scenic:conservation:3",
+      "imageRoute": "conservation",
       "continuity": "reversal",
       "tags": [
         "歩きやすさ",
@@ -13646,8 +13646,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:scenic:conservation:3",
-      "imageRoute": "conservation",
+      "imageId": "facility:scenic:park:3",
+      "imageRoute": "park",
       "continuity": "reversal",
       "tags": [
         "静けさ",
@@ -13791,8 +13791,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:scenic:park:3",
-      "imageRoute": "park",
+      "imageId": "facility:scenic:conservation:3",
+      "imageRoute": "conservation",
       "continuity": "reversal",
       "tags": [
         "静けさ",
@@ -13878,8 +13878,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:cafe:local:3",
-      "imageRoute": "local",
+      "imageId": "facility:cafe:gourmet:3",
+      "imageRoute": "gourmet",
       "continuity": "reversal",
       "tags": [
         "店の雰囲気",
@@ -14023,8 +14023,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:cafe:gourmet:3",
-      "imageRoute": "gourmet",
+      "imageId": "facility:cafe:local:3",
+      "imageRoute": "local",
       "continuity": "reversal",
       "tags": [
         "店の雰囲気",
@@ -14284,8 +14284,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:cafe:local:3",
-      "imageRoute": "local",
+      "imageId": "facility:cafe:gourmet:3",
+      "imageRoute": "gourmet",
       "continuity": "reversal",
       "tags": [
         "メニュー",
@@ -14429,8 +14429,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:cafe:gourmet:3",
-      "imageRoute": "gourmet",
+      "imageId": "facility:cafe:local:3",
+      "imageRoute": "local",
       "continuity": "reversal",
       "tags": [
         "メニュー",
@@ -14690,8 +14690,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:cafe:local:3",
-      "imageRoute": "local",
+      "imageId": "facility:cafe:gourmet:3",
+      "imageRoute": "gourmet",
       "continuity": "reversal",
       "tags": [
         "静けさ",
@@ -14835,8 +14835,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:cafe:gourmet:3",
-      "imageRoute": "gourmet",
+      "imageId": "facility:cafe:local:3",
+      "imageRoute": "local",
       "continuity": "reversal",
       "tags": [
         "静けさ",
@@ -15328,8 +15328,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:museum:mystery:3",
-      "imageRoute": "mystery",
+      "imageId": "facility:museum:history:3",
+      "imageRoute": "history",
       "continuity": "reversal",
       "tags": [
         "不思議な資料",
@@ -15473,8 +15473,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:museum:history:3",
-      "imageRoute": "history",
+      "imageId": "facility:museum:mystery:3",
+      "imageRoute": "mystery",
       "continuity": "reversal",
       "tags": [
         "不思議な資料",
@@ -15734,8 +15734,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:museum:history:3",
-      "imageRoute": "history",
+      "imageId": "facility:museum:mystery:3",
+      "imageRoute": "mystery",
       "continuity": "reversal",
       "tags": [
         "静けさ",
@@ -15879,8 +15879,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:museum:mystery:3",
-      "imageRoute": "mystery",
+      "imageId": "facility:museum:history:3",
+      "imageRoute": "history",
       "continuity": "reversal",
       "tags": [
         "静けさ",
@@ -15966,8 +15966,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:lodge:retreat:3",
-      "imageRoute": "retreat",
+      "imageId": "facility:lodge:activity:3",
+      "imageRoute": "activity",
       "continuity": "reversal",
       "tags": [
         "自然",
@@ -16111,8 +16111,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:lodge:activity:3",
-      "imageRoute": "activity",
+      "imageId": "facility:lodge:retreat:3",
+      "imageRoute": "retreat",
       "continuity": "reversal",
       "tags": [
         "自然",
@@ -16372,8 +16372,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:lodge:retreat:3",
-      "imageRoute": "retreat",
+      "imageId": "facility:lodge:activity:3",
+      "imageRoute": "activity",
       "continuity": "reversal",
       "tags": [
         "料金",
@@ -16517,8 +16517,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:lodge:activity:3",
-      "imageRoute": "activity",
+      "imageId": "facility:lodge:retreat:3",
+      "imageRoute": "retreat",
       "continuity": "reversal",
       "tags": [
         "料金",
@@ -16778,8 +16778,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:lodge:retreat:3",
-      "imageRoute": "retreat",
+      "imageId": "facility:lodge:activity:3",
+      "imageRoute": "activity",
       "continuity": "reversal",
       "tags": [
         "設備",
@@ -16923,8 +16923,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:lodge:activity:3",
-      "imageRoute": "activity",
+      "imageId": "facility:lodge:retreat:3",
+      "imageRoute": "retreat",
       "continuity": "reversal",
       "tags": [
         "設備",
@@ -17010,8 +17010,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:harbor:fishery:3",
-      "imageRoute": "fishery",
+      "imageId": "facility:harbor:maritime:3",
+      "imageRoute": "maritime",
       "continuity": "reversal",
       "tags": [
         "魚",
@@ -17155,8 +17155,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:harbor:maritime:3",
-      "imageRoute": "maritime",
+      "imageId": "facility:harbor:fishery:3",
+      "imageRoute": "fishery",
       "continuity": "reversal",
       "tags": [
         "魚",
@@ -17416,8 +17416,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:harbor:fishery:3",
-      "imageRoute": "fishery",
+      "imageId": "facility:harbor:maritime:3",
+      "imageRoute": "maritime",
       "continuity": "reversal",
       "tags": [
         "海との距離",
@@ -17561,8 +17561,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:harbor:maritime:3",
-      "imageRoute": "maritime",
+      "imageId": "facility:harbor:fishery:3",
+      "imageRoute": "fishery",
       "continuity": "reversal",
       "tags": [
         "海との距離",
@@ -17822,8 +17822,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:harbor:fishery:3",
-      "imageRoute": "fishery",
+      "imageId": "facility:harbor:maritime:3",
+      "imageRoute": "maritime",
       "continuity": "reversal",
       "tags": [
         "賑わい",
@@ -17967,8 +17967,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:harbor:maritime:3",
-      "imageRoute": "maritime",
+      "imageId": "facility:harbor:fishery:3",
+      "imageRoute": "fishery",
       "continuity": "reversal",
       "tags": [
         "賑わい",
@@ -18054,8 +18054,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:robot:coexist:3",
-      "imageRoute": "coexist",
+      "imageId": "facility:robot:research:3",
+      "imageRoute": "research",
       "continuity": "reversal",
       "tags": [
         "自動化",
@@ -18199,8 +18199,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:robot:research:3",
-      "imageRoute": "research",
+      "imageId": "facility:robot:coexist:3",
+      "imageRoute": "coexist",
       "continuity": "reversal",
       "tags": [
         "自動化",
@@ -18460,8 +18460,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:robot:coexist:3",
-      "imageRoute": "coexist",
+      "imageId": "facility:robot:research:3",
+      "imageRoute": "research",
       "continuity": "reversal",
       "tags": [
         "職員",
@@ -18605,8 +18605,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:robot:research:3",
-      "imageRoute": "research",
+      "imageId": "facility:robot:coexist:3",
+      "imageRoute": "coexist",
       "continuity": "reversal",
       "tags": [
         "職員",
@@ -18866,8 +18866,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:robot:coexist:3",
-      "imageRoute": "coexist",
+      "imageId": "facility:robot:research:3",
+      "imageRoute": "research",
       "continuity": "reversal",
       "tags": [
         "教育",
@@ -19011,8 +19011,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:robot:research:3",
-      "imageRoute": "research",
+      "imageId": "facility:robot:coexist:3",
+      "imageRoute": "coexist",
       "continuity": "reversal",
       "tags": [
         "教育",

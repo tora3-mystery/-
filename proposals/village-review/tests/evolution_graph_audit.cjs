@@ -59,6 +59,10 @@ for(const final of db.stage3){
  assert.equal(qa.evolutionRecord(after)?.id,final.id,final.id+' terminal mismatch');
  assert(qa.groundQA().length===0,final.id+' malformed map');
  const image=qa.v1FacilityId(after);
+ const expectedRoute=(first.facet===second.facet&&first.target!==second.target)?second.imageRoute:first.imageRoute;
+ assert.equal(final.imageRoute,expectedRoute,final.id+' final image must match current direction');
+ assert.equal(final.imageId,'facility:'+final.kind+':'+expectedRoute+':3',final.id+' DB image mismatch');
+ assert.equal(image,final.imageId,final.id+' displayed image does not match terminal state');
  assert(assetIds.has(image),final.id+' lacks an existing image mapping');
  seenImages.add(image);traversals++;
 }
