@@ -301,4 +301,26 @@ check('public posts and approved TINE message use beta handles not source databa
  const tine=list.find(a=>a.person_id==='P003'&&a.platform==='TINE');
  assert.ok(t.html.includes(tine.handle));assert.ok(t.html.includes(tine.display_name));
 });
+check('all 24 curated SNS posts preserve source visibility and factual scheduling',()=>{
+ const SNS=dataScope.window.S6_BETA_SOCIAL;
+ assert.equal(Object.keys(SNS.postTexts).length,D.posts.length);
+ for(const post of D.posts){
+  assert.ok(SNS.postTexts[post.post_id]?.length>5,post.post_id);
+  assert.ok(SNS.accounts.some(a=>a.platform===post.platform&&a.person_id===post.author_id));
+ }
+ const b=newPlayer();b.click('skip');b.click('night-sns','Photogram');
+ assert.match(b.html,/こもれびは水曜のお茶会から/);
+ assert.match(b.html,/音だけでも、聴きに来てください。/);
+});
+check('locked Photogram author is not visible without contact but becomes accessible after exchange',()=>{
+ const SNS=dataScope.window.S6_BETA_SOCIAL.accounts;
+ const a=SNS.find(x=>x.person_id==='P003'&&x.platform==='Photogram');
+ const no=newPlayer();no.click('skip');no.click('night-sns','Photogram');
+ assert.ok(!no.html.includes(a.handle));
+ const yes=newPlayer();visit(yes,'E01','E01-A');
+ yes.click('action-menu','contact');yes.click('act-target','P003');
+ assert.ok(yes.state.contacts.includes('P003'));
+ yes.click('back-venue');yes.click('finish-venue');yes.click('night-sns','Photogram');
+ assert.ok(yes.html.includes(a.handle));
+});
 console.log(JSON.stringify({passed:total,failed:failures}));if(failures)process.exitCode=1;
