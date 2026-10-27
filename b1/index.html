@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#20372f">
-<title>B1｜採用結果をお知らせします。｜α0.4.5</title>
+<title>B1｜採用結果をお知らせします。｜α0.4.6</title>
 <style>
 :root{--bg:#f5f4ef;--paper:#fffdf8;--ink:#24332f;--muted:#64736e;--line:#d9ddd5;--green:#26684c;--soft:#e7f0e7;--red:#a34639;--redbg:#fff0e9;--amber:#82570e;--amberbg:#fff2d5}
 *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;line-height:1.65}
@@ -74,7 +74,7 @@ progress::-webkit-progress-bar{background:#e5e7e0}progress::-webkit-progress-val
 .day-review .matrix{margin:10px 0}.day-review .btn-row{margin-top:14px}
 @media(max-width:420px){.status-grid{grid-template-columns:1fr}.daily-grid{gap:6px}.daily-grid .mini{padding:9px}}</style>
 </head><body>
-<header><div class="brand">喫茶まどか <small>B1｜採用結果をお知らせします。</small></div><div class="version">α0.4.5<br>更新 2026.10.27 11:57 JST</div></header>
+<header><div class="brand">喫茶まどか <small>B1｜採用結果をお知らせします。</small></div><div class="version">α0.4.6<br>更新 2026.10.27 17:09 JST</div></header>
 <main id="app" class="wrap"></main>
 <script>
 "use strict";
@@ -461,9 +461,9 @@ n:{accept:"採用ありがとうございます。仕込みと閉店作業、任
 g:{accept:"採用ありがとうございます。週2回以上のお昼勤務が可能なら、ぜひお願いします。初日の忙しい時間も教えてください。",withdraw:"勤務回数が先に決まった別のお店で接客を続けます。",final:"希望する週2回以上の勤務を組めないため、今回は辞退します。",fixed:"週2回以上の勤務を確認できました。お昼の接客、よろしくお願いします。"},
 k:{accept:"採用ありがとうございます。初日は経験者の方と基本を覚えます。ラテアートはそのあとで。",withdraw:"先に研修日が決まった別のお店に進むことにしました。"},
 i:{accept:"採用ありがとうございます。日曜夜の勤務が含まれるなら、お引き受けします。閉店手順も確認します。",withdraw:"日曜夜の勤務が先に決まった別のお店を選びました。",final:"希望していた日曜夜の勤務が組めないため、今回は辞退します。",fixed:"日曜夜の勤務を確認しました。閉店チェックも担当します。"},
-m:{accept:"採用ありがとうございます。月・水・金のランチで、さっそくお役に立てればと思います。",withdraw:"金曜中に勤務先を決める必要があり、先に決まったお店を選びました。"},
+m:{accept:"採用ありがとうございます。ランチの時間帯を中心に、さっそくお役に立てればと思います。",withdraw:"金曜中に勤務先を決める必要があり、先に決まったお店を選びました。"},
 o:{accept:"採用ありがとうございます。閉店作業の確認項目を教えてください。火曜と日曜の夜も入れます。",withdraw:"金曜に返事をいただいた別のお店に決めました。"},
-w:{accept:"採用ありがとうございます。週末のお昼、まずはメニューを覚えるところから始めます。",withdraw:"先にお返事をいただいたお店で週末勤務を始めることにしました。"}
+w:{accept:"採用ありがとうございます。週末のシフトで、まずはメニューを覚えるところから始めます。",withdraw:"先にお返事をいただいたお店で週末勤務を始めることにしました。"}
 };
 function withdrawalMail(id,interviewed){return (interviewed?"面接ありがとうございました。":"応募をご確認いただきありがとうございました。")+"結果のご連絡を待っていましたが、"+MAIL[id].withdraw+"今回は選考を辞退します。";}
 function interviewV(id){if(st.active||st.used>=2||status(id)!=="applicant"||!arrived(id)||st.day>LIMITS[id][1])return;st.used++;st.active=id;st.selected=id;st.status[id]="interview";st.view="interview";}
@@ -637,13 +637,13 @@ function renderV3(){
  '</div><p class="small muted">再挑戦では一部の応募者の勤務希望が変わります。前回と同じ顔ぶれでも、その週の書類を確認してください。</p>'+
  '<div class="btn-row"><button class="btn" data-action="intro-back">設定に戻る</button><button class="btn primary" data-action="start">月曜の応募を確認する</button></div></div>';return;
  }
- if(st.screen==="day-review"){root.innerHTML=dayReviewV()+'<div class="footer">B1 α0.4.5｜喫茶まどか</div>';return;}
- if(st.screen==="morning"){root.innerHTML=morningView()+'<div class="footer">B1 α0.4.5｜5日間の採用テスト版</div>';return;}
+ if(st.screen==="day-review"){root.innerHTML=dayReviewV()+'<div class="footer">B1 α0.4.6｜喫茶まどか</div>';return;}
+ if(st.screen==="morning"){root.innerHTML=morningView()+'<div class="footer">B1 α0.4.6｜5日間の採用テスト版</div>';return;}
  if(st.screen==="result"){
  let old=renderResult();old=old.replace("営業成功｜喫茶まどか",st.gameSuccess?"営業成功｜喫茶まどか":"採用活動の結果").replace("営業に課題が残りました","採用活動の結果");
  const replies=st.messages.filter(m=>m.kind==="answer"||m.kind==="withdraw");
  const lastMail=replies.length?'<div class="card"><div class="eyebrow">SATURDAY MAIL / 最終の採用返答</div><h2>土曜朝のご連絡</h2>'+replies.map(m=>'<details class="letter important" open><summary>'+esc(m.title)+'</summary><div class="mailbody">'+esc(m.body)+'</div></details>').join("")+'</div>':"";
- root.innerHTML=lastMail+'<div class="card"><div class="eyebrow">SATURDAY / 採用結果</div><h2>5日間の採用活動が終了しました</h2><p class="small">採用確定：'+(st.confirmed.map(nameV).join("・")||"なし")+'</p><p class="small muted">勤務条件が成立しない仮承諾者は、採用確定として数えません。</p></div>'+old+'<div class="footer">B1 α0.4.5</div>';return;
+ root.innerHTML=lastMail+'<div class="card"><div class="eyebrow">SATURDAY / 採用結果</div><h2>5日間の採用活動が終了しました</h2><p class="small">採用確定：'+(st.confirmed.map(nameV).join("・")||"なし")+'</p><p class="small muted">勤務条件が成立しない仮承諾者は、採用確定として数えません。</p></div>'+old+'<div class="footer">B1 α0.4.6</div>';return;
  }
 
  if(st.screen==="records"){
@@ -655,14 +655,14 @@ function renderV3(){
  }).join("");
  root.innerHTML='<div class="card"><div class="eyebrow">INTERVIEW RECORD / 面接記録</div><h2>採用活動を振り返る</h2><p class="small muted">5日間で面接した人と回答の記録です。ここから採用結果を変更することはできません。</p>'+
  (entries||'<p>面接の記録はありません。</p>')+
- '<button class="btn primary" data-action="result-back">営業結果へ戻る</button></div><div class="footer">B1 α0.4.5</div>';
+ '<button class="btn primary" data-action="result-back">営業結果へ戻る</button></div><div class="footer">B1 α0.4.6</div>';
  return;
  }
  const view=st.active?"interview":st.view;
  const nav='<nav class="topnav"><button class="tab '+(view==="desk"?"on":"")+'" data-action="desk" '+(st.active?"disabled":"")+'>応募・面接</button><button class="tab '+(view==="board"?"on":"")+'" data-action="board" '+(st.active?"disabled":"")+'>仮シフト</button><button class="tab '+(view==="mail"?"on":"")+'" data-action="mail" '+(st.active?"disabled":"")+'>メール</button></nav>';
  const content=view==="interview"?interviewView():view==="board"?boardV():view==="mail"?archiveV():deskV();
  const desktop=!window.matchMedia("(max-width:780px)").matches;
- root.innerHTML=nav+'<div class="layout '+(view==="board"?"board-alone":"")+'"><section class="main">'+content+'</section><aside class="side">'+(desktop&&view!=="board"?boardV():"")+'</aside></div><div class="footer">B1 α0.4.5｜架空の人物・店舗</div>'+
+ root.innerHTML=nav+'<div class="layout '+(view==="board"?"board-alone":"")+'"><section class="main">'+content+'</section><aside class="side">'+(desktop&&view!=="board"?boardV():"")+'</aside></div><div class="footer">B1 α0.4.6｜架空の人物・店舗</div>'+
  '<div class="mobilebar"><button data-action="desk" '+(st.active?"disabled":"")+'>面接</button><button data-action="board" '+(st.active?"disabled":"")+'>仮シフト</button><button data-action="mail" '+(st.active?"disabled":"")+'>メール</button></div>';
 }
 function handleV3(e){
