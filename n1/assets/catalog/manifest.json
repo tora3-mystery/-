@@ -1,0 +1,73 @@
+{
+  "manifestVersion": 1,
+  "project": "N1 neutral category reference images",
+  "expectedAssetCount": 32,
+  "prototypeAssetCount": 3,
+  "remainingAssetCount": 29,
+  "expectedKeysFromOrder": [
+    "eraser", "correction_pen", "correction_tape", "pencil_case", "pen", "notebook", "paper", "underlay",
+    "earbuds", "headphones", "charger", "cable", "smartphone", "mouse", "keyboard", "clock", "speaker",
+    "mug", "tumbler", "coffee", "kitchen", "tableware", "beauty", "towel", "bag", "clothing", "shoes",
+    "furniture", "appliance", "diffuser", "gift", "car"
+  ],
+  "catalogSource": {
+    "expectedPath": "n1/catalog-v1.js (imageCatalog)",
+    "status": "not_found_on_inspected_main_revision",
+    "inspectedMainRevision": "e6c4216ba3758ead520c0503ff90473c6b440067",
+    "note": "The three prototype keys are explicitly named in the supplied work order. The expected full catalog source was not present in the inspected public main tree."
+  },
+  "imageSpec": {
+    "width": 800,
+    "height": 600,
+    "aspectRatio": "4:3",
+    "format": "WebP",
+    "colorSpace": "sRGB",
+    "alpha": "opaque",
+    "maximumBytes": 204800
+  },
+  "rightsNote": "AI-generated generic category-reference imagery. Not a replica or photograph of a named product. No brand, logo, trademark, model number, text, watermark, or existing-photo tracing is intended. Do not present these images as official product photographs.",
+  "entries": [
+    {
+      "key": "earbuds",
+      "filename": "earbuds-neutral.webp",
+      "bytes": 11418,
+      "width": 800,
+      "height": 600,
+      "sha256": "d2d0047a412284bffa031e14f6744fca6153af8d6306226ab1b3d51c2b2a5d5c",
+      "format": "WebP",
+      "colorSpace": "sRGB",
+      "productionMethod": "OpenAI built-in image generation; 4:3 output resized with Lanczos and encoded as WebP quality 90",
+      "rightsNote": "Generic true-wireless earbuds and case; no named product or brand reference.",
+      "promptReference": "prompts.md#earbuds",
+      "status": "prototype_pending_human_review"
+    },
+    {
+      "key": "charger",
+      "filename": "charger-neutral.webp",
+      "bytes": 14710,
+      "width": 800,
+      "height": 600,
+      "sha256": "0f0c1f541480c2dfc1c60bf3880a323e67b985131fb44a95b4e74b74646c901a",
+      "format": "WebP",
+      "colorSpace": "sRGB",
+      "productionMethod": "OpenAI built-in image generation; 4:3 output resized with Lanczos and encoded as WebP quality 90",
+      "rightsNote": "Generic elongated USB-C travel charger; deliberately avoids a named product silhouette.",
+      "promptReference": "prompts.md#charger",
+      "status": "prototype_pending_human_review"
+    },
+    {
+      "key": "eraser",
+      "filename": "eraser-neutral.webp",
+      "bytes": 12114,
+      "width": 800,
+      "height": 600,
+      "sha256": "eefca5c9a0618e9d66e65bdd5e8b53ca2720cdff76c13ae1244fbcdff2470031",
+      "format": "WebP",
+      "colorSpace": "sRGB",
+      "productionMethod": "OpenAI built-in image generation; 4:3 output resized with Lanczos and encoded as WebP quality 90",
+      "rightsNote": "Generic white stationery eraser in a blank paper sleeve; no package markings.",
+      "promptReference": "prompts.md#eraser",
+      "status": "prototype_pending_human_review"
+    }
+  ]
+}
