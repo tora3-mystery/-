@@ -27,7 +27,7 @@ window.S6_BETA_SOCIAL = {
       "person_id": "P001",
       "platform": "Zitter",
       "handle": "terrace.music",
-      "display_name": "terrace観測",
+      "display_name": "テラス観測",
       "visibility": "公開",
       "reply_window": "当日",
       "avatar_kind": "icon"
@@ -87,7 +87,7 @@ window.S6_BETA_SOCIAL = {
       "person_id": "P003",
       "platform": "Zitter",
       "handle": "lowend_ordinary",
-      "display_name": "static便り",
+      "display_name": "ノイズ便り",
       "visibility": "公開",
       "reply_window": "当日",
       "avatar_kind": "face"
@@ -207,7 +207,7 @@ window.S6_BETA_SOCIAL = {
       "person_id": "P007",
       "platform": "Zitter",
       "handle": "pitch.windowside",
-      "display_name": "pitch便り",
+      "display_name": "ピッチ便り",
       "visibility": "公開",
       "reply_window": "当日",
       "avatar_kind": "icon"
@@ -287,7 +287,7 @@ window.S6_BETA_SOCIAL = {
       "person_id": "P010",
       "platform": "Photogram",
       "handle": "musicbox.afterglow",
-      "display_name": "afterglowの写真",
+      "display_name": "残光の写真",
       "visibility": "公開",
       "reply_window": "翌日",
       "avatar_kind": "icon"
@@ -297,7 +297,7 @@ window.S6_BETA_SOCIAL = {
       "person_id": "P010",
       "platform": "Zitter",
       "handle": "afterglow.frame",
-      "display_name": "afterglowの日記",
+      "display_name": "残光の日記",
       "visibility": "公開",
       "reply_window": "当日",
       "avatar_kind": "icon"
@@ -567,7 +567,7 @@ window.S6_BETA_SOCIAL = {
       "person_id": "P019",
       "platform": "Zitter",
       "handle": "chord.recess",
-      "display_name": "chord便り",
+      "display_name": "コード便り",
       "visibility": "公開",
       "reply_window": "当日",
       "avatar_kind": "icon"
@@ -687,7 +687,7 @@ window.S6_BETA_SOCIAL = {
       "person_id": "P023",
       "platform": "Zitter",
       "handle": "humming_onepage",
-      "display_name": "bridge便り",
+      "display_name": "ブリッジ便り",
       "visibility": "公開",
       "reply_window": "当日",
       "avatar_kind": "icon"
@@ -767,7 +767,7 @@ window.S6_BETA_SOCIAL = {
       "person_id": "P026",
       "platform": "Photogram",
       "handle": "spring.record",
-      "display_name": "spring notes",
+      "display_name": "音の記録",
       "visibility": "公開",
       "reply_window": "翌日",
       "avatar_kind": "icon"
@@ -777,7 +777,7 @@ window.S6_BETA_SOCIAL = {
       "person_id": "P026",
       "platform": "Zitter",
       "handle": "note_spring",
-      "display_name": "spring archive",
+      "display_name": "音の保管庫",
       "visibility": "公開",
       "reply_window": "当日",
       "avatar_kind": "icon"
@@ -917,7 +917,7 @@ window.S6_BETA_SOCIAL = {
       "person_id": "P031",
       "platform": "Photogram",
       "handle": "echo.notes",
-      "display_name": "notesの写真",
+      "display_name": "ノートの写真",
       "visibility": "公開",
       "reply_window": "翌日",
       "avatar_kind": "face"
@@ -927,7 +927,7 @@ window.S6_BETA_SOCIAL = {
       "person_id": "P031",
       "platform": "Zitter",
       "handle": "notes.archive",
-      "display_name": "notesの日記",
+      "display_name": "ノートの日記",
       "visibility": "公開",
       "reply_window": "当日",
       "avatar_kind": "icon"
@@ -947,7 +947,7 @@ window.S6_BETA_SOCIAL = {
       "person_id": "P032",
       "platform": "Photogram",
       "handle": "paper.speaker",
-      "display_name": "paper notes",
+      "display_name": "音の記録",
       "visibility": "公開",
       "reply_window": "通知なし",
       "avatar_kind": "face"
@@ -1007,7 +1007,7 @@ window.S6_BETA_SOCIAL = {
       "person_id": "P034",
       "platform": "Photogram",
       "handle": "lfo.recess",
-      "display_name": "recessの写真",
+      "display_name": "休み時間の写真",
       "visibility": "公開",
       "reply_window": "翌日",
       "avatar_kind": "icon"
@@ -1017,7 +1017,7 @@ window.S6_BETA_SOCIAL = {
       "person_id": "P034",
       "platform": "Zitter",
       "handle": "recess.letter",
-      "display_name": "recessの日記",
+      "display_name": "休み時間の日記",
       "visibility": "公開",
       "reply_window": "当日",
       "avatar_kind": "icon"
@@ -1047,7 +1047,7 @@ window.S6_BETA_SOCIAL = {
       "person_id": "P035",
       "platform": "Zitter",
       "handle": "humming_overcast",
-      "display_name": "pluck便り",
+      "display_name": "弦便り",
       "visibility": "公開",
       "reply_window": "当日",
       "avatar_kind": "face"
@@ -1187,7 +1187,7 @@ window.S6_BETA_SOCIAL = {
       "person_id": "P040",
       "platform": "Photogram",
       "handle": "lfo.pocket",
-      "display_name": "pocketの写真",
+      "display_name": "ポケットの写真",
       "visibility": "公開",
       "reply_window": "通知なし",
       "avatar_kind": "icon"
@@ -1277,7 +1277,7 @@ window.S6_BETA_SOCIAL = {
       "person_id": "P043",
       "platform": "Photogram",
       "handle": "echo.afterglow",
-      "display_name": "afterglowの写真",
+      "display_name": "残光の写真",
       "visibility": "公開",
       "reply_window": "翌日",
       "avatar_kind": "face"
@@ -1287,7 +1287,7 @@ window.S6_BETA_SOCIAL = {
       "person_id": "P043",
       "platform": "Zitter",
       "handle": "afterglow.window",
-      "display_name": "afterglowの日記",
+      "display_name": "残光の日記",
       "visibility": "公開",
       "reply_window": "当日",
       "avatar_kind": "icon"
@@ -1367,7 +1367,7 @@ window.S6_BETA_SOCIAL = {
       "person_id": "P046",
       "platform": "Photogram",
       "handle": "line.windowside",
-      "display_name": "windowsideの写真",
+      "display_name": "窓辺の写真",
       "visibility": "公開",
       "reply_window": "翌日",
       "avatar_kind": "icon"
@@ -1377,7 +1377,7 @@ window.S6_BETA_SOCIAL = {
       "person_id": "P046",
       "platform": "Zitter",
       "handle": "windowside.corner",
-      "display_name": "windowsideの日記",
+      "display_name": "窓辺の日記",
       "visibility": "公開",
       "reply_window": "当日",
       "avatar_kind": "face"
@@ -1397,7 +1397,7 @@ window.S6_BETA_SOCIAL = {
       "person_id": "P047",
       "platform": "Photogram",
       "handle": "dawn.swing",
-      "display_name": "dawn notes",
+      "display_name": "音の記録",
       "visibility": "公開",
       "reply_window": "翌日",
       "avatar_kind": "face"
@@ -1407,7 +1407,7 @@ window.S6_BETA_SOCIAL = {
       "person_id": "P047",
       "platform": "Zitter",
       "handle": "frame_dawn",
-      "display_name": "dawn archive",
+      "display_name": "音の保管庫",
       "visibility": "公開",
       "reply_window": "当日",
       "avatar_kind": "icon"
@@ -1457,7 +1457,7 @@ window.S6_BETA_SOCIAL = {
       "person_id": "P049",
       "platform": "Photogram",
       "handle": "take.sidelight",
-      "display_name": "sidelightの写真",
+      "display_name": "横光の写真",
       "visibility": "公開",
       "reply_window": "翌日",
       "avatar_kind": "face"
@@ -1467,7 +1467,7 @@ window.S6_BETA_SOCIAL = {
       "person_id": "P049",
       "platform": "Zitter",
       "handle": "sidelight.frame",
-      "display_name": "sidelightの日記",
+      "display_name": "横光の日記",
       "visibility": "公開",
       "reply_window": "当日",
       "avatar_kind": "icon"
@@ -1717,7 +1717,7 @@ window.S6_BETA_SOCIAL = {
       "person_id": "P062",
       "platform": "Photogram",
       "handle": "plain.headphone",
-      "display_name": "plain notes",
+      "display_name": "音の記録",
       "visibility": "公開",
       "reply_window": "翌日",
       "avatar_kind": "face"
@@ -1737,7 +1737,7 @@ window.S6_BETA_SOCIAL = {
       "person_id": "P063",
       "platform": "Zitter",
       "handle": "lowend_deepsea",
-      "display_name": "soundcheck便り",
+      "display_name": "音合わせ便り",
       "visibility": "公開",
       "reply_window": "当日",
       "avatar_kind": "icon"
@@ -1757,7 +1757,7 @@ window.S6_BETA_SOCIAL = {
       "person_id": "P064",
       "platform": "Photogram",
       "handle": "musicbox.kumo",
-      "display_name": "kumoの写真",
+      "display_name": "雲の写真",
       "visibility": "公開",
       "reply_window": "通知なし",
       "avatar_kind": "icon"
@@ -1957,7 +1957,7 @@ window.S6_BETA_SOCIAL = {
       "person_id": "P075",
       "platform": "Zitter",
       "handle": "keys_linen",
-      "display_name": "overtones便り",
+      "display_name": "倍音便り",
       "visibility": "公開",
       "reply_window": "当日",
       "avatar_kind": "icon"
@@ -1977,7 +1977,7 @@ window.S6_BETA_SOCIAL = {
       "person_id": "P076",
       "platform": "Photogram",
       "handle": "session.horizon",
-      "display_name": "horizonの写真",
+      "display_name": "水平線の写真",
       "visibility": "公開",
       "reply_window": "通知なし",
       "avatar_kind": "icon"
