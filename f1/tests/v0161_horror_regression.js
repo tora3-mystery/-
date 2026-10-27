@@ -42,7 +42,7 @@ const product=api.getState().complaintTickets.find(x=>x.body.includes('見掛け
 check(!!product&&api.focus(product.id,'見掛けない商品がありました'),'First product discovery');
 advance('productCheck');
 check(api.focus('f17-back-review','裏手の社の周りが暗く'),'DAY 2 phrase inspection');
-advance('inspectBack');advance('audit');
+advance('inspectBack');api.setState({...api.getState(),policySeed:0});advance('audit');
 let posts=specialCards();
 check(api.getState().day===4,'First special review must appear on DAY 4 in the earliest route');
 check(posts.length===1&&posts[0].body.includes('レジの近くに、ずっと立っている人がいました。'),'DAY 4 plain concern');

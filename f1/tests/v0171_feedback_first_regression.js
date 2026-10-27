@@ -83,7 +83,7 @@ check(c.api.focus('f17-back-review','裏手の社の周りが暗く'),'Discover 
 check(c.api.availableIds().includes('inspectBack'),'Immediately available once discovered');
 c.api.play('inspectBack');c.api.advance();c.api.closeTransition();
 check(c.api.availableIds().includes('audit')&&c.api.availableIds().includes('removeShrine'),'Resulting shrine visit/demolition fork');
-c.api.play('audit');c.api.advance();c.api.closeTransition();
+c.api.setState({...c.api.getState(),policySeed:0});c.api.play('audit');c.api.advance();c.api.closeTransition();
 check(!c.api.availableIds().includes('removeShrine'),'Shrine removal blocked after visiting');
 c.api.play('camera0');c.api.advance();c.api.closeTransition();
 check(c.get('complaintBoard').children.filter(x=>x.children[1]?.textContent.includes('変な客がいます')).length===5,'Five identical customer complaints');
