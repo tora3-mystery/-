@@ -5,7 +5,7 @@
   const SAVE_KEY = 's6-case-a-v03-save';
   const AUTO_KEY = 's6-case-a-v03-auto';
   const META_KEY = 's6-case-a-v03-meta';
-  const BUILD_AT = '2026-10-27 17:16 JST';
+  const BUILD_AT = '2026-10-27 17:21 JST';
   const DAYS = [
     ['2026-04-06','4月6日 月曜'],['2026-04-07','4月7日 火曜'],
     ['2026-04-08','4月8日 水曜'],['2026-04-09','4月9日 木曜'],
@@ -23,6 +23,7 @@
     辞退:'菜月と渚に誘われ、学内の空き教室で短く音を出す。合宿に行かない選択も、音楽を諦めることではない。'
   };
   const pmap = Object.fromEntries(D.people.map(x=>[x.person_id,x]));
+  const socialMap = Object.fromEntries((D.socialProfiles||[]).map(x=>[x.person_id,x]));
   const emap = Object.fromEntries(D.events.map(x=>[x.event_id,x]));
   const gmap = Object.fromEntries(D.groups.map(x=>[x.group_id,x]));
   const amap = Object.fromEntries(D.accounts.map(x=>[x.person_id+'|'+x.platform,x]));
@@ -135,22 +136,13 @@
   // C1のアイコン＋短い言葉を参考に、相手の観察可能な反応だけを表現する。
   // 推理の証拠、好感度表示、フラグ解放条件には使用しない。
 
-  // 楽器／学年に基づく、短い音楽談義。職務や隠し真相を推測させない日常会話。
+  // 人物別DB優先。既存の年齢・楽器テンプレートは旧データのフォールバック。
   const personMusicCue=pid=>{
+    const saved=socialMap[pid]?.first_hook;
+    if(saved)return saved;
     const person=pmap[pid];
-    if(person.year==='1')return '自分もまだ、どこで音楽をやるか考えているところなんだ。';
-    const notes={
-      'Vo/Gt':'弾き語りだと、最初の一音が大事なんだよね。',
-      'Vo':'歌いやすい高さを探すだけでも、曲の印象は変わるよ。',
-      'Gt':'ギターの音色って、弾く人でだいぶ違うんだ。',
-      'Ba':'ベースが合うと、ほかの楽器も気持ちよく鳴るんだ。',
-      'Dr':'最初のテンポを合わせると、みんな演奏しやすいよ。',
-      'Key':'鍵盤は音色を切り替えるだけでも雰囲気が変わるよ。',
-      'DTM':'まだ途中のデモでも、聴いてもらうと発見があるよ。',
-      'Perc':'小さな打楽器の音が、一曲のリズムを支えることもあるよ。',
-      'Sax':'一音を伸ばすところにも、演奏する人の癖が出るんだ。'
-    };
-    return notes[person.part]||'好きな音を見つけていけるといいね。';
+    if(person.year==='1')return 'どこで音楽をやるか、まだ考えているところなんだ。';
+    return '好きな音を見つけていけるといいね。';
   };
   const REACTIONS={
     welcome:{icon:'😊',label:'にこやか'},
@@ -529,14 +521,16 @@
       p.met=true;p.affinity=Math.min(8,p.affinity+2);p.lastInteraction='approach';
       S.participationHistory??=[];S.participationHistory.push({group_id:S.activeGroup,action:'approach',person_id:id});S.groupActions[S.activeGroup]='approach';
       const style=pmap[id].social_style||'quiet',cue=personMusicCue(id);
-      const introduces=style==='open'||(style==='quiet'&&prior>=1)||(style==='reserved'&&prior>=2);
+      const introMin=socialMap[id]?.intro_min_affinity??({open:0,quiet:1,reserved:2}[style]??1);
+      const introduces=prior>=introMin;
       if(prior>0&&p.introduced){
         mood=style==='reserved'?'calm':'familiar';
+        const reunionHook=socialMap[id]?.reunion_hook;
         S.groupResult=style==='open'
-          ?'「また来てくれたんだ！」と'+pmap[id].name+'が笑う。「'+cue+'」'
+          ?'「また来てくれたんだ！」と'+pmap[id].name+'が笑う。「'+(reunionHook||cue)+'」'
           :style==='quiet'
-            ?pmap[id].name+'がこちらに気づき、小さく手を振った。「この前の話の続き、する？」'
-            :pmap[id].name+'がうなずいた。「この前、話したよね」と短く笑う。';
+            ?pmap[id].name+'がこちらに気づき、小さく手を振った。「'+(reunionHook||'この前の話の続き、する？')+'」'
+            :pmap[id].name+'がうなずいた。「'+(reunionHook||'また会ったね。今日はどう？')+'」と短く笑う。';
       }else if(introduces){
         p.introduced=true;mood=style==='open'?'welcome':style==='reserved'?'calm':'glad';
         S.groupResult=style==='open'
