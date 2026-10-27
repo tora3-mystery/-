@@ -38,7 +38,7 @@ h2{font-size:17px;line-height:1.4;margin:0 0 8px}h3{font-size:14px;margin:0 0 8p
 </style>
 </head>
 <body><main class="app">
-<header class="mast"><div><div class="sub">短編UIゲーム実験室｜K1 プロトタイプ</div><h1>掲示物をご確認ください。</h1><div class="meta"><b>K1 α0.1.1</b> ｜ 2026-10-27 19:23 JST更新</div></div><a class="home" href="../index.html">作品一覧へ</a></header>
+<header class="mast"><div><div class="sub">短編UIゲーム実験室｜K1 プロトタイプ</div><h1>掲示物をご確認ください。</h1><div class="meta"><b>K1 α0.1.2</b> ｜ 2026-10-27 19:43 JST更新</div></div><a class="home" href="../index.html">作品一覧へ</a></header>
 <section id="intro" class="panel intro">
 <div class="sub">白波レジデンス・406号室</div><h2>掲示物をご確認ください。</h2>
 <p class="lede">あなたは白波レジデンス406号室で一人暮らしをする会社員です。</p><p>入居して3か月。仕事から帰るたび、エントランスの大量の掲示が目に入ります。少し慣れた今も、すべてに目を通すのはひと苦労です。</p>
@@ -106,7 +106,7 @@ var EVENTS={
 7:[{id:'E09',time:'19:10',title:'対応完了の確認',scene:'黒田が言う。「407号室の件は既に処理済みです。406号室にも問題がないということでよろしいですね」',monitor:'確認書には管理番号がある。報告先は管理会社で、管理組合理事会ではない。',hint:'B06、保管した資料、405号室の証言'},
 { id:'E10',time:'02:14',title:'最後の訪問',scene:'インターホンが鳴る。「管理事務所です。昨日のお問い合わせの件で参りました」。',monitor:'廊下の照明だけが映る。\nトン、トン。……トン。',hint:'初日の掲示、古い掲示、夜間の記録'}]
 };
-function initial(){return{started:false,day:1,index:0,phase:'morning',owner:'405',evidence:[],alert:0,trust:0,exposed:false,consent:false,seal:false,history:[],result:'',resultPending:false,ended:false,snapshots:{}};}
+function initial(){return{started:false,day:1,index:0,phase:'morning',owner:'405',evidence:[],alert:0,trust:0,exposed:false,consent:false,seal:false,letterTaken:false,history:[],result:'',resultPending:false,ended:false,snapshots:{}};}
 function copy(x){return JSON.parse(JSON.stringify(x));}
 var state=initial(),tab='board',selected=null,monitor=false,filter='',pendingChoice=null;
 var WEEKDAYS=['月','火','水','木','金','土','日'];
@@ -131,16 +131,16 @@ var post=[
 ];
 var door=[
 {day:1,id:'doorbase',name:'406号室の玄関',text:'ドアノブ、インターホン、表札。特に変わったところはない。'},
-{day:3,id:'log',name:'呼出記録',text:'02:14の呼出しが履歴に残っている。録音には三度のノックのような音。'},
+{day:4,id:'log',name:'呼出記録',text:'02:14の呼出しが履歴に残っている。録音には三度のノックのような音。'},
 {day:4,id:'scratch',name:'玄関横の印',text:'壁に鉛筆で書いたような印がある。以前は気づかなかった。'},
-{day:6,id:'sticker',name:'点検済のシール',text:'「確認済」。あなたが点検に応じていなくても、406号室の扉に貼られている。'},
-{day:7,id:'finaldoor',name:'今朝の玄関',text:'床に小さな水滴がある。隣室の前にも同じような跡が続いている。'}
+{day:7,id:'sticker',name:'点検済のシール',text:state.seal?'「確認済」。昨夜、点検を受けた際に貼られたものだ。':'「確認済」。昨夜は点検を受けていないのに、406号室の扉に貼られている。'},
+{day:7,id:'finaldoor',name:'帰宅時の玄関',text:'床に小さな水滴がある。隣室の前にも同じような跡が続いている。'}
 ];
-return (where==='post'?post:door).filter(function(i){return i.day<=state.day;});
+return (where==='post'?post:door).filter(function(i){return i.day<=state.day&&!(where==='post'&&i.id==='letter'&&state.letterTaken);});
 }
 function eventNow(){return EVENTS[state.day][state.index];}
 function inquiryTarget(e){var m={E01:'配送会社の問い合わせ窓口',E02:'管理会社の時間外窓口',E03:'管理会社の時間外窓口',E04:'管理会社の受付窓口',E05:'設備点検会社の受付窓口',E06:'管理会社の受付窓口',E07:'管理会社の時間外窓口',E08:'管理会社の時間外窓口',E09:'管理組合理事会',E10:'管理会社の時間外窓口'};return m[e.id]||'登録済み窓口';}
-function actionPreview(e,c){if(c==='yes')return '訪問者の要求を受けます。インターホンの場合は通話を開始し、相手に声が届きます。';if(c==='no')return 'この訪問・要求には応じず、相手が引き下がるのを待ちます。';return inquiryTarget(e)+'へ連絡して正規の訪問・要求かを確かめます。問い合わせた内容は相手方に伝わります。怪異に声で返事をする行為ではありません。';}
+function actionPreview(e,c){if(c==='yes')return '訪問者の要求を受けます。インターホンの場合は通話を開始し、相手に声が届きます。';if(c==='no')return 'この訪問・要求には応じず、相手が引き下がるのを待ちます。';if(e.id==='E09')return '管理組合理事会宛てに、手元の資料を添えて書面で照会します。日曜夜のため回答は翌営業日以降です。申入れをした事実は記録に残ります。';return inquiryTarget(e)+'へ連絡して正規の訪問・要求かを確かめます。問い合わせた内容は相手方に伝わります。玄関先の訪問者との通話は開始しません。';}
 function drawingHtml(){var target=state.day>=5?state.owner:'407',px={'405':189,'406':288,'407':387}[target];return '<figure style="margin:12px 0"><svg class="kid-art" role="img" aria-label="子どもが描いた4階の廊下。'+esc(target)+'号室の前に黒い人のようなものがいる。" viewBox="0 0 480 225" xmlns="http://www.w3.org/2000/svg"><rect width="480" height="225" fill="#fff9e8"/><path d="M25 55 L455 54 M25 165 L452 169" stroke="#87b3c9" stroke-width="5" stroke-linecap="round" fill="none"/><path d="M48 76V162h77V76ZM148 76V162h77V76ZM248 76V162h77V76ZM348 76V162h77V76Z" stroke="#a47d55" stroke-width="6" fill="#fff5d9" stroke-linejoin="round"/><g fill="#77664f" font-size="18" font-family="sans-serif"><text x="68" y="105">404</text><text x="168" y="105">405</text><text x="268" y="105">406</text><text x="368" y="105">407</text></g><g fill="#c9aa6a"><circle cx="114" cy="131" r="4"/><circle cx="214" cy="131" r="4"/><circle cx="314" cy="131" r="4"/><circle cx="414" cy="131" r="4"/></g><g fill="#39404b" stroke="#333843" stroke-linecap="round"><ellipse cx="'+px+'" cy="119" rx="11" ry="14"/><path d="M'+(px-11)+' 132Q'+px+' 123 '+(px+11)+' 132L'+(px+17)+' 181H'+(px-17)+'Z" stroke-width="3"/></g><path d="M38 200 Q89 185 126 199T210 201T310 200T446 201" stroke="#95b270" stroke-width="4" fill="none"/><text x="25" y="34" font-family="sans-serif" font-size="17" fill="#5b8199">ぼくのマンション</text></svg><figcaption class="tiny">404号室のお子さんの絵。4階の廊下が描かれている。</figcaption></figure>';}
 
 function evidenceName(id){var map={delivery:'宅配予告',letter:'405号室の警告',old:'旧掲示物',inspection:'個別点検案内',drawing:'子どもの絵',report:'407号室の事故資料',chair:'理事会宛ての案内',doorbase:'玄関の確認',log:'02:14の呼出記録',scratch:'玄関の印',sticker:'点検済シール',finaldoor:'玄関の水滴',technician:'点検員の実施控え',testimony:'横田の証言'};return map[id]||id;}
@@ -150,11 +150,11 @@ var msg='';
 if(e.id==='E01'){msg=c==='yes'?'予定された荷物が届いた。':c==='no'?'荷物は持ち帰りになった。':'配達予定を確認できたが、荷物は持ち帰りになった。';}
 if(e.id==='E02'){msg=c==='no'?'訪問者はしばらくして立ち去った。':c==='verify'?'時間外窓口には、そのような巡回予定は登録されていない。':'男性は要件を曖昧にしたまま廊下の奥へ消えた。';if(c==='verify'||c==='yes')state.alert++;}
 if(e.id==='E03'||e.id==='E08'||e.id==='E10'){if(c==='yes'){state.owner='406';msg='「はい」と声を出した瞬間、通話が切れた。廊下で、もう一度だけノックがした。';}else if(c==='verify'){state.alert++;msg='時間外窓口は訪問予定を把握していなかった。呼出しは止んだ。';}else msg='応答せずにいると、呼出しは止んだ。';}
-if(e.id==='E04'){if(c==='yes'){state.trust--;msg='文書は回収された。黒田は封筒を確認すると、すぐに帰った。';}else if(c==='verify'){state.alert++;msg='管理会社は、あなたが405号室の文書を持っていることを確認した。';}else{state.trust++;msg='文書は手元に残った。翌朝、405号室のポストに新しいメモが差し込まれている。';}}
+if(e.id==='E04'){if(c==='yes'){state.trust--;state.letterTaken=true;msg='405号室の手紙の原本は回収された。黒田は封筒を確認するとすぐに帰った。手元に写しを控えていたなら、記録は残っている。';}else if(c==='verify'){state.alert++;msg='管理会社は、あなたが405号室の文書を持っていることを確認した。';}else{state.trust++;msg='文書は手元に残った。黒田の足音が遠ざかると、405号室の扉が静かに閉まった。';}}
 if(e.id==='E05'){if(c==='yes'){add('technician');msg='大野が設備を確認し、実施控えを渡した。記録に書かれた以前の点検日だけが少し気になる。';}else if(c==='verify'){msg='連絡先と予定が一致した。再予約が必要になる。';}else msg='業者は帰った。点検の実施控えは得られなかった。';}
-if(e.id==='E06'){if(c==='yes'){state.trust++;add('testimony');msg='横田は407号室の過去の事故を話した。「旧管理人は、返事をするなと言っていた」と。';}else if(c==='verify'){state.trust--;state.alert++;msg='管理室へ問い合わせた後、横田は話をやめてしまった。';}else msg='横田は戻っていった。扉の下に「旧掲示を見て」とだけ書かれた紙がある。';}
-if(e.id==='E07'){if(c==='yes'){state.seal=true;state.alert++;msg='担当者は玄関の設備収納を確認し、何かを記録した。「406号室も確認済みです」。';}else if(c==='verify'){state.alert++;msg='黒田は「管理番号は正しいでしょう」と繰り返した。訪問理由は説明しなかった。';}else msg='点検への応答を見送った。翌朝、玄関に「確認済」のシールだけが残った。';}
-if(e.id==='E09'){if(c==='yes'){state.consent=true;msg='黒田は「ご理解ありがとうございます」と言い、確認書を持ち帰った。';}else if(c==='verify'){if(canExpose()){state.exposed=true;msg='手元の旧掲示・事故記録を管理組合に示した。黒田の報告書は再調査の対象となった。';}else{state.alert++;msg='手元の資料だけでは、管理組合に正式な異議を残せなかった。黒田は対応済みだと繰り返す。';}}else msg='確認書への同意はしなかった。黒田は後日連絡すると言って引き下がった。';}
+if(e.id==='E06'){if(c==='yes'){if(state.letterTaken&&state.trust<0){state.trust++;msg='横田は手紙が管理会社へ渡ったことを知っていた。「旧管理人の掲示を見て」とだけ告げ、詳しい話はしなかった。';}else{state.trust++;add('testimony');msg='横田は407号室の過去の事故を話した。「旧管理人は、返事をするなと言っていた」と。';}}else if(c==='verify'){state.trust--;state.alert++;msg='管理室へ問い合わせた後、横田は話をやめてしまった。';}else msg='横田は戻っていった。扉の下に「旧掲示を見て」とだけ書かれた紙がある。';}
+if(e.id==='E07'){if(c==='yes'){state.seal=true;state.alert++;msg='担当者は玄関の設備収納を確認し、何かを記録した。「406号室も確認済みです」。';}else if(c==='verify'){state.alert++;msg='黒田は「管理番号は正しいでしょう」と繰り返した。訪問理由は説明しなかった。';}else msg='点検への応答を見送った。黒田は玄関の前で少し立ち止まり、何も言わずに去った。';}
+if(e.id==='E09'){if(c==='yes'){state.consent=true;msg='黒田は「ご理解ありがとうございます」と言い、確認書を持ち帰った。';}else if(c==='verify'){if(canExpose()){state.exposed=true;msg='保管していた旧掲示と事故の記録を、管理組合理事会宛てに送った。日曜の夜なので回答はないが、送付控えが残った。';}else{state.alert++;msg='理事会宛ての申入れは送ったが、事故と点検記録を結びつける資料が足りない。黒田は対応済みだと繰り返す。';}}else msg='確認書への同意はしなかった。黒田は後日連絡すると言って引き下がった。';}
 state.history.push({day:state.day,id:e.id,title:e.title,choice:c,outcome:msg});
 return msg;
 }
@@ -169,7 +169,7 @@ else{name='確認済み';body='管理会社の記録では、406号室への説�
 return '<div class="ending"><div class="tiny" style="color:#b5c0c2">白波レジデンス｜7日目の翌朝</div><h2>THE END</h2><div class="endingname">'+esc(name)+'</div><p>'+esc(body)+'</p></div><p class="caption">結末は行動と保存資料で変化します。別の日から再挑戦できます。</p><div class="btnrow"><button class="btn primary" data-restartday="1">1日目からやり直す</button><button class="btn secondary" data-showrewind="1">日付を選ぶ</button></div>';
 }
 function renderNight(){var n=el('nightPanel');n.classList.toggle('hidden',state.phase!=='night'||state.ended);if(state.phase!=='night'||state.ended)return;
-var e=eventNow();var h='<div class="over">'+state.day+'日目｜'+esc(e.time)+'｜'+(state.index+1)+' / '+EVENTS[state.day].length+'</div><h2>'+esc(e.title)+'</h2><div class="scenario">'+esc(e.scene)+'</div>';
+var e=eventNow();var shownTime=e.time+(Number(e.time.slice(0,2))<5?'（翌'+WEEKDAYS[state.day%7]+'曜日）':'');var h='<div class="over">'+state.day+'日目｜'+esc(shownTime)+'｜'+(state.index+1)+' / '+EVENTS[state.day].length+'</div><h2>'+esc(e.title)+'</h2><div class="scenario">'+esc(e.scene)+'</div>';
 if(state.resultPending){h+='<div class="result"><b>その夜の記録</b><p>'+esc(state.result)+'</p></div><button class="btn primary" data-next="1">次へ進む</button>';}
 else{h+='<div class="btnrow"><button class="btn secondary" data-monitor="1">'+(monitor?'観察を閉じる':'相手・状況を確認する')+'</button></div>';
 if(monitor)h+='<div class="monitor">'+esc(e.monitor)+'</div>';
@@ -224,7 +224,7 @@ el('morningText').textContent=([
 '金曜日、仕事から戻った。子どもの作品が貼り替えられたらしい。いつもより掲示板の前で足が止まる。',
 '土曜日。買い物を済ませて戻ると、夜間点検を求める掲示が増えている。',
 '日曜日の夕方。明日はまた仕事だ。管理会社からは「対応完了」の通知が出ていた。'
-])[state.day];
+])[state.day]+(state.day>=5&&state.alert>=2?' 管理会社からは、あなたの問い合わせについて確認したいという連絡も入っている。':'');
 var rp=el('rewindPanel');if(!rp.classList.contains('hidden'))renderRewind();
 renderNight();renderTab();
 }
