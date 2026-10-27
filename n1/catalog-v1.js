@@ -81,14 +81,17 @@
  };
  const chooseSlots=(products,seed,avoid=[])=>{
    const pool=playable(products),recent=new Set(avoid),keys=['buy','fact','gift','present'];
-   const mix=n=>{let x=(seed^Math.imul(n+1,0x9e3779b9))>>>0;
+   const hash=(id,salt)=>{
+     let x=(seed ^ Math.imul(salt+1,0x9e3779b9))>>>0;
+     for(let i=0;i<id.length;i++){x=Math.imul(x^id.charCodeAt(i),0x01000193)>>>0;}
      x=Math.imul(x^(x>>>16),0x85ebca6b);x=Math.imul(x^(x>>>13),0xc2b2ae35);
-     return (x^(x>>>16))>>>0;};
+     return (x^(x>>>16))>>>0;
+   };
    const used=new Set(),out={};
    for(let i=0;i<keys.length;i++){
      const role=keys[i],options=pool.filter(x=>x.questionRoles.includes(role)&&!used.has(x.id));
      if(!options.length)throw new Error('Insufficient playable image-covered products for '+role);
-     options.sort((a,b)=>Number(recent.has(a.id))-Number(recent.has(b.id)) || mix(i+mix(15+a.id.length)+a.id.charCodeAt(0))-mix(i+mix(15+b.id.length)+b.id.charCodeAt(0)));
+     options.sort((a,b)=>Number(recent.has(a.id))-Number(recent.has(b.id)) || hash(a.id,i)-hash(b.id,i) || a.id.localeCompare(b.id));
      const pick=options[0];out[role]=pick;used.add(pick.id);
    }
    return out;
