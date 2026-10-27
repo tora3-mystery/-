@@ -120,6 +120,7 @@
       q.zone = [celeb.age - 4,celeb.age - 2];
       q.mode = 'social';
       q.source = celeb.source;
+      q.factDate = '2026-10-28';
       q.speech = 'ねえ、私って何歳に見える？ 実は' + celeb.name + 'さんと同い年なの。';
       q.context = '相馬「' + celeb.clue + '」 生年は教えずに、表情を見てこちらの答えを待っている。';
       q.hint = celeb.hint;
@@ -134,9 +135,10 @@
       q.truth = w.wait;
       q.zone = [w.wait, w.wait + 4];
       q.speech = '私、何分待ってたと思う？';
-      q.context = '集合は' + w.promise + '、あなたの到着は' + w.arrival + '。テーブルのレシートには「入店 ' + w.checkin + '」とある。';
-      q.hint = '遅刻時間と、梨花が店に入ってから待った時間は違う。店に入った時刻から考えよう。';
-      q.resultDetail = '遅刻は' + w.delay + '分、梨花が入店してからは' + w.wait + '分。';
+      q.context = '集合は' + w.promise + '、あなたの到着は' + w.arrival + '。梨花が注文したドリンクのレシートには「' + w.checkin + '」と印字されている。梨花「注文してからずっと待ってたんだけど？」';
+      q.delayMinutes = w.delay;
+      q.hint = '遅刻した分数と、梨花が注文してから待った分数は違う。レシートの注文時刻から数えよう。';
+      q.resultDetail = '遅刻は' + w.delay + '分。ドリンクの注文から数えると、梨花が待ったのは' + w.wait + '分。';
       q.explain = '「遅刻時間」と「実際に待った時間」は必ずしも同じではない。';
       q.cardType = 'none';
     }
@@ -168,7 +170,7 @@
     if (q.legacyIndex === 11) {
       q.speech = '木曜に見せたこの商品、妻にはいくらくらいに見えると思います？';
       q.context = '木曜に公式価格は教えてもらっている。庄司は「高すぎて気を遣わせるんじゃないか」と少し心配している。';
-      q.hint = '木曜の会話ログに本当の価格が残っている。正確さでも空気読みでも100点が狙える。';
+      q.hint = '木曜の会話ログに実際の価格が残っている。でも庄司さんが心配しているのは、奥さんに高価すぎると思われないかということ。';
       q.cardType = 'product';
     }
     if (q.legacyIndex === 1) {
@@ -255,7 +257,7 @@
       3:{
         exact:['正解。待ったのは'+fmt(q.truth)+'分。','正解を当ててほしくて聞いてるわけじゃないんだけど？'],
         social:['そう。ちゃんと待ってた時間を分かってるんだ。','それなら次は時間にも分かってもらってほしいな。'],
-        low:['それ、あなたが遅れた時間でしょ。','私が待ったのは、店に入ったときから。レシート見て。'],
+        low:['もっと待ってたよ。','時計だけじゃなくて、レシートの時間も見て。'],
         high:['ちょっと盛りすぎ。','そんなに待ってたら、先にメニュー全部食べてるわ。'],
         extremeLow:['その時間で済んでたら、まだ笑ってた。','あ、今も笑ってはいる。笑顔の種類が違うけど。'],
         extremeHigh:['私を遭難者にしないで。','そこまでなら保護要請してる。']
@@ -317,10 +319,21 @@
     if(q.legacyIndex===1 && q.item.indexOf('アダプタ')>=0 && t==='high')out=lines(speaker,'充電器にその額？','スマホの方が先にびっくりして電源落ちそう。');
     if(q.legacyIndex===1 && q.item.indexOf('Alarmo')>=0 && t==='high')out=lines(speaker,'目覚まし時計にその値段？','その額なら、僕を会社まで起こしに来てほしい。');
     if(q.legacyIndex===1 && q.item.indexOf('ヘッドホン')>=0 && t==='high')out=lines(speaker,'ヘッドホンにそこまで出せないよ！','イヤホンをつけたまま財布の声が聞こえてしまう。');
+    if (q.legacyIndex===3 && t==='low' && x===q.delayMinutes) {
+      out=lines(speaker,'それ、あなたが遅刻した時間でしょ。','私が待ってたのは、ドリンクを注文してから。レシート見て。');
+    }
     if (t==='near' && q.mode==='facts') {
       const delta=Math.abs(x-q.truth);
-      if(q.type==='yen' && delta<=1)out=lines(speaker,'あと1円！','この1円だけ、どこに置いてきたんですか？');
+      if(q.type==='yen' && delta===1) {
+        if(q.legacyIndex===2) out=lines(speaker,'惜しい、1円' + (x<q.truth?'足りない':'多い') + 'です。','こういうの、答え合わせをすると気になりますよね。');
+        else if(q.legacyIndex===7) out=lines(speaker,'誤差は1円ですね。','経理としては直しますが、プレゼント選びとしてはほぼ正解です。');
+        else if(q.legacyIndex===8) out=lines(speaker,'あと1円！','でも梅田さんのショックは、1円も変わらないと思う。');
+      }
       if(q.type==='year' && delta===1)out=lines(speaker,'惜しい！ 1年違いだよ。','歴史の年号って、その1年が案外大事なんだよね。');
+    }
+    if (q.legacyIndex===1 && t==='extremeLow') {
+      const noun=informalProductName(q.item);
+      out=lines(speaker,'その額で'+noun+'が買えるなら、もう1つ買ってるよ。','いや、それなら自慢する前にみんなに教えてる。');
     }
     if(q.legacyIndex===8){
       const prev=(history||[]).find(r=>r&&r.legacyIndex===1);
