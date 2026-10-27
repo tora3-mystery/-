@@ -122,7 +122,7 @@
       q.source = celeb.source;
       q.factDate = '2026-10-28';
       q.speech = 'ねえ、私って何歳に見える？ 実は' + celeb.name + 'さんと同い年なの。';
-      q.context = '相馬「' + celeb.clue + '」 生年は教えずに、表情を見てこちらの答えを待っている。';
+      q.context = '相馬「' + celeb.clue + '」 相馬さんは、こちらの返事を楽しみにしている。';
       q.hint = celeb.hint;
       q.item = '相馬さんの年齢';
       q.publicDetail = '';
@@ -158,14 +158,15 @@
     }
     if (q.legacyIndex === 8) {
       const discount = [25,30,40][variation];
-      q.context = '同じ型番の商品を扱う架空の別店舗で、今週は' + discount + '%OFFの広告。値下がり前の値段は月曜の会話ログに残っている。';
+      q.context = '月曜の買い物と同じ型番の商品を、別のお店が値引きしていた。月曜の購入額は会話ログから確認できる。';
       q.speech = '梅田さんのアレ、今' + discount + '%OFFなんだって。いくらになってると思う？';
       q.hint = '月曜の会話ログに、梅田さんが実際に買った値段がある。店頭セールと公式通常価格は別。';
-      q.publicDetail = '今週の割引率：' + discount + '%OFF。キャンペーンは架空の設定。';
+      q.publicDetail = '別店舗の架空セール：' + discount + '%OFF。値引き前の価格は月曜の会話ログを参照。';
       q.spec = '割引率 ' + discount + '%OFF（元値は会話ログで確認）';
       q.resultDetail = '月曜の購入額 ' + fmt(old.truth / (1 - discount / 100)) + '円 → 架空のセール価格 ' + fmt(old.truth) + '円。';
       q.explain = '公式価格自体が値下げされたわけではない。別店舗のセールはゲーム内の架空設定。';
       q.cardType = 'product';
+      q.item = q.item.replace(/の別店舗価格$/, '');
     }
     if (q.legacyIndex === 11) {
       q.speech = '木曜に見せたこの商品、妻にはいくらくらいに見えると思います？';
@@ -180,7 +181,7 @@
     q.speechName = informalProductName(q.item);
     q.displayName = q.item;
     if (q.legacyIndex === 2) {
-      q.context = '新井「' + q.speechName + 'だよ。普通のお店でいくらくらいだと思う？ セールは考えなくていいからね」';
+      q.context = '新井「' + q.speechName + 'だよ。セールとかポイント還元はナシでね」';
     }
     if (q.legacyIndex === 8) {
       q.speech = '梅田さんが買った' + informalProductName(q.item) + '、今' + [25,30,40][variation] + '%OFFなんだって。いくらだと思う？';
