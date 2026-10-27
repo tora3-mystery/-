@@ -407,8 +407,8 @@
     if (typeof legacyBuild !== 'function') throw new TypeError('legacyBuild must be a function');
     if (!Array.isArray(legacyPicks) || legacyPicks.length < 12) throw new TypeError('legacyPicks must have >=12 entries');
     const opts=options||{}, order=ORDER.slice();
-    // Swap only independent encounters within a day.
-    for(let day=0;day<4;day++)if((opts.daySwapMask||0)&(1<<day)){
+    // All five weekdays can swap their two encounters; story callbacks use legacy IDs.
+    for(let day=0;day<5;day++)if((opts.daySwapMask||0)&(1<<day)){
       const i=2*day;[order[i],order[i+1]]=[order[i+1],order[i]];
     }
     const purchasePrice=opts.productAssignments?.[1]?.price ?? legacyBuild(1,legacyPicks[1],legacyPicks).truth;
