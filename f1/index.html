@@ -404,16 +404,14 @@ function reconcileComplaints(){
      body:source+(matched?'ご指摘の'+labels[metric]+'を改善しました。':'ご指摘の問題が改善しました。')+' ご利用後に問題が残る場合は、改めてお知らせください。'});
    });
   }
-  // At the severity cap, customer complaints continue without increasing severity.
+   // Old saves and migrated states may have fewer submissions than their current severity.
+  const existing=s.complaintTickets.filter(x=>x.metric===metric&&x.status==='open').length;
+  for(let n=existing;n<severity;n++)addComplaintTicket(metric,s.day,false);
+  // At 5/5 the severity remains capped, but new complaints continue to arrive.
   const key=s.day+'-'+metric;
   if(s.day>1&&severity===5&&!s.complaintSaturationKeys.includes(key)){
    addComplaintTicket(metric,s.day,false);s.complaintSaturationKeys.push(key);
   }
- });
- // Fill only missing baseline tickets (older saves or direct-state tests). Never cap real submissions.
- s.vals.forEach((severity,i)=>{
-  const open=s.complaintTickets.filter(x=>x.metric===i&&x.status==='open').length;
-  for(let n=open;n<severity;n++)addComplaintTicket(i,s.day,false);
  });
  s.complaintLedgerSeverity=[...s.vals];
 }
