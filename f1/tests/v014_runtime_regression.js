@@ -24,6 +24,7 @@ function test(html){
   return {d:window.__F1_DEBUG__,get:document.getElementById,db};
  }
  function step(ctx,id){
+  if(id==='inspectBack')assert(ctx.d.focus('f17-back-review','裏手の社の周りが暗く'),'DAY 2 shrine message discovery');
   const {d,get}=ctx,before=d.getState();
   const legal=d.availableIds();
   assert(legal.includes(id),'Action not offered: DAY '+before.day+' '+id);
@@ -84,7 +85,7 @@ function test(html){
  assert(boundary(500,4)==='normal_success','500 with four complaints remains success');
  assert(boundary(500,7)==='normal_customer','500 with seven complaints is not full success');
  const two=app();two.d.restart();step(two,'pickup');step(two,'complaintHide');
- assert(two.d.availableIds().includes('audit'),'Eerie choice and gray should coexist');
+ assert(!two.d.availableIds().includes('audit'),'Uninspected shrine must not be offered directly');
  assert(two.d.availableIds().some(x=>['dateShift','stockCover'].includes(x)),'Gray action not displaced');
  const idle=app();idle.d.restart();
  for(let i=0;i<7&&!idle.d.getState().finish;i++)step(idle,'idle');
@@ -93,7 +94,7 @@ function test(html){
  step(zero,'idle');
  assert(zero.d.getState().endingReason==='店長解任・営業停止','Zero-day firing');
  const eerie=app();eerie.d.restart();
- for(const id of ['pickup','vibration','audit','camera0','open0'])step(eerie,id);
+ for(const id of ['pickup','inspectBack','audit','camera0','open0'])step(eerie,id);
  assert(eerie.d.getState().day===6&&eerie.d.getState().odd===3,'Ten-comment route reaches DAY 6');
  const six=eerie.get('complaintBoard').children;
  assert(six.length>=10,'Day 6 ten reviews');
