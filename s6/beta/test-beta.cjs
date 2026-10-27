@@ -5,10 +5,11 @@ const root=path.resolve(__dirname,'..');
 const dataCode=fs.readFileSync(path.join(root,'game-data.js'),'utf8');
 const profileCode=fs.readFileSync(path.join(__dirname,'character-profiles.js'),'utf8');
 const socialCode=fs.readFileSync(path.join(__dirname,'social-personas.js'),'utf8');
+const storyCode=fs.readFileSync(path.join(__dirname,'story-vocaloid.js'),'utf8');
 const dialogueCode=fs.readFileSync(path.join(__dirname,'dialogue-engine.js'),'utf8');
 const game=fs.readFileSync(path.join(__dirname,'game.js'),'utf8');
 const dataScope={window:{}};vm.runInNewContext(dataCode,dataScope);
-vm.runInNewContext(profileCode,dataScope);vm.runInNewContext(socialCode,dataScope);vm.runInNewContext(dialogueCode,dataScope);
+vm.runInNewContext(profileCode,dataScope);vm.runInNewContext(socialCode,dataScope);vm.runInNewContext(storyCode,dataScope);vm.runInNewContext(dialogueCode,dataScope);
 const D=dataScope.window.S6_DATA;
 let total=0, failures=0;
 function check(name,fn){try{fn();total++;console.log('PASS',name)}catch(e){failures++;console.error('FAIL',name,e.stack||e)}}
@@ -17,11 +18,11 @@ function makeSession(cache=new Map()){
  const app={set innerHTML(v){html=v},get innerHTML(){return html},addEventListener(n,f){if(n==='click')onClick=f}};
  const doc={getElementById:id=>id==='app'?app:fields[id]||null};
  const storage={getItem:k=>cache.get(k)||null,setItem:(k,v)=>cache.set(k,v)};
- const win={S6_DATA:D,S6_BETA_PROFILES:dataScope.window.S6_BETA_PROFILES,S6_BETA_SOCIAL:dataScope.window.S6_BETA_SOCIAL,S6_BETA_DIALOGUE:dataScope.window.S6_BETA_DIALOGUE,scrollTo(){}};
+ const win={S6_DATA:D,S6_BETA_PROFILES:dataScope.window.S6_BETA_PROFILES,S6_BETA_SOCIAL:dataScope.window.S6_BETA_SOCIAL,S6_BETA_STORY:dataScope.window.S6_BETA_STORY,S6_BETA_DIALOGUE:dataScope.window.S6_BETA_DIALOGUE,scrollTo(){}};
  vm.runInNewContext(game,{window:win,document:doc,localStorage:storage});
  return {
   get html(){return html},
-  get state(){return JSON.parse(cache.get('s6-origin-beta-010')||'{}')},
+  get state(){return JSON.parse(cache.get('s6-vocaloid-beta-060')||'{}')},
   cache,
   field(id,value){fields[id]={value}},
   click(action,id=''){assert.ok(onClick);onClick({target:{closest:()=>({dataset:{act:action,id}})},preventDefault(){}});return html;}
@@ -35,10 +36,12 @@ check('96 original DB people and portraits, 6 clubs, 12 events, 44 groups',()=>{
  assert.equal(new Set(D.people.map(x=>x.person_id)).size,96);
  for(const p of D.people)assert.match(p.portrait_path,/^assets\/faces\/p\d{3}\.webp$/);
 });
-check('content warning, six-club tutorial, and online stalking backstory',()=>{
- const s=makeSession();s.click('start');assert.equal(s.state.phase,'warning');assert.match(s.html,/ジャンプスケア/);
+check('six-club tutorial and invited search for anonymous Vocaloid producer',()=>{
+ const s=makeSession();s.click('start');assert.equal(s.state.phase,'warning');assert.match(s.html,/見つけたら声をかけて/);
  s.click('show-campus');for(const o of D.orgs)assert.ok(s.html.includes(o.formal_name));
- s.click('show-intro');assert.match(s.html,/SNSで見知らぬ相手/);s.click('begin');assert.equal(s.state.phase,'day');
+ s.click('show-intro');assert.match(s.html,/余白ラムネ/);assert.match(s.html,/午前二時の紙飛行機/);
+ assert.doesNotMatch(s.html,/ストーカー|つきまとい/);
+ s.click('begin');assert.equal(s.state.phase,'day');
 });
 check('entering a venue shows faces but no names',()=>{
  const s=newPlayer();s.click('attend','E01');assert.equal(s.state.phase,'venue');
@@ -118,24 +121,31 @@ check('character identification plus conversation and board link to camp judgmen
  s.click('action-menu','question');s.click('ask-affiliation','P001');s.click('back-venue');s.click('finish-venue');
  s.click('open-notebook');s.click('open-identity','P001');s.field('guessName','P001');s.field('guessOrg','K');s.click('submit-identity');
  s.click('back-from-notebook');s.click('next-day');s.click('skip');s.click('next-day');s.click('skip');s.click('next-day');
- assert.match(s.html,/ばらばらだった情報が、一つの団体につながった/);
+ assert.match(s.html,/こもれびで会った西園寺紬/);
 });
-check('non-K and no-camp options do not share the special trap',()=>{
- for(const c of ['L','Z','J','W','F','N']){const s=skipWeek();s.click('choose-camp',c);assert.doesNotMatch(s.html,/data-act="private"/);s.click('finish-safe');assert.equal(s.state.result,'SAFE')}
+check('five alternate clubs and no-camp each have coherent outcomes',()=>{
+ for(const c of ['L','Z','J','W','F','N']){
+  const s=skipWeek();s.click('choose-camp',c);
+  assert.equal(s.state.phase,'saturday');assert.doesNotMatch(s.html,/data-act="meet-producer"/);
+  assert.match(s.html,/このサークルで演奏を楽しむ|一週間を振り返る/);
+  s.click('finish-other');assert.equal(s.state.result,c==='N'?'SKIPPED':'OTHER');
+  assert.equal(s.state.phase,'end');assert.match(s.html,/2027年4月/);
+ }
 });
-check('specific hazard allows refusal, rescue, shared rescue, and danger',()=>{
- let s=skipWeek();s.click('choose-camp','K');s.click('finish-safe');assert.equal(s.state.result,'DECLINED');
- s=skipWeek();s.click('choose-camp','K');s.click('private');s.click('stay');assert.equal(s.state.result,'DANGER');
- s=skipWeek();s.click('choose-camp','K');s.click('private');s.click('escape');assert.equal(s.state.result,'RESCUED');
- s=skipWeek();s.click('choose-camp','K');s.click('share');s.click('private');assert.doesNotMatch(s.html,/data-act="stay"/);
+check('the target circle lets you meet the Vocaloid producer or just listen',()=>{
+ let s=skipWeek();s.click('choose-camp','K');assert.match(s.html,/最後の一拍/);
+ s.click('meet-producer');assert.equal(s.state.result,'FOUND');assert.match(s.html,/西園寺紬/);
+ assert.match(s.html,/聞かれても教えないで/);
+ s=skipWeek();s.click('choose-camp','K');s.click('listen-only');assert.equal(s.state.result,'HEARD');
+ assert.doesNotMatch(s.html,/「余白ラムネさん、ですか？/);
 });
 check('separate save and legacy beta migration',()=>{
  const cache=new Map(),s=makeSession(cache);
  for(const a of ['start','show-campus','show-intro','begin'])s.click(a);
  s.click('attend','E01');s.click('join-group','E01-A');s.click('leave-flash');
  assert.equal(makeSession(cache).state.phase,'group');
- assert.equal(cache.has('s6-case-a-v03-auto'),false);
- const data=s.state;data.phase='flash';data.group=null;cache.set('s6-origin-beta-010',JSON.stringify(data));
+ assert.equal(cache.has('s6-case-a-v03-auto'),false);assert.equal(cache.has('s6-origin-beta-010'),false);
+ const data=s.state;data.phase='flash';data.group=null;cache.set('s6-vocaloid-beta-060',JSON.stringify(data));
  const reread=makeSession(cache);assert.equal(reread.state.phase,'venue');
 });
 check('all 96 character profiles provide stable voice, four traits and SNS demeanor',()=>{
@@ -245,7 +255,7 @@ check('TINE displays personal messages only for approved contacts, without datin
  s.click('action-menu','contact');s.click('act-target','P003');
  s.click('back-venue');s.click('finish-venue');s.click('night-sns','TINE');
  assert.match(s.html,/交換済みの連絡先/);
- assert.match(s.html,/相手が安全かどうかは別の話/);
+ assert.match(s.html,/ネット上の活動名義は別の話/);
  const msg=B.snsMessage('P003',s.state);
  assert.ok(msg?.text.includes('新歓'));
  assert.doesNotMatch(msg.text,/神谷杏奈|好きだよ|付き合って/);
@@ -256,7 +266,7 @@ check('old beta saves missing relationshipDay fields load without error or false
  // Supply an actual legacy shape to the loader and confirm graceful migration.
  const legacy=s.state;
  legacy.affinity={P003:4};delete legacy.relationshipDays;delete legacy.dailyAffinity;
- storage.set('s6-origin-beta-010',JSON.stringify(legacy));
+ storage.set('s6-vocaloid-beta-060',JSON.stringify(legacy));
  const loaded=makeSession(storage);
  assert.equal(loaded.state.affinity.P003,4);
  assert.equal(dataScope.window.S6_BETA_DIALOGUE.level(loaded.state,'P003'),'acquainted');
@@ -383,7 +393,7 @@ check('new rounds shuffle first-day visual circle order but keep event/group mem
  first.click('attend','E01');assert.equal(first.state.phase,'venue');
  const layouts=new Set();
  for(let seed=0;seed<24;seed++){
-  const st={...first.state,presentationSeed:seed};cache.set('s6-origin-beta-010',JSON.stringify(st));
+  const st={...first.state,presentationSeed:seed};cache.set('s6-vocaloid-beta-060',JSON.stringify(st));
   const same=makeSession(cache);
   const layout=(same.html.match(/data-id="E01-[A-E]"/g)||[]).join('|');
   layouts.add(layout);
@@ -460,7 +470,7 @@ check('personal name flags from old beta saves survive reload without invented a
  const cache=new Map(),s=makeSession(cache);
  for(const a of ['start','show-campus','show-intro','begin'])s.click(a);
  const legacy=s.state;legacy.spokenTo=['P003'];delete legacy.personalIntroduced;delete legacy.interacted;
- cache.set('s6-origin-beta-010',JSON.stringify(legacy));
+ cache.set('s6-vocaloid-beta-060',JSON.stringify(legacy));
  const loaded=makeSession(cache);
  assert.ok(loaded.state.personalIntroduced.P003);
  assert.equal(loaded.state.affinity.P003||0,0);
@@ -481,16 +491,16 @@ check('first direct talk is a real first meeting, not an accidental reunion',()=
  assert.doesNotMatch(first,/あ、また会ったね|あ、また会えた|この前はどうも|この前もいたよね|前にも話したよね/);
  assert.ok(s.state.interacted.includes('P003'));
 });
-check('P001 pre-entry clue appears on first talk and is not repeated',()=>{
+check('the producer speaking cue appears on first talk without forcing their alias',()=>{
  const s=newPlayer();
  for(let i=0;i<2;i++){s.click('skip');s.click('next-day')}
  visit(s,'E05','E05-A');
  s.click('action-menu','talk');s.click('act-target','P001');
  const first=s.state.groupLog['E05-A'][0].text;
- assert.match(first,/西園寺紬/);assert.match(first,/入学前から/);
+ assert.match(first,/西園寺紬/);assert.match(first,/鳴らしていない一拍/);
  s.click('action-menu','talk');s.click('act-target','P001');
  const second=s.state.groupLog['E05-A'][1].text;
- assert.doesNotMatch(second,/入学前から/);
+ assert.doesNotMatch(second,/鳴らしていない一拍/);
 });
 check('all 88 questions match the seniority of the target',()=>{
  const E=dataScope.window.S6_BETA_DIALOGUE;
@@ -542,6 +552,58 @@ check('third-party question responses follow the question subject across every c
   }
  }
  assert.ok(spoken>0&&silent>0);
+});
+
+
+check('all story clues match real performers and the deliberate red herrings',()=>{
+ const story=dataScope.window.S6_BETA_STORY;
+ assert.equal(story.homeOrg,'K');assert.equal(story.producerId,'P001');
+ assert.equal(D.people.find(p=>p.person_id==='P001').primary_org,story.homeOrg);
+ assert.equal(story.board.length,5);
+ assert.equal(story.confidants.length,3);
+ for(const pid of story.confidants)assert.ok(D.people.some(p=>p.person_id===pid));
+ for(const key of Object.keys(story.lines)){
+  const [gid,pid,order]=key.split('|');
+  assert.ok(D.lines.some(x=>x.group_id===gid&&x.speaker_id===pid&&String(x.order)===order),key);
+ }
+ for(const gid of Object.keys(story.listening))assert.ok(D.groups.some(x=>x.group_id===gid),gid);
+ for(const id of Object.keys(story.posts))assert.ok(D.posts.some(p=>p.post_id===id),id);
+});
+check('vocaloid clues are available without visiting the correct circle',()=>{
+ const s=newPlayer();
+ s.click('skip');s.click('night-board');
+ assert.match(s.html,/ネットで曲を作る人/);
+ s.click('back-night');s.click('night-sns','Photogram');
+ assert.match(s.html,/一拍/);
+ assert.doesNotMatch(s.html,/余白ラムネ.*西園寺紬/);
+});
+check('producer line and listening clue are heard only in the actual circle',()=>{
+ const E=dataScope.window.S6_BETA_DIALOGUE;
+ assert.match(E.listenText('E05-A'),/あのボカロ曲/);
+ assert.match(E.listenText('E10-A'),/高校時代に何度も聴いた/);
+ assert.match(E.sceneLine(D.lines.find(x=>x.group_id==='E05-A'&&x.speaker_id==='P001')),/最後の一拍/);
+ assert.match(E.answer('P001','E05-A','question').text,/ボカロも聴く/);
+ assert.match(E.answer('P001','E10-A','question').text,/DTMもする/);
+ assert.doesNotMatch(E.listenText('E09-A'),/高校時代の公開ライブ/);
+});
+check('found ending reflects real peer contact and prior identity match',()=>{
+ const s=newPlayer();
+ for(let i=0;i<2;i++){s.click('skip');s.click('next-day')}
+ visit(s,'E05','E05-A');s.click('action-menu','talk');s.click('act-target','P001');
+ s.click('back-venue');s.click('finish-venue');s.click('open-notebook');s.click('open-identity','P001');
+ s.field('guessName','P001');s.field('guessOrg','K');s.click('submit-identity');s.click('back-from-notebook');
+ for(let i=2;i<4;i++){s.click('next-day');s.click('skip')}
+ s.click('next-day');assert.equal(s.state.phase,'camp');
+ s.click('choose-camp','K');s.click('meet-producer');
+ assert.match(s.html,/覚えていた顔と名前/);
+ assert.match(s.html,/新歓でも会話した相手/);
+});
+check('old S6 beta saves do not mix stalking and producer narratives',()=>{
+ const cache=new Map();
+ cache.set('s6-origin-beta-010',JSON.stringify({schema:1,phase:'private',result:'DANGER'}));
+ const s=makeSession(cache);
+ assert.equal(s.state.phase,'title');
+ assert.match(s.html,/サークルは/);
 });
 
 console.log(JSON.stringify({passed:total,failed:failures}));if(failures)process.exitCode=1;
