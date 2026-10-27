@@ -95,7 +95,7 @@ function makeCandidates(pairs){
  s.candidates=ids.map(id=>{
   const a=articles[id];const pair=pairs.find(p=>articleCode(p)===id);
   const lead=pair&&a.leadVariant?.leadToken&&s.leads.includes(a.leadVariant.leadToken)&&LEAD_RULES[a.leadVariant.leadToken]?.includes(pair.join(''))?a.leadVariant.leadToken:null;
-  const resolved=(carry?.id===id?carry.lead:lead)||null;
+  const resolved=lead||(carry?.id===id?carry.lead:null)||null;
   const view=displayArticle(a);return {id,lead:resolved,displayHeadline:view.headline,displayBody:resolved&&a.leadVariant?.leadToken===resolved?a.leadVariant.body:view.body}
  });
  s.slots=[null,null,null,null];s.research=pairs;s.stage='newsroom';save();
