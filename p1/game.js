@@ -1,7 +1,7 @@
 'use strict';
 /* P1 v0.9.1-beta. All content is fictitious. No network calls beyond story.json. */
 const APP=document.getElementById('app');
-const SAVE='short-ui-games-p1-v091';
+const SAVE='short-ui-games-p1-v090';
 const DAYS=['10月12日（月）','10月13日（火）','10月14日（水）','10月15日（木）','10月16日（金）','10月17日（土）','10月18日（日）'];
 const REPORTERS=[['S','佐伯','行政・予算'],['K','桐谷','経済・企業'],['M','森下','医療・現場'],['O','大野','観光・地域'],['B','黒田','社会問題']];
 const TOPICS=[['H','医療'],['T','観光'],['E','自然環境'],['G','県政・財政']];
@@ -21,9 +21,9 @@ const header=(small,big,description='')=>`<p class="kicker">${esc(small)}</p><h1
 const status=()=>`<div class="status"><span>第 ${s.day} 日／7日</span><span>公的支援上限：2分野</span><span>発行済 ${s.history.length} 紙</span></div>`;
 function random(){s.random=(s.random+0x6D2B79F5)>>>0;let t=s.random;t=Math.imul(t^(t>>>15),t|1);t^=t+Math.imul(t^(t>>>7),t|61);return ((t^(t>>>14))>>>0)/4294967296}
 function choice(a){return a[Math.floor(random()*a.length)]}
-function init(seed){s={version:91,stage:'intro',day:1,random:seed>>>0,variant:'none',att:{H:0,T:0,E:0},evidence:[],small:{},budget:2,leads:[],verified:[],reactionsSeen:[],latestReactions:[],history:[],publishedIds:[],outcomes:{},carry:null,research:[],candidates:[],slots:[null,null,null,null],trace:[],lastDecisions:[],lastAttention:{H:0,T:0,E:0},lastPaper:[]};s.variant=choice(['none','H','T','E']);save()}
+function init(seed){s={version:9,stage:'intro',day:1,random:seed>>>0,variant:'none',att:{H:0,T:0,E:0},evidence:[],small:{},budget:2,leads:[],verified:[],reactionsSeen:[],latestReactions:[],history:[],publishedIds:[],outcomes:{},carry:null,research:[],candidates:[],slots:[null,null,null,null],trace:[],lastDecisions:[],lastAttention:{H:0,T:0,E:0},lastPaper:[]};s.variant=choice(['none','H','T','E']);save()}
 function save(){try{localStorage.setItem(SAVE,JSON.stringify(s))}catch(e){/* private mode */}}
-function restore(){try{const old=JSON.parse(localStorage.getItem(SAVE));if(old?.version===91&&old.day>=1&&old.day<=7&&['intro','morning','newsroom','published','ending'].includes(old.stage))return old}catch(e){}return null}
+function restore(){try{const old=JSON.parse(localStorage.getItem(SAVE));if(old?.version===9&&old.day>=1&&old.day<=7&&['intro','morning','newsroom','published','ending'].includes(old.stage))return old}catch(e){}return null}
 function seen(id){return s.publishedIds.includes(id)}
 function newspaper(slots,small=false){const pieces=slots.map(id=>id&&articles[id]);return `<section class="paper" aria-label="組版済み新聞プレビュー"><div class="masthead"><h2>東雲日報</h2><time>2026年<br>${esc(DAYS[s.day-1])}</time></div>${pieces.map((a,i)=>i<2?`<div class="front ${i?'second':'top'}"><small>${i?'準トップ':'一面トップ'}　${a?esc(LABEL[topic(a)]):'未設定'}</small><h3>${a?esc(seen(a.id)?'続報｜'+(s.candidates.find(z=>z.id===a.id)?.displayHeadline||a.headline):(s.candidates.find(z=>z.id===a.id)?.displayHeadline||a.headline)):'記事を選択してください'}</h3>${a?`<p class="brief">${esc((s.candidates.find(z=>z.id===a.id)?.displayBody||a.body||'').slice(0,i?72:110))}${small?'': '…'}</p>`:''}</div>`:'').join('')}<div class="mini-grid">${pieces.slice(2).map((a,i)=>`<div class="front mini"><small>小記事${i+1}</small><h3>${a?esc(s.candidates.find(z=>z.id===a.id)?.displayHeadline||a.headline):'未設定'}</h3></div>`).join('')}</div></section>`}
 function briefingText(){
@@ -90,7 +90,37 @@ const TIME_VARIANTS={
  N04:{from:4,headline:'中央病院の診療体制、再編に向けて協議続く',body:'医師や看護師の配置と病院間の連携について協議が続いている。支援策があっても、現場の体制を立て直すことが欠かせない。'},
  N16:{from:4,headline:'県内医療ネットワーク、再編方針を検討',body:'中央病院の機能維持と周辺医療機関との連携を巡り、担当部署が実務上の課題を洗い出している。制度変更には調整が必要だ。'}
 };
-function displayArticle(a){const v=TIME_VARIANTS[a.id];return v&&s.day>=v.from?v:a}
+const FOLLOWUP_TITLES={
+ N01:'中央病院の待ち時間、診療体制の改善なお課題',
+ N02:'中央病院の夜勤体制、人員補充の調整続く',
+ N03:'県北部の診療所、医師派遣縮小の影響続く',
+ N05:'霧峰高原の開発構想、企業が条件を精査',
+ N06:'宿泊需要の伸び、持続性について意見分かれる',
+ N07:'高原へのアクセス道路、交通対策を検討',
+ N09:'千鳥湿原の希少鳥、保護活動の課題を確認',
+ N10:'県北部の河川、水質変化の原因調査続く',
+ N11:'登山道の復旧、管理の担い手確保が課題',
+ N13:'中央病院の運営費、県議会で協議続く',
+ N14:'宿泊税の使途、観光と環境保全で意見分かれる',
+ N15:'千鳥湿原の保護指定、維持管理費も論点に'
+};
+const FOLLOWUP_INV={
+ I01:'病院向け県費の活用、議会手続きが焦点',
+ I05:'企業の病院出資案、診療連携の条件を再確認',
+ I06:'高原開発への出資、環境対策の見通しが焦点',
+ I09:'中央病院の診療連携、調整の行方',
+ I14:'環境共生型観光案、費用とルートを再検討',
+ I15:'湿原の保全協定、負担と管理責任を協議',
+ I19:'湿原周辺の環境調査、追加検証が焦点'
+};
+function displayArticle(a){
+ const v=TIME_VARIANTS[a.id],base=v&&s.day>=v.from?v:a;
+ if(!seen(a.id))return base;
+ const suffix=a.id.startsWith('I')
+  ?'前回の取材内容を踏まえ、関係者への追加照会を続けている。現時点で最終決定は出ていない。'
+  :'前回の記事以降も、住民や担当者が対応の行方を注視している。課題の解決には継続的な確認が必要だ。';
+ return {headline:FOLLOWUP_TITLES[a.id]||FOLLOWUP_INV[a.id]||base.headline,body:base.body+' '+suffix};
+}
 function makeCandidates(pairs){
  const articleCode=([r,t])=>`I${String(1+REPORTERS.findIndex(x=>x[0]===r)*4+TOPICS.findIndex(x=>x[0]===t)).padStart(2,'0')}`;
  const codes=pairs.map(articleCode);
