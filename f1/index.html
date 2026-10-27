@@ -207,7 +207,7 @@ body.odd-3 #day8Panel[data-stage="2"]{border-color:#987b79;box-shadow:0 4px 18px
 .practice-completed{border:1px solid #d5c48b;background:#fffbef;color:#394b38;border-radius:12px;padding:14px;margin-top:12px}.practice-completed p{margin:6px 0}.practice-screen [hidden],.day8-shell [hidden]{display:none!important}
 .day8-shell .operations-board{margin-top:10px}.day8-shell .two{margin-top:14px}.day8-shell .day8-action-card{display:block;width:100%;padding:14px;border-radius:11px;border:2px solid #b4c8ba;background:#eef4ed;color:#29483f;text-align:left;font-size:14px;font-weight:800;cursor:pointer}.day8-shell .day8-action-card small{display:block;font-size:11px;font-weight:500;margin-top:5px}.day8-shell .day8-action-card:focus-visible{outline:3px solid #b87d36;outline-offset:3px}.day8-shell #day8IssueTag{color:#463834;background:#ebe5d8}
 @media(max-width:550px){.practice-screen .two,.day8-shell .two{display:grid;grid-template-columns:1fr}}
-</style></head><body><main class="container"><header class="mast"><div class="brand"><span class="brand-icon" id="brandIcon">🛒</span><span id="brandName">まるまるスーパー<br><small class="tiny">お客様改善センター</small></span></div><div class="header-actions"><button id="help" class="button-quiet hidden">遊び方</button><button id="restart" class="button-quiet hidden">最初から</button></div></header><div class="version-top"><b>F1 v0.19.0</b><span>2026-10-27 22:26:04 JST更新</span></div>
+</style></head><body><main class="container"><header class="mast"><div class="brand"><span class="brand-icon" id="brandIcon">🛒</span><span id="brandName">まるまるスーパー<br><small class="tiny">お客様改善センター</small></span></div><div class="header-actions"><button id="help" class="button-quiet hidden">遊び方</button><button id="restart" class="button-quiet hidden">最初から</button></div></header><div class="version-top"><b>F1 v0.19.0</b><span>2026-10-27 22:38:48 JST更新</span></div>
 <section id="intro" class="focus box">
  <div class="overline">日曜日 17:30｜まるまるスーパー 店長室</div><h1 class="head">すべてのご意見に対応してください。</h1>
  <div class="intro-note"><b>【店長からの引き継ぎ】</b>明日から私が一週間不在になります。7日間、お客様の声を確認しながら、この店の営業を任せます。</div>
@@ -767,8 +767,8 @@ const F17_ACTIONS=[
 ];
 options.push(...F17_ACTIONS,{
  id:'productCheck',name:'棚の商品と仕入伝票を照合する',kind:'stock',role:'discovery',
- delta:[0,0,-1,0],attractionOnCompletion:0,
- desc:'品名を確認し、商品札のない品を売場から外します。',
+ delta:[0,0,0,0],attractionOnCompletion:0,
+ desc:'仕入元不明の商品を確認し、記録がないため一時保管します。',
  min:1,max:5,completionDays:1,repeat:false,f17Only:true
 });
 
@@ -1087,7 +1087,8 @@ function v09CompleteJobs(day){
    if(j.anomalySideEffect){s.afterSales+=2;if(j.anomalyEvenDay)s.remaining++;s.permit=s.odd>=3?'不許可':'保留';}
   }
   if(j.kind==='odd')s.appliedToday.push({kind:'odd',id:j.id,name:j.name});
-  if(j.id==='productCheck')s.news='棚の商品を照合しましたが、該当する仕入記録は見つかりませんでした。';
+  if(j.id==='productCheck')s.news='商品名も仕入番号も見つかりませんでした。包装には「裏口受取」とだけ記されていました。';
+  if(j.id==='inspectBack'&&s.actionCounts.productCheck)s.news='裏手の社の脇に、売場で見つかった商品と同じ包装が置かれていました。';
   s.history.unshift('DAY '+day+' 開店前：「'+j.name+'」の施策が反映されました。');
  }
 }
