@@ -220,14 +220,21 @@
     guardPublic(q);
     return q;
   }
-  function createPlan(legacyBuild, legacyPicks) {
+  function createPlan(legacyBuild, legacyPicks, options) {
     if (typeof legacyBuild !== 'function') throw new TypeError('legacyBuild must be a function');
     if (!Array.isArray(legacyPicks) || legacyPicks.length < 12) throw new TypeError('legacyPicks must have >=12 entries');
-    const questions = ORDER.map((id, i) => upgrade(legacyBuild(id,legacyPicks[id],legacyPicks),i,legacyPicks[id]));
+    const opts=options||{}, order=ORDER.slice();
+    // Swap only independent encounters within a day.
+    for(let day=0;day<4;day++)if((opts.daySwapMask||0)&(1<<day)){
+      const i=2*day;[order[i],order[i+1]]=[order[i+1],order[i]];
+    }
+    const purchasePrice=legacyBuild(1,legacyPicks[1],legacyPicks).truth;
+    const questions=order.map((id,i)=>upgrade(legacyBuild(id,legacyPicks[id],legacyPicks),i,legacyPicks[id],{...opts,purchasePrice}));
     const pairs = [];
     for (let i = 0; i < 5; i++) pairs.push(questions.slice(2*i,2*i+2));
-    if (questions[7].truth !== questions[9].truth) throw new Error('Thursday-Friday gift must retain the same official price');
-    if (questions[1].item.replace(/の別店舗価格$/,'') !== questions[8].item.replace(/の別店舗価格$/,'')) throw new Error('Monday-Friday deal must be the same product');
+    const byLegacy=id=>questions.find(q=>q.legacyIndex===id);
+    if(byLegacy(7).truth!==byLegacy(11).truth||byLegacy(7).item!==byLegacy(11).item)throw new Error('Gift revisit mismatch');
+    if(byLegacy(1).item!==byLegacy(8).item)throw new Error('Shopping revisit mismatch');
     return Object.freeze({version:VERSION,days:DAYS.slice(),questions,pairs,questionCount:10});
   }
   function tone(q,x,grade) {
@@ -351,6 +358,19 @@
         extremeHigh:['まさかその価格に見えるとは。','家計簿の方まで心配になってきました。']
       }
     };
+    if(q.legacyIndex===0&&q.person==='hina'){
+      const variants={
+        exact:['え、当たり！','さっきまで受講生扱いだったのに、やっと年齢を分かってもらえました。'],
+        near:['ほとんど合ってるんですけどね。','この差で、名札の説得力まで変わるんですかね。'],
+        social:['そのくらいに見えます？','よかった。今度の研修では、最初から講師だと信じてもらえるかな。'],
+        low:['やっぱり学生に見えますか。','明日はジャケットを変えてみようかな……。'],
+        high:['ちょっと上に見積もりすぎです！','大人っぽいと老けてるは違うんですから。'],
+        extremeLow:['それ、何年生だと思ってます？','まだ小学校の校舎に入りそうな数字ですよ。'],
+        extremeHigh:['そこまでのベテランには見えません！','まだ講師を引退する予定はありませんから。']
+      };
+      const hi=variants[t]||variants.low;
+      return {kind:t,score:grade.score,exact:t==='exact',lines:lines('陽菜',hi[0],hi[1])};
+    }
     const script = names[q.legacyIndex] && names[q.legacyIndex][t] || ['……なるほど。','数字って難しいですね。'];
     let out=lines(speaker,script[0],script[1]);
     if(q.legacyIndex===1 && q.item.indexOf('アダプタ')>=0 && t==='high')out=lines(speaker,'充電器にその額？','スマホの方が先にびっくりして電源落ちそう。');
@@ -383,29 +403,30 @@
     if(!Number.isInteger(dayIndex)||dayIndex<0||dayIndex>=4)throw new RangeError('dayIndex 0-3');
     const pair=(history||[]).filter(r=>r.dayIndex===dayIndex);
     if(pair.length!==2)throw new Error('Day break requires two answered questions for that day');
+    const byLegacy=id=>pair.find(row=>row.legacyIndex===id);
     const dayScore=pair.reduce((n,r)=>n+(r.score||0),0);
     let reflect;
     switch(dayIndex){
       case 0:
-        reflect=pair[0].exact && pair[0].air<90?'真壁先輩の年齢は当てた。でも本人は少し複雑そうだった。':
-          pair[0].air>=90?'真壁先輩との立ち話は妙にうまくいった。':
-          '真壁先輩とは、朝からちょっとした温度差が生まれた。';
-        reflect+=' '+(pair[1].air>=90?'梅田は満足げに自分の買い物を見せていた。':'梅田は自分の買い物について、まだ何か言いたそうだった。');
+        reflect=byLegacy(0).exact?'月曜日の年齢クイズはピタリ。思わず相手も驚いていた。':
+          byLegacy(0).air>=90?'年齢の話題では、相手もまんざらではなさそうだった。':
+          '朝の年齢クイズは、少しだけ気まずい空気になった。';
+        reflect+=' '+(byLegacy(1).air>=90?'梅田は買い物自慢ができて満足そうだった。':'梅田は買い物の話を、まだ少し続けたそうだった。');
         break;
       case 1:
-        reflect='新井の価格クイズはひとまず終了。'+(pair[1].exact?'梨花の待ち時間を当てても、遅刻の事実は消えなかった。':'梨花との待ち合わせには、次こそ余裕を持って来よう。');
+        reflect='新井の価格クイズはひとまず終了。'+(byLegacy(3).exact?'梨花の待ち時間を当てても、遅刻の事実は消えなかった。':'梨花との待ち合わせには、次こそ余裕を持って来よう。');
         break;
       case 2:
-        reflect='相馬さんと昔のテレビの話をして、藤野さんの贈り物にも付き合った。'+(pair[1].air>=90?'相手の気持ちを汲む方も、少し上達した気がする。':'相手が気にする金額は、自分の相場感と必ずしも一致しない。');
+        reflect='相馬さんと昔のテレビの話をして、藤野さんの贈り物にも付き合った。'+(byLegacy(5).air>=90?'相手の気持ちを汲む方も、少し上達した気がする。':'相手が気にする金額は、自分の相場感と必ずしも一致しない。');
         break;
       default:
-        reflect='圭介との街歩きのあと、庄司さんが珍しく贈り物の相談をしてきた。'+(pair[1].exact?'商品価格はぴったり当てた。覚えておくと何かあるかもしれない。':'木曜の贈り物の値段は、会話ログに残しておこう。');
+        reflect='圭介との街歩きのあと、庄司さんが珍しく贈り物の相談をしてきた。'+(byLegacy(7).exact?'商品価格はぴったり当てた。覚えておくと何かあるかもしれない。':'木曜の贈り物の値段は、会話ログに残しておこう。');
     }
     return {dayIndex,day:DAYS[dayIndex],score:dayScore,title:DAYS[dayIndex]+'の振り返り',reflection:reflect,nextIntro:NEXT_DAY[dayIndex],buttonLabel:'翌日へ進む'};
   }
   function epilogue(history) {
     if(!Array.isArray(history)||history.length!==10)throw new Error('Need all ten answers');
-    const last=history[9], gift=history[7];
+    const last=history.find(x=>x.legacyIndex===11),gift=history.find(x=>x.legacyIndex===7);
     const exact=!!last.exact;
     const social=(last.air||0)>=90;
     const linesOut=exact?
