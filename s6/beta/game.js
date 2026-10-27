@@ -25,7 +25,7 @@ const arrange=(items,salt)=>items.slice().sort((a,b)=>{
 const date=()=>DATES[Math.min(S.day,4)];
 const initial=()=>({
  schema:1,phase:'title',day:0,selectedEvent:null,group:null,target:null,presentationSeed:Math.floor(Math.random()*1000000000),
- eventHistory:[],seen:[],introduced:[],flash:[],visitedGroups:[],groupDone:{},groupLog:{},spokenTo:[],interacted:[],personalIntroduced:{},photoRequests:[],photoFollows:[],affinity:{},relationshipDays:{},dailyAffinity:{},contacts:[],socialLinked:{},socialCandidates:{},selectedSocial:null,
+ eventHistory:[],seen:[],introduced:[],flash:[],visitedGroups:[],groupVisitHistory:[],groupDone:{},groupLog:{},spokenTo:[],interacted:[],personalIntroduced:{},photoRequests:[],photoFollows:[],affinity:{},relationshipDays:{},dailyAffinity:{},contacts:[],socialLinked:{},socialCandidates:{},selectedSocial:null,
  guesses:{},note:{},clues:[],crossings:{},knownOrg:{},nightChoice:{},viewedPlatforms:{},viewedBoard:{},pendingContacts:[],
  checks:{},currentNotebook:null,camp:'',
  report:'',result:'',savedAt:''
@@ -33,7 +33,7 @@ const initial=()=>({
 let S,hydrationChanged=false;
 try {const raw=JSON.parse(localStorage.getItem(KEY));S=raw&&raw.schema===1?raw:initial()}catch{S=initial()}
 function hydrate(){
- for(const k of ['eventHistory','seen','introduced','flash','visitedGroups','contacts','clues','spokenTo','interacted','pendingContacts','photoRequests','photoFollows'])
+ for(const k of ['eventHistory','seen','introduced','flash','visitedGroups','groupVisitHistory','contacts','clues','spokenTo','interacted','pendingContacts','photoRequests','photoFollows'])
   if(!Array.isArray(S[k])){S[k]=[];hydrationChanged=true}
  for(const k of ['groupDone','guesses','note','crossings','knownOrg','nightChoice','viewedPlatforms','viewedBoard','groupLog','personalIntroduced','affinity','relationshipDays','dailyAffinity','checks','socialLinked','socialCandidates'])
   if(!S[k]||typeof S[k]!=='object'){S[k]={};hydrationChanged=true}
@@ -260,9 +260,9 @@ function identity(){
 }
 function camp(){
  const memories=[];
- if(S.visitedGroups.includes('E05-A')||S.visitedGroups.includes('E10-A'))memories.push('こもれびの演奏で、曲の終わりに一拍の静けさがあった。');
- if(S.visitedGroups.includes('E02-A')||S.visitedGroups.includes('E08-A'))memories.push('wav.では、ネット名義とサークルが別のこともあると聞いた。');
- if(S.visitedGroups.includes('E03-A')||S.visitedGroups.includes('E09-A'))memories.push('残響にも、打ち込みや曲作りに詳しい先輩がいた。');
+ if(S.groupVisitHistory.includes('E05-A')||S.groupVisitHistory.includes('E10-A'))memories.push('こもれびの演奏で、曲の終わりに一拍の静けさがあった。');
+ if(S.groupVisitHistory.includes('E02-A')||S.groupVisitHistory.includes('E08-A'))memories.push('wav.では、ネット名義とサークルが別のこともあると聞いた。');
+ if(S.groupVisitHistory.includes('E03-A')||S.groupVisitHistory.includes('E09-A'))memories.push('残響にも、打ち込みや曲作りに詳しい先輩がいた。');
  if(S.guesses.P001?.verified&&S.interacted.includes('P001'))memories.push('こもれびで会った西園寺紬。話し方や音の好みを覚えている。');
  const recall=memories.length?memories.join(' '):'六つのサークルには、まだ知らない人もいる。SNSや新歓で聞いた音を頼りに考えよう。';
  const choices=D.orgs.map(o=>'<article class="panel"><span class="tag">'+esc(o.common_name)+'</span><p>'+esc(o.focus)+'</p>'+btn('このサークルの合宿へ','choose-camp',o.org_id)+'</article>').join('');
@@ -347,7 +347,7 @@ function handle(act,id){
  case 'skip':if(S.phase==='day')go('night');break;
  case 'join-group':{
   if(S.phase!=='venue'||!groups[id]||groups[id].event_id!==S.selectedEvent||S.visitedGroups.length>=2||S.visitedGroups.includes(id))return;
-  S.group=id;S.visitedGroups.push(id);
+  S.group=id;S.visitedGroups.push(id);if(!S.groupVisitHistory.includes(id))S.groupVisitHistory.push(id);
   S.flash=byGroup(id).filter(pid=>!S.introduced.includes(pid));
   go('flash');break;
  }
