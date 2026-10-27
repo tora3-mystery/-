@@ -88,5 +88,67 @@
     if(!FILE_SET.has(file))throw Error('Missing F1 scene target: '+file);
     return Object.freeze({file,reason,main:true});
   }
-  return Object.freeze({AXES:Object.freeze(AXES),FILES,resolve});
+
+  /*
+   * Integration bridge: use s.visuals (completed measures), not s.actionCounts
+   * (measures chosen before the next opening). Dedicated horror scenes continue
+   * to be routed by the existing game.
+   * Structural fixtures require P2 inspection. Do not treat these flags as
+   * proof that the new photography consistently depicts the installed fixture.
+   */
+  const FIXTURES=Object.freeze({
+    register:'additional-register',
+    self:'self-checkout',
+    pickup:'pickup-counter',
+    compact:'narrow-display-shelves',
+    weekendStore:'renovated-layout'
+  });
+  const P1_FILES=Object.freeze([
+    'main-base-neutral.webp',
+    'main-checkout-mild.webp',
+    'main-checkout-aisle-severe.webp'
+  ]);
+  function resolveGameState(state){
+    if(!state||typeof state!=='object')throw Error('Game state required');
+    if(state.day===8||state.day8Active
+      ||(state.day===7&&state.odd>=3&&!state.finish)
+      ||String(state.ending||'').startsWith('odd_'))return null;
+    if((state.appliedToday||[]).some(x=>x.id==='audit'&&x.kind==='odd')
+      &&state.day<=5)return null;
+    const completed=(state.visuals||[])
+      .filter(x=>x&&Number.isInteger(x.day)&&x.day<=state.day&&typeof x.id==='string')
+      .map(x=>x.id);
+    const scene=resolve({
+      complaints:state.vals,attraction:state.attraction,day:state.day,
+      completedActions:completed,
+      ending:state.ending,endingReason:state.endingReason
+    });
+    if(!scene)return null;
+    const fixtures=[...new Set(completed.filter(id=>FIXTURES[id]).map(id=>FIXTURES[id]))];
+    const matchingImprovement={
+      'main-improved-register-added.webp':'additional-register',
+      'main-improved-renovated.webp':'renovated-layout'
+    }[scene.file];
+    const unverified=fixtures.filter(x=>x!==matchingImprovement);
+    return Object.freeze({
+      ...scene,derivedFrom:'applied-visual-history',
+      fixtureReview:Object.freeze(unverified),
+      requiresFixtureQA:unverified.length>0
+    });
+  }
+  function assetCoverage(present,phase){
+    const requested=phase==='P1'?P1_FILES:phase==='ALL'?FILES:null;
+    if(!requested)throw Error('phase must be P1 or ALL');
+    if(!Array.isArray(present))throw Error('Available filenames array required');
+    const supplied=new Set(present);
+    const missing=requested.filter(x=>!supplied.has(x));
+    return Object.freeze({
+      phase,total:requested.length,present:requested.length-missing.length,
+      missing:Object.freeze(missing),ready:missing.length===0
+    });
+  }
+  return Object.freeze({
+    AXES:Object.freeze(AXES),FILES,P1_FILES,
+    FIXTURES,resolve,resolveGameState,assetCoverage
+  });
 });
