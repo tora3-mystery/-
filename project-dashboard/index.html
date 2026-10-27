@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#17232e">
+<title>内部｜短編UIゲーム実験室・進捗ダッシュボード</title>
+<style>
+:root{--bg:#101922;--panel:#192632;--edge:#344555;--white:#eaf1f7;--muted:#a6b9c9;--mint:#9ddac9;--warm:#eec990}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--white);font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN",Meiryo,sans-serif;line-height:1.55}
+main{max-width:1180px;margin:0 auto;padding:25px 18px 70px}.eyebrow{color:var(--mint);font-size:12px;letter-spacing:.13em;font-weight:750}h1{font-size:clamp(24px,4vw,38px);margin:10px 0 8px;line-height:1.28}h2{font-size:19px;margin:30px 0 6px}p{margin:0}.lede,.fine{color:var(--muted);font-size:13px}.fine{line-height:1.8}.top{display:flex;gap:16px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap}.top a{color:var(--mint);font-size:13px}.note{border:1px solid var(--edge);border-radius:12px;padding:12px 15px;margin-top:16px;color:#c8d5df;background:#17222d;font-size:12px}.note strong{color:#f4d9a2}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:21px 0}.stat{border:1px solid var(--edge);border-radius:12px;background:var(--panel);padding:13px}.stat strong{display:block;font-size:27px;font-variant-numeric:tabular-nums}.stat span{color:var(--muted);font-size:12px}
+.controls{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0 6px}input,select{background:#223240;border:1px solid #526778;color:var(--white);padding:11px;border-radius:9px;font:inherit;min-height:42px}input{flex:2 1 230px}select{flex:1 1 180px}.count{margin:12px 0;color:var(--muted);font-size:12px}
+.board{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.project{border:1px solid var(--edge);border-radius:14px;background:var(--panel);padding:16px;min-width:0;display:flex;flex-direction:column;gap:11px}.project h3{margin:2px 0;font-size:18px;line-height:1.45}.row{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}.id{font-weight:800;font-size:12px;letter-spacing:.1em;color:var(--mint)}.pill{display:inline-flex;align-items:center;border:1px solid #586c7a;border-radius:20px;padding:3px 9px;font-size:11px;color:#d9e5ed}.pill.release{border-color:#e2b781;color:#f1dcb5}.pill.work{border-color:#86ae9b;color:#cde9d8}.ver{font-size:12px;color:var(--muted)}.track{height:8px;background:#3b4a57;border-radius:50px;overflow:hidden;margin-top:7px}.fill{height:100%;background:var(--mint);border-radius:50px}.line{display:flex;gap:9px;font-size:12px;align-items:baseline}.line dt{min-width:83px;flex:0 0 83px;color:#9fb1be}.line dd{margin:0;min-width:0;overflow-wrap:anywhere}.details{display:grid;gap:5px}.attention{background:#263443;border-radius:9px;padding:11px}.attention b{color:#f3d3a8}.attention p{font-size:12px;margin-top:4px}.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:auto}.actions a{border:1px solid #657889;border-radius:8px;color:#d7edf0;text-decoration:none;padding:7px 10px;font-size:12px}.actions a:first-child{background:#b0e3d7;color:#1c343c;border-color:#b0e3d7;font-weight:750}.stale{color:#f8d7a8;font-size:12px}.small{font-size:11px;color:var(--muted)}#freshness{margin-top:9px}
+@media(max-width:740px){.board{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}main{padding:22px 12px 65px}.project{padding:14px}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<main>
+<div class="top">
+<div><div class="eyebrow">ARG / MASTER CONTROL · UNLISTED</div><h1>作品進捗・監査ダッシュボード</h1><p class="lede">開発工程・AI監査・ブラウザ試験・人間レビューを別々に記録します。</p></div>
+<a href="https://github.com/tora3-mystery/short-ui-games/tree/main/project-dashboard/" target="_blank" rel="noopener">管理データを見る</a>
+</div>
+<div class="note"><strong>内部運用向けですが非公開ページではありません。</strong> 公開GitHub Pages上のURLを知る人は閲覧できます。INDEXからリンクしておらず、検索エンジンには登録しないよう指示していますが、アクセス制限はありません。</div>
+<div class="stats" id="stats" aria-label="集計"><div class="stat"><strong>—</strong><span>読み込み中</span></div></div>
+<div class="note"><b>バーの意味：</b> Phase 0〜8の<strong>現在位置の目安</strong>です。完成率・品質評価・残作業時間ではありません。人間レビューは実施版が特定できなければ「最新版確認済み」としません。<div id="freshness" class="small">GitHubの更新有無を確認中…</div></div>
+<h2>作品一覧</h2><div class="controls"><input id="q" type="search" placeholder="作品・ID・次の作業で検索" aria-label="検索"><select id="filter" aria-label="絞り込み"><option value="all">全作品</option><option value="human">人間レビュー要確認</option><option value="work-active">画像Work進行中</option><option value="work-next">次にWorkを検討</option><option value="release">正式公開</option></select><select id="sort" aria-label="並び替え"><option value="default">管理順</option><option value="phase">工程の進んだ順</option><option value="work">Work候補を先頭</option></select></div>
+<div id="resultCount" class="count"></div><div class="board" id="board" aria-live="polite"></div>
+<h2>更新運用</h2><p class="fine">この画面はGitHubの <code>project-dashboard/projects.json</code> を読み込むため、そのファイルの更新はページ再読込で反映されます。作品コードの更新や別チャットでのレビューが自動的にJSONを書き換えることはありません。各作品Chatの更新報告を企画マスターが取り込み、監査対象バージョンを記録してください。</p>
+</main>
+<script>
+'use strict';
+const root = 'https://tora3-mystery.github.io/short-ui-games/';
+const repo = 'https://github.com/tora3-mystery/short-ui-games/tree/main/';
+const $ = id => document.getElementById(id);
+let projects=[];
+function esc(s){return String(s??'').replace(/[&<>"']/g,x=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[x]));}
+function hasHumanReview(p){return p.humanVersion===p.version && p.humanVersion!=='';}
+function needsHuman(p){return !hasHumanReview(p);}
+function metrics(data){
+const n=data.projects.length,h=data.projects.filter(needsHuman).length,w=data.projects.filter(x=>x.assets.includes('Work実施中')).length;
+$('stats').innerHTML=[
+[n,'登録作品・試作'],[data.projects.filter(x=>x.phase===8).length,'正式公開・Gate C'],[h,'最新版の人間確認未記録'],[w,'画像Work稼働（申告）']
+].map(([n,label])=>'<div class="stat"><strong>'+n+'</strong><span>'+label+'</span></div>').join('');
+}
+function reviewClass(p){return hasHumanReview(p)?'confirmed':(p.human==='未実施'?'none':'pending');}
+function show(){
+const term=$('q').value.trim().toLowerCase(),filter=$('filter').value,sort=$('sort').value;
+let items=projects.filter(p=>(p.id+' '+p.title+' '+p.next+' '+p.stage).toLowerCase().includes(term));
+items=items.filter(p=>filter==='all'||(filter==='human'&&needsHuman(p))||(filter==='release'&&p.stage==='正式公開')||(filter==='work-active'&&p.assets.includes('Work実施中'))||(filter==='work-next'&&p.work.includes('候補')));
+if(sort==='phase')items.sort((a,b)=>b.phase-a.phase);
+if(sort==='work')items.sort((a,b)=>Number(b.work.includes('候補'))-Number(a.work.includes('候補')));
+$('resultCount').textContent=items.length+' / '+projects.length+'案件を表示';
+$('board').innerHTML=items.map(p=>{
+let human=hasHumanReview(p)?'確認済み：'+p.humanVersion:(p.human+'（最新版の確認は未記録）');
+const pct=Math.max(0,Math.min(8,p.phase))*12.5;
+return '<article class="project" id="item-'+esc(p.id)+'">'+
+'<div class="row"><span class="id">'+esc(p.id)+'</span><span class="pill '+(p.stage==='正式公開'?'release':'')+'">'+esc(p.stage)+'</span></div>'+
+'<h3>'+esc(p.title)+'</h3><div class="ver">'+esc(p.version)+'　｜　'+esc(p.path)+'</div>'+
+'<div class="small">Phase '+p.phase+' / 8（工程位置）</div><div class="track" role="progressbar" aria-label="'+esc(p.id)+' 工程の位置" aria-valuemin="0" aria-valuemax="8" aria-valuenow="'+p.phase+'"><div class="fill" style="width:'+pct+'%"></div></div>'+
+'<dl class="details">'+
+'<div class="line"><dt>AIロジック</dt><dd>'+esc(p.logic)+'</dd></div>'+
+'<div class="line"><dt>実ブラウザ</dt><dd>'+esc(p.browser)+'</dd></div>'+
+'<div class="line"><dt>人間レビュー</dt><dd>'+esc(human)+'</dd></div>'+
+'<div class="line"><dt>画像素材</dt><dd>'+esc(p.assets)+'</dd></div>'+
+'</dl><div class="attention"><div class="small">NEXT / '+esc(p.owner)+'</div><p><b>次にすること：</b>'+esc(p.next)+'</p><p class="small">Work判断：'+esc(p.work)+'</p><div class="stale" data-path="'+esc(p.path)+'" hidden></div></div>'+
+'<div class="actions"><a href="'+root+encodeURI(p.path)+'" target="_blank" rel="noopener">試作・作品を開く</a><a href="'+repo+encodeURI(p.path)+'" target="_blank" rel="noopener">GitHub</a></div></article>';
+}).join('')||'<p class="fine">該当作品がありません。</p>';
+}
+async function checkGitHub(data){
+try{
+const resp=await fetch('https://api.github.com/repos/tora3-mystery/short-ui-games/git/trees/main?recursive=1',{headers:{'Accept':'application/vnd.github+json'}});
+if(!resp.ok)throw Error('HTTP '+resp.status);
+const t=await resp.json(),map=new Map((t.tree||[]).map(f=>[f.path,f.sha]));
+let count=0;
+for(const p of projects){
+if(!p.sourceFile||!p.sourceSha)continue;
+if(map.has(p.sourceFile)&&map.get(p.sourceFile)!==p.sourceSha)count++;
+}
+$('freshness').textContent=t.truncated?'GitHub最新状態：一部のファイルのみ取得しました。':'GitHubソース差分チェック：'+count+'作品に監視対象ファイルの変更あり。変更があれば状態の再確認が必要です。';
+if(count){$('freshness').className='stale';}
+}catch(e){$('freshness').textContent='GitHub最新状態の自動照合は実行できませんでした（API制限・通信等）。手動でGitHub更新履歴を確認してください。';}
+}
+async function load(){
+try{
+const resp=await fetch('./projects.json',{cache:'no-store'});
+if(!resp.ok)throw Error('HTTP '+resp.status);
+const data=await resp.json();projects=data.projects;
+metrics(data);show();checkGitHub(data);
+}catch(e){$('board').textContent='進捗データを読み込めませんでした。projects.json の存在と公開反映状況を確認してください。';$('freshness').textContent='読込失敗：'+e.message;}
+}
+['q','filter','sort'].forEach(x=>$(x).addEventListener(x==='q'?'input':'change',show));
+load();
+</script>
+</body>
+</html>
