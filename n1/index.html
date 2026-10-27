@@ -200,32 +200,15 @@ document.addEventListener('visibilitychange',()=>{
  else if(timerPauseAt){timerDeadline+=Date.now()-timerPauseAt;timerPauseAt=0;updateAnswerTimer()}
 });
 let state=null,screen='intro',current='',hintShown=false,hints=3,results=[],round=0,picks=[];
-const productImages=[
- ['ポリッシングクロス','assets/products/apple-polishing-cloth.svg'],
- ['20W USB-C電源アダプタ','assets/products/apple-20w-adapter.svg'],
- ['WH-1000XM6','assets/products/sony-wh1000xm6.svg'],
- ['Alarmo','assets/products/nintendo-alarmo.svg'],
- ['消しゴム 黒・大','assets/products/muji-eraser-black-large.svg'],
- ['日常の器 マグカップ','assets/products/muji-mug-gray-380.svg'],
- ['コードレス超音波アロマディフューザー','assets/products/muji-diffuser-mjcad2.svg'],
- ['カローラ G','assets/products/toyota-corolla-g-2wd.svg']
-];
-const categoryArtwork={
- charger:'assets/products/apple-20w-adapter.svg',
- headphones:'assets/products/sony-wh1000xm6.svg',
- clock:'assets/products/nintendo-alarmo.svg',
- paper:'assets/products/apple-polishing-cloth.svg',
- eraser:'assets/products/muji-eraser-black-large.svg',
- mug:'assets/products/muji-mug-gray-380.svg',
- diffuser:'assets/products/muji-diffuser-mjcad2.svg',
- car:'assets/products/toyota-corolla-g-2wd.svg'
-};
+// Every reference image is category-generic; never imply that it is an official photo.
+const categoryArtwork=Object.fromEntries(
+ window.N1Catalog.deliveredKeys.map(key=>[key,'assets/catalog/'+key+'-neutral.webp'])
+);
 function productDrawing(q){
- const picture=q.imageKey&&categoryArtwork[q.imageKey];
- const found=picture?[q.imageKey,picture]:productImages.find(([token])=>q.item.includes(token));
- if(!found)return '<div class="emoji" aria-hidden="true">'+q.emoji+'</div><div class="itemsub">画像のない数値問題です。</div>';
- const src=found[1],label=q.item+'のカテゴリ参考イラスト（実製品と完全一致する写真ではありません）';
- return '<button type="button" class="product-zoom" data-product-src="'+src+'" data-product-label="'+escapeHtml(label)+'" aria-label="'+escapeHtml(q.item)+'の画像を拡大"><img src="'+src+'" width="800" height="600" alt="'+escapeHtml(label)+'" decoding="async"></button><div class="itemsub">カテゴリ共通の参考画像（実製品の写真ではありません）。タップで拡大。</div>';
+ const src=q.imageKey&&categoryArtwork[q.imageKey];
+ if(!src)return '<div class="emoji" aria-hidden="true">'+escapeHtml(q.emoji||'🛍️')+'</div><div class="itemsub">該当カテゴリの画像が未登録です。</div>';
+ const label='「'+q.item+'」の商品カテゴリ参考画像。実製品の写真とは異なります';
+ return '<button type="button" class="product-zoom" data-product-src="'+escapeHtml(src)+'" data-product-label="'+escapeHtml(label)+'" aria-label="'+escapeHtml(q.item)+'の参考画像を拡大"><img src="'+escapeHtml(src)+'" width="800" height="600" alt="'+escapeHtml(label)+'" decoding="async"></button><div class="itemsub">カテゴリ参考画像（実製品の写真ではありません）。タップで拡大。</div>';
 }
 function portrait(id){return '<img src="assets/portraits/'+id+'.webp" width="1024" height="1024" alt="'+escapeHtml(faces[id].name)+'のポートレート" decoding="async" draggable="false">'}
 function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
