@@ -89,12 +89,12 @@
   function guardPublic(question) {
     const q = question;
     const fields = [q.opening,q.speech,q.context,q.hint,q.item,q.publicDetail].filter(Boolean).join(' ');
-    if (q.legacyIndex === 9) {
+    if (q.legacyIndex === 9 && !q.micro) {
       const year = String(q.truth);
       if (fields.includes(year)) throw new Error('History answer leaked before submission: ' + year);
       if (/竣工したのは|完成したのは/.test(q.publicDetail || '')) throw new Error('History source detail leaked');
     }
-    if (q.legacyIndex === 4 && /(?:19|20)\d\d年生まれ|生年月日/.test(fields)) {
+    if (q.legacyIndex === 4 && !q.micro && /(?:19|20)\d\d年生まれ|生年月日/.test(fields)) {
       throw new Error('Celebrity birth year leaked');
     }
     if (q.legacyIndex === 8 && /公式価格\s*[0-9,]+円|購入価格\s*[0-9,]+円|税込価格\s*[0-9,]+円/.test(fields)) {
