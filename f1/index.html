@@ -235,6 +235,17 @@ body.odd-3 #day8Panel[data-stage="2"]{border-color:#987b79;box-shadow:0 4px 18px
 .operations-board .meterrow.severity-max .fill{background:linear-gradient(90deg,#a81025,#f52b45)!important}
 .operations-board .meterrow.severity-max .meter-name::before{content:'⚠';color:#ff6f7d;margin-right:2px}
 @media(max-width:550px){.operations-board .meterrow.severity-max{padding:6px}}
+.practice-coach-toast{position:fixed;z-index:40;left:50%;bottom:calc(12px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);width:min(520px,calc(100vw - 24px));background:#fff9e5;border:2px solid #b88d3b;border-radius:14px;box-shadow:0 6px 30px #1927205c;padding:14px 16px;color:#332b22;font-size:14px;line-height:1.65}
+.practice-coach-toast.hidden{display:none!important}.practice-coach-toast b{display:block;font-size:15px}.practice-coach-toast p{margin:6px 0 10px}.practice-coach-toast button{display:block;margin-left:auto;border-radius:8px;border:1px solid #977a49;background:#f6e9bd;color:#332b22;font-weight:750;padding:8px 12px;cursor:pointer}
+body .action.odd-action.odd-tier-1,body .action.odd-action.odd-tier-1:hover{background:#faf8f1;border:2px dashed #a7a4a0;box-shadow:none;color:#294339}
+body .action.odd-action.odd-tier-1 .choice-title b,body .action.odd-action.odd-tier-1 small{color:#35483e}
+body .action.odd-action.odd-tier-1 .choice-icon{background:#e6eee2}
+body .action.odd-action.odd-tier-1 .effect-chip{background:#eaf1e7;border-color:#c5d6c5;color:#35483e}
+body .action.odd-action.odd-tier-1 .effect-chip.good{color:#22704d}
+body .action.odd-action.odd-tier-1 .effect-chip.bad{color:#994541}
+body .action.odd-action.odd-tier-2,body .action.odd-action.odd-tier-2:hover{background:#f3ecec;border:2px dashed #a58c98;box-shadow:none;color:#473943}
+body .action.odd-action.odd-tier-2 .choice-title b,body .action.odd-action.odd-tier-2 small{color:#473943}
+body .action.odd-action.odd-tier-3,body .action.odd-action.odd-tier-3:hover{background:linear-gradient(145deg,#241923,#121417);color:#fff0e8;border-color:#bb7791}
 </style></head><body><main class="container"><header class="mast"><div class="brand"><span class="brand-icon" id="brandIcon">🛒</span><span id="brandName">まるまるスーパー<br><small class="tiny">お客様改善センター</small></span></div><div class="header-actions"><button id="help" class="button-quiet hidden">遊び方</button><button id="restart" class="button-quiet hidden">最初から</button></div></header><div class="version-top"><b>F1 v0.19.7</b><span>2026-10-28 01:33:36 JST更新</span></div>
 <section id="intro" class="focus box">
  <div class="overline">日曜日 17:30｜まるまるスーパー 店長室</div><h1 class="head">すべてのご意見に対応してください。</h1>
@@ -247,7 +258,8 @@ body.odd-3 #day8Panel[data-stage="2"]{border-color:#987b79;box-shadow:0 4px 18px
 <section id="day0Panel" class="practice-screen hidden" aria-live="polite">
  <div class="overline">店長からの引き継ぎ｜DAY 0（練習用）</div><h1 class="head" style="font-size:24px">まず一件、対応してみましょう。</h1>
  <div class="practice-coach" id="day0Coach" role="status"><b>店長</b>「下線のあるお客様の声を押してみてください。」</div>
- <div class="metrics"><div class="stat"><label>👥 集客力</label><strong>7/10</strong></div><div class="stat"><label>🧾 レジ待ちの不満度</label><strong id="day0Queue">3/5</strong></div><div class="stat"><label>🔊 店内騒音の不満度</label><strong id="day0Noise">0/5</strong></div><div class="stat"><label>日売上見込み</label><strong id="day0Sales">50万円</strong></div></div>
+<div id="day0CoachNotice" class="practice-coach-toast hidden" role="alert" aria-live="assertive"><b>👔 店長から新しい指示</b><p id="day0CoachNoticeText"></p><button type="button" id="day0CoachClose">確認しました</button></div>
+ <div class="metrics"><div class="stat"><label>👥 集客力</label><strong>7/10</strong></div><div class="stat"><label>🧾 レジ待ちの不満度</label><strong id="day0Queue">3/5</strong></div><div class="stat"><label>↔️ 通路混雑の不満度</label><strong>1/5</strong></div><div class="stat"><label>📦 品切れの不満度</label><strong>1/5</strong></div><div class="stat"><label>🔊 店内騒音の不満度</label><strong id="day0Noise">0/5</strong></div><div class="stat"><label>日売上見込み</label><strong id="day0Sales">50万円</strong></div></div>
  <figure class="store-scene"><img id="day0Image" src="./assets/main-checkout-mild.webp" alt="引き継ぎ用の過去の店内"><figcaption>日曜日の売場：レジの行列が目立っています。</figcaption></figure>
  <div class="two"><section class="box issue-card"><div class="issue-meta"><span>📮 お客様の声</span><span class="pill">過去の記録</span></div><article class="complaint-ticket"><div class="complaint-ticket-head"><strong>仕事帰りのお客様</strong><span>レジ待ち</span></div><p class="complaint-letter">「<button id="day0Investigate" class="practice-highlight" type="button">レジの列が長すぎて</button>、夕食の買い物だけで時間がかかりました。」</p><div id="day0Discovery" class="complaint-investigation-result discovery-award hidden" role="status"><strong class="discovery-award-title">対応案を発見！</strong><div class="discovery-award-items"><span>応援スタッフを手配</span></div></div></article></section>
  <section class="box"><h2 style="margin-top:0;font-size:18px">今日できる対応</h2><p class="help" id="day0ActionHint">下線を調べると、対応案がここに現れます。</p><button id="day0Apply" class="practice-policy hidden" type="button">👥 応援スタッフを手配<small>列は短くなるが、案内の声は増えます。</small></button></section></div>
@@ -371,21 +383,23 @@ function ensureComplaints(){
  }
  s.complaintTickets=[];s.complaintSequence=0;
  if(s.day===1&&!s.days.length){
-  const buckets=[
-   ['会計まで20分かかりました。買ったアイスが溶けそうです。','レジが長蛇の列で、冷凍食品を持ったまま待ちました。','閉店間際なのに、レジが一台しか開いていません。','会計待ちが店の奥まで続いています。'],
-   ['カートとベビーカーが通路ですれ違えません。','通路に段ボールが積まれ、車椅子が通れません。','入口の案内板が邪魔でカートを押しにくいです。'],
-   ['いつもの牛乳がありません。代わりの商品も売り切れでした。','夕食用の卵も牛乳も売り切れでした。','棚札はあるのに、肝心の商品がどこにもありません。'],
-   ['店内放送が大きくて、子どもが泣いてしまいました。','特売のアナウンスが途切れず落ち着きません。','売場とレジの呼び出しが重なって、会話もできません。']
-  ];
-  const entries=[0,0,1,2,3];const used=[0,0,0,0];
-  // The rear shrine is introduced through an ordinary DAY 2 customer note.
-  for(const metric of entries){
-   const variants=buckets[metric],candidates=variants.filter((_,i)=>!used[metric] || i!==s.initialComplaintPick);
-   const ordinaryBody=candidates[Math.floor(Math.random()*candidates.length)];
-    const body=metric===3?ordinaryBody+' 宣伝を増やすより、商店街の神社で商売繁盛を祈願したらどうですか。':metric===2?ordinaryBody+' 売場に見掛けない商品がありました。あれは何ですか？':ordinaryBody;
-   const person=complaintAuthors[metric][Math.floor(Math.random()*complaintAuthors[metric].length)];
-   s.complaintSequence++;s.complaintTickets.push({id:'c'+s.complaintSequence,metric,customer:person,body,day:1,status:'open',closedDay:null,replies:[]});
-   used[metric]++;if(metric===0)s.initialComplaintPick=variants.indexOf(body);
+  const buckets=[["会計まで20分かかりました。買ったアイスが溶けそうです。","レジが長蛇の列で、冷凍食品を持ったまま待ちました。","閉店間際なのに、レジが一台しか開いていません。","会計待ちが店の奥まで続いています。","レジの最後尾がどこか分かりません。列の入口が見えませんでした。","レジに20分並びました。隣の列が先に進む理由を知りたいです。","会計の列が、買い物かご売場まで伸びています。","急いでいる人も買い物を楽しむ人も、同じ一列で待っています。","会計が終わる前に閉店の音楽が流れました。"],["カートとベビーカーが通路ですれ違えません。","通路に段ボールが積まれ、車椅子が通れません。","入口の案内板が邪魔でカートを押しにくいです。","通路の真ん中に商品が置かれていて、遠回りになりました。","何度も引き返しました。狭い売場でカートが向かい合っています。","出口に出るまで遠回りでした。買い物が済んでから時間がかかります。","車椅子が通れません。売場の箱を通路から移してください。"],["いつもの牛乳がありません。代わりの商品も売り切れでした。","夕食用の卵も牛乳も売り切れでした。","棚札はあるのに、肝心の商品がどこにもありません。","補充予定を聞いても、誰も分からないようでした。","昨日あった商品が、今日はどの棚にもありません。","夕食の材料がまた品切れでした。買い物を二度やり直しました。","いつもの商品が見つかりません。入荷予定を知りたいです。"],["店内放送が大きくて、子どもが泣いてしまいました。","特売のアナウンスが途切れず落ち着きません。","売場とレジの呼び出しが重なって、会話もできません。","案内放送が繰り返され、店内で会話ができません。","レジからの呼出音と特売放送が重なっています。","落ち着いて商品を選ぶことができませんでした。","小さな子どもが放送のたびに耳をふさいでいます。"]];
+  // Stable once persisted, different per playthrough. Fundamental categories are unchanged.
+  let entropy=((s.policySeed>>>0)^0x6D2B79F5)>>>0;
+  const draw=max=>{entropy^=entropy<<13;entropy^=entropy>>>17;entropy^=entropy<<5;return (entropy>>>0)%max};
+  const order=[0,0,1,2,3],usedTexts=[[],[],[],[]],usedAuthors=new Set();
+  for(let k=order.length-1;k>0;k--){const j=draw(k+1);[order[k],order[j]]=[order[j],order[k]]}
+  for(const metric of order){
+   const variants=buckets[metric].filter(body=>!usedTexts[metric].includes(body));
+   const ordinaryBody=variants[draw(variants.length)];
+   usedTexts[metric].push(ordinaryBody);
+   const body=metric===3?ordinaryBody+' 宣伝を増やすより、商店街の神社で商売繁盛を祈願したらどうですか。':
+    metric===2?ordinaryBody+' 売場に見掛けない商品がありました。あれは何ですか？':ordinaryBody;
+   const unused=complaintAuthors[metric].filter(name=>!usedAuthors.has(name));
+   const people=unused.length?unused:complaintAuthors[metric],person=people[draw(people.length)];
+   usedAuthors.add(person);
+   s.complaintSequence++;
+   s.complaintTickets.push({id:'c'+s.complaintSequence,metric,customer:person,body,day:1,status:'open',closedDay:null,replies:[]});
   }
   s.complaintLedgerSeverity=[...s.vals];persist();return;
  }
@@ -1087,7 +1101,7 @@ function sceneForState(){
    const selected=window.F1StoreSceneV018.resolveGameState(s);
    if(selected?.file){
      file=selected.file;modern=true;
-     caption='現在の店内です。負担度は上の指標、投稿されたご意見は下の一覧で確認できます。';
+     caption='現在の店内です。不満度は上の指標、投稿されたご意見は下の一覧で確認できます。';
    }
  }
  const effect=s.openingReport?.effect||[];
@@ -1532,8 +1546,10 @@ function renderEnd(){
 }
 
 let practiceStage=0,practiceReturn=false;
+function showDay0Coach(text){$('day0CoachNoticeText').textContent=text;$('day0CoachNotice').classList.remove('hidden')}
+function hideDay0Coach(){$('day0CoachNotice').classList.add('hidden')}
 function startPractice(fromHelp=false){
- practiceReturn=!!fromHelp;practiceStage=0;
+ practiceReturn=!!fromHelp;practiceStage=0;hideDay0Coach();
  for(const id of ['intro','game','day8Panel','ending','finalChoice','overlay','dayTransition'])$(id).classList.add('hidden');
  $('day0Panel').classList.remove('hidden');$('help').classList.add('hidden');$('restart').classList.add('hidden');
  for(const id of ['day0Discovery','day0Apply','day0Outcome','day0Finish'])$(id).classList.add('hidden');
@@ -1550,6 +1566,7 @@ function investigatePractice(){
  $('day0Discovery').classList.remove('hidden');$('day0Apply').classList.remove('hidden');
  $('day0ActionHint').textContent='対応案が見つかりました。今度はこちらを選んでみましょう。';
  $('day0Coach').textContent='店長：「見つかりましたね。営業中は下線を1日3箇所まで調べられます。次は対応を決めましょう。」';
+ showDay0Coach('見つかりましたね。本番では下線を1日3箇所まで調べられます。次は対応を決めましょう。');
 }
 function applyPractice(){
  if(practiceStage!==1)return;
@@ -1557,17 +1574,18 @@ function applyPractice(){
  $('day0Queue').textContent='2/5';$('day0Noise').textContent='1/5';$('day0Sales').textContent='50万円';
  $('day0Image').src='./assets/main-noise-mild.webp';
  $('day0Coach').textContent='店長：「この対応で、明日のレジ待ちは改善する見込みです。ただし案内の声は増えます。」';
+ showDay0Coach('明日のレジ待ちは3→2へ改善する見込みです。一方、騒音は0→1に増えます。売上見込みは50万円のままです。');
  $('day0Outcome').classList.remove('hidden');$('day0Finish').classList.remove('hidden');
  $('day0ActionHint').textContent='実行した施策は翌営業日の店内に影響します。';
 }
 function finishPractice(){
- if(practiceStage!==2)return;
+ if(practiceStage!==2)return;hideDay0Coach();
  $('day0Panel').classList.add('hidden');
  if(practiceReturn)resumeCurrent();else restart();
  scrollTo(0,0);
 }
 function restart(){$('day0Panel').classList.add('hidden');$('dayTransition').classList.add('hidden');s=fresh();rollback=null;persist();$('intro').classList.add('hidden');$('overlay').classList.add('hidden');$('breakdown').open=false;render();scrollTo(0,0)}
-function showLanding(saved,review=false){$('day8Help').classList.add('hidden');$('help').textContent='遊び方';$('day0Panel').classList.add('hidden');
+function showLanding(saved,review=false){hideDay0Coach();$('day8Help').classList.add('hidden');$('help').textContent='遊び方';$('day0Panel').classList.add('hidden');
  $('dayTransition').classList.add('hidden');$('intro').classList.remove('hidden');$('game').classList.add('hidden');$('finalChoice').classList.add('hidden');$('day8Panel').classList.add('hidden');$('ending').classList.add('hidden');$('overlay').classList.add('hidden');$('help').classList.add('hidden');$('restart').classList.add('hidden');
  $('practiceAgain').classList.add('hidden');
  $('start').classList.remove('hidden');
@@ -1605,7 +1623,7 @@ function resumeCurrent(){$('day0Panel').classList.add('hidden');
  if(s.day===7&&s.days.length===7){if(s.odd>=3)beginDay8();else{normalEnding();persist();renderEnd()}return}
  render()
 }
-$('policyConfirmYes').onclick=acceptPlay;$('policyConfirmNo').onclick=cancelPlay;$('transitionContinue').onclick=v11CloseTransition;$('start').onclick=()=>startPractice(false);$('practiceAgain').onclick=()=>startPractice(true);$('day0Investigate').onclick=investigatePractice;$('day0Apply').onclick=applyPractice;$('day0Finish').onclick=finishPractice;$('resume').onclick=resumeCurrent;$('backToGame').onclick=resumeCurrent;$('day8HelpClose').onclick=closeDay8Help;$('help').onclick=()=>{if(s.day8Active){showDay8Help();return}showLanding(true,true)};$('startOver').onclick=()=>{if(!localStorage.getItem('f1-v10')||confirm('保存された営業記録を更新して、DAY 1から始めますか？'))restart()};$('restart').onclick=()=>showLanding(true,true);$('next').onclick=advance;$('undo').onclick=()=>{if(!rollback)return;s=JSON.parse(rollback);s.undoSnapshot=null;rollback=null;$('overlay').classList.add('hidden');persist();render()};$('day8Next').onclick=advanceDay8;window.__F1_DEBUG__={startPractice,investigatePractice,applyPractice,finishPractice,practiceStatus:()=>practiceStage,focus:(ticketId,excerpt)=>{
+$('policyConfirmYes').onclick=acceptPlay;$('policyConfirmNo').onclick=cancelPlay;$('transitionContinue').onclick=v11CloseTransition;$('start').onclick=()=>startPractice(false);$('practiceAgain').onclick=()=>startPractice(true);$('day0CoachClose').onclick=hideDay0Coach;$('day0Investigate').onclick=investigatePractice;$('day0Apply').onclick=applyPractice;$('day0Finish').onclick=finishPractice;$('resume').onclick=resumeCurrent;$('backToGame').onclick=resumeCurrent;$('day8HelpClose').onclick=closeDay8Help;$('help').onclick=()=>{if(s.day8Active){showDay8Help();return}showLanding(true,true)};$('startOver').onclick=()=>{if(!localStorage.getItem('f1-v10')||confirm('保存された営業記録を更新して、DAY 1から始めますか？'))restart()};$('restart').onclick=()=>showLanding(true,true);$('next').onclick=advance;$('undo').onclick=()=>{if(!rollback)return;s=JSON.parse(rollback);s.undoSnapshot=null;rollback=null;$('overlay').classList.add('hidden');persist();render()};$('day8Next').onclick=advanceDay8;window.__F1_DEBUG__={startPractice,investigatePractice,applyPractice,finishPractice,practiceStatus:()=>practiceStage,focus:(ticketId,excerpt)=>{
   const tickets=[...f17ShrineComplaint(),...f19ProductComplaint(),...ordinaryUnusualComplaints(),...(s.complaintTickets||[])];
   const ticket=tickets.find(t=>t.id===ticketId);
   const segment=ticket&&focusSegments(ticket).find(p=>p.text===excerpt);
