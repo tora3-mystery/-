@@ -1,0 +1,1490 @@
+{
+  "title": "V1 additional asset scope audit matrix",
+  "version": "0.6.26-alpha",
+  "dateJST": "2026-10-28",
+  "sourceHead": "58b0f4eefdbdacabe255ad393575ed4d49bb1821",
+  "manifestSha": "3b22a1ca977b5cd7beb46250de90d805d1c03141",
+  "total": 145,
+  "note": "All 290 PNG/WebP filenames and byte sizes confirmed against GitHub directory metadata. Pixel data was not available through GitHub connector; no visual approval implied.",
+  "assets": [
+    {
+      "id": "facility:rail:base:0",
+      "label": "小さな無人駅",
+      "png": "assets/facilities/rail/base-0.png",
+      "webp": "assets/facilities/rail/base-0.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": []
+    },
+    {
+      "id": "facility:rail:base:1",
+      "label": "観光案内のある駅",
+      "png": "assets/facilities/rail/base-1.png",
+      "webp": "assets/facilities/rail/base-1.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": [
+        "stage1-quiet-vs-growth"
+      ]
+    },
+    {
+      "id": "facility:rail:transport:2",
+      "label": "地域交通の乗換駅",
+      "png": "assets/facilities/rail/transport-2.png",
+      "webp": "assets/facilities/rail/transport-2.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": []
+    },
+    {
+      "id": "facility:rail:transport:3",
+      "label": "村の総合交通ターミナル",
+      "png": "assets/facilities/rail/transport-3.png",
+      "webp": "assets/facilities/rail/transport-3.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": [
+        "stage2-stage3-difference"
+      ]
+    },
+    {
+      "id": "facility:rail:heritage:2",
+      "label": "保存された木造観光駅",
+      "png": "assets/facilities/rail/heritage-2.png",
+      "webp": "assets/facilities/rail/heritage-2.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": []
+    },
+    {
+      "id": "facility:rail:heritage:3",
+      "label": "駅舎を活かした文化観光駅",
+      "png": "assets/facilities/rail/heritage-3.png",
+      "webp": "assets/facilities/rail/heritage-3.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": [
+        "stage2-stage3-difference"
+      ]
+    },
+    {
+      "id": "facility:market:base:0",
+      "label": "小さな道の駅",
+      "png": "assets/facilities/market/base-0.png",
+      "webp": "assets/facilities/market/base-0.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": []
+    },
+    {
+      "id": "facility:market:base:1",
+      "label": "評判の直売所",
+      "png": "assets/facilities/market/base-1.png",
+      "webp": "assets/facilities/market/base-1.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": [
+        "stage1-quiet-vs-growth"
+      ]
+    },
+    {
+      "id": "facility:market:tourist:2",
+      "label": "特産品市場",
+      "png": "assets/facilities/market/tourist-2.png",
+      "webp": "assets/facilities/market/tourist-2.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": [
+        "semantic-remap-0625"
+      ]
+    },
+    {
+      "id": "facility:market:tourist:3",
+      "label": "巨大観光商業センター",
+      "png": "assets/facilities/market/tourist-3.png",
+      "webp": "assets/facilities/market/tourist-3.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": [
+        "stage2-stage3-difference"
+      ]
+    },
+    {
+      "id": "facility:market:community:2",
+      "label": "地域生活直売所",
+      "png": "assets/facilities/market/community-2.png",
+      "webp": "assets/facilities/market/community-2.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": [
+        "semantic-remap-0625"
+      ]
+    },
+    {
+      "id": "facility:market:community:3",
+      "label": "地域流通センター",
+      "png": "assets/facilities/market/community-3.png",
+      "webp": "assets/facilities/market/community-3.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": [
+        "stage2-stage3-difference"
+      ]
+    },
+    {
+      "id": "facility:school:base:0",
+      "label": "村の小学校",
+      "png": "assets/facilities/school/base-0.png",
+      "webp": "assets/facilities/school/base-0.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": []
+    },
+    {
+      "id": "facility:school:base:1",
+      "label": "特色ある少人数校",
+      "png": "assets/facilities/school/base-1.png",
+      "webp": "assets/facilities/school/base-1.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": [
+        "stage1-quiet-vs-growth"
+      ]
+    },
+    {
+      "id": "facility:school:education:2",
+      "label": "教育・移住交流校",
+      "png": "assets/facilities/school/education-2.png",
+      "webp": "assets/facilities/school/education-2.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": []
+    },
+    {
+      "id": "facility:school:education:3",
+      "label": "教育交流学園",
+      "png": "assets/facilities/school/education-3.png",
+      "webp": "assets/facilities/school/education-3.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": [
+        "stage2-stage3-difference"
+      ]
+    },
+    {
+      "id": "facility:school:culture:2",
+      "label": "地域文化を伝える学校",
+      "png": "assets/facilities/school/culture-2.png",
+      "webp": "assets/facilities/school/culture-2.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": [
+        "semantic-remap-0625"
+      ]
+    },
+    {
+      "id": "facility:school:culture:3",
+      "label": "地域文化学舎",
+      "png": "assets/facilities/school/culture-3.png",
+      "webp": "assets/facilities/school/culture-3.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": [
+        "stage2-stage3-difference"
+      ]
+    },
+    {
+      "id": "facility:shrine:base:0",
+      "label": "小さな神社",
+      "png": "assets/facilities/shrine/base-0.png",
+      "webp": "assets/facilities/shrine/base-0.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": []
+    },
+    {
+      "id": "facility:shrine:base:1",
+      "label": "参拝客の増えた神社",
+      "png": "assets/facilities/shrine/base-1.png",
+      "webp": "assets/facilities/shrine/base-1.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": [
+        "stage1-quiet-vs-growth"
+      ]
+    },
+    {
+      "id": "facility:shrine:ritual:2",
+      "label": "祭礼の中心神社",
+      "png": "assets/facilities/shrine/ritual-2.png",
+      "webp": "assets/facilities/shrine/ritual-2.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": []
+    },
+    {
+      "id": "facility:shrine:ritual:3",
+      "label": "大祭礼の神社",
+      "png": "assets/facilities/shrine/ritual-3.png",
+      "webp": "assets/facilities/shrine/ritual-3.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": [
+        "stage2-stage3-difference"
+      ]
+    },
+    {
+      "id": "facility:shrine:mystery:2",
+      "label": "怪談を伝える神社",
+      "png": "assets/facilities/shrine/mystery-2.png",
+      "webp": "assets/facilities/shrine/mystery-2.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": [
+        "semantic-remap-0625"
+      ]
+    },
+    {
+      "id": "facility:shrine:mystery:3",
+      "label": "怪談観光の聖地",
+      "png": "assets/facilities/shrine/mystery-3.png",
+      "webp": "assets/facilities/shrine/mystery-3.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": [
+        "stage2-stage3-difference"
+      ]
+    },
+    {
+      "id": "facility:shrine:sanctuary:2",
+      "label": "静かな杜の神社",
+      "png": "assets/facilities/shrine/sanctuary-2.png",
+      "webp": "assets/facilities/shrine/sanctuary-2.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": [
+        "coastal-reuse"
+      ]
+    },
+    {
+      "id": "facility:shrine:sanctuary:3",
+      "label": "森に守られた静かな聖域",
+      "png": "assets/facilities/shrine/sanctuary-3.png",
+      "webp": "assets/facilities/shrine/sanctuary-3.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": [
+        "coastal-reuse",
+        "stage2-stage3-difference"
+      ]
+    },
+    {
+      "id": "facility:inn:base:0",
+      "label": "山あいの旅館",
+      "png": "assets/facilities/inn/base-0.png",
+      "webp": "assets/facilities/inn/base-0.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": []
+    },
+    {
+      "id": "facility:inn:base:1",
+      "label": "人気の温泉宿",
+      "png": "assets/facilities/inn/base-1.png",
+      "webp": "assets/facilities/inn/base-1.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": [
+        "stage1-quiet-vs-growth"
+      ]
+    },
+    {
+      "id": "facility:inn:gourmet:2",
+      "label": "郷土料理の人気旅館",
+      "png": "assets/facilities/inn/gourmet-2.png",
+      "webp": "assets/facilities/inn/gourmet-2.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": []
+    },
+    {
+      "id": "facility:inn:gourmet:3",
+      "label": "グルメ温泉リゾート",
+      "png": "assets/facilities/inn/gourmet-3.png",
+      "webp": "assets/facilities/inn/gourmet-3.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": [
+        "stage2-stage3-difference"
+      ]
+    },
+    {
+      "id": "facility:inn:retreat:2",
+      "label": "自然を楽しむ静養旅館",
+      "png": "assets/facilities/inn/retreat-2.png",
+      "webp": "assets/facilities/inn/retreat-2.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": [
+        "coastal-reuse"
+      ]
+    },
+    {
+      "id": "facility:inn:retreat:3",
+      "label": "絶景静養リゾート",
+      "png": "assets/facilities/inn/retreat-3.png",
+      "webp": "assets/facilities/inn/retreat-3.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": [
+        "coastal-reuse",
+        "stage2-stage3-difference"
+      ]
+    },
+    {
+      "id": "facility:inn:heritage:2",
+      "label": "修復された老舗旅館",
+      "png": "assets/facilities/inn/heritage-2.png",
+      "webp": "assets/facilities/inn/heritage-2.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": []
+    },
+    {
+      "id": "facility:inn:heritage:3",
+      "label": "文化財温泉旅館",
+      "png": "assets/facilities/inn/heritage-3.png",
+      "webp": "assets/facilities/inn/heritage-3.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": [
+        "stage2-stage3-difference"
+      ]
+    },
+    {
+      "id": "facility:office:base:0",
+      "label": "小さな村役場",
+      "png": "assets/facilities/office/base-0.png",
+      "webp": "assets/facilities/office/base-0.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": []
+    },
+    {
+      "id": "facility:office:base:1",
+      "label": "改善が進む役場",
+      "png": "assets/facilities/office/base-1.png",
+      "webp": "assets/facilities/office/base-1.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": [
+        "stage1-quiet-vs-growth"
+      ]
+    },
+    {
+      "id": "facility:office:digital:2",
+      "label": "デジタル行政庁舎",
+      "png": "assets/facilities/office/digital-2.png",
+      "webp": "assets/facilities/office/digital-2.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": []
+    },
+    {
+      "id": "facility:office:digital:3",
+      "label": "自律行政センター",
+      "png": "assets/facilities/office/digital-3.png",
+      "webp": "assets/facilities/office/digital-3.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": [
+        "stage2-stage3-difference"
+      ]
+    },
+    {
+      "id": "facility:office:policy:2",
+      "label": "地域政策の拠点",
+      "png": "assets/facilities/office/policy-2.png",
+      "webp": "assets/facilities/office/policy-2.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": [
+        "semantic-remap-0625"
+      ]
+    },
+    {
+      "id": "facility:office:policy:3",
+      "label": "村の政策・文化拠点",
+      "png": "assets/facilities/office/policy-3.png",
+      "webp": "assets/facilities/office/policy-3.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": [
+        "stage2-stage3-difference"
+      ]
+    },
+    {
+      "id": "facility:clinic:base:0",
+      "label": "地域の診療所",
+      "png": "assets/facilities/clinic/base-0.png",
+      "webp": "assets/facilities/clinic/base-0.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": []
+    },
+    {
+      "id": "facility:clinic:base:1",
+      "label": "診療体制の整った医院",
+      "png": "assets/facilities/clinic/base-1.png",
+      "webp": "assets/facilities/clinic/base-1.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": [
+        "stage1-quiet-vs-growth"
+      ]
+    },
+    {
+      "id": "facility:clinic:community:2",
+      "label": "地域連携型の診療所",
+      "png": "assets/facilities/clinic/community-2.png",
+      "webp": "assets/facilities/clinic/community-2.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": []
+    },
+    {
+      "id": "facility:clinic:community:3",
+      "label": "地域医療総合センター",
+      "png": "assets/facilities/clinic/community-3.png",
+      "webp": "assets/facilities/clinic/community-3.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": [
+        "stage2-stage3-difference"
+      ]
+    },
+    {
+      "id": "facility:clinic:advanced:2",
+      "label": "高機能検査診療所",
+      "png": "assets/facilities/clinic/advanced-2.png",
+      "webp": "assets/facilities/clinic/advanced-2.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": []
+    },
+    {
+      "id": "facility:clinic:advanced:3",
+      "label": "先進医療センター",
+      "png": "assets/facilities/clinic/advanced-3.png",
+      "webp": "assets/facilities/clinic/advanced-3.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": [
+        "stage2-stage3-difference"
+      ]
+    },
+    {
+      "id": "facility:shop:base:0",
+      "label": "村の個人商店",
+      "png": "assets/facilities/shop/base-0.png",
+      "webp": "assets/facilities/shop/base-0.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": []
+    },
+    {
+      "id": "facility:shop:base:1",
+      "label": "評判の地域商店",
+      "png": "assets/facilities/shop/base-1.png",
+      "webp": "assets/facilities/shop/base-1.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": [
+        "stage1-quiet-vs-growth"
+      ]
+    },
+    {
+      "id": "facility:shop:specialty:2",
+      "label": "人気の地元専門店",
+      "png": "assets/facilities/shop/specialty-2.png",
+      "webp": "assets/facilities/shop/specialty-2.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": [
+        "semantic-remap-0625"
+      ]
+    },
+    {
+      "id": "facility:shop:specialty:3",
+      "label": "村の大型専門商業店",
+      "png": "assets/facilities/shop/specialty-3.png",
+      "webp": "assets/facilities/shop/specialty-3.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": [
+        "stage2-stage3-difference"
+      ]
+    },
+    {
+      "id": "facility:shop:daily:2",
+      "label": "暮らしの総合商店",
+      "png": "assets/facilities/shop/daily-2.png",
+      "webp": "assets/facilities/shop/daily-2.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": [
+        "semantic-remap-0625"
+      ]
+    },
+    {
+      "id": "facility:shop:daily:3",
+      "label": "地域生活総合拠点",
+      "png": "assets/facilities/shop/daily-3.png",
+      "webp": "assets/facilities/shop/daily-3.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": [
+        "stage2-stage3-difference"
+      ]
+    },
+    {
+      "id": "facility:hall:base:0",
+      "label": "小さな公民館",
+      "png": "assets/facilities/hall/base-0.png",
+      "webp": "assets/facilities/hall/base-0.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": []
+    },
+    {
+      "id": "facility:hall:base:1",
+      "label": "地域交流の拠点",
+      "png": "assets/facilities/hall/base-1.png",
+      "webp": "assets/facilities/hall/base-1.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": [
+        "stage1-quiet-vs-growth"
+      ]
+    },
+    {
+      "id": "facility:hall:festival:2",
+      "label": "祭礼文化会館",
+      "png": "assets/facilities/hall/festival-2.png",
+      "webp": "assets/facilities/hall/festival-2.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": []
+    },
+    {
+      "id": "facility:hall:festival:3",
+      "label": "広域伝統文化センター",
+      "png": "assets/facilities/hall/festival-3.png",
+      "webp": "assets/facilities/hall/festival-3.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": [
+        "stage2-stage3-difference"
+      ]
+    },
+    {
+      "id": "facility:hall:community:2",
+      "label": "村民交流複合館",
+      "png": "assets/facilities/hall/community-2.png",
+      "webp": "assets/facilities/hall/community-2.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": []
+    },
+    {
+      "id": "facility:hall:community:3",
+      "label": "地域交流複合施設",
+      "png": "assets/facilities/hall/community-3.png",
+      "webp": "assets/facilities/hall/community-3.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": [
+        "stage2-stage3-difference"
+      ]
+    },
+    {
+      "id": "facility:farm:base:0",
+      "label": "小さな農園",
+      "png": "assets/facilities/farm/base-0.png",
+      "webp": "assets/facilities/farm/base-0.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": []
+    },
+    {
+      "id": "facility:farm:base:1",
+      "label": "評判の産直農園",
+      "png": "assets/facilities/farm/base-1.png",
+      "webp": "assets/facilities/farm/base-1.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": [
+        "stage1-quiet-vs-growth"
+      ]
+    },
+    {
+      "id": "facility:farm:brand:2",
+      "label": "地元ブランド農園",
+      "png": "assets/facilities/farm/brand-2.png",
+      "webp": "assets/facilities/farm/brand-2.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": []
+    },
+    {
+      "id": "facility:farm:brand:3",
+      "label": "大規模農業ブランド",
+      "png": "assets/facilities/farm/brand-3.png",
+      "webp": "assets/facilities/farm/brand-3.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": [
+        "stage2-stage3-difference"
+      ]
+    },
+    {
+      "id": "facility:farm:agritourism:2",
+      "label": "見学できる観光農園",
+      "png": "assets/facilities/farm/agritourism-2.png",
+      "webp": "assets/facilities/farm/agritourism-2.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": [
+        "semantic-remap-0625"
+      ]
+    },
+    {
+      "id": "facility:farm:agritourism:3",
+      "label": "農業観光テーマパーク",
+      "png": "assets/facilities/farm/agritourism-3.png",
+      "webp": "assets/facilities/farm/agritourism-3.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": [
+        "stage2-stage3-difference"
+      ]
+    },
+    {
+      "id": "facility:farm:automation:2",
+      "label": "ロボット農園",
+      "png": "assets/facilities/farm/automation-2.png",
+      "webp": "assets/facilities/farm/automation-2.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": []
+    },
+    {
+      "id": "facility:farm:automation:3",
+      "label": "完全自動農業拠点",
+      "png": "assets/facilities/farm/automation-3.png",
+      "webp": "assets/facilities/farm/automation-3.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": [
+        "stage2-stage3-difference"
+      ]
+    },
+    {
+      "id": "facility:scenic:base:0",
+      "label": "静かな景勝地",
+      "png": "assets/facilities/scenic/base-0.png",
+      "webp": "assets/facilities/scenic/base-0.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": []
+    },
+    {
+      "id": "facility:scenic:base:1",
+      "label": "散策できる景勝地",
+      "png": "assets/facilities/scenic/base-1.png",
+      "webp": "assets/facilities/scenic/base-1.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": [
+        "stage1-quiet-vs-growth"
+      ]
+    },
+    {
+      "id": "facility:scenic:conservation:2",
+      "label": "保護された自然景勝地",
+      "png": "assets/facilities/scenic/conservation-2.png",
+      "webp": "assets/facilities/scenic/conservation-2.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": [
+        "coastal-reuse"
+      ]
+    },
+    {
+      "id": "facility:scenic:conservation:3",
+      "label": "自然保護景観エリア",
+      "png": "assets/facilities/scenic/conservation-3.png",
+      "webp": "assets/facilities/scenic/conservation-3.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": [
+        "coastal-reuse",
+        "stage2-stage3-difference"
+      ]
+    },
+    {
+      "id": "facility:scenic:park:2",
+      "label": "散策と展望の公園",
+      "png": "assets/facilities/scenic/park-2.png",
+      "webp": "assets/facilities/scenic/park-2.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": []
+    },
+    {
+      "id": "facility:scenic:park:3",
+      "label": "広域観光自然公園",
+      "png": "assets/facilities/scenic/park-3.png",
+      "webp": "assets/facilities/scenic/park-3.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": [
+        "stage2-stage3-difference"
+      ]
+    },
+    {
+      "id": "facility:cafe:base:0",
+      "label": "小さな喫茶店",
+      "png": "assets/facilities/cafe/base-0.png",
+      "webp": "assets/facilities/cafe/base-0.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": []
+    },
+    {
+      "id": "facility:cafe:base:1",
+      "label": "人気の喫茶店",
+      "png": "assets/facilities/cafe/base-1.png",
+      "webp": "assets/facilities/cafe/base-1.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": [
+        "stage1-quiet-vs-growth"
+      ]
+    },
+    {
+      "id": "facility:cafe:local:2",
+      "label": "村民の憩いの喫茶店",
+      "png": "assets/facilities/cafe/local-2.png",
+      "webp": "assets/facilities/cafe/local-2.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": []
+    },
+    {
+      "id": "facility:cafe:local:3",
+      "label": "村民交流喫茶",
+      "png": "assets/facilities/cafe/local-3.png",
+      "webp": "assets/facilities/cafe/local-3.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": [
+        "stage2-stage3-difference"
+      ]
+    },
+    {
+      "id": "facility:cafe:gourmet:2",
+      "label": "地元食材の人気カフェ",
+      "png": "assets/facilities/cafe/gourmet-2.png",
+      "webp": "assets/facilities/cafe/gourmet-2.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": []
+    },
+    {
+      "id": "facility:cafe:gourmet:3",
+      "label": "名物グルメカフェ",
+      "png": "assets/facilities/cafe/gourmet-3.png",
+      "webp": "assets/facilities/cafe/gourmet-3.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": [
+        "stage2-stage3-difference"
+      ]
+    },
+    {
+      "id": "facility:museum:base:0",
+      "label": "小さな資料館",
+      "png": "assets/facilities/museum/base-0.png",
+      "webp": "assets/facilities/museum/base-0.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": []
+    },
+    {
+      "id": "facility:museum:base:1",
+      "label": "評判の展示館",
+      "png": "assets/facilities/museum/base-1.png",
+      "webp": "assets/facilities/museum/base-1.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": [
+        "stage1-quiet-vs-growth"
+      ]
+    },
+    {
+      "id": "facility:museum:history:2",
+      "label": "郷土展示館",
+      "png": "assets/facilities/museum/history-2.png",
+      "webp": "assets/facilities/museum/history-2.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": [
+        "semantic-remap-0625"
+      ]
+    },
+    {
+      "id": "facility:museum:history:3",
+      "label": "村立歴史博物館",
+      "png": "assets/facilities/museum/history-3.png",
+      "webp": "assets/facilities/museum/history-3.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": [
+        "stage2-stage3-difference"
+      ]
+    },
+    {
+      "id": "facility:museum:mystery:2",
+      "label": "不思議な展示資料館",
+      "png": "assets/facilities/museum/mystery-2.png",
+      "webp": "assets/facilities/museum/mystery-2.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": [
+        "semantic-remap-0625"
+      ]
+    },
+    {
+      "id": "facility:museum:mystery:3",
+      "label": "怪異資料博物館",
+      "png": "assets/facilities/museum/mystery-3.png",
+      "webp": "assets/facilities/museum/mystery-3.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": [
+        "stage2-stage3-difference"
+      ]
+    },
+    {
+      "id": "facility:lodge:base:0",
+      "label": "簡素な宿泊施設",
+      "png": "assets/facilities/lodge/base-0.png",
+      "webp": "assets/facilities/lodge/base-0.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": []
+    },
+    {
+      "id": "facility:lodge:base:1",
+      "label": "人気の民宿",
+      "png": "assets/facilities/lodge/base-1.png",
+      "webp": "assets/facilities/lodge/base-1.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": [
+        "stage1-quiet-vs-growth"
+      ]
+    },
+    {
+      "id": "facility:lodge:retreat:2",
+      "label": "静かな隠れ家民宿",
+      "png": "assets/facilities/lodge/retreat-2.png",
+      "webp": "assets/facilities/lodge/retreat-2.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": [
+        "coastal-reuse"
+      ]
+    },
+    {
+      "id": "facility:lodge:retreat:3",
+      "label": "自然に包まれた隠れ家宿",
+      "png": "assets/facilities/lodge/retreat-3.png",
+      "webp": "assets/facilities/lodge/retreat-3.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": [
+        "coastal-reuse",
+        "stage2-stage3-difference"
+      ]
+    },
+    {
+      "id": "facility:lodge:activity:2",
+      "label": "体験プログラムの宿",
+      "png": "assets/facilities/lodge/activity-2.png",
+      "webp": "assets/facilities/lodge/activity-2.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": []
+    },
+    {
+      "id": "facility:lodge:activity:3",
+      "label": "大型体験型宿泊施設",
+      "png": "assets/facilities/lodge/activity-3.png",
+      "webp": "assets/facilities/lodge/activity-3.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": [
+        "stage2-stage3-difference"
+      ]
+    },
+    {
+      "id": "facility:harbor:base:0",
+      "label": "村の漁港",
+      "png": "assets/facilities/harbor/base-0.png",
+      "webp": "assets/facilities/harbor/base-0.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": []
+    },
+    {
+      "id": "facility:harbor:base:1",
+      "label": "地元で評判の港",
+      "png": "assets/facilities/harbor/base-1.png",
+      "webp": "assets/facilities/harbor/base-1.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": [
+        "stage1-quiet-vs-growth"
+      ]
+    },
+    {
+      "id": "facility:harbor:fishery:2",
+      "label": "水産物の加工拠点",
+      "png": "assets/facilities/harbor/fishery-2.png",
+      "webp": "assets/facilities/harbor/fishery-2.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": []
+    },
+    {
+      "id": "facility:harbor:fishery:3",
+      "label": "大規模水産加工拠点",
+      "png": "assets/facilities/harbor/fishery-3.png",
+      "webp": "assets/facilities/harbor/fishery-3.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": [
+        "stage2-stage3-difference"
+      ]
+    },
+    {
+      "id": "facility:harbor:maritime:2",
+      "label": "観光と海の拠点",
+      "png": "assets/facilities/harbor/maritime-2.png",
+      "webp": "assets/facilities/harbor/maritime-2.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": []
+    },
+    {
+      "id": "facility:harbor:maritime:3",
+      "label": "海洋観光都市拠点",
+      "png": "assets/facilities/harbor/maritime-3.png",
+      "webp": "assets/facilities/harbor/maritime-3.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": [
+        "stage2-stage3-difference"
+      ]
+    },
+    {
+      "id": "facility:robot:base:0",
+      "label": "実験施設",
+      "png": "assets/facilities/robot/base-0.png",
+      "webp": "assets/facilities/robot/base-0.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": []
+    },
+    {
+      "id": "facility:robot:base:1",
+      "label": "自動化研究所",
+      "png": "assets/facilities/robot/base-1.png",
+      "webp": "assets/facilities/robot/base-1.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": [
+        "stage1-quiet-vs-growth"
+      ]
+    },
+    {
+      "id": "facility:robot:research:2",
+      "label": "自動化実験研究所",
+      "png": "assets/facilities/robot/research-2.png",
+      "webp": "assets/facilities/robot/research-2.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": []
+    },
+    {
+      "id": "facility:robot:research:3",
+      "label": "自律技術研究都市",
+      "png": "assets/facilities/robot/research-3.png",
+      "webp": "assets/facilities/robot/research-3.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": [
+        "stage2-stage3-difference"
+      ]
+    },
+    {
+      "id": "facility:robot:coexist:2",
+      "label": "人とロボットの交流棟",
+      "png": "assets/facilities/robot/coexist-2.png",
+      "webp": "assets/facilities/robot/coexist-2.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": [
+        "semantic-remap-0625"
+      ]
+    },
+    {
+      "id": "facility:robot:coexist:3",
+      "label": "ロボット住民共生地区",
+      "png": "assets/facilities/robot/coexist-3.png",
+      "webp": "assets/facilities/robot/coexist-3.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": [
+        "stage2-stage3-difference"
+      ]
+    },
+    {
+      "id": "background:mountain",
+      "label": "",
+      "png": "assets/backgrounds/mountain.png",
+      "webp": "assets/backgrounds/mountain.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": [
+        "terrain-mask-visual"
+      ]
+    },
+    {
+      "id": "background:river",
+      "label": "",
+      "png": "assets/backgrounds/river.png",
+      "webp": "assets/backgrounds/river.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": [
+        "terrain-mask-visual"
+      ]
+    },
+    {
+      "id": "background:plain",
+      "label": "",
+      "png": "assets/backgrounds/plain.png",
+      "webp": "assets/backgrounds/plain.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": [
+        "terrain-mask-visual"
+      ]
+    },
+    {
+      "id": "background:coast",
+      "label": "",
+      "png": "assets/backgrounds/coast.png",
+      "webp": "assets/backgrounds/coast.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": [
+        "terrain-mask-visual"
+      ]
+    },
+    {
+      "id": "background:island",
+      "label": "",
+      "png": "assets/backgrounds/island.png",
+      "webp": "assets/backgrounds/island.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": [
+        "terrain-mask-visual"
+      ]
+    },
+    {
+      "id": "tile:land",
+      "label": "",
+      "png": "assets/tiles/land.png",
+      "webp": "assets/tiles/land.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": [
+        "not-currently-rendered"
+      ]
+    },
+    {
+      "id": "tile:field",
+      "label": "",
+      "png": "assets/tiles/field.png",
+      "webp": "assets/tiles/field.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": [
+        "not-currently-rendered"
+      ]
+    },
+    {
+      "id": "tile:forest",
+      "label": "",
+      "png": "assets/tiles/forest.png",
+      "webp": "assets/tiles/forest.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": [
+        "not-currently-rendered"
+      ]
+    },
+    {
+      "id": "tile:hill",
+      "label": "",
+      "png": "assets/tiles/hill.png",
+      "webp": "assets/tiles/hill.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": [
+        "not-currently-rendered"
+      ]
+    },
+    {
+      "id": "tile:coast",
+      "label": "",
+      "png": "assets/tiles/coast.png",
+      "webp": "assets/tiles/coast.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": [
+        "not-currently-rendered"
+      ]
+    },
+    {
+      "id": "tile:sea",
+      "label": "",
+      "png": "assets/tiles/sea.png",
+      "webp": "assets/tiles/sea.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": [
+        "not-currently-rendered"
+      ]
+    },
+    {
+      "id": "tile:river",
+      "label": "",
+      "png": "assets/tiles/river.png",
+      "webp": "assets/tiles/river.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": [
+        "not-currently-rendered"
+      ]
+    },
+    {
+      "id": "tile:bridge",
+      "label": "",
+      "png": "assets/tiles/bridge.png",
+      "webp": "assets/tiles/bridge.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": [
+        "not-currently-rendered"
+      ]
+    },
+    {
+      "id": "overlay:closed-sign",
+      "label": "",
+      "png": "assets/overlays/closed-sign.png",
+      "webp": "assets/overlays/closed-sign.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": []
+    },
+    {
+      "id": "overlay:boarded-door",
+      "label": "",
+      "png": "assets/overlays/boarded-door.png",
+      "webp": "assets/overlays/boarded-door.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": []
+    },
+    {
+      "id": "overlay:weeds",
+      "label": "",
+      "png": "assets/overlays/weeds.png",
+      "webp": "assets/overlays/weeds.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": []
+    },
+    {
+      "id": "overlay:scaffolding",
+      "label": "",
+      "png": "assets/overlays/scaffolding.png",
+      "webp": "assets/overlays/scaffolding.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": []
+    },
+    {
+      "id": "overlay:reopening",
+      "label": "",
+      "png": "assets/overlays/reopening.png",
+      "webp": "assets/overlays/reopening.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": []
+    },
+    {
+      "id": "overlay:crowd",
+      "label": "",
+      "png": "assets/overlays/crowd.png",
+      "webp": "assets/overlays/crowd.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": []
+    },
+    {
+      "id": "overlay:traffic",
+      "label": "",
+      "png": "assets/overlays/traffic.png",
+      "webp": "assets/overlays/traffic.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": []
+    },
+    {
+      "id": "overlay:market-stall",
+      "label": "",
+      "png": "assets/overlays/market-stall.png",
+      "webp": "assets/overlays/market-stall.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": []
+    },
+    {
+      "id": "overlay:festival",
+      "label": "",
+      "png": "assets/overlays/festival.png",
+      "webp": "assets/overlays/festival.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": []
+    },
+    {
+      "id": "overlay:quiet-garden",
+      "label": "",
+      "png": "assets/overlays/quiet-garden.png",
+      "webp": "assets/overlays/quiet-garden.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": []
+    },
+    {
+      "id": "overlay:automation",
+      "label": "",
+      "png": "assets/overlays/automation.png",
+      "webp": "assets/overlays/automation.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": []
+    },
+    {
+      "id": "overlay:robot-citizens",
+      "label": "",
+      "png": "assets/overlays/robot-citizens.png",
+      "webp": "assets/overlays/robot-citizens.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": []
+    },
+    {
+      "id": "overlay:odd-notice",
+      "label": "",
+      "png": "assets/overlays/odd-notice.png",
+      "webp": "assets/overlays/odd-notice.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": []
+    },
+    {
+      "id": "overlay:tidal",
+      "label": "",
+      "png": "assets/overlays/tidal.png",
+      "webp": "assets/overlays/tidal.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": []
+    },
+    {
+      "id": "ending:ancient:map",
+      "label": "",
+      "png": "assets/endings/ancient-map.png",
+      "webp": "assets/endings/ancient-map.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": [
+        "ending-visual"
+      ]
+    },
+    {
+      "id": "ending:ancient:final",
+      "label": "",
+      "png": "assets/endings/ancient-ending.png",
+      "webp": "assets/endings/ancient-ending.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": [
+        "ending-visual"
+      ]
+    },
+    {
+      "id": "ending:robot:map",
+      "label": "",
+      "png": "assets/endings/robot-map.png",
+      "webp": "assets/endings/robot-map.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": [
+        "ending-visual"
+      ]
+    },
+    {
+      "id": "ending:robot:final",
+      "label": "",
+      "png": "assets/endings/robot-ending.png",
+      "webp": "assets/endings/robot-ending.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": [
+        "ending-visual"
+      ]
+    },
+    {
+      "id": "ending:deepsea:map",
+      "label": "",
+      "png": "assets/endings/deepsea-map.png",
+      "webp": "assets/endings/deepsea-map.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": [
+        "ending-visual"
+      ]
+    },
+    {
+      "id": "ending:deepsea:final",
+      "label": "",
+      "png": "assets/endings/deepsea-ending.png",
+      "webp": "assets/endings/deepsea-ending.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": [
+        "ending-visual"
+      ]
+    },
+    {
+      "id": "person:guide",
+      "label": "",
+      "png": "assets/people/guide.png",
+      "webp": "assets/people/guide.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": []
+    },
+    {
+      "id": "person:shopkeeper",
+      "label": "",
+      "png": "assets/people/shopkeeper.png",
+      "webp": "assets/people/shopkeeper.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": []
+    },
+    {
+      "id": "person:farmer",
+      "label": "",
+      "png": "assets/people/farmer.png",
+      "webp": "assets/people/farmer.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": []
+    },
+    {
+      "id": "person:fisher",
+      "label": "",
+      "png": "assets/people/fisher.png",
+      "webp": "assets/people/fisher.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": []
+    },
+    {
+      "id": "person:inn-staff",
+      "label": "",
+      "png": "assets/people/inn-staff.png",
+      "webp": "assets/people/inn-staff.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": []
+    },
+    {
+      "id": "person:parent",
+      "label": "",
+      "png": "assets/people/parent.png",
+      "webp": "assets/people/parent.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": []
+    },
+    {
+      "id": "person:family",
+      "label": "",
+      "png": "assets/people/family.png",
+      "webp": "assets/people/family.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": []
+    },
+    {
+      "id": "person:elderly",
+      "label": "",
+      "png": "assets/people/elderly.png",
+      "webp": "assets/people/elderly.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": []
+    },
+    {
+      "id": "person:official",
+      "label": "",
+      "png": "assets/people/official.png",
+      "webp": "assets/people/official.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": []
+    },
+    {
+      "id": "person:villager",
+      "label": "",
+      "png": "assets/people/villager.png",
+      "webp": "assets/people/villager.webp",
+      "manifestSizeChecked": true,
+      "pixelVisualStatus": "NOT_INSPECTED",
+      "reviewFlags": []
+    }
+  ]
+}
