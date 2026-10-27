@@ -266,7 +266,7 @@ const glitchAction={id:'glitch6',name:'7日間の営業終了を予約する',co
 const idleAction={id:'idle',name:'何も対策しない',cost:0,delta:[0,0,0,0],desc:'本日は新しい改善施策を実施しません。売上と苦情は現状のままです。',kind:'idle',role:'idle',repeat:true,completionDays:1,attractionToday:0,attractionOnCompletion:0};
 function mood(){
  document.body.classList.remove('odd-1','odd-2','odd-3');
- if(s.day8Active)document.body.classList.add('odd-3');
+ // Keep ordinary styling during the eighth day.
  $('brandIcon').textContent=s.day8Active?'▣':'🛒';
  $('brandName').innerHTML='まるまるスーパー<br><small class="tiny">お客様改善センター</small>';
 }
@@ -671,18 +671,46 @@ function beginDay8(){
  s.day=8;s.day8Active=true;s.day8Stage=0;s.permit='不許可';persist();renderDay8();
 }
 function renderDay8(){
- $('game').classList.add('hidden');$('finalChoice').classList.add('hidden');$('ending').classList.add('hidden');$('intro').classList.add('hidden');
+ for(const id of ['game','day0Panel','finalChoice','ending','intro'])$(id).classList.add('hidden');
  $('day8Panel').classList.remove('hidden');$('restart').classList.remove('hidden');$('help').classList.remove('hidden');
  mood();
- const pages=[
-  ['DAY 08 / 07','今日も通常どおり開店準備を進めてください。','出勤記録：8日目／担当者：店長代理／処理状況：待機中','開店処理を実行する'],
-  ['DAY 08 / 07','開店処理完了。入店客数0名。会計件数88件。','日売上88万円／稼働レジ0台／ご意見10件／受付時刻08:44','本日の売上を確認する'],
-  ['DAY 08 / 07 / 08','本日の売上は既に昨日の売上に加算されています。','昨日：DAY 08／明日：DAY 08／担当者：あなた／終了予定：未登録','本日の日報を提出する']
- ];
- const stage=Math.min(s.day8Stage||0,2),page=pages[stage];
+ const stage=Math.min(s.day8Stage||0,2);
+ const displays=[
+  ['DAY 08 / 07','DAY 08 / 07 ｜ 月曜日',s.attraction+'/10',v09Sales()+'万円',s.revenue+'万円',
+   s.vals.map(x=>x+'件'),'営業中の売場','本日の店舗状況です。','本日の新着 0件 ｜ 未解決 0件','未解決 0件',
+   '本日あと1件','1案＋見送り','店内の状態を確認してください。','本日も通常どおり営業します。',
+   '出勤記録：8日目／担当者：店長代理／処理状況：待機中','本日の営業を始める','scene-day8-floor.webp'],
+  ['DAY 08 / 07','DAY 08 / 07 ｜ 人曜日','10/10','88万円',(s.revenue+88)+'万円',
+   ['0件','0件','0件','0件'],'入店客数 0名','入店客0名。会計88件。稼働レジ0台。',
+   '本日の新着 10件 ｜ 未解決 0件','未解決 0件',
+   '本日あと1件','1案＋見送り','売上は計上されています。レジにお客様はいません。',
+   '入店した人は確認できませんでした。',
+   '本部速報：売上88万円／会計番号は全件同じ／受付時刻08:44','本日の売上を確定する','scene-day8-strange.webp'],
+  ['DAY 08 / 07 / 08','DAY 08 / 07 / 08 ｜ 人曜日','88/10','88万円（昨日）','未確定／∞万円',
+   ['-1件','∞件','0件','88件'],'営業中／閉店済み','稼働レジ -1台。お客様の声は受信し続けています。',
+   '本日の新着 10件 ｜ 未解決 -10件 ｜ 対応済み 88件','未解決 -10件',
+   '本日あと88件','88案＋見送り','昨日の売上は明日の売上に加算されています。',
+   '前日の処理結果で本日の値が上書きされました。',
+   '昨日：DAY 08／明日：DAY 08／担当者：あなた／終了予定：未登録','本日の日報を提出する','store-human-day.jpg']
+ ][stage];
+ const ids=['day8Title','day8Date','day8Attraction','day8Sales','day8Revenue',null,
+  'day8SceneStatus','day8SceneCaption','day8FeedbackSummary','day8IssueTag','day8ChoicePill',
+  'day8ActionCount','day8ActionGuide','day8Message','day8Ledger','day8Next'];
+ ids.forEach((id,i)=>{if(id)$(id).textContent=displays[i]});
  $('day8Panel').setAttribute('data-stage',String(stage));
- v09AttachFallback($('day8Image'),stage===0?'scene-day8-floor.webp':stage===1?'scene-day8-strange.webp':'store-human-day.jpg');
- $('day8Title').textContent=page[0];$('day8Message').textContent=page[1];$('day8Ledger').textContent=page[2];$('day8Next').textContent=page[3];
+ $('brandIcon').textContent=stage===2?'▣':'🛒';
+ $('day8MoneyDetail').textContent=stage===0?'本部目標：今週の売上500万円':
+  stage===1?'本部評価：売上のみ／入店客数0名':'本部評価：計算中／閉店時刻：未登録';
+ $('day8Meters').replaceChildren();
+ const symbols=['🧾','↔️','📦','🔊'];
+ for(let i=0;i<4;i++){
+  const item=document.createElement('div');item.className='meterrow';
+  item.innerHTML='<span class="meter-name">'+symbols[i]+' '+labels[i]+'</span><div class="bar"><div class="fill" style="width:'+(stage===2?100:stage===1?0:s.vals[i]*20)+'%"></div></div><b>'+displays[5][i]+'</b>';
+  $('day8Meters').append(item);
+ }
+ $('day8Markers').replaceChildren();
+ if(stage>0){const item=document.createElement('span');item.textContent='有人レジ稼働 0台';$('day8Markers').append(item)}
+ v09AttachFallback($('day8Image'),displays[16]);$('day8Image').alt=displays[6];
  $('day8Feedback').replaceChildren(...(stage>=1?ordinaryUnusualComplaints().map(complaintNode):[]));
  scrollTo(0,0);
 }
