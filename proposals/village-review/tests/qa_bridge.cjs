@@ -174,6 +174,44 @@ for(let seed=1;seed<=120;seed++){
 }
 assert(adverseFound>0,'Evidence-grounded closure ending is unreachable');
 
+// New buildings must be a reachable consequence, not a dormant promise.
+let expansionVillages=0;
+for(let seed=1;seed<=90;seed++){
+ qa.generate(Math.imul(seed+47529,2654435761)>>>0);
+ for(let month=0;month<12;month++){
+  const st=qa.getState(),id=st.candidates[(seed+month)%st.candidates.length];
+  const f=st.facilities.find(x=>x.id===id);
+  qa.post(id,(seed+month)%qa.factsFor(f).length,5);
+ }
+ if(qa.getState().stats.newFacilities>0)expansionVillages++;
+}
+assert(expansionVillages>=5,'New facilities are too hard to create across 90 high-rating villages');
+
+// Direction-dependent evolution consequences are additive, but never double counted.
+{
+ const local=createHarness().qa;
+ const data=JSON.parse(fs.readFileSync(path.join(root,'evolution-db.json'),'utf8'));
+ assert.equal(local.evolutionRegister(data),true,'Cannot load evolution metrics');
+ local.generate(718);
+ const world=local.getState(),f=world.facilities[0];
+ world.visitors=600;world.economy=50;world.quiet=70;
+ f.stage=2;const first=data.stage2.find(x=>x.id==='rail.0.0');
+ const stageTwo=local.applyEvolutionConsequences(f,first),m=first.metrics;
+ assert.equal(stageTwo.delta.visitors,9*m.access+4*m.heritage+3*m.oddity);
+ assert.equal(stageTwo.delta.economy,m.economy+Math.trunc(m.technology/2));
+ assert.equal(stageTwo.delta.quiet,2*m.nature-Math.trunc(m.access/2)-Math.trunc(m.oddity/2));
+ const before={...world.evolutionImpact};
+ f.stage=3;f.firstDirection=first.id;
+ const reversed=data.stage3.find(x=>x.id==='rail.0.0.0.1');
+ const second=data.stage2.find(x=>x.id==='rail.0.1'),n=second.metrics;
+ const stageThree=local.applyEvolutionConsequences(f,reversed);
+ assert.equal(stageThree.delta.visitors,9*n.access+4*n.heritage+3*n.oddity);
+ assert.equal(stageThree.delta.economy,n.economy+Math.trunc(n.technology/2));
+ assert.equal(stageThree.delta.quiet,2*n.nature-Math.trunc(n.access/2)-Math.trunc(n.oddity/2));
+ for(const key of ['visitors','economy','quiet'])assert.equal(world.evolutionImpact[key],before[key]+stageThree.delta[key]);
+}
+
+
 // Save/reload regression: keep an in-progress 6-month game, then finish it.
 const persisted={};
 let trial=createHarness(persisted),tqa=trial.qa;
@@ -194,4 +232,4 @@ assert(tqa.getState().completed,'Reloaded run must finish');
 trial=createHarness(persisted);tqa=trial.qa;
 assert(tqa.getState().completed&&tqa.getState().annualDue,'Final review must be preserved on reload');
 assert(trial.get('modal').innerHTML.includes('口コミが反映'),'Final review modal must reopen');
-console.log(JSON.stringify({status:'PASS',terrain,statistics,endings,saveResume:'PASS',arrivalDate:'PASS',stageArt:'PASS',strictManifest:'PASS',fallback:'PASS',polarityCases:polarityCombinations,adverseEnding:'PASS'},null,2));
+console.log(JSON.stringify({status:'PASS',terrain,statistics,endings,newFacilityReachable:expansionVillages,evolutionImpact:'PASS',saveResume:'PASS',arrivalDate:'PASS',stageArt:'PASS',strictManifest:'PASS',fallback:'PASS',polarityCases:polarityCombinations,adverseEnding:'PASS'},null,2));
