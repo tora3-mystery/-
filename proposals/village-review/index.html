@@ -218,7 +218,8 @@ function placeBuilding(f){const spots=freePlots(f.kind);if(!spots.length)throw E
  const score=i=>(f.kind==='harbor'?200:0)+(f.kind==='scenic'&&['hill','forest'].includes(S.ground[i])?95:0)+(f.kind==='farm'&&S.ground[i]==='field'?90:0)+(S.ground[i]==='land'?55:0)+(S.ground[i]==='field'?30:0)+(19-i)/20;
  spots.sort((a,b)=>score(b)-score(a));f.plot=spots[0]}
 function restoreGround(){initGround();
- // Always migrate old saves to the current background-aligned water mask.const placed=S.facilities.slice().sort((a,b)=>Number(b.kind==='harbor')-Number(a.kind==='harbor')),used=new Set();
+ // Always migrate old saves to the current background-aligned water mask.
+ const placed=S.facilities.slice().sort((a,b)=>Number(b.kind==='harbor')-Number(a.kind==='harbor')),used=new Set();
  for(const f of placed){if(!eligiblePlot(f.kind,f.plot)||used.has(f.plot))f.plot=null;else used.add(f.plot)}
  for(const f of placed)if(f.plot===null||f.plot===undefined){placeBuilding(f);used.add(f.plot)}}
 // Roads are intentionally no longer simulated or drawn.
