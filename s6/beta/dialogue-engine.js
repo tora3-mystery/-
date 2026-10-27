@@ -187,10 +187,16 @@ const thirdParty=(targetId,gid,state,action)=>{
   words=yr===1&&targetYear>1?'自分も、もう少し話してから聞いてみようと思います。':
    yr===1?'連絡先、交換するかまだ迷ってるんだよね。':
    '連絡先の交換って、急いで決めなくても大丈夫だよ。';
+ }else if(action==='question'||action==='affiliation'){
+  const topic=action==='affiliation'?'どこのサークルで活動しているか':aboutIdentity?'お名前':aboutMusic?'好きな音楽':/パート/.test(question)?'担当パート':/何が大事/.test(question)?'大切にしていること':'今の活動';
+  words=yr===1&&targetYear>1?nickname+'、'+topic+'は自分も聞きたかったです。':
+   yr===1?topic+'は私も気になってた。':
+   targetYear===1?topic+'の話、私もしてみたいな。':
+   nickname+'、'+topic+'の話は私も気になるな。';
  }else if(sceneMode(gid)==='performance'){
   words=yr===1&&targetYear>1?'さっきの演奏、自分ももう一度聴いてみたいです。':
    yr===1?'今のところ、もう一回聴いてみたいね。':
-   action==='question'?(aboutIdentity?'あ、お名前なら私も聞いてみたかった。':aboutMusic?'どんな音楽が好きか、私も気になるな。':'その話、私も聞いてみたいな。'):'今の一小節、もう一度合わせてみようか。';
+   '今の一小節、もう一度合わせてみようか。';
  }else if(yr===1&&targetYear>1){
   words=action==='question'?nickname+'、自分もそこが気になってました。':
    'そうなんですね。自分も話を聞いてみたかったです。';
