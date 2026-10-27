@@ -256,7 +256,7 @@ const options=[
 {id:'gourmet',name:'地元の名物フェア',cost:16,delta:[0,1,-1,1],desc:'売上+28万円、追加導線が必要',kind:'sales',min:3,max:6,bonus:28},{id:'audit',name:'スーパー裏手の不気味な社にお参りする',cost:0,delta:[0,0,0,1],desc:'「商売繁盛に効く」と聞いた古い社を訪ねます。',attractionOnCompletion:1,kind:'odd',min:3,max:5,oddReq:0,bonus:18,after:18,remain:1},{id:'camera0',name:'客がいない時間も会計を受け付ける',cost:0,delta:[0,1,0,1],desc:'閉店後も会計を続けます。防犯映像に客の姿はありません。',attractionOnCompletion:1,kind:'odd',min:4,max:6,oddReq:1,bonus:28,after:28,remain:3},{id:'open0',name:'裏手の社に生贄を捧げる',cost:0,delta:[1,1,0,1],desc:'社から届いた紙には「供物を捧げよ」とだけ記されています。閉店後に従います。',kind:'odd',min:5,max:7,oddReq:2,bonus:45,after:45,remain:5}
 ];
 const issueBase=['レジの列が長すぎます。','カートがすれ違えません。','欲しい商品が品切れです。','放送が多くて落ち着きません。'];
-const fresh=()=>({version:11,grayAuditSeed:Math.floor(Math.random()*4294967296)>>>0,legacyShrineAccess:false,grayFines:0,grayStrikes:0,auditEvents:[],undoSnapshot:null,grayUsed:[],attraction:7,lowDays:0,endingReason:null,visuals:[],issueEvents:[],complaintTickets:null,complaintSequence:0,focusDay:0,focusKeys:[],focusHistory:[],focusedNote:null,discoveredActions:[],customerDiary:[],hqHistory:[],actionCounts:{},clueViewed:[],inferencePending:false,inferenceAttempts:0,day8Active:false,day8Stage:0,glitchSeen:false,sundayRevealed:false,oddGain:0,forfeitedGain:0,auditStatus:'未照合',day:1,cash:120,vals:[2,1,1,1],revenue:0,days:[],used:[],jobs:[],benefits:[],last:null,news:'今週だけ、店舗改善を任されました。',odd:0,afterSales:0,remaining:0,permit:'許可',clues:0,history:[],finish:false,needsAdvance:false,ending:null});let s=fresh(),rollback=null;
+const fresh=()=>({version:11,complaintLedgerSeverity:null,complaintSaturationKeys:[],grayAuditSeed:Math.floor(Math.random()*4294967296)>>>0,legacyShrineAccess:false,grayFines:0,grayStrikes:0,auditEvents:[],undoSnapshot:null,grayUsed:[],attraction:7,lowDays:0,endingReason:null,visuals:[],issueEvents:[],complaintTickets:null,complaintSequence:0,focusDay:0,focusKeys:[],focusHistory:[],focusedNote:null,discoveredActions:[],customerDiary:[],hqHistory:[],actionCounts:{},clueViewed:[],inferencePending:false,inferenceAttempts:0,day8Active:false,day8Stage:0,glitchSeen:false,sundayRevealed:false,oddGain:0,forfeitedGain:0,auditStatus:'未照合',day:1,cash:120,vals:[2,1,1,1],revenue:0,days:[],used:[],jobs:[],benefits:[],last:null,news:'今週だけ、店舗改善を任されました。',odd:0,afterSales:0,remaining:0,permit:'許可',clues:0,history:[],finish:false,needsAdvance:false,ending:null});let s=fresh(),rollback=null;
 function support(){return Math.max(0,Math.min(100,100-8*s.vals.reduce((a,b)=>a+b,0)))}
 const weekdayNames=['月曜日','火曜日','水曜日','木曜日','金曜日','土曜日','日曜日','人曜日'];
 function weekday(n){return weekdayNames[Math.max(0,Math.min(7,n-1))]}
@@ -337,7 +337,10 @@ function addComplaintTicket(metric,day,initial){
  s.complaintTickets.push({id:'c'+s.complaintSequence,metric,customer:name,body:text,day,status:'open',closedDay:null,replies:[]});
 }
 function ensureComplaints(){
- if(Array.isArray(s.complaintTickets))return;
+ if(Array.isArray(s.complaintTickets)){
+  if(!Array.isArray(s.complaintLedgerSeverity))s.complaintLedgerSeverity=[...s.vals];
+  return;
+ }
  s.complaintTickets=[];s.complaintSequence=0;
  if(s.day===1&&!s.days.length){
   const buckets=[
@@ -356,9 +359,10 @@ function ensureComplaints(){
    s.complaintSequence++;s.complaintTickets.push({id:'c'+s.complaintSequence,metric,customer:person,body,day:1,status:'open',closedDay:null,replies:[]});
    used[metric]++;if(metric===0)s.initialComplaintPick=variants.indexOf(body);
   }
-  persist();return;
+  s.complaintLedgerSeverity=[...s.vals];persist();return;
  }
  desiredComplaintCounts().forEach((qty,i)=>{for(let k=0;k<qty;k++)addComplaintTicket(i,s.day,false)});
+ s.complaintLedgerSeverity=[...s.vals];
 }
 function issueReply(ticket,action,before,after){
  const metric=ticket.metric,name=action.name;
@@ -375,11 +379,15 @@ function issueReply(ticket,action,before,after){
 function queueManagerReplies(action,before,after){/* Answers are issued only when complaints actually resolve. */}
 function reconcileComplaints(){
  ensureComplaints();
- const targets=desiredComplaintCounts();
- targets.forEach((target,metric)=>{
-   const opened=s.complaintTickets.filter(x=>x.metric===metric&&x.status==='open');
-   if(opened.length>target){
-     opened.slice(target).forEach(ticket=>{
+ const previous=Array.isArray(s.complaintLedgerSeverity)?s.complaintLedgerSeverity:[...s.vals];
+ if(!Array.isArray(s.complaintSaturationKeys))s.complaintSaturationKeys=[];
+ s.vals.forEach((severity,metric)=>{
+  const delta=severity-(previous[metric]??severity);
+  const opened=s.complaintTickets.filter(x=>x.metric===metric&&x.status==='open');
+  // Customer letters are separate submissions; severity is an independent 0–5 measure.
+  if(delta>0)for(let k=0;k<delta;k++)addComplaintTicket(metric,s.day,false);
+  if(delta<0){
+   opened.slice(Math.max(0,opened.length+delta)).forEach(ticket=>{
     ticket.status='resolved';ticket.closedDay=s.day;
     const matched=(s.appliedToday||[]).find(job=>(job.delta?.[metric]||0)<0);
     const source=matched?'「'+matched.name+'」の効果で':'改善対応の結果、';
@@ -387,8 +395,14 @@ function reconcileComplaints(){
     ticket.replies.push({visibleFrom:s.day,actionId:matched?.id||'resolution',
      body:source+(matched?'ご指摘の'+labels[metric]+'を改善しました。':'ご指摘の問題が改善しました。')+' ご利用後に問題が残る場合は、改めてお知らせください。'});
    });
-   }else for(let k=opened.length;k<target;k++)addComplaintTicket(metric,s.day,false);
+  }
+  // At the severity cap, customer complaints continue without increasing severity.
+  const key=s.day+'-'+metric;
+  if(s.day>1&&severity===5&&!s.complaintSaturationKeys.includes(key)){
+   addComplaintTicket(metric,s.day,false);s.complaintSaturationKeys.push(key);
+  }
  });
+ s.complaintLedgerSeverity=[...s.vals];
 }
 const F17_SNIPPETS=[
  [/レジに20分並びました|会計まで20分かかりました|レジが長蛇の列|レジの列が長/g,['register','staff','queueExpress','pickup']],
@@ -884,7 +898,10 @@ if(typeof module !== "undefined" && module.exports) module.exports = {resolveF1S
 })();
 const v09Clamp=(v,l,h)=>Math.max(l,Math.min(h,v));
 const v09Count=()=>s.vals.reduce((x,y)=>x+y,0);
-const v09Sales=()=>Math.max(0,30+10*s.attraction-10*v09Count());
+// A single area at 5/5 blocks purchases more sharply than ordinary friction.
+const MAX_SEVERITY_PENALTY=15;
+const rawSales=()=>30+10*s.attraction-10*v09Count()-MAX_SEVERITY_PENALTY*s.vals.filter(x=>x>=5).length;
+const v09Sales=()=>Math.max(0,rawSales());
 function persist(){try{localStorage.setItem('f1-v10',JSON.stringify(s))}catch(e){}}
 function load(){try{
  const modern=localStorage.getItem('f1-v10'),raw=modern||localStorage.getItem('f1-v09');
@@ -896,7 +913,9 @@ function load(){try{
    if(!Object.prototype.hasOwnProperty.call(data,'legacyShrineAccess')&&data.actionCounts?.inspectBack&&!data.actionCounts?.productCheck)s.legacyShrineAccess=true;
    if(data.version<11){s.clueViewed=[];s.clues=0;}
   if(data.version===9)s.jobs=(s.jobs||[]).map(j=>({...j,finishDay:Math.min(j.finishDay,s.day+1)}));
-  if(!Number.isInteger(data.grayAuditSeed))s.grayAuditSeed=((data.day*2654435761)^(data.revenue*2246822519)^20261026)>>>0;
+  if(!Array.isArray(s.complaintLedgerSeverity))s.complaintLedgerSeverity=[...s.vals];
+   if(!Array.isArray(s.complaintSaturationKeys))s.complaintSaturationKeys=[];
+   if(!Number.isInteger(data.grayAuditSeed))s.grayAuditSeed=((data.day*2654435761)^(data.revenue*2246822519)^20261026)>>>0;
    s.grayFines=Number.isFinite(data.grayFines)?data.grayFines:0;
    s.grayStrikes=Number.isInteger(data.grayStrikes)?data.grayStrikes:0;
    s.auditEvents=Array.isArray(data.auditEvents)?data.auditEvents:[];
