@@ -376,10 +376,11 @@ function handle(act,id){
   const q=D.questions.find(q=>q.group_id===S.group&&q.target_id===id);
   let reply,kind=type;
   if(type==='talk'){
-    // Determine first-contact speech before the action updates relationship state.
-    // Updating first would force a reunion greeting and suppress P001's initial clue.
-    reply=Dialogue.talk(id,S.group,S);
+    // Keep acquaintance status from BEFORE this action, and speech warmth from AFTER it.
+    // This preserves first introductions and P001's one-time clue without delaying familiarity.
+    const knownBefore=S.spokenTo.includes(id)||S.interacted.includes(id);
     recordConversation(id,'talk');
+    reply=Dialogue.talk(id,S.group,S,knownBefore);
     if(!S.spokenTo.includes(id))S.spokenTo.push(id);
   }else if(type==='question'||type==='affiliation'){
     reply=Dialogue.answer(id,S.group,type==='affiliation'?'affiliation':'question');
