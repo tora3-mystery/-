@@ -175,13 +175,46 @@ var SIDE_POOL={
   {id:'E02F',time:'21:36',title:'共用部の防火扉',scene:'廊下の防火扉が開いたままになり、警報器が鳴っている。「4階担当住戸は防火扉の閉鎖を確認してください」と表示された。',monitor:'炎や煙は見えない。扉の前に物が挟まっている。端末に閉鎖操作の表示がある。',hint:'防火扉の警報時の手順'}
  ]
 };
+
+/* Each day keeps one story-critical event. The other is chosen per playthrough. */
+SIDE_POOL[3]=[
+ EVENTS[3][0],
+ {id:'E03C',time:'20:16',title:'本人確認の再送依頼',scene:'「認証書類を送信し直すため、氏名・部屋番号・生年月日を入力してください」という通知が届いた。差出人は管理会社の一斉配信アドレスだ。',monitor:'前日に見た掲示では、本人確認の送信項目は2つだけだった。差出人のアドレスは管理組合ではない。',hint:'本人確認の項目'},
+ {id:'E03D',time:'20:22',title:'部屋番号の登録訂正',scene:'端末に「406号室の警報連動が停止します。管理組合へ申請内容をご確認ください」と通知が届く。',monitor:'表示された連絡先は管理組合の書面窓口と一致する。管理会社が求める個人情報の入力欄はない。',hint:'管理組合の連絡先'},
+ {id:'E03E',time:'20:33',title:'警報装置の試験',scene:'自室の警報装置が「試験終了の確認をしてください」と表示する。試験用のランプが赤く点灯している。',monitor:'室内の警報装置。電話での確認は不要と、以前の装置案内に書かれていた。',hint:'警報装置の操作'},
+ {id:'E03F',time:'20:27',title:'本人確認の提出',scene:'住戸用の本人確認フォームに「継続利用のため、登録内容を送信してください」と表示された。',monitor:'管理組合が配った本人確認案内と差出人は一致する。送信する項目を選択できる。',hint:'前の本人確認掲示'}
+];
+SIDE_POOL[4]=[
+ EVENTS[4][1],
+ {id:'E05C',time:'20:12',title:'点検員の入室確認',scene:'東洋設備の大野が「406号室の定期点検に参りました」とインターホンを鳴らす。',monitor:'社名・氏名は郵便の個別点検案内と一致する。時刻も予定内だ。',hint:'今日の個別点検案内'},
+ {id:'E05D',time:'20:15',title:'点検内容の確認',scene:'設備会社から「点検控えを送る前に、担当者と日時を照会してください」と連絡が届いた。',monitor:'連絡は個別通知にある東洋設備の窓口から。黒田の管理会社とは別の受付だ。',hint:'点検業者の本人確認'},
+ {id:'E05E',time:'20:24',title:'点検控えの返却依頼',scene:'予定された大野の点検が終了し、実施控えを受け取った直後、管理会社から「控えをこちらに返送してください」と連絡が来た。',monitor:'点検会社の控えと管理会社の依頼は別書類。控えを管理組合へ提出できる旨が案内にある。',hint:'記録の保管先'},
+ {id:'E05F',time:'20:09',title:'点検結果の受取り',scene:'東洋設備・大野が点検日時を告げ、「室内を確認後、控えを発行します」と申し出た。',monitor:'社名・担当者と日付は個別通知と一致する。腕章だけでなく名札もある。',hint:'訪問者の確認規則'}
+];
+SIDE_POOL[5]=[
+ EVENTS[5][1],
+ {id:'E06C',time:'21:11',title:'記録の再照合',scene:'管理組合の文書受付から「訂正後の4階呼出し件数を回答してください」と届いた。',monitor:'送付先は理事会の文書受付。火曜の数値は水曜に訂正され、その訂正紙もすでに撤去されている。',hint:'以前の数値訂正'},
+ {id:'E06D',time:'21:16',title:'書面の提出先確認',scene:'管理会社から「事故資料の提出をこちらで代行します。受理しない場合は理事会へ直接ご確認ください」と通知が届いた。',monitor:'管理会社名義の受付と、管理組合理事会の文書受付が併記されている。',hint:'管理組合の提出先'},
+ {id:'E06E',time:'21:22',title:'訂正文書の撤回依頼',scene:'「呼出記録の訂正はなかったことにしてください」と管理会社から通知が届く。「ご理解の場合は対応してください」。',monitor:'火曜日の件数と水曜日の訂正文書は同じ管理会社が掲示したものだ。訂正の撤回を承認する理由は書かれていない。',hint:'訂正の取り扱い'},
+ {id:'E06F',time:'21:20',title:'記録照合の本人認証',scene:'理事会の文書受付で「氏名と部屋番号のみを送信し、資料の受付を完了してください」と表示された。',monitor:'受付先は理事会。個人の連絡先や生年月日を求める項目もあるが、必須とは書かれていない。',hint:'本人確認の入力項目'}
+];
+SIDE_POOL[6]=[
+ EVENTS[6][0],
+ {id:'E07C',time:'23:37',title:'特例点検の再通知',scene:'管理会社から「正式な管理番号があります。室内に入れてください」と連絡が来た。',monitor:'管理番号は掲示と同じ。しかし個別の点検案内は届いていない。',hint:'撤去された立入点検の規則'},
+ {id:'E07D',time:'23:39',title:'旧掲示の回収',scene:'「旧掲示をお持ちであれば、管理事務所へ提出してください」と連絡が来た。',monitor:'連絡元は管理会社の黒田。旧掲示の記録は405号室が渡したものと同じ内容だ。',hint:'以前の掲示と住民の警告'},
+ {id:'E07E',time:'23:34',title:'点検履歴の独立照会',scene:'理事会から「管理会社とは別の窓口で旧点検履歴の照合を受け付けます」と案内が届いた。',monitor:'連絡先は管理組合の掲示と一致する。提出済みの証言と点検控えを照合する目的だ。',hint:'管理会社と管理組合の区別'},
+ {id:'E07F',time:'23:36',title:'共用部の異常信号',scene:'自室端末が「4階の共用部感知器に異常。室内の確認ボタンで受信を確定してください」と通知する。',monitor:'画面は入居時からある室内端末。遠隔の訪問者や音声応答ではなく、端末内の確認ボタンだ。',hint:'室内設備の操作と訪問の違い'}
+];
+var SIDE_SLOT={2:1,3:0,4:1,5:1,6:0};
 function getEvents(day){
  if(!SIDE_POOL[day])return EVENTS[day];
  if(!state.sideChoices)state.sideChoices={};
  var chosen=state.sideChoices[day];
  if(!chosen){var candidates=SIDE_POOL[day];chosen=candidates[Math.floor(Math.random()*candidates.length)].id;state.sideChoices[day]=chosen;}
  var picked=SIDE_POOL[day].find(function(e){return e.id===chosen;})||SIDE_POOL[day][0];
- return [EVENTS[day][0],picked];
+ var schedule=EVENTS[day].slice();
+ schedule[SIDE_SLOT[day]]=picked;
+ return schedule;
 }
 function initial(){return{started:false,day:1,index:0,phase:'morning',failure:null,owner:'405',evidence:[],alert:0,trust:0,exposed:false,consent:false,seal:false,letterTaken:false,drawingTarget:null,numberVerified:false,sideChoices:{},history:[],result:'',resultPending:false,ended:false,snapshots:{}};}
 function copy(x){return JSON.parse(JSON.stringify(x));}
