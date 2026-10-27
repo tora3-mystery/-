@@ -5,7 +5,7 @@
   const SAVE_KEY = 's6-case-a-v03-save';
   const AUTO_KEY = 's6-case-a-v03-auto';
   const META_KEY = 's6-case-a-v03-meta';
-  const BUILD_AT = '2026-10-27 10:58 JST';
+  const BUILD_AT = '2026-10-27 11:09 JST';
   const DAYS = [
     ['2026-04-06','4月6日 月曜'],['2026-04-07','4月7日 火曜'],
     ['2026-04-08','4月8日 水曜'],['2026-04-09','4月9日 木曜'],
@@ -33,7 +33,7 @@
   const makeState=()=>({
     schema:3,caseId:'A',phase:'title',returnPhase:null,day:0,eventId:null,eventHistory:[],
     visitedGroups:[],groupActions:{},activeGroup:null,groupResult:'',reunionText:'',preEventState:{},
-    person:{},nightUsed:{},nightDone:{},nightMessage:'',lunchSeenDates:[],lunchPreState:{},lunchTalked:{},lunchMessage:'',
+    person:{},contactSince:{},replyLog:{},nightUsed:{},nightDone:{},nightMessage:'',lunchSeenDates:[],lunchPreState:{},lunchTalked:{},lunchMessage:'',
     evidence:{},oldNew:false,bridge:false,bridgeAvailable:false,
     discoveredFacts:[],viewedPosts:[],platform:'Photogram',
     campChoice:null,safety:false,risky:false,rescued:false,
@@ -121,6 +121,38 @@
     const action=type==='question'?'ask-person':'contact-person';
     return '<p class="eyebrow">'+esc(g.group_title)+'</p><h2>'+(type==='question'?'誰に、何を聞く？':'誰に交換を頼む？')+'</h2><p class="subtle">この追加行動を選ぶと、同じ輪ではほかの追加行動を選べません。</p><div class="person-list">'+candidates.map(pid=>'<div class="person-card">'+photo(pid,{venue:true})+'<div><div class="name">'+esc(knownName(pid))+'</div><div class="small">'+esc(publicAppearance(pid))+'</div>'+(type==='question'?btn('質問する',action,'data-pid="'+pid+'"','tiny'):['TINE','Photogram'].filter(platform=>!!amap[pid+'|'+platform]).map(platform=>btn(platform+'を頼む',action,'data-pid="'+pid+'" data-platform="'+platform+'"','tiny')).join(' '))+'</div></div>').join('')+'</div><div class="btnrow">'+btn('会話に戻る','back-group','','ghost')+'</div>';
   };
+
+  // TINEで交換した知り合いから届く、ゲーム内の日常連絡。推理の証拠は解除しない。
+  const TINE_LINES={
+    L:['見学で聴くだけでも歓迎だよ。合いそうな場所を探してね。','演奏したい曲が決まらなくても大丈夫。気軽に相談して。','人が多かったね。無理に全部覚えなくてもいいからね。'],
+    Z:['まだ完成していない曲も、誰かが音を重ねると変わるね。','次の練習は音量を合わせるところから。見学だけでもどうぞ。','好きなフレーズがあったら、次に聴かせて。'],
+    J:['即興は間違えても曲が止まらないのがいいところだよ。','楽器が違ってもセッションに混ざれるよ。','今日は何か新しい音楽に出会えた？'],
+    K:['急いで決める必要はないよ。見学だけでも気にしないで。','小さな部屋でも、音を出すと雰囲気が変わるね。','また演奏したくなったら、声をかけてね。'],
+    W:['完成していない音源でも、聴き合うだけなら歓迎だよ。','公開する前に、誰に聴かせるか決めるのも大事だね。','音作りの相談なら、短いメモだけでも送ってね。'],
+    F:['機材の扱いは細かく確認するけど、見学は自由だよ。','知らない曲でも、ライブで聴くと印象が変わるよ。','次に音を出すときは、耳を守る準備も忘れずに。'],
+    N:['今週は新しい顔をたくさん見たね。','どこの新歓が気になった？','またどこかで会えたら話そう。']
+  };
+  const tineMessages=()=>{
+    const ids=Object.entries(S.person).filter(([id,p])=>p.met&&p.introduced&&Array.isArray(p.contacts)&&p.contacts.includes('TINE')&&amap[id+'|TINE']).map(([id])=>id);
+    if(!ids.length)return [];
+    const start=S.day%ids.length;
+    return Array.from({length:Math.min(2,ids.length)},(_,i)=>{
+      const pid=ids[(start+i)%ids.length];
+      const lines=TINE_LINES[pmap[pid].primary_org]||TINE_LINES.N;
+      return {pid,text:lines[S.day%lines.length]};
+    });
+  };
+  const tineFeed=()=>{
+    const messages=tineMessages();
+    if(!messages.length)return '';
+    const replied=S.replyLog?.[currentDate()];
+    const rows=messages.map(({pid,text:body})=>
+      '<div class="document"><strong>'+esc(knownName(pid))+' / TINE</strong><p>'+esc(body)+'</p>'+
+      (replied===pid?'<span class="chip">返信済み</span>':replied?'':
+        btn('短く返信する','reply-contact','data-pid="'+esc(pid)+'"','tiny'))+'</div>'
+    ).join('');
+    return '<div class="card soft"><h3>知り合いからの連絡</h3><p class="subtle">連絡先を交換した人との日常のやり取り。返信は今夜一人まで、調査回数には含まれません。</p>'+rows+'</div>';
+  };
   const researchItems=()=>{
     const day=S.day;
     const specs=[
@@ -137,7 +169,7 @@
   };
   const night=()=>{
     const date=currentDate();
-    return '<p class="eyebrow">EVENING / '+esc(date)+'</p><h2>夜の調査</h2><p class="lead">残り '+(3-nightCount())+' 回。調べずに眠ることもできる。</p><div class="progress"><span style="width:'+(nightCount()/3*100)+'%"></span></div>'+(S.nightMessage?note(esc(S.nightMessage)):'')+'<h3>手がかりを探す</h3>'+researchItems()+'<h3>SNSを読む</h3><div class="grid3">'+['TINE','Photogram','Zitter'].map(p=>btn(p,platformNeedsAction(p)?'browse-sns':'open-sns','data-platform="'+p+'"',platformNeedsAction(p)?'secondary':'ghost')).join('')+'</div><p class="subtle">新しい投稿の確認は1回。既読投稿の再読は無料。鍵投稿は承認条件を満たさなければ開きません。</p><div class="btnrow">'+btn(S.day===4?'合宿の選択へ':'翌日へ','end-night','','')+'</div>';
+    return '<p class="eyebrow">EVENING / '+esc(date)+'</p><h2>夜の時間</h2><p class="lead">今日は誰と話しただろう。調査は残り '+(3-nightCount())+' 回。調べずに眠ることもできる。</p>'+tineFeed()+'<div class="progress"><span style="width:'+(nightCount()/3*100)+'%"></span></div>'+(S.nightMessage?note(esc(S.nightMessage)):'')+'<h3>手がかりを探す</h3>'+researchItems()+'<h3>SNSを読む</h3><div class="grid3">'+['TINE','Photogram','Zitter'].map(p=>btn(p,platformNeedsAction(p)?'browse-sns':'open-sns','data-platform="'+p+'"',platformNeedsAction(p)?'secondary':'ghost')).join('')+'</div><p class="subtle">新しい投稿の確認は1回。既読投稿の再読は無料。鍵投稿は承認条件を満たさなければ開きません。</p><div class="btnrow">'+btn(S.day===4?'合宿の選択へ':'翌日へ','end-night','','')+'</div>';
   };
   const sns=()=>{
     const platform=S.platform, date=currentDate();
@@ -151,7 +183,7 @@
       return '<article class="post'+(open?'':' locked')+'"><div class="post-head">'+avatar+'<div><div class="meta">'+esc(platform)+' / '+esc(p.published_at)+' / '+esc(p.visibility)+'</div><strong>'+esc(label)+'</strong></div></div><p>'+esc(open?p.text:postAccessible(p)?'この投稿の本文はまだ読んでいません。':'閲覧には本人の承認または参加条件が必要です。')+'</p>'+(open?media:'')+'</article>';
     }).join('');
     const alt=D.publicInfo.map(x=>'<div class="document"><strong>'+esc(x.topic)+'</strong>'+esc(x.confirms)+'<p class="subtle">別経路：'+esc(x.route_1)+'／'+esc(x.route_2)+'</p></div>').join('');
-    return '<p class="eyebrow">SOCIAL / '+esc(platform)+'</p><h2>今夜のタイムライン</h2><div class="tabs">'+['TINE','Photogram','Zitter'].map(p=>btn(p,platformNeedsAction(p)?'browse-sns':'sns-tab','data-platform="'+p+'"',p===platform?'':'ghost')).join('')+'</div>'+(rows||'<p class="subtle">今夜までの投稿はありません。</p>')+'<h3>鍵投稿を使わず確認できる案内</h3>'+alt+'<div class="btnrow">'+btn('夜の行動に戻る','back-night','','ghost')+'</div>';
+    return '<p class="eyebrow">SOCIAL / '+esc(platform)+'</p><h2>今夜のタイムライン</h2>'+(platform==='TINE'?tineFeed():'')+'<div class="tabs">'+['TINE','Photogram','Zitter'].map(p=>btn(p,platformNeedsAction(p)?'browse-sns':'sns-tab','data-platform="'+p+'"',p===platform?'':'ghost')).join('')+'</div>'+(rows||'<p class="subtle">今夜までの投稿はありません。</p>')+'<h3>鍵投稿を使わず確認できる案内</h3>'+alt+'<div class="btnrow">'+btn('夜の行動に戻る','back-night','','ghost')+'</div>';
   };
   const board=()=>{
     const rows=D.factExposures.filter(x=>x.fact_id!=='F-COM-02'&&x.available_at.slice(0,10)<=currentDate());
@@ -211,7 +243,8 @@
     else if(repeated.length)activity='何度か足を運んだ'+repeated.join('と')+'の新歓。そこで聴いた音や、見かけた顔を覚えている。';
     else activity='この一週間、'+[...new Set(orgIds.map(id=>ORG[id]))].join('、')+'の新歓を訪れた。';
     const metPeers=['P013','P014','P015','P016'].filter(id=>S.person[id]?.met);
-    const social=metPeers.length?'同期と話した時間も、大学生活の一部になった。':'まだ名前の分からない顔も、いくつか記憶に残った。';
+    const repliedIds=[...new Set(Object.values(S.replyLog||{}))].filter(id=>S.person[id]?.introduced);
+    const social=repliedIds.length?'TINEで'+repliedIds.slice(0,2).map(id=>pmap[id].name).join('や')+'に返信した日もあった。':metPeers.length?'同期と話した時間も、大学生活の一部になった。':'まだ名前の分からない顔も、いくつか記憶に残った。';
     const weekend=S.campChoice==='辞退'?'合宿への参加は見送った。':S.campChoice?'週末は'+S.campChoice+'の班を選んだ。':'';
     return [activity,social,weekend].filter(Boolean).join(' ');
   };
@@ -349,14 +382,32 @@
       S.phase='group';saveAndRender();return;
     }
     if(act==='contact-person'){
-      const platform=el.dataset.platform||'TINE',a=amap[id+'|'+platform], p=ps(id);
-      p.contact_requested=true;
+      const platform=el.dataset.platform||'TINE',a=amap[id+'|'+platform],p=ps(id);
+      const policy=D.contactChannels.find(c=>c.group_id===S.activeGroup&&c.person_id===id&&c.platform===platform)?.approval_policy;
+      if(!a||!policy){S.groupResult='この連絡手段では交換できない。';S.phase='group';saveAndRender();return}
+      p.contact_requested=true;p.introduced=true;
       S.groupActions[S.activeGroup]='contact';
-      if(!a){S.groupResult='この連絡手段は使っていない。会話の印象は手帳に残せる。'}
-      else if(!p.introduced){p.introduced=true;S.groupResult=pmap[id].name+'は「まず名前から」と名乗った。今日は連絡先を渡さず、次の機会にと言った。'}
-      else if(a.visibility==='承認制'||a.visibility==='鍵垢・承認制'){p.contact_pending=true;if(!p.pendingContacts.includes(platform))p.pendingContacts.push(platform);S.groupResult=platform+'の交換を申請した。承認は後日。今は鍵付きの投稿を読めない。'}
-      else{if(!p.contacts.includes(platform))p.contacts.push(platform);p.contact_exchanged=true;p.clearPortrait=true;S.groupResult='本人が'+platform+'の交換を了承した。表示名「'+a.display_name+'」を確認。手帳で顔・氏名・SNSを照合できる。'}
+      const intro=pmap[id].name+'と名前を確かめた。';
+      if(p.contacts.includes(platform)){
+        S.groupResult=intro+'既に'+platform+'で連絡できる。';
+      }else if(policy==='after_week'){
+        S.groupResult=intro+' '+platform+'の交換は今週は保留になった。急がなくてもよさそうだ。';
+      }else if(policy==='next_day'){
+        p.contact_pending=true;
+        if(!p.pendingContacts.includes(platform))p.pendingContacts.push(platform);
+        S.groupResult=intro+' '+platform+'の交換を申請した。承認は翌日以降。';
+      }else{
+        if(!p.contacts.includes(platform))p.contacts.push(platform);
+        p.contact_exchanged=true;p.clearPortrait=true;
+        if(platform==='TINE'){S.contactSince??={};S.contactSince[id]=currentDate()}
+        S.groupResult=intro+' '+platform+'の交換を了承してもらえた。表示名「'+a.display_name+'」を確認した。';
+      }
       S.phase='group';saveAndRender();return;
+    }
+    if(act==='reply-contact'){
+      S.replyLog??={};
+      if(!S.replyLog[date]&&tineMessages().some(x=>x.pid===id))S.replyLog[date]=id;
+      saveAndRender();return;
     }
     if(act==='finish-venue'){S.phase='night';saveAndRender();return}
     if(act==='research'){research(el.dataset.key);return}
@@ -375,7 +426,7 @@
       for(const [pid,p] of Object.entries(S.person)){
         ps(pid);
         const approved=p.pendingContacts.filter(platform=>D.contactChannels.some(c=>c.person_id===pid&&c.platform===platform&&c.approval_policy==='next_day'));
-        approved.forEach(platform=>{if(!p.contacts.includes(platform))p.contacts.push(platform)});
+        approved.forEach(platform=>{if(!p.contacts.includes(platform))p.contacts.push(platform);if(platform==='TINE'){S.contactSince??={};S.contactSince[pid]=currentDate()}});
         p.pendingContacts=p.pendingContacts.filter(platform=>!approved.includes(platform));
         p.contact_pending=p.pendingContacts.length>0;
         p.contact_exchanged=p.contacts.length>0;
