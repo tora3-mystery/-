@@ -114,6 +114,93 @@
     if(/カローラ/.test(value))return 'カローラ';
     return value.replace(/／[A-Z0-9-]+.*$/,'').replace(/の別店舗価格$/,'');
   }
+  // Situation derives from the chosen product, not a fixed 'present' slot label.
+  // Scene texts, social target band, replies and Friday callback must all agree.
+  const CONSUMABLE_CATEGORIES=new Set(['eraser','correction_pen','correction_tape','pencil_case','pen','notebook','paper','underlay','cable']);
+  const EQUIPMENT_CATEGORIES=new Set(['car','furniture','appliance','smartphone','keyboard','mouse','speaker','charger']);
+  function productSituation(q, role) {
+    const category=q.imageKey||'';
+    const cost=q.truth;
+    if(CONSUMABLE_CATEGORIES.has(category)||cost<300)return 'office_supplies';
+    if(EQUIPMENT_CATEGORIES.has(category)||cost>30000)return 'office_equipment';
+    return role==='fujino'?'farewell_gift':'spouse_gift';
+  }
+  function applyProductScene(q) {
+    if(![5,7,11].includes(q.legacyIndex))return;
+    const role=q.legacyIndex===5?'fujino':'shoji';
+    const type=productSituation(q,role);
+    q.situationType=type;
+    const name=q.speechName;
+    if(q.legacyIndex===5) {
+      if(type==='office_supplies'){
+        q.opening='水曜日。藤野さんが社内研修で配る備品の準備をしている。';
+        q.speech='研修で配る'+name+'、1ついくらくらい予算を見ておくと安心ですか？';
+        q.context='藤野「人数分揃えたいんです。見積もりを低く出しすぎて足りなくなると困るので……」';
+        q.hint='1点あたりの通常価格を見積もり、少し予算に余裕を持たせると安心。';
+        q.explain='実際の価格と、配布物として確保する予算は別の数字。';
+        q.zone=[q.truth,Math.max(q.truth+1,Math.ceil(q.truth*1.2))];
+      }else if(type==='office_equipment'){
+        q.opening='水曜日。藤野さんが部署の備品・設備を導入する相談に来た。';
+        q.speech='部署で'+name+'を導入するとして、いくらくらい予算を見ておきましょう？';
+        q.context='藤野「上司に予算案を出すんです。安く見積もって足りなくなるのが一番怖くて」';
+        q.hint='予算申請では、価格を過小評価するより少し余裕を取るのが安心。';
+        q.explain='実際の調達価格と、予算確保のための数字は同じとは限らない。';
+        q.zone=[q.truth,Math.max(q.truth+1,Math.ceil(q.truth*1.15))];
+      }else{
+        q.opening='水曜日。藤野さんが送別会の贈り物を一緒に選んでほしいと言ってきた。';
+        q.speech='送別会の小さな贈り物に'+name+'を考えてるんです。いくらくらいに見えます？';
+        q.context='藤野「相手が受け取りやすいものにしたくて。包装も迷ってるんです」';
+        q.hint='お礼の品だから、高く見えすぎると相手も気を遣うかも。';
+        q.explain='贈り物の実価格と、受け取る人に伝わる印象は別の数字。';
+        q.zone=[Math.round(q.truth*.65),Math.round(q.truth*.85)];
+      }
+    }else if(q.legacyIndex===7){
+      if(type==='office_supplies'){
+        q.opening='木曜日。庄司さんが来週の研修で使う消耗品の単価表を見ている。';
+        q.speech='この'+name+'、通常は1つ何円なのか分かりますか？';
+        q.context='庄司「来週の研修で必要なんです。見積書の数字を確認しておきたくて」';
+        q.hint='消耗品も正式商品名と規格を照合。通常の単品税込価格を答える。';
+        q.explain='研修用品の単価を確認するための正確な数字。';
+      }else if(type==='office_equipment'){
+        q.opening='木曜日。庄司さんが部署で検討中の設備・機器の価格を確認している。';
+        q.speech='この'+name+'、メーカーの通常価格を確認したいんです。何円でしょう？';
+        q.context='庄司「会社の購入申請に出すものなので、数字は正確にしておきたいんです」';
+        q.hint='商品の規格・機種・公式の税込表示を確認。購入付帯費用は除外する。';
+        q.explain='備品・設備の申請に使う通常価格を確認。';
+      }else{
+        q.opening='木曜日。庄司さんが、少し照れながら妻へのプレゼントの相談を持ちかけてきた。';
+        q.speech='妻への贈り物に'+name+'を考えています。通常価格はいくらなんでしょう？';
+        q.context='庄司「妻が前に気にしていたものなんです。値段も知っておきたくて」';
+        q.hint='メーカー公式の通常税込価格。値下げやポイントは考えなくていい。';
+        q.explain='妻へのプレゼント候補のメーカー・ブランド通常価格。';
+      }
+      q.mode='facts';q.zone=[q.truth,q.truth];
+    }else {
+      if(type==='office_supplies'){
+        q.opening='金曜日。庄司さんが昨日の研修備品の発注見積もりを持ってきた。';
+        q.speech='昨日の'+name+'、1つあたりいくらで予算を確保したらいいと思います？';
+        q.context='庄司「正確な単価は分かったんですが、経理への申請額を少し余裕を持って組むべきか迷っていまして」';
+        q.hint='昨日の単価は会話ログに残っている。予算を低く見積もりすぎないことも大切。';
+        q.explain='価格の正確さと、発注予算の見積もりは別の判断。';
+        q.zone=[q.truth,Math.max(q.truth+1,Math.ceil(q.truth*1.2))];
+      }else if(type==='office_equipment'){
+        q.opening='金曜日。庄司さんが昨日の設備・機器の購入申請書を持ってきた。';
+        q.speech='昨日の'+name+'、購入予算にはいくらくらい計上しておくのが妥当でしょう？';
+        q.context='庄司「本体価格だけでなく、予算に少し余裕がないと稟議を出し直すことになるので」';
+        q.hint='木曜のメーカー価格はログから確認。予算額には少し余裕があると安心。';
+        q.explain='メーカー価格と、会社が確保する購入予算は区別する。';
+        q.zone=[q.truth,Math.max(q.truth+1,Math.ceil(q.truth*1.15))];
+      }else{
+        q.opening='金曜日。庄司さんが木曜に見せてくれたプレゼントの候補を持って、またやってきた。';
+        q.speech='昨日の'+name+'、妻にはいくらくらいに見えると思います？';
+        q.context='庄司「渡すときに、値段を気にせず喜んでもらえるかが心配でして……」';
+        q.hint='木曜日の公式価格はログから確認できる。妻が気負わず受け取れるかどうかを考えよう。';
+        q.explain='実際の価格を知っていても、相手への伝わり方は別の問題。';
+        q.zone=[Math.round(q.truth*.6),Math.round(q.truth*.87)];
+      }
+      q.mode='social';
+    }
+  }
   function upgrade(old, position, variation, opts) {
     opts=opts||{};
     const originalPosition=ORDER.indexOf(old.i);
@@ -265,6 +352,7 @@
     if (q.legacyIndex === 7) {
       q.context = '庄司「妻への贈り物に' + q.speechName + 'を考えていまして。少し予算が気になって……」';
     }
+    applyProductScene(q);
     guardPublic(q);
     return q;
   }
