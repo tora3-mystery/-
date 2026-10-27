@@ -174,6 +174,34 @@ for(let seed=1;seed<=120;seed++){
 }
 assert(adverseFound>0,'Evidence-grounded closure ending is unreachable');
 
+// All five-star reviews can preserve small scale past the point of financial
+// viability. This must remain uncommon, not impossible or dominant.
+let fiveStarClosures=0;
+for(let seed=1;seed<=220;seed++){
+ qa.generate(Math.imul(seed+34019,2654435761)>>>0);
+ for(let month=0;month<12;month++){
+  const st=qa.getState(),id=st.candidates[(month+seed)%st.candidates.length];
+  const f=st.facilities.find(x=>x.id===id);
+  qa.post(id,(month+seed)%qa.factsFor(f).length,5);
+ }
+ if(qa.getState().facilities.some(f=>!f.open))fiveStarClosures++;
+}
+assert(fiveStarClosures>0&&fiveStarClosures<66,'Five-star financial collapse must be possible but unusual');
+{
+ const h=createHarness(),q=h.qa;
+ q.generate(718);const s=q.getState();
+ assert.equal(q.villageWhisper(),null,'No mysterious clues before residents discuss them');
+ s.month=7;s.secrets.ancient=true;s.themes.tradition=3;s.themes.history=1;
+ assert(q.villageWhisper()?.includes('役場の人'),'Tradition clue missing');
+ s.secrets.ancient=false;s.secrets.robot=true;s.themes.tech=3;
+ assert(q.villageWhisper()?.includes('住民の欄'),'Technology clue missing');
+ s.secrets.robot=false;s.secrets.deep=true;s.terrain='island';s.themes.sea=2;
+ s.facilities[0].kind='harbor';
+ assert(q.villageWhisper()?.includes('港'),'Sea clue missing');
+ s.secrets.deep=false;assert.equal(q.villageWhisper(),null,'Clue leaked without village secret');
+}
+
+
 // New buildings must be a reachable consequence, not a dormant promise.
 let expansionVillages=0;
 for(let seed=1;seed<=90;seed++){
@@ -232,4 +260,4 @@ assert(tqa.getState().completed,'Reloaded run must finish');
 trial=createHarness(persisted);tqa=trial.qa;
 assert(tqa.getState().completed&&tqa.getState().annualDue,'Final review must be preserved on reload');
 assert(trial.get('modal').innerHTML.includes('口コミが反映'),'Final review modal must reopen');
-console.log(JSON.stringify({status:'PASS',terrain,statistics,endings,newFacilityReachable:expansionVillages,evolutionImpact:'PASS',saveResume:'PASS',arrivalDate:'PASS',stageArt:'PASS',strictManifest:'PASS',fallback:'PASS',polarityCases:polarityCombinations,adverseEnding:'PASS'},null,2));
+console.log(JSON.stringify({status:'PASS',terrain,statistics,endings,newFacilityReachable:expansionVillages,evolutionImpact:'PASS',fiveStarClosureCheck:fiveStarClosures,whispers:'PASS',saveResume:'PASS',arrivalDate:'PASS',stageArt:'PASS',strictManifest:'PASS',fallback:'PASS',polarityCases:polarityCombinations,adverseEnding:'PASS'},null,2));
