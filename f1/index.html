@@ -340,7 +340,7 @@ function reconcileComplaints(){
 }
 const F17_SNIPPETS=[
  [/レジに20分並びました|会計まで20分かかりました|レジが長蛇の列|レジの列が長|レジの最後尾がどこか分かりません|閉店間際なのに、レジが一台しか開いていません|レジが1台しか開いていません/g,['queueExpress','register','ticket']],
- [/カートが通れませんでした|カートとベビーカーが通路ですれ違えません|車椅子が通れません|通路ですれ違えません|通路の真ん中に商品が置かれていて|通路まで列が伸びていて/g,['cartSigns','lane','floorcheck']],
+ [/カートが通れませんでした|カートとベビーカーが通路ですれ違えません|車椅子が通れません|通路ですれ違えません|通路の真ん中に商品が置かれていて/g,['cartSigns','lane','floorcheck']],
  [/牛乳がありません|売り切れでした|品切れでした|夕食の材料がまた品切れ|棚札はあるのに|補充予定を聞いても/g,['eveningRestock','receive','forecast']],
  [/店内放送が大きくて|アナウンスが途切れず|呼び出しが重なって|案内放送が繰り返され|特売放送が重なっています/g,['quietNotices','quiet','vibration']],
  [/裏手の社の周りが暗く/g,['inspectBack']]
@@ -801,13 +801,14 @@ function available(){
  if(gray){if(picks.length>=6)picks.splice(5,1,gray);else picks.push(gray)}
  const odd=legal.find(a=>a.kind==='odd');
  if(odd){const offset=gray?Math.min(4,picks.length):Math.min(5,picks.length);picks.splice(offset,picks.length>=6?1:0,odd)}
- for(const x of legal.filter(a=>a.f17Only||a.f17Followup).sort((a,b)=>a.id==='inspectBack'?-1:b.id==='inspectBack'?1:a.id.localeCompare(b.id))){
-   if(!picks.includes(x)){
-     if(picks.length<cap)picks.push(x);
-     else picks.splice(cap-1,1,x);
-   }
- }
- for(const x of legal.filter(a=>a.v15Family).sort((a,b)=>b.tier-a.tier||score(b)-score(a)))
+ const discovered=legal.filter(a=>a.f17Only||a.f17Followup).sort((a,b)=>a.id==='inspectBack'?-1:b.id==='inspectBack'?1:a.id.localeCompare(b.id));
+  if(discovered.length){
+    const reserved=Math.max(0,cap-discovered.length);
+    const essential=picks.filter(a=>a.kind==='odd'||a.kind==='gray').slice(0,reserved);
+    const everyday=picks.filter(a=>!essential.includes(a)).slice(0,Math.max(0,reserved-essential.length));
+    picks.splice(0,picks.length,...essential,...everyday,...discovered);
+  }
+  for(const x of legal.filter(a=>a.v15Family).sort((a,b)=>b.tier-a.tier||score(b)-score(a)))
   if(picks.length<cap&&!picks.includes(x))picks.push(x);
  for(const x of legal.filter(a=>a.kind==='major'&&!a.v15Family).sort((a,b)=>score(b)-score(a)))
   if(picks.length<cap&&!picks.includes(x))picks.push(x);
