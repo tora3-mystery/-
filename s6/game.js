@@ -5,7 +5,7 @@
   const SAVE_KEY = 's6-case-a-v03-save';
   const AUTO_KEY = 's6-case-a-v03-auto';
   const META_KEY = 's6-case-a-v03-meta';
-  const BUILD_AT = '2026-10-27 17:28 JST';
+  const BUILD_AT = '2026-10-27 19:08 JST';
   const DAYS = [
     ['2026-04-06','4月6日 月曜'],['2026-04-07','4月7日 火曜'],
     ['2026-04-08','4月8日 水曜'],['2026-04-09','4月9日 木曜'],
@@ -24,6 +24,7 @@
   };
   const pmap = Object.fromEntries(D.people.map(x=>[x.person_id,x]));
   const socialMap = Object.fromEntries((D.socialProfiles||[]).map(x=>[x.person_id,x]));
+  const peerMap = Object.fromEntries((D.peerProgress||[]).map(x=>[x.person_id,x]));
   const emap = Object.fromEntries(D.events.map(x=>[x.event_id,x]));
   const gmap = Object.fromEntries(D.groups.map(x=>[x.group_id,x]));
   const amap = Object.fromEntries(D.accounts.map(x=>[x.person_id+'|'+x.platform,x]));
@@ -227,7 +228,7 @@
     const selected=order.slice(S.day%order.length).concat(order.slice(0,S.day%order.length)).slice(0,2);
     return selected.map(pid=>{
       const p=ps(pid), lines=PERSON_TINE[pid]||TINE_LINES[pmap[pid].primary_org]||TINE_LINES.N;
-      const main=lines[S.day%lines.length];
+      const main=peerMap[pid]?.daily_messages?.[S.day]||lines[S.day%lines.length];
       const lastGroup=p.lastGroup&&gmap[p.lastGroup];
       const reminder=lastGroup&&p.lastInteraction==='question'&&S.contactSince?.[pid]!==currentDate()?
         '前に「'+lastGroup.group_title+'」で聞いてくれた話、覚えているよ。 ':'';
@@ -375,7 +376,23 @@
     else if(contacts.length)people=contacts.slice(0,2).map(pid=>pmap[pid].name).join('と')+'と、連絡できるようになったのもあの春だ。';
     else if(met.length)people='会場で話した'+met.slice(0,2).map(pid=>pmap[pid].name).join('と')+'の顔を、ふと思い出すことがある。';
     else people='まだ知らない人も場所も多い。これからどこへ行くか、決める余地は残っている。';
-    return '<div class="card soft"><h3>2027年4月｜あれから一年</h3><p>'+esc(music)+'</p><p>'+esc(people)+'</p></div>';
+    const knownPeers=(D.peerProgress||[]).filter(x=>S.person[x.person_id]?.met);
+    const scored=knownPeers.sort((a,b)=>{
+      const score=profile=>{
+        const pid=profile.person_id,p=S.person[pid]||{};
+        const reply=Object.values(S.replyLog||{}).includes(pid);
+        return (reply?10:0)+(p.contacts?.includes('TINE')?5:0)+(p.affinity||0);
+      };
+      return score(b)-score(a)||a.person_id.localeCompare(b.person_id);
+    });
+    const closest=scored[0];
+    let peerNote='';
+    if(closest){
+      const pid=closest.person_id,p=S.person[pid]||{},replied=Object.values(S.replyLog||{}).includes(pid);
+      peerNote=replied?closest.reply_memory:
+        (p.contacts?.includes('TINE')?closest.contact_memory:closest.met_memory);
+    }
+    return '<div class="card soft"><h3>2027年4月｜あれから一年</h3><p>'+esc(music)+'</p><p>'+esc(people)+'</p>'+(peerNote?'<p>'+esc(peerNote)+'</p>':'')+'</div>';
   };
   const ending=()=>{
     const texts={
@@ -570,7 +587,8 @@
     }
     if(act==='contact-person'){
       const platform=el.dataset.platform||'TINE',a=amap[id+'|'+platform],p=ps(id);
-      const policy=D.contactChannels.find(c=>c.group_id===S.activeGroup&&c.person_id===id&&c.platform===platform)?.approval_policy;
+      const contactRule=D.contactChannels.find(c=>c.group_id===S.activeGroup&&c.person_id===id&&c.platform===platform);
+      const policy=contactRule?.approval_policy;
       if(!a||!policy){S.groupResult='この連絡手段では交換できない。';S.phase='group';saveAndRender();return}
       if(S.groupActions[S.activeGroup])return;
       S.participationHistory??=[];S.participationHistory.push({group_id:S.activeGroup,action:'contact',person_id:id});
@@ -581,7 +599,7 @@
       if(p.contacts.includes(platform)){
         mood='familiar';S.groupResult=intro+'既に'+platform+'で連絡できる。';
       }else if(policy==='after_week'&&p.affinity<3){mood='cautious';S.groupResult=intro+'「もう少し話してからにしよう」と穏やかに断られた。';
-      }else if(policy==='next_day'&&p.affinity<1){mood=pmap[id].social_style==='reserved'?'cautious':'awkward';S.groupResult=intro+'「また話す機会があったら」と、今日は連絡先を渡してもらえなかった。';
+      }else if(policy==='next_day'&&p.affinity<(contactRule.min_affinity??1)){mood=pmap[id].social_style==='reserved'?'cautious':'awkward';S.groupResult=intro+'「また話す機会があったら」と、今日は連絡先を渡してもらえなかった。';
       }else if(policy==='next_day'||policy==='after_week'){
         mood='waiting';p.contact_pending=true;if(!p.pendingContacts.includes(platform))p.pendingContacts.push(platform);
         S.groupResult=intro+(pmap[id].social_style==='open'?'「いいよ、あとで承認するね！」と明るい返事。':pmap[id].social_style==='reserved'?'「後で確認しておくね」と落ち着いた返事。':'「あとで確認してみるね」と小さくうなずいた。');
