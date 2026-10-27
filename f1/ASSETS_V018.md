@@ -1,54 +1,81 @@
-# F1 v0.18 店舗写真素材台帳（P1・P2）
+# F1 v0.18 店舗写真素材台帳（P1・P2・P3）
 
 制作日：2026-10-27（JST）  
-進捗：P1はユーザー承認済み。P2の3点を制作・検品。P3と残り28候補は未着手。
+対象ブランチ：`f1-v018-p1-20261027`  
+反映前ブランチHEAD：`c5cadd7bee895f995d3ee8276a62fc32e67af46f`  
+制作範囲：P3正式発注書の新規23枚のみ。P1/P2を含む素材台帳は計29枚。
 
 ## 正本・参照
 
-- 制作開始時に確認した `main`：`d68cb0d66db71127a9c2275f2dc65466be25e415`
-- P2開始時の `main`：`9693ef4df53557eb08784d020dc3ded42021b39d`。P1レビュー用ページと画像ゲートテストの追加を確認。状態仕様・発注書のblobは制作開始時と同一。
-- 発注書：`f1/WORK_V018_PHOTO_BRIEF.md`（blob `c7936dcda81ef1d4bc157483c66f7c9a3c7df54d`）
-- 状態仕様：`f1/STORE_PHOTO_STATE_SPEC_V018.md`（blob `a0d8b61caf4a69529022b6805e82e593937534de`）
-- 参照素材：`f1/assets/store-normal.jpg`（blob `0b37a7228c3db3e2a54c537625755efd5e24d879`）と `f1/assets/scene-checkout-normal.webp`。世界観参照には使ったが、指定レイアウトに合わず、共通マスターを新規制作。
+- 制作前に確認した最新 `main`：`9b0ba740c3d5a66834836e96f5d061ff00fe64d8`
+- 正式発注書：`f1/WORK_V018_P3_BRIEF.md`（blob `293e98b09ff9b306a8897d9ca2d7fa3e478c75fe`）
+- 状態仕様：`f1/STORE_PHOTO_STATE_SPEC_V018.md`（blob `5fd36164abac39b84c0a4e916414d0e8fbd1c396`）
+- 表示対象名・順序は最新 `f1/store_scene_v018.js` の `P3_FILES` と照合。発注書・コードとも23枚で一致。
+- 共通マスター：`/Users/ryu/.codex/generated_images/01a17850-e471-7362-a690-0d929573e475/exec-f04174ad-82f3-4ae2-b8cd-efcde23e6439.png`（1672×941）
 
-## 共通制作方法
+## 共通制作・出力
 
-Imagegenで架空の日本のスーパー「まるまるスーパー」の撮影マスターを1枚制作。既存写真を色調・素材感の参照にした。入口側から店内を少し高い位置で斜めに見る固定画角。左に白いレジ3台、中央にカート通路、右に商品棚、奥に放送設備を配置。
+架空の日本のスーパーの店舗全景を共通マスターとして、同じ入口側カメラ位置から差分編集した。柱、既存の3台のレジ、中央通路、床目地、左右の商品棚、奥の放送設備を固定し、客・カート・棚在庫・客の反応のみを状態差分とした。レジ増設写真および透明な設備レイヤーは通常営業写真に含めていない。P2方針どおり、増設写真は施策結果写真に限り1回使用し、継続効果はゲーム内状態・数値表示で示す。
 
-共通マスターPNG：`/Users/ryu/.codex/generated_images/01a17850-e471-7362-a690-0d929573e475/exec-f04174ad-82f3-4ae2-b8cd-efcde23e6439.png`（1672×941）。全6枚はこのマスターを起点にした。各画像はLanczosで1100×619へ縮小し、WebP quality 82 / method 6で書き出した。RGB、16:9、画像内の説明文字・ロゴなし。
+出力仕様は全23枚ともWebP、1100×619、16:9、RGB、quality 82 / method 6。全ファイル350KB未満。
 
-## 成果物一覧
+## 29枚の素材一覧
 
-| ファイル | 用途・差分 | 容量 | 判定 |
-|---|---|---:|---|
-| `f1/assets/main-base-neutral.webp` | 通常営業の固定マスター | 156,562 bytes | P1承認済み。1100×619。 |
-| `f1/assets/main-checkout-mild.webp` | レジ待ち軽度。短い列を少し延長、主通路は開放 | 148,718 bytes | P1承認済み。390px幅で区別可。 |
-| `f1/assets/main-checkout-moderate.webp` | 中間状態。列は中央通路の縁まで伸びるが、通行路は残す | 161,218 bytes | P2合格。mildより明確に混み、severeより通路の余裕がある。 |
-| `f1/assets/main-checkout-aisle-severe.webp` | レジ列が中央通路へ波及し、通行を妨げる | 168,866 bytes | P1承認済み。moderateより列が密で通路が狭い。 |
-| `f1/assets/main-improved-register-added.webp` | 有人レジ1台増設の試作。既存3台に4台目を追加 | 144,334 bytes | P2素材として合格。継続表示の検証は不合格。下記参照。 |
-| `f1/assets/main-noise-severe.webp` | 後方PAでの呼出業務と、音に反応する客の控えめな仕草 | 146,300 bytes | P2補助写真として合格。音の強さを写真だけで確実に示す用途には不十分。 |
+| 区分 | ファイル | 用途・見える状態差分 | 容量 | 判定 |
+|---|---|---|---:|---|
+| P1 | `main-base-neutral.webp` | 通常営業の固定マスター | 156,562 B | 承認済み |
+| P1 | `main-checkout-mild.webp` | レジ待ち軽度 | 148,718 B | 承認済み |
+| P1 | `main-checkout-aisle-severe.webp` | レジ列が通路側へ波及する深刻状態 | 168,866 B | 承認済み |
+| P2 | `main-checkout-moderate.webp` | レジ待ち中度 | 161,218 B | 合格 |
+| P2 | `main-improved-register-added.webp` | レジ増設施策の直後を示す写真。1回だけ使用 | 144,334 B | 施策結果写真として採用 |
+| P2 | `main-noise-severe.webp` | 放送設備への客の反応を示す深刻状態の補助写真 | 146,300 B | 補助用途として合格 |
+| P3 | `main-base-orderly.webp` | 通常・整然 | 152,990 B | 合格 |
+| P3 | `main-base-busy.webp` | 通常営業の混雑 | 151,838 B | 合格 |
+| P3 | `main-base-underused.webp` | 客が少なくレジが空く状態 | 151,054 B | 合格 |
+| P3 | `main-checkout-severe.webp` | レジ待ち深刻 | 153,860 B | 合格 |
+| P3 | `main-aisle-mild.webp` | 通路混雑・軽度 | 149,588 B | 合格 |
+| P3 | `main-aisle-moderate.webp` | 通路混雑・中度 | 158,134 B | 合格 |
+| P3 | `main-aisle-severe.webp` | 通路混雑・深刻 | 166,208 B | 合格 |
+| P3 | `main-stock-mild.webp` | 欠品・軽度 | 151,626 B | 合格 |
+| P3 | `main-stock-moderate.webp` | 欠品・中度 | 141,936 B | 合格 |
+| P3 | `main-stock-severe.webp` | 欠品・深刻 | 135,086 B | 合格 |
+| P3 | `main-noise-mild.webp` | 放送音への反応・軽度 | 149,294 B | 合格・補助写真 |
+| P3 | `main-noise-moderate.webp` | 放送音への反応・中度 | 150,122 B | 合格・補助写真 |
+| P3 | `main-checkout-aisle-moderate.webp` | レジ待ち＋通路混雑・中度 | 164,246 B | 合格、レジ列差分はやや弱い |
+| P3 | `main-checkout-stock-moderate.webp` | レジ待ち＋欠品・中度 | 143,254 B | 合格、レジ列差分はやや弱い |
+| P3 | `main-checkout-stock-severe.webp` | レジ待ち＋欠品・深刻 | 149,302 B | 合格 |
+| P3 | `main-checkout-noise-moderate.webp` | レジ待ち＋放送反応・中度 | 151,880 B | 合格、レジ列差分は弱い |
+| P3 | `main-checkout-noise-severe.webp` | レジ待ち＋放送反応・深刻 | 157,680 B | 合格 |
+| P3 | `main-aisle-stock-moderate.webp` | 通路混雑＋欠品・中度 | 148,198 B | 合格 |
+| P3 | `main-aisle-stock-severe.webp` | 通路混雑＋欠品・深刻 | 154,142 B | 合格 |
+| P3 | `main-aisle-noise-moderate.webp` | 通路混雑＋放送反応・中度 | 152,510 B | 合格・放送反応は補助 |
+| P3 | `main-aisle-noise-severe.webp` | 通路混雑＋放送反応・深刻 | 161,374 B | 合格・放送反応は補助 |
+| P3 | `main-stock-noise-moderate.webp` | 欠品＋放送反応・中度 | 136,756 B | 合格・放送反応は補助 |
+| P3 | `main-stock-noise-severe.webp` | 欠品＋放送反応・深刻 | 135,512 B | 合格・放送反応は補助 |
 
-## 比較・目視検品
+## 比較・検品結果
 
-- 6枚・各390px幅の一覧：`/Users/ryu/Documents/ChatGPT/ARG/f1-v018-p2-review/six-up-390.png`
-- 全6枚を390px幅で縦並び：`/Users/ryu/Documents/ChatGPT/ARG/f1-v018-p2-review/phone-390-all-six.png`
-- mild / moderate 50%重ね：`/Users/ryu/Documents/ChatGPT/ARG/f1-v018-p2-review/overlay-mild-moderate.png`
-- moderate / severe 50%重ね：`/Users/ryu/Documents/ChatGPT/ARG/f1-v018-p2-review/overlay-moderate-severe.png`
-- 通常 / 増設レジ 50%重ね：`/Users/ryu/Documents/ChatGPT/ARG/f1-v018-p2-review/overlay-base-register-added.png`
-- 通常 / 騒音補助写真 50%重ね：`/Users/ryu/Documents/ChatGPT/ARG/f1-v018-p2-review/overlay-base-noise-severe.png`
-- 増設後から通常画像へ戻るときの390px確認：`/Users/ryu/Documents/ChatGPT/ARG/f1-v018-p2-review/register-continuity-check-390.png`
-- 透明レジレイヤー合成試験（通常・moderate・severeの各390px）：`/Users/ryu/Documents/ChatGPT/ARG/f1-v018-p2-review/transparent-register-overlay-trial-390.png`
+目視用ローカル比較物（コミット対象外）：
 
-固定カメラ、柱、壁・床境界、既存レジ、主通路、右棚、奥スピーカーの位置は6枚で整合。人物とカートは各状態差として配置が変わる。mild→moderate→severeは390px幅で3段階を見分けられる。騒音写真はPA設備と客の仕草を補助に使うが、写真単体で音量を判定できないため、数値・アイコンを主情報とする。
+- 23枚一覧：`/Users/ryu/Documents/ChatGPT/ARG/f1-v018-p3-review/p3-contact-23.jpg`
+- すべてを共通マスターと50%透過で重ねた一覧：`/Users/ryu/Documents/ChatGPT/ARG/f1-v018-p3-review/p3-overlays-50-master.jpg`
+- 各画像を横幅390pxで表示した23枚一覧：`/Users/ryu/Documents/ChatGPT/ARG/f1-v018-p3-review/p3-phone-390-23.jpg`
 
-## レジ増設の継続表示ゲート
+確認した差分：
 
-`main-improved-register-added.webp`では4台目の有人レジが見える。一方、P1の通常・混雑画像は3台のままなので、その後に通常状態画像へ戻すと4台目が消える。固定カメラの1枚編集で追加設備を常時維持することは、この6枚のままでは実証できなかった。これは状態画像として使う場合の矛盾であり、P3の制作ゲート未解決。
+- `base-orderly` → `base-busy` → `base-underused` は、客数・カート・空いたレジの有無で区別できる。
+- 通路の軽度→中度→深刻は、中央通路の利用可能幅とカート密度が段階的に変わり、390px幅の一覧でも差が追える。
+- 欠品の軽度→中度→深刻は、商品を残した小さな棚の空きから複数棚の広い空きへ進む。空棚の面積で段階を区別できる。
+- 放送状態は、スピーカー方向を見る客・スタッフの反応で表現。音量自体は静止画から検証できないため、ゲーム内数値・状態表示が主情報。
+- 50%重ね合わせで柱、レジ配置、通路、棚の位置、床目地は大きくずれていない。人物やカートの重なりは状態編集による差分。
+- 29枚全体に対し新規P3は23枚のみ。P1/P2の6枚は上書きしていない。
 
-固定位置の透明差分レイヤーも試作して通常・moderate・severeへ重ねたが、レジの視点・縮尺と床への接地が合わず、切り抜きを貼ったように浮いて見えたため採用しなかった。レイヤー合成でも継続表示は実証できていない。
+## 残る不整合・留意点
 
-仕様案の代替として、増設写真は施策直後の結果写真、継続する効果はゲーム内のレジ数・待ち時間表示で示す役割分担を提案する。状態写真へ使う場合は、Chat側が設備履歴を合成する処理を先に決める必要がある。どちらの扱いにするか決まるまでP3・残り28枚は制作しない。
+- `main-checkout-aisle-moderate.webp`、`main-checkout-stock-moderate.webp`、`main-checkout-noise-moderate.webp` は、390px表示では中度のレジ列がP2 `main-checkout-moderate.webp` ほど明瞭でない。複合写真では通路・欠品・放送反応の副状態は見える。レジ待ちの厳密な段階判断は、P2の単独写真またはゲーム内数値を併用する。
+- 放送状態の軽度・中度・深刻は写真だけで音の強さを伝えられない。客の反応は補助情報として扱い、ゲーム内数値・状態表示を正とする。
+- これは写真素材の静的・390px幅での目視検品であり、ゲーム画面への実装、実機Safari表示、ユーザー評価は含まない。
 
 ## 編集範囲
 
-この作業で追加するのは上記 `main-*.webp` 6枚と本台帳のみ。`f1/index.html`、JavaScript、テスト、INDEX、既存の `scene-*.webp`、他作品は変更しない。
+P3で追加するのは上記の新規23枚と本台帳の更新のみ。P1/P2の6枚は保持。ゲーム本体HTML・JavaScript、テスト、仕様書、INDEX、他作品は変更していない。P3完了後のP2・P3以外の追加制作は対象外。
