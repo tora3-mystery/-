@@ -42,9 +42,19 @@ function talk(id,gid,state){
 function answer(id,gid,kind){
  const p=people[id],q=D.questions.find(x=>x.group_id===gid&&x.target_id===id);
  if(kind==='question'&&q)return {text:plain(q.answer),reveals:q.reveals||'',kind:'question'};
- if(p.year==='1')return {text:'まだどこに入るか決めてないんだ。いろいろ見学中。',reveals:'primary_org',primaryOrg:'N'};
+ const voice=P.people[id]?.voice||'soft';
+ if(p.year==='1'){
+  const msg=voice==='reserved'||voice==='precise'?'まだ決めてないんだ。いくつか見比べてる。':
+    voice==='energetic'||voice==='friendly'?'まだ迷ってる！ いろんな新歓に行ってみたいんだ。':
+    'まだ決めてない。いくつか見て回ってるところ。';
+  return {text:msg,reveals:'primary_org',primaryOrg:'N',kind:'affiliation'};
+ }
  const main=orgNames[p.primary_org],dual=p.dual_org?orgNames[p.dual_org]:null;
- return {text:'普段は'+main+'にいるよ。'+(dual?dual+'にも顔を出すんだ。':''),reveals:'primary_org'+(dual?',dual_org':''),primaryOrg:p.primary_org,dualOrg:p.dual_org||null,kind:'affiliation'};
+ const first=voice==='precise'||voice==='reserved'?'主な活動は'+main+'。':
+   voice==='energetic'||voice==='friendly'?main+'がメインだよ！':
+   voice==='quiet'?main+'でやってる。':'普段は'+main+'にいるよ。';
+ const second=dual?(voice==='precise'||voice==='reserved'?dual+'も掛け持ちしてる。':dual+'にも顔を出してるよ。'):'';
+ return {text:first+second,reveals:'primary_org'+(dual?',dual_org':''),primaryOrg:p.primary_org,dualOrg:p.dual_org||null,kind:'affiliation'};
 }
 function contact(id,gid,state){
  const c=P.people[id],rule=D.contactChannels.find(x=>x.group_id===gid&&x.person_id===id&&x.platform==='TINE');
