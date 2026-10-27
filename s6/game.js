@@ -5,7 +5,7 @@
   const SAVE_KEY = 's6-case-a-v03-save';
   const AUTO_KEY = 's6-case-a-v03-auto';
   const META_KEY = 's6-case-a-v03-meta';
-  const BUILD_AT = '2026-10-27 19:08 JST';
+  const BUILD_AT = '2026-10-27 19:49 JST';
   const DAYS = [
     ['2026-04-06','4月6日 月曜'],['2026-04-07','4月7日 火曜'],
     ['2026-04-08','4月8日 水曜'],['2026-04-09','4月9日 木曜'],
@@ -20,7 +20,7 @@
     'こもれび音楽同好会':'小さな部屋で、一人の音が終わるまで誰も急かさない。紬は温かいお茶を差し出した。',
     'wav.':'画面を閉じてもよい共同制作。公開範囲を自分で選べることが、今日は何より大事だった。',
     '404':'学外ライブの準備は音量計から始まった。噂の背景を話し、今の約束を守る人たちがいる。',
-    辞退:'菜月と渚に誘われ、学内の空き教室で短く音を出す。合宿に行かない選択も、音楽を諦めることではない。'
+    辞退:'合宿には行かず、学内の空き教室でひとり短く音を鳴らす。参加しない選択も、音楽を諦めることではない。'
   };
   const pmap = Object.fromEntries(D.people.map(x=>[x.person_id,x]));
   const socialMap = Object.fromEntries((D.socialProfiles||[]).map(x=>[x.person_id,x]));
