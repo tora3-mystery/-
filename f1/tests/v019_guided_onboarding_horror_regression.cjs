@@ -45,10 +45,11 @@ ok(newGame.get('start').onclick instanceof Function,'Start button has an action'
 newGame.get('start').onclick();
 ok(newGame.api.practiceStatus()===0&&!newGame.get('day0Panel').classList.contains('hidden'),'DAY 0 opens');
 ok(newGame.get('day0Apply').classList.contains('hidden'),'Practice response initially hidden');
+ok(newGame.get('day0Queue').textContent==='3/5'&&newGame.get('day0Noise').textContent==='0/5','DAY 0 begins one action before normal DAY 1');
 newGame.get('day0Investigate').onclick();
 ok(newGame.api.practiceStatus()===1&&!newGame.get('day0Discovery').classList.contains('hidden'),'Actual underlined phrase yields a policy');
 newGame.get('day0Apply').onclick();
-ok(newGame.api.practiceStatus()===2&&newGame.get('day0Queue').textContent==='1/5'&&newGame.get('day0Noise').textContent==='2/5','Practice shows both improvement and side effect');
+ok(newGame.api.practiceStatus()===2&&newGame.get('day0Queue').textContent==='2/5'&&newGame.get('day0Noise').textContent==='1/5','Practice shows both improvement and side effect');
 ok(!newGame.get('day0Finish').classList.contains('hidden'),'Practice has a completion action');
 newGame.get('day0Finish').onclick();
 let state=newGame.api.getState();
@@ -57,8 +58,8 @@ ok(state.days.length===0&&state.revenue===0&&state.used.length===0,'Practice lea
 ok(newGame.api.availableIds().join(',')==='idle','No action unlocked by the practice');
 const preserved=JSON.stringify(newGame.api.getState());
 newGame.api.showLanding(true,true);
-ok(!newGame.get('practiceAgain').classList.contains('hidden'),'Help offers a repeatable rehearsal');
-newGame.get('practiceAgain').onclick();
+ok(!newGame.get('start').classList.contains('hidden')&&newGame.get('practiceAgain').classList.contains('hidden'),'Help shows unified DAY0 start instead of redundant rehearsal');
+newGame.api.startPractice(true);
 newGame.get('day0Investigate').onclick();newGame.get('day0Apply').onclick();
 newGame.get('day0Finish').onclick();
 ok(JSON.stringify(newGame.api.getState())===preserved,'Repeatable rehearsal does not overwrite ongoing state');
@@ -70,23 +71,28 @@ savedSeed.api.setState({...savedSeed.api.getState(),day:4,revenue:180,
  discoveredActions:['register'],actionCounts:{register:1}});
 const saved=boot(savedSeed.memory);
 ok(!saved.get('resume').classList.contains('hidden'),'Existing-save resume button remains visible');
-ok(!saved.get('practiceAgain').classList.contains('hidden'),'Existing-save DAY 0 practice button is visible');
-ok(!saved.get('startOver').classList.contains('hidden'),'Existing-save new-game DAY 0 button is visible');
-saved.get('practiceAgain').onclick();
+ok(!saved.get('start').classList.contains('hidden'),'Existing-save DAY0 button visible');
+ok(!saved.get('startOver').classList.contains('hidden'),'Existing-save DAY1 button visible');
+ok(saved.get('start').textContent.includes('DAY 0')&&saved.get('startOver').textContent.includes('DAY 1'),'Two start routes are explicit');
+saved.api.startPractice(true);
 ok(saved.api.practiceStatus()===0&&!saved.get('day0Panel').classList.contains('hidden'),
  'Existing-save rehearsal enters DAY 0');
 saved.get('day0Investigate').onclick();saved.get('day0Apply').onclick();saved.get('day0Finish').onclick();
 ok(saved.api.getState().day===4&&saved.api.getState().revenue===180,
  'Rehearsal preserves saved day and sales');
-saved.api.showLanding(true,false);saved.get('startOver').onclick();
-ok(!saved.get('day0Panel').classList.contains('hidden'),'New game from saved data enters DAY 0');
-ok(saved.api.getState().day===4,'Entering new DAY 0 does not immediately erase previous save');
+saved.api.showLanding(true,false);saved.get('start').onclick();
+ok(!saved.get('day0Panel').classList.contains('hidden'),'Saved user can enter DAY 0 from unified start');
+ok(saved.api.getState().day===4,'DAY 0 entry retains save until tutorial completion');
 saved.get('day0Investigate').onclick();saved.get('day0Apply').onclick();saved.get('day0Finish').onclick();
 ok(saved.api.getState().day===1&&saved.api.getState().revenue===0,
- 'After DAY 0 a new, clean DAY 1 is created');
+ 'Finishing DAY 0 starts fresh DAY 1');
+saved.api.setState({...saved.api.getState(),day:4,revenue:180,
+ days:[{day:1,sales:60},{day:2,sales:60},{day:3,sales:60}]});
+saved.api.showLanding(true,false);saved.get('startOver').onclick();
+ok(saved.get('day0Panel').classList.contains('hidden')&&saved.api.getState().day===1,'Direct DAY 1 skips tutorial and replaces save');
 saved.get('restart').onclick();
-ok(saved.api.practiceStatus()===0&&!saved.get('day0Panel').classList.contains('hidden'),
- 'In-game restart now begins at DAY 0, not DAY 1');
+ok(!saved.get('intro').classList.contains('hidden')&&!saved.get('start').classList.contains('hidden'),
+ 'In-game restart presents both start options');
 saved.api.setState({...saved.api.getState(),day:7,revenue:510,finish:true,ending:'normal_success',
  days:Array.from({length:7},(_,i)=>({day:i+1,sales:70}))});
 const replayButton=saved.get('ending').children.find(x=>x.textContent==='もう一度営業する');
@@ -100,6 +106,7 @@ step(blocked,'idle');
 ok(blocked.api.focus('f17-back-review','裏手の社の周りが暗く'),'Rear alley investigated');
 step(blocked,'inspectBack');
 ok(blocked.api.getState().day===3,'Reach third day without product handling');
+ok(blocked.api.getState().vals.join(',')==='2,2,2,1','Rear inspection changes no severity; only daily natural deterioration applies');
 ok(!blocked.api.availableIds().includes('audit'),'Rear alley alone does not unlock visit');
 ok(blocked.api.availableIds().includes('removeShrine'),'Demolition remains available without product handling');
 const sameSave=new Map([['f1-v10',JSON.stringify(blocked.api.getState())]]);
@@ -122,12 +129,23 @@ ok(route.api.getState().day===4&&route.api.getState().odd===1,'One unusual compl
 step(route,'camera0');ok(route.api.getState().day===5&&route.api.getState().odd===2,'Second unusual stage on DAY 5');
 step(route,'open0');ok(route.api.getState().day===6&&route.api.getState().odd===3,'Third unusual stage on DAY 6');
 step(route,'idle');ok(route.api.getState().day===7,'DAY 7 ordinary return');
-step(route,'idle');
+route.api.play('idle');route.api.advance();
 ok(route.api.getState().day8Active,'Conditional DAY 8 begins');
 ok(route.get('day8Title').textContent==='DAY 08 / 07','DAY 8 looks like original business day');
+ok(route.api.getState().day8OpeningPending&&!route.get('dayTransition').classList.contains('hidden'),
+ 'Seventh-day close leads to a familiar overnight opening panel');
+ok(route.get('transitionScoreLabel').textContent==='本日の日売上見込み'&&
+ route.get('transitionContinue').textContent==='今日の営業を確認する','New opening panel foregrounds sales and an ordinary business action');
+const day8Pending=boot(route.memory);day8Pending.api.resumeCurrent();
+ok(!day8Pending.get('dayTransition').classList.contains('hidden'),'DAY 8 opening panel survives saving and reloading');
+day8Pending.api.closeTransition();
+ok(!day8Pending.api.getState().day8OpeningPending,'Closing the overnight panel clears persisted pending flag');
 ok(route.get('day8Meters').children.length===4,'Same four operational indicators');
 ok(route.get('day8Sales').textContent.endsWith('万円'),'Ordinary-looking sales first');
 ok(route.get('day8Feedback').children.length===0,'No premature praise posts at opening');
+route.api.closeTransition();
+ok(route.get('dayTransition').classList.contains('hidden')&&!route.api.getState().day8OpeningPending,'Ordinary DAY 8 business UI appears after opening transition');
+ok(route.get('day8Next').textContent==='本日の対応を確定する','DAY 8 does not ask to begin an already begun workday');
 route.api.advanceDay8();
 ok(route.get('day8Feedback').children.length===10,'Ten praise posts in ordinary customer board');
 ok(route.get('day8SceneStatus').textContent==='入店客数 0名','Zero customers with sales');
