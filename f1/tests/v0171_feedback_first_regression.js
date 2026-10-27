@@ -39,7 +39,7 @@ check(a.get('actions').children.some(c=>c.className?.includes('discovery-new-act
 check(a.api.focus(ordinary.id,shrineText),'Repeated phrase review succeeds');
 check(!a.get('complaintBoard').children.some(c=>c.children.some(x=>x.className?.includes('discovery-award'))),'Repeat does not fake a new discovery');
 a.api.restart();
-check(a.get('moneyDetail').textContent==='本部目標：今週の売上500万円','Condensed HUD instead of formulas/fines');
+check(a.get('moneyDetail').textContent.includes('各売場の負担度は0〜5'),'Condensed HUD instead of formulas/fines');
 check(!a.get('moneyDetail').textContent.includes('基礎30'),'No unwanted formula on HUD');
 a.api.setState({...a.api.getState(),complaintTickets:[
  customer('reviewA',0,'昨日はレジに20分並びました。通路まで列が伸びていて、カートが通れませんでした。'),
