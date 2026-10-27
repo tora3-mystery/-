@@ -89,7 +89,8 @@ const productCatalog=(()=>{
   api.normalizeLegacy('muji-mug-gray',vetted.mugMuji,'mug',['fact','gift','present']),
   api.normalizeLegacy('muji-diffuser',vetted.diffuser,'diffuser',['fact','gift','present']),
   api.normalizeLegacy('toyota-corolla',vetted.car,'car',['fact']),
-  ...api.confirmedAdditions
+  ...api.confirmedAdditions,
+  ...api.mixedBrandAdditions
  ];
 })();
 
