@@ -26,7 +26,7 @@ function test(html){
  function step(ctx,id){
   if(id==='inspectBack')assert(ctx.d.focus('f17-back-review','裏手の社の周りが暗く'),'DAY 2 shrine message discovery');
   // Legacy economic-core tests inject the selected policy; v0171 tests player discovery.
-  if(!ctx.d.availableIds().includes(id)&&!['audit','camera0','open0','idle','shrine','removeShrine'].includes(id)){
+  if(!ctx.d.availableIds().includes(id)&&!['audit','camera0','open0','idle','removeShrine'].includes(id)){
    const previous=ctx.d.getState();ctx.d.setState({...previous,discoveredActions:[...new Set([...(previous.discoveredActions||[]),id])]});
   }
   const {d,get}=ctx,before=d.getState();
@@ -136,7 +136,7 @@ function test(html){
  assert(gray.d.getState().jobs.every(x=>x.id!=='stockCover-risk'),'End-of-week gray backlash has been settled');
  
  const tier=app();tier.d.restart();
- assert(tier.d.availableIds().length===2,'Day 1 opens with only ordinary shrine and idle');
+ assert(tier.d.availableIds().length===1&&tier.d.availableIds()[0]==='idle','No initial policy before reading customer comments');
  assert(!tier.d.availableIds().includes('queueLane'),'Queue specialization initially locked');
  step(tier,'pickup');
  assert(tier.d.availableIds().includes('queueLane'),'Queue choice unlocks special branch');
