@@ -70,12 +70,25 @@ for (const x of D.marks) {
   check(persons.has(x.person_id), 'Orphan mark person ' + x.mark_rule_id);
   check(validFactIds.has(x.trigger_fact_id), 'Orphan mark fact ' + x.mark_rule_id);
 }
+// Four classmates independently pursue music interests, even if the player never meets them.
+const peerIds = new Set(['P013','P014','P015','P016']);
+check(D.peerProgress?.length === 4, 'Expected four independent student timelines');
+const peerProfiles = unique(D.peerProgress || [], 'person_id', 'peer progress');
+for (const peer of D.peerProgress || []) {
+  check(peerIds.has(peer.person_id) && persons.has(peer.person_id), 'Unknown peer ' + peer.person_id);
+  check(Array.isArray(peer.daily_messages) && peer.daily_messages.length === 5, 'Incomplete weekday messages ' + peer.person_id);
+  for (const [i,msg] of (peer.daily_messages||[]).entries()) check(typeof msg === 'string' && msg.length >= 10, 'Invalid peer message ' + peer.person_id + ':' + i);
+  for (const field of ['met_memory','contact_memory','reply_memory']) check(typeof peer[field] === 'string' && peer[field].length >= 10, 'Missing peer epilogue ' + peer.person_id + ':' + field);
+}
+for (const peer of peerIds) check(peerProfiles.has(peer), 'Missing peer arc ' + peer);
+for (const rule of D.contactChannels) if ('min_affinity' in rule)
+  check(Number.isInteger(rule.min_affinity) && rule.min_affinity >= 0 && rule.min_affinity <= 8, 'Invalid contact affinity ' + rule.person_id);
 // Evidence photograph assets are separate from the 96 portrait photos; G01-G08 are not expected to be ready.
 const overview = {
   version: D.version,
   people: D.people.length, profiles: D.socialProfiles.length,
   firstHookUnique: new Set(hooks).size,
-  customReunions: D.socialProfiles.filter(x => x.reunion_hook).length,
+  customReunions: D.socialProfiles.filter(x => x.reunion_hook).length, peerProgress: (D.peerProgress||[]).length,
   groups: D.groups.length, members: D.members.length,
   lines: D.lines.length, questions: D.questions.length,
   contactChannels: D.contactChannels.length, errors: errors.length
