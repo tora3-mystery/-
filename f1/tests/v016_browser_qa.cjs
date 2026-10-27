@@ -18,6 +18,7 @@ const browserErrors=[];
 const visible=async(page,sel)=>assert(await page.locator(sel).isVisible(),sel+' should be visible');
 const state=page=>page.evaluate(()=>window.__F1_DEBUG__.getState());
 async function select(page,id){
+ if(id==='inspectBack')assert(await page.evaluate(()=>window.__F1_DEBUG__.focus('f17-back-review','裏手の社の周りが暗く')));
  const actions=await page.evaluate(()=>window.__F1_DEBUG__.getAvailableActions());
  const index=actions.findIndex(x=>x.id===id);assert(index>=0,`DAY ${(await state(page)).day}: ${id} unavailable`);
  await page.locator('#actions .action').nth(index).click();
@@ -96,7 +97,7 @@ async function select(page,id){
   for(let i=0;i<7&&!(await state(page)).finish;i++)await select(page,'idle');
   assert.equal((await state(page)).ending,'normal_strain');assert((await state(page)).complaintTickets.length>initial);checks+=2;
   await page.evaluate(()=>window.__F1_DEBUG__.restart());
-  for(const id of ['pickup','vibration','audit','camera0','open0'])await select(page,id);
+  for(const id of ['pickup','inspectBack','audit','camera0','open0'])await select(page,id);
   assert.equal((await state(page)).day,6);assert.equal((await state(page)).odd,3);
   const letters=await page.locator('#complaintBoard .complaint-letter').allInnerTexts();
   assert(letters.filter(x=>x.includes('レジのご案内が丁寧でした。ありがとうございました。')).length===10);
