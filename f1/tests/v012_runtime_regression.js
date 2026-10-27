@@ -65,8 +65,11 @@ function runRegression(html){
  check(resumed.api.getState().day===2&&resumed.api.getState().vals[0]===0,'Deferred effect lost on resume');
  const day8=route(['productCheck','inspectBack','audit','camera0','open0','idle','idle']);
  check(day8.api.getState().day8Active&&day8.api.getState().day===8,'DAY 8 automatic');
- day8.api.advanceDay8();check(day8.get('day8Feedback').children.length===10,'DAY 8 ten regular review cards');
- day8.api.advanceDay8();day8.api.advanceDay8();
+ check(day8.get('day8Feedback').children.length===10,'DAY 8 ten strange letters');
+ check(day8.get('day8Next').classList.contains('hidden'),'No bypass around the last-day discovery');
+ day8.get('day8Feedback').children[9].children[1].children.find(x=>x.textContent==='終わりはありますか').onclick();
+ check(day8.get('day8Offers').children.length===10,'Ten identical choices unlocked');
+ day8.get('day8Offers').children[0].onclick();
  check(day8.api.getState().ending==='odd_day8','DAY 8 scripted ending');
  for(const end of [none,best,mixed,day8])check(end.get('ending').children.some(x=>x.className==='ending-media'),'Missing newspaper and forum');
  const clamp=boot();clamp.api.restart();clamp.api.setState({day:4,attraction:10,vals:[0,5,0,5],days:[{day:1,sales:80}],revenue:80});
@@ -108,7 +111,10 @@ function runRegression(html){
  check(first.get('complaintBoard').children.every(x=>!x.children.some(y=>y.className==='complaint-reply')),'Unresolved card received a reply');
  check(resolved.every(x=>x.replies.at(-1)?.body.includes('改善しました')),'Resolved replies must report actual fix');
  check(first.get('complaintArchiveLabel').textContent.includes('対応済みのご意見（3件'),'Archive label wrong');
- check(first.get('transitionDecision').textContent.includes('昨日の判断')&&first.get('transitionDecision').textContent.includes('別件で新たなご意見'),'Decision result and daily pressure should be separate');
+ check(first.get('transitionDecision').textContent.includes('昨日の判断')&&
+ !first.get('transitionDecision').textContent.includes('不満度')&&
+ first.get('transitionChanges').children.some(x=>x.textContent.includes('不満度')),
+ 'Yesterday policy and numerical metric changes shown in separate components');
  const random=boot(),seen=new Set();
  for(let i=0;i<24;i++){random.api.restart();seen.add(random.api.getState().complaintTickets.map(x=>x.body).join('|'))}
  check(seen.size>5,'Starting complaints are fixed, not randomized');

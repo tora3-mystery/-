@@ -98,8 +98,10 @@ saved.api.setState({...saved.api.getState(),day:7,revenue:510,finish:true,ending
 const replayButton=saved.get('ending').children.find(x=>x.textContent==='もう一度営業する');
 ok(!!replayButton&&typeof replayButton.onclick==='function','Ending has replay button');
 replayButton.onclick();
-ok(saved.api.practiceStatus()===0&&!saved.get('day0Panel').classList.contains('hidden'),
- 'Ending replay enters DAY 0');
+ok(!saved.get('intro').classList.contains('hidden')&&saved.get('day0Panel').classList.contains('hidden'),
+ 'Ending replay returns to start choice, not forced DAY 0');
+ok(!saved.get('start').classList.contains('hidden')&&!saved.get('startOver').classList.contains('hidden'),
+ 'Both DAY 0 and DAY 1 are available after game over');
 
 const blocked=boot();blocked.api.restart();
 step(blocked,'idle');
@@ -150,13 +152,26 @@ ok(route.get('day8FeedbackSummary').textContent.includes('新着 10件'),'Ten in
 route.api.closeTransition();
 ok(route.get('dayTransition').classList.contains('hidden')&&!route.api.getState().day8OpeningPending,
  'Opening handoff ends without an intermediate anomalous phase');
-ok(route.get('day8Next').textContent==='本日の対応を確定する','Normal action wording');
+ok(route.get('day8Next').classList.contains('hidden'),'No free next-day choice before inspecting the final complaint');
+ok(route.get('day8Meters').children[1].innerHTML.includes('出口の数'),'Uncanny replacement for ordinary metrics');
+ok(route.get('transitionScore').textContent==='88万円'&&route.get('transitionDecision').textContent.includes('第8営業日'),
+ 'Already broken ledger in the opening transition');
 const resume=boot(route.memory);resume.api.resumeCurrent();
 ok(!resume.api.getState().day8OpeningPending&&resume.get('day8Date').textContent.includes('人曜日'),
  'Human day remains on resume');
 ok(resume.get('day8Feedback').children.length===10,'Unusual letters remain on resume');
+const last=resume.get('day8Feedback').children[9].children[1];
+const ask=last.children.find(x=>x.textContent==='終わりはありますか');
+ok(!!ask&&typeof ask.onclick==='function','The last complaint has an investigable ending question');
 resume.api.advanceDay8();
-ok(resume.api.getState().ending==='odd_day8'&&resume.api.getState().finish,'One decision directly ends DAY 8');
+ok(!resume.api.getState().finish,'The ending cannot be entered before investigating');
+ask.onclick();
+ok(resume.api.getState().day8Revealed&&resume.get('day8Offers').children.length===10,
+ 'Question reveals ten identically named responses');
+const reloaded=boot(resume.memory);reloaded.api.resumeCurrent();
+ok(reloaded.get('day8Offers').children.length===10,'Unlocked choices survive save and reload');
+resume.get('day8Offers').children[5].onclick();
+ok(resume.api.getState().ending==='odd_day8'&&resume.api.getState().finish,'One of the ten choices ends the story');
 ok(resume.get('ending').children[0].textContent==='店舗運営報告','Same header genre as normal endings');
 const report=resume.get('ending').children.find(x=>x.className==='outcome');
 ok(!!report&&report.innerHTML.includes('営業 8/7日間')&&report.innerHTML.includes('集客力 88/10'),

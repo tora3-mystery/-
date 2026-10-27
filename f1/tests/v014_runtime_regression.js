@@ -115,8 +115,11 @@ function test(html){
  assert(eerie.get('day8Feedback').children.length===10,'Ten strange customer letters visible immediately');
  const replay=app(eerie.db);replay.d.resumeCurrent();
  assert(!replay.d.getState().day8OpeningPending&&replay.get('day8Feedback').children.length===10,'Human day progress survives reload');
- eerie.d.advanceDay8();
- assert(eerie.d.getState().ending==='odd_day8'&&eerie.d.getState().finish,'One decision leads to ordinary-looking report');
+ assert(!eerie.d.getState().day8Revealed,'Question is still locked on entering human day');
+ eerie.get('day8Feedback').children[9].children[1].children.find(x=>x.textContent==='終わりはありますか').onclick();
+ assert(eerie.get('day8Offers').children.length===10,'Ten identical choices discovered');
+ eerie.get('day8Offers').children[4].onclick();
+ assert(eerie.d.getState().ending==='odd_day8'&&eerie.d.getState().finish,'One of ten decisions reaches familiar report');
  assert(!html.includes('id="inferWho"')&&!html.includes('id="checkCustomer"'),'No deduction controls');
  const undoDb=new Map(),undoBefore=app(undoDb);
  undoBefore.d.restart();undoBefore.d.setState({...undoBefore.d.getState(),discoveredActions:['pickup']});undoBefore.d.play('pickup');
