@@ -56,7 +56,23 @@
   product('muji-eraser-white-large-76725992','無印良品 消しゴム 白・大／76725992','無印の大きな消しゴム',80,'eraser','https://www.muji.com/jp/ja/store/cmdty/detail/4548076725992',{details:'白・大／76725992。単品通常税込価格。',emoji:'⬜'}),
   product('muji-eraser-black-small-76726036','無印良品 消しゴム 黒・小／76726036','無印の小さな消しゴム',50,'eraser','https://www.muji.com/jp/ja/store/cmdty/detail/4548076726036',{details:'黒・小／76726036。単品通常税込価格。',emoji:'⬛'}),
   product('muji-underlay-pet-b5-83904333','無印良品 PET下じき B5／83904333','無印の下敷き',150,'underlay','https://www.muji.com/jp/ja/store/cmdty/detail/4550583904333',{details:'B5用・PET製／83904333。単品通常税込価格。',emoji:'📄'}),
-  product('muji-correction-pen-white-15138173','無印良品 修正ペン 白／15138173','無印の修正ペン',190,'correction_pen','https://www.muji.com/jp/ja/store/cmdty/detail/4547315138173',{details:'白・小型修正ペン／15138173。単品通常税込価格。',emoji:'🖊️'})
+  product('muji-correction-pen-white-15138173','無印良品 修正ペン 白／15138173','無印の修正ペン',190,'correction_pen','https://www.muji.com/jp/ja/store/cmdty/detail/4547315138173',{details:'白・小型修正ペン／15138173。単品通常税込価格。',emoji:'🖊️'}),
+  product("muji-pp-pencil-case-large-76738886","無印良品 ポリプロピレンペンケース 横型 大 ダークグレー／76738886","無印の大きいペンケース",250,"pencil_case","https://www.muji.com/jp/ja/store/cmdty/detail/4548076738886",{details:"横型・大／約184×64×25mm／商品番号76738886",roles:['fact','gift','present']}),
+  product("muji-pp-pencil-case-small-76738879","無印良品 ポリプロピレンペンケース 横型 小 ダークグレー／76738879","無印の小さいペンケース",150,"pencil_case","https://www.muji.com/jp/ja/store/cmdty/detail/4548076738879",{details:"横型・小／約170×51×20mm／商品番号76738879",roles:['fact','gift','present']}),
+  product("muji-pencil-box-partition-84663079","無印良品 ポリプロピレン 仕切りが外せる筆箱／84663079","無印の仕切り付き筆箱",390,"pencil_case","https://www.muji.com/jp/ja/store/cmdty/detail/4550584663079",{details:"約225×81×26mm／商品番号84663079",roles:['fact','gift','present']}),
+  product("muji-mesh-pencil-case-s-23058469","無印良品 立体メッシュ ペンケース マチ付き ピンク 小／23058469","無印のメッシュペンケース",590,"pencil_case","https://www.muji.com/jp/ja/store/cmdty/detail/4550723058469",{details:"ピンク／約170×50×50mm／商品番号23058469",roles:['fact','gift','present']}),
+  product("muji-mesh-pencil-case-l-23058438","無印良品 立体メッシュ ペンケース マチ付き 大／23058438","無印の大きなメッシュペンケース",790,"pencil_case","https://www.muji.com/jp/ja/store/cmdty/detail/4550723058438",{details:"約170×100×50mm／商品番号23058438",roles:['fact','gift','present']}),
+  product("muji-canvas-pencil-case-266178","無印良品 帆布ペンケース 約185×35×35mm","無印の帆布ペンケース",1290,"pencil_case","https://www.muji.com/jp/ja/store/cmdty/detail/4550723266178",{details:"約185×35×35mm",roles:['fact','gift','present']}),
+  product("muji-notebook-five-897320","無印良品 植林木ペーパーノート5冊組 B5","無印のノート5冊セット",299,"notebook","https://www.muji.com/jp/ja/store/cmdty/detail/4550584897320",{details:"B5・5冊組／36枚・6mm横罫",roles:['fact','gift','present']}),
+  product("muji-notebook-a4-09580","無印良品 ノート 7mm横罫 A4・30枚","無印のA4ノート",190,"notebook","https://www.muji.com/jp/ja/store/cmdty/detail/4550182109580",{details:"A4・7mm横罫・A罫／30枚・糸綴じ",roles:['fact','gift','present']}),
+  product("muji-notebook-b5-a-66962","無印良品 ノート 7mm横罫 B5・30枚","無印のB5ノート",120,"notebook","https://www.muji.com/jp/ja/store/cmdty/detail/4550583766962",{details:"B5・7mm横罫・A罫／30枚・糸綴じ",roles:['fact','gift','present']}),
+  product("muji-notebook-a6-b-09467","無印良品 ノート 6mm横罫 A6・30枚","無印のA6ノート",100,"notebook","https://www.muji.com/jp/ja/store/cmdty/detail/4550182109467",{details:"A6・6mm横罫・B罫／30枚・糸綴じ",roles:['fact','gift','present']}),
+  product("muji-notebook-premium-b6-85626","無印良品 上質紙 フラットに開くノート B6・80枚・黒","無印の上質なノート",590,"notebook","https://www.muji.com/jp/ja/store/cmdty/detail/4550002185626",{details:"B6・80枚・横罫・黒",roles:['fact','gift','present']}),
+  product("muji-notebook-blank-a5-84925269","無印良品 ノート 無地 A5・32枚／84925269","無印の無地ノート",120,"notebook","https://www.muji.com/jp/ja/store/cmdty/detail/4550584925269",{details:"A5・32枚／商品番号84925269",roles:['fact','gift','present']}),
+  product("muji-notebook-blank-a6-84925313","無印良品 ノート 無地 A6・32枚／84925313","無印の小さな無地ノート",100,"notebook","https://www.muji.com/jp/ja/store/cmdty/detail/4550584925313",{details:"A6・32枚／商品番号84925313",roles:['fact','gift','present']}),
+  product("muji-glass-mug-37527300","無印良品 耐熱ガラス マグカップ 約360mL／37527300","無印のガラスマグ",490,"mug","https://www.muji.com/jp/ja/store/cmdty/detail/4549337527300",{details:"約360mL／商品番号37527300",roles:['fact','gift','present']}),
+  product("muji-lidded-mug-white-02181222","無印良品 ポリプロピレンふた付きマグカップ 白／02181222","無印のふた付きマグ",490,"mug","https://www.muji.com/jp/ja/store/cmdty/detail/4550002181222",{details:"白・約270mL／商品番号02181222",roles:['fact','gift','present']}),
+  product("muji-lidded-mug-black-02181239","無印良品 ポリプロピレンふた付きマグカップ 黒／02181239","無印の黒いふた付きマグ",490,"mug","https://www.muji.com/jp/ja/store/cmdty/detail/4550002181239",{details:"黒・約270mL／商品番号02181239",roles:['fact','gift','present']})
  ]);
  // Expansion backlog: labels/categories only; no guessed official prices, no gameplay eligibility.
  const researchBacklog=Object.freeze([
