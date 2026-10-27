@@ -1,5 +1,5 @@
 {
-  "version": "v0.9.4-beta",
+  "version": "v0.9.5-beta",
   "phase": "browser_prototype",
   "articles": [
     {
@@ -916,6 +916,7 @@
     "Follow-up article display retains prior reporting and appends fresh lead-variant detail instead of overwriting the follow-up with the initial lead.",
     "Mobile layout offers in-page navigation between candidate articles and editorial slot selection.",
     "v0.9.4-beta: Fiscal/political source topic remains visible as a newspaper section even where the story's downstream impact is health, tourism or conservation.",
-    "Newsroom carry-over articles are explicitly labelled; administrative contacts in R21/R24/R27 avoid incorrect same-day wording when read on the next morning."
+    "Newsroom carry-over articles are explicitly labelled; administrative contacts in R21/R24/R27 avoid incorrect same-day wording when read on the next morning.",
+    "v0.9.5-beta: Add observation-room narrative explaining the seven-day newspaper intervention and five reporter profiles; no changes to the 44-article/50-reaction dataset or state machine."
   ]
 }
