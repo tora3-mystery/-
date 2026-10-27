@@ -1,7 +1,7 @@
 (() => {
 'use strict';
 const D=window.S6_DATA, APP=document.getElementById('app'), KEY='s6-origin-beta-010', Dialogue=window.S6_BETA_DIALOGUE;
-const VERSION='0.4.1', BUILD='2026-10-27 23:39 JST';
+const VERSION='0.5.0', BUILD='2026-10-27 23:39 JST';
 const WEEK=['月曜 4月6日','火曜 4月7日','水曜 4月8日','木曜 4月9日','金曜 4月10日'];
 const DATES=['2026-04-06','2026-04-07','2026-04-08','2026-04-09','2026-04-10'];
 const people=Object.fromEntries(D.people.map(p=>[p.person_id,p]));
@@ -16,10 +16,16 @@ const unique=a=>[...new Set(a)];
 const label=id=>clubs[id]?.common_name||'新入生';
 const byEvent=eid=>unique(D.members.filter(m=>m.event_id===eid).map(m=>m.person_id));
 const byGroup=gid=>D.members.filter(m=>m.group_id===gid).map(m=>m.person_id);
+// A replay changes only card/portrait arrangement, never membership, facts, clues or event dates.
+const arrange=(items,salt)=>items.slice().sort((a,b)=>{
+ const hash=x=>{let n=(Number(S?.presentationSeed)||0)>>>0;for(const c of String(salt)+'|'+String(x))n=Math.imul(n^c.charCodeAt(0),16777619)>>>0;return n>>>0;};
+ const ka=hash(a.group_id||a.event_id||a),kb=hash(b.group_id||b.event_id||b);
+ return ka===kb?String(a.group_id||a.event_id||a).localeCompare(String(b.group_id||b.event_id||b)):ka-kb;
+});
 const date=()=>DATES[Math.min(S.day,4)];
 const initial=()=>({
- schema:1,phase:'title',day:0,selectedEvent:null,group:null,target:null,
- eventHistory:[],seen:[],introduced:[],flash:[],visitedGroups:[],groupDone:{},groupLog:{},spokenTo:[],affinity:{},relationshipDays:{},dailyAffinity:{},contacts:[],socialLinked:{},socialCandidates:{},selectedSocial:null,
+ schema:1,phase:'title',day:0,selectedEvent:null,group:null,target:null,presentationSeed:Math.floor(Math.random()*1000000000),
+ eventHistory:[],seen:[],introduced:[],flash:[],visitedGroups:[],groupDone:{},groupLog:{},spokenTo:[],photoRequests:[],photoFollows:[],affinity:{},relationshipDays:{},dailyAffinity:{},contacts:[],socialLinked:{},socialCandidates:{},selectedSocial:null,
  guesses:{},note:{},clues:[],crossings:{},knownOrg:{},nightChoice:{},viewedPlatforms:{},viewedBoard:{},pendingContacts:[],
  checks:{},currentNotebook:null,suspect:'',camp:'',shared:false,privateInvite:false,
  report:'',result:'',savedAt:''
@@ -27,10 +33,11 @@ const initial=()=>({
 let S;
 try {const raw=JSON.parse(localStorage.getItem(KEY));S=raw&&raw.schema===1?raw:initial()}catch{S=initial()}
 function hydrate(){
- for(const k of ['eventHistory','seen','introduced','flash','visitedGroups','contacts','clues','spokenTo','pendingContacts'])if(!Array.isArray(S[k]))S[k]=[];
+ for(const k of ['eventHistory','seen','introduced','flash','visitedGroups','contacts','clues','spokenTo','pendingContacts','photoRequests','photoFollows'])if(!Array.isArray(S[k]))S[k]=[];
  for(const k of ['groupDone','guesses','note','crossings','knownOrg','nightChoice','viewedPlatforms','viewedBoard','groupLog','affinity','relationshipDays','dailyAffinity','checks','socialLinked','socialCandidates'])if(!S[k]||typeof S[k]!=='object')S[k]={};
 }
 hydrate();
+if(!Number.isFinite(S.presentationSeed))S.presentationSeed=0;
 if(S.phase==='flash'&&!S.group){S.phase='venue';localStorage.setItem(KEY,JSON.stringify(S));}
 for(const [gid,result] of Object.entries(S.groupDone))if(result&&!S.groupLog[gid])S.groupLog[gid]=[{pid:null,type:'旧版の交流',text:result}];
 const PEERS=new Set(['P013','P014','P015','P016']);
@@ -84,7 +91,7 @@ case 'intro':return '<div class="eyebrow">4月、入学</div><h2>もう一度、
 function daily(){
  const offers=D.events.filter(e=>e.date===date());
  return '<div class="eyebrow">'+esc(WEEK[S.day])+' / 新歓の予定</div><h2>今日は、どこへ行く？</h2><p>行けるのは一日一つ。明日には別の顔が増えるかもしれない。</p>'+
- '<div class="two">'+offers.map(e=>'<article class="panel"><span class="tag">'+esc(label(e.org_id))+'</span><h3>'+esc(e.title)+'</h3><p class="dim">'+esc(e.location)+' ／ '+esc(e.start)+'〜'+esc(e.end)+'</p><p>'+esc(clubs[e.org_id].focus)+'</p>'+btn('この新歓へ','attend',e.event_id)+'</article>').join('')+'</div>'+
+ '<div class="two">'+arrange(offers,'events-'+S.day).map(e=>'<article class="panel"><span class="tag">'+esc(label(e.org_id))+'</span><h3>'+esc(e.title)+'</h3><p class="dim">'+esc(e.location)+' ／ '+esc(e.start)+'〜'+esc(e.end)+'</p><p>'+esc(clubs[e.org_id].focus)+'</p>'+btn('この新歓へ','attend',e.event_id)+'</article>').join('')+'</div>'+
  '<div class="actions">'+btn('今日は参加しない','skip','','ghost')+btn('人物手帳を見る','open-notebook','','ghost')+'</div>';
 }
 function firstIntroductions(){
@@ -102,9 +109,10 @@ function firstIntroductions(){
 function venue(){
  const e=events[S.selectedEvent];
  const gs=D.groups.filter(g=>g.event_id===e.event_id);
- return '<div class="eyebrow">'+esc(WEEK[S.day])+' / '+esc(label(e.org_id))+'</div><h2>'+esc(e.title)+'</h2>'+
+ const ambience=['どこかでアンプの音がして、廊下には別の輪の笑い声が漏れている。','少し遅れて来た見学者が、空いた席を探している。','隣の机から短いフレーズが聞こえ、誰かが拍手した。'];
+ return '<div class="eyebrow">'+esc(WEEK[S.day])+' / '+esc(label(e.org_id))+'</div><h2>'+esc(e.title)+'</h2><p class="dim">'+esc(ambience[(S.presentationSeed+S.day)%ambience.length])+'</p>'+
  '<p>あちこちで演奏や会話が始まっている。どの二組に混ざろう？</p><div class="status">話したグループ '+S.visitedGroups.length+' / 2</div>'+
- '<div class="two">'+gs.map(g=>'<article class="panel"><h3>'+esc(g.group_title)+'</h3><p>'+esc(g.activity)+'</p><div class="faces small-faces">'+byGroup(g.group_id).map(id=>portrait(id,peerClass(id))).join('')+'</div>'+
+ '<div class="two">'+arrange(gs,'circles-'+S.day).map(g=>'<article class="panel"><h3>'+esc(g.group_title)+'</h3><p>'+esc(g.activity)+'</p><div class="faces small-faces">'+arrange(byGroup(g.group_id),'faces-'+g.group_id).map(id=>portrait(id,peerClass(id))).join('')+'</div>'+
  (S.visitedGroups.includes(g.group_id)?'<span class="pill">参加済み</span>':S.visitedGroups.length>=2?'<span class="dim">今日はここまで</span>':btn('この輪に入る','join-group',g.group_id))+'</article>').join('')+'</div>'+
  '<div class="actions">'+btn('会場を出て夜へ','finish-venue')+'</div>';
 }
@@ -119,13 +127,17 @@ function group(){
  const g=groups[S.group],lines=D.lines.filter(l=>l.group_id===g.group_id).sort((a,b)=>Number(a.order)-Number(b.order));
  const log=S.groupLog[g.group_id]||[],remaining=Math.max(0,2-log.length);
  const chats=lines.slice(0,3).map(l=>speech(l.speaker_id,Dialogue.sceneLine(l))).join('')+
- log.map(x=>x.pid&&people[x.pid]?speech(x.pid,x.text,x.type):'<div class="notice">'+esc(x.text)+'</div>').join('');
+ log.map(x=>{
+  const primary=x.pid&&people[x.pid]?speech(x.pid,x.text,x.type):'<div class="notice">'+esc(x.text)+'</div>';
+  return primary+(x.reply&&people[x.reply.pid]?speech(x.reply.pid,x.reply.text,'輪の反応'):'');
+ }).join('');
  return '<div class="eyebrow">'+esc(label(events[g.event_id].org_id))+' / '+esc(g.group_title)+'</div><h2>輪の会話</h2>'+
- '<p>'+esc(g.activity)+'</p><div class="chat-thread">'+chats+'</div>'+
+ '<p>'+esc(g.activity)+'</p>'+(Dialogue.sceneMode(S.group)==='performance'?'<p class="dim">演奏がひと区切りつき、音が止んだところで短い会話が始まる。</p>':'')+
+ '<div class="chat-thread">'+chats+'</div>'+
  '<p class="status">あと '+remaining+' 回行動できます</p>'+
  (remaining?'<div class="paper"><h3>この輪でどう過ごす？</h3><p class="dim">誰と何を話すか決めましょう。交流はこの輪で2回まで。</p>'+
  '<div class="actions">'+btn('話しかける','action-menu','talk')+btn('質問する','action-menu','question')+
- btn('連絡先を頼む','action-menu','contact')+btn('聞き耳を立てる','listen-group','','ghost')+'</div></div>':
+ btn('連絡先を頼む','action-menu','contact')+btn('Photogramを聞く','action-menu','photo')+btn('聞き耳を立てる','listen-group','','ghost')+'</div></div>':
  '<div class="notice">この輪では十分に話した。次の輪へ移れます。</div>')+
  '<div class="actions">'+btn('会場のほかの輪へ戻る','back-venue','','ghost')+'</div>';
 }
@@ -136,11 +148,11 @@ function chooseAction(){
   const q=qmap[id],name=S.guesses[id]?.verified?people[id].name:PEERS.has(id)?'同期の学生':'名前はまだ曖昧';
   return '<div class="person-card">'+portrait(id,peerClass(id))+'<div><strong>'+esc(name)+'</strong><p class="dim">'+esc(relationship(id))+esc(contactBadge(id))+'</p>'+
   (questionMode?'<p class="dim">'+esc(q?.question||'所属を尋ねる')+'</p>':'')+
-  btn(questionMode?'この質問をする':mode==='contact'?'交換を頼む':'話しかける','act-target',id,'mini')+
+  btn(questionMode?'この質問をする':mode==='contact'?'交換を頼む':mode==='photo'?'Photogramを聞く':'話しかける','act-target',id,'mini')+
   (questionMode&&q?btn('所属について聞く','ask-affiliation',id,'mini ghost'):'')+'</div></div>';
  }).join('');
  return '<div class="eyebrow">'+esc(groups[S.group].group_title)+'</div><h2>'+
- (mode==='talk'?'誰に話しかける？':mode==='contact'?'誰に連絡先を頼む？':'誰に何を聞く？')+'</h2>'+
+ (mode==='talk'?'誰に話しかける？':mode==='contact'?'誰に連絡先を頼む？':mode==='photo'?'誰のPhotogramを聞く？':'誰に何を聞く？')+'</h2>'+
  '<p>顔を見比べながら話す相手を選びます。会場で聞いた名前を思い出せるでしょうか。</p>'+
  '<div class="person-list">'+items+'</div>'+btn('輪に戻る','back-group','','ghost');
 }
@@ -169,7 +181,7 @@ function sns(){
       '<div><strong>'+esc(a.display_name)+'</strong><p class="dim">'+esc('@'+a.handle)+'</p><p>'+esc(msg.text)+'</p></div></div>';
   }).join('')+'</div>':'';
  const visible=D.posts.filter(p=>p.platform===platform&&p.published_at.slice(0,10)<=date()&&
- (p.visibility==='公開'||p.visibility==='匿名表示'||(p.visibility==='鍵垢・承認制'&&S.contacts.includes(p.author_id))||
+ (p.visibility==='公開'||p.visibility==='匿名表示'||(p.visibility==='鍵垢・承認制'&&S.photoFollows.includes(p.author_id))||
  ((p.visibility==='グループ参加者'||p.visibility==='主人公との個別')&&S.contacts.includes(p.author_id))));
  return '<div class="eyebrow">SNS / '+esc(platform)+'</div><h2>タイムライン</h2>'+
  '<p class="dim">写真を出している人も、出していない人もいる。名前の似たアカウントが同じ人とは限らない。</p>'+
@@ -348,7 +360,7 @@ function handle(act,id){
  }
  case 'action-menu':{
   if(S.phase!=='group'||!S.group||(S.groupLog[S.group]||[]).length>=2)return;
-  if(!['talk','question','contact'].includes(id))return;
+  if(!['talk','question','contact','photo'].includes(id))return;
   S.mode=id;go('choose');break;
  }
  case 'back-group':if(S.phase==='choose')go('group');break;
@@ -372,6 +384,13 @@ function handle(act,id){
     // Asking somebody explicitly to introduce themself gives a name as an earned answer.
     if(type==='question'&&q?.reveals?.includes('self_name')&&q.answer?.includes(people[id].name)&&!S.introduced.includes(id))S.introduced.push(id);
     if(id==='P001'&&type==='affiliation')reply.text+=' 昨年の秋にはもう、新入生を迎える席を決めていたんだ。';
+  }else if(type==='photo'){
+    const account=accounts[id+'|Photogram'];kind='SNSの話';
+    if(!account)reply={text:'Photogramは今のところ使ってないんだ。'};
+    else if(account.visibility==='鍵垢・承認制'){
+      if(!S.photoFollows.includes(id)&&!S.photoRequests.includes(id))S.photoRequests.push(id);
+      reply={text:'Photogramは「'+account.display_name+'」で使ってるよ。フォロー申請は後で確認するね。'};
+    }else reply={text:'Photogramは「'+account.display_name+'」だよ。よかったら見てみて。'};
   }else if(type==='contact'){
     reply=Dialogue.contact(id,S.group,S);kind='連絡先';
     if(reply.result==='accept'){
@@ -382,7 +401,8 @@ function handle(act,id){
       if(!S.pendingContacts.includes(id))S.pendingContacts.push(id);
     }
   }else return;
-  (S.groupLog[S.group]??=[]).push({pid:id,type:kind,text:reply.text});
+  (S.groupLog[S.group]??=[]).push({pid:id,type:kind,text:reply.text,
+    reply:Dialogue.thirdParty(id,S.group,S,type)});
   S.groupDone[S.group]=reply.text;
   S.report='';go('group');break;
  }
@@ -425,7 +445,7 @@ function handle(act,id){
  case 'account-match':{
   if(S.phase!=='sns')return;
   const post=D.posts.find(p=>p.post_id===id),acct=post&&accounts[post.author_id+'|'+post.platform];
-  const readable=post&&(post.visibility==='公開'||(post.visibility==='鍵垢・承認制'&&S.contacts.includes(post.author_id))||((post.visibility==='グループ参加者'||post.visibility==='主人公との個別')&&S.contacts.includes(post.author_id)));
+  const readable=post&&(post.visibility==='公開'||(post.visibility==='鍵垢・承認制'&&S.photoFollows.includes(post.author_id))||((post.visibility==='グループ参加者'||post.visibility==='主人公との個別')&&S.contacts.includes(post.author_id)));
   if(!readable||post.platform!==S.snsPlatform||post.published_at.slice(0,10)>date()||acct?.avatar_kind!=='face'||!S.seen.length)return;
   S.selectedSocial=id;S.report='';go('sns-match');break;
  }
@@ -448,6 +468,8 @@ function handle(act,id){
  case 'next-day':{
   if(S.phase!=='night')return;
   for(const pid of S.pendingContacts)if(!S.contacts.includes(pid))S.contacts.push(pid);S.pendingContacts=[];
+  for(const pid of S.photoRequests)if(!S.photoFollows.includes(pid))S.photoFollows.push(pid);
+  S.photoRequests=[];
   S.report='';if(S.day<4){S.day++;go('day')}else go('camp');break;
  }
  case 'record-suspect':{
