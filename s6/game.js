@@ -5,7 +5,7 @@
   const SAVE_KEY = 's6-case-a-v03-save';
   const AUTO_KEY = 's6-case-a-v03-auto';
   const META_KEY = 's6-case-a-v03-meta';
-  const BUILD_AT = '2026-10-27 10:40 JST';
+  const BUILD_AT = '2026-10-27 10:58 JST';
   const DAYS = [
     ['2026-04-06','4月6日 月曜'],['2026-04-07','4月7日 火曜'],
     ['2026-04-08','4月8日 水曜'],['2026-04-09','4月9日 木曜'],
@@ -31,7 +31,7 @@
   const esc = x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const getMeta=()=>{try{return JSON.parse(localStorage.getItem(META_KEY))||{}}catch{return {}}};
   const makeState=()=>({
-    schema:3,caseId:'A',phase:'title',returnPhase:null,day:0,eventId:null,
+    schema:3,caseId:'A',phase:'title',returnPhase:null,day:0,eventId:null,eventHistory:[],
     visitedGroups:[],groupActions:{},activeGroup:null,groupResult:'',reunionText:'',preEventState:{},
     person:{},nightUsed:{},nightDone:{},nightMessage:'',lunchSeenDates:[],lunchPreState:{},lunchTalked:{},lunchMessage:'',
     evidence:{},oldNew:false,bridge:false,bridgeAvailable:false,
@@ -68,6 +68,7 @@
     if(p.portrait_status==='ready')return '<span class="'+cls+'"><img src="'+esc(p.portrait_path)+'" alt="架空人物の顔写真"></span>';
     return '<span class="'+cls+'" role="img" aria-label="顔写真未受領の仮表示"><span class="silhouette" aria-hidden="true">◌</span></span>';
   };
+  const publicAppearance=pid=>(pmap[pid]?.appearance||'').replace(/。?顔素材は未制作/g,'').trim();
   const knownName=pid=>{const x=ps(pid);return x.introduced||x.identity_confirmed||x.nameKnownFromDoc?pmap[pid].name:'名前未確認'};
   const side=()=>{
     const seen=Object.values(S.person).filter(x=>x.seen).length;
@@ -118,7 +119,7 @@
     const gid=S.activeGroup, g=gmap[gid];
     const candidates=type==='question'?D.questions.filter(q=>q.group_id===gid).map(q=>q.target_id):D.members.filter(m=>m.group_id===gid).map(m=>m.person_id);
     const action=type==='question'?'ask-person':'contact-person';
-    return '<p class="eyebrow">'+esc(g.group_title)+'</p><h2>'+(type==='question'?'誰に、何を聞く？':'誰に交換を頼む？')+'</h2><p class="subtle">この追加行動を選ぶと、同じ輪ではほかの追加行動を選べません。</p><div class="person-list">'+candidates.map(pid=>'<div class="person-card">'+photo(pid,{venue:true})+'<div><div class="name">'+esc(knownName(pid))+'</div><div class="small">'+esc(pmap[pid].appearance)+'</div>'+(type==='question'?btn('質問する',action,'data-pid="'+pid+'"','tiny'):['TINE','Photogram'].filter(platform=>!!amap[pid+'|'+platform]).map(platform=>btn(platform+'を頼む',action,'data-pid="'+pid+'" data-platform="'+platform+'"','tiny')).join(' '))+'</div></div>').join('')+'</div><div class="btnrow">'+btn('会話に戻る','back-group','','ghost')+'</div>';
+    return '<p class="eyebrow">'+esc(g.group_title)+'</p><h2>'+(type==='question'?'誰に、何を聞く？':'誰に交換を頼む？')+'</h2><p class="subtle">この追加行動を選ぶと、同じ輪ではほかの追加行動を選べません。</p><div class="person-list">'+candidates.map(pid=>'<div class="person-card">'+photo(pid,{venue:true})+'<div><div class="name">'+esc(knownName(pid))+'</div><div class="small">'+esc(publicAppearance(pid))+'</div>'+(type==='question'?btn('質問する',action,'data-pid="'+pid+'"','tiny'):['TINE','Photogram'].filter(platform=>!!amap[pid+'|'+platform]).map(platform=>btn(platform+'を頼む',action,'data-pid="'+pid+'" data-platform="'+platform+'"','tiny')).join(' '))+'</div></div>').join('')+'</div><div class="btnrow">'+btn('会話に戻る','back-group','','ghost')+'</div>';
   };
   const researchItems=()=>{
     const day=S.day;
@@ -162,10 +163,10 @@
   };
   const camp=()=>'<p class="eyebrow">FRIDAY / 21:00</p><h2>週末の行き先を選ぶ</h2><p class="lead">有志主催の合同新歓体験合宿。どの班にも音楽の時間がある。参加せず、学内で過ごしてもよい。</p>'+note('金曜20:30の匿名追伸が届いている。読んでいなくても、後から保全資料で確認できます。')+'<div class="grid2">'+CAMP.map(c=>'<div class="card"><h3>'+esc(c)+'</h3><p>'+esc(CAMP_STORY[c])+'</p>'+btn(c==='辞退'?'参加せず過ごす':'この班に参加','choose-camp','data-choice="'+esc(c)+'"','')+'</div>').join('')+'</div>';
   const saturday=()=>{
-    const risky=S.campChoice==='こもれび音楽同好会';
-    return '<p class="eyebrow">SATURDAY / '+esc(S.campChoice)+'</p><h2>選んだ場所の音</h2><div class="card"><p class="lead">'+esc(CAMP_STORY[S.campChoice])+'</p></div>'+(S.safety?note('同行・居場所の共有を済ませた。必要なときは相談できる。'):note('いつでも無料で、同行や居場所の共有を頼めます。'))+'<div class="btnrow">'+(!S.safety?btn('同行・居場所を共有する','share-safety','','secondary'):'')+(risky?btn('紬の個別練習の誘いに応じる','accept-risk','','danger'):'')+btn(risky?'誘いを断って日曜へ':'日曜へ進む','go-sunday','','')+'</div>';
+    const risky=S.campChoice!=='辞退';
+    return '<p class="eyebrow">SATURDAY / '+esc(S.campChoice)+'</p><h2>選んだ場所の音</h2><div class="card"><p class="lead">'+esc(CAMP_STORY[S.campChoice])+'</p></div>'+(risky?'<p class="subtle">合同合宿の共用棟に、希望者向けの個別練習案内が出ている。担当者の名前は書かれていない。</p>':'')+(S.safety?note('同行・居場所の共有を済ませた。必要なときは相談できる。'):note('いつでも無料で、同行や居場所の共有を頼めます。'))+'<div class="btnrow">'+(!S.safety?btn('同行・居場所を共有する','share-safety','','secondary'):'')+(risky?btn('共用棟の個別練習に立ち寄る','accept-risk','','secondary'):'')+btn(risky?'個別練習には行かず日曜へ':'日曜へ進む','go-sunday','','')+'</div>';
   };
-  const risk=()=>'<p class="eyebrow">SATURDAY / EVENING</p><h2>扉の向こう</h2><div class="card warn"><p>別室で、帰る時刻を決めようとすると、紬は「もう少しだけ」と出口の前に立った。ここから先は暗転する。</p></div><p>緊急連絡は調査回数を使いません。</p><div class="btnrow">'+btn('連絡して助けを求める','rescue','','')+btn('連絡しない','danger-end','','danger')+'</div>';
+  const risk=()=>'<p class="eyebrow">SATURDAY / EVENING</p><h2>扉の向こう</h2><div class="card warn"><p>共用棟の奥で個別練習が始まる。帰る時刻を伝えると、案内役の先輩が「もう少しだけ」と出口の前に立った。</p></div><p>緊急連絡は調査回数を使いません。</p>'+(S.safety?note('事前に居場所を共有していた同行者が、約束の時刻に迎えに来た。'):note('連絡できる相手はいる。今、どうする？',true))+'<div class="btnrow">'+(S.safety?btn('同行者と会場を離れる','rescue','',''):btn('連絡して助けを求める','rescue','','')+btn('連絡しない','danger-end','','danger'))+'</div>';
   const evidenceCards=()=>['C1','C2','C3'].map(k=>{
     const x=evid[k],st=S.evidence[k]||'unseen',txt=st==='full'?x.full_fact:st==='pre'?x.preliminary_fact:'まだ調べていない。';
     return '<div class="document"><strong>'+esc(x.source_system)+'</strong><span class="chip '+(st==='full'?'':'dim')+'">'+esc(st==='full'?'署名付き保全写し':st==='pre'?'予備情報':'未取得')+'</span><p>'+esc(txt)+'</p>'+(st==='full'?'<p class="subtle">操作ハッシュ '+esc(receipts[k].operation_hash)+' ／ 署名付き匿名照合子 '+esc(S.alias)+'。所有者は非表示。</p>':'')+'</div>';
@@ -200,6 +201,20 @@
     const st=['見かけた','会話した','名前を聞いた','交換を依頼','連絡先交換','顔・氏名・SNSを照合'].map((x,i)=>'<span class="chip '+([p.seen,p.met,p.introduced,p.contact_requested,p.contact_exchanged,p.identity_confirmed][i]?'':'dim')+'">'+x+'</span>').join('');
     return '<p class="eyebrow">NOTEBOOK / PERSON</p><h2>'+esc(knownName(id))+'</h2><div class="card"><div style="display:flex;gap:14px;align-items:center">'+photo(id,{large:true})+'<div><div class="chips">'+st+'</div><p class="subtle">'+esc(p.seen?base.appearance:'顔はまだ見ていない')+'</p></div></div>'+reason+'<div class="btnrow">'+btn(p.bookmark?'★を外す':'★を付ける','bookmark','data-pid="'+id+'"','secondary')+(p.introduced&&p.contact_exchanged&&!p.identity_confirmed?btn('顔・氏名・SNSを照合','confirm-identity','data-pid="'+id+'"','secondary'):'')+'</div><div class="form-row"><label for="hypothesis">仮説（事実とは別）</label><select id="hypothesis"><option>未設定</option><option>気になる</option><option>協力を頼める</option><option>保留</option></select></div><div class="form-row"><label for="personNote">自由メモ</label><textarea id="personNote" maxlength="2000" placeholder="覚えておきたいこと">'+esc(p.note)+'</textarea></div>'+btn('メモを保存','save-person','data-pid="'+id+'"','')+'</div><div class="btnrow">'+btn('人物一覧へ','back-notebook','','ghost')+'</div>';
   };
+  const weekReflection=()=>{
+    const visited=Array.isArray(S.eventHistory)?S.eventHistory:[];
+    const orgIds=visited.map(eid=>emap[eid]?.org_id).filter(Boolean);
+    const counts={};orgIds.forEach(id=>{counts[id]=(counts[id]||0)+1});
+    const repeated=Object.keys(counts).filter(id=>counts[id]>1).map(id=>ORG[id]);
+    let activity;
+    if(!visited.length)activity='今週、新歓には参加しなかった。自分のペースで、新しい生活を始める。';
+    else if(repeated.length)activity='何度か足を運んだ'+repeated.join('と')+'の新歓。そこで聴いた音や、見かけた顔を覚えている。';
+    else activity='この一週間、'+[...new Set(orgIds.map(id=>ORG[id]))].join('、')+'の新歓を訪れた。';
+    const metPeers=['P013','P014','P015','P016'].filter(id=>S.person[id]?.met);
+    const social=metPeers.length?'同期と話した時間も、大学生活の一部になった。':'まだ名前の分からない顔も、いくつか記憶に残った。';
+    const weekend=S.campChoice==='辞退'?'合宿への参加は見送った。':S.campChoice?'週末は'+S.campChoice+'の班を選んだ。':'';
+    return [activity,social,weekend].filter(Boolean).join(' ');
+  };
   const ending=()=>{
     const texts={
       'A-TRUE-SAFE':['音を選び直す','日曜の資料から紬が最有力となった。週明け、権限ある担当者が認証端末、委任・復旧履歴、旧匿名鍵の移転と送信記録を照合し、盗用や伝聞の反論を退けた。真相は西園寺紬だった。','2027年4月。支援と接触制限の中で、あなたは自分で選んだ場所で再び演奏する。'],
@@ -214,7 +229,7 @@
       '三つの作業者照合子と異なる操作ハッシュを比べよう。旧匿名文は別の線で確認する。',
       'C1・C2・C3の共通者は紬。ただし日曜は最有力にとどまる。週明けの認証と旧鍵の確認が必要。'
     ].slice(0,S.hintsOpen).map((h,i)=>'<p><strong>ヒント '+(i+1)+'</strong> '+esc(h)+'</p>').join('')+(S.hintsOpen<3?btn('次のヒントを見る','hint','','secondary'):'')+'</div>':'';
-    return '<p class="eyebrow">ENDING / CASE A</p><h2>'+esc(head)+'</h2><div class="card"><p class="lead">'+esc(body)+'</p><hr class="divider"><p>'+esc(epi)+'</p></div>'+hints+'<div class="btnrow">'+btn('最初から遊ぶ','replay','','')+btn('人物手帳を読む','notebook','','ghost')+'</div>';
+    return '<p class="eyebrow">ENDING / CASE A</p><h2>'+esc(head)+'</h2><div class="card"><p class="lead">'+esc(body)+'</p><hr class="divider"><p>'+esc(epi)+'</p></div>'+(S.ending==='A-DANGER'?'':'<div class="card soft"><h3>この一週間の記憶</h3><p>'+esc(weekReflection())+'</p></div>')+hints+'<div class="btnrow">'+btn('最初から遊ぶ','replay','','')+btn('人物手帳を読む','notebook','','ghost')+'</div>';
   };
   function render(){
     let content;
@@ -293,7 +308,10 @@
     if(act==='notebook'||act==='dossier'){if(S.phase!=='notebook'&&S.phase!=='person'&&S.phase!=='dossier')S.returnPhase=S.phase;S.phase=act;saveAndRender();return}
     if(act==='back-overlay'){S.phase=S.returnPhase||'day';S.returnPhase=null;saveAndRender();return}
     if(act==='event'){
-      S.eventId=el.dataset.eid;S.visitedGroups=[];S.groupActions={};S.preEventState={};
+      S.eventId=el.dataset.eid;
+      if(!Array.isArray(S.eventHistory))S.eventHistory=[];
+      S.eventHistory.push(S.eventId);
+      S.visitedGroups=[];S.groupActions={};S.preEventState={};
       D.members.filter(m=>m.event_id===S.eventId).forEach(m=>{const x=ps(m.person_id);S.preEventState[m.person_id]={seen:x.seen,met:x.met,contact:x.contact_exchanged};x.seen=true});
       S.phase='venue';saveAndRender();return;
     }
