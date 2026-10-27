@@ -259,63 +259,57 @@ function identity(){
  form+notes+btn('人物一覧へ','back-identity','','ghost');
 }
 function camp(){
- const choices=D.orgs.map(o=>'<article class="panel"><span class="tag">'+esc(o.common_name)+'</span><p>'+esc(o.focus)+'</p>'+
- btn('この団体の合宿へ','choose-camp',o.org_id)+'</article>').join('');
- const verifiedIds=Object.keys(S.guesses).filter(id=>S.guesses[id]?.verified);
- const targetVerified=!!S.guesses.P001?.verified;
- const hasTalk=Object.values(S.groupLog).flat().some(x=>typeof x?.text==='string'&&(x.text.includes('入学前から、きみに')||x.text.includes('去年の秋にはもう')));
- const hasArchive=S.clues.includes('F-COM-01')||S.viewedBoard['2026-04-06'];
- const clueText=targetVerified&&hasTalk&&hasArchive?
-   '照合した西園寺紬の顔、こもれびの所属、入学前から準備された受け入れ枠。ばらばらだった情報が、一つの団体につながった。':
-   targetVerified?(hasTalk?'あの人が自分のために席を準備していたという言葉は、まだ耳に残っている。':'西園寺紬という名前と、こもれびの所属は確認できた。これだけで危険だとは言い切れない。'):
-   hasArchive?'昨年秋からの受け入れ枠は気になるが、誰が準備したのだろう。':'顔と名前が一致しない人も多い。どの団体で何が起こるか、まだ分からない。';
- const select='<option value="">誰とも断定しない</option>'+verifiedIds.filter(id=>Number(id.slice(1))<=16||id==='P018')
- .map(id=>'<option value="'+esc(id)+'">'+esc(people[id].name)+'</option>').join('');
- return '<div class="eyebrow">金曜の夜 / 週末の合宿</div><h2>誰のいる場所なら、安心できるだろう。</h2>'+
- '<p>すべての顔や名前を覚えられたわけではない。印象だけで判断するのも怖い。それでも行き先は選ばなければならない。</p><div class="paper"><h3>今週の記憶</h3><p>'+esc(clueText)+'</p></div>'+
- '<div class="paper"><p>気にかかっている人がいるなら記録しておこう。犯人を断定する必要はありません。</p><label>特に気になる人物<select id="suspect">'+select+'</select></label>'+btn('考えを記録する','record-suspect','','mini')+'</div>'+
- (S.report?'<div class="notice">'+esc(S.report)+'</div>':'')+
- '<div class="two">'+choices+'</div><div class="actions">'+btn('今回は合宿に行かない','choose-camp','N','ghost')+'</div>';
+ const memories=[];
+ if(S.visitedGroups.includes('E05-A')||S.visitedGroups.includes('E10-A'))memories.push('こもれびの演奏で、曲の終わりに一拍の静けさがあった。');
+ if(S.visitedGroups.includes('E02-A')||S.visitedGroups.includes('E08-A'))memories.push('wav.では、ネット名義とサークルが別のこともあると聞いた。');
+ if(S.visitedGroups.includes('E03-A')||S.visitedGroups.includes('E09-A'))memories.push('残響にも、打ち込みや曲作りに詳しい先輩がいた。');
+ if(S.guesses.P001?.verified&&S.interacted.includes('P001'))memories.push('こもれびで会った西園寺紬。話し方や音の好みを覚えている。');
+ const recall=memories.length?memories.join(' '):'六つのサークルには、まだ知らない人もいる。SNSや新歓で聞いた音を頼りに考えよう。';
+ const choices=D.orgs.map(o=>'<article class="panel"><span class="tag">'+esc(o.common_name)+'</span><p>'+esc(o.focus)+'</p>'+btn('このサークルの合宿へ','choose-camp',o.org_id)+'</article>').join('');
+ return '<div class="eyebrow">金曜の夜 / 週末</div><h2>余白ラムネは、どこにいる？</h2>'+
+ '<p>あの投稿は「見つけたら声をかけて」だった。正解が分からなくても、今週出会った音楽から一つ選ぼう。</p>'+
+ '<div class="paper"><h3>一週間の記憶</h3><p>'+esc(recall)+'</p></div>'+
+ '<div class="two">'+choices+'</div><div class="actions">'+btn('今回は合宿に参加しない','choose-camp','N','ghost')+'</div>';
 }
 function saturday(){
- const isK=S.camp==='K';
- const prose=S.camp==='N'?'合宿には行かなかった。キャンパスの掲示を見ながら、一人で曲を弾いてみる。':
-  label(S.camp)+'の新歓合宿が始まった。練習の音と、知らない先輩の笑い声が聞こえる。';
- return '<div class="eyebrow">土曜日 / '+esc(S.camp==='N'?'学内':label(S.camp))+'</div><h2>選んだ場所</h2><div class="paper"><p>'+esc(prose)+'</p>'+
- (isK?'<p>夕方、個別の練習スペースを案内するという連絡が届く。担当の名前は書かれていない。あなたが好きだった曲名だけが、なぜか添えられている。</p>':
- '<p>知らない人の輪に混ざっても、今日は自分のペースで演奏できそうだ。</p>')+'</div>'+
- (isK?'<div class="actions">'+btn(S.shared?'同行の相談は済ませた':'同期や大学窓口に居場所を共有する','share')+
- btn('個別練習の誘いに応じる','private')+
- btn('誘いを断り、通常の練習に戻る','finish-safe','','ghost')+'</div>':
- '<div class="actions">'+btn('一年後へ','finish-safe')+'</div>');
-}
-function privateRoom(){
- return '<div class="eyebrow">土曜の夜 / 別室</div><h2>扉の向こうで</h2>'+
- '<div class="paper tense"><p>指定された部屋には、あなたがかつて演奏した曲の譜面が用意されていた。</p><p>帰ろうとすると、案内役が「もう少しだけ」と出口の前に立つ。</p></div>'+
- (S.shared?'<div class="notice">居場所を伝えてあった同期が、迎えに来てくれている。</div>':'<p>まだ連絡はできる。どうする？</p>')+
- '<div class="actions">'+btn(S.shared?'同行者と帰る':'大学窓口と同期に助けを求める','escape')+
- (S.shared?'':btn('連絡せず、その場に残る','stay','','ghost'))+'</div>';
+ const home=S.camp===Story.homeOrg,none=S.camp==='N';
+ const name=none?'キャンパス':label(S.camp);
+ const scene=none?'合宿には行かず、部屋で久しぶりに「'+Story.song+'」を聴いた。曲を作った人の顔は、まだ分からない。':Story.clubScenes[S.camp];
+ const extra=home?'<p>聞き覚えがある。高校時代に何度も聴いた、最後の一拍の空白。窓辺にいた先輩がギターを置いた。</p><p>本人が声をかけてほしいと書いていた。演奏が終わった今なら、話しかけられそうだ。</p>':
+  none?'<p>行かないと決めたことも、今週のあなたの選択だ。</p>':
+  '<p>探していた音楽家かどうかは分からない。でも、ここにいる人たちの音も、今日初めて知った。</p>';
+ return '<div class="eyebrow">土曜日 / '+esc(name)+'</div><h2>選んだ場所の音</h2><div class="paper"><p>'+esc(scene)+'</p>'+extra+'</div>'+
+ (home?'<div class="actions">'+btn('演奏が終わった先輩に声をかける','meet-producer')+btn('今日は聴いて帰る','listen-only','','ghost')+'</div>':
+ '<div class="actions">'+btn(none?'一週間を振り返る':'このサークルで演奏を楽しむ','finish-other')+'</div>');
 }
 function ending(){
- const camp=S.camp==='N'?'合宿に参加しない':label(S.camp)+'の合宿';
- const safe=S.result!=='DANGER';
- const visited=S.eventHistory.map(id=>label(events[id].org_id));
- const group=visited.length?unique(visited).join('、'):'どの新歓にも行かなかった';
- let title='あの春を越えて',body='自分で選んだ場所から、また音楽を始める。';
- if(S.result==='DANGER'){title='閉じた練習室';body='帰り時を伝えても相手は動かなかった。誰かへ連絡する判断を、まだ残していた。'}
- else if(S.result==='RESCUED'){title='迎えに来た人';body='連絡を受けた同期と大学窓口が迎えに来た。ひとりで相手と向き合う必要はなかった。'}
- else if(S.camp==='K'){title='招待を断って';body='こもれびの個別練習の誘いは断った。団体の顔を全員把握しなくても、違和感に気づくことはできた。'}
- else if(S.camp==='N'){title='参加しない自由';body='不安が残る一週間だった。行かないという選択も、自分の居場所を守る方法だった。'}
- const linked=Object.keys(S.guesses).filter(id=>S.guesses[id]?.verified);
- const suspectCorrect=S.suspect==='P001';
- const epilogue='2027年4月。'+(safe?'いくつかの学生の顔は今も思い出せる。':'あの夜のことを、時間をかけて整理している。')+
- (visited.length?'あの週、'+group+'で聴いた音は忘れていない。':'新しい音楽に触れる機会は、これからもある。');
- const explain=(safe&&suspectCorrect?'気になった人物の所属を確かめ、大学窓口に相談した。その記録はその後の調査にも役立った。':
- linked.includes('P001')?'あのとき照合した顔と、その人が関わる小さな団体の記録が残っている。':
- '名前が分からないまま終わった人も多い。手帳の余白は、まだ残っている。');
+ const found=S.result==='FOUND',heard=S.result==='HEARD',none=S.result==='SKIPPED';
+ const weekend=S.camp==='N'?'合宿に参加しない':label(S.camp)+'の合宿';
+ const met=S.interacted.includes(Story.producerId),known=!!S.guesses[Story.producerId]?.verified;
+ const body=found?
+  '「余白ラムネさん、ですか？」 先輩は少し驚いて、それから笑った。「うん。西園寺紬です。よく気づいたね。知っている人たちには、聞かれても教えないでって頼んでおいたんだ」':
+  heard?'あの曲の作り手は、きっとあの窓辺にいた。今日は声をかけなかった。でも、もう一度会える場所を一つ知った。':
+  none?'六つのサークルを巡った春が終わった。あの人には会えなかったが、探しているあいだに、自分の好きな音の輪郭が見えてきた。':
+  '探していたボカロPには会えなかった。それでも、選んだサークルで聴いた音と、新しく話した人のことを覚えている。';
+ const title=found?'見つけた音の続き':heard?'一拍先の約束':none?'まだ名前のない春':'別の音に出会う';
+ const feeling=found?(met?'新歓でも会話した相手が、あの曲を作っていた。':'初めて話した先輩が、何年も聴き続けてきた曲の作り手だった。')+
+  (known?' 覚えていた顔と名前が、ようやく音につながった。':' 声と演奏を頼りに、ようやく名前を知った。'):
+  heard?'本人が自ら出した招待だから、答えを急ぐ必要もない。':
+  '正解のサークルは一つだった。けれど、ほかのサークルを選んだ時間まで間違いだったわけではない。';
+ const peers=['P013','P014','P015','P016'].filter(p=>S.interacted.includes(p)||S.contacts.includes(p));
+ const named=peers.filter(p=>S.guesses[p]?.verified);
+ const relationships=named.length?'あの週に知り合った'+named.slice(0,2).map(p=>people[p].name).join('や')+'とは、ときどき連絡を取り合っている。':
+  peers.length?'あの週、同じ新入生として話した人と、今も挨拶を交わしている。':
+  S.contacts.length?'新歓で交換した連絡先が、何人か残っている。':
+  'まだ知らない人も多いけれど、音楽に誘われて別の場所へ行くこともある。';
+ const future=found?'一緒に一曲を聴いたことから、音楽の楽しみ方が少し広がった。':
+  heard?'こもれびで聴いた一拍の余韻が、今も不意に浮かんでくる。':
+  none?'音楽との距離は、自分の速度で決めている。':
+  label(S.camp)+'で初めて聴いた曲が、今でもプレイリストに残っている。';
+ const revisit=S.eventHistory.length?'見学したサークルは'+[...new Set(S.eventHistory.map(eid=>label(events[eid].org_id)))].join('、')+'。':'平日の新歓には参加しなかった。';
  return '<div class="eyebrow">2026年4月12日 / 日曜</div><h1>THE END</h1><h2>'+esc(title)+'</h2>'+
- '<div class="paper"><p>'+esc(body)+'</p><p>'+esc(explain)+'</p><hr><p>'+esc(epilogue)+'</p></div>'+
- '<div class="paper"><h3>一週間の記録</h3><p>見学 '+S.eventHistory.length+'回 ／ 見かけた顔 '+S.seen.length+'人 ／ 照合した顔 '+linked.length+'人</p><p>週末：'+esc(camp)+'</p></div>'+
+ '<div class="paper"><p>'+esc(body)+'</p><p>'+esc(feeling)+'</p><hr><h3>2027年4月｜あれから一年</h3><p>'+esc(future)+'</p><p>'+esc(relationships)+'</p></div>'+
+ '<div class="paper"><h3>一週間の記録</h3><p>'+esc(revisit)+' 見かけた顔 '+S.seen.length+'人 ／ 照合した顔 '+Object.values(S.guesses).filter(x=>x?.verified).length+'人</p><p>週末：'+esc(weekend)+'</p></div>'+
  btn('別の一週間を始める','reset')+btn('手帳を振り返る','open-notebook','','ghost');
 }
 function draw(){
