@@ -23,7 +23,13 @@ function boot(db=new Map()){
 }
 function customer(id,metric,body){return{id,metric,body,customer:id,day:1,status:'open',closedDay:null,replies:[]}}
 const a=boot();a.api.restart();
-check(a.api.availableIds().every(id=>id==='shrine'||id==='idle'),'No default business-policy catalog');
+check(a.api.availableIds().length===1&&a.api.availableIds()[0]==='idle','No prefilled policy before reading customer feedback');
+const ordinary=a.api.getState().complaintTickets.find(x=>x.metric===3);
+const shrineText='商店街の神社で商売繁盛を祈願したらどうですか';
+check(!!ordinary&&ordinary.body.includes(shrineText),'Day 1 has a normal customer complaint mentioning a local shrine');
+check(a.api.focus(ordinary.id,shrineText),'Tap a customer phrase to discover ordinary shrine visit');
+check(a.api.availableIds().includes('shrine'),'Ordinary shrine is unlocked immediately after investigation');
+a.api.restart();
 check(a.get('moneyDetail').textContent==='本部目標：今週の売上500万円','Condensed HUD instead of formulas/fines');
 check(!a.get('moneyDetail').textContent.includes('基礎30'),'No unwanted formula on HUD');
 a.api.setState({...a.api.getState(),complaintTickets:[
@@ -53,7 +59,12 @@ b.api.play('idle');b.api.advance();b.api.closeTransition();
 check(b.get('investigationCount').textContent.includes('あと3箇所'),'Day increment refreshes quota');
 check(b.api.focus('reviewA','レジに20分並びました'),'Same phrase repeat across days is free');
 check(b.api.getState().focusKeys.length===3||b.api.getState().focusKeys.length===0,'Historic repeat does not consume a fresh investigation');
-const c=boot();c.api.restart();c.api.play('shrine');c.api.advance();c.api.closeTransition();
+const c=boot();c.api.restart();
+const shrineSource=c.api.getState().complaintTickets.find(t=>t.metric===3);
+check(!c.api.availableIds().includes('shrine'),'Ordinary shrine cannot be chosen without examining a complaint');
+check(c.api.focus(shrineSource.id,shrineText),'Discover local shrine from noise-related complaint');
+check(c.api.availableIds().includes('shrine'),'Ordinary shrine available after tapping');
+c.api.play('shrine');c.api.advance();c.api.closeTransition();
 check(c.api.getState().day===2,'Reached DAY2');
 check(!c.api.availableIds().includes('inspectBack'),'The rear inspection is not default');
 check(c.api.focus('f17-back-review','裏手の社の周りが暗く'),'Discover rear of store from ordinary complaint');
