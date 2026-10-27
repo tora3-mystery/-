@@ -1,4 +1,4 @@
-import {VERSION,UPDATED_JST,LIMITS,DAYS,DIRECTIVES,ENDING_META,PROFILE_TYPES,createProfile,createRun,calculate,advance,beginDay,isValidSave,SPEED_HARASSMENTS,ensureLocalPortrait} from './engine.mjs?v=0.6.6';
+import {VERSION,UPDATED_JST,LIMITS,DAYS,DIRECTIVES,ENDING_META,PROFILE_TYPES,createProfile,createRun,calculate,advance,beginDay,isValidSave,SPEED_HARASSMENTS,ensureLocalPortrait} from './engine.mjs?v=1.0';
 
 const app=document.getElementById('app');
 const SAVE_KEY='arg_c1_save_v04';
@@ -311,7 +311,7 @@ function secretTone(id,stage){
  }catch{}
 }
 function finishRunOnce(){if(!run?.ending||run.finishedRecorded)return;run.finishedRecorded=true;records.plays++;records.endings[run.ending]=(records.endings[run.ending]||0)+1;storeRecords();save();}
-function resultToText(){if(!run?.ending)return '';const d=ENDING_META[run.ending];return `適切にご対応ください。｜ARG C1\nENDING ${run.ending.slice(1)} / ${ENDING_TOTAL}「${d[0]}」\n評価 ${d[2]}｜コンプラ違反 ${finalCp()}pt／進捗 ${run.progress}／習熟 ${run.growth}\n${d[1]}\nhttps://tora3-mystery.github.io/short-ui-games/c1/`}
+function resultToText(){if(!run?.ending)return '';const d=ENDING_META[run.ending];return `適切にご対応ください。｜短編UIゲーム実験室 C1\nENDING ${run.ending.slice(1)} / ${ENDING_TOTAL}「${d[0]}」\n評価 ${d[2]}｜コンプラ違反 ${finalCp()}pt／進捗 ${run.progress}／習熟 ${run.growth}\n${d[1]}\nhttps://tora3-mystery.github.io/short-ui-games/c1/`}
 async function share(){const txt=resultToText();if(!txt)return;try{if(navigator.share){await navigator.share({title:'適切にご対応ください。',text:txt});return;}if(navigator.clipboard?.writeText){await navigator.clipboard.writeText(txt);}else{const el=document.createElement('textarea');el.value=txt;document.body.appendChild(el);el.select();document.execCommand('copy');el.remove();}toast='結果テキストをコピーしました。';}catch(e){if(e?.name!=='AbortError')toast='共有に失敗しました。画像保存をお試しください。';}render(false);}
 function drawWrapped(ctx,text,x,y,maxWidth,lineHeight){let line='';for(const char of text){if(ctx.measureText(line+char).width>maxWidth){ctx.fillText(line,x,y);y+=lineHeight;line='';}line+=char;}if(line){ctx.fillText(line,x,y);y+=lineHeight;}return y;}
 function downloadCard(){if(!run?.ending)return;const [title,desc,grade]=ENDING_META[run.ending];const can=document.createElement('canvas');can.width=1000;can.height=800;const ctx=can.getContext('2d');if(!ctx){toast='画像保存に対応していないブラウザです。';render(false);return;}
@@ -322,8 +322,8 @@ function downloadCard(){if(!run?.ending)return;const [title,desc,grade]=ENDING_M
   ctx.fillStyle='#dfe9f0';ctx.font='28px sans-serif';y=drawWrapped(ctx,desc,68,y+112,860,45);
   ctx.fillStyle='#314f68';ctx.fillRect(65,530,870,130);
   ctx.fillStyle='#ffffff';ctx.font='bold 34px sans-serif';ctx.fillText(`コンプラ ${finalCp()} pt`,91,609);ctx.fillText(`進捗 ${run.progress}`,410,609);ctx.fillText(`育成 ${run.growth}`,690,609);
-  ctx.fillStyle='#a9bbca';ctx.font='24px sans-serif';ctx.fillText('適切にご対応ください。｜ ARG C1',68,730);
-  const a=document.createElement('a');a.download=`ARG_C1_${run.ending}.png`;a.href=can.toDataURL('image/png');a.click();}
+  ctx.fillStyle='#a9bbca';ctx.font='24px sans-serif';ctx.fillText('適切にご対応ください。｜ 短編UIゲーム実験室',68,730);
+  const a=document.createElement('a');a.download=`C1_${run.ending}.png`;a.href=can.toDataURL('image/png');a.click();}
 function maybeNew(){const saved=load(SAVE_KEY,null);if(isValidSave(saved,events)&&!confirm('保存中のプレイは上書きされます。新しく始めますか？'))return;run=createRun(createProfile());resetClock();screen='profile';popup='';save();render();}
 app.addEventListener('click', async ev=>{
   const target=ev.target.closest('[data-action],[data-choice],[data-time]');
