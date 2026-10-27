@@ -18,8 +18,19 @@ const sceneContext={
  L:'カバー曲',Z:'オリジナル曲',J:'セッション',K:'弾き語り',W:'DTM',F:'学外ライブ'
 };
 const plain=x=>String(x??'').trim().replace(/^「|」$/g,'').replace(/^『|』$/g,'');
-const level=(state,id)=>state.contacts?.includes(id)?'contact':(state.affinity?.[id]||0)>=3?'familiar':
- (state.affinity?.[id]||0)>=1?'acquainted':'new';
+// "Familiarity" is social comfort, not romance or evidence that an NPC is safe.
+const stage=(state,id)=>{
+ const score=Math.max(0,Math.min(6,Number(state.affinity?.[id])||0));
+ const days=new Set(state.relationshipDays?.[id]||[]);
+ if(score>=5&&days.size>=3)return 'easygoing';
+ if(score>=3&&days.size>=2)return 'familiar';
+ return score>=1?'acquainted':'new';
+};
+const level=(state,id)=>stage(state,id);
+const relationshipLabel=(state,id)=>({
+ new:'まだ話したことがない',acquainted:'話したことがある',
+ familiar:'少し話しやすくなった',easygoing:'気軽に話せる'
+})[stage(state,id)];
 const role=(id,gid)=>{
  const p=people[id],g=D.groups.find(x=>x.group_id===gid),e=events[g?.event_id];
  if(p.year==='1')return 'newcomer';
@@ -28,8 +39,11 @@ const role=(id,gid)=>{
 };
 function talk(id,gid,state){
  const p=people[id],c=P.people[id],r=role(id,gid),v=c.voice;
- const already=state.spokenTo.includes(id),close=level(state,id);
- const intro=already?(close==='contact'?'この前は連絡ありがとう。':words[v].again):words[v][r];
+ const already=state.spokenTo?.includes(id)||false,close=level(state,id);
+ const intro=already?(
+  close==='easygoing'?(v==='reserved'||v==='quiet'?'今日も来てたんだね。':'お、また会えたね。'):
+  close==='familiar'?(v==='precise'||v==='reserved'?'この前の話、覚えてるよ。':'また会ったね。この前の続きも話せそう。'):
+  words[v].again):words[v][r];
  const h=hooks[id];let cue=plain(h?.[already?'reunion_hook':'first_hook']||h?.first_hook||'音を聴いていってね。');
  if(!already&&r==='newcomer'&&cue.includes('見学中なんだ'))cue=cue.replace('、見学中なんだ','');
  // Preserve original character hook; add contextual color only when it fits the character.
@@ -67,8 +81,23 @@ function contact(id,gid,state){
  if(rule.approval_policy==='next_day')return {result:'pending',text:c.warmth>=3?'いいよ。夜に申請を見ておくね。':'あとで確認しておくね。'};
  return {result:'accept',text:c.warmth>=3?'いいよ、つながろう。':'うん、大丈夫。',accountName:a.display_name};
 }
+const snsMessage=(id,state)=>{
+ const p=people[id],c=P.people[id];
+ if(!p||!c||!state.contacts?.includes(id))return null;
+ const close=level(state,id),main=orgNames[p.primary_org]||'新歓';
+ const opening={
+  active:'今日は新歓どうだった？',quiet:'この前はどうも。',private:'連絡先、登録しておいたよ。',
+  curated:'今日は来てくれてありがとう。'
+ }[c.snsTone]||'この前はどうも。';
+ const continuity=close==='easygoing'?'また時間が合ったら話そう。':
+   close==='familiar'?'今度、会場でもう少し話せるといいね。':
+   p.year==='1'?'ほかの新歓にも行ってみる？':
+   c.caution>=3?'困ったことがあれば、案内くらいならできるよ。':
+   main+'も、見学だけで大丈夫だよ。';
+ return {text:opening+' '+continuity,stage:close,accountName:D.accounts.find(a=>a.person_id===id&&a.platform==='TINE')?.display_name||'アカウント'};
+};
 const sceneLine=line=>P.sceneOverrides[line.group_id+'|'+line.speaker_id]||line.text;
 const chatAudit=()=>({firstYearLines:D.lines.filter(x=>people[x.speaker_id]?.year==='1').length,
  overridden:Object.keys(P.sceneOverrides).length,allScenes:D.lines.length,profiles:Object.keys(P.people).length});
-window.S6_BETA_DIALOGUE={talk,answer,contact,sceneLine,level,role,chatAudit};
+window.S6_BETA_DIALOGUE={talk,answer,contact,sceneLine,level,relationshipLabel,snsMessage,role,chatAudit};
 })();
