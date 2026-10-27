@@ -5,7 +5,7 @@
   const SAVE_KEY = 's6-case-a-v03-save';
   const AUTO_KEY = 's6-case-a-v03-auto';
   const META_KEY = 's6-case-a-v03-meta';
-  const BUILD_AT = '2026-10-27 20:10 JST';
+  const BUILD_AT = '2026-10-27 20:51 JST';
   const DAYS = [
     ['2026-04-06','4月6日 月曜'],['2026-04-07','4月7日 火曜'],
     ['2026-04-08','4月8日 水曜'],['2026-04-09','4月9日 木曜'],
@@ -40,7 +40,7 @@
     discoveredFacts:[],viewedPosts:[],platform:'Photogram',socialDate:null,socialReturn:null,
     campChoice:null,safety:false,risky:false,rescued:false,
     inference:false,deductionMessage:'',ending:null,hintsOpen:0,sundayPreserved:false,
-    selectedPerson:null,notebookFilter:'seen',boardMessage:'',
+    selectedPerson:null,notebookFilter:'seen',boardMessage:'',snsMatchPostId:null,snsMatchMessage:'',snsNotice:'',
     alias:'κ-'+Math.random().toString(36).slice(2,6).toUpperCase()
   });
   let S=makeState();
@@ -49,6 +49,7 @@
     if(!Number.isFinite(p.affinity))p.affinity=0;p.heardName??='';
     if(!Array.isArray(p.contacts))p.contacts=p.contact_exchanged?['TINE']:[];
     if(!Array.isArray(p.pendingContacts))p.pendingContacts=[];
+    if(!Array.isArray(p.socialMatches))p.socialMatches=[];
     return p;
   };
   const currentDate=()=>DAYS[Math.min(S.day,4)][0];
@@ -74,6 +75,17 @@
   };
   const publicAppearance=pid=>(pmap[pid]?.appearance||'').replace(/。?顔素材は未制作/g,'').trim();
   const knownName=pid=>{const x=ps(pid);return x.introduced||x.identity_confirmed||x.nameKnownFromDoc?pmap[pid].name:x.heardName||'名前未確認'};
+  // A visible face can connect an SNS handle to a remembered face, without revealing a legal name.
+  const avatarKind=(pid,platform)=>amap[pid+'|'+platform]?.avatar_kind||'icon';
+  const linkedPlatforms=pid=>ps(pid).socialMatches.filter(platform=>!!amap[pid+'|'+platform]);
+  const verifiedPerson=pid=>{const p=ps(pid);return !!(p.identity_confirmed||(p.introduced&&linkedPlatforms(pid).length))};
+  const accountAvatar=(pid,platform,canView)=>{
+    if(!canView)return '<span class="face"><span class="silhouette" aria-hidden="true">◇</span></span>';
+    if(avatarKind(pid,platform)==='face')return photo(pid,{venue:true});
+    const symbols=['♪','♫','◈','✳','●','☾'];
+    const index=(Number(pid.slice(1))*7+(platform==='TINE'?1:platform==='Photogram'?3:5))%symbols.length;
+    return '<span class="face"><span class="silhouette" aria-label="顔を公開していないアイコン">'+symbols[index]+'</span></span>';
+  };
   const SURNAMES={"P003":"神谷","P010":"真野","P017":"斉藤","P021":"志田","P023":"近藤","P040":"深町","P041":"高瀬","P042":"比嘉","P043":"木島","P002":"榊原","P008":"米沢","P026":"森田","P005":"八代","P009":"北沢","P033":"石田","P034":"黒川","P001":"西園寺","P012":"和泉","P037":"日向","P007":"長瀬","P022":"三浦","P018":"橘","P046":"奥田","P006":"久世","P039":"内田","P048":"瀬川"};
   const groupMention=gid=>{
     if(D.groups.findIndex(g=>g.group_id===gid)%3!==0)return null;
@@ -241,7 +253,7 @@
     if(!messages.length)return '';
     const replied=S.replyLog?.[currentDate()];
     const rows=messages.map(({pid,text:body})=>
-      '<div class="document"><strong>'+esc(knownName(pid))+' / TINE</strong><p>'+esc(body)+'</p>'+
+      '<div class="document"><div class="post-head">'+accountAvatar(pid,'TINE',true)+'<div><strong>'+esc(knownName(pid))+' / TINE</strong><p>'+esc(body)+'</p></div></div>'+
       (replied===pid?'<span class="chip">返信しました</span>':replied?'':
         btn('短く返信する','reply-contact','data-pid="'+esc(pid)+'"','tiny'))+'</div>'
     ).join('');
@@ -271,14 +283,38 @@
     const posts=D.posts.filter(p=>p.platform===platform&&p.published_at.slice(0,10)<=date);
     const rows=posts.map(p=>{
       const acct=amap[p.author_id+'|'+platform];
-      const open=postAccessible(p)&&S.viewedPosts.includes(p.post_id);
-      const label=p.visibility==='匿名表示'?'匿名ユーザー':acct?.display_name||'未確認のアカウント';
+      const accessible=postAccessible(p),open=accessible&&S.viewedPosts.includes(p.post_id);
+      const anonymous=p.visibility==='匿名表示';
+      const label=anonymous?'匿名ユーザー':accessible?(acct?.display_name||'未確認のアカウント'):'非公開アカウント';
       const media=p.media_id?'<p class="subtle">添付写真：'+esc(p.media_id)+'（本文の説明を参照）</p>':'';
-      const avatar=(p.visibility==='匿名表示'||!postAccessible(p))?'<span class="face"><span class="silhouette" aria-hidden="true">◇</span></span>':photo(p.author_id,{venue:true});
-      return '<article class="post'+(open?'':' locked')+'"><div class="post-head">'+avatar+'<div><div class="meta">'+esc(platform)+' / '+esc(p.published_at)+' / '+esc(p.visibility)+'</div><strong>'+esc(label)+'</strong></div></div><p>'+esc(open?p.text:postAccessible(p)?'この投稿の本文はまだ読んでいません。':'閲覧には本人の承認または参加条件が必要です。')+'</p>'+(open?media:'')+'</article>';
+      const faceVisible=open&&!anonymous&&acct?.avatar_kind==='face';
+      const avatar=accountAvatar(p.author_id,platform,open&&!anonymous);
+      const matched=faceVisible&&linkedPlatforms(p.author_id).includes(platform);
+      const canMatch=faceVisible&&ps(p.author_id).seen&&!matched;
+      const matchAction=canMatch?btn('見かけた顔と照合','start-sns-match','data-postid="'+esc(p.post_id)+'"','tiny'):
+        matched?'<span class="chip">手帳の顔と一致</span>':'';
+      return '<article class="post'+(open?'':' locked')+'"><div class="post-head">'+avatar+'<div><div class="meta">'+esc(platform)+' / '+esc(p.published_at)+' / '+esc(p.visibility)+'</div><strong>'+esc(label)+'</strong></div></div><p>'+esc(open?p.text:accessible?'この投稿の本文はまだ読んでいません。':'閲覧には本人の承認または参加条件が必要です。')+'</p>'+(open?media+matchAction:'')+'</article>';
     }).join('');
     const alt=D.publicInfo.map(x=>'<div class="document"><strong>'+esc(x.topic)+'</strong>'+esc(x.confirms)+'<p class="subtle">別経路：'+esc(x.route_1)+'／'+esc(x.route_2)+'</p></div>').join('');
-    return '<p class="eyebrow">SOCIAL / '+esc(platform)+'</p><h2>'+(S.socialDate?'週末のタイムライン':'今夜のタイムライン')+'</h2>'+(!S.socialDate&&platform==='TINE'?tineFeed():'')+'<div class="tabs">'+['TINE','Photogram','Zitter'].map(p=>btn(p,S.socialDate?'sns-tab':platformNeedsAction(p)?'browse-sns':'sns-tab','data-platform="'+p+'"',p===platform?'':'ghost')).join('')+'</div>'+(rows||'<p class="subtle">表示できる投稿はありません。</p>')+'<h3>鍵投稿を使わず確認できる案内</h3>'+alt+'<div class="btnrow">'+btn(S.socialDate?'週末の画面に戻る':'夜の行動に戻る','back-night','','ghost')+'</div>';
+    return '<p class="eyebrow">SOCIAL / '+esc(platform)+'</p><h2>'+(S.socialDate?'週末のタイムライン':'今夜のタイムライン')+'</h2>'+(S.snsNotice?note(esc(S.snsNotice)):'')+(!S.socialDate&&platform==='TINE'?tineFeed():'')+'<div class="tabs">'+['TINE','Photogram','Zitter'].map(p=>btn(p,S.socialDate?'sns-tab':platformNeedsAction(p)?'browse-sns':'sns-tab','data-platform="'+p+'"',p===platform?'':'ghost')).join('')+'</div>'+(rows||'<p class="subtle">表示できる投稿はありません。</p>')+'<h3>鍵投稿を使わず確認できる案内</h3>'+alt+'<div class="btnrow">'+btn(S.socialDate?'週末の画面に戻る':'夜の行動に戻る','back-night','','ghost')+'</div>';
+  };
+  const snsMatch=()=>{
+    const post=D.posts.find(x=>x.post_id===S.snsMatchPostId);
+    if(!post||post.platform!==S.platform||post.visibility==='匿名表示'||!postAccessible(post)||
+        !S.viewedPosts.includes(post.post_id)||avatarKind(post.author_id,post.platform)!=='face')
+      return '<h2>この投稿は照合できません</h2>'+btn('SNSへ戻る','back-sns-match','','');
+    const acct=amap[post.author_id+'|'+post.platform];
+    const ids=Object.keys(S.person).filter(id=>ps(id).seen&&pmap[id]).sort();
+    const choices=ids.map(id=>'<div class="person-card">'+photo(id,{venue:true})+
+      '<div><div class="name">'+esc(knownName(id))+'</div><p class="subtle">'+esc(publicAppearance(id))+'</p>'+
+      btn('この人だと思う','match-sns-person','data-pid="'+esc(id)+'"','tiny')+'</div></div>').join('');
+    return '<p class="eyebrow">SNS / FACE MATCH</p><h2>見覚えのある顔？</h2>'+
+      '<div class="card"><div class="post-head">'+accountAvatar(post.author_id,post.platform,true)+
+      '<div><strong>'+esc(acct?.display_name||'アカウント')+'</strong><p class="subtle">'+esc(post.platform)+'で公開しているプロフィール写真</p></div></div></div>'+
+      '<p class="subtle">新歓で見かけた顔の中から、同じ人物だと思う写真を選んでください。顔が分かっても、本名が分かるとは限りません。</p>'+
+      (S.snsMatchMessage?note(esc(S.snsMatchMessage)):'')+
+      '<div class="person-list">'+(choices||'<p class="subtle">まだ照合できる顔の記憶はありません。</p>')+'</div>'+
+      '<div class="btnrow">'+btn('SNSへ戻る','back-sns-match','','ghost')+'</div>';
   };
   const board=()=>{
     const rows=D.factExposures.filter(x=>x.fact_id!=='F-COM-02'&&x.available_at.slice(0,10)<=currentDate());
@@ -317,7 +353,7 @@
     }).sort();
     const cards=ids.map(id=>{
       const p=ps(id),auto=D.marks.some(m=>m.person_id===id&&S.discoveredFacts.includes(m.trigger_fact_id));
-      return '<div class="person-card">'+photo(id)+'<div><div class="name">'+esc(knownName(id))+' '+(auto?'<span class="chip alert">?</span>':'')+(p.bookmark?'<span class="chip">★</span>':'')+'</div><div class="small">'+(p.met?'会話済み':p.seen?'顔だけ見た':'資料で名前を知った')+(p.identity_confirmed?' ／ 照合済み':'')+'</div>'+btn('手帳を開く','open-person','data-pid="'+id+'"','tiny')+'</div></div>';
+      return '<div class="person-card">'+photo(id)+'<div><div class="name">'+esc(knownName(id))+' '+(auto?'<span class="chip alert">?</span>':'')+(p.bookmark?'<span class="chip">★</span>':'')+'</div><div class="small">'+(p.met?'会話済み':p.seen?'顔だけ見た':'資料で名前を知った')+(verifiedPerson(id)?' ／ 照合済み':linkedPlatforms(id).length?' ／ SNSの顔と一致':'')+'</div>'+btn('手帳を開く','open-person','data-pid="'+id+'"','tiny')+'</div></div>';
     }).join('');
     return '<p class="eyebrow">NOTEBOOK</p><h2>人物手帳</h2><p class="subtle">見かけただけの顔は曖昧な記憶としてぼかします。名前を聞いたことと、顔・名前・SNSの照合は別です。</p><div class="tabs">'+[['seen','見かけた人'],['met','知り合った人'],['marked','注目人物']].map(([k,v])=>btn(v,'filter-notebook','data-filter="'+k+'"',k===filter?'':'ghost')).join('')+'</div><div class="person-list">'+(cards||'<p class="subtle">該当する人物はいません。</p>')+'</div><div class="btnrow">'+btn('元の画面へ','back-overlay','','ghost')+'</div>';
   };
@@ -326,8 +362,11 @@
     const autoFacts=D.marks.filter(m=>m.person_id===id&&S.discoveredFacts.includes(m.trigger_fact_id)).map(m=>D.facts.find(f=>f.fact_id===m.trigger_fact_id));
     const reason=autoFacts.length?autoFacts.map(f=>'<div class="notice"><strong>？の理由：</strong>'+esc(f.ambiguous_fact)+'<br><span class="subtle">通常の読み方：'+esc(f.ordinary_reading)+'</span></div>').join(''):'<p class="subtle">自動「？」の理由はありません。</p>';
     const reaction=p.met&&p.lastReaction?.key&&REACTIONS[p.lastReaction.key]?'<div class="last-reaction"><span class="subtle">最後に話したときの様子</span>'+renderReaction({key:p.lastReaction.key},false)+'</div>':'';
-    const st=['見かけた','会話した','名前を聞いた','交換を依頼','連絡先交換','顔・氏名・SNSを照合'].map((x,i)=>'<span class="chip '+([p.seen,p.met,p.introduced,p.contact_requested,p.contact_exchanged,p.identity_confirmed][i]?'':'dim')+'">'+x+'</span>').join('');
-    return '<p class="eyebrow">NOTEBOOK / PERSON</p><h2>'+esc(knownName(id))+'</h2><div class="card"><div style="display:flex;gap:14px;align-items:center">'+photo(id,{large:true})+'<div><div class="chips">'+st+'</div><p class="subtle">'+esc(p.seen?publicAppearance(id):'顔はまだ見ていない')+'</p></div></div>'+reaction+reason+'<div class="btnrow">'+btn(p.bookmark?'★を外す':'★を付ける','bookmark','data-pid="'+id+'"','secondary')+(p.introduced&&p.contact_exchanged&&!p.identity_confirmed?btn('顔・氏名・SNSを照合','confirm-identity','data-pid="'+id+'"','secondary'):'')+'</div><div class="form-row"><label for="hypothesis">仮説（事実とは別）</label><select id="hypothesis"><option>未設定</option><option>気になる</option><option>協力を頼める</option><option>保留</option></select></div><div class="form-row"><label for="personNote">自由メモ</label><textarea id="personNote" maxlength="2000" placeholder="覚えておきたいこと">'+esc(p.note)+'</textarea></div>'+btn('メモを保存','save-person','data-pid="'+id+'"','')+'</div><div class="btnrow">'+btn('人物一覧へ','back-notebook','','ghost')+'</div>';
+    const st=['見かけた','会話した','名前を聞いた','交換を依頼','連絡先交換','顔・氏名・SNSを照合'].map((x,i)=>'<span class="chip '+([p.seen,p.met,p.introduced,p.contact_requested,p.contact_exchanged,verifiedPerson(id)][i]?'':'dim')+'">'+x+'</span>').join('');
+    const socialLinks=linkedPlatforms(id).map(platform=>'<p><strong>'+esc(platform)+'</strong>：'+esc(amap[id+'|'+platform]?.display_name||'アカウント')+
+      '（公開プロフィールの顔と一致'+(p.introduced?'・本人の名前を確認済み':'・名前は未確認')+'）</p>').join('');
+    const socialBox=socialLinks?'<div class="card soft"><h3>SNSで見つけた顔</h3>'+socialLinks+'</div>':'';
+    return '<p class="eyebrow">NOTEBOOK / PERSON</p><h2>'+esc(knownName(id))+'</h2><div class="card"><div style="display:flex;gap:14px;align-items:center">'+photo(id,{large:true})+'<div><div class="chips">'+st+'</div><p class="subtle">'+esc(p.seen?publicAppearance(id):'顔はまだ見ていない')+'</p></div></div>'+reaction+reason+'<div class="btnrow">'+btn(p.bookmark?'★を外す':'★を付ける','bookmark','data-pid="'+id+'"','secondary')+(p.introduced&&p.contact_exchanged&&!p.identity_confirmed?btn('顔・氏名・SNSを照合','confirm-identity','data-pid="'+id+'"','secondary'):'')+'</div><div class="form-row"><label for="hypothesis">仮説（事実とは別）</label><select id="hypothesis"><option>未設定</option><option>気になる</option><option>協力を頼める</option><option>保留</option></select></div><div class="form-row"><label for="personNote">自由メモ</label><textarea id="personNote" maxlength="2000" placeholder="覚えておきたいこと">'+esc(p.note)+'</textarea></div>'+btn('メモを保存','save-person','data-pid="'+id+'"','')+'</div>'+socialBox+'<div class="btnrow">'+btn('人物一覧へ','back-notebook','','ghost')+'</div>';
   };
   const weekReflection=()=>{
     const visited=Array.isArray(S.eventHistory)?S.eventHistory:[];
@@ -416,7 +455,7 @@
       case 'title':content=title();break; case 'warning':content=warning();break;case 'campus':content=campus();break;case 'intro':content=intro();break;
       case 'day':content=day();break;case 'lunch':content=lunch();break;case 'venue':content=venue();break;case 'group':content=group();break;
       case 'question':content=choiceMenu('question');break;case 'approach':content=choiceMenu('approach');break;case 'contact':content=choiceMenu('contact');break;
-      case 'night':content=night();break;case 'sns':content=sns();break;case 'board':content=board();break;case 'camp':content=camp();break;
+      case 'night':content=night();break;case 'sns':content=sns();break;case 'sns-match':content=snsMatch();break;case 'board':content=board();break;case 'camp':content=camp();break;
       case 'saturday':content=saturday();break;case 'risk':content=risk();break;case 'sunday':content=sunday();break;
       case 'deduction':content=deduction();break;case 'dossier':content=dossier();break;
       case 'notebook':content=notebook();break;case 'person':content=personDetail();break;case 'ending':content=ending();break;
@@ -619,6 +658,30 @@
     }
     if(act==='finish-venue'){S.phase='night';saveAndRender();return}
     if(act==='research'){research(el.dataset.key);return}
+    if(act==='start-sns-match'){
+      const post=D.posts.find(x=>x.post_id===el.dataset.postid);
+      if(!post||S.phase!=='sns'||post.platform!==S.platform||post.visibility==='匿名表示'||
+          !postAccessible(post)||!S.viewedPosts.includes(post.post_id)||
+          avatarKind(post.author_id,post.platform)!=='face'||!ps(post.author_id).seen)return;
+      S.snsMatchPostId=post.post_id;S.snsMatchMessage='';S.phase='sns-match';saveAndRender();return;
+    }
+    if(act==='back-sns-match'){S.snsMatchPostId=null;S.snsMatchMessage='';S.phase='sns';saveAndRender();return}
+    if(act==='match-sns-person'){
+      if(S.phase!=='sns-match')return;
+      const post=D.posts.find(x=>x.post_id===S.snsMatchPostId);
+      if(!post||post.platform!==S.platform||post.visibility==='匿名表示'||
+          !postAccessible(post)||!S.viewedPosts.includes(post.post_id)||
+          avatarKind(post.author_id,post.platform)!=='face'||!ps(id).seen)return;
+      if(id!==post.author_id){
+        S.snsMatchMessage='見比べてみると、どうやら別の人のようだ。';saveAndRender();return;
+      }
+      const p=ps(id);
+      if(!p.socialMatches.includes(post.platform))p.socialMatches.push(post.platform);
+      p.clearPortrait=true;
+      S.snsNotice='このプロフィール写真は、以前見かけた顔と一致した。'+
+        (p.introduced?'名前とアカウントがつながった。':'まだ本名は分からないが、アカウントを手帳に記録した。');
+      S.snsMatchPostId=null;S.snsMatchMessage='';S.phase='sns';saveAndRender();return;
+    }
     if(act==='browse-sns'||act==='open-sns'){
       const platform=el.dataset.platform, key=date+'|'+platform;
       if(act==='browse-sns'&&platformNeedsAction(platform)&&!S.nightDone[key]){
@@ -626,7 +689,7 @@
         S.nightUsed[date]=nightCount()+1;S.nightDone[key]=true;
       }
       platformPosts(platform).filter(postAccessible).forEach(p=>{if(!S.viewedPosts.includes(p.post_id))S.viewedPosts.push(p.post_id)});
-      S.platform=platform;S.phase='sns';saveAndRender();return;
+      S.platform=platform;S.snsNotice='';S.phase='sns';saveAndRender();return;
     }
     if(act==='weekend-sns'){
       if(S.phase!=='saturday'&&S.phase!=='sunday')return;
@@ -635,11 +698,11 @@
       S.phase='sns';saveAndRender();return;
     }
     if(act==='sns-tab'){
-      S.platform=el.dataset.platform;
+      S.platform=el.dataset.platform;S.snsNotice='';
       if(S.socialDate)platformPosts(S.platform).filter(postAccessible).forEach(p=>{if(!S.viewedPosts.includes(p.post_id))S.viewedPosts.push(p.post_id)});
       saveAndRender();return;
     }
-    if(act==='back-night'){S.phase=S.socialReturn||'night';S.socialReturn=null;S.socialDate=null;saveAndRender();return}
+    if(act==='back-night'){S.phase=S.socialReturn||'night';S.socialReturn=null;S.socialDate=null;S.snsMatchPostId=null;S.snsNotice='';saveAndRender();return}
     if(act==='end-night'){
       for(const [pid,p] of Object.entries(S.person)){
         ps(pid);
@@ -692,7 +755,7 @@
     if(act==='open-person'){S.selectedPerson=id;S.phase='person';saveAndRender();return}
     if(act==='back-notebook'){S.phase='notebook';saveAndRender();return}
     if(act==='bookmark'){ps(id).bookmark=!ps(id).bookmark;saveAndRender();return}
-    if(act==='confirm-identity'){const p=ps(id);if(p.introduced&&p.contact_exchanged)p.identity_confirmed=true;saveAndRender();return}
+    if(act==='confirm-identity'){const p=ps(id);if(p.introduced&&(p.contact_exchanged||linkedPlatforms(id).length))p.identity_confirmed=true;saveAndRender();return}
     if(act==='save-person'){const p=ps(id);p.note=document.getElementById('personNote').value;p.hypothesis=document.getElementById('hypothesis').value;saveAndRender();return}
   }
   APP.addEventListener('click',ev=>{const el=ev.target.closest('[data-act]');if(el){ev.preventDefault();handle(el.dataset.act,el)}});
