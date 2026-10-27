@@ -1,0 +1,334 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<meta name="theme-color" content="#183a4b"/>
+<title>校則を改定してください。｜短編UIゲーム実験室 S7</title>
+<style>
+:root{color-scheme:light;--bg:#edf1f1;--paper:#fff;--ink:#19333d;--muted:#657983;--subtle:#e7eff1;--line:#d4e2e6;--accent:#176e85;--accent-dark:#155063;--warn:#995d24;--bad:#a03a44;--good:#217960;--shadow:0 5px 22px #1e414310}
+*{box-sizing:border-box}html{font-size:16px}body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Noto Sans JP",Meiryo,sans-serif;line-height:1.55}button,select{font:inherit}button{cursor:pointer}button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid #d8a54f;outline-offset:2px}button:disabled{opacity:.45;cursor:not-allowed}.shell{max-width:1120px;margin:auto;padding:16px 16px 55px}header{display:flex;justify-content:space-between;align-items:flex-start;gap:15px;padding:8px 2px 17px;margin-bottom:18px;border-bottom:1px solid var(--line)}h1{margin:2px 0;font-size:clamp(20px,3.2vw,29px);line-height:1.35}.kicker{font-size:11px;letter-spacing:.15em;font-weight:800;color:var(--accent)}.version{font-size:11px;color:var(--muted)}.toolbar{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}button{border-radius:10px;border:1px solid var(--line);padding:10px 13px;background:white;color:var(--ink);font-weight:700}button:hover{border-color:var(--accent)}button.primary{border-color:var(--accent);background:var(--accent);color:white;box-shadow:0 3px 0 var(--accent-dark)}button.primary:hover{background:var(--accent-dark)}button.secondary{background:transparent}button.small{font-size:12px;padding:7px 9px}button.full{width:100%;padding:14px;font-size:15px}button.muted{background:#f4f7f8}button:active{transform:translateY(1px)}.dashboard{display:grid;grid-template-columns:minmax(0,1fr) minmax(330px,.92fr);gap:17px;align-items:start}.panel{background:var(--paper);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);overflow:hidden}.pad{padding:18px}.panel-head{display:flex;justify-content:space-between;gap:12px;align-items:center;margin:0 0 13px}.panel-head h2{font-size:18px;margin:0}.section-label{font-size:11px;font-weight:800;color:var(--muted);letter-spacing:.09em}.period{font-size:24px;font-weight:900}.pill{background:#e2f0ee;color:var(--good);border-radius:30px;padding:4px 9px;font-weight:800;font-size:11px;white-space:nowrap}.pill.warn{background:#fff0dc;color:var(--warn)}.meter-grid{display:grid;gap:11px;margin:13px 0 18px}.meter{display:grid;grid-template-columns:73px 1fr 35px;gap:10px;align-items:center}.meter-name{font-size:13px;font-weight:750}.meter-value{font-size:15px;font-variant-numeric:tabular-nums;text-align:right;font-weight:850}.bar{height:9px;border-radius:30px;overflow:hidden;background:#e7eef0}.bar span{display:block;height:100%;background:#3487a0;border-radius:30px;transition:width .25s ease}.bar .green{background:var(--good)}.detail-list{display:grid;gap:8px}.detail-item{border:1px solid var(--line);border-radius:9px;padding:10px 11px;background:#f8fafa;display:flex;justify-content:space-between;gap:10px;font-size:12px}.detail-item strong{font-size:12px;max-width:60%;text-align:right}.subtitle{font-size:12px;color:var(--muted);margin-top:4px}.divider{height:1px;background:var(--line);margin:14px 0}.note{border-left:4px solid #a3bec5;background:#eff5f6;padding:11px 12px;border-radius:7px;font-size:12px}.note.strong{background:#e5f3f4;border-left-color:var(--accent)}.note.warn{background:#fff6e9;border-left-color:#e2a150}.tiny{font-size:11px;color:var(--muted)}.tabs{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin:14px 0 12px}.tab{padding:10px 9px;border-radius:8px;background:#eef4f5;color:#45636e}.tab.on{background:var(--accent);color:white;border-color:var(--accent)}.field{display:grid;gap:6px;margin:13px 0}.field label{font-size:12px;font-weight:800}.field select{width:100%;padding:12px;border:1px solid var(--line);border-radius:9px;background:white;color:var(--ink);font-size:14px}.choice-set{display:grid;grid-template-columns:1fr 1fr;gap:8px}.choice{display:flex;align-items:center;gap:7px;cursor:pointer;border-radius:9px;padding:11px 9px;border:1px solid var(--line);font-size:12px;min-height:48px;background:white}.choice:has(input:checked){background:#e5f2f6;border-color:var(--accent);font-weight:850}.choice input{accent-color:var(--accent)}.preview{border:1px solid #c8dfe6;border-radius:10px;background:#f4f9fb;padding:12px;margin-top:16px;font-size:13px}.preview p{margin:6px 0 0}.actions{display:grid;gap:9px;margin-top:15px}.recommendations{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0 16px}.recommendations button{font-size:11px;background:#f5f9fa;padding:6px 9px}.news-item{border-bottom:1px solid var(--line);padding:12px 0}.news-item:last-child{border-bottom:0}.news-source{font-size:10px;color:var(--muted);font-weight:800;letter-spacing:.05em}.news-item h3{margin:3px 0 4px;font-size:14px}.news-item p{margin:0;color:#46606b;font-size:12px}.reform-title{font-weight:850;margin-bottom:5px}.delta{font-variant-numeric:tabular-nums}.delta.pos{color:var(--good)}.delta.neg{color:var(--bad)}.timeline{display:grid;gap:7px;max-height:260px;overflow:auto}.timeline .item{font-size:12px;border-left:3px solid var(--line);padding:3px 8px}.timeline .item b{color:var(--accent)}.feature-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.feature{padding:10px;background:#f5f9fa;border:1px solid var(--line);border-radius:9px}.feature b{display:block;font-size:13px}.feature small{font-size:11px;color:var(--muted)}.actions-row{display:flex;gap:8px;flex-wrap:wrap;justify-content:space-between;align-items:center}.stamp{display:inline-block;background:#e0efe7;color:var(--good);border-radius:3px;padding:3px 9px;font-weight:900;transform:rotate(-2deg);border:2px solid #9dbda9}.stamp.fail{color:var(--bad);background:#fae9eb;border-color:#ddbac1}.progress-row{display:flex;gap:4px;margin:12px 0}.progress-row i{display:block;height:6px;flex:1;background:#dce8eb;border-radius:3px}.progress-row i.done{background:#4b94a9}.report-hero{background:linear-gradient(125deg,#ecf5f5,#fff5e4);border-radius:13px;padding:20px;text-align:center;margin-bottom:16px;border:1px solid #d3e3df}.report-hero .hero-text{font-size:21px;font-weight:900;line-height:1.4}.report-hero .hero-sub{font-size:12px;color:var(--muted);margin-top:5px}.election-bar{display:flex;height:15px;overflow:hidden;border-radius:20px;background:#dee8eb}.election-bar span{display:block;height:100%;background:#27836c}.election-bar span.other{background:#abb8bf}.election-bar span.last{background:#d6bd81}.data-table{width:100%;border-collapse:collapse;font-size:12px}.data-table td,.data-table th{padding:8px 6px;border-bottom:1px solid var(--line);text-align:left}.data-table td:last-child,.data-table th:last-child{text-align:right}.stat-pair{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0}.stat-pair div{background:#f4f9fa;border:1px solid var(--line);padding:12px;border-radius:9px}.stat-pair strong{display:block;font-size:19px}.subtitle-right{font-size:11px;color:var(--muted)}.overlay{position:fixed;inset:0;z-index:50;background:#102b38be;display:flex;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(3px)}.overlay[hidden]{display:none}.dialog{background:white;max-height:min(90vh,820px);overflow:auto;width:min(510px,100%);padding:24px;border-radius:17px;box-shadow:0 30px 100px #05151977}.dialog h2{margin:0 0 12px;font-size:22px}.dialog p,.dialog li{font-size:14px}.dialog li{margin-bottom:7px}.dialog .dialog-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:18px}.footer-note{margin:14px 0 0}footer{font-size:10px;text-align:center;color:var(--muted);margin-top:24px}.empty{padding:16px;background:#f7fafb;border-radius:8px;font-size:12px;color:var(--muted)}.table-scroll{overflow:auto}
+@media(max-width:800px){.dashboard{grid-template-columns:1fr}.shell{padding:12px 10px 42px}.pad{padding:15px}.panel-head h2{font-size:17px}.toolbar{max-width:140px}.choice-set{gap:6px}.choice{padding:9px 7px;font-size:12px}}@media(max-width:370px){.choice-set{grid-template-columns:1fr}.meter{grid-template-columns:70px 1fr 30px}.feature-grid{grid-template-columns:1fr}h1{font-size:20px}.toolbar button{font-size:11px;padding:6px}}@media(prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;animation:none!important}}
+
+@media(max-width:550px){header{flex-direction:column}.toolbar{max-width:none;justify-content:flex-start}h1{max-width:100%}}
+
+</style>
+</head>
+<body>
+<div class="shell">
+<header>
+ <div class="brand-area"><div class="kicker">短編UIゲーム実験室 / S7</div><h1>校則を改定してください。</h1><div class="version">α v0.7.0 ｜ 更新：2026年10月27日 10:39 JST</div></div>
+ <div class="toolbar"><button id="help" class="secondary small" type="button">あそびかた</button><button id="new" class="secondary small" type="button">新しく始める</button></div>
+</header>
+<main id="root" aria-live="polite"></main>
+<footer>県立青葉高校・生徒自治実証制度 ｜ プロトタイプα版。ゲーム内の学校と制度は架空です。</footer>
+</div>
+<div class="overlay" id="dialog" hidden><div class="dialog" role="dialog" aria-modal="true" aria-labelledby="dialog-heading"><div id="dialog-inner"></div></div></div>
+<script>
+// S7 校則を改定してください。 — alpha v0.7.0 | deterministic browser simulation.
+// Game logic is deliberately independent from UI. All display text derives from state/history.
+const VERSION='0.7.0-alpha';
+const MONTHS=['4月','5月','6月','7月','8月','9月','10月','11月','12月','1月','2月','3月'];
+const STAT=['生活','学び','課外','自治','人気'];
+const ACT=['受験','運動','芸術','事業','探究','自治組織','管理'];
+const GROUPS=['進学重視','部活動重視','自由重視','文化・行事重視','生活・就労重視'];
+const RULES={
+ phone:{name:'スマートフォン',options:['原則禁止','休み時間のみ許可','授業外は自由','使用時間の制限なし'],scopes:['校内全域','指定エリアのみ'],init:1,effects:[[0,0,0,0,0],[2,0,1,0,1],[4,-1,2,1,2],[5,-3,3,2,5]],impact:'スマートフォンの利用方法'},
+ uniform:{name:'制服・服装',options:['指定制服のみ','一部選択可能','私服併用','服装自由'],scopes:['すべての登校日','指定曜日のみ'],init:1,effects:[[0,0,0,0,0],[2,0,1,1,0],[4,0,2,2,1],[6,0,2,3,3]],impact:'登校時の服装'},
+ jobs:{name:'アルバイト',options:['原則禁止','許可制','届出制','原則自由'],scopes:['平日・休日とも対象','休日のみ対象'],init:0,effects:[[0,0,0,0,0],[1,0,-1,0,1],[3,-1,-3,0,2],[5,-2,-5,0,3]],impact:'放課後の就労'},
+ clubs:{name:'部活動',options:['加入義務','加入推奨','任意加入','学外活動も認定'],scopes:['すべての生徒に適用','新入生から適用'],init:1,effects:[[-4,-2,7,-2,3],[0,0,0,0,0],[3,1,-4,1,-1],[4,2,-2,2,3]],impact:'部活動の参加状況'},
+ exams:{name:'定期試験・評価',options:['筆記試験中心','小テスト併用','成果物評価併用','定期筆記試験を廃止'],scopes:['全教科（可能な範囲）','選択科目から導入'],init:0,effects:[[0,0,0,0,0],[1,2,0,0,1],[3,2,2,0,3],[5,-4,3,1,5]],impact:'学習成果の評価'},
+ lessons:{name:'授業・自習',options:['標準授業','選択自習枠','探究学習枠','個別学習計画'],scopes:['全学年で実施','一部の授業枠で試行'],init:0,effects:[[0,0,0,0,0],[1,2,-1,1,2],[2,3,2,1,4],[2,4,2,3,6]],impact:'授業と自主学習'},
+ shop:{name:'購買・生徒事業',options:['学校管理','生徒提案を受付','共同運営','生徒事業を認定'],scopes:['通年で実施','期間限定で実施'],init:0,effects:[[0,0,0,0,0],[1,0,1,1,1],[2,0,3,3,4],[4,-1,5,4,7]],impact:'校内の商品企画'},
+ attendance:{name:'遅刻・欠席',options:['一律指導','事情を考慮','個別支援','柔軟な登校支援'],scopes:['全校生徒に適用','申請・相談者に適用'],init:1,effects:[[0,0,0,0,0],[1,0,0,0,1],[3,1,0,1,3],[4,-2,0,2,5]],impact:'登校と生活支援'},
+ civic:{name:'生徒自治',options:['意見聴取','規則提案権','予算提案権','裁量予算の編成権'],scopes:['全校生徒会が担当','委員会で段階導入'],init:0,effects:[[0,0,0,0,0],[1,0,1,6,2],[1,0,1,12,5],[2,0,2,20,10]],impact:'生徒による学校運営'}
+};
+const EVENT={
+ festival:{name:'文化祭',month:5,deadline:3,initial:[1,1],major:true},
+ sports:{name:'体育祭',month:6,deadline:4,initial:[1,1],major:true},
+ ball:{name:'球技大会',month:2,deadline:1,initial:[1,1],major:false},
+ research:{name:'研究発表会',month:7,deadline:6,initial:[-1,1],major:false},
+ chorus:{name:'合唱コンクール',month:8,deadline:7,initial:[1,1],major:false}
+};
+const EVENT_SCALE=['中止','縮小','通常開催','大規模開催']; // offset +1 from scale -1..2
+const EVENT_OP=['教員主導','教員・生徒共同','生徒主体'];
+const DEFAULT_STATS={生活:52,学び:50,課外:50,自治:30,人気:50};
+const BASE_SHARE=[.24,.22,.19,.18,.17];
+const BASE_MAT={受験:18,運動:20,芸術:10,事業:0,探究:8,自治組織:12,管理:10};
+const CLAMP=(x,a=0,b=100)=>Math.max(a,Math.min(b,x));
+const calc=(n)=>Math.round(n*10)/10;
+function rng(s){let x=s.randomState>>>0;x^=x<<13;x^=x>>>17;x^=x<<5;s.randomState=x>>>0;return s.randomState/4294967296}
+function range(s,a,b){return a+rng(s)*(b-a)}
+function choose(s,list){return list[Math.floor(rng(s)*list.length)]}
+const keylist=Object.keys(RULES);
+function newWorld(seed=123456789){
+ const s={version:VERSION,seed:seed>>>0,randomState:(seed>>>0)||1,year:1,month:0,stage:'edit',policies:{},scopes:{},events:{},pending:{},stats:{...DEFAULT_STATS},teacher:40,mats:{...BASE_MAT},shares:[],turnouts:[],friction:0,grudge:[0,0,0,0,0],fame:0,history:[],reforms:[],elections:[],special:{charter:false,mediation:false,declared:false},messages:[],lastReport:null};
+ for(const k of keylist){s.policies[k]=RULES[k].init;s.scopes[k]=0}
+ for(const k of Object.keys(EVENT)){s.events[k]=EVENT[k].initial.slice()}
+ const weights=BASE_SHARE.map(a=>a+range(s,-.025,.025));const total=weights.reduce((a,b)=>a+b,0);s.shares=weights.map(x=>x/total);
+ s.turnouts=GROUPS.map(()=>range(s,.54,.70));
+ for(const k of STAT){s.stats[k]=CLAMP(s.stats[k]+range(s,-2,2))}
+ s.teacher=CLAMP(40+range(s,-3,3));return s;
+}
+const nrm=(k)=>RULES[k].effects[RULES[k].init];
+function scopeFactor(s,k){if(s.scopes[k]===0)return 1; if(k==='uniform')return .65;if(k==='jobs')return .67;if(k==='clubs')return s.year===1?.70:.85;return .68}
+function softcap(x){return (x/(1+Math.abs(x)/30))*1.35}
+function synergize(s){const p=s.policies,e=s.events,sy=[];const add=(id,ok,effect,maturity,desc)=>{if(ok)sy.push({id,effect,maturity,desc})};
+ add('phone-research',p.phone>=2&&p.lessons>=2,[0,3,0,0,1],{探究:2},'スマホを使う探究活動が増えた');
+ add('phone-personal',p.phone>=2&&p.lessons===3,[0,2,0,0,1],{受験:1},'個別学習の情報共有が進んだ');
+ add('strict-phone-exam',p.phone===0&&p.exams<=1,[0,1,0,0,1],{受験:1},'試験対策への集中を重視する雰囲気になった');
+ add('uniform-festival',p.uniform>=2&&e.festival[0]>=1,[1,0,1,0,1],{芸術:2},'服装の自由化が文化祭の創作活動に波及した');
+ add('strict-uniform-attend',p.uniform===0&&p.attendance===0,[-2,1,0,-1,1],{管理:2},'服装と登校を厳しく管理する体制が整った');
+ add('jobs-clubs',p.jobs>=2&&p.clubs>=2,[0,0,-2,0,0],{運動:-2,事業:1},'アルバイトと校外活動へ時間が流れた');
+ add('jobs-shop',p.jobs>=2&&p.shop>=2,[1,0,1,0,1],{事業:3},'アルバイト経験を活かした商品企画が増えた');
+ add('jobs-research',p.jobs>=2&&p.lessons>=2,[0,1,1,0,2],{探究:1,事業:1},'就労経験が探究活動の題材になった');
+ add('clubs-lessons',p.clubs===0&&p.lessons>=2,[-1,-1,2,0,2],{運動:1},'部活と探究学習の時間が競合した');
+ add('outdoor-support',p.clubs===3&&p.attendance>=2,[1,0,2,0,1],{芸術:1},'校外で活動する生徒の支援が進んだ');
+ add('clubs-sports',p.clubs<=1&&e.sports[0]===2,[0,0,2,0,2],{運動:2},'体育祭と部活動が連動した');
+ add('civic-event',p.civic>=2&&(e.festival[1]===2||e.sports[1]===2),[1,0,1,2,1],{自治組織:2},'生徒による学校行事の運営が定着した');
+ add('event-shop',e.festival[0]===2&&p.shop>=2,[0,0,2,0,2],{事業:2},'文化祭の模擬店が生徒事業に発展した');
+ add('exam-research',p.exams>=2&&p.lessons>=2,[0,3,1,0,2],{探究:3},'評価制度と探究学習がかみ合った');
+ add('exam-phone-free',p.exams===3&&p.phone===3,[1,-2,1,0,2],{探究:1},'自由度が高い一方で学習管理に差が生まれた');
+ add('self-support',p.lessons>=1&&p.attendance>=2,[1,1,0,0,1],{受験:1},'個別支援と自習がかみ合った');
+ add('clubs-self',p.clubs>=2&&p.lessons>=1,[1,1,-1,0,1],{芸術:1},'自習と校外活動へ時間を振り向ける生徒が増えた');
+ add('shop-civic',p.shop>=2&&p.civic>=2,[0,0,1,3,1],{事業:2,自治組織:2},'生徒会が事業予算を監督し始めた');
+ add('civic-strict',p.civic>=2&&p.attendance===0,[-2,0,0,2,2],{管理:3},'生徒自治が相互監督の仕組みへ変化した');
+ add('uniform-civic',p.uniform===3&&p.civic>=1,[1,0,0,2,1],{自治組織:1},'服装規則の運用を生徒同士で話し合うようになった');
+ return sy;
+}
+const ASSET_MAP={受験:'進学指導',運動:'運動部',芸術:'芸術・文化活動',事業:'生徒事業',探究:'探究研究',自治組織:'生徒自治組織',管理:'生活指導制度'};
+function level(mat){return mat>=85?3:mat>=55?2:mat>=25?1:0}
+function institutionName(key,lev){
+ const names={受験:['通常の進路指導','受験対策講座','進学支援センター','進学指導の名門'],運動:['一般的な部活動','活動の盛んな運動部','県大会常連校','全国大会常連校'],芸術:['文化系サークル','創作発表会','校内芸術祭','文化芸術の名門校'],事業:['生徒の企画提案','商品開発チーム','青葉高校生徒事業部','起業家育成拠点'],探究:['通常の調べ学習','探究活動チーム','特色ある研究活動','全国的な研究実績'],自治組織:['通常の生徒会','活発な生徒委員会','生徒議会','高度自治学校'],管理:['一般的な生活指導','規律重視の指導','生徒管理体制','徹底管理型学校']};return (names[key]||[key])[lev];
+}
+const IDEAL={
+ '進学重視':{phone:0,uniform:1,jobs:0,clubs:2,exams:1,lessons:3,shop:0,attendance:1,civic:1},
+ '部活動重視':{phone:1,uniform:1,jobs:0,clubs:0,exams:1,lessons:0,shop:1,attendance:1,civic:1},
+ '自由重視':{phone:3,uniform:3,jobs:3,clubs:3,exams:3,lessons:3,shop:3,attendance:3,civic:3},
+ '文化・行事重視':{phone:2,uniform:3,jobs:1,clubs:3,exams:2,lessons:2,shop:2,attendance:2,civic:2},
+ '生活・就労重視':{phone:2,uniform:2,jobs:3,clubs:2,exams:1,lessons:1,shop:2,attendance:3,civic:2}
+};
+const FOCUS=[[.07,.6,.02,.03,.01],[.08,.04,.55,.02,.01],[.4,.03,.08,.3,.01],[.2,.06,.45,.15,.01],[.5,.1,.08,.1,.01]];
+const EVENT_IDEALS=[[0,0,0,2,0],[1,2,2,0,0],[2,1,1,1,1],[2,1,1,2,2],[1,1,1,1,1]];
+const EVENT_KEYS=['festival','sports','ball','research','chorus'];
+function groupSupport(s){return GROUPS.map((g,i)=>{
+ let policies=0;for(const k of keylist){const ideal=IDEAL[g][k];policies+=(Math.abs(RULES[k].init-ideal)-Math.abs(s.policies[k]-ideal))*2.8*scopeFactor(s,k)}
+ let eventScore=0;EVENT_KEYS.forEach((k,j)=>{const [scale,op]=s.events[k],pref=EVENT_IDEALS[i][j],start=EVENT[k].initial[0],w=k==='festival'?2:k==='sports'?1.5:.9;eventScore+=w*(Math.abs(start-pref)-Math.abs(scale-pref))+(scale>=1&&op===2&&(i===2||i===3)?.8:0)});
+ const outcome=STAT.reduce((a,k,j)=>a+FOCUS[i][j]*(s.stats[k]-DEFAULT_STATS[k]),0)*.58;
+ const burden=Math.max(0,s.teacher-62)*((i===0||i===1)?.37:.20);
+ const special=i===0?(s.mats.探究-8)*.09:i===1?(s.mats.運動-20)*.11:i===3?(s.mats.芸術-10)*.10:i===4?s.mats.事業*.09:0;
+ const orderly=(i<=1&&s.mats.受験>=35&&s.mats.運動>=43)?Math.min(8,Math.max(0,(s.mats.管理-45)*.22)):0;
+ return CLAMP(53+policies*.54+eventScore+outcome+special+orderly-burden-s.friction*.32+s.grudge[i],17,84);
+})}
+function eventDisplay(s,key,scale,op){const e=EVENT[key];return `${e.name}：${EVENT_SCALE[scale+1]}${scale<0?'':`／${EVENT_OP[op]}`}`}
+function actionDescription(action){if(!action)return '現行の校則を維持';if(action.type==='rule'){const r=RULES[action.key];return `${r.name}：「${r.options[action.level]}」・${r.scopes[action.scope]}`};if(action.type==='event'){return `${EVENT[action.key].name}：${EVENT_SCALE[action.scale+1]}${action.scale<0?'':`／${EVENT_OP[action.operator]}`}`};if(action.type==='special')return action.key==='charter'?'青葉自治憲章を採択':action.key==='mediation'?'校内紛争調停委員会を設置':'青葉自治共和国の独立を宣言';return '現行維持'}
+function applyAction(s,action){if(!action)return {ok:true,desc:'今月は校則を維持しました。',changed:false};
+ if(action.type==='rule'){
+  const r=RULES[action.key];if(!r||!(action.level>=0&&action.level<r.options.length)||![0,1].includes(action.scope))return {ok:false,error:'校則の指定が不正です。'};
+  if(action.key==='civic'&&action.level>s.policies.civic+1)return {ok:false,error:'生徒自治の権限は一段階ずつ拡大してください。'};
+  if(action.key==='civic'&&action.level===3&&s.mats.自治組織<25)return {ok:false,error:'裁量予算の編成権には、生徒自治組織の発展が必要です。'};
+  const was=s.policies[action.key],prior=s.scopes[action.key];if(was===action.level&&prior===action.scope)return {ok:false,error:'現在と同じ設定です。変更しない場合は「現行維持」を選んでください。'};
+  s.policies[action.key]=action.level;s.scopes[action.key]=action.scope;
+  return {ok:true,changed:true,desc:actionDescription(action),key:action.key,from:was,to:action.level}
+ }
+ if(action.type==='event'){
+  if(!EVENT[action.key]||![-1,0,1,2].includes(action.scale)||![0,1,2].includes(action.operator))return {ok:false,error:'行事設定の指定が不正です。'};
+  const key=action.key;let next=[action.scale,action.operator];if(next[0]===-1)next[1]=1;
+  const old=s.pending[key]||s.events[key];if(old[0]===next[0]&&(old[0]===-1||old[1]===next[1]))return {ok:false,error:'現在と同じ行事設定です。'};
+  const pending=s.month>EVENT[key].deadline;
+  if(pending)s.pending[key]=next;else s.events[key]=next;
+  return {ok:true,changed:true,desc:actionDescription(action)+(pending?'（翌年度から適用）':''),key,from:old,to:next,forNext:pending}
+ }
+ if(action.type==='special'){
+  if(action.key==='charter'&&s.year>=2&&!s.special.charter&&s.policies.civic===3&&s.mats.自治組織>=55){s.special.charter=true;return {ok:true,changed:true,desc:'青葉自治憲章を採択',special:'charter'}}
+  if(action.key==='mediation'&&s.year>=2&&s.special.charter&&!s.special.mediation&&s.policies.attendance>=2&&s.mats.自治組織>=65){s.special.mediation=true;return {ok:true,changed:true,desc:'校内紛争調停委員会を設置',special:'mediation'}}
+  if(action.key==='declaration'&&s.year>=2&&s.special.charter&&s.special.mediation&&!s.special.declared&&s.policies.civic===3&&s.policies.shop>=2&&s.mats.自治組織>=85&&s.stats.自治>=55){s.special.declared=true;return {ok:true,changed:true,desc:'青葉自治共和国の独立を宣言（法的地位は変わりません）',special:'declaration'}}
+  return {ok:false,error:'現在の学校では、この制度を採択できません。'};
+ }
+ return {ok:false,error:'改定の内容が不明です。'}
+}
+function availableSpecial(s){let opts=[];if(s.year>=2&&s.policies.civic===3&&s.mats.自治組織>=55&&!s.special.charter)opts.push({key:'charter',name:'青葉自治憲章の制定'});if(s.year>=2&&s.special.charter&&s.policies.attendance>=2&&s.mats.自治組織>=65&&!s.special.mediation)opts.push({key:'mediation',name:'校内紛争調停委員会の設置'});if(s.year>=2&&s.special.charter&&s.special.mediation&&s.policies.shop>=2&&s.mats.自治組織>=85&&s.stats.自治>=55&&!s.special.declared)opts.push({key:'declaration',name:'青葉自治共和国の独立宣言'});return opts}
+function getActivityGrowth(s,sy){const p=s.policies,e=s.events;
+ const g={受験:.35+(p.exams<=1?1:0)+(p.lessons>=1?1.2:0)+(p.lessons===3?1:0)-(p.exams===3&&p.lessons<2?1:0),
+ 運動:.5+(p.clubs===0?2.2:0)+(p.clubs===1?1:0)-(p.clubs===2?1.3:0)-(p.jobs>=2?1.2:0),
+ 芸術:.1+(p.uniform>=2?1.1:0)+(e.festival[0]>=1&&e.festival[1]>=1?1.2:0)+(p.clubs===3?.8:0),
+ 事業:-1.2+(p.shop>=1?2.1:0)+(p.shop>=2?1:0)+(p.jobs>=2?.9:0),
+ 探究:-.5+(p.lessons>=2?2.5:0)+(p.exams>=2?1.5:0)+(p.phone>=2?.6:0),
+ 自治組織:.1+(p.civic>=1?2:0)+(p.civic>=2?1.8:0)+(p.civic===3?.9:0),
+ 管理:.1+(p.attendance===0?1.3:0)+(p.clubs===0?1.2:0)+(p.uniform===0?.8:0)+(p.phone===0?1.2:0)};
+ for(const item of sy)for(const k of Object.keys(item.maturity))g[k]+=item.maturity[k];return g;
+}
+function eventResult(s,key){const [scale,op]=s.events[key];if(scale===-1)return {key,headline:`${EVENT[key].name}は開催されませんでした`,detail:'学校の行事方針に基づき、今年度は実施しませんでした。',level:'cancelled'};
+ const activity=key==='research'?'探究':key==='festival'||key==='chorus'?'芸術':'運動';
+ const m=s.mats[activity];const support=op===2&&s.mats.自治組織>=38?3:0;
+ const score=scale*5+m*.18+support;
+ const overload=s.teacher>=78?4:0;
+ if(score>=18+overload){if(['festival','sports','research'].includes(key))s.fame=CLAMP(s.fame+1.5+Math.min(2,(score-16)/8),-20,30);s.mats[activity]=CLAMP(s.mats[activity]+Math.min(4,1.5*Math.max(1,scale)));
+  return {key,headline:`${EVENT[key].name}が盛況に終わりました`,detail:activity==='探究'?'生徒の研究発表が外部からも注目されました。':activity==='芸術'?'生徒主体の展示や発表が来場者の関心を集めました。':'競技・部活動の成果が注目されました。',level:'success'};}
+ if(scale===2&&score<9+overload){s.fame=CLAMP(s.fame-1,-20,30);return {key,headline:`${EVENT[key].name}の大規模運営に課題`,detail:'準備の負担に対して運営体制が追いつかず、改善を求める声が出ています。',level:'strain'}}
+ return {key,headline:`${EVENT[key].name}が開催されました`,detail:'通常の学校行事として実施されました。',level:'normal'};
+}
+function newsFromReform(s,a,sy,changes,ev){let entries=[];
+ if(a&&a.changed){entries.push({type:'policy',source:a.key||a.special||'rule',headline:'校則の改定が承認されました',detail:a.desc})}
+ const syn=sy.filter(x=>!s.messages.includes(x.id));
+ if(syn.length){const pickOne=choose(s,syn);entries.push({type:'synergy',source:pickOne.id,headline:'校則の組み合わせに新しい動き',detail:pickOne.desc+'。'});s.messages.push(pickOne.id)}
+ for(const c of changes){entries.push({type:'development',source:c.key,headline:`${ASSET_MAP[c.key]}が発展`,detail:`「${c.from}」から「${c.to}」へ変化しました。`})}
+ for(const x of ev){if(EVENT[x.key].major||x.level!=='normal')entries.push({type:'event',source:x.key,headline:x.headline,detail:x.detail})}
+ if(s.teacher>=78)entries.push({type:'teacher',source:'teacher',headline:'職員会議で業務負担を懸念',detail:'学校改革の実施と通常業務の両立が課題になっています。'});
+ if(s.policies.jobs>=2&&s.policies.clubs>=2)entries.push({type:'opinion',source:'clubs',headline:'部活動の新入部員減少が話題に',detail:'「アルバイトと両立したかったけれど、練習の日程が合わなくなりました」（2年生）'});
+ if(s.mats.事業>=25)entries.push({type:'opinion',source:'shop',headline:'購買の生徒企画に新しい提案',detail:'「地域のお店と商品を作ってみたいです」（購買委員）'});
+ if(s.policies.exams===3&&s.policies.lessons<2)entries.push({type:'opinion',source:'exams',headline:'評価方法に疑問の声',detail:'「テストがなくなりましたが、進路指導はどうなるのでしょうか」（保護者）'});
+ if(s.special.declared)entries.push({type:'special',source:'republic',headline:'県教委、独立宣言を受領',detail:'県立青葉高校の法的な位置付けに変更はありません。'});
+ // Small situational reactions vary between schools, but do not override the rules-driven outcomes.
+ const incidentPool=[
+  {type:'opinion',source:'bulletin',headline:'生徒会への意見箱が更新されました',detail:'「良い面も不安な面もあります。これから学校がどうなるのか見ています」（2年生）'},
+  {type:'opinion',source:'parent',headline:'保護者会から近況連絡',detail:'「制度が変わる理由を、家庭にも分かるように伝えてほしいです」（保護者）'}
+ ];
+ if(s.policies.phone>=2)incidentPool.push({type:'opinion',source:'sns',headline:'校内SNSで校則改革が話題に',detail:'「校則って本当に変わるんだ。来月の生徒会も気になる」（1年生）'});
+ if(s.policies.lessons>=2)incidentPool.push({type:'opinion',source:'research',headline:'探究活動について新たな提案',detail:'「調べて終わりではなく、地域の人にも成果を聞いてもらいたいです」（研究グループ）'});
+ if(s.policies.civic>=2)incidentPool.push({type:'opinion',source:'civic',headline:'生徒委員会から自治制度の提案',detail:'「予算が使えるなら、決算も生徒に公開した方がいいと思います」（委員会）'});
+ if(s.mats.運動>=30)incidentPool.push({type:'opinion',source:'sports',headline:'運動部から活動報告',detail:'「練習への参加状況が変わったので、来年度の体制を考えています」（運動部主将）'});
+ if(s.policies.shop>=2)incidentPool.push({type:'opinion',source:'shop2',headline:'購買委員から売場改善の相談',detail:'「販売するだけでなく、売れた理由を分析してみたいです」（購買委員）'});
+ if(rng(s)<.32)entries.push(choose(s,incidentPool));
+
+ const unique=[];const seen=new Set();for(const e of entries){if(seen.has(e.headline))continue;seen.add(e.headline);unique.push(e)}
+ if(unique.length<2){const fallback=[{type:'opinion',source:'student',headline:'校内意見箱に投稿',detail:'「来月も学校がどう変わるか楽しみです」（1年生）'},{type:'opinion',source:'teacher',headline:'職員室から近況報告',detail:'「学校の様子を見ながら、必要なことを考えていきます」（担当教員）'}];unique.push(...fallback.slice(0,2-unique.length))}
+ return unique.slice(0,4)
+}
+function processMonth(s,action){if(s.stage!=='edit')return {ok:false,error:'現在は改定できません。'};
+ const start=JSON.parse(JSON.stringify({stats:s.stats,mats:s.mats,teacher:s.teacher,policies:s.policies,scopes:s.scopes}));
+ const applied=applyAction(s,action);if(!applied.ok)return applied;
+ const raw=[0,0,0,0,0];for(const k of keylist){const v=RULES[k].effects[s.policies[k]],base=nrm(k),factor=scopeFactor(s,k);for(let i=0;i<5;i++)raw[i]+=(v[i]-base[i])*factor}
+ const sy=synergize(s);for(const item of sy){for(let i=0;i<5;i++)raw[i]+=item.effect[i]}
+ let burdenEvent=0;for(const [scale,op] of Object.values(s.events)){if(scale===2)burdenEvent+=op<2?2:3;else if(scale===-1)burdenEvent-=1}
+ const civicHelp=s.policies.civic>=1?Math.max(0,(s.mats.自治組織-40)/11):0;
+ const teacherGoal=CLAMP(40+raw[4]+burdenEvent-civicHelp,25,95);s.teacher=CLAMP(s.teacher+.28*(teacherGoal-s.teacher));
+ const bonus=[(s.mats.芸術-10)*.035+(s.mats.自治組織-12)*.025,(s.mats.受験-18)*.07+(s.mats.探究-8)*.065,(s.mats.運動-20)*.05+s.mats.事業*.055+(s.mats.芸術-10)*.05,(s.mats.自治組織-12)*.06];
+ for(let i=0;i<4;i++){const k=STAT[i],target=CLAMP(DEFAULT_STATS[k]+softcap(raw[i])+bonus[i]-Math.max(0,s.teacher-65)*(i<3?.11:.045));s.stats[k]=CLAMP(s.stats[k]+.25*(target-s.stats[k]))}
+ const g=getActivityGrowth(s,sy),stress=Math.max(0,s.teacher-65)*.06,dev=[];
+ for(const key of ACT){const before=s.mats[key],v=g[key]* (key==='事業'&&s.scopes.shop===1?.75:1),speed=v>0?1-.72*Math.pow(before/100,1.3):1;s.mats[key]=CLAMP(before+(v-stress)*speed);const a=level(before),b=level(s.mats[key]);if(a!==b)dev.push({key,from:institutionName(key,a),to:institutionName(key,b),direction:b>a?'up':'down'})}
+ const eventUpdates=[];for(const key of Object.keys(EVENT)){if(EVENT[key].month===s.month)eventUpdates.push(eventResult(s,key))}
+ const merit=.12*(s.stats.生活-52)+.20*(s.stats.学び-50)+.15*(s.stats.課外-50)+.06*(s.stats.自治-30);
+ const attractiveness=CLAMP(50+merit+s.fame-Math.max(0,s.teacher-73)*.19);s.stats.人気=CLAMP(s.stats.人気+.10*(attractiveness-s.stats.人気));
+ s.friction=s.friction*.78+(applied.changed?1.2:0);
+ GROUPS.forEach((group,i)=>{s.grudge[i]*=.72;if(applied.changed&&action?.type==='rule'){const k=action.key,ideal=IDEAL[group][k],delta=(Math.abs(start.policies[k]-ideal)-Math.abs(s.policies[k]-ideal));s.grudge[i]+=CLAMP(delta,-2,2)}s.grudge[i]=CLAMP(s.grudge[i],-5,5)});
+ const entries=newsFromReform(s,applied,sy,dev,eventUpdates);
+ const statDelta=STAT.map(k=>({name:k,before:calc(start.stats[k]),after:calc(s.stats[k]),delta:calc(s.stats[k]-start.stats[k])}));
+ const rec={year:s.year,month:s.month,action:applied.desc,news:entries,stats:statDelta,teacher:calc(s.teacher),synergies:sy.map(x=>x.id),developments:dev,events:eventUpdates};
+ s.history.push(rec);s.reforms.push({year:s.year,month:s.month,action:applied.desc});s.lastReport=rec;
+ s.month++;if(s.month>=12)s.stage='year-end';else s.stage='report';
+ return {ok:true,record:rec}
+}
+function completeReport(s){if(s.stage!=='report')return false;s.stage='edit';return true}
+function election(s){if(s.stage!=='year-end')return null;if(s.year===3)return {final:true,graduation:true};
+ const supports=groupSupport(s);
+ const dissent=s.shares.map((v,i)=>v*(65-supports[i]));const opponent=dissent.indexOf(Math.max(...dissent));
+ const t=s.turnouts.map((v,i)=>CLAMP(v+.007*Math.abs(supports[i]-50)+(i===opponent?.10:0),.38,.89));
+ const challenger=range(s,0,8.2)+Math.max(0,s.teacher-65)*.27;const votes=supports.map((v,i)=>CLAMP(v-(i===opponent?4.5:1.4)-challenger,4,96));
+ const swing=range(s,-1.8,1.8);const turnoutTotal=s.shares.reduce((a,v,i)=>a+v*t[i],0);
+ const share=CLAMP(s.shares.reduce((a,v,i)=>a+v*t[i]*votes[i],0)/turnoutTotal+swing,0,100);
+ const split=rng(s)<(Math.max(...supports)-Math.min(...supports)>22?.25:.13);
+ const opponentTop=split?(100-share)*range(s,.54,.79):100-share;const other=split?100-share-opponentTop:0;
+ const won=share>=opponentTop&&share>=other;
+ const out={year:s.year,won,vote:calc(share),opponent:GROUPS[opponent],opponentTop:calc(opponentTop),other:calc(other),candidateCount:split?3:2,turnout:calc(turnoutTotal*100),supports:supports.map(calc),share:s.shares.slice()};
+ s.elections.push(out);return out;
+}
+function nextYear(s){if(s.stage!=='year-end'||s.year===3)return false;const result=s.elections.at(-1);if(!result||result.year!==s.year||!result.won)return false;
+ s.year++;s.month=0;s.stage='edit';s.lastReport=null;
+ Object.assign(s.events,s.pending);s.pending={};
+ const preferred=groupSupport(s).indexOf(Math.max(...groupSupport(s)));const newShares=s.shares.map((v,i)=>Math.max(.02,v+(i===preferred?.005:-.00125)));const total=newShares.reduce((a,b)=>a+b,0);s.shares=newShares.map(x=>x/total);return true
+}
+function finalIdentity(s){const mature=ACT.map(k=>({key:k,value:s.mats[k],level:level(s.mats[k])})).sort((a,b)=>b.value-a.value);
+ const tags=mature.filter(o=>o.level>=1).slice(0,4).map(o=>institutionName(o.key,o.level));
+ let lead=s.special.declared?'青葉自治共和国を宣言した学校':s.stats.学び>=64&&s.mats.受験>=55?'進学指導に特色のある学校':s.mats.芸術>=55?'文化活動に特色のある学校':s.mats.運動>=55?'部活動が盛んな学校':s.mats.事業>=55?'生徒事業が盛んな学校':s.stats.自治>=50?'自治活動に特色のある学校':'変化の途中にある学校';return {lead,tags,mature}
+}
+function compactWorld(s){return {version:s.version,seed:s.seed,year:s.year,month:s.month,stage:s.stage,stats:s.stats,teacher:s.teacher,mat:s.mats,policies:s.policies,scopes:s.scopes,events:s.events,pending:s.pending,history:s.history.length,elections:s.elections,special:s.special}}
+function checkInvariants(s){const reasons=[];if(s.month<0||s.month>12||s.year<1||s.year>3)reasons.push('period');if([...Object.values(s.stats),...Object.values(s.mats),s.teacher].some(v=>!Number.isFinite(v)||v<0||v>100))reasons.push('stat_range');if(Math.abs(s.shares.reduce((a,b)=>a+b,0)-1)>.0001)reasons.push('share_sum');if(s.history.length>(s.year*12))reasons.push('history_count');return reasons}
+
+const STORAGE='s7-school-alpha-v070';
+const $=(id)=>document.getElementById(id);
+const esc=(s)=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const num=(n)=>Math.round(n*10)/10;
+const displayStat={生活:'学校生活',学び:'学び',課外:'課外活動',自治:'生徒自治',人気:'人気度'};
+let s=null,tab='rule',rk='phone',ek='festival',lv=2,scope=0,scale=1,operator=1,sp='';
+function trySave(){try{localStorage.setItem(STORAGE,JSON.stringify(s))}catch(e){}}
+function tryLoad(){try{const x=JSON.parse(localStorage.getItem(STORAGE));if(x?.version===VERSION&&Array.isArray(x.history)&&x.stats&&x.policies&&x.events&&x.randomState!=null&&checkInvariants(x).length===0)return x}catch(e){}return null}
+function fresh(){s=newWorld((Date.now()^(Math.random()*0xffffffff))>>>0);s.stage='edit';tab='rule';rk='phone';setFromRule();trySave();render()}
+function setFromRule(){lv=s.policies[rk];scope=s.scopes[rk]}
+function setFromEvent(){const p=s.pending[ek]||s.events[ek];scale=p[0];operator=p[1]}
+function showDialog(html){$('dialog-inner').innerHTML=html;$('dialog').hidden=false;const btn=$('dialog-inner').querySelector('button');if(btn)btn.focus()}
+function closeDialog(){$('dialog').hidden=true}
+function help(){showDialog(`<h2 id="dialog-heading">青葉高校へようこそ</h2><p>あなたは1年生の生徒会長です。県立青葉高校では生徒自治の実証制度が始まりました。</p><ol><li>毎月1件、校則または行事規定を改定します。改定せずに次の月へ進んでも構いません。</li><li>規制を変えると、生徒の行動が変わり、複数の校則が組み合わさることで学校の特色が生まれます。</li><li>5つの学校指標を確認してください。生徒の支持はグループごとに異なります。</li><li>3月に選挙。再選すれば翌年度へ。最長3年の学校改革が可能です。</li></ol><p class="note strong">文化祭や体育祭も校則改定枠で変更できます。行事の準備期限を過ぎると翌年度からの適用です。学校の成果は自動的に発生します。</p><div class="dialog-actions"><button id="dialog-ok" class="primary">校務ポータルへ</button></div>`);$('dialog-ok').onclick=closeDialog}
+function meter(name,v,old=null){const diff=old===null?'':`<span class="delta ${v-old>0.04?'pos':v-old<-.04?'neg':''}">${v-old>0.04?'+':''}${num(v-old)}</span>`;return `<div class="meter"><span class="meter-name">${esc(displayStat[name]||name)}</span><div class="bar"><span class="${name==='人気'?'green':''}" style="width:${Math.max(0,Math.min(100,v))}%"></span></div><span class="meter-value">${Math.round(v)}</span></div>${old===null?'':`<div class="tiny" style="text-align:right;margin-top:-9px">前月比 ${diff}</div>`}`}
+function timeName(y,m){return `${2027+y-1+(m>=9?1:0)}年${((m+3)%12)+1}月`}
+function leftPane(){const current=s.year<=3&&s.month<12?timeName(s.year,s.month):`${2027+s.year-1}年度末`;const initial=s.year===1&&s.month===0&&s.history.length===0;
+ return `<section class="panel"><div class="pad"><div class="panel-head"><div><div class="section-label">県立青葉高校 / 第${s.year}期生徒会</div><div class="period">${esc(current)}</div></div><span class="pill">${s.stage==='edit'?'改定受付中':s.stage==='report'?'今月の報告':'年度末'}</span></div>
+ <div class="progress-row" aria-label="年度進行">${Array.from({length:12},(_,i)=>`<i class="${(s.stage==='year-end'||i<s.month)?'done':''}"></i>`).join('')}</div>
+ <div class="section-label">学校の状況 / 0〜100</div><div class="meter-grid">${STAT.map(k=>meter(k,s.stats[k])).join('')}</div>
+ <p class="note ${s.teacher>=75?'warn':''}">${s.teacher>=78?'教員から、改革の実務負担に関する強い懸念が出ています。':s.teacher>=65?'校務が忙しくなり、運営体制への不安が見え始めています。':s.stats.自治>=45?'生徒の自治活動が少しずつ学校に定着しています。':'校則の変化は、少し時間をかけて学校全体へ広がります。'}</p>
+ <div class="divider"></div>
+ <div class="panel-head"><h2>校内活動の状況</h2><span class="tiny">自動的に発展・衰退</span></div>
+ <div class="feature-grid">${ACT.map(k=>`<div class="feature"><b>${esc(institutionName(k,level(s.mats[k])))}</b><small>${esc(k)}／${Math.round(s.mats[k])}・100</small></div>`).join('')}</div>
+ <div class="divider"></div><div class="panel-head"><h2>これまでの改定</h2><span class="tiny">${s.history.length}か月分</span></div>
+ <div class="timeline">${s.reforms.length?s.reforms.slice().reverse().slice(0,10).map(r=>`<div class="item"><b>${r.year}年目・${MONTHS[r.month]}</b> ${esc(r.action)}</div>`).join(''):'<div class="empty">まだ改定履歴はありません。最初の校則を選んでください。</div>'}</div>
+ </div></section>`}
+function recommendations(){const items=[];if(s.month===0&&s.year===1){items.push(['phone','スマホ規則'],['clubs','部活動'],['civic','生徒自治'])}else if(s.policies.jobs>=2&&s.policies.shop<2){items.push(['shop','生徒事業'])}else if(s.policies.lessons>=2&&s.policies.exams<2){items.push(['exams','成績評価'])}else if(s.policies.civic>=1&&s.policies.shop<2){items.push(['shop','購買'])}else{items.push(['lessons','授業・自習'],['uniform','制服・服装'],['civic','自治制度'])};return `<div class="tiny">今月の関連議題（変更は自由に選べます）</div><div class="recommendations">${items.map(([k,l])=>`<button data-recommend="${k}" type="button">${l}</button>`).join('')}</div>`}
+function editor(){let options='';for(const [key,r] of Object.entries(RULES))options+=`<option value="${key}" ${rk===key?'selected':''}>${esc(r.name)}</option>`;
+ const r=RULES[rk];const ev=EVENT[ek];const pending=s.month>ev.deadline;const actual=s.pending[ek]||s.events[ek];
+ const special=availableSpecial(s);
+ let side=`<section class="panel"><div class="pad"><div class="panel-head"><h2>今月の校則改定</h2><span class="pill">残り1件</span></div><p class="subtitle">校則を1件変更するか、現行制度を維持できます。行事の設定も1件の改定として扱います。</p>${recommendations()}
+ <div class="tabs"><button type="button" class="tab ${tab==='rule'?'on':''}" id="tab-rule">校則を編集</button><button type="button" class="tab ${tab==='event'?'on':''}" id="tab-event">行事規定を編集</button></div>`;
+ if(tab==='rule'){
+ side+=`<div class="field"><label for="rule-type">改定分野</label><select id="rule-type">${options}</select></div>
+ <div class="field"><label>基本方針</label><div class="choice-set">${r.options.map((a,i)=>`<label class="choice"><input type="radio" name="rule-level" value="${i}" ${i===lv?'checked':''}/><span>${esc(a)}</span></label>`).join('')}</div></div>
+ <div class="field"><label>適用条件</label><div class="choice-set">${r.scopes.map((a,i)=>`<label class="choice"><input type="radio" name="rule-scope" value="${i}" ${i===scope?'checked':''}/><span>${esc(a)}</span></label>`).join('')}</div></div>
+ <div class="preview"><div class="section-label">改定案の条文</div><p>${esc(r.name)}について、${esc(r.options[lv])}とし、${esc(r.scopes[scope])}。${rk==='civic'?'権限の拡大には段階的な制度整備を要する。':''}</p></div>`;
+ if(rk==='civic'&&lv>s.policies.civic+1)side+=`<div class="note warn footer-note">生徒自治の権限は一段階ずつ拡大する必要があります。</div>`;
+ if(rk==='civic'&&lv===3&&s.mats.自治組織<25)side+=`<div class="note warn footer-note">裁量予算の編成権は自治組織が成熟してから利用できます。</div>`;
+ }else{
+ side+=`<div class="field"><label for="event-type">改定する行事</label><select id="event-type">${Object.entries(EVENT).map(([k,e])=>`<option value="${k}" ${ek===k?'selected':''}>${esc(e.name)}</option>`).join('')}</select></div>
+ <div class="field"><label>開催方針</label><div class="choice-set">${EVENT_SCALE.map((a,i)=>`<label class="choice"><input type="radio" name="event-scale" value="${i-1}" ${scale===i-1?'checked':''}/><span>${a}</span></label>`).join('')}</div></div>
+ ${scale===-1?'':`<div class="field"><label>運営方式</label><div class="choice-set">${EVENT_OP.map((a,i)=>`<label class="choice"><input type="radio" name="event-op" value="${i}" ${operator===i?'checked':''}/><span>${a}</span></label>`).join('')}</div></div>`}
+ <div class="preview"><div class="section-label">行事規定の改定案</div><p>${esc(ev.name)}を${esc(EVENT_SCALE[scale+1])}${scale<0?'':`、${esc(EVENT_OP[operator])}で運営`}する。</p></div>
+ ${pending?`<div class="note warn footer-note">${esc(ev.name)}の今年度の準備期限を過ぎています。この変更は翌年度から適用されます。${s.year===3?'（3年目のため、在任中の開催には影響しません）':''}</div>`:''}
+ <div class="tiny footer-note">現在有効：${esc(EVENT_SCALE[s.events[ek][0]+1])}。${s.pending[ek]?'翌年度の変更予約が登録されています。':''}</div>`
+ }
+ if(special.length){side+=`<div class="divider"></div><h2 style="font-size:15px">特別な自治議案</h2><div class="field"><label for="special-type">自治制度に関する提案</label><select id="special-type"><option value="">選択しない</option>${special.map(p=>`<option value="${p.key}">${esc(p.name)}</option>`).join('')}</select></div><p class="tiny">特別な議案も今月の改定1件として数えます。</p>`}
+ side+=`<div class="actions"><button class="primary full" id="enact" type="button">改定を確定して翌月へ</button><button class="full muted" id="skip" type="button">今月は改定しない</button></div></div></section>`;return side;
+}
+function report(){const rec=s.lastReport;return `<section class="panel"><div class="pad"><div class="panel-head"><h2>${rec.year}年目 ${MONTHS[rec.month]}｜月次報告</h2><span class="pill">改定完了</span></div><div class="note strong"><b>今月の判断</b><div>${esc(rec.action)}</div></div><div class="divider"></div><h2 style="font-size:16px">学校で起きたこと</h2>${rec.news.map((n,i)=>`<div class="news-item"><div class="news-source">${i===0?'学校からの通知':n.type==='opinion'?'生徒・教員の声':n.type==='teacher'?'職員会議':n.type==='event'?'学校行事':n.type==='synergy'?'校内ニュース':'学校の近況'}</div><h3>${esc(n.headline)}</h3><p>${esc(n.detail)}</p></div>`).join('')}
+ <div class="divider"></div><h2 style="font-size:16px">今月のパラメータ変化</h2><table class="data-table"><tbody>${rec.stats.map(p=>`<tr><td>${esc(displayStat[p.name]||p.name)}</td><td>${p.before} → ${p.after}</td><td class="delta ${p.delta>0?'pos':p.delta<0?'neg':''}">${p.delta>0?'+':''}${p.delta}</td></tr>`).join('')}</tbody></table><div class="actions"><button id="next-month" class="primary full">${s.month===12?'年度末へ進む':'次の月へ進む'}</button></div></div></section>`}
+function yearEnd(){const id=finalIdentity(s),ei=s.elections.find(e=>e.year===s.year);const final=s.year===3||ei&&!ei.won;const yearHistory=s.history.filter(x=>x.year===s.year);const notable=yearHistory.flatMap(x=>x.news.filter(n=>n.type==='development'||n.type==='event'&&n.level!=='normal')).slice(-5);
+ let html=`<section class="panel"><div class="pad"><div class="report-hero"><div class="section-label">県立青葉高校 ${2027+s.year-1}年度・学校案内</div><div class="hero-text">${esc(id.lead)}</div><div class="hero-sub">校則改革を経て、青葉高校は新しい姿になりました。</div></div>
+ <h2 style="font-size:17px">この年度の学校の特色</h2><div class="feature-grid">${(id.tags.length?id.tags:['特色の形成はこれから']).map(t=>`<div class="feature"><b>${esc(t)}</b></div>`).join('')}</div>
+ <div class="divider"></div><h2 style="font-size:17px">学校のパラメータ</h2><table class="data-table"><tbody>${STAT.map(k=>`<tr><td>${esc(displayStat[k]||k)}</td><td>${Math.round(s.stats[k])} / 100</td></tr>`).join('')}</tbody></table>
+ <p class="tiny">教員からの意見：${s.teacher>=75?'行事と制度改革の負担が大きく、運営体制の見直しが求められています。':s.teacher>=60?'改革は進みましたが、職員の業務量には注意が必要です。':'通常業務と改革を両立できています。'}</p>
+ <div class="divider"></div><h2 style="font-size:17px">学校の歩み</h2>${notable.length?notable.map(n=>`<div class="news-item"><h3>${esc(n.headline)}</h3><p>${esc(n.detail)}</p></div>`).join(''):'<p class="tiny">大きな発展はまだありませんが、校則の積み重ねが学校の姿を変えています。</p>'}
+ <div class="divider"></div><h2 style="font-size:17px">生徒会選挙</h2>`;
+ if(s.year===3){html+=`<div class="note strong"><b>会長任期満了・卒業</b><p>あなたは青葉高校を卒業します。次の生徒会が、この学校の未来を引き継ぎます。</p></div>`}
+ else if(!ei){html+=`<p>翌年度の生徒会長を決める選挙が行われます。各生徒集団の評価や対立候補の公約が結果を左右します。</p><button id="count-votes" class="primary full">生徒会長選挙を開票する</button>`}
+ else{html+=`<div class="stat-pair"><div><span class="tiny">現職会長の得票率</span><strong>${ei.vote}%</strong></div><div><span class="tiny">有効投票率</span><strong>${ei.turnout}%</strong></div></div><div class="election-bar"><span style="width:${ei.vote}%"></span><span class="other" style="width:${ei.opponentTop}%"></span>${ei.candidateCount===3?`<span class="last" style="width:${ei.other}%"></span>`:''}</div><p class="tiny">現職 ${ei.vote}% ／ 主な対立候補 ${ei.opponentTop}%${ei.candidateCount===3?` ／ 第2対立候補 ${ei.other}%`:''}</p><p><span class="stamp ${ei.won?'':'fail'}">${ei.won?'再選':'落選'}</span></p><p class="subtitle">${ei.won?'学校改革は翌年度へ続きます。':`「${esc(ei.opponent)}」の支持を集めた対立候補が現職を上回りました。これまでの改革は学校に残ります。`}</p>
+ <div class="tiny">主な対立軸：${esc(ei.opponent)}／候補者${ei.candidateCount}人</div>
+ <div class="actions">${ei.won?`<button id="next-year" class="primary full">${s.year+1}年目へ進む</button>`:''}<button id="replay" class="full muted">別の青葉高校で遊ぶ</button></div>`}
+ if(s.year===3){html+=`<div class="actions"><button id="replay" class="primary full">別の青葉高校で遊ぶ</button></div>`}
+ return html+`</div></section>`;
+}
+function render(){if(!s)return;document.title=`${s.stage==='year-end'?'年度末｜':''}校則を改定してください。｜S7`;let rhs=s.stage==='edit'?editor():s.stage==='report'?report():yearEnd();$('root').innerHTML=`<div class="dashboard">${leftPane()}${rhs}</div>`;bind();trySave()}
+function bind(){const r=$('root');r.querySelectorAll('[data-recommend]').forEach(b=>b.onclick=()=>{tab='rule';rk=b.dataset.recommend;setFromRule();render()});
+ if(s.stage==='edit'){
+ $('tab-rule').onclick=()=>{sp='';tab='rule';render()};$('tab-event').onclick=()=>{sp='';tab='event';render()};
+ if(tab==='rule'){$('rule-type').onchange=e=>{rk=e.target.value;setFromRule();render()};document.querySelectorAll('[name=rule-level]').forEach(el=>el.onchange=e=>{lv=+e.target.value;render()});document.querySelectorAll('[name=rule-scope]').forEach(el=>el.onchange=e=>{scope=+e.target.value;render()})}
+ else{$('event-type').onchange=e=>{ek=e.target.value;setFromEvent();render()};document.querySelectorAll('[name=event-scale]').forEach(el=>el.onchange=e=>{scale=+e.target.value;render()});document.querySelectorAll('[name=event-op]').forEach(el=>el.onchange=e=>{operator=+e.target.value;render()})}
+ const special=$('special-type');if(special)special.onchange=e=>{sp=e.target.value};
+ $('enact').onclick=()=>{const action=sp?{type:'special',key:sp}:tab==='rule'?{type:'rule',key:rk,level:lv,scope}:{type:'event',key:ek,scale,operator};const ans=processMonth(s,action);if(!ans.ok){showDialog(`<h2 id="dialog-heading">改定できませんでした</h2><p>${esc(ans.error)}</p><div class="dialog-actions"><button id="dialog-ok" class="primary">戻る</button></div>`);$('dialog-ok').onclick=closeDialog;return}sp='';render()};
+ $('skip').onclick=()=>{const ans=processMonth(s,null);if(ans.ok)render()};
+ }else if(s.stage==='report'){$('next-month').onclick=()=>{completeReport(s);render()}}
+ else{if($('count-votes'))$('count-votes').onclick=()=>{election(s);render()};if($('next-year'))$('next-year').onclick=()=>{nextYear(s);rk='phone';setFromRule();render()};if($('replay'))$('replay').onclick=confirmReset}
+}
+function confirmReset(){showDialog(`<h2 id="dialog-heading">新しい学校を始めますか？</h2><p>現在のプレイ記録が消去され、新たな生徒構成の青葉高校で始めます。</p><div class="dialog-actions"><button id="cancel-reset">キャンセル</button><button id="confirm-reset" class="primary">新しく始める</button></div>`);$('cancel-reset').onclick=closeDialog;$('confirm-reset').onclick=()=>{closeDialog();fresh()}}
+$('help').onclick=help;$('new').onclick=confirmReset;$('dialog').onclick=e=>{if(e.target===$('dialog'))closeDialog()};document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('dialog').hidden)closeDialog()});
+s=tryLoad();if(!s){fresh();help()}else {setFromRule();render()}
+
+</script>
+</body>
+</html>
