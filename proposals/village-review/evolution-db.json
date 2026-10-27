@@ -298,8 +298,8 @@
         "economy": -2,
         "oddity": -1
       },
-      "imageId": "facility:market:tourist:2",
-      "imageRoute": "tourist",
+      "imageId": "facility:market:community:2",
+      "imageRoute": "community",
       "stability": "low"
     },
     {
@@ -322,8 +322,8 @@
         "economy": 2,
         "oddity": 1
       },
-      "imageId": "facility:market:community:2",
-      "imageRoute": "community",
+      "imageId": "facility:market:tourist:2",
+      "imageRoute": "tourist",
       "stability": "high"
     },
     {
@@ -466,8 +466,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:school:education:2",
-      "imageRoute": "education",
+      "imageId": "facility:school:culture:2",
+      "imageRoute": "culture",
       "stability": "high"
     },
     {
@@ -610,8 +610,8 @@
         "economy": 0,
         "oddity": 2
       },
-      "imageId": "facility:shrine:sanctuary:2",
-      "imageRoute": "sanctuary",
+      "imageId": "facility:shrine:mystery:2",
+      "imageRoute": "mystery",
       "stability": "high"
     },
     {
@@ -850,8 +850,8 @@
         "economy": 2,
         "oddity": 1
       },
-      "imageId": "facility:office:digital:2",
-      "imageRoute": "digital",
+      "imageId": "facility:office:policy:2",
+      "imageRoute": "policy",
       "stability": "high"
     },
     {
@@ -898,8 +898,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:office:digital:2",
-      "imageRoute": "digital",
+      "imageId": "facility:office:policy:2",
+      "imageRoute": "policy",
       "stability": "high"
     },
     {
@@ -1066,8 +1066,8 @@
         "economy": -2,
         "oddity": -1
       },
-      "imageId": "facility:shop:specialty:2",
-      "imageRoute": "specialty",
+      "imageId": "facility:shop:daily:2",
+      "imageRoute": "daily",
       "stability": "low"
     },
     {
@@ -1090,8 +1090,8 @@
         "economy": 2,
         "oddity": 1
       },
-      "imageId": "facility:shop:daily:2",
-      "imageRoute": "daily",
+      "imageId": "facility:shop:specialty:2",
+      "imageRoute": "specialty",
       "stability": "high"
     },
     {
@@ -1186,8 +1186,8 @@
         "economy": 2,
         "oddity": 1
       },
-      "imageId": "facility:shop:specialty:2",
-      "imageRoute": "specialty",
+      "imageId": "facility:shop:daily:2",
+      "imageRoute": "daily",
       "stability": "high"
     },
     {
@@ -1474,8 +1474,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:farm:brand:2",
-      "imageRoute": "brand",
+      "imageId": "facility:farm:agritourism:2",
+      "imageRoute": "agritourism",
       "stability": "high"
     },
     {
@@ -1858,8 +1858,8 @@
         "economy": 0,
         "oddity": 2
       },
-      "imageId": "facility:museum:history:2",
-      "imageRoute": "history",
+      "imageId": "facility:museum:mystery:2",
+      "imageRoute": "mystery",
       "stability": "high"
     },
     {
@@ -1906,8 +1906,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:museum:mystery:2",
-      "imageRoute": "mystery",
+      "imageId": "facility:museum:history:2",
+      "imageRoute": "history",
       "stability": "high"
     },
     {
@@ -2290,8 +2290,8 @@
         "economy": 1,
         "oddity": 0
       },
-      "imageId": "facility:robot:research:2",
-      "imageRoute": "research",
+      "imageId": "facility:robot:coexist:2",
+      "imageRoute": "coexist",
       "stability": "high"
     },
     {
@@ -4105,8 +4105,8 @@
         "economy": -4,
         "oddity": -2
       },
-      "imageId": "facility:market:tourist:3",
-      "imageRoute": "tourist",
+      "imageId": "facility:market:community:3",
+      "imageRoute": "community",
       "continuity": "combination",
       "tags": [
         "価格",
@@ -4134,8 +4134,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:market:tourist:3",
-      "imageRoute": "tourist",
+      "imageId": "facility:market:community:3",
+      "imageRoute": "community",
       "continuity": "combination",
       "tags": [
         "価格",
@@ -4163,8 +4163,8 @@
         "economy": -4,
         "oddity": -2
       },
-      "imageId": "facility:market:tourist:3",
-      "imageRoute": "tourist",
+      "imageId": "facility:market:community:3",
+      "imageRoute": "community",
       "continuity": "combination",
       "tags": [
         "価格",
@@ -4192,8 +4192,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:market:tourist:3",
-      "imageRoute": "tourist",
+      "imageId": "facility:market:community:3",
+      "imageRoute": "community",
       "continuity": "combination",
       "tags": [
         "価格",
@@ -4221,8 +4221,8 @@
         "economy": -4,
         "oddity": -2
       },
-      "imageId": "facility:market:tourist:3",
-      "imageRoute": "tourist",
+      "imageId": "facility:market:community:3",
+      "imageRoute": "community",
       "continuity": "deepening",
       "tags": [
         "価格",
@@ -4250,8 +4250,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:market:community:3",
-      "imageRoute": "community",
+      "imageId": "facility:market:tourist:3",
+      "imageRoute": "tourist",
       "continuity": "reversal",
       "tags": [
         "価格",
@@ -4279,8 +4279,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:market:community:3",
-      "imageRoute": "community",
+      "imageId": "facility:market:tourist:3",
+      "imageRoute": "tourist",
       "continuity": "combination",
       "tags": [
         "価格",
@@ -4308,8 +4308,8 @@
         "economy": 4,
         "oddity": 2
       },
-      "imageId": "facility:market:community:3",
-      "imageRoute": "community",
+      "imageId": "facility:market:tourist:3",
+      "imageRoute": "tourist",
       "continuity": "combination",
       "tags": [
         "価格",
@@ -4337,8 +4337,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:market:community:3",
-      "imageRoute": "community",
+      "imageId": "facility:market:tourist:3",
+      "imageRoute": "tourist",
       "continuity": "combination",
       "tags": [
         "価格",
@@ -4366,8 +4366,8 @@
         "economy": 4,
         "oddity": 2
       },
-      "imageId": "facility:market:community:3",
-      "imageRoute": "community",
+      "imageId": "facility:market:tourist:3",
+      "imageRoute": "tourist",
       "continuity": "combination",
       "tags": [
         "価格",
@@ -4395,8 +4395,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:market:tourist:3",
-      "imageRoute": "tourist",
+      "imageId": "facility:market:community:3",
+      "imageRoute": "community",
       "continuity": "reversal",
       "tags": [
         "価格",
@@ -4424,8 +4424,8 @@
         "economy": 4,
         "oddity": 2
       },
-      "imageId": "facility:market:community:3",
-      "imageRoute": "community",
+      "imageId": "facility:market:tourist:3",
+      "imageRoute": "tourist",
       "continuity": "deepening",
       "tags": [
         "価格",
@@ -5294,8 +5294,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:school:education:3",
-      "imageRoute": "education",
+      "imageId": "facility:school:culture:3",
+      "imageRoute": "culture",
       "continuity": "reversal",
       "tags": [
         "地域行事",
@@ -5323,8 +5323,8 @@
         "economy": -1,
         "oddity": 0
       },
-      "imageId": "facility:school:education:3",
-      "imageRoute": "education",
+      "imageId": "facility:school:culture:3",
+      "imageRoute": "culture",
       "continuity": "combination",
       "tags": [
         "地域行事",
@@ -5352,8 +5352,8 @@
         "economy": 1,
         "oddity": 0
       },
-      "imageId": "facility:school:education:3",
-      "imageRoute": "education",
+      "imageId": "facility:school:culture:3",
+      "imageRoute": "culture",
       "continuity": "combination",
       "tags": [
         "地域行事",
@@ -5381,8 +5381,8 @@
         "economy": -1,
         "oddity": 0
       },
-      "imageId": "facility:school:education:3",
-      "imageRoute": "education",
+      "imageId": "facility:school:culture:3",
+      "imageRoute": "culture",
       "continuity": "combination",
       "tags": [
         "地域行事",
@@ -5410,8 +5410,8 @@
         "economy": 1,
         "oddity": 0
       },
-      "imageId": "facility:school:education:3",
-      "imageRoute": "education",
+      "imageId": "facility:school:culture:3",
+      "imageRoute": "culture",
       "continuity": "combination",
       "tags": [
         "地域行事",
@@ -5468,8 +5468,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:school:education:3",
-      "imageRoute": "education",
+      "imageId": "facility:school:culture:3",
+      "imageRoute": "culture",
       "continuity": "deepening",
       "tags": [
         "地域行事",
@@ -6338,8 +6338,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:shrine:sanctuary:3",
-      "imageRoute": "sanctuary",
+      "imageId": "facility:shrine:mystery:3",
+      "imageRoute": "mystery",
       "continuity": "reversal",
       "tags": [
         "不思議な雰囲気",
@@ -6367,8 +6367,8 @@
         "economy": 0,
         "oddity": 2
       },
-      "imageId": "facility:shrine:sanctuary:3",
-      "imageRoute": "sanctuary",
+      "imageId": "facility:shrine:mystery:3",
+      "imageRoute": "mystery",
       "continuity": "combination",
       "tags": [
         "不思議な雰囲気",
@@ -6396,8 +6396,8 @@
         "economy": 0,
         "oddity": 2
       },
-      "imageId": "facility:shrine:sanctuary:3",
-      "imageRoute": "sanctuary",
+      "imageId": "facility:shrine:mystery:3",
+      "imageRoute": "mystery",
       "continuity": "combination",
       "tags": [
         "不思議な雰囲気",
@@ -6425,8 +6425,8 @@
         "economy": 0,
         "oddity": 2
       },
-      "imageId": "facility:shrine:sanctuary:3",
-      "imageRoute": "sanctuary",
+      "imageId": "facility:shrine:mystery:3",
+      "imageRoute": "mystery",
       "continuity": "combination",
       "tags": [
         "不思議な雰囲気",
@@ -6454,8 +6454,8 @@
         "economy": 0,
         "oddity": 2
       },
-      "imageId": "facility:shrine:sanctuary:3",
-      "imageRoute": "sanctuary",
+      "imageId": "facility:shrine:mystery:3",
+      "imageRoute": "mystery",
       "continuity": "combination",
       "tags": [
         "不思議な雰囲気",
@@ -6512,8 +6512,8 @@
         "economy": 0,
         "oddity": 4
       },
-      "imageId": "facility:shrine:sanctuary:3",
-      "imageRoute": "sanctuary",
+      "imageId": "facility:shrine:mystery:3",
+      "imageRoute": "mystery",
       "continuity": "deepening",
       "tags": [
         "不思議な雰囲気",
@@ -8020,8 +8020,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:office:digital:3",
-      "imageRoute": "digital",
+      "imageId": "facility:office:policy:3",
+      "imageRoute": "policy",
       "continuity": "reversal",
       "tags": [
         "地域振興",
@@ -8107,8 +8107,8 @@
         "economy": 2,
         "oddity": 0
       },
-      "imageId": "facility:office:digital:3",
-      "imageRoute": "digital",
+      "imageId": "facility:office:policy:3",
+      "imageRoute": "policy",
       "continuity": "combination",
       "tags": [
         "地域振興",
@@ -8136,8 +8136,8 @@
         "economy": 2,
         "oddity": 2
       },
-      "imageId": "facility:office:digital:3",
-      "imageRoute": "digital",
+      "imageId": "facility:office:policy:3",
+      "imageRoute": "policy",
       "continuity": "combination",
       "tags": [
         "地域振興",
@@ -8194,8 +8194,8 @@
         "economy": 4,
         "oddity": 2
       },
-      "imageId": "facility:office:digital:3",
-      "imageRoute": "digital",
+      "imageId": "facility:office:policy:3",
+      "imageRoute": "policy",
       "continuity": "deepening",
       "tags": [
         "地域振興",
@@ -8223,8 +8223,8 @@
         "economy": 2,
         "oddity": 1
       },
-      "imageId": "facility:office:digital:3",
-      "imageRoute": "digital",
+      "imageId": "facility:office:policy:3",
+      "imageRoute": "policy",
       "continuity": "combination",
       "tags": [
         "地域振興",
@@ -8252,8 +8252,8 @@
         "economy": 2,
         "oddity": 1
       },
-      "imageId": "facility:office:digital:3",
-      "imageRoute": "digital",
+      "imageId": "facility:office:policy:3",
+      "imageRoute": "policy",
       "continuity": "combination",
       "tags": [
         "地域振興",
@@ -8426,8 +8426,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:office:digital:3",
-      "imageRoute": "digital",
+      "imageId": "facility:office:policy:3",
+      "imageRoute": "policy",
       "continuity": "reversal",
       "tags": [
         "村の決まり",
@@ -8455,8 +8455,8 @@
         "economy": 0,
         "oddity": -1
       },
-      "imageId": "facility:office:digital:3",
-      "imageRoute": "digital",
+      "imageId": "facility:office:policy:3",
+      "imageRoute": "policy",
       "continuity": "combination",
       "tags": [
         "村の決まり",
@@ -8484,8 +8484,8 @@
         "economy": 0,
         "oddity": 1
       },
-      "imageId": "facility:office:digital:3",
-      "imageRoute": "digital",
+      "imageId": "facility:office:policy:3",
+      "imageRoute": "policy",
       "continuity": "combination",
       "tags": [
         "村の決まり",
@@ -8513,8 +8513,8 @@
         "economy": -2,
         "oddity": -1
       },
-      "imageId": "facility:office:digital:3",
-      "imageRoute": "digital",
+      "imageId": "facility:office:policy:3",
+      "imageRoute": "policy",
       "continuity": "combination",
       "tags": [
         "村の決まり",
@@ -8542,8 +8542,8 @@
         "economy": 2,
         "oddity": 1
       },
-      "imageId": "facility:office:digital:3",
-      "imageRoute": "digital",
+      "imageId": "facility:office:policy:3",
+      "imageRoute": "policy",
       "continuity": "combination",
       "tags": [
         "村の決まり",
@@ -8600,8 +8600,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:office:digital:3",
-      "imageRoute": "digital",
+      "imageId": "facility:office:policy:3",
+      "imageRoute": "policy",
       "continuity": "deepening",
       "tags": [
         "村の決まり",
@@ -9673,8 +9673,8 @@
         "economy": -4,
         "oddity": -2
       },
-      "imageId": "facility:shop:specialty:3",
-      "imageRoute": "specialty",
+      "imageId": "facility:shop:daily:3",
+      "imageRoute": "daily",
       "continuity": "deepening",
       "tags": [
         "価格",
@@ -9702,8 +9702,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:shop:daily:3",
-      "imageRoute": "daily",
+      "imageId": "facility:shop:specialty:3",
+      "imageRoute": "specialty",
       "continuity": "reversal",
       "tags": [
         "価格",
@@ -9731,8 +9731,8 @@
         "economy": -3,
         "oddity": -1
       },
-      "imageId": "facility:shop:specialty:3",
-      "imageRoute": "specialty",
+      "imageId": "facility:shop:daily:3",
+      "imageRoute": "daily",
       "continuity": "combination",
       "tags": [
         "価格",
@@ -9760,8 +9760,8 @@
         "economy": -1,
         "oddity": -1
       },
-      "imageId": "facility:shop:specialty:3",
-      "imageRoute": "specialty",
+      "imageId": "facility:shop:daily:3",
+      "imageRoute": "daily",
       "continuity": "combination",
       "tags": [
         "価格",
@@ -9789,8 +9789,8 @@
         "economy": -4,
         "oddity": -2
       },
-      "imageId": "facility:shop:specialty:3",
-      "imageRoute": "specialty",
+      "imageId": "facility:shop:daily:3",
+      "imageRoute": "daily",
       "continuity": "combination",
       "tags": [
         "価格",
@@ -9818,8 +9818,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:shop:specialty:3",
-      "imageRoute": "specialty",
+      "imageId": "facility:shop:daily:3",
+      "imageRoute": "daily",
       "continuity": "combination",
       "tags": [
         "価格",
@@ -9847,8 +9847,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:shop:specialty:3",
-      "imageRoute": "specialty",
+      "imageId": "facility:shop:daily:3",
+      "imageRoute": "daily",
       "continuity": "reversal",
       "tags": [
         "価格",
@@ -9876,8 +9876,8 @@
         "economy": 4,
         "oddity": 2
       },
-      "imageId": "facility:shop:daily:3",
-      "imageRoute": "daily",
+      "imageId": "facility:shop:specialty:3",
+      "imageRoute": "specialty",
       "continuity": "deepening",
       "tags": [
         "価格",
@@ -9905,8 +9905,8 @@
         "economy": 1,
         "oddity": 1
       },
-      "imageId": "facility:shop:daily:3",
-      "imageRoute": "daily",
+      "imageId": "facility:shop:specialty:3",
+      "imageRoute": "specialty",
       "continuity": "combination",
       "tags": [
         "価格",
@@ -9934,8 +9934,8 @@
         "economy": 3,
         "oddity": 1
       },
-      "imageId": "facility:shop:daily:3",
-      "imageRoute": "daily",
+      "imageId": "facility:shop:specialty:3",
+      "imageRoute": "specialty",
       "continuity": "combination",
       "tags": [
         "価格",
@@ -9963,8 +9963,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:shop:daily:3",
-      "imageRoute": "daily",
+      "imageId": "facility:shop:specialty:3",
+      "imageRoute": "specialty",
       "continuity": "combination",
       "tags": [
         "価格",
@@ -9992,8 +9992,8 @@
         "economy": 4,
         "oddity": 2
       },
-      "imageId": "facility:shop:daily:3",
-      "imageRoute": "daily",
+      "imageId": "facility:shop:specialty:3",
+      "imageRoute": "specialty",
       "continuity": "combination",
       "tags": [
         "価格",
@@ -10514,8 +10514,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:shop:specialty:3",
-      "imageRoute": "specialty",
+      "imageId": "facility:shop:daily:3",
+      "imageRoute": "daily",
       "continuity": "reversal",
       "tags": [
         "品揃え",
@@ -10543,8 +10543,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:shop:specialty:3",
-      "imageRoute": "specialty",
+      "imageId": "facility:shop:daily:3",
+      "imageRoute": "daily",
       "continuity": "combination",
       "tags": [
         "品揃え",
@@ -10572,8 +10572,8 @@
         "economy": 4,
         "oddity": 2
       },
-      "imageId": "facility:shop:specialty:3",
-      "imageRoute": "specialty",
+      "imageId": "facility:shop:daily:3",
+      "imageRoute": "daily",
       "continuity": "combination",
       "tags": [
         "品揃え",
@@ -10601,8 +10601,8 @@
         "economy": 1,
         "oddity": 1
       },
-      "imageId": "facility:shop:specialty:3",
-      "imageRoute": "specialty",
+      "imageId": "facility:shop:daily:3",
+      "imageRoute": "daily",
       "continuity": "combination",
       "tags": [
         "品揃え",
@@ -10630,8 +10630,8 @@
         "economy": 3,
         "oddity": 1
       },
-      "imageId": "facility:shop:specialty:3",
-      "imageRoute": "specialty",
+      "imageId": "facility:shop:daily:3",
+      "imageRoute": "daily",
       "continuity": "combination",
       "tags": [
         "品揃え",
@@ -10688,8 +10688,8 @@
         "economy": 4,
         "oddity": 2
       },
-      "imageId": "facility:shop:specialty:3",
-      "imageRoute": "specialty",
+      "imageId": "facility:shop:daily:3",
+      "imageRoute": "daily",
       "continuity": "deepening",
       "tags": [
         "品揃え",
@@ -12602,8 +12602,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:farm:brand:3",
-      "imageRoute": "brand",
+      "imageId": "facility:farm:agritourism:3",
+      "imageRoute": "agritourism",
       "continuity": "reversal",
       "tags": [
         "景色",
@@ -12631,8 +12631,8 @@
         "economy": -2,
         "oddity": -1
       },
-      "imageId": "facility:farm:brand:3",
-      "imageRoute": "brand",
+      "imageId": "facility:farm:agritourism:3",
+      "imageRoute": "agritourism",
       "continuity": "combination",
       "tags": [
         "景色",
@@ -12660,8 +12660,8 @@
         "economy": 2,
         "oddity": 1
       },
-      "imageId": "facility:farm:brand:3",
-      "imageRoute": "brand",
+      "imageId": "facility:farm:agritourism:3",
+      "imageRoute": "agritourism",
       "continuity": "combination",
       "tags": [
         "景色",
@@ -12689,8 +12689,8 @@
         "economy": 0,
         "oddity": -1
       },
-      "imageId": "facility:farm:brand:3",
-      "imageRoute": "brand",
+      "imageId": "facility:farm:agritourism:3",
+      "imageRoute": "agritourism",
       "continuity": "combination",
       "tags": [
         "景色",
@@ -12718,8 +12718,8 @@
         "economy": 0,
         "oddity": 1
       },
-      "imageId": "facility:farm:brand:3",
-      "imageRoute": "brand",
+      "imageId": "facility:farm:agritourism:3",
+      "imageRoute": "agritourism",
       "continuity": "combination",
       "tags": [
         "景色",
@@ -12776,8 +12776,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:farm:brand:3",
-      "imageRoute": "brand",
+      "imageId": "facility:farm:agritourism:3",
+      "imageRoute": "agritourism",
       "continuity": "deepening",
       "tags": [
         "景色",
@@ -15328,8 +15328,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:museum:history:3",
-      "imageRoute": "history",
+      "imageId": "facility:museum:mystery:3",
+      "imageRoute": "mystery",
       "continuity": "reversal",
       "tags": [
         "不思議な資料",
@@ -15415,8 +15415,8 @@
         "economy": -1,
         "oddity": 2
       },
-      "imageId": "facility:museum:history:3",
-      "imageRoute": "history",
+      "imageId": "facility:museum:mystery:3",
+      "imageRoute": "mystery",
       "continuity": "combination",
       "tags": [
         "不思議な資料",
@@ -15444,8 +15444,8 @@
         "economy": 1,
         "oddity": 2
       },
-      "imageId": "facility:museum:history:3",
-      "imageRoute": "history",
+      "imageId": "facility:museum:mystery:3",
+      "imageRoute": "mystery",
       "continuity": "combination",
       "tags": [
         "不思議な資料",
@@ -15502,8 +15502,8 @@
         "economy": 0,
         "oddity": 4
       },
-      "imageId": "facility:museum:history:3",
-      "imageRoute": "history",
+      "imageId": "facility:museum:mystery:3",
+      "imageRoute": "mystery",
       "continuity": "deepening",
       "tags": [
         "不思議な資料",
@@ -15531,8 +15531,8 @@
         "economy": 0,
         "oddity": 2
       },
-      "imageId": "facility:museum:history:3",
-      "imageRoute": "history",
+      "imageId": "facility:museum:mystery:3",
+      "imageRoute": "mystery",
       "continuity": "combination",
       "tags": [
         "不思議な資料",
@@ -15560,8 +15560,8 @@
         "economy": 0,
         "oddity": 2
       },
-      "imageId": "facility:museum:history:3",
-      "imageRoute": "history",
+      "imageId": "facility:museum:mystery:3",
+      "imageRoute": "mystery",
       "continuity": "combination",
       "tags": [
         "不思議な資料",
@@ -15734,8 +15734,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:museum:mystery:3",
-      "imageRoute": "mystery",
+      "imageId": "facility:museum:history:3",
+      "imageRoute": "history",
       "continuity": "reversal",
       "tags": [
         "静けさ",
@@ -15763,8 +15763,8 @@
         "economy": -1,
         "oddity": 0
       },
-      "imageId": "facility:museum:mystery:3",
-      "imageRoute": "mystery",
+      "imageId": "facility:museum:history:3",
+      "imageRoute": "history",
       "continuity": "combination",
       "tags": [
         "静けさ",
@@ -15792,8 +15792,8 @@
         "economy": 1,
         "oddity": 0
       },
-      "imageId": "facility:museum:mystery:3",
-      "imageRoute": "mystery",
+      "imageId": "facility:museum:history:3",
+      "imageRoute": "history",
       "continuity": "combination",
       "tags": [
         "静けさ",
@@ -15821,8 +15821,8 @@
         "economy": 0,
         "oddity": -2
       },
-      "imageId": "facility:museum:mystery:3",
-      "imageRoute": "mystery",
+      "imageId": "facility:museum:history:3",
+      "imageRoute": "history",
       "continuity": "combination",
       "tags": [
         "静けさ",
@@ -15850,8 +15850,8 @@
         "economy": 0,
         "oddity": 2
       },
-      "imageId": "facility:museum:mystery:3",
-      "imageRoute": "mystery",
+      "imageId": "facility:museum:history:3",
+      "imageRoute": "history",
       "continuity": "combination",
       "tags": [
         "静けさ",
@@ -15908,8 +15908,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:museum:mystery:3",
-      "imageRoute": "mystery",
+      "imageId": "facility:museum:history:3",
+      "imageRoute": "history",
       "continuity": "deepening",
       "tags": [
         "静けさ",
@@ -18460,8 +18460,8 @@
         "economy": 0,
         "oddity": 0
       },
-      "imageId": "facility:robot:research:3",
-      "imageRoute": "research",
+      "imageId": "facility:robot:coexist:3",
+      "imageRoute": "coexist",
       "continuity": "reversal",
       "tags": [
         "職員",
@@ -18547,8 +18547,8 @@
         "economy": 1,
         "oddity": -1
       },
-      "imageId": "facility:robot:research:3",
-      "imageRoute": "research",
+      "imageId": "facility:robot:coexist:3",
+      "imageRoute": "coexist",
       "continuity": "combination",
       "tags": [
         "職員",
@@ -18576,8 +18576,8 @@
         "economy": 1,
         "oddity": 1
       },
-      "imageId": "facility:robot:research:3",
-      "imageRoute": "research",
+      "imageId": "facility:robot:coexist:3",
+      "imageRoute": "coexist",
       "continuity": "combination",
       "tags": [
         "職員",
@@ -18634,8 +18634,8 @@
         "economy": 2,
         "oddity": 0
       },
-      "imageId": "facility:robot:research:3",
-      "imageRoute": "research",
+      "imageId": "facility:robot:coexist:3",
+      "imageRoute": "coexist",
       "continuity": "deepening",
       "tags": [
         "職員",
@@ -18663,8 +18663,8 @@
         "economy": 1,
         "oddity": -1
       },
-      "imageId": "facility:robot:research:3",
-      "imageRoute": "research",
+      "imageId": "facility:robot:coexist:3",
+      "imageRoute": "coexist",
       "continuity": "combination",
       "tags": [
         "職員",
@@ -18692,8 +18692,8 @@
         "economy": 1,
         "oddity": 1
       },
-      "imageId": "facility:robot:research:3",
-      "imageRoute": "research",
+      "imageId": "facility:robot:coexist:3",
+      "imageRoute": "coexist",
       "continuity": "combination",
       "tags": [
         "職員",
