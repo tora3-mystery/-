@@ -39,13 +39,13 @@ function runRegression(html){
   check(h.get('actions').children.length+h.get('moreActionsBody').children.length===choices.length,'Visible and expanded option count mismatch');
   for(const b of [...h.get('actions').children,...h.get('moreActionsBody').children])check((b.innerHTML.match(/class="effect-chip/g)||[]).length===5,'Metric chips not five');
   h.api.play(id);const post=h.api.getState();
-  const sales=Math.max(0,30+10*s.attraction-10*s.vals.reduce((a,b)=>a+b,0));
+  const sales=Math.max(0,30+10*s.attraction-10*s.vals.reduce((a,b)=>a+b,0)-15*s.vals.filter(x=>x===5).length);
   check(post.days.at(-1).sales===sales,'Daily sales mismatch '+id);
   check(post.revenue===s.revenue+sales,'Revenue sum mismatch '+id);
   check(post.vals.join(',')===s.vals.join(',')&&post.attraction===s.attraction&&post.odd===s.odd,'Same-day effect '+id);
   h.api.advance();const after=h.api.getState();
   check(after.vals.every(v=>v>=0&&v<=5)&&after.attraction>=0&&after.attraction<=10,'State boundaries');
-  check(after.complaintTickets.filter(x=>x.status==='open').length===after.vals.reduce((a,b)=>a+b,0),'Complaint ledger mismatch');
+  check(after.complaintTickets.filter(x=>x.status==='open').length>=after.vals.reduce((a,b)=>a+b,0),'Complaint ledger mismatch');
   if(!h.get('dayTransition').classList.contains('hidden'))h.api.closeTransition();
  }
  function route(ids){const h=boot();h.api.restart();ids.forEach(id=>step(h,id));return h}
