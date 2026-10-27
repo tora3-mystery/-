@@ -5,7 +5,7 @@
   const SAVE_KEY = 's6-case-a-v03-save';
   const AUTO_KEY = 's6-case-a-v03-auto';
   const META_KEY = 's6-case-a-v03-meta';
-  const BUILD_AT = '2026-10-27 11:33 JST';
+  const BUILD_AT = '2026-10-27 15:16 JST';
   const DAYS = [
     ['2026-04-06','4月6日 月曜'],['2026-04-07','4月7日 火曜'],
     ['2026-04-08','4月8日 水曜'],['2026-04-09','4月9日 木曜'],
@@ -33,7 +33,7 @@
   const makeState=()=>({
     schema:3,caseId:'A',phase:'title',returnPhase:null,day:0,eventId:null,eventHistory:[],
     visitedGroups:[],groupActions:{},groupResults:{},groupReunions:{},activeGroup:null,groupResult:'',reunionText:'',preEventState:{},
-    person:{},contactSince:{},replyLog:{},nightUsed:{},nightDone:{},nightMessage:'',lunchSeenDates:[],lunchPreState:{},lunchTalked:{},lunchMessage:'',
+    person:{},contactSince:{},replyLog:{},musicMemory:[],nightUsed:{},nightDone:{},nightMessage:'',lunchSeenDates:[],lunchPreState:{},lunchTalked:{},lunchMessage:'',
     evidence:{},oldNew:false,bridge:false,bridgeAvailable:false,
     discoveredFacts:[],viewedPosts:[],platform:'Photogram',
     campChoice:null,safety:false,risky:false,rescued:false,
@@ -98,7 +98,7 @@
         '<p class="subtle">前に話した'+esc(familiar.slice(0,2).map(pid=>pmap[pid].name).join('・'))+
         (familiar.length>2?'たち':'')+'も参加予定らしい。</p>':'';
       return '<article class="card event-card"><p class="eyebrow">'+esc(ORG[e.org_id])+'</p><h3>'+esc(e.title)+'</h3><div class="meta">'+esc(e.start)+'–'+esc(e.end)+' / '+esc(e.location)+'</div><p>'+esc(D.orgs.find(o=>o.org_id===e.org_id).focus)+'。会場にいる人を見てから、話す二組を選べます。</p>'+reunionBadge+btn('この新歓に参加','event','data-eid="'+esc(e.event_id)+'"','')+'</article>';}).join('');
-    return '<p class="eyebrow">DAY '+(S.day+1)+' / 5</p><h2>'+esc(label)+'：どこへ行こう？</h2><p class="lead">犯人を探すためではなく、今日は音楽を楽しむために選ぶ。</p>'+(lunchCount?'<div class="card soft"><h3>昼休みの学内</h3><p>今日は'+lunchCount+'人の姿がある。顔を見て、気になる人と話せる。夜の調査や新歓の選択には影響しない。</p>'+btn('昼休みに立ち寄る','lunch','','secondary')+'</div>':'')+'<div class="grid2">'+cards+'</div><div class="btnrow">'+btn('学内の公開掲示を読む','board','','secondary')+btn('今日は新歓に参加しない','skip-day','','ghost')+'</div>';
+    return '<p class="eyebrow">DAY '+(S.day+1)+' / 5</p><h2>'+esc(label)+'：どこへ行こう？</h2><p class="lead">気になる音がする場所へ。何をするかは、着いてから決めればいい。</p>'+(lunchCount?'<div class="card soft"><h3>昼休みの学内</h3><p>今日は'+lunchCount+'人の姿がある。顔を見て、気になる人と話せる。夜の調査や新歓の選択には影響しない。</p>'+btn('昼休みに立ち寄る','lunch','','secondary')+'</div>':'')+'<div class="grid2">'+cards+'</div><div class="btnrow">'+btn('学内の公開掲示を読む','board','','secondary')+btn('今日は新歓に参加しない','skip-day','','ghost')+'</div>';
   };
   const lunch=()=>{
     const date=currentDate(),list=D.recurring.filter(x=>x.date===date),talked=S.lunchTalked[date]||[],prior=S.lunchPreState[date]||{};
@@ -200,9 +200,10 @@
       return '<div class="document"><strong>'+esc(label)+'</strong><span class="subtle">'+esc(when)+' / '+(done?'取得済み：再読無料':'新規調査：1回')+'</span><div class="btnrow">'+btn(done?'読み返す':'調査する','research','data-key="'+id+'"',done?'ghost':'secondary')+'</div></div>';
     }).join('');
   };
+  const musicTonight=()=>{const memories=(S.musicMemory||[]).filter(x=>x.date===currentDate());return memories.length?'<div class="card soft"><h3>今日、耳に残ったこと</h3>'+memories.map(x=>'<p>'+esc(x.note)+'</p>').join('')+'</div>':'';};
   const night=()=>{
     const date=currentDate();
-    return '<p class="eyebrow">EVENING / '+esc(date)+'</p><h2>夜の時間</h2><p class="lead">今日は誰と話しただろう。調査は残り '+(3-nightCount())+' 回。調べずに眠ることもできる。</p>'+tineFeed()+'<div class="progress"><span style="width:'+(nightCount()/3*100)+'%"></span></div>'+(S.nightMessage?note(esc(S.nightMessage)):'')+'<h3>手がかりを探す</h3>'+researchItems()+'<h3>SNSを読む</h3><div class="grid3">'+['TINE','Photogram','Zitter'].map(p=>btn(p,platformNeedsAction(p)?'browse-sns':'open-sns','data-platform="'+p+'"',platformNeedsAction(p)?'secondary':'ghost')).join('')+'</div><p class="subtle">新しい投稿の確認は1回。既読投稿の再読は無料。鍵投稿は承認条件を満たさなければ開きません。</p><div class="btnrow">'+btn(S.day===4?'合宿の選択へ':'翌日へ','end-night','','')+'</div>';
+    return '<p class="eyebrow">EVENING / '+esc(date)+'</p><h2>夜の時間</h2><p class="lead">今日は誰と話しただろう。調査は残り '+(3-nightCount())+' 回。調べずに眠ることもできる。</p>'+musicTonight()+tineFeed()+'<div class="progress"><span style="width:'+(nightCount()/3*100)+'%"></span></div>'+(S.nightMessage?note(esc(S.nightMessage)):'')+'<h3>気になることを調べる</h3>'+researchItems()+'<h3>SNSを読む</h3><div class="grid3">'+['TINE','Photogram','Zitter'].map(p=>btn(p,platformNeedsAction(p)?'browse-sns':'open-sns','data-platform="'+p+'"',platformNeedsAction(p)?'secondary':'ghost')).join('')+'</div><p class="subtle">新しい投稿の確認は1回。既読投稿の再読は無料。鍵投稿は承認条件を満たさなければ開きません。</p><div class="btnrow">'+btn(S.day===4?'合宿の選択へ':'翌日へ','end-night','','')+'</div>';
   };
   const sns=()=>{
     const platform=S.platform, date=currentDate();
@@ -279,7 +280,8 @@
     const repliedIds=[...new Set(Object.values(S.replyLog||{}))].filter(id=>S.person[id]?.introduced);
     const social=repliedIds.length?'TINEで'+repliedIds.slice(0,2).map(id=>pmap[id].name).join('や')+'に返信した日もあった。':metPeers.length?'同期と話した時間も、大学生活の一部になった。':'まだ名前の分からない顔も、いくつか記憶に残った。';
     const weekend=S.campChoice==='辞退'?'合宿への参加は見送った。':S.campChoice?'週末は'+S.campChoice+'の班を選んだ。':'';
-    return [activity,social,weekend].filter(Boolean).join(' ');
+    const music=(S.musicMemory||[]).slice(-1)[0];const musicLine=music?'あの週、'+music.note:'';
+    return [activity,social,musicLine,weekend].filter(Boolean).join(' ');
   };
   const ending=()=>{
     const texts={
@@ -414,7 +416,7 @@
       S.activeGroup=gid;S.phase='group';saveAndRender();return;
     }
     if(act==='back-venue'){S.phase='venue';saveAndRender();return}
-    if(act==='listen'){const a=D.actions.find(a=>a.group_id===S.activeGroup);S.groupActions[S.activeGroup]='listen';S.groupResult=a.listen_text;S.groupResults??={};S.groupResults[S.activeGroup]=S.groupResult;if(a.trigger_fact_id)discoverFact(a.trigger_fact_id);saveAndRender();return}
+    if(act==='listen'){const a=D.actions.find(a=>a.group_id===S.activeGroup);S.groupActions[S.activeGroup]='listen';S.groupResult=a.listen_text;S.groupResults??={};S.groupResults[S.activeGroup]=S.groupResult;S.musicMemory??=[];if(a.music_note&&!S.musicMemory.some(m=>m.group_id===S.activeGroup))S.musicMemory.push({group_id:S.activeGroup,date:currentDate(),note:a.music_note});if(a.trigger_fact_id)discoverFact(a.trigger_fact_id);saveAndRender();return}
     if(act==='ask-menu'){S.phase='question';saveAndRender();return}
     if(act==='contact-menu'){S.phase='contact';saveAndRender();return}
     if(act==='back-group'){S.phase='group';saveAndRender();return}
