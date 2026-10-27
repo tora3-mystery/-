@@ -352,7 +352,7 @@ function handle(act,id){
     reply=Dialogue.contact(id,S.group,S);kind='連絡先';
     if(reply.result==='accept'){
       if(!S.contacts.includes(id))S.contacts.push(id);
-      reply.text+=' TINEの表示名は「'+(reply.accountName||'アカウント')+'」。';
+      reply.text+=' TINEは「'+(reply.accountName||'アカウント')+'」で登録してるよ。';
       S.affinity[id]=Math.min(8,(S.affinity[id]||0)+1);
     }else if(reply.result==='pending'){
       if(!S.pendingContacts.includes(id))S.pendingContacts.push(id);
