@@ -24,13 +24,15 @@ const stage=(state,id)=>{
  const days=new Set(state.relationshipDays?.[id]||[]);
  if(score>=5&&days.size>=3)return 'easygoing';
  if(score>=3&&days.size>=2)return 'familiar';
- return score>=1?'acquainted':'new';
+ return score>0||state.interacted?.includes(id)||state.spokenTo?.includes(id)||state.personalIntroduced?.[id]?'acquainted':'new';
 };
 const level=(state,id)=>stage(state,id);
-const relationshipLabel=(state,id)=>({
- new:'まだ話したことがない',acquainted:'話したことがある',
- familiar:'少し話しやすくなった',easygoing:'気軽に話せる'
-})[stage(state,id)];
+const relationshipLabel=(state,id)=>{
+ if(stage(state,id)==='new')return 'まだ話しかけたことがない';
+ if(!state.interacted?.includes(id)&&!state.spokenTo?.includes(id)&&state.personalIntroduced?.[id])
+  return '向こうから自己紹介された';
+ return ({acquainted:'話したことがある',familiar:'少し話しやすくなった',easygoing:'気軽に話せる'})[stage(state,id)];
+};
 // Conversational responsiveness is a stable character property, not a moral or safety rating.
 // A guarded character can warm up more through a thoughtful question than through small talk.
 const responseGain=(id,action)=>{
@@ -116,6 +118,32 @@ const snsMessage=(id,state)=>{
  return {text:opening+' '+continuity,stage:close,accountName:Social.accounts.find(a=>a.person_id===id&&a.platform==='TINE')?.display_name||'アカウント'};
 };
 // Scene-specific dialogue must override per (group, speaker, order), because a single member may speak twice.
+// Names are explicit in the beta DB. A pair's address is stable by grade, shared organization and tone.
+// This is a conversational clue, not automatic notebook verification.
+const addressFor=(speakerId,targetId)=>{
+ const a=people[speakerId],b=people[targetId],ca=P.people[speakerId],cb=P.people[targetId];
+ if(!a||!b||!ca||!cb)return '';
+ const names=cb.nameParts||{family:b.name.slice(0,2),given:b.name.slice(2)};
+ if(Number(a.year)<Number(b.year))return names.family+'先輩';
+ const sameYear=a.year===b.year;
+ const shared=a.primary_org===b.primary_org||a.primary_org===b.dual_org||
+  (a.dual_org&&a.dual_org===b.primary_org);
+ const relaxed=sameYear&&shared&&ca.addressStyle==='casual'&&cb.addressStyle!=='formal';
+ if(relaxed)return names.nickname||names.given;
+ return names.family+(sameYear?'さん':'さん');
+};
+const selfIntroduction=(id,state,source='direct')=>{
+ if(state.personalIntroduced?.[id])return '';
+ const c=P.people[id],p=people[id],roleType=Number(p.year)===1?'newcomer':'member';
+ const base=roleType==='newcomer'?'同じ新入生の':'';
+ if(source==='bystander'){
+  if(c.initiative>=3&&c.warmth>=3)return 'あ、名乗ってなかったね。'+base+p.name+'です。よろしく。';
+  return 'そういえば、'+p.name+'です。よろしく。';
+ }
+ if(c.voice==='reserved'||c.voice==='precise')return '改めて、'+p.name+'です。';
+ if(c.voice==='energetic'||c.voice==='friendly')return 'あ、'+p.name+'です。よろしく！';
+ return 'そういえばまだ直接話してなかったね。'+base+p.name+'です。';
+};
 const sceneLine=line=>P.sceneOverrides[line.group_id+'|'+line.speaker_id+'|'+line.order]||
  P.sceneOverrides[line.group_id+'|'+line.speaker_id]||line.text;
 const performanceGroups=new Set(['E01-C','E03-A','E04-A','E04-B','E04-C','E04-D','E05-C','E06-B','E06-C','E06-D','E07-C','E09-A','E09-B','E10-A','E11-A','E11-B','E11-C','E11-D','E12-C']);
@@ -123,24 +151,41 @@ const sceneMode=gid=>performanceGroups.has(gid)?'performance':'conversation';
 const thirdParty=(targetId,gid,state,action)=>{
  const peers=D.members.filter(m=>m.group_id===gid&&m.person_id!==targetId).map(m=>m.person_id);
  if(!peers.length)return null;
- const history=(state.groupLog?.[gid]||[]).filter(e=>e.type!=='相づち').length;
- const seed=Number(state.presentationSeed)||0;
- const index=Math.abs(seed+Number(targetId.slice(1))*11+gid.charCodeAt(gid.length-1)*13+history*19)%peers.length;
- const id=peers[index],year=Number(people[id].year),targetYear=Number(people[targetId].year);
- let text;
+ const history=state.groupLog?.[gid]?.length||0;
+ const key=gid+'|'+targetId+'|'+history+'|'+action;
+ let seed=Number(state.presentationSeed)>>>0;
+ for(const char of key)seed=Math.imul(seed^char.charCodeAt(0),16777619)>>>0;
+ const id=peers[seed%peers.length],trait=P.people[id];
+ // Personality controls whether the bystander joins at all. A quiet person often just listens.
+ const probability=Math.max(0.10,Math.min(.85,
+   .15+trait.initiative*.105+trait.warmth*.045+trait.expressiveness*.045-trait.caution*.08));
+ const roll=(((Math.imul(seed^0x9e3779b9,2246822519)>>>0)%1000)/1000);
+ if(roll>=probability)return null;
+ const yr=Number(people[id].year),targetYear=Number(people[targetId].year);
+ const nickname=addressFor(id,targetId);
+ const introEligible=!state.personalIntroduced?.[id]&&trait.initiative>=3&&trait.warmth>=3;
+ const introRoll=(((Math.imul(seed^0x2b992ddf,3266489917)>>>0)%1000)/1000);
+ const spontaneousIntro=introEligible&&introRoll<Math.min(.6,.13+trait.expressiveness*.1);
+ let words;
  if(sceneMode(gid)==='performance'){
-   text=year===1&&targetYear>1?'さっきの音、すごく分かりやすかったです。':
-     year===1?'今のところ、もう一回聴いてみたいね。':'今の一小節、もう一度合わせてみようか。';
- }else if(year===1&&targetYear>1){
-   text=action==='question'?'先輩、自分もそこが気になってました。':'そうなんですね。自分も聞いてみたかったです。';
- }else if(year===1){
-   text='あ、それ自分も気になってた。';
+  words=yr===1&&targetYear>1?'今のところ、自分ももう一回聴いてみたいです。':
+   yr===1?'今のところ、もう一回聴きたいね。':
+   action==='question'?'今の演奏の話なら、私も少し聞いてみたいな。':'今の一小節、もう一度合わせてみようか。';
+ }else if(yr===1&&targetYear>1){
+  words=action==='question'?nickname+'、自分もそこが気になってました。':
+   'あ、自分も今の話、聞いてみたかったです。';
+ }else if(yr===1){
+  words=action==='question'?'それ、私も気になってた。':'あ、同じこと考えてた。';
  }else if(targetYear===1){
-   text='最初は分からないこともあるよね。聞いてくれて大丈夫だよ。';
- }else text='それ、さっきも少し話してたね。';
- return {pid:id,text,type:'相づち'};
+  words=action==='question'?'最初は分からないよね。聞いてくれて大丈夫だよ。':
+   'そうそう、無理に今日決めなくていいよ。';
+ }else words=action==='question'?nickname+'、そこは私も確認しておきたい。':
+  'なるほど。それは少し気になるね。';
+ const nameLine=spontaneousIntro?selfIntroduction(id,state,'bystander'):'';
+ return {pid:id,text:[words,nameLine].filter(Boolean).join(' '),type:'輪の反応',
+   selfIntroduced:spontaneousIntro};
 };
 const chatAudit=()=>({firstYearLines:D.lines.filter(x=>people[x.speaker_id]?.year==='1').length,
  overridden:Object.keys(P.sceneOverrides).length,allScenes:D.lines.length,profiles:Object.keys(P.people).length});
-window.S6_BETA_DIALOGUE={talk,answer,contact,sceneLine,sceneMode,thirdParty,level,relationshipLabel,responseGain,snsMessage,role,chatAudit};
+window.S6_BETA_DIALOGUE={talk,answer,contact,sceneLine,sceneMode,thirdParty,selfIntroduction,addressFor,level,relationshipLabel,responseGain,snsMessage,role,chatAudit};
 })();
