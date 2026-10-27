@@ -99,11 +99,16 @@ check('SNS TINE/Photogram/Zitter plus board all available same night',()=>{
  const s=newPlayer();s.click('skip');for(const p of ['TINE','Photogram','Zitter']){s.click('night-sns',p);assert.equal(s.state.phase,'sns');s.click('back-night')}
  s.click('night-board');assert.equal(s.state.phase,'board');assert.equal(s.state.viewedBoard['2026-04-06'],true);assert.equal(s.state.viewedPlatforms['2026-04-06'].length,3);
 });
-check('public profile face matches anonymously only when previously seen',()=>{
+check('SNS face matching records a tentative user guess without confirming true identity',()=>{
  const s=newPlayer();s.click('skip');s.click('next-day');s.click('skip');s.click('next-day');visit(s,'E05','E05-A');s.click('back-venue');s.click('finish-venue');
  s.click('night-sns','Photogram');s.click('account-match','S02');assert.equal(s.state.phase,'sns-match');
- s.click('match-social-face','P013');assert.equal(s.state.socialLinked.P001,undefined);
- s.click('match-social-face','P001');assert.ok(s.state.socialLinked.P001.includes('Photogram'));
+ s.click('match-social-face','P013');
+ assert.equal(s.state.phase,'sns');assert.equal(s.state.socialCandidates.S02,'P013');
+ assert.match(s.html,/推測を記録した/);assert.doesNotMatch(s.html,/別人だった|一致した/);
+ s.click('account-match','S02');s.click('match-social-face','P001');
+ assert.equal(s.state.socialCandidates.S02,'P001');assert.equal(s.state.socialLinked.P013.length,0);
+ assert.ok(s.state.socialLinked.P001.includes('Photogram'));
+ assert.doesNotMatch(s.html,/正解|不正解|一致した/);
  const anon=newPlayer();for(let i=0;i<3;i++){anon.click('skip');anon.click('next-day')}
  anon.click('skip');anon.click('night-sns','Zitter');assert.match(anon.html,/匿名アカウント/);assert.doesNotMatch(anon.html,/p004.webp/);
 });
@@ -322,5 +327,18 @@ check('locked Photogram author is not visible without contact but becomes access
  assert.ok(yes.state.contacts.includes('P003'));
  yes.click('back-venue');yes.click('finish-venue');yes.click('night-sns','Photogram');
  assert.ok(yes.html.includes(a.handle));
+});
+check('public SNS portrait can be compared even when the real author has never been met',()=>{
+ const s=newPlayer();visit(s,'E01','E01-A');s.click('back-venue');s.click('finish-venue');s.click('night-sns','Photogram');
+ assert.ok(!s.state.seen.includes('P001'));
+ assert.match(s.html,/data-id="S02"/);
+ s.click('account-match','S02');assert.equal(s.state.phase,'sns-match');
+ assert.match(s.html,/正誤は自動判定されません/);
+});
+check('direct face-match actions cannot bypass locked or future post privacy',()=>{
+ const s=newPlayer();visit(s,'E01','E01-A');s.click('back-venue');s.click('finish-venue');s.click('night-sns','Photogram');
+ s.click('account-match','S01');assert.equal(s.state.phase,'sns');
+ s.click('account-match','S22');assert.equal(s.state.phase,'sns');
+ s.click('account-match','S02');assert.equal(s.state.phase,'sns-match');
 });
 console.log(JSON.stringify({passed:total,failed:failures}));if(failures)process.exitCode=1;
