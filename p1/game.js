@@ -1,5 +1,5 @@
 'use strict';
-/* P1 v0.9.6-beta. All content is fictitious. No network calls beyond story.json. */
+/* P1 v0.9.7-beta. All content is fictitious. No network calls beyond story.json. */
 const APP=document.getElementById('app');
 const SAVE='short-ui-games-p1-v090';
 const DAYS=['10月12日（月）','10月13日（火）','10月14日（水）','10月15日（木）','10月16日（金）','10月17日（土）','10月18日（日）'];
@@ -298,12 +298,75 @@ function intersectingConsequences(){
  if(!H&&!T&&!E)return '医療・観光・自然のどれも、関心だけでは解決できませんでした。問題を知ることと、実行の条件がそろうことには距離があります。';
  return '事業の成否は一つずつ違います。ある報道が新たな選択を生み、別の問題では十分な準備が整わないまま、一年が過ぎました。';
 }
+
+const REPORTER_ENDNOTES=[
+ {article:'I01',person:'S',domain:'H',route:'public',line:'「あの予算書を見た日には、病院が残るとは思いませんでした。数字が伝わって、ようやく議論になったんです。」'},
+ {article:'I02',person:'S',domain:'T',route:'public',line:'「許可が進んだ、という記事と、開業した、という記事。両方を自分で書くことになるとは思いませんでした。」'},
+ {article:'I03',person:'S',domain:'E',route:'public',line:'「保護区域の線は、地図の上だけの話じゃない。県が守ると決めて、初めて残るんですね。」'},
+ {article:'I05',person:'K',domain:'H',route:'private',line:'「出資の条件を一つずつ確認した記事でした。『検討』で終わらずに済んだことには、少し驚いています。」'},
+ {article:'I06',person:'K',domain:'T',route:'public',line:'「投資家は最後まで数字を見ていました。県の支援も条件の一つだったと、今なら分かります。」'},
+ {article:'I06',person:'K',domain:'T',route:'private_eco',line:'「自然を避けた案で採算が合うのか。あの取材で聞いた『それなら』という一言を覚えています。」'},
+ {article:'I09',person:'M',domain:'H',route:'private',line:'「病院が残っても、夜勤や人手の問題が終わるわけじゃありません。でも、現場の人たちに選択肢が増えました。」'},
+ {article:'I14',person:'O',domain:'T',route:'private_eco',line:'「地元の人も会社の人も、最初は同じ地図を見ていなかったんです。話を聞いて回ってよかった。」'},
+ {article:'I15',person:'O',domain:'E',route:'private',line:'「湿原は『守りたい』だけでは守れない。お金と手間を引き受ける人たちの声を、載せられてよかったです。」'},
+ {article:'I19',person:'B',domain:'E',route:'public',line:'「図面の違いは不正の証拠ではありませんでした。それでも確かめたからこそ、議論を続けられたんです。」'},
+ {article:'I19',person:'B',domain:'E',route:'private',line:'「古い地図を調べたのは私ですが、湿原を守ると決めたのは住民たちです。そこは書き分けたいですね。」'}
+];
+const REPORTER_UNFINISHED={
+ S:'「資料の数字は残ります。けれど、その数字を読んだ人が何を選ぶかまでは、私には決められませんでした。」',
+ K:'「出資の話を記事にしただけでは、投資にはなりません。条件を確認する仕事は、まだ続いています。」',
+ M:'「私たちの取材が終わっても、現場の一日は終わりません。また話を聞きに行きます。」',
+ O:'「賛成と反対の間に、暮らしがあります。まだ同じテーブルにつけていない人たちがいます。」',
+ B:'「おかしいと思ったことを確かめました。それでも、分からないまま残ったことはあります。」'
+};
+// The epilogue is grounded only in articles actually printed in a major slot.
+// Never draw a reporter from an unprinted or solely dispatched investigation.
+function reporterEndingNote(){
+ if(!s.history?.length||!s.outcomes||Object.keys(s.outcomes).length!==3)return null;
+ const appearances=[];
+ for(const issue of s.history){
+  for(let slot=0;slot<Math.min(2,issue.published.length);slot++){
+   const id=issue.published[slot],i=Number(id.slice(1)),art=articles[id];
+   if(!/^I\d\d$/.test(id)||i<1||i>20||!art)continue;
+   const person=REPORTERS[Math.floor((i-1)/4)][0];
+   const rule=REPORTER_ENDNOTES.find(r=>r.article===id&&r.person===person&&s.outcomes[r.domain]===r.route);
+   appearances.push({id,person,domain:topic(art),day:issue.day,weight:slot===0?3:2,headline:issue.headlines?.[slot]||art.headline,rule});
+  }
+ }
+ const byPerson=Object.fromEntries(REPORTERS.map(([id])=>[id,appearances.filter(x=>x.person===id)]));
+ const successes=appearances.filter(x=>x.rule).map(x=>({
+  ...x,score:x.weight+byPerson[x.person].reduce((sum,item)=>sum+item.weight,0)*.3+x.day*.02
+ }));
+ successes.sort((a,b)=>b.score-a.score||b.day-a.day||a.person.localeCompare(b.person));
+ let picked=successes[0],line=picked?.rule?.line;
+ if(!picked){
+  const unfinished=[];
+  for(const [person,items] of Object.entries(byPerson)){
+   const failed=items.filter(x=>s.outcomes[x.domain]==='failed');
+   if(failed.length<2||new Set(failed.map(x=>x.day)).size<2)continue;
+   const score=failed.reduce((v,x)=>v+x.weight,0);
+   if(score>=5)unfinished.push({person,score,...failed[failed.length-1]});
+  }
+  unfinished.sort((a,b)=>b.score-a.score||b.day-a.day||a.person.localeCompare(b.person));
+  picked=unfinished[0];
+  if(picked)line=REPORTER_UNFINISHED[picked.person];
+ }
+ if(!picked)return null;
+ return {person:picked.person,name:REPORTERS.find(([id])=>id===picked.person)[1],
+   skill:REPORTERS.find(([id])=>id===picked.person)[2],
+   day:picked.day,headline:picked.headline,line};
+}
+function reporterEndingHtml(){
+ const note=reporterEndingNote();
+ if(!note)return '';
+ return `<section class="panel reporter-ending"><p class="kicker">東雲日報・記者の取材ノート</p><h3>${esc(note.name)} <span class="small muted">／${esc(note.skill)}</span></h3><blockquote>${esc(note.line)}</blockquote><p class="small muted">編集期間中の記事「${esc(note.headline)}」を振り返って。</p></section>`;
+}
 function ending(){const complete=[...'HTE'].filter(k=>s.outcomes[k]!=='failed').length;const h=s.history;
  const majors={H:0,T:0,E:0,G:0};
- for(const issue of h){for(const id of issue.published.slice(0,2)){const k=section(articles[id]);if(k in majors)majors[k]++}}const trace=h.map(x=>'<li><b>'+x.day+'日目</b>　一面トップ「'+esc(x.headlines?.[0]||articles[x.published[0]]?.headline||'')+'」／準トップ「'+esc(x.headlines?.[1]||articles[x.published[1]]?.headline||'')+'」</li>').join('');const unreleased=arrUnique(h.flatMap(x=>x.unprinted)).filter(id=>!s.publishedIds.includes(id)).sort((a,b)=>{const rank=id=>(s.outcomes[topic(articles[id])]==='failed'?4:0)+(EVIDENCE[id]&&!s.evidence.includes(EVIDENCE[id])?3:0)+(id.startsWith('I')?1:0);return rank(b)-rank(a)}).slice(0,3).map(id=>({headline:articles[id]?.headline,domain:topic(articles[id])})).filter(x=>x.headline);APP.innerHTML=`<div class="stage">${header('因果観察室｜2027年10月','一年後の東雲県','7日目の朝刊発行を終え、1週間の報道履歴から未来を確定しました。')}<section class="paper"><div class="masthead"><h2>東雲日報</h2><time>2027年10月<br>特別紙面</time></div><p class="kicker">未来復元 ${complete}／3条件</p><h3 class="headline" style="font-size:1.36rem">${complete===3?'県の未来、医療・観光・自然が共存':complete===0?'変化は届かず、県の課題が深刻化':`変わった県の未来、残された課題は${3-complete}つ`}</h3>${'HTE'.split('').map(k=>`<div class="front"><small>${esc(LABEL[k])}</small><h3 style="font-size:1rem">${s.outcomes[k]==='failed'?'未達成':'達成'}｜${esc(RES_NAMES[k][s.outcomes[k]])}</h3><p class="brief">${esc(outcomeText(k))}</p><p class="brief">${esc(outcomeReason(k))}</p></div>`).join('')}</section><section class="panel observation-report"><h3>因果観察室｜観測照合</h3><p class="small muted">照合対象：2027年の中央病院・霧峰高原・千鳥湿原</p><p>${esc(observationDebrief())}</p><p class="small">${esc(intersectingConsequences())}</p></section><div class="panel"><h3>あなたの新聞が動かした出来事</h3><ul class="log">${trace||'<li>政策決定の記録なし</li>'}</ul><p class="small">一面トップ・準トップの紙面分野別掲載回数：医療 ${majors.H}回／観光 ${majors.T}回／自然保護 ${majors.E}回／県政・財政 ${majors.G}回。県の未来は7日間の関心と根拠の積み重ねで決まりました。${s.verifiedReactionLeads?.length?' 期間中には、投書やSNSの手掛かりを追加取材で確かめた報道も政策判断を後押ししました。':''}</p></div><div class="panel"><h3>発行されなかった記事</h3><p class="small">紙面に載らなかった記事のうち、次のニュースも県内では進行していました。</p><ul>${unreleased.length?unreleased.map(t=>`<li class="small">${esc(t.headline)}${s.outcomes[t.domain]==='failed'?'（この問題を広く知らせる機会は限られたままでした）':'（紙面には載らず、課題は続いていました）'}</li>`).join(''):'<li class="small">該当する未掲載記事はありません。</li>'}</ul><p class="small muted">不掲載が直接問題を発生させたわけではありません。報道による社会の反応が起きなかったことが、結果に影響しました。</p></div><div class="panel"><h3>別の編集方針を試す</h3><p class="small">同じ3目標を達成しても、公的資金と民間資金の組み合わせによって未来の新聞が変わります。</p><div class="btn-row"><button class="btn" data-do="restart">もう一度、7日間を編集する</button></div></div></div>`}
+ for(const issue of h){for(const id of issue.published.slice(0,2)){const k=section(articles[id]);if(k in majors)majors[k]++}}const trace=h.map(x=>'<li><b>'+x.day+'日目</b>　一面トップ「'+esc(x.headlines?.[0]||articles[x.published[0]]?.headline||'')+'」／準トップ「'+esc(x.headlines?.[1]||articles[x.published[1]]?.headline||'')+'」</li>').join('');const unreleased=arrUnique(h.flatMap(x=>x.unprinted)).filter(id=>!s.publishedIds.includes(id)).sort((a,b)=>{const rank=id=>(s.outcomes[topic(articles[id])]==='failed'?4:0)+(EVIDENCE[id]&&!s.evidence.includes(EVIDENCE[id])?3:0)+(id.startsWith('I')?1:0);return rank(b)-rank(a)}).slice(0,3).map(id=>({headline:articles[id]?.headline,domain:topic(articles[id])})).filter(x=>x.headline);APP.innerHTML=`<div class="stage">${header('因果観察室｜2027年10月','一年後の東雲県','7日目の朝刊発行を終え、1週間の報道履歴から未来を確定しました。')}<section class="paper"><div class="masthead"><h2>東雲日報</h2><time>2027年10月<br>特別紙面</time></div><p class="kicker">未来復元 ${complete}／3条件</p><h3 class="headline" style="font-size:1.36rem">${complete===3?'県の未来、医療・観光・自然が共存':complete===0?'変化は届かず、県の課題が深刻化':`変わった県の未来、残された課題は${3-complete}つ`}</h3>${'HTE'.split('').map(k=>`<div class="front"><small>${esc(LABEL[k])}</small><h3 style="font-size:1rem">${s.outcomes[k]==='failed'?'未達成':'達成'}｜${esc(RES_NAMES[k][s.outcomes[k]])}</h3><p class="brief">${esc(outcomeText(k))}</p><p class="brief">${esc(outcomeReason(k))}</p></div>`).join('')}</section><section class="panel observation-report"><h3>因果観察室｜観測照合</h3><p class="small muted">照合対象：2027年の中央病院・霧峰高原・千鳥湿原</p><p>${esc(observationDebrief())}</p><p class="small">${esc(intersectingConsequences())}</p></section>${reporterEndingHtml()}<div class="panel"><h3>あなたの新聞が動かした出来事</h3><ul class="log">${trace||'<li>政策決定の記録なし</li>'}</ul><p class="small">一面トップ・準トップの紙面分野別掲載回数：医療 ${majors.H}回／観光 ${majors.T}回／自然保護 ${majors.E}回／県政・財政 ${majors.G}回。県の未来は7日間の関心と根拠の積み重ねで決まりました。${s.verifiedReactionLeads?.length?' 期間中には、投書やSNSの手掛かりを追加取材で確かめた報道も政策判断を後押ししました。':''}</p></div><div class="panel"><h3>発行されなかった記事</h3><p class="small">紙面に載らなかった記事のうち、次のニュースも県内では進行していました。</p><ul>${unreleased.length?unreleased.map(t=>`<li class="small">${esc(t.headline)}${s.outcomes[t.domain]==='failed'?'（この問題を広く知らせる機会は限られたままでした）':'（紙面には載らず、課題は続いていました）'}</li>`).join(''):'<li class="small">該当する未掲載記事はありません。</li>'}</ul><p class="small muted">不掲載が直接問題を発生させたわけではありません。報道による社会の反応が起きなかったことが、結果に影響しました。</p></div><div class="panel"><h3>別の編集方針を試す</h3><p class="small">同じ3目標を達成しても、公的資金と民間資金の組み合わせによって未来の新聞が変わります。</p><div class="btn-row"><button class="btn" data-do="restart">もう一度、7日間を編集する</button></div></div></div>`}
 function render(){if(!database)return;switch(s.stage){case'intro':intro();break;case'morning':morning();break;case'newsroom':newsroom();break;case'published':published();break;case'ending':ending();break;default:intro()}APP.focus({preventScroll:true});window.scrollTo(0,0)}
 APP.addEventListener('change',e=>{if(e.target.matches('[data-slot]')){setSlot(Number(e.target.dataset.slot),e.target.value)}if(e.target.matches('[data-reporter]')||e.target.id.startsWith('topic'))updateHints()});
 APP.addEventListener('click',e=>{const button=e.target.closest('[data-do]');if(!button)return;switch(button.dataset.do){case'start':s.stage='morning';save();render();break;case'dispatch':{const r=[document.getElementById('reporter0').value,document.getElementById('reporter1').value],t=[document.getElementById('topic0').value,document.getElementById('topic1').value];if(r[0]===r[1]){const el=document.getElementById('dispatchError');el.hidden=false;el.textContent='同じ記者を同じ日に二度派遣することはできません。';return}makeCandidates(r.map((x,i)=>[x,t[i]]));render();break}case'publish':publish();render();break;case'next':if(s.day===7)s.stage='ending';else{s.day++;s.stage='morning'}save();render();break;case'restart':init(Date.now());render();break}});
 document.getElementById('reset').addEventListener('click',()=>{if(confirm('現在の7日間の編集記録を消し、最初からやり直しますか？')){init(Date.now());render()}});
-async function boot(){try{const r=await fetch('./story.json?v=0.9.6',{cache:'no-store'});if(!r.ok)throw new Error(`HTTP ${r.status}`);database=await r.json();if(database.version!=='v0.9.6-beta')throw Error('記事データの版数が一致しません。ページを再読み込みしてください。');if(database.articles?.length!==44||database.reactions?.length!==50)throw Error('記事データの件数不整合');articles=Object.fromEntries(database.articles.map(x=>[x.id,x]));reactions=Object.fromEntries(database.reactions.map(x=>[x.id,x]));s=restore();if(!s){const param=new URLSearchParams(location.search).get('seed');init(param===null?Date.now():Number(param)||2026)}render()}catch(e){APP.innerHTML=`<section class="stage"><h1 class="headline">編集資料を読み込めませんでした</h1><p>${esc(e.message)}</p><p>接続を確認し、ページを再読み込みしてください。</p></section>`}}
+async function boot(){try{const r=await fetch('./story.json?v=0.9.7',{cache:'no-store'});if(!r.ok)throw new Error(`HTTP ${r.status}`);database=await r.json();if(database.version!=='v0.9.7-beta')throw Error('記事データの版数が一致しません。ページを再読み込みしてください。');if(database.articles?.length!==44||database.reactions?.length!==50)throw Error('記事データの件数不整合');articles=Object.fromEntries(database.articles.map(x=>[x.id,x]));reactions=Object.fromEntries(database.reactions.map(x=>[x.id,x]));s=restore();if(!s){const param=new URLSearchParams(location.search).get('seed');init(param===null?Date.now():Number(param)||2026)}render()}catch(e){APP.innerHTML=`<section class="stage"><h1 class="headline">編集資料を読み込めませんでした</h1><p>${esc(e.message)}</p><p>接続を確認し、ページを再読み込みしてください。</p></section>`}}
 boot();
