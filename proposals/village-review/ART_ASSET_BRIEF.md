@@ -1,6 +1,8 @@
 # V1｜最終版・一括素材制作仕様 v1.1
 2026年10月27日 JST（最終監査改訂）｜「この村の評価をお願いします。」｜短編UIゲーム実験室
 
+**Workへの追加必読：`ASSET_INTEGRATION.md`（asset-manifest.jsonの最終公開順・厳密な受入仕様）。**
+
 ## Workの作業境界
 実装上の正本は `proposals/village-review/index.html` の `VISUAL_ROUTES`, `ROUTE_BY_FACT`, `GROUND`。必ず最新mainを取得。Workは画像素材・軽量WebP・manifest・コンタクトシートのみを `proposals/village-review/assets/` 配下に追加し、ゲーム本体・ルートindex・他作品は変更しない。既存の公開URLは維持。
 
