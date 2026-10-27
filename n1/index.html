@@ -272,7 +272,7 @@ function initRound(){
  const options={
   productAssignments:assignments,
   sideScenes,
-  daySwapMask:(Math.imul(round,0x9e3779b1)>>>5)&15,
+  daySwapMask:(Math.imul(round,0x9e3779b1)>>>5)&31,
   firstPerson:round%3===0?'hina':'makabe',
   discountRate:[10,15,20,25,30,35,40][(Math.imul(round,13)>>>0)%7],
   arrivalDelta:(round*7)%11-5,
