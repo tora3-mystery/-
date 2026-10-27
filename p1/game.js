@@ -204,12 +204,12 @@ function publish(){if(s.slots.some(x=>!x)||new Set(s.slots).size!==4)return;cons
  if(a.lead&&i<2&&(s.reactionLeads||[]).includes(a.lead)){s.verifiedReactionLeads=s.verifiedReactionLeads||[];if(!s.verifiedReactionLeads.includes(a.lead))s.verifiedReactionLeads.push(a.lead);s.lastVerifiedLeads.push(a.lead)}if(a.lead)s.trace.push({day:s.day,type:'verification',id:a.id,lead:a.lead});(ARTICLE_LEADS[a.id]||[]).forEach(x=>{if(!s.leads.includes(x))s.leads.push(x)})});for(const k of 'HTE')s.att[k]=Math.min(12,s.att[k]+earned[k]);const outcomes=decide();s.lastAttention=prev;s.lastDecisions=[];s.lastPaper=published;s.publishedIds.push(...s.slots);const unused=s.candidates.filter(a=>a.id.startsWith('I')&&!s.slots.includes(a.id));if(s.day<7&&unused.length){const deadlines={H:7,T:7,E:7,G:7};unused.sort((a,b)=>(deadlines[topic(articles[a.id])]||7)-(deadlines[topic(articles[b.id])]||7));s.carry={id:unused[0].id,lead:unused[0].lead}}else s.carry=null;
 s.trace.push({day:s.day,type:'paper',top:published[0].id,second:published[1].id,unprinted:s.candidates.filter(a=>!s.slots.includes(a.id)).map(a=>a.id),proof:proof.map(x=>x.evidence),decision:outcomes});s.latestReactions=getReactions();s.history.push({day:s.day,headlines:published.map(x=>x.displayHeadline),published:s.slots.slice(),unprinted:s.candidates.filter(a=>!s.slots.includes(a.id)).map(a=>a.id),attention:{...s.att},earned,budget:s.budget,decision:outcomes,reactions:s.latestReactions.slice()});s.stage='published';save()}
 function publicationFeedback(){
- const last=s.history.at(-1),top=topic(articles[last.published[0]]),a=s.att,e=s.evidence,notes=[];
- if(top==='H')notes.push(e.includes('public_h')?'病院支援の財源に関する報道を受け、県の予算担当者が説明を求められています。':e.includes('private_h')?'病院再建を巡る企業の動きが、地域の関心を集めています。':'中央病院の現状について、医療関係者から追加取材を求める声が出ています。');
- if(top==='T')notes.push(e.includes('investment_t')?'投資条件が記事になったことで、観光事業者の間で計画の実現性が話題になっています。':'観光計画の話題が広がる一方、事業資金については確認を求める声が続いています。');
- if(top==='E')notes.push(e.includes('survey_e')?'湿原の調査記事を受け、地域の保護団体が資料の公開を求めています。':'湿原への関心が高まり、管理の費用や区域について意見が分かれています。');
- if(top==='G')notes.push('予算と県政の報道を受け、関係者が今後の財源配分を巡って発言しています。');
- if(a.H>=6&&e.includes('reform_h'))notes.push('医療機関の連携案が広く知られ、経営再建の実現性が議論されています。');
+ const last=s.history.at(-1),topArticle=articles[last.published[0]],top=topic(topArticle),paperSection=section(topArticle),a=s.att,e=s.evidence,notes=[];
+ if(paperSection==='G')notes.push('県政・財政に関する報道を受け、関係部署に説明を求める声が出ています。');
+ else if(top==='H')notes.push(e.includes('public_h')?'病院支援の財源についてこれまでに報じた内容を巡り、県の予算担当者が説明を求められています。':e.includes('private_h')?'病院再建を巡る企業の動きが、地域の関心を集めています。':'中央病院の現状について、医療関係者から追加取材を求める声が出ています。');
+ else if(top==='T')notes.push(e.includes('investment_t')?'これまでの投資条件の報道も踏まえ、観光事業者の間で計画の実現性が話題になっています。':'観光計画の話題が広がる一方、事業資金については確認を求める声が続いています。');
+ else if(top==='E')notes.push(e.includes('survey_e')?'これまでの湿原の調査報道を踏まえ、地域の保護団体が資料の公開を求めています。':'湿原への関心が高まり、管理の費用や区域について意見が分かれています。');
+  if(a.H>=6&&e.includes('reform_h'))notes.push('医療機関の連携案が広く知られ、経営再建の実現性が議論されています。');
  else if(a.T>=6&&e.includes('eco_tour'))notes.push('環境に配慮した観光案を巡り、投資と保全の両立が話題になっています。');
  else if(a.E>=6&&e.includes('community_e'))notes.push('住民参加の保全協定案が注目され、資金確保の方法が議論されています。');
  if(s.lastVerifiedLeads?.length)notes.unshift('読者・関係者から届いた手掛かりを裏取りした記事が大きく報じられ、議論の根拠が増えました。');if(s.day===7)notes.push('最終号を発行しました。7日間の新聞が積み重ねた影響は、1年後に明らかになります。');
