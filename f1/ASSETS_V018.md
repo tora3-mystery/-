@@ -37,12 +37,15 @@ Imagegenで架空の日本のスーパー「まるまるスーパー」の撮影
 - 通常 / 増設レジ 50%重ね：`/Users/ryu/Documents/ChatGPT/ARG/f1-v018-p2-review/overlay-base-register-added.png`
 - 通常 / 騒音補助写真 50%重ね：`/Users/ryu/Documents/ChatGPT/ARG/f1-v018-p2-review/overlay-base-noise-severe.png`
 - 増設後から通常画像へ戻るときの390px確認：`/Users/ryu/Documents/ChatGPT/ARG/f1-v018-p2-review/register-continuity-check-390.png`
+- 透明レジレイヤー合成試験（通常・moderate・severeの各390px）：`/Users/ryu/Documents/ChatGPT/ARG/f1-v018-p2-review/transparent-register-overlay-trial-390.png`
 
 固定カメラ、柱、壁・床境界、既存レジ、主通路、右棚、奥スピーカーの位置は6枚で整合。人物とカートは各状態差として配置が変わる。mild→moderate→severeは390px幅で3段階を見分けられる。騒音写真はPA設備と客の仕草を補助に使うが、写真単体で音量を判定できないため、数値・アイコンを主情報とする。
 
 ## レジ増設の継続表示ゲート
 
 `main-improved-register-added.webp`では4台目の有人レジが見える。一方、P1の通常・混雑画像は3台のままなので、その後に通常状態画像へ戻すと4台目が消える。固定カメラの1枚編集で追加設備を常時維持することは、この6枚のままでは実証できなかった。これは状態画像として使う場合の矛盾であり、P3の制作ゲート未解決。
+
+固定位置の透明差分レイヤーも試作して通常・moderate・severeへ重ねたが、レジの視点・縮尺と床への接地が合わず、切り抜きを貼ったように浮いて見えたため採用しなかった。レイヤー合成でも継続表示は実証できていない。
 
 仕様案の代替として、増設写真は施策直後の結果写真、継続する効果はゲーム内のレジ数・待ち時間表示で示す役割分担を提案する。状態写真へ使う場合は、Chat側が設備履歴を合成する処理を先に決める必要がある。どちらの扱いにするか決まるまでP3・残り28枚は制作しない。
 
