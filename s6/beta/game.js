@@ -19,7 +19,7 @@ const byGroup=gid=>D.members.filter(m=>m.group_id===gid).map(m=>m.person_id);
 const date=()=>DATES[Math.min(S.day,4)];
 const initial=()=>({
  schema:1,phase:'title',day:0,selectedEvent:null,group:null,target:null,
- eventHistory:[],seen:[],introduced:[],flash:[],visitedGroups:[],groupDone:{},contacts:[],
+ eventHistory:[],seen:[],introduced:[],flash:[],visitedGroups:[],groupDone:{},contacts:[],socialLinked:{},selectedSocial:null,
  guesses:{},note:{},clues:[],crossings:{},knownOrg:{},nightChoice:{},
  checks:{},currentNotebook:null,suspect:'',camp:'',shared:false,privateInvite:false,
  report:'',result:'',savedAt:''
@@ -28,7 +28,7 @@ let S;
 try {const raw=JSON.parse(localStorage.getItem(KEY));S=raw&&raw.schema===1?raw:initial()}catch{S=initial()}
 function hydrate(){
  for(const k of ['eventHistory','seen','introduced','flash','visitedGroups','contacts','clues'])if(!Array.isArray(S[k]))S[k]=[];
- for(const k of ['groupDone','guesses','note','crossings','knownOrg','nightChoice','checks'])if(!S[k]||typeof S[k]!=='object')S[k]={};
+ for(const k of ['groupDone','guesses','note','crossings','knownOrg','nightChoice','checks','socialLinked'])if(!S[k]||typeof S[k]!=='object')S[k]={};
 }
 hydrate();
 const remember=()=>{S.savedAt=BUILD;localStorage.setItem(KEY,JSON.stringify(S))};
@@ -51,6 +51,7 @@ const site=()=>{
  case 'choose':return chooseAction();
  case 'night':return night();
  case 'sns':return sns();
+ case 'sns-match':return snsMatch();
  case 'board':return board();
  case 'notebook':return notebook();
  case 'identity':return identity();
@@ -128,9 +129,21 @@ function sns(){
   const avatar=face?portrait(p.author_id):'<div class="avatar-icon">♪</div>';
   return '<div class="social">'+avatar+'<div><strong>'+esc(anonymous?'匿名アカウント':a?.display_name||'不明')+'</strong>'+
   '<div class="dim">'+esc(p.published_at)+'</div><p>'+esc(p.text)+'</p>'+
-  (face?'<p class="dim">見覚えがある顔かもしれない。人物手帳で写真を比べられる。</p>':'')+'</div></div>';
+  (face?'<p class="dim">見覚えがある顔かもしれない。</p>'+(S.seen.includes(p.author_id)?btn((S.socialLinked[p.author_id]||[]).includes(platform)?'照合済み':'顔を見比べる','account-match',p.post_id,'mini'):''):'')+'</div></div>';
  }).join(''):'<p>閲覧できる投稿はありません。</p>')+
  '<div class="actions">'+btn('夜の画面に戻る','back-night','','ghost')+'</div>';
+}
+function snsMatch(){
+ const post=D.posts.find(p=>p.post_id===S.selectedSocial);
+ if(!post)return '<h2>投稿が見つかりません</h2>'+btn('戻る','back-sns','','ghost');
+ const a=accounts[post.author_id+'|'+post.platform];
+ const entries=S.seen.map(id=>faceCard(id,S.guesses[id]?.verified?people[id].name:'名前は未確認','match-social-face','この顔かな'));
+ return '<div class="eyebrow">'+esc(post.platform)+' / PHOTO</div><h2>この顔、会場で見た？</h2>'+
+ '<div class="chosen">'+portrait(post.author_id,'large')+'<div><strong>'+esc(a?.display_name||'アカウント')+'</strong><p class="dim">写真を公開しているアカウント</p></div></div>'+
+ '<p>新歓で見た顔と比べてみよう。合致しても本名や所属が自動的に分かるわけではありません。</p>'+
+ (S.report?'<div class="notice">'+esc(S.report)+'</div>':'')+
+ '<div class="faces">'+entries.join('')+'</div>'+
+ btn('SNSに戻る','back-sns','','ghost');
 }
 const notices=[
  '学内の掲示：一部の団体は、昨年秋から新入生向けの受け入れ枠を作っていたらしい。具体的な対象者は公表されていない。',
@@ -152,6 +165,8 @@ function notebook(){
  const note=S.note[id]||'';
  return '<div class="person-card">'+portrait(id)+'<div><strong>'+(verified?esc(people[id].name):'名前を思い出せない')+'</strong>'+
  '<p class="dim">'+(verified?'所属：'+esc(label(people[id].primary_org))+(people[id].dual_org?' ／ 他にも所属あり':''):'写真と記憶を照合できます')+'</p>'+
+ ((S.socialLinked[id]||[]).length?'<p class="dim">顔が一致したSNS：'+esc(S.socialLinked[id].join('、'))+'</p>':'')+
+ (S.knownOrg[id]&&!verified?'<p class="dim">話して聞いた所属：'+esc(label(S.knownOrg[id]))+'</p>':'')+
  (note?'<p class="dim">メモ：'+esc(note)+'</p>':'')+
  btn(verified?'メモを見る':'この顔を照合','open-identity',id,'mini')+'</div></div>';
  }).join('');
@@ -180,10 +195,17 @@ function camp(){
  const choices=D.orgs.map(o=>'<article class="panel"><span class="tag">'+esc(o.common_name)+'</span><p>'+esc(o.focus)+'</p>'+
  btn('この団体の合宿へ','choose-camp',o.org_id)+'</article>').join('');
  const verifiedIds=Object.keys(S.guesses).filter(id=>S.guesses[id]?.verified);
+ const targetVerified=!!S.guesses.P001?.verified;
+ const hasTalk=Object.values(S.groupDone).some(t=>typeof t==='string'&&(t.includes('入学前から、きみに')||t.includes('去年の秋にはもう')));
+ const hasArchive=S.clues.includes('F-COM-01')||S.nightChoice['2026-04-06']==='掲示板';
+ const clueText=targetVerified&&hasTalk&&hasArchive?
+   '照合した西園寺紬の顔、こもれびの所属、入学前から準備された受け入れ枠。ばらばらだった情報が、一つの団体につながった。':
+   targetVerified?(hasTalk?'あの人が自分のために席を準備していたという言葉は、まだ耳に残っている。':'西園寺紬という名前と、こもれびの所属は確認できた。これだけで危険だとは言い切れない。'):
+   hasArchive?'昨年秋からの受け入れ枠は気になるが、誰が準備したのだろう。':'顔と名前が一致しない人も多い。どの団体で何が起こるか、まだ分からない。';
  const select='<option value="">誰とも断定しない</option>'+verifiedIds.filter(id=>Number(id.slice(1))<=16||id==='P018')
  .map(id=>'<option value="'+esc(id)+'">'+esc(people[id].name)+'</option>').join('');
  return '<div class="eyebrow">金曜の夜 / 週末の合宿</div><h2>誰のいる場所なら、安心できるだろう。</h2>'+
- '<p>すべての顔や名前を覚えられたわけではない。印象だけで判断するのも怖い。それでも行き先は選ばなければならない。</p>'+
+ '<p>すべての顔や名前を覚えられたわけではない。印象だけで判断するのも怖い。それでも行き先は選ばなければならない。</p><div class="paper"><h3>今週の記憶</h3><p>'+esc(clueText)+'</p></div>'+
  '<div class="paper"><p>気にかかっている人がいるなら記録しておこう。犯人を断定する必要はありません。</p><label>特に気になる人物<select id="suspect">'+select+'</select></label>'+btn('考えを記録する','record-suspect','','mini')+'</div>'+
  (S.report?'<div class="notice">'+esc(S.report)+'</div>':'')+
  '<div class="two">'+choices+'</div><div class="actions">'+btn('今回は合宿に行かない','choose-camp','N','ghost')+'</div>';
@@ -314,6 +336,21 @@ function handle(act,id){
   if(used&&used!==id)return;
   S.nightChoice[date()]=id;S.snsPlatform=id;go('sns');break;
  }
+ case 'account-match':{
+  if(S.phase!=='sns')return;
+  const post=D.posts.find(p=>p.post_id===id),acct=post&&accounts[post.author_id+'|'+post.platform];
+  if(!post||post.platform!==S.snsPlatform||post.visibility==='匿名表示'||acct?.avatar_kind!=='face'||!S.seen.includes(post.author_id))return;
+  S.selectedSocial=id;S.report='';go('sns-match');break;
+ }
+ case 'match-social-face':{
+  if(S.phase!=='sns-match'||!S.seen.includes(id))return;
+  const post=D.posts.find(p=>p.post_id===S.selectedSocial);
+  if(!post)return;
+  if(id!==post.author_id){S.report='似ているが、別人だったようだ。';go('sns-match');return}
+  S.socialLinked[id]=unique([...(S.socialLinked[id]||[]),post.platform]);
+  S.report='SNSの写真と新歓で見た顔が一致した。';go('sns');break;
+ }
+ case 'back-sns':go('sns');break;
  case 'night-board':{
   if(S.phase!=='night')return;
   const used=S.nightChoice[date()];
