@@ -18,6 +18,8 @@ const H1_B013={
       x.suspect===monster&&x.source===source&&x.round===coreRound-1);
     const marked=(state.h162Marks||[]).some(x=>x.person===monster);
     const grade=type==="horror"?"無効":type==="bad"?"D":matched&&marked?"S":"A";
+    const endingName=type==="good"?"GOOD END":type==="bad"?"BAD END":"HORROR END";
+    const endingDescription=type==="good"?"選考終了":type==="bad"?"誤採用":"面接官交代";
     const title=type==="horror"?"面接官の登録が変更されました。":
       type==="bad"?"面接時の判断に、確認が必要です。":
       "最終選考は、問題なく終了しました。";
@@ -31,6 +33,7 @@ const H1_B013={
     return '<section class="panel h011-assessment h113-report">'+
       '<p class="eyebrow">CONFIDENTIAL｜人事部・選考記録</p>'+
       '<div class="h011-end-mark">THE END</div>'+
+      '<div class="h115-end-kind">'+endingName+'<span>｜'+endingDescription+'</span></div>'+
       '<h1>最終選考の記録</h1>'+
       '<div class="h011-evaluation"><small>選考評価</small><strong class="'+(type==="horror"?"not-rated":"")+'">'+grade+'</strong><span>'+title+'</span></div>'+
       summary+
