@@ -31,7 +31,7 @@ function hydrate(){
  for(const k of ['groupDone','guesses','note','crossings','knownOrg','nightChoice','viewedPlatforms','viewedBoard','groupLog','checks','socialLinked'])if(!S[k]||typeof S[k]!=='object')S[k]={};
 }
 hydrate();
-if(S.phase==='flash'&&!S.group)S.phase='venue';
+if(S.phase==='flash'&&!S.group){S.phase='venue';localStorage.setItem(KEY,JSON.stringify(S));}
 for(const [gid,result] of Object.entries(S.groupDone))if(result&&!S.groupLog[gid])S.groupLog[gid]=[{pid:null,type:'旧版の交流',text:result}];
 const PEERS=new Set(['P013','P014','P015','P016']);
 const peerClass=id=>PEERS.has(id)?' peer-highlight':'';
