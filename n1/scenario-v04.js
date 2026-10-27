@@ -532,6 +532,26 @@
         extremeHigh:['まさかその価格に見えるとは。','家計簿の方まで心配になってきました。']
       }
     };
+    if(q.situationType==='household_supplies'&&[7,11].includes(q.legacyIndex)){
+      const scenes=q.legacyIndex===7?{
+        exact:['その価格で合っています。','家の買い物でも、単価はきっちり確認したいんです。'],
+        near:['ほとんど同じ額ですね。','最後の端数だけ確認します。'],
+        low:['実際はもう少し高いようです。','買い物の予算には気をつけておきます。'],
+        high:['そこまではしないはずです。','まだまとめ買いする予定はありません。'],
+        extremeLow:['その金額では売っていないでしょうね。','家計簿の予算欄を埋め直します。'],
+        extremeHigh:['そんな買い物でしたっけ。','帰宅前に値札を見てきます。']
+      }:{
+        exact:['価格そのものはその額です。','実際の買い物には少し余裕を残しておきたいですね。'],
+        near:['実際の価格にかなり近いです。','家計の予算でも、それくらいなら安心ですね。'],
+        social:['そのくらい確保しておけば安心ですね。','予算を使い切らなければ、その分は残しておけますし。'],
+        low:['それだけだと少し足りないかもしれません。','買い足しを頼まれたときに困りそうです。'],
+        high:['ずいぶん余裕がありますね。','家計簿に根拠を残しておいた方がよさそうです。'],
+        extremeLow:['その予算だとレジの前で立ち止まりそうです。','念のため少し足しておきます。'],
+        extremeHigh:['そんな大きな買い物ではないつもりです。','家計簿の桁を一度確認しましょうか。']
+      };
+      const v=scenes[t]||scenes.low;
+      return {kind:t,score:grade.score,exact:t==='exact',lines:lines(speaker,v[0],v[1])};
+    }
     if([5,7,11].includes(q.legacyIndex)&&q.situationType&&
        q.situationType!=='farewell_gift'&&q.situationType!=='spouse_gift') {
       const isSupplies=q.situationType==='office_supplies';
@@ -631,7 +651,7 @@
         reflect='新井の価格クイズはひとまず終了。'+(byLegacy(3).exact?'梨花の待ち時間を当てても、遅刻の事実は消えなかった。':'梨花との待ち合わせには、次こそ余裕を持って来よう。');
         break;
       case 2:
-        reflect='相馬さんと昔のテレビの話をした。'+(byLegacy(5).situationType==='office_supplies'?'藤野さんの研修備品の見積もりも手伝った。':byLegacy(5).situationType==='office_equipment'?'藤野さんの設備購入の予算も相談した。':'藤野さんの贈り物選びにも付き合った。')+(byLegacy(5).air>=90?'相手が必要とする金額をうまく考えられた気がする。':'金額は同じでも、使い道によって伝え方が違う。');
+        reflect='相馬さんと昔のテレビの話をした。'+(byLegacy(5).situationType==='office_supplies'?'藤野さんの職場用の備品についても相談した。':byLegacy(5).situationType==='office_equipment'?'藤野さんの設備購入の予算も相談した。':'藤野さんの贈り物選びにも付き合った。')+(byLegacy(5).air>=90?'相手が必要とする金額をうまく考えられた気がする。':'金額は同じでも、使い道によって伝え方が違う。');
         break;
       default:
         reflect=(pair[0].legacyIndex===9?'圭介と街の歴史の話をしてから、庄司さんの商品価格相談を受けた。':'庄司さんの商品価格相談のあと、圭介と街の歴史の話をした。')+(byLegacy(7).exact?'商品価格はぴったり当てた。明日の相談にも関係しそうだ。':'木曜日に確認した商品の価格は、会話ログに残っている。');
@@ -644,7 +664,14 @@
     const exact=!!last.exact;
     const social=(last.air||0)>=90;
     const administrative=last.situationType==='office_supplies'||last.situationType==='office_equipment';
-    const linesOut=administrative?(
+    const household=last.situationType==='household_supplies';
+    const linesOut=household?(
+      exact?
+       [{speaker:'庄司',text:'通常価格は正解です。'},{speaker:'庄司',text:'家計の予算は、ほんの少し余裕を持つことにします。'}]:
+       social?
+       [{speaker:'庄司',text:'そのくらいあれば週末の買い物も安心です。'},{speaker:'庄司',text:'余ったら次の買い物に回せますね。'}]:
+       [{speaker:'庄司',text:'家計簿の数字も意外と難しいんですね。'},{speaker:'庄司',text:'もう一度、買い物の予定と照らしてみます。'}]
+    ):administrative?(
       exact?
        [{speaker:'庄司',text:'単価の正確さは完璧ですね。'},{speaker:'庄司',text:'申請のときだけは、少し余裕を見ておくことにします。'}]:
        social?
