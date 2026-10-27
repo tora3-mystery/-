@@ -689,8 +689,8 @@
     },
     {
       "id": "R26",
-      "eligibilityDescription": "予算を医療に使用",
-      "baseCopy": "「残る事業の財源には厳しい調整が必要です」（財政課）",
+      "eligibilityDescription": "医療と他分野の支援財源が争点",
+      "baseCopy": "「病院支援に県費を充てる場合、観光や保全など他事業との調整も必要です」（県財政課）",
       "leadToken": null,
       "verified": false
     },
@@ -852,14 +852,14 @@
     },
     {
       "id": "R45",
-      "eligibilityDescription": "第4日・病院救済決定",
-      "baseCopy": "「これで病院は残りますね。あとの二つはまだ分からない」",
+      "eligibilityDescription": "医療政策案が議論の中心になった後の謎の投書",
+      "baseCopy": "「中央病院を残す議論が進んでいるようですね。残りの二つはまだ分からない」",
       "leadToken": null,
       "verified": false,
       "revisionSample": {
         "channel": "差出人不明",
-        "copy": "中央病院は残ったようですね。残りの二つについて、紙面に何を残すかが気になります。",
-        "editorialNotes": "違和感はあるが未来確定の攻略指示ではない。"
+        "copy": "中央病院の救済策が議論に上ったようですね。あとの二つは、これからの紙面にかかっています。",
+        "editorialNotes": "翌年の存続を確定したようには描かない。差出人の不穏さは残す。"
       }
     },
     {
@@ -897,8 +897,8 @@
     },
     {
       "id": "R50",
-      "eligibilityDescription": "いずれか政策決定",
-      "baseCopy": "「地元放送局が決定の背景を特集」（地方放送局）",
+      "eligibilityDescription": "3分野いずれかの社会的関心が高まったときの他媒体の取材",
+      "baseCopy": "「地元放送局が県の今後を巡る議論を特集」（地方放送局）",
       "leadToken": null,
       "verified": false
     }
