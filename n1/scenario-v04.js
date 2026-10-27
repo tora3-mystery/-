@@ -118,24 +118,46 @@
   // Scene texts, social target band, replies and Friday callback must all agree.
   const CONSUMABLE_CATEGORIES=new Set(['eraser','correction_pen','correction_tape','pencil_case','pen','notebook','paper','underlay','cable']);
   const EQUIPMENT_CATEGORIES=new Set(['car','furniture','appliance','smartphone','keyboard','mouse','speaker','charger']);
-  function productSituation(q, role) {
-    const category=q.imageKey||'';
-    const cost=q.truth;
+  const GIFTABLE_CATEGORIES=new Set(['gift','beauty','clothing','bag','shoes','towel','coffee','mug','tumbler','tableware','diffuser','clock']);
+  const SITUATION_TYPES=new Set(['office_supplies','office_equipment','farewell_gift','spouse_gift','household_supplies']);
+  function productSituation(q,role) {
+    const category=q.imageKey||'',cost=q.truth;
+    const override=q.sceneOverrides?.[role];
+    if(override!==undefined&&override!==null){
+      if(!SITUATION_TYPES.has(override))throw new Error('Invalid scene override for '+q.productId);
+      return override;
+    }
+    if(GIFTABLE_CATEGORIES.has(category)){
+      if(cost<300)return 'office_supplies';
+      if(role==='shoji'&&cost<1500)return 'household_supplies';
+      if(role==='fujino'&&cost<1500)return 'office_supplies';
+      return role==='fujino'?'farewell_gift':'spouse_gift';
+    }
     if(CONSUMABLE_CATEGORIES.has(category)||cost<300)return 'office_supplies';
     if(EQUIPMENT_CATEGORIES.has(category)||cost>30000)return 'office_equipment';
     return role==='fujino'?'farewell_gift':'spouse_gift';
+  }
+  function productSceneVariant(q) {
+    const name=q.speechName||'';
+    if(q.imageKey==='paper'&&/画面拭き|ポリッシングクロス/.test(name+' '+q.item))return 'device_care';
+    if(['mug','tableware','coffee','kitchen','tumbler'].includes(q.imageKey))return 'breakroom_item';
+    if(q.imageKey==='gift'&&q.truth<300)return 'event_token';
+    if(['eraser','pen','pencil_case','correction_pen','correction_tape','underlay'].includes(q.imageKey)&&q.truth>=500)return 'office_trial';
+    return 'training_handout';
   }
   function applyProductScene(q) {
     if(![5,7,11].includes(q.legacyIndex))return;
     const role=q.legacyIndex===5?'fujino':'shoji';
     const type=productSituation(q,role);
     q.situationType=type;
+    q.sceneVariant=productSceneVariant(q);
     const name=q.speechName;
     if(q.legacyIndex===5) {
       if(type==='office_supplies'){
-        q.opening='水曜日。藤野さんが社内研修で配る備品の準備をしている。';
-        q.speech='研修で配る'+name+'、1ついくらくらい予算を見ておくと安心ですか？';
-        q.context='藤野「人数分揃えたいんです。見積もりを低く出しすぎて足りなくなると困るので……」';
+        const v=q.sceneVariant;
+        q.opening=v==='device_care'?'水曜日。藤野さんが共用端末の手入れ用品を選んでいる。':v==='breakroom_item'?'水曜日。藤野さんがオフィスの休憩スペース用の備品を選んでいる。':v==='event_token'?'水曜日。藤野さんが社内イベントの参加賞を選んでいる。':v==='office_trial'?'水曜日。藤野さんが職場で試す新しい文具の見積もりを見ている。':'水曜日。藤野さんが社内研修で配る備品の準備をしている。';
+        q.speech=v==='device_care'?'共用端末用の'+name+'、1点いくらくらい予算を見ておきましょう？':v==='breakroom_item'?'休憩スペース用の'+name+'、1点いくらくらいで考えましょう？':v==='office_trial'?'試しに使う'+name+'、1点いくらくらい見ておけば安心ですか？':v==='event_token'?'参加賞にする'+name+'、1個いくらくらい予算を取っておきましょう？':'研修で配る'+name+'、1ついくらくらい予算を見ておくと安心ですか？';
+        q.context=v==='device_care'?'藤野「機器の手入れ用品を揃えるんです。単価は余裕を持って見積もりたくて」':v==='breakroom_item'?'藤野「共用のものですし、人数分ではなく予備まで考えておきたいんです」':v==='office_trial'?'藤野「まず1つ使ってみてから、部署全体で導入するか決めます」':v==='event_token'?'藤野「参加者に配るので、個数を掛けても予算内に収まるか気になって」':'藤野「人数分揃えたいんです。見積もりを低く出しすぎて足りなくなると困るので……」';
         q.hint='1点あたりの通常価格を見積もり、少し予算に余裕を持たせると安心。';
         q.explain='実際の価格と、配布物として確保する予算は別の数字。';
         q.zone=[q.truth,Math.max(q.truth+1,Math.ceil(q.truth*1.2))];
@@ -147,18 +169,20 @@
         q.explain='実際の調達価格と、予算確保のための数字は同じとは限らない。';
         q.zone=[q.truth,Math.max(q.truth+1,Math.ceil(q.truth*1.15))];
       }else{
-        q.opening='水曜日。藤野さんが送別会の贈り物を一緒に選んでほしいと言ってきた。';
-        q.speech='送別会の小さな贈り物に'+name+'を考えてるんです。いくらくらいに見えます？';
-        q.context='藤野「相手が受け取りやすいものにしたくて。包装も迷ってるんです」';
+        const premium=q.truth>=15000;
+        q.opening=premium?'水曜日。藤野さんが退職する先輩へ、皆で贈る記念品の相談をしてきた。':'水曜日。藤野さんが送別会の贈り物を一緒に選んでほしいと言ってきた。';
+        q.speech=(premium?'退職記念に皆で':'送別会で')+name+'を贈ろうと思うんです。いくらくらいに見えます？';
+        q.context=premium?'藤野「皆で費用を出し合って決めたんです。重く感じさせたくないのですが……」':'藤野「相手が受け取りやすいものにしたくて。包装も迷ってるんです」';
         q.hint='お礼の品だから、高く見えすぎると相手も気を遣うかも。';
         q.explain='贈り物の実価格と、受け取る人に伝わる印象は別の数字。';
         q.zone=[Math.round(q.truth*.65),Math.round(q.truth*.85)];
       }
     }else if(q.legacyIndex===7){
       if(type==='office_supplies'){
-        q.opening='木曜日。庄司さんが来週の研修で使う消耗品の単価表を見ている。';
+        const v=q.sceneVariant;
+        q.opening=v==='device_care'?'木曜日。庄司さんが共用端末の手入れ用品の価格を調べている。':v==='breakroom_item'?'木曜日。庄司さんが共用スペースの備品を買い足そうとしている。':v==='office_trial'?'木曜日。庄司さんが新しい文具の試験購入について確認している。':v==='event_token'?'木曜日。庄司さんが社内イベントの参加賞を確認している。':'木曜日。庄司さんが来週の研修で使う消耗品の単価表を見ている。';
         q.speech='この'+name+'、通常は1つ何円なのか分かりますか？';
-        q.context='庄司「来週の研修で必要なんです。見積書の数字を確認しておきたくて」';
+        q.context=v==='device_care'?'庄司「共用の機器を清掃するものです。注文前に正式な単価を見たくて」':v==='breakroom_item'?'庄司「休憩室で使う備品です。買い足す前に価格を確認したいんです」':v==='office_trial'?'庄司「まず1個試し買いをします。正式な価格を確認したいんです」':v==='event_token'?'庄司「イベントの参加賞を数えています。単価を確定したいんです」':'庄司「来週の研修で必要なんです。見積書の数字を確認しておきたくて」';
         q.hint='消耗品も正式商品名と規格を照合。通常の単品税込価格を答える。';
         q.explain='研修用品の単価を確認するための正確な数字。';
       }else if(type==='office_equipment'){
@@ -167,6 +191,12 @@
         q.context='庄司「会社の購入申請に出すものなので、数字は正確にしておきたいんです」';
         q.hint='商品の規格・機種・公式の税込表示を確認。購入付帯費用は除外する。';
         q.explain='備品・設備の申請に使う通常価格を確認。';
+      }else if(type==='household_supplies'){
+        q.opening='木曜日。庄司さんが家で使う日用品の買い足しを検討している。';
+        q.speech='家で使う'+name+'、通常価格はいくらか分かりますか？';
+        q.context='庄司「妻に買い物を頼まれまして。家計簿の金額も確認しておきたいんです」';
+        q.hint='メーカー公式の単品税込価格を確認。家計の見積もりは翌日に考える。';
+        q.explain='日常の買い足しについての正確な価格。';
       }else{
         q.opening='木曜日。庄司さんが、少し照れながら妻へのプレゼントの相談を持ちかけてきた。';
         q.speech='妻への贈り物に'+name+'を考えています。通常価格はいくらなんでしょう？';
@@ -177,7 +207,8 @@
       q.mode='facts';q.zone=[q.truth,q.truth];
     }else {
       if(type==='office_supplies'){
-        q.opening='金曜日。庄司さんが昨日の研修備品の発注見積もりを持ってきた。';
+        const v=q.sceneVariant;
+        q.opening=v==='device_care'?'金曜日。庄司さんが昨日の端末清掃用品の発注書を持ってきた。':v==='breakroom_item'?'金曜日。庄司さんが共用スペースの備品予算を確認している。':v==='office_trial'?'金曜日。庄司さんが試験購入する文具の申請額を確認している。':v==='event_token'?'金曜日。庄司さんがイベントの参加賞に必要な予算を確認している。':'金曜日。庄司さんが昨日の研修備品の発注見積もりを持ってきた。';
         q.speech='昨日の'+name+'、1つあたりいくらで予算を確保したらいいと思います？';
         q.context='庄司「正確な単価は分かったんですが、経理への申請額を少し余裕を持って組むべきか迷っていまして」';
         q.hint='昨日の単価は会話ログに残っている。予算を低く見積もりすぎないことも大切。';
@@ -189,6 +220,13 @@
         q.context='庄司「本体価格だけでなく、予算に少し余裕がないと稟議を出し直すことになるので」';
         q.hint='木曜のメーカー価格はログから確認。予算額には少し余裕があると安心。';
         q.explain='メーカー価格と、会社が確保する購入予算は区別する。';
+        q.zone=[q.truth,Math.max(q.truth+1,Math.ceil(q.truth*1.15))];
+      }else if(type==='household_supplies'){
+        q.opening='金曜日。庄司さんが昨日の家の買い物について、予算の確認に来た。';
+        q.speech='昨日の'+name+'、週末の買い物予算にはいくらくらい見ておけば安心ですか？';
+        q.context='庄司「家計の予算を少し余裕を持って考えておきたくて。単価は昨日確認しましたよね」';
+        q.hint='木曜の価格はログにある。買い物予算を少なすぎる額にしないのが大切。';
+        q.explain='日用品の正確な価格と、家計に確保しておく予算は別。';
         q.zone=[q.truth,Math.max(q.truth+1,Math.ceil(q.truth*1.15))];
       }else{
         q.opening='金曜日。庄司さんが木曜に見せてくれたプレゼントの候補を持って、またやってきた。';
