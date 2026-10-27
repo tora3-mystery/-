@@ -451,6 +451,14 @@
     if (!q || !Number.isSafeInteger(q.truth)) throw new TypeError('invalid question');
     const t=tone(q,x,grade||{});
     const speaker=person(q);
+    if(q.micro){
+      const inBand=x>=q.zone[0]&&x<=q.zone[1];
+      const first=(t==='exact'&&q.mode==='facts')?'ぴったりです。':
+        inBand?q.good:x<q.zone[0]?q.low:q.high;
+      const second=q.mode==='facts'?'資料に書かれた数字と照合しておきます。':
+        inBand?'その数字なら話を進められそうです。':'数字の受け止め方って、難しいですね。';
+      return {kind:t,score:grade.score,exact:t==='exact',lines:lines(speaker,first,second)};
+    }
     const names = {
       0:{
         exact:['……正解。','ねえ、普通ここでちょっと若めに言わない？ いや、正解なんだけど。'],
