@@ -38,7 +38,7 @@ h2{font-size:17px;line-height:1.4;margin:0 0 8px}h3{font-size:14px;margin:0 0 8p
 </style>
 </head>
 <body><main class="app">
-<header class="mast"><div><div class="sub">短編UIゲーム実験室｜K1 プロトタイプ</div><h1>掲示物をご確認ください。</h1><div class="meta"><b>K1 α0.5.0</b> ｜ 2026-10-28 02:00 JST更新</div></div><a class="home" href="../index.html">作品一覧へ</a></header>
+<header class="mast"><div><div class="sub">短編UIゲーム実験室｜K1 プロトタイプ</div><h1>掲示物をご確認ください。</h1><div class="meta"><b>K1 α0.6.0</b> ｜ 2026-10-28 02:06 JST更新</div></div><a class="home" href="../index.html">作品一覧へ</a></header>
 <section id="intro" class="panel intro">
 <div class="sub">白波レジデンス・406号室</div><h2>掲示物をご確認ください。</h2>
 <p class="lede">あなたは白波レジデンス406号室で一人暮らしをする会社員です。</p><p>入居して3か月。仕事から帰るたび、エントランスの大量の掲示が目に入ります。少し慣れた今も、すべてに目を通すのはひと苦労です。</p>
@@ -59,7 +59,7 @@ h2{font-size:17px;line-height:1.4;margin:0 0 8px}h3{font-size:14px;margin:0 0 8p
 <script>
 (function(){
 'use strict';
-var KEY='short-ui-k1-alpha050';
+var KEY='short-ui-k1-alpha060';
 var BASE=[
 ['R01','管理人室の受付','管理人室の通常受付は9時から17時までです。時間外のご用件は指定窓口へお願いいたします。','管理事務所'],
 ['R02','夜間の訪問について','21時以降、管理事務所および委託業者が訪問する場合は、原則として事前に案内を配布します。','管理事務所'],
@@ -220,11 +220,12 @@ function initial(){return{started:false,day:1,index:0,phase:'morning',failure:nu
 function copy(x){return JSON.parse(JSON.stringify(x));}
 var state=initial(),tab='board',selected=null,monitor=false,pendingChoice=null,reply={fields:[],number:'',person:''};
 var WEEKDAYS=['月','火','水','木','金','土','日'];
+function weekday(day){return WEEKDAYS[(day-1)%7];}
 function snapshot(){getEvents(state.day);dailyDocuments();var s=copy(state);delete s.snapshots;s.result='';s.resultPending=false;s.phase='morning';state.snapshots[state.day]=s;}
-function load(){try{var v=JSON.parse(localStorage.getItem(KEY));if(v&&v.day>=1&&v.day<=7&&v.snapshots&&typeof v.started==='boolean'){state=v;if(state.failure===undefined)state.failure=null;if(state.day>=5&&!state.drawingTarget)state.drawingTarget=firstDrawingTarget(state.history);}}catch(e){}}
+function load(){try{var v=JSON.parse(localStorage.getItem(KEY));if(v&&v.day>=1&&v.day<=10&&v.snapshots&&typeof v.started==='boolean'){state=v;if(state.failure===undefined)state.failure=null;if(state.day>=7&&!state.drawingTarget)state.drawingTarget=firstDrawingTarget(state.history);}}catch(e){}}
 function firstDrawingTarget(history){var h=history.find(function(x){return x.id==='E03';});return h&&h.choice==='yes'?'406':'405';}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(state));}catch(e){}}
-function dailyDocuments(){if(state.day>=1)add('delivery');if(state.day>=2)add('letter');if(state.day>=4){add('old');add('inspection');}if(state.day>=6&&state.trust>0)add('report');if(state.day>=7)add('chair');}
+function dailyDocuments(){if(state.day>=1)add('delivery');if(state.day>=4)add('letter');if(state.day>=6){add('old');add('inspection');}if(state.day>=8&&state.trust>0)add('report');if(state.day>=10)add('chair');}
 function has(id){return state.evidence.indexOf(id)>=0;}
 function add(id){if(!has(id)){state.evidence.push(id);save();}}
 function esc(t){return String(t).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
@@ -234,19 +235,19 @@ function currentNotices(){var retired=retiredIds(state.day);var base=BASE.filter
 function items(where){
 var post=[
 {day:1,id:'delivery',name:'配送日時変更のお知らせ',text:'406号室宛ての荷物は配達日が変更されました。変更前：月曜日19:00〜21:00／変更後：火曜日19:00〜21:00。月曜夜の配達予定はありません。配送会社お客様窓口。'},
-{day:2,id:'letter',name:'405号室からの短い手紙',text:'「407号室は空室と説明されています。夜中の呼出しには気をつけてください。私の手紙を管理室に渡さないでください」。横田'},
-{day:4,id:'old',name:'旧掲示物のコピー',text:'「夜間、心当たりのない呼出しには応答しないでください」。欄外に手書きで「返事をした部屋で翌日も同じことが起きる」。旧管理人・藤井。'},
-{day:4,id:'inspection',name:'本日の個別点検案内',text:'406号室の設備確認。20:00〜20:30。担当：東洋設備・大野。日付と管理番号の記載あり。'},
+{day:4,id:'letter',name:'405号室からの短い手紙',text:'「407号室は空室と説明されています。夜中の呼出しには気をつけてください。私の手紙を管理室に渡さないでください」。横田'},
+{day:6,id:'old',name:'旧掲示物のコピー',text:'「夜間、心当たりのない呼出しには応答しないでください」。欄外に手書きで「返事をした部屋で翌日も同じことが起きる」。旧管理人・藤井。'},
+{day:6,id:'inspection',name:'本日の個別点検案内',text:'406号室の設備確認。20:00〜20:30。担当：東洋設備・大野。日付と管理番号の記載あり。'},
 
-{day:6,id:'report',name:'405号室からの事故資料',text:'407号室・高瀬奈津美の事故。過去の点検記録と異常通報の日時が一致しない。横田が渡した書面の写し。',requiresTrust:true},
-{day:7,id:'chair',name:'管理組合への意見送付案内',text:'異議申立ては管理会社ではなく理事会でも受付。保管済み資料を添えて提出できる。'}
+{day:8,id:'report',name:'405号室からの事故資料',text:'407号室・高瀬奈津美の事故。過去の点検記録と異常通報の日時が一致しない。横田が渡した書面の写し。',requiresTrust:true},
+{day:10,id:'chair',name:'管理組合への意見送付案内',text:'異議申立ては管理会社ではなく理事会でも受付。保管済み資料を添えて提出できる。'}
 ];
 var door=[
 {day:1,id:'doorbase',name:'406号室の玄関',text:'ドアノブ、インターホン、表札。特に変わったところはない。'},
-{day:4,id:'log',name:'呼出記録',text:'02:14の呼出しが履歴に残っている。録音には三度のノックのような音。'},
-{day:4,id:'scratch',name:'玄関横の印',text:'壁に鉛筆で書いたような印がある。以前は気づかなかった。'},
-{day:7,id:'sticker',name:'点検済のシール',text:state.seal?'「確認済」。昨夜、点検を受けた際に貼られたものだ。':'「確認済」。昨夜は点検を受けていないのに、406号室の扉に貼られている。'},
-{day:7,id:'finaldoor',name:'帰宅時の玄関',text:'床に小さな水滴がある。隣室の前にも同じような跡が続いている。'}
+{day:6,id:'log',name:'呼出記録',text:'02:14の呼出しが履歴に残っている。録音には三度のノックのような音。'},
+{day:6,id:'scratch',name:'玄関横の印',text:'壁に鉛筆で書いたような印がある。以前は気づかなかった。'},
+{day:9,id:'sticker',name:'点検済のシール',text:state.seal?'「確認済」。昨夜、点検を受けた際に貼られたものだ。':'「確認済」。昨夜は点検を受けていないのに、406号室の扉に貼られている。'},
+{day:10,id:'finaldoor',name:'帰宅時の玄関',text:'床に小さな水滴がある。隣室の前にも同じような跡が続いている。'}
 ];
 return (where==='post'?post:door).filter(function(i){return i.day<=state.day&&!(where==='post'&&i.id==='letter'&&state.letterTaken)&&(!i.requiresTrust||state.trust>0);});
 }
@@ -264,7 +265,7 @@ function responseForm(e){
  if(e.id==='E08'){return '<p><b>照合する氏名</b></p>'+[{id:'水野 凪',label:'水野 凪（406号室）'},{id:'横田',label:'横田（405号室）'},{id:'高瀬 奈津美',label:'高瀬 奈津美（407号室・過去の居住者）'},{id:'森本 透',label:'森本 透（照合に出てきた名称）'}].map(function(x){return '<label class="answer-line"><input type="radio" name="replyPerson" data-reply-person="'+esc(x.id)+'" '+(reply.person===x.id?'checked':'')+'> '+esc(x.label)+'</label>';}).join('');}
  return '';
 }
-function drawingHtml(){var target=state.day>=7&&state.drawingTarget&&state.owner!==state.drawingTarget?state.owner:state.day>=5?(state.drawingTarget||firstDrawingTarget(state.history)):'407',px={'405':189,'406':288,'407':387}[target];return '<figure style="margin:12px 0"><svg class="kid-art" role="img" aria-label="子どもが描いた4階の廊下。'+esc(target)+'号室の前に黒い人のようなものがいる。" viewBox="0 0 480 225" xmlns="http://www.w3.org/2000/svg"><rect width="480" height="225" fill="#fff9e8"/><path d="M25 55 L455 54 M25 165 L452 169" stroke="#87b3c9" stroke-width="5" stroke-linecap="round" fill="none"/><path d="M48 76V162h77V76ZM148 76V162h77V76ZM248 76V162h77V76ZM348 76V162h77V76Z" stroke="#a47d55" stroke-width="6" fill="#fff5d9" stroke-linejoin="round"/><g fill="#77664f" font-size="18" font-family="sans-serif"><text x="68" y="105">404</text><text x="168" y="105">405</text><text x="268" y="105">406</text><text x="368" y="105">407</text></g><g fill="#c9aa6a"><circle cx="114" cy="131" r="4"/><circle cx="214" cy="131" r="4"/><circle cx="314" cy="131" r="4"/><circle cx="414" cy="131" r="4"/></g><g fill="#39404b" stroke="#333843" stroke-linecap="round"><ellipse cx="'+px+'" cy="119" rx="11" ry="14"/><path d="M'+(px-11)+' 132Q'+px+' 123 '+(px+11)+' 132L'+(px+17)+' 181H'+(px-17)+'Z" stroke-width="3"/></g><path d="M38 200 Q89 185 126 199T210 201T310 200T446 201" stroke="#95b270" stroke-width="4" fill="none"/><text x="25" y="34" font-family="sans-serif" font-size="17" fill="#5b8199">ぼくのマンション</text></svg><figcaption class="tiny">404号室のお子さんの絵。4階の廊下が描かれている。'+(state.day>=7&&state.owner!==state.drawingTarget?'別の絵に貼り替えられたようだ。':'')+'</figcaption></figure>';}
+function drawingHtml(){var target=state.day>=9&&state.drawingTarget&&state.owner!==state.drawingTarget?state.owner:state.day>=7?(state.drawingTarget||firstDrawingTarget(state.history)):'407',px={'405':189,'406':288,'407':387}[target];return '<figure style="margin:12px 0"><svg class="kid-art" role="img" aria-label="子どもが描いた4階の廊下。'+esc(target)+'号室の前に黒い人のようなものがいる。" viewBox="0 0 480 225" xmlns="http://www.w3.org/2000/svg"><rect width="480" height="225" fill="#fff9e8"/><path d="M25 55 L455 54 M25 165 L452 169" stroke="#87b3c9" stroke-width="5" stroke-linecap="round" fill="none"/><path d="M48 76V162h77V76ZM148 76V162h77V76ZM248 76V162h77V76ZM348 76V162h77V76Z" stroke="#a47d55" stroke-width="6" fill="#fff5d9" stroke-linejoin="round"/><g fill="#77664f" font-size="18" font-family="sans-serif"><text x="68" y="105">404</text><text x="168" y="105">405</text><text x="268" y="105">406</text><text x="368" y="105">407</text></g><g fill="#c9aa6a"><circle cx="114" cy="131" r="4"/><circle cx="214" cy="131" r="4"/><circle cx="314" cy="131" r="4"/><circle cx="414" cy="131" r="4"/></g><g fill="#39404b" stroke="#333843" stroke-linecap="round"><ellipse cx="'+px+'" cy="119" rx="11" ry="14"/><path d="M'+(px-11)+' 132Q'+px+' 123 '+(px+11)+' 132L'+(px+17)+' 181H'+(px-17)+'Z" stroke-width="3"/></g><path d="M38 200 Q89 185 126 199T210 201T310 200T446 201" stroke="#95b270" stroke-width="4" fill="none"/><text x="25" y="34" font-family="sans-serif" font-size="17" fill="#5b8199">ぼくのマンション</text></svg><figcaption class="tiny">404号室のお子さんの絵。4階の廊下が描かれている。'+(state.day>=9&&state.owner!==state.drawingTarget?'別の絵に貼り替えられたようだ。':'')+'</figcaption></figure>';}
 
 function evidenceName(id){var map={delivery:'宅配予告',letter:'405号室の警告',old:'旧掲示物',inspection:'個別点検案内',drawing:'子どもの絵',report:'407号室の事故資料',chair:'理事会宛ての案内',doorbase:'玄関の確認',log:'02:14の呼出記録',scratch:'玄関の印',sticker:'点検済シール',finaldoor:'玄関の水滴',technician:'点検員の実施控え',testimony:'横田の証言'};return map[id]||id;}
 function canExpose(){return has('old')&&has('report')&&has('testimony')&&has('technician')&&state.recordValidated;}
@@ -382,17 +383,17 @@ function answer(c,extra){
  if(state.failure){state.ended=true;state.phase='fail';}
  monitor=false;save();render();scrollToTop();
 }
-function advance(){if(!state.resultPending)return;pendingChoice=null;state.resultPending=false;state.result='';state.index++;if(state.index>=getEvents(state.day).length){if(state.day===7){state.ended=true;state.phase='end';}else{state.day++;state.index=0;state.phase='morning';if(state.day===5)state.drawingTarget=state.owner;snapshot();}}save();render();scrollToTop();}
+function advance(){if(!state.resultPending)return;pendingChoice=null;state.resultPending=false;state.result='';state.index++;if(state.index>=getEvents(state.day).length){if(state.day===10){state.ended=true;state.phase='end';}else{state.day++;state.index=0;state.phase='morning';if(state.day===7)state.drawingTarget=state.owner;snapshot();}}save();render();scrollToTop();}
 function scrollToTop(){try{window.scrollTo({top:0,behavior:'instant'});}catch(e){window.scrollTo(0,0);}}
 function ending(){if(state.failure){return '<div class="ending"><div class="tiny" style="color:#b5c0c2">406号室｜'+state.day+'日目</div><h2>GAME OVER</h2><div class="endingname">'+esc(state.failure.reason)+'</div><p>'+esc(state.result)+'</p></div><div class="btnrow"><button class="btn primary" data-restartday="'+state.day+'">同じ日の帰宅時からやり直す</button><button class="btn secondary" data-showrewind="1">別の日を選ぶ</button></div>';}var name,body;
 if(state.exposed&&state.owner==='405'&&!state.consent){name='記録は残りました';body='旧掲示と点検控え、横田の証言をまとめた書面が管理組合に届いた。廊下が静かになった夜、407号室の灯りだけが消えていた。';}
 else if(state.exposed){name='説明のつかない呼出し';body='管理組合には書面が届いた。けれど午前2時14分、再びあなたの部屋へインターホンが鳴る。どこかで返事をした日を思い出す。';}
 else if(state.owner==='405'&&!state.consent){name='戸締まり';body='406号室は今夜も静かだった。管理会社からは「対応完了」の通知が届く。405号室の前だけ、朝になると濡れている。';}
 else{name='確認済み';body='管理会社の記録では、406号室への説明と点検は完了している。今夜の呼出しについても、回答は必要ないとされている。';}
-return '<div class="ending"><div class="tiny" style="color:#b5c0c2">白波レジデンス｜7日目の夜</div><h2>THE END</h2><div class="endingname">'+esc(name)+'</div><p>'+esc(body)+'</p></div><p class="caption">結末は判断と、それまでに得た情報によって変化します。別の日から再挑戦できます。</p><div class="btnrow"><button class="btn primary" data-restartday="1">1日目からやり直す</button><button class="btn secondary" data-showrewind="1">日付を選ぶ</button></div>';
+return '<div class="ending"><div class="tiny" style="color:#b5c0c2">白波レジデンス｜10日目の夜</div><h2>THE END</h2><div class="endingname">'+esc(name)+'</div><p>'+esc(body)+'</p></div><p class="caption">結末は判断と、それまでに得た情報によって変化します。別の日から再挑戦できます。</p><div class="btnrow"><button class="btn primary" data-restartday="1">1日目からやり直す</button><button class="btn secondary" data-showrewind="1">日付を選ぶ</button></div>';
 }
 function renderNight(){var n=el('nightPanel');n.classList.toggle('hidden',state.phase!=='night'||state.ended);if(state.phase!=='night'||state.ended)return;
-var e=eventNow();var shownTime=e.time+(Number(e.time.slice(0,2))<5?'（翌'+WEEKDAYS[state.day%7]+'曜日）':'');var h='<div class="over">'+state.day+'日目｜'+esc(shownTime)+'｜'+(state.index+1)+' / '+getEvents(state.day).length+'</div><h2>'+esc(e.title)+'</h2><div class="scenario">'+esc(e.scene)+'</div>';
+var e=eventNow();var shownTime=e.time+(Number(e.time.slice(0,2))<5?'（翌'+weekday(state.day+1)+'曜日）':'');var h='<div class="over">'+state.day+'日目｜'+esc(shownTime)+'｜'+(state.index+1)+' / '+getEvents(state.day).length+'</div><h2>'+esc(e.title)+'</h2><div class="scenario">'+esc(e.scene)+'</div>';
 if(state.resultPending){h+='<div class="result"><b>その夜の記録</b><p>'+esc(state.result)+'</p></div><button class="btn primary" data-next="1">次へ進む</button>';}
 else{h+='<div class="btnrow"><button class="btn secondary" data-monitor="1">'+(monitor?'観察を閉じる':'相手・状況を確認する')+'</button></div>';
 if(monitor)h+='<div class="monitor">'+esc(e.monitor)+'</div>';
@@ -416,7 +417,7 @@ if(n){h+='<div class="detail"><div class="issuer">'+esc(n.id)+'｜'+esc(n.issuer
 if(state.day>=6)h+='<div class="detail"><h3>掲示の貼替履歴</h3><p>R04「不審な呼出しについて」は6日目に撤去され、N06「夜間設備点検へのご協力」が掲示されています。古い文面を控えていた住民がいるようです。</p></div>';
 }else{
  h='<h2>'+(tab==='post'?'406号室のポスト':'406号室の玄関')+'</h2><p class="tiny">帰宅時に内容を確かめてください。この情報が後の判断に役立つ場合があります。</p><div class="listing">';
- items(tab).forEach(function(i){h+='<div class="record"><strong>'+esc(i.name)+'</strong>'+(tab==='post'?'<div class="tiny">投函日：'+esc(WEEKDAYS[i.day-1]+'曜日（'+i.day+'日目）')+'</div>':'')+'<p>'+esc(i.text)+'</p></div>';});
+ items(tab).forEach(function(i){h+='<div class="record"><strong>'+esc(i.name)+'</strong>'+(tab==='post'?'<div class="tiny">投函日：'+esc(weekday(i.day)+'曜日（'+i.day+'日目）')+'</div>':'')+'<p>'+esc(i.text)+'</p></div>';});
  h+='</div>';
 }
 p.innerHTML=h;
@@ -424,7 +425,7 @@ p.innerHTML=h;
 function render(){el('intro').classList.toggle('hidden',state.started);el('game').classList.toggle('hidden',!state.started);
 el('start').classList.toggle('hidden',!!state.snapshots[1]);el('resume').classList.toggle('hidden',!state.snapshots[1]);el('new').classList.toggle('hidden',!state.snapshots[1]);
 if(!state.started)return;
-el('dayLabel').textContent=state.day+'日目（'+WEEKDAYS[state.day-1]+'曜日） / 7日間｜406号室';
+el('dayLabel').textContent=state.day+'日目（'+weekday(state.day)+'曜日） / 10日間｜406号室';
 el('phaseLabel').textContent=state.failure?'その夜｜対応終了':state.ended?'翌朝｜終了':state.phase==='morning'?'帰宅時｜共用部の掲示を確認':'自室｜今夜の出来事に対応';
 el('endingPanel').classList.toggle('hidden',!state.ended);if(state.ended)el('endingPanel').innerHTML=ending();
 el('morningPanel').classList.toggle('hidden',state.phase!=='morning'||state.ended);
@@ -444,9 +445,9 @@ el('morningText').textContent=([
 var rp=el('rewindPanel');if(!rp.classList.contains('hidden'))renderRewind();
 renderNight();renderTab();
 }
-function renderRewind(){var h='';for(var d=1;d<=7;d++){h+='<button class="btn" '+(d>state.day?'disabled':'data-restartday="'+d+'"')+'>'+d+'日目'+(d===state.day?'（現在）':'')+'</button>';}el('days').innerHTML=h;}
+function renderRewind(){var h='';for(var d=1;d<=10;d++){h+='<button class="btn" '+(d>state.day?'disabled':'data-restartday="'+d+'"')+'>'+d+'日目'+(d===state.day?'（現在）':'')+'</button>';}el('days').innerHTML=h;}
 function start(){state=initial();state.started=true;pendingChoice=null;reply={fields:[],number:'',person:''};snapshot();save();render();scrollToTop();}
-function rewind(day){day=Number(day);if(!state.snapshots[day]||day>state.day)return;var old=state.snapshots;var snap=copy(old[day]);snap.snapshots={};Object.keys(old).forEach(function(k){if(Number(k)<=day)snap.snapshots[k]=old[k];});state=snap;if(state.day>=5&&!state.drawingTarget)state.drawingTarget=firstDrawingTarget(state.history);state.started=true;tab='board';selected=null;monitor=false;pendingChoice=null;reply={fields:[],number:'',person:''};el('rewindPanel').classList.add('hidden');save();render();scrollToTop();}
+function rewind(day){day=Number(day);if(!state.snapshots[day]||day>state.day)return;var old=state.snapshots;var snap=copy(old[day]);snap.snapshots={};Object.keys(old).forEach(function(k){if(Number(k)<=day)snap.snapshots[k]=old[k];});state=snap;if(state.day>=7&&!state.drawingTarget)state.drawingTarget=firstDrawingTarget(state.history);state.started=true;tab='board';selected=null;monitor=false;pendingChoice=null;reply={fields:[],number:'',person:''};el('rewindPanel').classList.add('hidden');save();render();scrollToTop();}
 function beginNight(){if(state.phase!=='morning'||state.ended)return;state.phase='night';pendingChoice=null;reply={fields:[],number:'',person:''};tab='board';selected=null;save();render();scrollToTop();}
 document.addEventListener('click',function(ev){
 var b=ev.target.closest('button');if(!b)return;
