@@ -1,7 +1,7 @@
 {
   "schema": 1,
-  "asOf": "2026-10-27 20:08 JST／差分同期。QAは記録照合であり再実行ではない。",
-  "baseCommit": "067d9b9885248355f9bc0944ce6b9968cd2e5ab6",
+  "asOf": "2026-10-27 20:12 JST／差分同期。S6 v0.5.4・F1素材仕様の追補。QA再実行なし。",
+  "baseCommit": "cead72a141ddeb8f2a8f2fc58a57899de0762870",
   "progressMeaning": "バーは到達した工程の位置（Phase番号/8）を示す目安。完成率、レビュー合格率ではない。進捗は資料上の暫定推定を含む。",
   "limitations": "人間レビューは実施記録・対象版・日付を確認した場合だけ更新。既存の人間評価は未再確認。Workの申告と現稼働は別。各ゲームの実ブラウザQA・人間試遊は今回未実施。管理データ更新は自動監視ではない。",
   "projects": [
@@ -37,10 +37,10 @@
       "id": "S6",
       "title": "サークルは、星の数ほどありますから。",
       "path": "s6/",
-      "version": "v0.5.3",
+      "version": "v0.5.4",
       "phase": 7,
       "stage": "試作・人間レビュー",
-      "logic": "v0.5.1 DB検証エラー0の記録／v0.5.3文面修正。最新全経路の合格記録は未確認",
+      "logic": "v0.5.4：複数イベント28人の再会話題を照合した記録。DB検証コード追加／実行合格記録未確認",
       "browser": "最新版の実ブラウザ未確認",
       "human": "最新版の初見未確認",
       "humanVersion": "",
@@ -49,24 +49,26 @@
       "next": "優先2：顔を覚えて再会できるか、交流の自然さ、1周の所要時間を初見確認",
       "work": "新規投入候補（顔写真の拡大二次検品・スマホ表示）。既存制作の稼働は未確認",
       "sourceFile": "s6/game-data.js",
-      "sourceSha": "c08b78e1d5a9dcf17a21a7ce2713009f3b13f9ea",
-      "lastCheckedAt": "2026-10-27T20:08:00+09:00",
-      "lastCheckedCommit": "067d9b9885248355f9bc0944ce6b9968cd2e5ab6",
-      "verificationScope": "差分・関連ソース・記録照合",
+      "sourceSha": "5138de288198a693cc6cdd0dab458165224eccd7",
+      "lastCheckedAt": "2026-10-27T20:12:00+09:00",
+      "lastCheckedCommit": "cead72a141ddeb8f2a8f2fc58a57899de0762870",
+      "verificationScope": "v0.5.4差分・到達性記録照合。96プロフィール・再会台詞32件。実行結果は未確認",
       "humanDate": null,
       "humanEvidence": "既存管理情報を継承。実施日・原記録は今回未再確認",
-      "blockers": "人物識別性・会話量・体験時間の評価待ち。追加シナリオ未実装",
+      "blockers": "人物識別性・行動バランス・体験時間の評価待ち。1イベントのみの68人の再接触導線、人物所属の正本確認、追加シナリオが残る",
       "releaseStatus": "公開区分は既存管理情報を継承／最新版の公開実操作は今回未確認",
       "evidence": [
         "s6/game-data.js",
         "s6/game.js",
         "s6/REVIEW_SHEET.md",
         "s6/assets/face_manifest.csv",
-        "s6/assets/face_qa.md"
+        "s6/assets/face_qa.md",
+        "s6/validate-db.cjs",
+        "s6/DATA_MODEL.md"
       ],
       "priority": 2,
       "priorityReason": "人物素材の待ちが解消。中核体験を人間が評価でき、追加実装の判断に直結する。",
-      "logicVersion": "v0.5.1 DB記録／v0.5.3全体未確認",
+      "logicVersion": "v0.5.4（到達性の記録照合）",
       "browserVersion": null,
       "assetStatus": {
         "githubSaved": 96,
@@ -231,22 +233,22 @@
       "version": "v0.17.3",
       "phase": 6,
       "stage": "試作・改修中",
-      "logic": "v0.17.0回帰記録あり／v0.17.3全体は未再検証。v0.18素材ゲート追加",
+      "logic": "v0.17.0回帰記録あり／v0.17.3全体未再検証。v0.18選択ロジック・テスト更新（実行結果未確認）",
       "browser": "最新版の実ブラウザ未確認",
       "human": "旧版に指摘あり",
       "humanVersion": "旧版（版数未特定）",
       "assets": "既存写真組込済／v0.18画像Work実施中（既存ユーザー申告・現稼働未確認）。新規main-*はGitHub未保存",
       "owner": "Work→人間→Chat",
-      "next": "既存担当の代表3点の保存・比較提出を待ち、人間のP1承認後に次段階へ",
+      "next": "既存担当とP1承認・保存状況を照合し、発注書34候補と選択コード29点（P3残り23点）の仕様差を整理",
       "work": "既存申告あり・重複発注禁止。現在の稼働は未確認",
       "sourceFile": "f1/index.html",
       "sourceSha": "8c026ac3ddcb763590c95a148b048667452da378",
-      "lastCheckedAt": "2026-10-27T20:08:00+09:00",
-      "lastCheckedCommit": "067d9b9885248355f9bc0944ce6b9968cd2e5ab6",
+      "lastCheckedAt": "2026-10-27T20:12:00+09:00",
+      "lastCheckedCommit": "cead72a141ddeb8f2a8f2fc58a57899de0762870",
       "verificationScope": "差分・関連ソース・記録照合",
       "humanDate": null,
       "humanEvidence": "既存管理情報を継承。実施日・原記録は今回未再確認",
-      "blockers": "v0.18代表3点のGitHub保存とP1承認記録を確認できない。選択ロジックは本体未接続",
+      "blockers": "v0.18写真はGitHub未保存。発注書34候補と最新コード29点の不整合、P1承認記録、本体接続が確認待ち",
       "releaseStatus": "公開区分は既存管理情報を継承／最新版の公開実操作は今回未確認",
       "evidence": [
         "f1/index.html",
@@ -254,11 +256,13 @@
         "f1/WORK_V018_PHOTO_BRIEF.md",
         "f1/store_scene_v018.js",
         "f1/tests/v018_asset_gate.cjs",
-        "f1/tests/v018_p1_review.html"
+        "f1/tests/v018_p1_review.html",
+        "f1/tests/v018_scene_selection.cjs",
+        "f1/tests/v018_game_state_bridge.cjs"
       ],
       "assetStatus": {
         "legacy": "ゲーム組込済",
-        "planned": "v0.18代表3点→承認→追加3点→残り。GitHub新規0点",
+        "planned": "最新選択コードは主写真28点＋結果写真1点、P3残り23点。発注書は34候補の旧記載。GitHub新規0点",
         "workActivity": "ユーザー申告継承・現稼働未確認"
       },
       "logicVersion": "v0.17.0（記録）",
@@ -453,10 +457,10 @@
   ],
   "previousBaseCommit": "739362d95e31d8cf9b9d64599fa2308d1c266735",
   "sync": {
-    "checkedAt": "2026-10-27T20:08:00+09:00",
+    "checkedAt": "2026-10-27T20:12:00+09:00",
     "comparedFrom": "739362d95e31d8cf9b9d64599fa2308d1c266735",
-    "checkedHead": "067d9b9885248355f9bc0944ce6b9968cd2e5ab6",
-    "commits": 17,
+    "checkedHead": "cead72a141ddeb8f2a8f2fc58a57899de0762870",
+    "commits": 26,
     "changedProjects": [
       "F1",
       "K1",
@@ -482,6 +486,12 @@
       "P1",
       "V1",
       "S6"
-    ]
+    ],
+    "catchup": {
+      "from": "067d9b9885248355f9bc0944ce6b9968cd2e5ab6",
+      "to": "cead72a141ddeb8f2a8f2fc58a57899de0762870",
+      "gameChange": "S6 v0.5.4再会台詞・到達性監査記録、F1素材選択仕様29点（P3残り23点）・検証コード追加。合格の推定なし",
+      "dashboardCommit": "c37d1431abc630b9d075bdd57c6d7af84427ccb9"
+    }
   }
 }
