@@ -141,8 +141,8 @@
       q.source = celeb.source;
       q.factDate = '2026-10-28';
       q.speech = 'ねえ、私って何歳に見える？ 実は' + celeb.name + 'さんと同い年なの。';
-      q.context = '相馬「' + celeb.clue + '」 相馬さんは、こちらの返事を楽しみにしている。';
-      q.hint = celeb.hint;
+      q.context = '相馬「昔のドラマをまた見返したくなっちゃってね」 こちらの返事を楽しみにしている。';
+      q.hint = celeb.clue + ' ' + celeb.hint;
       q.item = '相馬さんの年齢';
       q.publicDetail = '';
       q.spec = '';
@@ -189,7 +189,7 @@
       q.context = '月曜の買い物と同じ型番の商品を、別のお店が値引きしていた。月曜の購入額は会話ログから確認できる。';
       q.speech = '梅田さんのアレ、今' + discount + '%OFFなんだって。いくらになってると思う？';
       q.hint = '月曜の会話ログに、梅田さんが実際に買った値段がある。店頭セールと公式通常価格は別。';
-      q.publicDetail = '別店舗の架空セール：' + discount + '%OFF。値引き前の価格は月曜の会話ログを参照。';
+      q.publicDetail = '同じ商品の別店舗セール（ゲーム内の架空設定）。';
       q.spec = '割引率 ' + discount + '%OFF（元値は会話ログで確認）';
       q.resultDetail = '月曜の購入額 ' + fmt(purchasePrice) + '円 → 架空のセール価格 ' + fmt(q.truth) + '円。';
       q.explain = '公式価格自体が値下げされたわけではない。別店舗のセールはゲーム内の架空設定。';
