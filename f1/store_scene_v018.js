@@ -62,7 +62,7 @@
       file='main-outcome-decline.webp';reason='weekly-decline';
     }else if(worst.value>=3&&second.value>=3){
       const pair=[worst,second].sort((a,b)=>a.index-b.index);
-      const severe=pair.every(x=>x.value>=4);
+      const severe=worst.value>=4; // severe means the leading issue is severe; secondary may remain moderate
       file='main-'+pair[0].name+'-'+pair[1].name+'-'+(severe?'severe':'moderate')+'.webp';
       reason='two-current-issues';
     }else if(worst.value>=2){
