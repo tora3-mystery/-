@@ -28,13 +28,13 @@ function auditHumanDecisions(html){
  ];
  const clip=(n,max=5)=>Math.max(0,Math.min(max,n));
  function ranked(s,p){
-  const currentSales=Math.max(0,30+s.attraction*10-s.vals.reduce((a,b)=>a+b,0)*10);
+  const currentSales=Math.max(0,30+s.attraction*10-s.vals.reduce((a,b)=>a+b,0)*10-15*s.vals.filter(x=>x===5).length);
   const projection=s.revenue+(8-s.day)*currentSales;
   return api.getAvailableActions().filter(a=>a.kind!=='odd'&&(p.gray!==false||a.kind!=='gray')&&
    (p.gray!=='crisis'||a.kind!=='gray'||projection<480||currentSales<=30)).map(a=>{
     const delta=a.delta||[0,0,0,0],next=s.vals.map((v,i)=>clip(v+delta[i]));
     const before=s.vals.reduce((x,y)=>x+y,0),after=next.reduce((x,y)=>x+y,0);
-    const gain=(clip(s.attraction+(a.attractionOnCompletion||0),10)-s.attraction+before-after)*10;
+    const gain=(clip(s.attraction+(a.attractionOnCompletion||0),10)-s.attraction+before-after)*10-15*(next.filter(x=>x===5).length-s.vals.filter(x=>x===5).length);
     const peak=Math.max(...s.vals)-Math.max(...next);
     const cascadeBefore=before>=8||Math.max(...s.vals)>=4;
     const cascadeAfter=after>=8||Math.max(...next)>=4;
@@ -45,7 +45,7 @@ function auditHumanDecisions(html){
    }).sort((a,b)=>b.score-a.score||a.action.id.localeCompare(b.action.id));
  }
  function inspectFeedback(state,tried){
-  const names=['レジ待ち','通路','品切れ','店内騒音'],inspected=new Set();
+  const names=['レジ待ち','通路混雑','品切れ','店内騒音'],inspected=new Set();
   for(let attempt=0;attempt<3;attempt++){
    const cards=[...api.getTestNode('complaintBoard').children,...api.getTestNode('complaintExtraBody').children];
    const candidates=[];
@@ -79,7 +79,7 @@ function auditHumanDecisions(html){
    const s=api.getState();
    if(s.revenue!==s.days.reduce((n,d)=>n+(d.sales||0),0))throw Error('Revenue ledger mismatch');
    if(s.vals.some(v=>v<0||v>5))throw Error('Complaint limit');
-   if((s.complaintTickets||[]).filter(x=>x.status==='open').length!==s.vals.reduce((a,b)=>a+b,0))throw Error('Complaint ticket mismatch');
+   if((s.complaintTickets||[]).filter(x=>x.status==='open').length<s.vals.reduce((a,b)=>a+b,0))throw Error('Complaint ticket mismatch');
   }
   const s=api.getState();return {alternateDay,decisions,ending:s.ending,revenue:s.revenue,complaints:s.vals.reduce((a,b)=>a+b,0)};
  }

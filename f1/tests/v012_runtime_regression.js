@@ -71,7 +71,7 @@ function runRegression(html){
  for(const end of [none,best,mixed,day8])check(end.get('ending').children.some(x=>x.className==='ending-media'),'Missing newspaper and forum');
  const clamp=boot();clamp.api.restart();clamp.api.setState({day:4,attraction:10,vals:[0,5,0,5],days:[{day:1,sales:80}],revenue:80});
  for(const card of clamp.get('actions').children){
-  const numbers=[...card.innerHTML.matchAll(/aria-label="(?:集客力|レジ待ち|通路|品切れ|店内騒音) ([+-]?\d+)"/g)].map(x=>Number(x[1]));
+  const numbers=[...card.innerHTML.matchAll(/aria-label="(?:集客力|レジ待ち|通路混雑|品切れ|店内騒音) ([+-]?\d+)"/g)].map(x=>Number(x[1]));
   check(numbers.length===5,'All five effect numbers required');
   check(numbers[0]<=0&&numbers[1]>=0&&numbers[2]<=0&&numbers[3]>=0&&numbers[4]<=0,'Unbounded shown effect');
  }
