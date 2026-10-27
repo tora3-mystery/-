@@ -1,7 +1,7 @@
 (() => {
 'use strict';
-const D=window.S6_DATA, APP=document.getElementById('app'), KEY='s6-origin-beta-010', Dialogue=window.S6_BETA_DIALOGUE;
-const VERSION='0.5.2', BUILD='2026-10-28 01:29 JST';
+const D=window.S6_DATA, APP=document.getElementById('app'), KEY='s6-vocaloid-beta-060', Dialogue=window.S6_BETA_DIALOGUE, Story=window.S6_BETA_STORY;
+const VERSION='0.6.0', BUILD='2026-10-28 02:39 JST';
 const WEEK=['月曜 4月6日','火曜 4月7日','水曜 4月8日','木曜 4月9日','金曜 4月10日'];
 const DATES=['2026-04-06','2026-04-07','2026-04-08','2026-04-09','2026-04-10'];
 const people=Object.fromEntries(D.people.map(p=>[p.person_id,p]));
@@ -71,11 +71,11 @@ function faceCard(id,sub='',act='',extra=''){
 }
 const site=()=>{
  switch(S.phase){
- case 'title':return '<div class="hero"><div class="eyebrow">青嶺大学 / 2026年4月</div><h1>サークルは、<br>星の数ほどありますから。</h1><p>新歓の一週間。大勢の先輩と同期の顔、名前、所属は、なかなか覚えられない。</p><p>けれど、あなたには、どうしても人を見間違えたくない理由がある。</p>'+btn('はじめる','start')+'<p class="dim">β版：初期企画のゲーム性を独立して再構築中。公開中の旧版とは別の保存データです。</p></div>';
- case 'warning':return '<div class="eyebrow">PLAY NOTICE</div><h2>始める前に</h2><div class="paper tense"><p>この物語はストーキングと精神的圧迫を扱います。選択によって退室を妨げられる場面があります。</p><p><strong>過度な暴力・性的暴力・ジャンプスケアは含みません。</strong></p></div><p>不安を感じたらいつでも中断できます。犯人が分からなくても同行・緊急連絡による安全確保は可能です。</p>'+btn('続ける','show-campus')+btn('タイトルへ','back-title','','ghost');
-case 'campus':return '<div class="eyebrow">CAMPUS / WELCOME</div><h2>青嶺大学へようこそ。</h2><p>春のキャンパスには新歓のチラシと音楽があふれています。六つの音楽サークルは雰囲気も活動もそれぞれ違います。</p><div class="paper"><h3>見学できるサークル</h3><div class="club-intros">'+D.orgs.map(o=>'<div class="club-intro"><strong>'+esc(o.formal_name)+'</strong><span>'+esc(o.focus)+'</span></div>').join('')+'</div><p class="dim">見学だけでも構いません。掛け持ちで活動している先輩もいます。</p></div><div class="paper"><h3>一週間の過ごし方</h3><p><strong>平日：</strong>1日1新歓、会場で2つの輪まで参加できます。輪に入ると、初めて会った相手が自己紹介します。</p><p><strong>交流：</strong>話す・質問する・連絡先を頼む・聞き耳を立てる。同じ輪で2回まで行動できます。</p><p><strong>夜：</strong>SNSや掲示は自由に読めます。手帳での顔・名前・所属の照合やメモ編集は夜だけ、回数制限はありません。</p><p><strong>週末：</strong>人間関係と情報を整理し、合宿に行くか・どこに行くか決めます。</p></div>'+btn('主人公について読む','show-intro');
-case 'intro':return '<div class="eyebrow">4月、入学</div><h2>もう一度、音を出す場所を探す。</h2><div class="paper"><p>高校時代、少し名前の知られたバンドで演奏していた。SNSで見知らぬ相手から執拗につきまとわれ、公開していない居場所や行動まで言い当てられるようになった。</p><p>怖くなって音楽をやめ、浪人生活を経て大学に入った。あの相手がまた近くにいるかもしれない。それでも安心して演奏できる場所を選びたい。</p></div><p class="dim">全員の顔と名前を覚える必要はありません。覚えていた顔が、選択を助けることがあります。</p>'+btn('4月6日へ','begin');
- case 'day':return daily();
+ case 'title':return '<div class="hero"><div class="eyebrow">青嶺大学 / 2026年4月</div><h1>サークルは、<br>星の数ほどありますから。</h1><p>新歓の一週間。六つのサークル、覚えきれないほどの顔と名前。</p><p>その中に、あなたがずっと聴いてきたボカロPがいるらしい。</p>'+btn('はじめる','start')+'<p class="dim">β版：人物照合と音楽探しのシミュレーション。旧版とは保存データが別です。</p></div>';
+  case 'warning':return '<div class="eyebrow">BEFORE YOU START</div><h2>この春の約束</h2><div class="paper"><p>この物語は架空の大学と音楽家を扱うフィクションです。</p><p>探す相手は、自分から「見つけたら声をかけて」と公開しています。個人情報を調べたり、相手に正体を明かすよう迫ったりする必要はありません。</p></div>'+btn('新歓の案内を見る','show-campus')+btn('タイトルへ','back-title','','ghost');
+  case 'campus':return '<div class="eyebrow">CAMPUS / WELCOME</div><h2>青嶺大学へようこそ。</h2><p>春のキャンパスには新歓のチラシと音楽があふれています。六つの音楽サークルは雰囲気も活動もそれぞれ違います。</p><div class="paper"><h3>見学できるサークル</h3><div class="club-intros">'+D.orgs.map(o=>'<div class="club-intro"><strong>'+esc(o.formal_name)+'</strong><span>'+esc(o.focus)+'</span></div>').join('')+'</div><p class="dim">見学だけでも構いません。掛け持ちで活動している先輩もいます。</p></div><div class="paper"><h3>一週間の過ごし方</h3><p><strong>平日：</strong>1日1新歓、会場で2つの輪まで参加できます。輪に入ると、初めて会った人が自己紹介します。</p><p><strong>交流：</strong>話す・質問する・連絡先を頼む・聞き耳を立てる。同じ輪で2回まで行動できます。</p><p><strong>夜：</strong>SNSや掲示を読めます。手帳での顔・名前・所属の照合やメモ編集は夜だけ、回数制限はありません。</p><p><strong>金曜の夜：</strong>週末に参加するサークルを一つ決めます。</p></div>'+btn('主人公について読む','show-intro');
+  case 'intro':return '<div class="eyebrow">4月、入学</div><h2>あの曲の作り手に、会えるかもしれない。</h2><div class="paper"><p>高校時代から聴いていた、匿名のボカロP「'+esc(Story.alias)+'」。一番好きな曲は「'+esc(Story.song)+'」。</p><p>'+esc(Story.memory)+'</p><p>大学の新歓が始まる前、活動アカウントに最後の投稿があった。</p><div class="notice">「'+esc(Story.invitation)+'」</div><p>本人からの招待だ。六つのサークルを巡って、演奏や会話の中から手がかりを見つけたい。</p></div><p class="dim">全員の顔と名前を覚える必要はありません。音楽や友人との出会いも自由に楽しんでください。</p>'+btn('4月6日へ','begin');
+  case 'day':return daily();
  case 'flash':return firstIntroductions();
  case 'venue':return venue();
  case 'group':return group();
@@ -162,7 +162,7 @@ function chooseAction(){
  '<div class="person-list">'+items+'</div>'+btn('輪に戻る','back-group','','ghost');
 }
 function night(){
- return '<div class="eyebrow">'+esc(WEEK[S.day])+' / 夜</div><h2>あの顔、誰だったかな。</h2>'+
+ return '<div class="eyebrow">'+esc(WEEK[S.day])+' / 夜</div><h2>今日の音、誰のものだろう。</h2>'+
  '<p>今日出会った人を思い出す。SNS・公開掲示はすべて閲覧可能。手帳での照合とメモ編集は夜だけ、回数無制限です。</p>'+
  '<div class="status">今夜は何度でも調べて照合できます</div>'+
  (S.report?'<div class="notice">'+esc(S.report)+'</div>':'')+
@@ -177,7 +177,7 @@ function night(){
 function sns(){
  const platform=S.snsPlatform;
  const tineContacts=platform==='TINE'?unique(S.contacts).filter(id=>!!people[id]&&!!accounts[id+'|TINE']):[];
- const tineMessages=tineContacts.length?'<div class="paper"><h3>交換済みの連絡先</h3><p class="dim">連絡先交換と、相手が安全かどうかは別の話。</p>'+
+ const tineMessages=tineContacts.length?'<div class="paper"><h3>交換済みの連絡先</h3><p class="dim">連絡先の交換と、ネット上の活動名義は別の話。</p>'+
   tineContacts.map(id=>{
     const msg=Dialogue.snsMessage(id,S);
     if(!msg)return '';
@@ -197,7 +197,7 @@ function sns(){
   const face=!anonymous&&a?.avatar_kind==='face';
   const avatar=face?portrait(p.author_id):'<div class="avatar-icon">♪</div>';
   return '<div class="social">'+avatar+'<div><strong>'+esc(anonymous?'匿名アカウント':a?.display_name||'不明')+'</strong>'+
-  '<div class="dim">'+(anonymous?'':esc('@'+a.handle)+' ／ ')+esc(p.published_at)+'</div><p>'+esc(window.S6_BETA_SOCIAL.postTexts[p.post_id]||p.text)+'</p>'+
+  '<div class="dim">'+(anonymous?'':esc('@'+a.handle)+' ／ ')+esc(p.published_at)+'</div><p>'+esc(Story.posts[p.post_id]||window.S6_BETA_SOCIAL.postTexts[p.post_id]||p.text)+'</p>'+
   (face?'<p class="dim">見覚えがある顔かもしれない。</p>'+(S.seen.length?btn(S.socialCandidates[p.post_id]?'紐付けメモを見直す':'顔を見比べる','account-match',p.post_id,'mini'):''):'')+'</div></div>';
  }).join(''):'<p>閲覧できる投稿はありません。</p>')+
  '<div class="actions">'+btn('夜の画面に戻る','back-night','','ghost')+'</div>';
@@ -214,17 +214,11 @@ function snsMatch(){
  '<div class="faces">'+entries.join('')+'</div>'+
  btn('SNSに戻る','back-sns','','ghost');
 }
-const notices=[
- '学内の掲示：一部の団体は、昨年秋から新入生向けの受け入れ枠を作っていたらしい。具体的な対象者は公表されていない。',
- '学内の掲示：大規模団体の幹事が演奏経験者を個別に案内している。誰にでも届く連絡ではない。',
- '学内の掲示：公開ライブの音を知っている先輩と、非公開音源に触れる先輩は別の話かもしれない。',
- '学内の掲示：以前の学外会場には騒音苦情があったが、現在は音量ルールが導入された。',
- '学内の掲示：週末の合宿では一部の団体が希望者に個別練習の案内を出す。担当者名は記載されていない。'
-];
+const notices=Story.board;
 function board(){
- return '<div class="eyebrow">学内掲示 / '+esc(WEEK[S.day])+'</div><h2>掲示板</h2>'+
+ return '<div class="eyebrow">学内掲示 / '+esc(WEEK[S.day])+'</div><h2>新歓音楽掲示</h2>'+
  '<div class="paper"><p>'+esc(notices[S.day])+'</p></div>'+
- '<p class="dim">掲示の情報は事実の一部。誰が危険か、ここだけでは分からない。</p>'+
+ '<p class="dim">うわさも音楽の好みも、誰か一人の正体を直接教えてはくれない。</p>'+
  btn('夜の画面へ戻る','back-night','','ghost');
 }
 function notebook(){
