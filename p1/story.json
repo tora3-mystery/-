@@ -1,5 +1,5 @@
 {
-  "version": "v0.9.2-beta",
+  "version": "v0.9.3-beta",
   "phase": "browser_prototype",
   "articles": [
     {
@@ -911,6 +911,9 @@
     "The early-policy-decision wording in C08 was corrected so that it does not imply a decision before day seven.",
     "All people, organizations, social-media accounts, and places in the story are fictional.",
     "P1 v0.9.2-beta: Newspaper first editions are distinguished from real follow-ups using prior-day publication history; final-day reactions are readable before 2027 results.",
-    "Unprinted article summaries prioritize unmet goals and missing corroborating reports, without treating omission as the cause of an underlying incident."
+    "Unprinted article summaries prioritize unmet goals and missing corroborating reports, without treating omission as the cause of an underlying incident.",
+    "v0.9.3-beta: The seventh edition carries no special stability score; final retrospective cites actual top and second page coverage counts for all four domains.",
+    "Follow-up article display retains prior reporting and appends fresh lead-variant detail instead of overwriting the follow-up with the initial lead.",
+    "Mobile layout offers in-page navigation between candidate articles and editorial slot selection."
   ]
 }
