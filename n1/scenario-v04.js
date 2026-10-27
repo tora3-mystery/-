@@ -649,12 +649,26 @@
     }
     return {kind:t,score:grade.score,exact:t==='exact',lines:out};
   }
-  function dayBreak(dayIndex,history) {
+  function dayBreak(dayIndex,history,questions) {
     if(!Number.isInteger(dayIndex)||dayIndex<0||dayIndex>=4)throw new RangeError('dayIndex 0-3');
     const pair=(history||[]).filter(r=>r.dayIndex===dayIndex);
     if(pair.length!==2)throw new Error('Day break requires two answered questions for that day');
     const byLegacy=id=>pair.find(row=>row.legacyIndex===id);
     const dayScore=pair.reduce((n,r)=>n+(r.score||0),0);
+    if(questions?.some(q=>q.micro)){
+      const encounters=questions.filter(q=>q.dayIndex===dayIndex);
+      if(encounters.length!==2)throw new Error('Day has wrong number of encounters');
+      const describe=q=>{
+        if(q.micro)return q.recap;
+        if(q.legacyIndex===1)return '梅田は買い物の話をまだ楽しそうにしていた。';
+        if(q.legacyIndex===7)return '庄司さんが商品の単価を確認した。';
+        return q.slot+'について話した。';
+      };
+      return {dayIndex,day:DAYS[dayIndex],score:dayScore,
+        title:DAYS[dayIndex]+'の振り返り',
+        reflection:encounters.map(describe).join(' '),
+        nextIntro:NEXT_DAY[dayIndex],buttonLabel:'翌日へ進む'};
+    }
     let reflect;
     switch(dayIndex){
       case 0:
