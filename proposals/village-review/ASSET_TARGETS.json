@@ -3,7 +3,7 @@
   "game": "V1",
   "source": "proposals/village-review/index.html",
   "brief": "proposals/village-review/ART_ASSET_BRIEF.md",
-  "description": "Normative production inventory. Work must generate one PNG and one WebP per record, and compare actual delivery to this list.",
+  "description": "Normative production inventory. Generate PNG/WebP for every entry. Tiles are transparent terrain-accent overlays above opaque 5:4 full-map backgrounds.",
   "count": 145,
   "byCategory": {
     "facilities": 102,
@@ -1664,7 +1664,7 @@
       "webp": "assets/tiles/land.webp",
       "width": 320,
       "height": 320,
-      "alpha": false,
+      "alpha": true,
       "anchor": "grid-cell",
       "allowedTerrains": null
     },
@@ -1675,7 +1675,7 @@
       "webp": "assets/tiles/field.webp",
       "width": 320,
       "height": 320,
-      "alpha": false,
+      "alpha": true,
       "anchor": "grid-cell",
       "allowedTerrains": null
     },
@@ -1686,7 +1686,7 @@
       "webp": "assets/tiles/forest.webp",
       "width": 320,
       "height": 320,
-      "alpha": false,
+      "alpha": true,
       "anchor": "grid-cell",
       "allowedTerrains": null
     },
@@ -1697,7 +1697,7 @@
       "webp": "assets/tiles/hill.webp",
       "width": 320,
       "height": 320,
-      "alpha": false,
+      "alpha": true,
       "anchor": "grid-cell",
       "allowedTerrains": null
     },
@@ -1708,7 +1708,7 @@
       "webp": "assets/tiles/coast.webp",
       "width": 320,
       "height": 320,
-      "alpha": false,
+      "alpha": true,
       "anchor": "grid-cell",
       "allowedTerrains": null
     },
@@ -1719,7 +1719,7 @@
       "webp": "assets/tiles/sea.webp",
       "width": 320,
       "height": 320,
-      "alpha": false,
+      "alpha": true,
       "anchor": "grid-cell",
       "allowedTerrains": null
     },
@@ -1730,7 +1730,7 @@
       "webp": "assets/tiles/river.webp",
       "width": 320,
       "height": 320,
-      "alpha": false,
+      "alpha": true,
       "anchor": "grid-cell",
       "allowedTerrains": null
     },
@@ -1741,7 +1741,7 @@
       "webp": "assets/tiles/bridge.webp",
       "width": 320,
       "height": 320,
-      "alpha": false,
+      "alpha": true,
       "anchor": "grid-cell",
       "allowedTerrains": null
     },
