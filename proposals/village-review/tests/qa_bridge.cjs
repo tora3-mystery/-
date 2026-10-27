@@ -261,5 +261,24 @@ for(let month=6;month<12;month++){
 assert(tqa.getState().completed,'Reloaded run must finish');
 trial=createHarness(persisted);tqa=trial.qa;
 assert(tqa.getState().completed&&tqa.getState().annualDue,'Final review must be preserved on reload');
-assert(trial.get('modal').innerHTML.includes('口コミが反映'),'Final review modal must reopen');
-console.log(JSON.stringify({status:'PASS',terrain,statistics,endings,newFacilityReachable:expansionVillages,evolutionImpact:'PASS',fiveStarClosureCheck:fiveStarClosures,whispers:'PASS',saveResume:'PASS',arrivalDate:'PASS',stageArt:'PASS',strictManifest:'PASS',fallback:'PASS',polarityCases:polarityCombinations,adverseEnding:'PASS'},null,2));
+assert(trial.get('modal').innerHTML.includes('投稿した口コミから、ひと月後'),'Final review modal must reopen');
+assert(trial.get('modal').innerHTML.includes('一年の終わりを迎えました'),'Final review must show annual transition');
+{
+ const h=createHarness(),q=h.qa;
+ q.generate(718);
+ assert.equal(q.visitNote(),'','Do not show return visit on arrival');
+ for(let month=0;month<3;month++){
+  const st=q.getState(),id=st.candidates[0],f=st.facilities.find(x=>x.id===id);
+  q.post(id,month%q.factsFor(f).length,5);
+  assert(q.visitNote().includes('ひと月ぶりの訪問'),'Return visit note is missing');
+  assert(h.get('modal').innerHTML.includes('村を再訪しました'),'Month transition is not visible');
+ }
+ const f=q.getState().facilities[0],voices=new Set();
+ for(let m=1;m<=12;m++){q.getState().month=m;voices.add(q.voice(f));}
+ assert(voices.size>=5,'Resident feedback repeats too frequently');
+ const magazine=q.report();
+ assert(magazine.includes('観光案内パンフレット'),'Brochure header missing');
+ assert(magazine.includes('annualPublicationHead'),'Brochure masthead missing');
+}
+
+console.log(JSON.stringify({status:'PASS',terrain,statistics,endings,newFacilityReachable:expansionVillages,evolutionImpact:'PASS',fiveStarClosureCheck:fiveStarClosures,whispers:'PASS',saveResume:'PASS',arrivalDate:'PASS',stageArt:'PASS',strictManifest:'PASS',fallback:'PASS',annualPamphletAndReturnVisit:'PASS',polarityCases:polarityCombinations,adverseEnding:'PASS'},null,2));
