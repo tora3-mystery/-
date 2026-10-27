@@ -35,4 +35,5 @@ assert.equal(result.cp,5);
 assert.equal(isValidSave({...result,version:'0.6.1'},events),true);
 assert.equal(isValidSave(result,events),true);
 assert.equal(isValidSave({...result,version:'0.6.5'},events),true);
-console.log('PASS C1 v0.6.6 progress 23 and secret endings regression');
+assert.equal(isValidSave({...result,version:'0.6.6'},events),true);
+console.log('PASS C1 v1.0 progress 23 and secret endings regression');
