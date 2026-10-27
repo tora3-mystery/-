@@ -32,7 +32,7 @@
   const getMeta=()=>{try{return JSON.parse(localStorage.getItem(META_KEY))||{}}catch{return {}}};
   const makeState=()=>({
     schema:3,caseId:'A',phase:'title',returnPhase:null,day:0,eventId:null,eventHistory:[],
-    visitedGroups:[],groupActions:{},groupReunions:{},activeGroup:null,groupResult:'',reunionText:'',preEventState:{},
+    visitedGroups:[],groupActions:{},groupResults:{},groupReunions:{},activeGroup:null,groupResult:'',reunionText:'',preEventState:{},
     person:{},contactSince:{},replyLog:{},nightUsed:{},nightDone:{},nightMessage:'',lunchSeenDates:[],lunchPreState:{},lunchTalked:{},lunchMessage:'',
     evidence:{},oldNew:false,bridge:false,bridgeAvailable:false,
     discoveredFacts:[],viewedPosts:[],platform:'Photogram',
@@ -377,7 +377,7 @@
       S.eventId=el.dataset.eid;
       if(!Array.isArray(S.eventHistory))S.eventHistory=[];
       S.eventHistory.push(S.eventId);
-      S.visitedGroups=[];S.groupActions={};S.groupReunions={};S.preEventState={};
+      S.visitedGroups=[];S.groupActions={};S.groupResults={};S.groupReunions={};S.preEventState={};
       D.members.filter(m=>m.event_id===S.eventId).forEach(m=>{const x=ps(m.person_id);S.preEventState[m.person_id]={seen:x.seen,met:x.met,contact:x.contact_exchanged};x.seen=true});
       S.phase='venue';saveAndRender();return;
     }
@@ -409,17 +409,18 @@
         S.visitedGroups.push(gid);S.groupResult='';
       }else{
         S.reunionText=S.groupReunions?.[gid]||'';
+        S.groupResult=S.groupResults?.[gid]||'';
       }
       S.activeGroup=gid;S.phase='group';saveAndRender();return;
     }
     if(act==='back-venue'){S.phase='venue';saveAndRender();return}
-    if(act==='listen'){const a=D.actions.find(a=>a.group_id===S.activeGroup);S.groupActions[S.activeGroup]='listen';S.groupResult=a.listen_text;if(a.trigger_fact_id)discoverFact(a.trigger_fact_id);saveAndRender();return}
+    if(act==='listen'){const a=D.actions.find(a=>a.group_id===S.activeGroup);S.groupActions[S.activeGroup]='listen';S.groupResult=a.listen_text;S.groupResults??={};S.groupResults[S.activeGroup]=S.groupResult;if(a.trigger_fact_id)discoverFact(a.trigger_fact_id);saveAndRender();return}
     if(act==='ask-menu'){S.phase='question';saveAndRender();return}
     if(act==='contact-menu'){S.phase='contact';saveAndRender();return}
     if(act==='back-group'){S.phase='group';saveAndRender();return}
     if(act==='ask-person'){
       const q=D.questions.find(q=>q.group_id===S.activeGroup&&q.target_id===id);if(!q)return;
-      ps(id).introduced=true;ps(id).lastInteraction='question';S.groupActions[S.activeGroup]='question';S.groupResult=q.answer;
+      ps(id).introduced=true;ps(id).lastInteraction='question';S.groupActions[S.activeGroup]='question';S.groupResult=q.answer;S.groupResults??={};S.groupResults[S.activeGroup]=S.groupResult;
       S.phase='group';saveAndRender();return;
     }
     if(act==='contact-person'){
@@ -443,6 +444,7 @@
         if(platform==='TINE'){S.contactSince??={};S.contactSince[id]=currentDate()}
         S.groupResult=intro+' '+platform+'の交換を了承してもらえた。表示名「'+a.display_name+'」を確認した。';
       }
+      S.groupResults??={};S.groupResults[S.activeGroup]=S.groupResult;
       S.phase='group';saveAndRender();return;
     }
     if(act==='reply-contact'){
