@@ -5,11 +5,13 @@ const root=path.resolve(__dirname,'..');
 const dataCode=fs.readFileSync(path.join(root,'game-data.js'),'utf8');
 const profileCode=fs.readFileSync(path.join(__dirname,'character-profiles.js'),'utf8');
 const socialCode=fs.readFileSync(path.join(__dirname,'social-personas.js'),'utf8');
+const musicCode=fs.readFileSync(path.join(__dirname,'music-profiles.js'),'utf8');
 const storyCode=fs.readFileSync(path.join(__dirname,'story-vocaloid.js'),'utf8');
+const routesCode=fs.readFileSync(path.join(__dirname,'story-routes.js'),'utf8');
 const dialogueCode=fs.readFileSync(path.join(__dirname,'dialogue-engine.js'),'utf8');
 const game=fs.readFileSync(path.join(__dirname,'game.js'),'utf8');
 const dataScope={window:{}};vm.runInNewContext(dataCode,dataScope);
-vm.runInNewContext(profileCode,dataScope);vm.runInNewContext(socialCode,dataScope);vm.runInNewContext(storyCode,dataScope);vm.runInNewContext(dialogueCode,dataScope);
+vm.runInNewContext(profileCode,dataScope);vm.runInNewContext(socialCode,dataScope);vm.runInNewContext(musicCode,dataScope);vm.runInNewContext(storyCode,dataScope);vm.runInNewContext(routesCode,dataScope);vm.runInNewContext(dialogueCode,dataScope);
 const D=dataScope.window.S6_DATA;
 let total=0, failures=0;
 function check(name,fn){try{fn();total++;console.log('PASS',name)}catch(e){failures++;console.error('FAIL',name,e.stack||e)}}
@@ -18,7 +20,7 @@ function makeSession(cache=new Map()){
  const app={set innerHTML(v){html=v},get innerHTML(){return html},addEventListener(n,f){if(n==='click')onClick=f}};
  const doc={getElementById:id=>id==='app'?app:fields[id]||null};
  const storage={getItem:k=>cache.get(k)||null,setItem:(k,v)=>cache.set(k,v)};
- const win={S6_DATA:D,S6_BETA_PROFILES:dataScope.window.S6_BETA_PROFILES,S6_BETA_SOCIAL:dataScope.window.S6_BETA_SOCIAL,S6_BETA_STORY:dataScope.window.S6_BETA_STORY,S6_BETA_DIALOGUE:dataScope.window.S6_BETA_DIALOGUE,scrollTo(){}};
+ const win={S6_DATA:D,S6_BETA_PROFILES:dataScope.window.S6_BETA_PROFILES,S6_BETA_SOCIAL:dataScope.window.S6_BETA_SOCIAL,S6_BETA_STORY:dataScope.window.S6_BETA_STORY,S6_BETA_MUSIC:dataScope.window.S6_BETA_MUSIC,S6_BETA_ROUTES:dataScope.window.S6_BETA_ROUTES,S6_BETA_DIALOGUE:dataScope.window.S6_BETA_DIALOGUE,scrollTo(){}};
  vm.runInNewContext(game,{window:win,document:doc,localStorage:storage});
  return {
   get html(){return html},
@@ -82,10 +84,10 @@ check('all 44 group activities can be entered and listened to twice',()=>{
  }
  assert.equal(total,44);
 });
-check('there are at most two conversation circles per event',()=>{
+check('there are at most three conversation circles per event',()=>{
  const s=newPlayer();s.click('attend','E01');
- for(const g of ['E01-A','E01-B']){s.click('join-group',g);s.click('leave-flash');s.click('back-venue')}
- s.click('join-group','E01-C');assert.equal(s.state.phase,'venue');assert.equal(s.state.visitedGroups.length,2);
+ for(const g of ['E01-A','E01-B','E01-C']){s.click('join-group',g);s.click('leave-flash');s.click('back-venue')}
+ s.click('join-group','E01-D');assert.equal(s.state.phase,'venue');assert.equal(s.state.visitedGroups.length,3);
 });
 check('day notebook prevents both guessing and editing',()=>{
  const s=newPlayer();s.click('attend','E01');s.click('join-group','E01-A');s.click('leave-flash');
@@ -624,6 +626,81 @@ check('old S6 beta saves do not mix stalking and producer narratives',()=>{
  const s=makeSession(cache);
  assert.match(s.html,/サークルは/);
  s.click('start');assert.equal(s.state.phase,'warning');
+});
+
+
+check('96 musicians have seven realistic graded skills and original/cover preferences',()=>{
+ const m=dataScope.window.S6_BETA_MUSIC;
+ assert.equal(Object.keys(m.people).length,96);
+ assert.equal(m.columns.length,7);
+ let dual=0;
+ for(const p of D.people){
+  const x=m.people[p.person_id];assert.ok(x,p.person_id);
+  assert.equal(Object.keys(x.skills).length,7);
+  for(const v of Object.values(x.skills))assert.ok(['◎','○','△','×'].includes(v));
+  assert.ok(Object.values(x.skills).includes('◎'));
+  assert.ok(x.composition.original||x.composition.cover);
+  if(['◎','○'].includes(x.skills.vocal)&&['◎','○'].includes(x.skills.guitar))dual++;
+ }
+ assert.ok(dual>=8,dual);
+ assert.equal(m.people.P001.skills.vocal,'◎');assert.equal(m.people.P001.skills.guitar,'◎');
+});
+check('every conversational referral is chronologically accessible and names a real person',()=>{
+ const nodes=dataScope.window.S6_BETA_ROUTES.nodes;
+ const byGroup=Object.fromEntries(D.groups.map(g=>[g.group_id,g]));
+ const event=Object.fromEntries(D.events.map(e=>[e.event_id,e]));
+ let links=0;
+ for(const [key,x] of Object.entries(nodes)){
+  const [gid,pid]=key.split('|');const g=byGroup[gid];assert.ok(g,key);
+  assert.ok(D.members.some(m=>m.group_id===gid&&m.person_id===pid),key);
+  if(!x.to)continue;
+  links++;
+  const next=byGroup[x.next];
+  assert.ok(next,key+' to unknown group');
+  assert.ok(D.members.some(m=>m.group_id===x.next&&m.person_id===x.to),key+' to missing person');
+  const a=event[g.event_id],b=event[next.event_id];
+  assert.ok(b.date>a.date||(b.date===a.date&&a.event_id===b.event_id),key+' inaccessible '+x.next);
+ }
+ assert.ok(links>=12);
+});
+check('three circles can contain a same-day referral and its target',()=>{
+ const s=newPlayer();visit(s,'E01','E01-A');
+ s.click('action-menu','question');s.click('ask-producer','P003');
+ assert.match(s.html,/歌の輪にいる斉藤先輩/);
+ assert.equal(s.state.routeVisits.length,1);
+ s.click('back-venue');s.click('join-group','E01-C');s.click('leave-flash');
+ s.click('action-menu','question');s.click('ask-producer','P017');
+ assert.match(s.html,/こもれびの宮本さん/);
+ assert.ok(s.state.profileEvidence.some(x=>x.topic==='faculty'));
+ s.click('back-venue');s.click('join-group','E01-B');s.click('leave-flash');
+ assert.equal(s.state.visitedGroups.length,3);
+ s.click('back-venue');s.click('join-group','E01-D');assert.equal(s.state.phase,'venue');
+});
+check('second-hand claim and firsthand correction are both recoverable',()=>{
+ const s=newPlayer();s.click('skip');s.click('next-day');
+ visit(s,'E03','E03-B');
+ s.click('action-menu','question');s.click('ask-producer','P025');assert.match(s.html,/ギターボーカルだったような/);
+ s.click('action-menu','question');s.click('ask-producer','P008');assert.match(s.html,/ずっとベース/);
+ assert.equal(s.state.routeVisits.length,2);
+});
+check('music experience is visible only after asking the performer',()=>{
+ const s=newPlayer();visit(s,'E01','E01-C');s.click('action-menu','question');s.click('ask-music','P017');
+ assert.ok(s.state.musicKnown.P017);
+ assert.match(s.html,/ボーカル/);
+ s.click('back-venue');s.click('finish-venue');s.click('open-notebook');s.click('open-identity','P017');
+ assert.match(s.html,/◎ 主担当/);assert.match(s.html,/オリジナル曲/);
+});
+check('producer profile can be filled without revealing truth or grading guesses',()=>{
+ const s=newPlayer();s.click('open-producer-profile');
+ assert.equal(s.state.phase,'producer-profile');
+ assert.match(s.html,/余白ラムネのプロフィール/);
+ s.field('profile-year','4年');s.field('profile-faculty','文学部日本文学科');
+ s.field('profile-instruments','歌とギター');s.field('profile-favorite','羊文学');
+ s.field('profile-production','生ギター＋歌声合成');s.field('profile-org','W');
+ s.click('save-producer-profile');
+ assert.equal(s.state.profileGuess.year,'4年');assert.equal(s.state.profileGuess.org,'W');
+ assert.doesNotMatch(s.html,/不正解|正しいプロフィール/);
+ s.click('back-producer-profile');assert.equal(s.state.phase,'day');
 });
 
 console.log(JSON.stringify({passed:total,failed:failures}));if(failures)process.exitCode=1;
