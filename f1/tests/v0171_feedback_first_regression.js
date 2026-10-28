@@ -22,7 +22,7 @@ function boot(db=new Map()){
  return{api:window.__F1_DEBUG__,get:document.getElementById,db};
 }
 function customer(id,metric,body){return{id,metric,body,customer:id,day:1,status:'open',closedDay:null,replies:[]}}
-const a=boot();a.api.restart();
+const a=boot();a.api.restart();a.api.setState({...a.api.getState(),policySeed:1,complaintTickets:null});
 check(html.includes('id="day0Panel"')&&html.includes('id="day0Investigate"')&&html.includes('id="day0Apply"'),'Interactive DAY 0 onboarding');
 check(!html.includes('<ol class="intro-jobs"><li>ご意見の下線部分をタップ'),'No repeated tutorial instructions');
 check(!html.includes('+(impact?'),'Avoid duplicating textual action impacts next to numeric effect chips');
@@ -68,7 +68,7 @@ b.api.play('idle');b.api.advance();b.api.closeTransition();
 check(b.get('investigationCount').textContent.includes('あと3箇所'),'Day increment refreshes quota');
 check(b.api.focus('reviewA','レジに20分並びました'),'Same phrase repeat across days is free');
 check(b.api.getState().focusKeys.length===3||b.api.getState().focusKeys.length===0,'Historic repeat does not consume a fresh investigation');
-const c=boot();c.api.restart();
+const c=boot();c.api.restart();c.api.setState({...c.api.getState(),policySeed:1,complaintTickets:null});
 const shrineSource=c.api.getState().complaintTickets.find(t=>t.metric===3);
 check(!c.api.availableIds().includes('shrine'),'Ordinary shrine cannot be chosen without examining a complaint');
 check(c.api.focus(shrineSource.id,shrineText),'Discover local shrine from noise-related complaint');
@@ -93,7 +93,7 @@ c.api.play('idle');c.api.advance();c.api.closeTransition();
 check(c.get('complaintBoard').children.every(x=>!x.children[1]?.textContent.includes('レジのご案内が丁寧')),'DAY7 returns to normal');
 c.api.play('idle');c.api.advance();
 check(c.api.getState().day8Active,'DAY8 automatically after sacrifice');
-const later=boot();later.api.restart();
+const later=boot();later.api.restart();later.api.setState({...later.api.getState(),policySeed:1,complaintTickets:null});
 const originalNoise=later.api.getState().complaintTickets.find(x=>x.metric===3);
 later.api.play('idle');later.api.advance();later.api.closeTransition();
 later.api.play('idle');later.api.advance();later.api.closeTransition();
