@@ -4,7 +4,7 @@
   "title": "口コミへの返信をご確認ください。（仮）",
   "nickname": "くちへん（仮）",
   "version": "0.1.0-alpha",
-  "updatedAtJST": "2026-10-29T05:24:35+09:00",
+  "updatedAtJST": "2026-10-29T05:26:47+09:00",
   "phase": "Phase 3実装済・Phase 4初期監査済・α試作公開（人間レビュー待ち）",
   "repository": "tora3-mystery/short-ui-games",
   "scope": "r1/",
@@ -17,7 +17,7 @@
     "extras": "店主返信、他者口コミ、SNS、口コミ履歴、localStorage保存・再開、一年後の商店街と店舗別後日談"
   },
   "aiAudit": {
-    "status": "初期PASS",
+    "status": "初期エンジンV8 PASS／最新パッチは静的監査のみ",
     "method": "GitHub書込前に同一エンジン関数をV8実行、静的参照・対応括弧監査",
     "cases": 24044,
     "randomTrajectories": 400,
@@ -26,7 +26,7 @@
     "routeDefinitions": 30,
     "focusedStage3PathsTested": 15,
     "errors": 0,
-    "limitations": "400周は均等評価系であり特殊結末すべての到達確認ではない。実ブラウザではない。"
+    "limitations": "24,044アサーションは初回エンジンに対する結果。顧客流動の追加3ルール・結果画面の月表示修正は後続パッチで、最新コードのV8再試行・実ブラウザ監査は未実施。特殊結末の網羅も未実施。"
   },
   "browserAudit": {
     "status": "未実施",
@@ -50,10 +50,12 @@
     "進化外観は仮CSSで表現。各進化方向専用画像は未制作。",
     "均等投稿では上位進化が発生しにくい（意図的な停滞と適正進化速度の人間評価が必要）。",
     "店舗経営モデルとSNS反応の数値調整は仮設定。",
-    "ブラウザと公開ページの実操作は未検証。"
+    "ブラウザと公開ページの実操作は未検証。",
+    "顧客流動ルール追加後の最新エンジン全件再テストは未実施。"
   ],
   "nextOwner": "人間：α版スマホ試遊 → 作品専用Chat：フィードバック反映・再監査",
   "nextWork": "Gate B後、店舗外観・店主写真・商品画像の制作を検討",
   "index": "企画マスター承認の公開INDEXにα試作カードを追加（同コミット）",
-  "publicUrl": "https://tora3-mystery.github.io/short-ui-games/r1/"
+  "publicUrl": "https://tora3-mystery.github.io/short-ui-games/r1/",
+  "lastModifiedCommit": "pending status update; r1/index.html 90b9795d26cb65f082e0f174c804cacdf8401b79"
 }
