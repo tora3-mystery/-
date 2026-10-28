@@ -76,17 +76,18 @@ try {
   page.on('pageerror', error => report.pageErrors.push({ width: 390, text: error.message }));
   await page.goto(baseUrl, { waitUntil: 'networkidle' });
   await page.locator('#start').click();
+  check('normal mode starts with 30-second preparation',await page.locator('#beginAnswer').innerText().then(t=>t.includes('30秒')),'normal mode label');
+  check('hint tokens removed',await page.locator('#hint').count()===0,'side questions must not offer clues via button');
+  await page.getByRole('button', { name: '会話ログ' }).click();
+  check('log opens before timed answer', await page.locator('.logbox').isVisible(), 'log dialog');
+  await page.getByRole('button', { name: '閉じる ×' }).click();
+  await page.locator('#beginAnswer').click();
 
   for (const value of ['', '-1', '1.5', '999999999999']) {
     await page.locator('#number').fill(value);
     await page.locator('#submit').click();
     check(`invalid input rejected ${JSON.stringify(value)}`, await page.locator('#number').getAttribute('aria-invalid') === 'true', await page.locator('#err').innerText());
   }
-  check('hint tokens removed',await page.locator('#hint').count()===0,'side questions must not offer clues via button');
-  await page.getByRole('button', { name: '会話ログ' }).click();
-  check('log opens', await page.locator('.logbox').isVisible(), 'log dialog');
-  await page.getByRole('button', { name: '閉じる ×' }).click();
-
   for (let run = 1; run <= 3; run++) {
     const seen = [];
     for (let question = 0; question < 10; question++) {
@@ -103,6 +104,7 @@ try {
         check(`run ${run} daybreak ${question}`, await page.getByText('本日の合計').isVisible(), 'daybreak');
         await page.locator('#nextDay').click();
       }
+      if(question < 9)await page.locator('#beginAnswer').click();
     }
     check(`run ${run} reaches ending`, await page.getByText('ONE WEEK COMPLETE', { exact: false }).isVisible(), 'ending');
     const recurrence = await page.evaluate(() => ({
@@ -121,7 +123,10 @@ try {
     check(`run ${run} q8 to q10 recurrence`, recurrence.q8 === recurrence.q10 && recurrence.productQ8 === recurrence.productQ10, JSON.stringify(recurrence));
     check(`run ${run} has 10 answers`, recurrence.count === 10, JSON.stringify(recurrence));
     report.fullRuns.push({ run, seen, recurrence });
-    if (run < 3) await page.getByRole('button', { name: /別の数字で/ }).click();
+    if (run < 3) {
+      await page.getByRole('button', { name: /別の数字で/ }).click();
+      await page.locator('#beginAnswer').click();
+    }
   }
 
   // Test timeout semantics directly, avoiding a 15-second delay in the QA runner.
@@ -152,7 +157,7 @@ try {
     }
     return {scenes:ids.size,topics:topics.size,units:[...allUnits],failures};
   });
-  check('36 incidental question variants and 12 topics valid',sideMatrix.scenes===36&&sideMatrix.topics===12&&sideMatrix.failures.length===0,JSON.stringify(sideMatrix));
+  check('24 approved incidental variants and 8 topics valid',sideMatrix.scenes===24&&sideMatrix.topics===8&&sideMatrix.failures.length===0,JSON.stringify(sideMatrix));
   report.incidentalMatrix=sideMatrix;
 
   const matrix = await page.evaluate(() => {
@@ -187,7 +192,7 @@ try {
 } finally {
   report.finishedAt = new Date().toISOString();
   report.passed = report.checks.every(row => row.ok);
-  await writeFile('n1/tests/qa-report-v060.json', JSON.stringify(report, null, 2));
+  await writeFile('n1/tests/qa-report-v065.json', JSON.stringify(report, null, 2));
   await browser.close();
 }
 
