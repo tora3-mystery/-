@@ -39,7 +39,7 @@ test(x.api.getState().focusKeys.length===3,'Three daily limit');
 test(!x.api.focus('reviewC','案内放送が繰り返され'),'Fourth focus rejected');
 test(x.api.focus('reviewA','レジに20分並びました'),'Repeated focus is free');
 test(x.api.getState().focusKeys.length===3,'Repeated focus does not spend a use');
-test(['queueExpress','cartSigns','eveningRestock'].every(id=>x.api.availableIds().includes(id)),'Discovered options all visible in same-day card cap');
+test(['register','pickup','cartSigns','eveningRestock'].every(id=>x.api.availableIds().includes(id)),'Focused phrases reveal their specific policies, not a whole category');
 x=boot();test(x.api.getState().focusKeys.length===3,'Investigation save/restore');
 x.api.resumeCurrent();
 test(x.get('investigationCount').textContent.includes('あと0箇所'),'Resume shows no more investigations');
