@@ -342,9 +342,14 @@ function ending(){
   heard?'こもれびで聴いた一拍の余韻が、今も不意に浮かんでくる。':
   none?'音楽との距離は、自分の速度で決めている。':
   label(S.camp)+'で初めて聴いた曲が、今でもプレイリストに残っている。';
+ const truth={year:'3年',faculty:'文学部日本文学科',instruments:'歌とギター',favorite:'羊文学',production:'生ギター＋歌声合成',org:Story.homeOrg};
+ const filled=Object.entries(S.profileGuess).filter(([k,v])=>v&&Object.prototype.hasOwnProperty.call(truth,k));
+ const matches=filled.filter(([k,v])=>v===truth[k]).length;
+ const answer=found&&filled.length?'<div class="paper"><h3>プロフィールの答え合わせ</h3><p>記録した'+filled.length+'項目のうち、'+matches+'項目が本人の話と一致した。</p><p class="dim">見つけたことと、本人について知っていたことは別。来年も新しい一面が見つかるかもしれない。</p></div>':'';
  const revisit=S.eventHistory.length?'見学したサークルは'+[...new Set(S.eventHistory.map(eid=>label(events[eid].org_id)))].join('、')+'。':'平日の新歓には参加しなかった。';
  return '<div class="eyebrow">2026年4月12日 / 日曜</div><h1>THE END</h1><h2>'+esc(title)+'</h2>'+
  '<div class="paper"><p>'+esc(body)+'</p><p>'+esc(feeling)+'</p><hr><h3>2027年4月｜あれから一年</h3><p>'+esc(future)+'</p><p>'+esc(relationships)+'</p></div>'+
+ answer+
  '<div class="paper"><h3>一週間の記録</h3><p>'+esc(revisit)+' 見かけた顔 '+S.seen.length+'人 ／ 照合した顔 '+Object.values(S.guesses).filter(x=>x?.verified).length+'人</p><p>週末：'+esc(weekend)+'</p></div>'+
  btn('別の一週間を始める','reset')+btn('手帳を振り返る','open-notebook','','ghost');
 }
