@@ -54,7 +54,7 @@ const day3=a.api.getState();
 const q2=day3.complaintTickets.filter(x=>x.metric===0&&x.status==='open').length;
 ok(day3.vals[0]===5&&q2>q1,'More feedback next day with severity already capped');
 const totalOpen=day3.complaintTickets.filter(x=>x.status==='open').length;
-ok(a.get('issueTag').textContent.includes('未解決 '+totalOpen+'件'),'Inbox shows actual submissions');
+ok(Number(a.get('issueTag').textContent.match(/未解決 (\d+)件/)?.[1])>=totalOpen,'Inbox includes submissions plus independent special notices');
 const reloaded=boot(a.memory);
 ok(reloaded.api.getState().complaintTickets.filter(x=>x.metric===0&&x.status==='open').length===q2,
  'Uncapped complaint submissions survive save/load');
