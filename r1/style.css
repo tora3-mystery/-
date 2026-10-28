@@ -43,3 +43,24 @@
 @media(max-width:760px){.result-views .storefront{min-height:157px}.shop-card .storefront{min-height:132px}.storefront .sign{font-size:10px}.store-feature{font-size:8px}.linked-compare .storefront{min-height:133px}}
 @media(max-width:380px){.result-views .storefront{min-height:153px}.linked-compare{gap:5px}.linked-compare .storefront{min-height:140px}.shop-card .storefront{min-height:142px}.store-feature{font-size:8px}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
+
+/* R1 α0.3: thirty tangible store identities */
+.store-merch{display:flex;align-items:center;gap:6px;padding:5px 6px;background:#212532e8;border:1px solid #f8e2bd9c;border-radius:6px;max-width:98%;min-width:0;line-height:1.15;box-shadow:0 3px 7px #14172455}
+.merch-icon{display:grid;place-items:center;flex:none;min-width:30px;height:30px;font-size:23px;filter:drop-shadow(0 1px 2px #0e1218)}
+.merch-label{display:flex;flex-direction:column;min-width:0;text-align:left;color:#fff6dc}
+.merch-label strong{font-size:10px;line-height:1.2;overflow-wrap:anywhere}
+.merch-label span{font-size:8px;line-height:1.2;color:#e0d7ca;overflow-wrap:anywhere}
+.storefront.stage-0 .store-merch{background:#2b3037bf;border-color:#e2d6bf59}
+.storefront.stage-1 .store-merch{border-style:dashed}
+.storefront.stage-2 .store-merch{background:#263b47e8;transform:rotate(-1.2deg)}
+.storefront.stage-3 .store-merch{background:#39415ae8;border:2px solid #f3d29e}
+.storefront.stage-4 .store-merch{background:#fbecd7;color:#3c3022;border:2px solid #d2a864;transform:scale(1.035)}
+.storefront.stage-4 .merch-label,.storefront.stage-4 .merch-label span{color:#34291c}
+.storefront.stage-4 .merch-label strong{font-size:11px}
+.storefront.stage-3 .store-feature,.storefront.stage-4 .store-feature{border-color:#fff0ac}
+.storefront.stage-4 .store-feature{color:#fff5b9;font-weight:700}
+.storefront.closed .store-merch{display:none}
+.owner-last{padding:9px 10px;border-left:3px solid #e3bd83;margin:11px 0 8px;background:#161f2cb3;font-size:12px;line-height:1.6;color:#f7e7d4}
+.ending-card .storefront{min-height:163px}
+@media(min-width:761px){.result-views .store-merch{gap:9px;padding:8px 12px}.result-views .merch-icon{font-size:31px;min-width:40px;height:39px}.result-views .merch-label strong{font-size:14px}.result-views .merch-label span{font-size:10px}.result-views .storefront{min-height:211px}}
+@media(max-width:380px){.shop-card .store-merch{gap:3px;padding:3px}.shop-card .merch-icon{font-size:19px;min-width:22px;height:24px}.shop-card .merch-label strong{font-size:9px}.shop-card .merch-label span{font-size:7px}.storefront.stage-4 .store-merch{transform:none}.owner-last{font-size:11px}}

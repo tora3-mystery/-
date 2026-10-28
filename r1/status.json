@@ -3,40 +3,39 @@
   "projectId": "R1",
   "title": "口コミへの返信をご確認ください。（仮）",
   "nickname": "くちへん（仮）",
-  "version": "0.2.0-alpha",
-  "updatedAtJST": "2026-10-29T05:36:40+09:00",
-  "phase": "Phase 4：進化頻度改修とV8・模擬DOM回帰QA実施済。α公開・人間レビュー待ち",
+  "version": "0.3.0-alpha",
+  "updatedAtJST": "2026-10-29T05:46:46+09:00",
+  "phase": "Phase 4：α0.3.0 QA実施済・試作公開、人間レビュー待ち（Gate B未通過）",
   "repository": "tora3-mystery/short-ui-games",
   "scope": "r1/",
-  "assetStatus": "CSS仮店舗のみ。写真・画像素材未制作・未組込。",
+  "assetStatus": "CSS仮店舗とルート別30商品ビジュアル（絵文字＋商品札）。実写素材なし、画像Work未投入。",
   "gameScope": {
     "shops": 3,
     "months": 12,
     "reviewOptions": "星1〜5 × 商品・味／接客／価格／雰囲気／個性",
-    "evolution": "3店舗×5ジャンル×肯定/否定=30主要進化方向。各店0〜4段階。★5は強化・★1は否定/反転が原則、岩城の逆張りは例外として返信に理由を表示。状態に応じ看板・メニュー・店頭の変化を表示。",
-    "extras": "店主返信、他者口コミ、SNS、月次結果（対象店の前後比較・関連店の変化）、履歴、旧αセーブ継続、localStorage保存・再開、街と店舗別の結末",
+    "evolution": "全3店舗×5ジャンル×2極性=30主要進化方向、各店0〜4段階。進化方向ごとに異なる店頭商品・小物・短い説明を表示。進化の方向転換・小さな変化・閉店も可能。",
+    "extras": "月次返信と進化の前後比較、別店舗への波及、他者口コミ、SNS、12か月後の店別結末と店主最後の一言、履歴、localStorage保存・再開",
     "spillovers": "他者口コミによる別店舗の進化をbefore/afterで別枠表示。客足の移動は進化と分離表示。"
   },
   "aiAudit": {
-    "status": "PASS（純粋JSロジック・模擬DOMのみ）",
-    "method": "GitHub mainの最新engine.jsとapp.jsをV8で直接評価。旧αデータ互換分岐を静的確認。実ブラウザ試験ではない。",
-    "scenarioCount": 2000,
-    "scenarioTypes": 10,
-    "virtualReviews": 22000,
-    "assertions": 176006,
-    "errors": 0,
-    "typicalSample": {
-      "completed": 200,
-      "submitted": 2400,
-      "directVisibleChangePct": 81.2,
-      "majorEvolutionPct": 37.6,
-      "relatedStoreChangePct": 34.9
-    },
-    "edgeCases": "星3固定は意図的に停滞しやすい。単店星1を7回程度繰り返すと閉店し継続レビュー不可。集中高評価では段階4に達する。",
-    "limitations": "状態遷移とDOMモックは合格。ブラウザ描画、実タップ、実際のユーザー評価、すべての結末条件の網羅的到達テストは未完了。"
+    "status": "PASS（V8状態遷移・模擬DOM）",
+    "version": "0.3.0-alpha",
+    "simulationCount": 2500,
+    "simulatedReviews": 30000,
+    "assertions": 242500,
+    "failures": 0,
+    "visibleChangeRatePct": 89.9,
+    "majorChangeRatePct": 46.7,
+    "crossShopChangeRatePct": 34,
+    "identifiedFinaleCount": 11,
+    "finaleConditions": 14,
+    "routeVisualVerified": 30,
+    "uiMockChecks": 34,
+    "legacySave": "0.2.0-alpha→0.3.0-alphaの模擬DOM移行PASS",
+    "limitations": "実ブラウザ表示や実機タップではなくV8と模擬DOM。エンディング条件のうち14種すべての到達は未確認。"
   },
   "browserAudit": {
-    "status": "未実施（模擬DOM操作のみPASS）",
+    "status": "未実施（ブラウザ内V8相当のロジックと模擬DOMのみ）",
     "desktop": null,
     "mobile320": null,
     "mobile390": null,
@@ -44,31 +43,32 @@
   },
   "humanReview": {
     "status": "未実施",
-    "targetVersion": "0.2.0-alpha",
+    "targetVersion": "0.3.0-alpha",
     "focus": [
-      "進化のテンポと前後比較",
-      "星1/5と進化の納得感・店主返信",
-      "別店舗の変化に気づけるか",
-      "12か月での変化の大小のメリハリ",
-      "スマホ320/390pxでの操作"
+      "全30進化方向の外観・店頭商品の見分けやすさ",
+      "褒める・批判するの結果と店主返信の納得感",
+      "月次の進化演出のメリハリ",
+      "店舗間の波及の理解しやすさ",
+      "一年後の店主の一言・エンディング",
+      "実機320px/390pxでのタップ・スクロール"
     ]
   },
   "knownIssues": [
-    "画像未制作。現状の進化差分はCSSの看板・配色・店頭札で表現。",
-    "1年間の結末は店舗別に組み合わせる方式。商店街全体のエンディング分布は今後調整。",
-    "実ブラウザ／実機／公開ページ最終版の操作検証は未実施。",
-    "岩城の繰り返す低評価への逆張り進化は人間によるシナリオ納得感の確認が必要。"
+    "画像素材は未制作。店舗外観と商品はCSS仮表現。",
+    "大きな看板の変化が毎月起きるとは限らない。店頭の小変化を含めて結果画面で確認する。",
+    "14種の商店街全体エンディング条件のうち11種到達確認。残りの到達性は別途検証。",
+    "実ブラウザ・スマートフォン実機の視覚・操作確認は未実施。",
+    "人間によるシナリオ・進化のインパクト評価は未実施。"
   ],
-  "nextOwner": "人間：α版スマホ試遊 → 作品専用Chat：フィードバック反映・再監査",
-  "nextWork": "Gate B後、店舗外観・店主写真・商品画像の制作を検討",
-  "index": "2026-10-29：既存INDEXのR1カードをα0.2.0へ同期し、制作・改修中の先頭に移動。全14作品の数は維持。",
+  "nextOwner": "作品Chat：残る分岐到達性と実ブラウザQA準備／人間：α0.3.0プレイテスト",
+  "nextWork": "人間レビューでGate B確認後、店舗外観・店主・商品画像の大量制作を検討",
+  "index": "2026-10-29：INDEXのR1カードをα0.3.0に更新。14作品を維持。",
   "publicUrl": "https://tora3-mystery.github.io/short-ui-games/r1/",
   "pending": [
-    "実ブラウザ320px/390pxの12か月通し試遊",
-    "各店5ジャンル×低高評価の表示監査",
-    "旧αセーブの実ブラウザ継続試験",
-    "人間による演出、進化頻度、メタ表現の確認"
+    "実ブラウザスマホ画面で1年間の通しプレイ",
+    "実ブラウザの旧版保存復旧",
+    "14種エンディングの到達可能性完全監査",
+    "人間レビューによる演出評価"
   ],
-  "lastStaticCheckedAtJST": "2026-10-29T05:36:40+09:00",
-  "lastModifiedCommit": "GitHub更新コミットは本ファイルを含む最終mainコミットで確認"
+  "lastStaticCheckedAtJST": "2026-10-29T05:46:46+09:00"
 }
