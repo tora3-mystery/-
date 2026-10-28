@@ -164,6 +164,7 @@ function applyToQuestion(q,scene){
  const nr={...q,...scene};
  nr.person=scene.person;
  nr.character=scene.person;
+ nr.item=scene.slot; // Discard the original question's unrelated product, age or building title.
  nr.opening=q.day+'。'+scene.opening;
  nr.cardType='none';
  nr.source=null;
