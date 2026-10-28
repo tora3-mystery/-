@@ -699,7 +699,7 @@ check('producer profile can be filled without revealing truth or grading guesses
  s.field('profile-production','生ギター＋歌声合成');s.field('profile-org','W');
  s.click('save-producer-profile');
  assert.equal(s.state.profileGuess.year,'4年');assert.equal(s.state.profileGuess.org,'W');
- assert.doesNotMatch(s.html,/不正解|正しいプロフィール/);
+ assert.doesNotMatch(s.html,/あなたの推測は不正解|正しいプロフィールです/);
  s.click('back-producer-profile');assert.equal(s.state.phase,'day');
 });
 
