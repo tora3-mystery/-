@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#191a26">
+<meta name="description" content="口コミへの返信をご確認ください。星とジャンルを選んで投稿すると、商店街の店が変化する短編ブラウザゲーム。">
+<title>口コミへの返信をご確認ください。｜短編UIゲーム実験室</title>
+<link rel="stylesheet" href="./style.css">
+<script src="./engine.js" defer></script>
+<script src="./app.js" defer></script>
+</head>
+<body>
+<div class="frame">
+<header class="app-head">
+  <a class="back" href="../">← ゲーム一覧</a>
+  <div class="brand">くちへん <span>／ R1　商店街レビュー</span></div>
+  <span class="edition">v0.1.0 α　／　更新 2026.10.29 JST</span>
+</header>
+<div class="headline">
+  <div class="eyebrow">MACHIKADO REVIEW <span class="live">架空の商店街</span></div>
+  <h1>口コミへの返信をご確認ください。</h1>
+  <p>星とコメントのジャンルを選んで、街のお店に感想を届けましょう。店主は、そのまま受け取るとは限りません。</p>
+</div>
+<section class="monthbar" aria-label="ゲームの進行">
+  <div><span class="eyebrow">現在の投稿期間</span><strong id="monthText">4月</strong></div>
+  <div class="progresswrap"><div class="progress" id="monthProgress" aria-label="12か月の進捗"></div><small id="monthCaption">1 / 12 件目の口コミ</small></div>
+</section>
+<nav class="tabs" aria-label="ページ切替">
+  <button type="button" data-tab="street" class="active" aria-current="page">🏘️ 商店街</button>
+  <button type="button" data-tab="history">📝 口コミ履歴</button>
+  <button type="button" data-tab="guide">ℹ️ あそび方</button>
+</nav>
+<div id="gameRoot" aria-live="polite"></div>
+<footer class="foot"><p>この作品はフィクションです。店名・人物・SNSはすべて架空。進行状況はこの端末のブラウザ内に保存され、外部送信されません。</p><a href="../">短編UIゲーム実験室に戻る</a></footer>
+</div>
+</body>
+</html>

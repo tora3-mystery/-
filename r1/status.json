@@ -1,0 +1,59 @@
+{
+  "schemaVersion": "1.0",
+  "projectId": "R1",
+  "title": "口コミへの返信をご確認ください。（仮）",
+  "nickname": "くちへん（仮）",
+  "version": "0.1.0-alpha",
+  "updatedAtJST": "2026-10-29T05:24:35+09:00",
+  "phase": "Phase 3実装済・Phase 4初期監査済・α試作公開（人間レビュー待ち）",
+  "repository": "tora3-mystery/short-ui-games",
+  "scope": "r1/",
+  "assetStatus": "CSS仮店舗のみ。写真・画像素材未制作・未組込。",
+  "gameScope": {
+    "shops": 3,
+    "months": 12,
+    "reviewOptions": "星1〜5 × 商品・味／接客／価格／雰囲気／個性",
+    "evolution": "各店舗10方向・0〜3段階・閉店分岐",
+    "extras": "店主返信、他者口コミ、SNS、口コミ履歴、localStorage保存・再開、一年後の商店街と店舗別後日談"
+  },
+  "aiAudit": {
+    "status": "初期PASS",
+    "method": "GitHub書込前に同一エンジン関数をV8実行、静的参照・対応括弧監査",
+    "cases": 24044,
+    "randomTrajectories": 400,
+    "reviewsProcessed": 4800,
+    "completedRuns": 400,
+    "routeDefinitions": 30,
+    "focusedStage3PathsTested": 15,
+    "errors": 0,
+    "limitations": "400周は均等評価系であり特殊結末すべての到達確認ではない。実ブラウザではない。"
+  },
+  "browserAudit": {
+    "status": "未実施",
+    "desktop": null,
+    "mobile320": null,
+    "mobile390": null,
+    "publicURLVerified": false
+  },
+  "humanReview": {
+    "status": "未実施",
+    "targetVersion": "0.1.0-alpha",
+    "focus": [
+      "星とジャンルの操作性",
+      "店主返信の面白さ",
+      "店の進化の見分けやすさ",
+      "12回後の変化量と周回性",
+      "スマホ実機の文字・タップと復帰"
+    ]
+  },
+  "knownIssues": [
+    "進化外観は仮CSSで表現。各進化方向専用画像は未制作。",
+    "均等投稿では上位進化が発生しにくい（意図的な停滞と適正進化速度の人間評価が必要）。",
+    "店舗経営モデルとSNS反応の数値調整は仮設定。",
+    "ブラウザと公開ページの実操作は未検証。"
+  ],
+  "nextOwner": "人間：α版スマホ試遊 → 作品専用Chat：フィードバック反映・再監査",
+  "nextWork": "Gate B後、店舗外観・店主写真・商品画像の制作を検討",
+  "index": "企画マスター承認の公開INDEXにα試作カードを追加（同コミット）",
+  "publicUrl": "https://tora3-mystery.github.io/short-ui-games/r1/"
+}
