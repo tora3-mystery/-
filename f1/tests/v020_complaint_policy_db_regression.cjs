@@ -1,4 +1,4 @@
-/* F1 v0.20.1 complaint database and deterministic shrine QA (DOM mock). */
+/* F1 v0.20.4 complaint database and deterministic shrine QA (DOM mock). */
 'use strict';
 const fs=require('node:fs'),path=require('node:path');
 const html=fs.readFileSync(path.join(__dirname,'..','index.html'),'utf8');
@@ -11,7 +11,7 @@ let count=0;const ok=(x,why)=>{count++;if(!x)throw Error('v020 '+count+': '+why)
 const first=boot(),ids=new Set(db.actions.map(x=>x.id));
 ok(db.actions.length===50&&first.catalog.options.length===50,'50 existing actions');
 ok(JSON.stringify(db.actions.map(x=>x.id))===JSON.stringify(first.catalog.options.map(x=>x.id)),'Catalog action IDs match runtime');
-ok(db.laterFreshPool.length===32&&JSON.stringify(db.laterFreshPool)===JSON.stringify(first.catalog.F20_LATE_COMPLAINTS),'32 late templates are synced');
+ok(db.laterFreshPool.length===38&&JSON.stringify(db.laterFreshPool)===JSON.stringify(first.catalog.F20_LATE_COMPLAINTS),'38 late templates are synced');
 for(const x of db.laterFreshPool){ok(x.body.includes(x.hint),'Actionable text exists');ok(x.actionIds.every(id=>ids.has(id)),'No invalid policy IDs')}
 const combinations=new Map(),firstLayouts=new Set();
 for(let seed=0;seed<400;seed++){const x=boot();x.api.setState({...x.api.getState(),policySeed:seed,complaintTickets:null});const letters=x.api.getState().complaintTickets;ok(letters.length===5,'Five first-day complaints');const key=String(letters.some(x=>x.body.includes('見掛けない商品')))+String(letters.some(x=>x.body.includes('商店街の神社')));combinations.set(key,(combinations.get(key)||0)+1);firstLayouts.add(letters.map(x=>x.body).join('|'))}
@@ -37,5 +37,5 @@ const state=x.api.getState(),letters=state.complaintTickets.filter(x=>x.day===da
 ok(letters.length===(day>=4?2:1),'Independent new letters per day');
 for(const z of letters){ok(z.body.includes(z.focusHint.text),'Underlined phrase exists');seen.add(z.body)}
 const again=boot(x.mem);again.api.resumeCurrent();ok(JSON.stringify(again.api.getState().complaintTickets)===JSON.stringify(state.complaintTickets),'Late letters preserve on reload')}
-ok(seen.size===32,'All 32 late messages are reachable');
+ok(seen.size===38,'All 32 late messages are reachable');
 console.log('PASS F1 v020 '+count+' checks; '+firstLayouts.size+' initial layouts, '+seen.size+' late templates');
