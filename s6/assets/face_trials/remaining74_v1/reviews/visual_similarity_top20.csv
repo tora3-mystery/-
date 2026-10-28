@@ -1,0 +1,21 @@
+﻿rank,person_id_a,name_a,person_id_b,name_b,manual_visual_reason,shared_groups,assessment
+1,P058,加藤晴人,P060,山田悠斗,短髪・暗色髪・柔らかい目元、100pxでは近く見える,none,low-to-moderate concern; no shared group found in game-data.js
+2,P073,池田千尋,P074,福田歩,短髪・細めの輪郭・目線外し、同じ男性類型に寄る,none,low-to-moderate concern; no shared group found in game-data.js
+3,P065,林美咲,P066,小川遼,黒髪・分け目・同程度の顔サイズ、輪郭差はある,none,low-to-moderate concern; no shared group found in game-data.js
+4,P086,上野拓,P087,酒井雫,長い暗色髪・笑顔・卵型寄りの輪郭,none,low-to-moderate concern; no shared group found in game-data.js
+5,P049,久保田千尋,P086,上野拓,女性・細めの輪郭・長めの髪、E12-Bで同時登場,E12-B,review first: co-occur in E12-B
+6,P032,藤井拓海,P039,内田はる,男性・短〜中髪・広めの頬、顔幅差あり,none,low-to-moderate concern; no shared group found in game-data.js
+7,P034,黒川潤,P041,高瀬駿,男性・暗髪・丸みのある顔、表情と頬幅は異なる,none,low-to-moderate concern; no shared group found in game-data.js
+8,P026,森田蓮,P057,伊藤花音,眼鏡・暗髪・カジュアルな室内写真,none,low-to-moderate concern; no shared group found in game-data.js
+9,P050,松永雅,P063,清水玲奈,眼鏡・ボブ・丸みのある女性顔,none,low-to-moderate concern; no shared group found in game-data.js
+10,P033,石田美琴,P062,井上湊,眼鏡・暗髪・細めの男性輪郭,none,low-to-moderate concern; no shared group found in game-data.js
+11,P076,藤田春香,P091,早川さくら,眼鏡・くせ毛・暗髪・顔の角度,none,low-to-moderate concern; no shared group found in game-data.js
+12,P071,山崎里穂,P091,早川さくら,眼鏡・くせ毛・暗髪・丸みのある顔,none,low-to-moderate concern; no shared group found in game-data.js
+13,P064,阿部一樹,P065,林美咲,同じE04-D、暗髪・中性的な輪郭。顔幅・髪型に差,E04-D,review first: co-occur in E04-D
+14,P047,安藤朔,P082,和田颯太,ふっくらした頬・暗髪の男性、表情差が主,none,low-to-moderate concern; no shared group found in game-data.js
+15,P084,竹内瑛,P090,野口渉,男性・黒髪・笑顔寄り。輪郭・頬幅は異なる,none,low-to-moderate concern; no shared group found in game-data.js
+16,P020,青木湊,P096,杉本直,短髪・暗髪・顔幅が標準的,none,low-to-moderate concern; no shared group found in game-data.js
+17,P009,北沢修,P073,池田千尋,短髪・暗髪・細めの男性顔,none,low-to-moderate concern; no shared group found in game-data.js
+18,P078,坂本樹,P079,遠藤ひなた,暗髪・頬の丸み・自然光のスナップ,none,low-to-moderate concern; no shared group found in game-data.js
+19,P083,中西凛,P087,酒井雫,長い暗髪・笑顔・細めの輪郭,none,low-to-moderate concern; no shared group found in game-data.js
+20,P042,比嘉音羽,P086,上野拓,長い暗髪・会話中の微笑み,none,low-to-moderate concern; no shared group found in game-data.js
