@@ -159,7 +159,7 @@ const selfIntroduction=(id,state,source='direct')=>{
  if(state.personalIntroduced?.[id])return '';
  const c=P.people[id],p=people[id];
  if(source==='bystander')return (c.initiative>=3&&c.warmth>=3?'そういえば名乗ってなかったね。':'初めまして、')+p.name+'です。';
- if(Number(p.year)===1)return p.name+'です。自分も新入生で、見学に来ています。';
+ if(Number(p.year)===1)return p.name+'です。よろしく。';
  if(c.voice==='energetic'||c.voice==='friendly')return p.name+'です。よろしくね。';
  if(c.voice==='reserved'||c.voice==='precise')return p.name+'です。よろしく。';
  return p.name+'です。今日はよろしくね。';
