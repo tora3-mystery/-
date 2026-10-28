@@ -13,7 +13,7 @@
  */
 (function (root) {
   'use strict';
-  const VERSION = '0.6.0-rc3';
+  const VERSION = '0.6.0-rc4';
   const ORDER = Object.freeze([0, 1, 2, 3, 4, 5, 9, 7, 8, 11]);
   const DAYS = Object.freeze(['月曜日','火曜日','水曜日','木曜日','金曜日']);
   const SCENES = Object.freeze([
@@ -427,7 +427,7 @@
     // over/under-estimate reaction even when social tact, not accuracy, was requested.
     if (q.mode !== 'facts' && q.type === 'yen' &&
         [1,5,11].includes(q.legacyIndex) &&
-        Math.abs(x - q.truth) <= Math.max(1,Math.round(q.truth*.01))) return 'near';
+        Math.abs(x - q.truth) <= Math.max(q.legacyIndex===1?20:1,Math.round(q.truth*(q.legacyIndex===1?.03:.01)))) return 'near';
     if (q.mode !== 'facts' && (grade.air >= 90 || grade.success)) return 'social';
     let delta;
     if (q.type === 'yen') {
@@ -473,7 +473,7 @@
         near:['え、ほぼピッタリじゃん！','そこまで分かるなら、もう少しだけ得した気分を味わわせてよ。'],
         social:['でしょ？ いいものに見えるよね！','でも実はもう少し安かったんだよ。今日、これだけは聞いてほしかった。'],
         low:['いや、ちょっと待って。','それ言われると「買い物上手」じゃなくて「選ぶ目がない人」になるから。'],
-        high:['さすがにそこまではしないよ。','欲しかったのは商品であって、住宅ローンじゃない。'],
+        high:['ちょっと高めに見積もったね。','でも、買った本人としては悪い気はしないよ。'],
         extremeLow:['その値段だと充電器の箱も買えないかも。','いや、物によるけど。'],
         extremeHigh:['いくら僕が買い物好きでもさ。','今それ答えたのって円？ 別の通貨じゃない？']
       },
@@ -623,6 +623,7 @@
     }
     const script = names[q.legacyIndex] && names[q.legacyIndex][t] || ['……なるほど。','数字って難しいですね。'];
     let out=lines(speaker,script[0],script[1]);
+    if(q.legacyIndex===1 && t==='high' && x>q.truth*1.5)out=lines(speaker,'そこまでは高くないよ。','でも、実際より高く見えるなら悪い気はしないな。');
     if(q.legacyIndex===1 && q.item.indexOf('アダプタ')>=0 && t==='high')out=lines(speaker,'充電器にその額？','スマホの方が先にびっくりして電源落ちそう。');
     if(q.legacyIndex===1 && q.item.indexOf('Alarmo')>=0 && t==='high')out=lines(speaker,'目覚まし時計にその値段？','その額なら、僕を会社まで起こしに来てほしい。');
     if(q.legacyIndex===1 && q.item.indexOf('ヘッドホン')>=0 && t==='high')out=lines(speaker,'ヘッドホンにそこまで出せないよ！','イヤホンをつけたまま財布の声が聞こえてしまう。');
