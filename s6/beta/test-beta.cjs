@@ -872,7 +872,8 @@ check('following someone with a private pre-game post shows truthful count after
  s.click('action-menu','photo');s.click('act-target','P003');
  s.click('back-venue');s.click('finish-venue');
  s.click('night-sns','Photogram');
- assert.doesNotMatch(s.html,/pg_003|あんちゃん.*投稿1件/);
+ assert.match(s.html,/フォロー中 0人 ／ 承認待ち 1人/);
+ assert.doesNotMatch(s.html,/新歓開始前 1件/);
  s.click('back-night');s.click('next-day');s.click('skip');
  s.click('night-sns','Photogram');
  assert.match(s.html,/投稿1件（この日時点）/);
