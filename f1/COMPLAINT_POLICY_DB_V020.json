@@ -1,0 +1,1734 @@
+{
+  "schemaVersion": 1,
+  "sourceVersion": "F1 v0.19.9",
+  "purpose": "Development inventory; runtime policy definitions remain in f1/index.html. Late ticket templates are kept in sync by regression tests.",
+  "categories": [
+    "レジ待ち",
+    "通路混雑",
+    "品切れ",
+    "店内騒音"
+  ],
+  "actions": [
+    {
+      "id": "register",
+      "name": "有人レジを増設",
+      "cost": 0,
+      "delta": [
+        -2,
+        1,
+        0,
+        0
+      ],
+      "desc": "レジ待ちは改善。増設により通路が狭くなる",
+      "kind": "queue",
+      "max": 5,
+      "bonus": 32,
+      "role": "long",
+      "repeat": false,
+      "min": 1,
+      "delay": 1,
+      "completionDays": 1,
+      "attractionToday": 0,
+      "attractionOnCompletion": 0
+    },
+    {
+      "id": "staff",
+      "name": "応援スタッフを手配",
+      "cost": 0,
+      "delta": [
+        -1,
+        0,
+        0,
+        1
+      ],
+      "desc": "応援で列は縮むが呼び声が増える",
+      "kind": "queue",
+      "repeat": true,
+      "role": "quick",
+      "min": 1,
+      "max": 7,
+      "delay": 1,
+      "completionDays": 1,
+      "attractionToday": 0,
+      "attractionOnCompletion": 0
+    },
+    {
+      "id": "ticket",
+      "name": "整理券で列を分散",
+      "cost": 0,
+      "delta": [
+        -1,
+        0,
+        0,
+        0
+      ],
+      "desc": "待ち列を整理。客を呼ぶ理由は増えない",
+      "kind": "queue",
+      "min": 2,
+      "role": "quick",
+      "repeat": true,
+      "max": 7,
+      "delay": 1,
+      "completionDays": 1,
+      "attractionToday": 0,
+      "attractionOnCompletion": 0
+    },
+    {
+      "id": "self",
+      "name": "セルフレジ導入",
+      "cost": 0,
+      "delta": [
+        -3,
+        1,
+        0,
+        1
+      ],
+      "desc": "セルフレジ完成は強力だが操作相談が増える",
+      "kind": "queue",
+      "delay": 1,
+      "max": 4,
+      "fixedSave": 8,
+      "role": "long",
+      "repeat": false,
+      "min": 1,
+      "completionDays": 1,
+      "attractionToday": 0,
+      "attractionOnCompletion": 0
+    },
+    {
+      "id": "lane",
+      "name": "通路を一方通行に",
+      "cost": 0,
+      "delta": [
+        1,
+        -2,
+        0,
+        0
+      ],
+      "desc": "一方通行化で通路は空くが遠回りになり集客力も落ちる",
+      "kind": "aisle",
+      "repeat": true,
+      "role": "suppression",
+      "min": 1,
+      "max": 7,
+      "delay": 1,
+      "completionDays": 1,
+      "attractionToday": 0,
+      "attractionOnCompletion": -1
+    },
+    {
+      "id": "compact",
+      "name": "陳列棚を小型化",
+      "cost": 0,
+      "delta": [
+        0,
+        -1,
+        1,
+        0
+      ],
+      "desc": "陳列縮小で通路は空くが品数が減り店の魅力も落ちる",
+      "kind": "aisle",
+      "role": "suppression",
+      "repeat": false,
+      "min": 1,
+      "max": 7,
+      "delay": 1,
+      "completionDays": 1,
+      "attractionToday": 0,
+      "attractionOnCompletion": -2
+    },
+    {
+      "id": "receive",
+      "name": "臨時の追加発注",
+      "cost": 0,
+      "delta": [
+        0,
+        0,
+        -2,
+        1
+      ],
+      "desc": "追加発注が欠品を救うが搬入が騒がしい",
+      "kind": "stock",
+      "repeat": true,
+      "role": "quick",
+      "min": 1,
+      "max": 7,
+      "delay": 1,
+      "completionDays": 1,
+      "attractionToday": 0,
+      "attractionOnCompletion": 0
+    },
+    {
+      "id": "forecast",
+      "name": "自動発注システム",
+      "cost": 0,
+      "delta": [
+        0,
+        0,
+        -3,
+        0
+      ],
+      "desc": "システム導入で欠品を大きく改善",
+      "kind": "stock",
+      "delay": 1,
+      "max": 5,
+      "perDayBonus": 5,
+      "role": "long",
+      "repeat": false,
+      "min": 1,
+      "completionDays": 1,
+      "attractionToday": 0,
+      "attractionOnCompletion": 0
+    },
+    {
+      "id": "pickup",
+      "name": "予約受取窓口を設置",
+      "cost": 0,
+      "delta": [
+        -1,
+        -1,
+        -1,
+        1
+      ],
+      "desc": "受取窓口が便利だが呼出音が増える",
+      "kind": "mix",
+      "delay": 1,
+      "max": 5,
+      "perDayBonus": 8,
+      "role": "long",
+      "repeat": false,
+      "min": 1,
+      "completionDays": 1,
+      "attractionToday": 0,
+      "attractionOnCompletion": 1
+    },
+    {
+      "id": "quiet",
+      "name": "館内放送を減らす",
+      "cost": 0,
+      "delta": [
+        0,
+        0,
+        0,
+        -2
+      ],
+      "desc": "放送縮小で静かに。特売の魅力も少し失われる",
+      "kind": "noise",
+      "repeat": true,
+      "bonus": -4,
+      "role": "suppression",
+      "min": 1,
+      "max": 7,
+      "delay": 1,
+      "completionDays": 1,
+      "attractionToday": 0,
+      "attractionOnCompletion": -1
+    },
+    {
+      "id": "vibration",
+      "name": "呼出を振動ベルに",
+      "cost": 0,
+      "delta": [
+        -1,
+        0,
+        0,
+        -1
+      ],
+      "desc": "振動ベル導入で列と騒音の問題を改善",
+      "kind": "noise",
+      "min": 2,
+      "role": "long",
+      "repeat": false,
+      "max": 5,
+      "delay": 1,
+      "completionDays": 1,
+      "attractionToday": 0,
+      "attractionOnCompletion": 0
+    },
+    {
+      "id": "sale",
+      "name": "ポイント5倍セール",
+      "cost": 0,
+      "delta": [
+        1,
+        0,
+        1,
+        1
+      ],
+      "desc": "翌営業日集客+2。翌営業日レジ・在庫・騒音の苦情が増える",
+      "kind": "sales",
+      "min": 3,
+      "max": 6,
+      "bonus": 36,
+      "role": "promotion",
+      "repeat": false,
+      "delay": 1,
+      "completionDays": 1,
+      "attractionToday": 0,
+      "attractionOnCompletion": 2
+    },
+    {
+      "id": "night",
+      "name": "閉店を2時間延長",
+      "cost": 0,
+      "delta": [
+        1,
+        0,
+        0,
+        1
+      ],
+      "desc": "営業時間延長の翌営業日集客+1。夜の混雑と騒音",
+      "kind": "sales",
+      "min": 3,
+      "bonus": 31,
+      "extraStaff": 7,
+      "role": "promotion",
+      "repeat": false,
+      "max": 6,
+      "delay": 1,
+      "completionDays": 1,
+      "attractionToday": 0,
+      "attractionOnCompletion": 1
+    },
+    {
+      "id": "delivery",
+      "name": "宅配受注を開始",
+      "cost": 0,
+      "delta": [
+        -1,
+        0,
+        -1,
+        1
+      ],
+      "desc": "宅配サービスが新規客を生み、呼出音も増える",
+      "kind": "mix",
+      "delay": 1,
+      "max": 5,
+      "perDayBonus": 16,
+      "role": "long",
+      "repeat": false,
+      "min": 2,
+      "completionDays": 1,
+      "attractionToday": 0,
+      "attractionOnCompletion": 1
+    },
+    {
+      "id": "discount",
+      "name": "閉店前の見切り販売",
+      "cost": 0,
+      "delta": [
+        1,
+        0,
+        1,
+        0
+      ],
+      "desc": "翌営業日集客+1。翌営業日にレジと品切れの苦情",
+      "kind": "sales",
+      "bonus": 13,
+      "repeat": true,
+      "role": "promotion",
+      "min": 1,
+      "max": 7,
+      "delay": 1,
+      "completionDays": 1,
+      "attractionToday": 0,
+      "attractionOnCompletion": 1
+    },
+    {
+      "id": "shift",
+      "name": "レジのシフト組み替え",
+      "cost": 0,
+      "delta": [
+        -1,
+        0,
+        0,
+        1
+      ],
+      "desc": "レジシフト組替え。売場案内の騒音が増える",
+      "kind": "queue",
+      "repeat": true,
+      "role": "quick",
+      "min": 1,
+      "max": 7,
+      "delay": 1,
+      "completionDays": 1,
+      "attractionToday": 0,
+      "attractionOnCompletion": 0
+    },
+    {
+      "id": "limit",
+      "name": "購入数量を制限",
+      "cost": 0,
+      "delta": [
+        0,
+        0,
+        -1,
+        0
+      ],
+      "desc": "購入制限で欠品クレームは減るが来店動機も削る",
+      "kind": "stock",
+      "repeat": true,
+      "role": "suppression",
+      "min": 1,
+      "max": 7,
+      "delay": 1,
+      "completionDays": 1,
+      "attractionToday": 0,
+      "attractionOnCompletion": -2
+    },
+    {
+      "id": "display",
+      "name": "混雑状況を入口に掲示",
+      "cost": 0,
+      "delta": [
+        -1,
+        0,
+        0,
+        0
+      ],
+      "desc": "混雑情報を入口に掲示してレジ待ちを分散。通路混雑そのものは変わらない",
+      "kind": "queue",
+      "min": 2,
+      "role": "quick",
+      "repeat": false,
+      "max": 7,
+      "delay": 1,
+      "completionDays": 1,
+      "attractionToday": 0,
+      "attractionOnCompletion": 0
+    },
+    {
+      "id": "farmer",
+      "name": "近所の農家と直接契約",
+      "cost": 0,
+      "delta": [
+        0,
+        0,
+        -1,
+        0
+      ],
+      "desc": "産直契約。品揃えも集客理由も増える",
+      "kind": "finance",
+      "min": 2,
+      "max": 5,
+      "delay": 1,
+      "marginSave": 4,
+      "role": "attraction",
+      "repeat": false,
+      "completionDays": 1,
+      "attractionToday": 0,
+      "attractionOnCompletion": 1
+    },
+    {
+      "id": "sampling",
+      "name": "店頭で試食祭り",
+      "cost": 0,
+      "delta": [
+        1,
+        1,
+        0,
+        1
+      ],
+      "desc": "試食祭り翌営業日集客+2。翌営業日行列・通路・騒音",
+      "kind": "sales",
+      "min": 2,
+      "max": 6,
+      "bonus": 24,
+      "role": "promotion",
+      "repeat": false,
+      "delay": 1,
+      "completionDays": 1,
+      "attractionToday": 0,
+      "attractionOnCompletion": 2
+    },
+    {
+      "id": "rest",
+      "name": "従業員の休憩を確保",
+      "cost": 0,
+      "delta": [
+        0,
+        0,
+        0,
+        -1
+      ],
+      "desc": "スタッフ休憩確保で場内誘導と案内音が落ち着く",
+      "kind": "staff",
+      "extraStaff": 5,
+      "repeat": true,
+      "role": "quick",
+      "min": 1,
+      "max": 7,
+      "delay": 1,
+      "completionDays": 1,
+      "attractionToday": 0,
+      "attractionOnCompletion": 0
+    },
+    {
+      "id": "early",
+      "name": "閉店を1時間早める",
+      "cost": 0,
+      "delta": [
+        -1,
+        0,
+        0,
+        0
+      ],
+      "desc": "早閉めで閉店間際のレジ苦情は減るが集客力も落ちる",
+      "kind": "finance",
+      "min": 3,
+      "bonus": -14,
+      "extraStaff": -6,
+      "repeat": true,
+      "role": "suppression",
+      "max": 7,
+      "delay": 1,
+      "completionDays": 1,
+      "attractionToday": 0,
+      "attractionOnCompletion": -2
+    },
+    {
+      "id": "floorcheck",
+      "name": "売場の通行帯を整理",
+      "cost": 0,
+      "delta": [
+        0,
+        -1,
+        0,
+        0
+      ],
+      "desc": "通行帯を整理。翌営業日から小さな改善効果",
+      "kind": "aisle",
+      "repeat": true,
+      "role": "quick",
+      "min": 1,
+      "max": 7,
+      "delay": 1,
+      "completionDays": 1,
+      "attractionToday": 0,
+      "attractionOnCompletion": 0
+    },
+    {
+      "id": "shelfcheck",
+      "name": "棚札と補充予定を点検",
+      "cost": 0,
+      "delta": [
+        0,
+        0,
+        -1,
+        0
+      ],
+      "desc": "補充予定を明確化。品切れの不安が減る",
+      "kind": "stock",
+      "repeat": true,
+      "role": "quick",
+      "min": 1,
+      "max": 7,
+      "delay": 1,
+      "completionDays": 1,
+      "attractionToday": 0,
+      "attractionOnCompletion": 0
+    },
+    {
+      "id": "stockScope",
+      "name": "欠品率の集計対象を整理",
+      "cost": 0,
+      "delta": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "desc": "廃番品を集計対象から除外し帳票上だけ欠品率を改善",
+      "kind": "kpi",
+      "min": 3,
+      "max": 6,
+      "hq": "欠品率0%を達成",
+      "hqNote": "※対象商品を集計から除外。棚の欠品は改善なし",
+      "role": "kpi",
+      "repeat": false,
+      "delay": 1,
+      "completionDays": 1,
+      "attractionToday": 0,
+      "attractionOnCompletion": 0
+    },
+    {
+      "id": "gourmet",
+      "name": "地元の名物フェア",
+      "cost": 0,
+      "delta": [
+        0,
+        1,
+        1,
+        1
+      ],
+      "desc": "名物フェアで翌営業日集客+2。翌営業日通路と品切れと騒音",
+      "kind": "sales",
+      "min": 3,
+      "max": 6,
+      "bonus": 28,
+      "role": "promotion",
+      "repeat": false,
+      "delay": 1,
+      "completionDays": 1,
+      "attractionToday": 0,
+      "attractionOnCompletion": 2
+    },
+    {
+      "id": "shrine",
+      "name": "街の神社にお賽銭を入れる",
+      "kind": "local",
+      "role": "local",
+      "delta": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "desc": "商売繁盛を願って、商店街の神社にお参りします。",
+      "min": 1,
+      "max": 7,
+      "repeat": false,
+      "completionDays": 1,
+      "attractionToday": 0,
+      "attractionOnCompletion": 1
+    },
+    {
+      "id": "audit",
+      "name": "スーパー裏手の不気味な社にお参りする",
+      "cost": 0,
+      "delta": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "desc": "「商売繁盛に効く」と聞いた古い社を訪ねます。",
+      "attractionOnCompletion": 1,
+      "kind": "odd",
+      "min": 3,
+      "max": 5,
+      "oddReq": 0,
+      "bonus": 18,
+      "after": 18,
+      "remain": 1,
+      "completionDays": 1
+    },
+    {
+      "id": "camera0",
+      "name": "客がいない時間も会計を受け付ける",
+      "cost": 0,
+      "delta": [
+        -1,
+        -1,
+        0,
+        -1
+      ],
+      "desc": "閉店後も会計を続けます。防犯映像に客の姿はありません。",
+      "attractionOnCompletion": 1,
+      "kind": "odd",
+      "min": 4,
+      "max": 6,
+      "oddReq": 1,
+      "bonus": 28,
+      "after": 28,
+      "remain": 3,
+      "completionDays": 1
+    },
+    {
+      "id": "open0",
+      "name": "裏手の社に生贄を捧げる",
+      "cost": 0,
+      "delta": [
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "desc": "社から届いた紙には「供物を捧げよ」とだけ記されています。閉店後に従います。",
+      "kind": "odd",
+      "min": 5,
+      "max": 7,
+      "oddReq": 2,
+      "bonus": 45,
+      "after": 45,
+      "remain": 5,
+      "completionDays": 1
+    },
+    {
+      "id": "dateShift",
+      "name": "賞味期限の表示をこっそり延ばす",
+      "kind": "gray",
+      "role": "gray",
+      "delta": [
+        0,
+        0,
+        -4,
+        0
+      ],
+      "attractionOnCompletion": 3,
+      "desc": "廃棄を減らし、欠品の印象を抑える。ただし商品の表示について後日苦情が来るかもしれません。",
+      "risk": [
+        0,
+        0,
+        2,
+        1
+      ],
+      "min": 2,
+      "max": 6,
+      "repeat": false,
+      "completionDays": 1
+    },
+    {
+      "id": "complaintHide",
+      "name": "ご意見箱をレジの裏に移す",
+      "kind": "gray",
+      "role": "gray",
+      "delta": [
+        -2,
+        -2,
+        0,
+        -2
+      ],
+      "attractionOnCompletion": 2,
+      "desc": "ご意見箱を目立たない場所に移し、帳票上の不満度を下げます。売場の混雑そのものは解決しません。",
+      "risk": [
+        1,
+        1,
+        0,
+        0
+      ],
+      "min": 2,
+      "max": 7,
+      "repeat": false,
+      "completionDays": 1
+    },
+    {
+      "id": "stockCover",
+      "name": "空の棚に「入荷済み」の札を出す",
+      "kind": "gray",
+      "role": "gray",
+      "delta": [
+        -1,
+        0,
+        -3,
+        0
+      ],
+      "attractionOnCompletion": 3,
+      "desc": "棚は空のまま、帳票上は「入荷済み」として不満度を下げます。後日の問い合わせ・発覚に注意。",
+      "risk": [
+        0,
+        0,
+        2,
+        0
+      ],
+      "min": 3,
+      "max": 7,
+      "repeat": false,
+      "completionDays": 1
+    },
+    {
+      "id": "queueLane",
+      "name": "増設レジ専用の待機通路を設ける",
+      "v15Family": "queue",
+      "tier": 1,
+      "delta": [
+        -3,
+        2,
+        0,
+        1
+      ],
+      "attractionOnCompletion": 1,
+      "desc": "レジの列を減らしますが、待機場所が通路を塞ぎ、呼出しも増えます。",
+      "kind": "branch",
+      "role": "branch",
+      "min": 2,
+      "max": 7,
+      "repeat": false,
+      "completionDays": 1
+    },
+    {
+      "id": "queueReset",
+      "name": "レジ全体の導線を再設計する",
+      "v15Family": "queue",
+      "tier": 2,
+      "delta": [
+        -4,
+        2,
+        0,
+        2
+      ],
+      "attractionOnCompletion": 2,
+      "desc": "会計を高速化。動線の集中で通路と案内放送への苦情が増えます。",
+      "kind": "branch",
+      "role": "major",
+      "min": 4,
+      "max": 7,
+      "repeat": false,
+      "completionDays": 1
+    },
+    {
+      "id": "aisleGuide",
+      "name": "混雑売場に案内係を配置",
+      "v15Family": "aisle",
+      "tier": 1,
+      "delta": [
+        2,
+        -3,
+        0,
+        0
+      ],
+      "attractionOnCompletion": 1,
+      "desc": "通路を整理しますが、案内の出口でレジ待ちが集中します。",
+      "kind": "branch",
+      "role": "branch",
+      "min": 2,
+      "max": 7,
+      "repeat": false,
+      "completionDays": 1
+    },
+    {
+      "id": "aisleReset",
+      "name": "売場を全面的に区画整理",
+      "v15Family": "aisle",
+      "tier": 2,
+      "delta": [
+        2,
+        -4,
+        1,
+        0
+      ],
+      "attractionOnCompletion": 2,
+      "desc": "全売場の通路を広げる代わりに、レジ待ちと品切れが悪化します。",
+      "kind": "branch",
+      "role": "major",
+      "min": 4,
+      "max": 7,
+      "repeat": false,
+      "completionDays": 1
+    },
+    {
+      "id": "stockTeam",
+      "name": "専属の緊急補充班を編成",
+      "v15Family": "stock",
+      "tier": 1,
+      "delta": [
+        0,
+        1,
+        -3,
+        1
+      ],
+      "attractionOnCompletion": 1,
+      "desc": "緊急補充で欠品を解消。補充車両のため通路と案内が混雑します。",
+      "kind": "branch",
+      "role": "branch",
+      "min": 2,
+      "max": 7,
+      "repeat": false,
+      "completionDays": 1
+    },
+    {
+      "id": "stockReset",
+      "name": "在庫・配送を一括して組み替える",
+      "v15Family": "stock",
+      "tier": 2,
+      "delta": [
+        1,
+        1,
+        -4,
+        2
+      ],
+      "attractionOnCompletion": 2,
+      "desc": "欠品を抜本的に改善。レジ・通路・案内放送には大きな負荷。",
+      "kind": "branch",
+      "role": "major",
+      "min": 4,
+      "max": 7,
+      "repeat": false,
+      "completionDays": 1
+    },
+    {
+      "id": "quietDesk",
+      "name": "館内案内を個別通知に切り替える",
+      "v15Family": "noise",
+      "tier": 1,
+      "delta": [
+        1,
+        0,
+        0,
+        -3
+      ],
+      "attractionOnCompletion": 1,
+      "desc": "案内放送を個別通知に変更。説明を求める客がレジに集中します。",
+      "kind": "branch",
+      "role": "branch",
+      "min": 2,
+      "max": 7,
+      "repeat": false,
+      "completionDays": 1
+    },
+    {
+      "id": "quietReset",
+      "name": "静かな売場の接客方式を全面導入",
+      "v15Family": "noise",
+      "tier": 2,
+      "delta": [
+        1,
+        2,
+        1,
+        -4
+      ],
+      "attractionOnCompletion": 2,
+      "desc": "放送を全廃。説明不足でレジ・通路・品切れへの苦情が増えます。",
+      "kind": "branch",
+      "role": "major",
+      "min": 4,
+      "max": 7,
+      "repeat": false,
+      "completionDays": 1
+    },
+    {
+      "id": "weekendStore",
+      "name": "週末向けに売場全体を改装",
+      "v15Family": null,
+      "tier": 0,
+      "delta": [
+        2,
+        -4,
+        1,
+        2
+      ],
+      "attractionOnCompletion": 2,
+      "desc": "通路を広げた大改装。レジ・品切れ・騒音には大きな負担。",
+      "kind": "major",
+      "role": "branch",
+      "min": 5,
+      "max": 7,
+      "repeat": false,
+      "completionDays": 1
+    },
+    {
+      "id": "weekendInventory",
+      "name": "本部から週末在庫を一括融通",
+      "v15Family": null,
+      "tier": 0,
+      "delta": [
+        2,
+        1,
+        -4,
+        2
+      ],
+      "attractionOnCompletion": 3,
+      "desc": "大量補充で欠品改善と集客強化。レジ・通路・騒音が悪化します。",
+      "kind": "major",
+      "role": "branch",
+      "min": 5,
+      "max": 7,
+      "repeat": false,
+      "completionDays": 1
+    },
+    {
+      "id": "queueExpress",
+      "name": "混雑時間だけレジ応援を固定配置",
+      "role": "discovery",
+      "kind": "queue",
+      "delta": [
+        -2,
+        1,
+        0,
+        1
+      ],
+      "attractionOnCompletion": 0,
+      "desc": "行列を短縮。増員した案内の声が増え、通路も一部狭くなります。",
+      "min": 1,
+      "max": 7,
+      "completionDays": 1,
+      "repeat": false,
+      "f17Only": true
+    },
+    {
+      "id": "cartSigns",
+      "name": "カートの待避位置を床に表示",
+      "role": "discovery",
+      "kind": "aisle",
+      "delta": [
+        0,
+        -2,
+        1,
+        0
+      ],
+      "attractionOnCompletion": 0,
+      "desc": "通行帯を広げますが、棚の置き場所を減らします。",
+      "min": 1,
+      "max": 7,
+      "completionDays": 1,
+      "repeat": false,
+      "f17Only": true
+    },
+    {
+      "id": "eveningRestock",
+      "name": "夕方に補充する商品を絞る",
+      "role": "discovery",
+      "kind": "stock",
+      "delta": [
+        1,
+        0,
+        -2,
+        0
+      ],
+      "attractionOnCompletion": 0,
+      "desc": "欠品を減らすため、夕方のレジ応援を補充作業へ回します。",
+      "min": 1,
+      "max": 7,
+      "completionDays": 1,
+      "repeat": false,
+      "f17Only": true
+    },
+    {
+      "id": "quietNotices",
+      "name": "特売案内を売場の札に切り替える",
+      "role": "discovery",
+      "kind": "noise",
+      "delta": [
+        1,
+        0,
+        0,
+        -2
+      ],
+      "attractionOnCompletion": 0,
+      "desc": "放送を減らしますが、案内の質問がレジに集中します。",
+      "min": 1,
+      "max": 7,
+      "completionDays": 1,
+      "repeat": false,
+      "f17Only": true
+    },
+    {
+      "id": "inspectBack",
+      "name": "店舗裏手の状況を確認する",
+      "role": "discovery",
+      "kind": "local",
+      "delta": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "attractionOnCompletion": 0,
+      "desc": "搬入口と社の周辺を調査します。確認だけでは売場の混雑は改善しません。",
+      "min": 2,
+      "max": 5,
+      "completionDays": 1,
+      "repeat": false,
+      "f17Only": true
+    },
+    {
+      "id": "removeShrine",
+      "name": "老朽化した社の撤去を手配する",
+      "role": "discovery",
+      "kind": "local",
+      "delta": [
+        0,
+        -1,
+        1,
+        0
+      ],
+      "attractionOnCompletion": 0,
+      "desc": "搬入口の通行を改善。撤去工事中は商品の入荷に負担が生じます。",
+      "min": 3,
+      "max": 7,
+      "completionDays": 1,
+      "repeat": false,
+      "f17Followup": true
+    },
+    {
+      "id": "productCheck",
+      "name": "棚の商品と仕入伝票を照合する",
+      "kind": "stock",
+      "role": "discovery",
+      "delta": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "attractionOnCompletion": 0,
+      "desc": "仕入元不明の商品を確認し、記録がないため一時保管します。",
+      "min": 1,
+      "max": 5,
+      "completionDays": 1,
+      "repeat": false,
+      "f17Only": true
+    }
+  ],
+  "initialComplaintPool": [
+    {
+      "metric": 0,
+      "variants": [
+        "会計まで20分かかりました。買ったアイスが溶けそうです。",
+        "レジが長蛇の列で、冷凍食品を持ったまま待ちました。",
+        "閉店間際なのに、レジが一台しか開いていません。",
+        "会計待ちが店の奥まで続いています。",
+        "レジの最後尾がどこか分かりません。列の入口が見えませんでした。",
+        "レジに20分並びました。隣の列が先に進む理由を知りたいです。",
+        "会計の列が、買い物かご売場まで伸びています。",
+        "急いでいる人も買い物を楽しむ人も、同じ一列で待っています。",
+        "会計が終わる前に閉店の音楽が流れました。"
+      ]
+    },
+    {
+      "metric": 1,
+      "variants": [
+        "カートとベビーカーが通路ですれ違えません。",
+        "通路に段ボールが積まれ、車椅子が通れません。",
+        "入口の案内板が邪魔でカートを押しにくいです。",
+        "通路の真ん中に商品が置かれていて、遠回りになりました。",
+        "何度も引き返しました。狭い売場でカートが向かい合っています。",
+        "出口に出るまで遠回りでした。買い物が済んでから時間がかかります。",
+        "車椅子が通れません。売場の箱を通路から移してください。"
+      ]
+    },
+    {
+      "metric": 2,
+      "variants": [
+        "いつもの牛乳がありません。代わりの商品も売り切れでした。",
+        "夕食用の卵も牛乳も売り切れでした。",
+        "棚札はあるのに、肝心の商品がどこにもありません。",
+        "補充予定を聞いても、誰も分からないようでした。",
+        "昨日あった商品が、今日はどの棚にもありません。",
+        "夕食の材料がまた品切れでした。買い物を二度やり直しました。",
+        "いつもの商品が見つかりません。入荷予定を知りたいです。"
+      ]
+    },
+    {
+      "metric": 3,
+      "variants": [
+        "店内放送が大きくて、子どもが泣いてしまいました。",
+        "特売のアナウンスが途切れず落ち着きません。",
+        "売場とレジの呼び出しが重なって、会話もできません。",
+        "案内放送が繰り返され、店内で会話ができません。",
+        "レジからの呼出音と特売放送が重なっています。",
+        "落ち着いて商品を選ぶことができませんでした。",
+        "小さな子どもが放送のたびに耳をふさいでいます。"
+      ]
+    }
+  ],
+  "initialMysteryClues": [
+    {
+      "key": "productCheck",
+      "phrase": "見掛けない商品がありました",
+      "firstDayProbability": 0.5,
+      "laterGuaranteedDay": 2
+    },
+    {
+      "key": "shrine",
+      "phrase": "商店街の神社で商売繁盛を祈願したらどうですか",
+      "firstDayProbability": 0.5,
+      "laterClue": "裏手の社の周りが暗く",
+      "laterGuaranteedDay": 2
+    }
+  ],
+  "laterGeneralPool": [
+    {
+      "metric": 0,
+      "variants": [
+        "レジの最後尾がどこか分かりません。",
+        "買った冷凍食品が帰るころには柔らかくなっていました。",
+        "会計の列が、買い物かご売場まで伸びています。"
+      ]
+    },
+    {
+      "metric": 1,
+      "variants": [
+        "前から来たカートとすれ違えず、何度も引き返しました。",
+        "通路の真ん中に商品が置かれていて、棚が見えません。",
+        "買い物を終えてから出口に出るまで遠回りでした。"
+      ]
+    },
+    {
+      "metric": 2,
+      "variants": [
+        "夕食の材料がまた品切れでした。",
+        "昨日あった商品が、今日はどの棚にもありません。",
+        "補充予定を聞いても、誰も分からないようでした。"
+      ]
+    },
+    {
+      "metric": 3,
+      "variants": [
+        "案内放送が繰り返され、店内で会話ができません。",
+        "レジからの呼出音と特売放送が重なっています。",
+        "落ち着いて商品を選ぶことができませんでした。"
+      ]
+    }
+  ],
+  "actionSideEffectComments": [
+    {
+      "actionId": "register",
+      "metric": 1,
+      "body": "レジは増えました。でも、ベビーカーが通れる幅まで減っています。"
+    },
+    {
+      "actionId": "staff",
+      "metric": 3,
+      "body": "人を増やしたら、あちこちから『こちらへどうぞ』が聞こえます。"
+    },
+    {
+      "actionId": "self",
+      "metric": 1,
+      "body": "会計は速いのに、操作の説明を聞くために並んでいます。"
+    },
+    {
+      "actionId": "self",
+      "metric": 3,
+      "body": "セルフレジの呼出音が、何台も重なって鳴っています。"
+    },
+    {
+      "actionId": "lane",
+      "metric": 0,
+      "body": "通路は空いたのに、レジに行くまで店を一周しました。"
+    },
+    {
+      "actionId": "compact",
+      "metric": 2,
+      "body": "歩きやすくなりました。いつもの牛乳はどこへ行きました？"
+    },
+    {
+      "actionId": "receive",
+      "metric": 3,
+      "body": "棚が埋まったと思ったら、品出しの声掛けがずっと響きます。"
+    },
+    {
+      "actionId": "pickup",
+      "metric": 3,
+      "body": "予約品は便利です。でも受取番号の呼出しが止まりません。"
+    },
+    {
+      "actionId": "sale",
+      "metric": 0,
+      "body": "ポイントは嬉しいけど、会計までの列が長すぎます。"
+    },
+    {
+      "actionId": "sale",
+      "metric": 3,
+      "body": "特売の放送が多すぎて、買い忘れたものを思い出せません。"
+    },
+    {
+      "actionId": "night",
+      "metric": 0,
+      "body": "閉店時間は延びたのに、最後のレジがいつまでも混んでいます。"
+    },
+    {
+      "actionId": "night",
+      "metric": 3,
+      "body": "遅くまで営業している分、案内放送も終わりません。"
+    },
+    {
+      "actionId": "delivery",
+      "metric": 3,
+      "body": "宅配窓口の呼出しで、商品を探している間も落ち着きません。"
+    },
+    {
+      "actionId": "discount",
+      "metric": 0,
+      "body": "見切り販売が続いて、値引きの時間に行列が集中しています。"
+    },
+    {
+      "actionId": "discount",
+      "metric": 2,
+      "body": "特売が続いて、今度は買いたい商品まで棚からなくなっています。"
+    },
+    {
+      "actionId": "shift",
+      "metric": 3,
+      "body": "レジが速くなったのに、案内の声が何度も重なっています。"
+    },
+    {
+      "actionId": "rope",
+      "metric": 0,
+      "body": "カートは通りやすいのに、出口の列に合流できません。"
+    },
+    {
+      "actionId": "limit",
+      "metric": 3,
+      "body": "『お一人2点まで』の説明が、レジで延々と続いています。"
+    },
+    {
+      "actionId": "sampling",
+      "metric": 0,
+      "body": "試食は楽しいけれど、会計待ちの列とつながっています。"
+    },
+    {
+      "actionId": "sampling",
+      "metric": 1,
+      "body": "試食の列が商品棚の前まで伸びています。"
+    },
+    {
+      "actionId": "sampling",
+      "metric": 3,
+      "body": "試食会の呼び込みが、店の端まで響いています。"
+    },
+    {
+      "actionId": "gourmet",
+      "metric": 1,
+      "body": "名物フェアを始めたら、特設売場でカートがすれ違えません。"
+    },
+    {
+      "actionId": "gourmet",
+      "metric": 3,
+      "body": "名物フェアの案内が大きすぎて、普段の買い物に集中できません。"
+    },
+    {
+      "actionId": "v15Cascade",
+      "metric": 0,
+      "body": "ほかの売場も混み合い、会計待ちの列がまた長くなっています。"
+    },
+    {
+      "actionId": "v15Cascade",
+      "metric": 1,
+      "body": "会計待ちの列が通路にはみ出して、カートが通れません。"
+    },
+    {
+      "actionId": "v15Cascade",
+      "metric": 2,
+      "body": "補充に追われ、欲しい商品が棚に並んでいません。"
+    },
+    {
+      "actionId": "v15Cascade",
+      "metric": 3,
+      "body": "混雑の問い合わせが重なり、案内放送が増えています。"
+    }
+  ],
+  "discoveryRules": [
+    {
+      "pattern": "レジに20分並びました|会計まで20分かかりました|レジが長蛇の列|レジの列が長",
+      "actionIds": [
+        "register",
+        "staff",
+        "queueExpress",
+        "pickup"
+      ]
+    },
+    {
+      "pattern": "レジの最後尾がどこか分かりません|閉店間際なのに、レジが一台しか開いていません|レジが1台しか開いていません|会計の列が、買い物かご売場まで伸びています",
+      "actionIds": [
+        "ticket",
+        "display",
+        "shift",
+        "self"
+      ]
+    },
+    {
+      "pattern": "カートが通れませんでした|カートとベビーカーが通路ですれ違えません|通路ですれ違えません|何度も引き返しました",
+      "actionIds": [
+        "lane",
+        "floorcheck",
+        "cartSigns"
+      ]
+    },
+    {
+      "pattern": "車椅子が通れません|通路の真ん中に商品が置かれていて|出口に出るまで遠回りでした",
+      "actionIds": [
+        "compact",
+        "rope",
+        "floorcheck"
+      ]
+    },
+    {
+      "pattern": "夕食の材料がまた品切れ|いつもの商品が見つかりません",
+      "actionIds": [
+        "delivery",
+        "farmer",
+        "limit",
+        "eveningRestock"
+      ]
+    },
+    {
+      "pattern": "牛乳がありません|売り切れでした|品切れでした",
+      "actionIds": [
+        "receive",
+        "forecast",
+        "eveningRestock"
+      ]
+    },
+    {
+      "pattern": "棚札はあるのに|補充予定を聞いても|昨日あった商品が",
+      "actionIds": [
+        "shelfcheck",
+        "stockCover",
+        "forecast"
+      ]
+    },
+    {
+      "pattern": "店内放送が大きくて|アナウンスが途切れず|落ち着いて商品を選ぶことができません",
+      "actionIds": [
+        "quiet",
+        "vibration",
+        "quietNotices"
+      ]
+    },
+    {
+      "pattern": "呼び出しが重なって|案内放送が繰り返され|特売放送が重なっています|呼出音が",
+      "actionIds": [
+        "board",
+        "mute",
+        "rest"
+      ]
+    },
+    {
+      "pattern": "商店街の神社で商売繁盛を祈願したらどうですか",
+      "actionIds": [
+        "shrine"
+      ]
+    },
+    {
+      "pattern": "裏手の社の周りが暗く",
+      "actionIds": [
+        "inspectBack"
+      ]
+    },
+    {
+      "pattern": "見掛けない商品がありました",
+      "actionIds": [
+        "productCheck"
+      ]
+    },
+    {
+      "pattern": "ご意見箱|苦情を伝えても",
+      "actionIds": [
+        "complaintHide"
+      ]
+    },
+    {
+      "pattern": "賞味期限|期限表示",
+      "actionIds": [
+        "dateShift"
+      ]
+    }
+  ],
+  "laterFreshPool": [
+    {
+      "metric": 0,
+      "body": "夕方だけ列が急に伸びます。混雑時間に応援を固定配置できませんか。",
+      "hint": "混雑時間に応援を固定配置",
+      "actionIds": [
+        "queueExpress",
+        "staff",
+        "shift"
+      ],
+      "fromDay": 2
+    },
+    {
+      "metric": 0,
+      "body": "整理券があれば、待っている間に買い忘れた商品を探せると思います。",
+      "hint": "整理券があれば",
+      "actionIds": [
+        "ticket",
+        "display"
+      ],
+      "fromDay": 2
+    },
+    {
+      "metric": 0,
+      "body": "会計の列が特設売場を塞いでいます。専用の待機通路を作ってほしいです。",
+      "hint": "専用の待機通路を作って",
+      "actionIds": [
+        "queueLane",
+        "floorcheck"
+      ],
+      "fromDay": 3
+    },
+    {
+      "metric": 0,
+      "body": "自分で会計したいのですが、セルフレジがいつも混んでいます。",
+      "hint": "セルフレジがいつも混んで",
+      "actionIds": [
+        "self",
+        "shift",
+        "queueReset"
+      ],
+      "fromDay": 3
+    },
+    {
+      "metric": 0,
+      "body": "レジ前の案内が複雑で、どこに並ぶか迷います。入口に待ち時間を掲示してほしいです。",
+      "hint": "入口に待ち時間を掲示",
+      "actionIds": [
+        "display",
+        "ticket",
+        "queueReset"
+      ],
+      "fromDay": 4
+    },
+    {
+      "metric": 0,
+      "body": "近所の人は夕食前に集中して来ます。レジの配置を全面的に見直せませんか。",
+      "hint": "レジの配置を全面的に見直せ",
+      "actionIds": [
+        "queueReset",
+        "shift"
+      ],
+      "fromDay": 4
+    },
+    {
+      "metric": 0,
+      "body": "買い物が終わったのに会計待ちの列が出口を塞ぎ、帰れませんでした。",
+      "hint": "列が出口を塞ぎ",
+      "actionIds": [
+        "queueLane",
+        "aisleGuide"
+      ],
+      "fromDay": 5
+    },
+    {
+      "metric": 0,
+      "body": "閉店前には会計が間に合いません。営業時間と人員を見直してほしいです。",
+      "hint": "営業時間と人員を見直して",
+      "actionIds": [
+        "night",
+        "shift",
+        "early"
+      ],
+      "fromDay": 5
+    },
+    {
+      "metric": 1,
+      "body": "カートの待避場所がなく、売場の角で列ができます。床に位置を表示してほしいです。",
+      "hint": "床に位置を表示",
+      "actionIds": [
+        "cartSigns",
+        "floorcheck"
+      ],
+      "fromDay": 2
+    },
+    {
+      "metric": 1,
+      "body": "通路の真ん中で試食を配るので、奥の棚に近づけません。",
+      "hint": "試食を配るので",
+      "actionIds": [
+        "aisleGuide",
+        "floorcheck"
+      ],
+      "fromDay": 2
+    },
+    {
+      "metric": 1,
+      "body": "棚の間隔が狭く、ベビーカーが曲がれません。陳列棚を小さくしてください。",
+      "hint": "陳列棚を小さくして",
+      "actionIds": [
+        "compact",
+        "cartSigns"
+      ],
+      "fromDay": 3
+    },
+    {
+      "metric": 1,
+      "body": "商品の案内係が通路に集まり、逆に歩きにくくなっています。",
+      "hint": "案内係が通路に集まり",
+      "actionIds": [
+        "aisleGuide",
+        "aisleReset"
+      ],
+      "fromDay": 3
+    },
+    {
+      "metric": 1,
+      "body": "休日は入口と出口でカートがぶつかります。動線そのものを変えられませんか。",
+      "hint": "動線そのものを変え",
+      "actionIds": [
+        "lane",
+        "aisleReset"
+      ],
+      "fromDay": 4
+    },
+    {
+      "metric": 1,
+      "body": "特設売場が広がりすぎて、普段の買い物に必要な通路がありません。",
+      "hint": "特設売場が広がりすぎて",
+      "actionIds": [
+        "weekendStore",
+        "compact"
+      ],
+      "fromDay": 4
+    },
+    {
+      "metric": 1,
+      "body": "改装した通路にも段ボールが積まれています。通行帯を毎朝点検してほしいです。",
+      "hint": "通行帯を毎朝点検",
+      "actionIds": [
+        "floorcheck",
+        "aisleGuide"
+      ],
+      "fromDay": 5
+    },
+    {
+      "metric": 1,
+      "body": "レジを増やした結果、カートの置き場がなくなりました。待機列を分けてください。",
+      "hint": "待機列を分けて",
+      "actionIds": [
+        "queueLane",
+        "cartSigns"
+      ],
+      "fromDay": 5
+    },
+    {
+      "metric": 2,
+      "body": "夕方になると惣菜とパンだけ空っぽです。補充する時間帯を変えてほしいです。",
+      "hint": "補充する時間帯を変えて",
+      "actionIds": [
+        "eveningRestock",
+        "receive"
+      ],
+      "fromDay": 2
+    },
+    {
+      "metric": 2,
+      "body": "棚札の入荷予定が毎日違います。まず補充予定を確認してください。",
+      "hint": "補充予定を確認して",
+      "actionIds": [
+        "shelfcheck",
+        "forecast"
+      ],
+      "fromDay": 2
+    },
+    {
+      "metric": 2,
+      "body": "よく買う商品は予約して店頭で受け取れると助かります。",
+      "hint": "予約して店頭で受け取れ",
+      "actionIds": [
+        "pickup",
+        "delivery"
+      ],
+      "fromDay": 3
+    },
+    {
+      "metric": 2,
+      "body": "野菜が足りません。近くの農家から仕入れられないでしょうか。",
+      "hint": "近くの農家から仕入れ",
+      "actionIds": [
+        "farmer",
+        "receive"
+      ],
+      "fromDay": 3
+    },
+    {
+      "metric": 2,
+      "body": "特売品だけ先になくなります。仕入れと配送の計画を作り直してほしいです。",
+      "hint": "仕入れと配送の計画を作り直して",
+      "actionIds": [
+        "stockReset",
+        "forecast"
+      ],
+      "fromDay": 4
+    },
+    {
+      "metric": 2,
+      "body": "仕入れたはずの商品が売場にありません。補充担当を増やしてください。",
+      "hint": "補充担当を増やして",
+      "actionIds": [
+        "stockTeam",
+        "receive"
+      ],
+      "fromDay": 4
+    },
+    {
+      "metric": 2,
+      "body": "週末にはいつもの品が一斉になくなります。在庫を融通してもらえませんか。",
+      "hint": "在庫を融通して",
+      "actionIds": [
+        "weekendInventory",
+        "stockTeam"
+      ],
+      "fromDay": 5
+    },
+    {
+      "metric": 2,
+      "body": "欲しい商品が店頭にない日が続くので、自宅へ配送してほしいです。",
+      "hint": "自宅へ配送して",
+      "actionIds": [
+        "delivery",
+        "pickup"
+      ],
+      "fromDay": 5
+    },
+    {
+      "metric": 3,
+      "body": "レジの呼び出しベルが止まりません。音を出さずに呼び出せませんか。",
+      "hint": "音を出さずに呼び出せ",
+      "actionIds": [
+        "vibration",
+        "quietDesk"
+      ],
+      "fromDay": 2
+    },
+    {
+      "metric": 3,
+      "body": "特売の案内が耳に残ります。札で知らせる形に変えてください。",
+      "hint": "札で知らせる形に変えて",
+      "actionIds": [
+        "quietNotices",
+        "quiet"
+      ],
+      "fromDay": 2
+    },
+    {
+      "metric": 3,
+      "body": "スタッフの呼び声が重なっています。休憩と配置を見直してください。",
+      "hint": "休憩と配置を見直して",
+      "actionIds": [
+        "rest",
+        "shift"
+      ],
+      "fromDay": 3
+    },
+    {
+      "metric": 3,
+      "body": "セルフレジの説明音声と館内放送が重なって、何を聞けばよいか分かりません。",
+      "hint": "説明音声と館内放送が重なって",
+      "actionIds": [
+        "quietDesk",
+        "vibration"
+      ],
+      "fromDay": 3
+    },
+    {
+      "metric": 3,
+      "body": "店内放送を減らしたのに案内係の声だけ響きます。接客方式を見直せませんか。",
+      "hint": "接客方式を見直せ",
+      "actionIds": [
+        "quietReset",
+        "rest"
+      ],
+      "fromDay": 4
+    },
+    {
+      "metric": 3,
+      "body": "閉店間際に同じ放送が何度も流れます。案内を掲示にまとめてほしいです。",
+      "hint": "案内を掲示にまとめて",
+      "actionIds": [
+        "quietNotices",
+        "quietDesk"
+      ],
+      "fromDay": 4
+    },
+    {
+      "metric": 3,
+      "body": "商品を選んでいるときに特売の声が絶えません。静かな時間を作ってください。",
+      "hint": "静かな時間を作って",
+      "actionIds": [
+        "quiet",
+        "rest"
+      ],
+      "fromDay": 5
+    },
+    {
+      "metric": 3,
+      "body": "お店全体で呼び出し音が重なります。売場ごとの案内を別にできませんか。",
+      "hint": "売場ごとの案内を別に",
+      "actionIds": [
+        "quietDesk",
+        "quietReset"
+      ],
+      "fromDay": 5
+    }
+  ]
+}
