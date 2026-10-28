@@ -24,6 +24,8 @@ const nodes={
  'E07-A|P018':{text:'別名義で曲を出してる人は404にもいるよ。だからボカロPってだけでwav.と決めつけない方がいい。',route:'D'},
  'E12-A|P018':{text:'この前、演奏経験がある人をボカロP本人と勘違いしたって話、聞いたよ。本人かどうかは名前じゃなく曲で分かるのかもね。',route:'D'},
  // Real, correctable human mistakes. The mistaken informant is not omniscient or malicious.
+ 'E02-D|P082':{text:'黒縁眼鏡の深町さんって、余白ラムネ本人じゃない？ 生ギターを録るボカロPなんでしょ。聞いたことはないけどね。',to:'P040',next:'E02-A',route:'dummy',misremember:true},
+ 'E05-B|P072':{text:'お茶の輪の西園寺さんって、歌だけの人だったような？ 私は譜面でしか見たことがなくて。',to:'P001',next:'E05-A',route:'dummy',misremember:true},
  'E03-B|P025':{text:'米沢さんって、前はギターボーカルだったような？ 私の記憶違いかも。隣で音源を聴いてる人だよ。',to:'P008',next:'E03-B',route:'dummy',misremember:true},
  'E03-B|P008':{text:'いや、ずっとベースだよ。コーラスはたまにするけどギターボーカルじゃない。南雲さん、誰かと間違えたんじゃないかな。',route:'dummy',correction:true},
  'E09-A|P002':{text:'ボカロも好きだけど、私は自分のバンドでオリジナル曲を作ってる。余白ラムネの曲とは違うと思う。',route:'dummy'},
