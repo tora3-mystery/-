@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#244f46"><title>すべてのご意見に対応してください。｜7日間の店長代理 v0.19.9</title><style>
+<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#244f46"><title>すべてのご意見に対応してください。｜7日間の店長代理 v0.20.0</title><style>
 :root{--bg:#f2f4ec;--ink:#243735;--muted:#627470;--line:#d8e1d7;--deep:#244f46;--surface:#fffdfa;--accent:#f0b967}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,'Hiragino Kaku Gothic ProN','Noto Sans JP',Meiryo,sans-serif;line-height:1.55;transition:background .5s,color .5s}button{font:inherit;cursor:pointer}button:disabled{opacity:.42;cursor:not-allowed}button:focus-visible,summary:focus-visible{outline:3px solid #ba7730;outline-offset:3px}.container{max-width:980px;margin:auto;padding:14px 14px 80px}.mast{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:9px}.brand{display:flex;align-items:center;gap:9px;font-size:14px;font-weight:800;color:#315d50}.brand-icon{font-size:24px}.tiny{font-size:12px;color:var(--muted)}.overline{font-size:11px;font-weight:850;letter-spacing:.08em;color:#648274}.head{margin:4px 0;font-size:clamp(24px,4vw,37px);line-height:1.3;letter-spacing:-.04em}.box{background:var(--surface);border:1px solid var(--line);border-radius:15px;padding:16px;box-shadow:0 4px 18px #2245340a}.widebtn{display:block;width:100%;text-align:center;background:#285f4f;color:#fff;border:none;border-radius:10px;padding:13px 15px;font-size:15px;font-weight:800}.widebtn:hover:not(:disabled){filter:brightness(1.12)}.button-quiet{background:none;border:1px solid #aebfb4;border-radius:9px;color:#36594f;padding:8px 12px;font-weight:700;font-size:12px}.version-top{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin:3px 0 13px;font-size:11px;color:#536b61;padding-bottom:10px;border-bottom:1px solid #d6ded4}.version-top b{background:#285f4f;color:#fff;border-radius:5px;padding:2px 7px}.metrics{position:sticky;top:0;z-index:5;background:#f2f4ecf2;backdrop-filter:blur(7px);border-bottom:1px solid #d6e0d7;display:grid;grid-template-columns:repeat(3,1fr);gap:7px;padding:8px 0;margin-bottom:14px}.stat{background:#fff;border:1px solid #dde3d9;border-radius:9px;padding:7px 8px;text-align:center}.stat label{font-size:10px;display:block;color:#61746e;font-weight:700}.stat strong{font-size:19px;line-height:1.3;font-variant-numeric:tabular-nums;white-space:nowrap}.stat small{font-size:10px;color:#637972}.cash-low{color:#b4423f}.anomaly-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:-5px 0 14px;padding:10px;border:1px solid #9a7776;border-radius:12px;background:#efe7e1}.anomaly-grid .stat{background:#f7f1eb;border-color:#ccb5ad}.two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;align-items:start}.issue-card{background:#fff7ec;border-color:#eccfaa}.issue-body{font-weight:700;font-size:17px;margin:12px 0 8px}.issue-meta{display:flex;justify-content:space-between;gap:7px;align-items:center;font-size:11px;color:#7d684b}.pill{display:inline-block;border-radius:99px;background:#e8efe8;color:#346154;padding:3px 9px;font-weight:800;font-size:11px}.pill.urgent{background:#fce7cc;color:#a3532c}.issue-tail{font-size:12px;color:#795f47;margin:8px 0 0}.help{font-size:12px;color:#6b7b70;margin:7px 0 0}.news{background:#f1f6f2;border:1px solid #d7e4d9;border-radius:9px;padding:9px 11px;font-size:12px;margin:9px 0}.news.odd{background:#eee4e1;border-color:#c5a9a5;color:#66484e}.actions-head{display:flex;justify-content:space-between;align-items:center;gap:8px;margin:0 0 8px}.actions-head h2{font-size:16px;margin:0}.context{font-size:12px;color:#567468}.day-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.action{display:flex;flex-direction:column;gap:4px;padding:12px;text-align:left;border-radius:11px;border:1px solid #cbdad0;background:#fff;min-height:116px;transition:border-color .15s,transform .15s}.action:hover:not(:disabled){border-color:#318367;transform:translateY(-1px)}.action b{font-size:13px;line-height:1.4}.action small{font-size:11px;color:#5d7168;line-height:1.45}.action .cost{color:#ad5736;font-size:11px;font-weight:800}.action.odd-action{border-style:dashed;border-color:#a7a4a0;background:#faf8f1}
 .action.odd-action.odd-tier-2{border-color:#a78a93;background:#f8f1f0}
 .action.odd-action.odd-tier-3{border-color:#674a54;background:#372c33;color:#fff0e8}
@@ -246,7 +246,7 @@ body .action.odd-action.odd-tier-1 .effect-chip.bad{color:#994541}
 body .action.odd-action.odd-tier-2,body .action.odd-action.odd-tier-2:hover{background:#f3ecec;border:2px dashed #a58c98;box-shadow:none;color:#473943}
 body .action.odd-action.odd-tier-2 .choice-title b,body .action.odd-action.odd-tier-2 small{color:#473943}
 body .action.odd-action.odd-tier-3,body .action.odd-action.odd-tier-3:hover{background:linear-gradient(145deg,#241923,#121417);color:#fff0e8;border-color:#bb7791}
-</style></head><body><main class="container"><header class="mast"><div class="brand"><span class="brand-icon" id="brandIcon">🛒</span><span id="brandName">まるまるスーパー<br><small class="tiny">お客様改善センター</small></span></div><div class="header-actions"><button id="help" class="button-quiet hidden">遊び方</button><button id="restart" class="button-quiet hidden">最初から</button></div></header><div class="version-top"><b>F1 v0.19.9</b><span>2026-10-28 12:48:30 JST更新</span></div>
+</style></head><body><main class="container"><header class="mast"><div class="brand"><span class="brand-icon" id="brandIcon">🛒</span><span id="brandName">まるまるスーパー<br><small class="tiny">お客様改善センター</small></span></div><div class="header-actions"><button id="help" class="button-quiet hidden">遊び方</button><button id="restart" class="button-quiet hidden">最初から</button></div></header><div class="version-top"><b>F1 v0.20.0</b><span>2026-10-28 12:58:51 JST更新</span></div>
 <section id="intro" class="focus box">
  <div class="overline">日曜日 17:30｜まるまるスーパー 店長室</div><h1 class="head">すべてのご意見に対応してください。</h1>
  <div class="intro-note"><b>【店長からの引き継ぎ】</b>明日から私が一週間不在になります。7日間、お客様の声を確認しながら、この店の営業を任せます。</div>
@@ -276,7 +276,7 @@ body .action.odd-action.odd-tier-3,body .action.odd-action.odd-tier-3:hover{back
  <div class="two"><section class="box issue-card"><div class="issue-meta"><span>📮 お客様の声・店長回答一覧</span><span id="day8IssueTag" class="pill">未解決 0件</span></div><div id="day8FeedbackSummary" class="complaint-summary">本日の新着 0件</div><div id="day8Feedback" class="complaint-board"></div><div id="day8Message" class="news"></div></section>
  <section class="box"><div class="actions-head"><h2>今日できる対応</h2><span id="day8ActionCount" class="context">1案から1つ</span></div><p class="help" id="day8ActionGuide">本日の売場を確認し、対応を選んでください。</p><div id="day8Offers" class="day8-offers" aria-live="polite"></div><button id="day8Next" class="day8-action-card hidden" type="button">本日の対応を確定する</button><div class="hq-bulletin"><b>📈 本部速報</b><span id="day8Ledger">売上データを照合中です。</span></div></section></div>
 </section>
-<section id="ending" class="focus box hidden" aria-live="polite"></section><div id="day8Help" class="veil hidden" role="dialog" aria-modal="true" aria-labelledby="day8HelpHeading"><div class="dialog"><div class="overline">利用手順　/　08・07・??</div><h2 id="day8HelpHeading">遊び方（参照先：譁ｯ縺ｮ人曜日）</h2><p class="glitch-help-code">HELP_CODE: 200 / 404 / 88人 / ▣▣</p><p class="glitch-help-line">① ご意見を読む。読んだ人から順に、出口の石に戻してください。</p><p class="glitch-help-line">② 下線を一箇所調べる。調べた箇所はまだ調べていません。受付番号はお名前です。</p><p class="glitch-help-line">③ 会計は終わりです。終わりは翌営業日です。翌営業日はこの画面の内側にあります。</p><p class="glitch-help-line">④ 繧ｶﾖ■縺ｵ｡ → 今日を取り消すには、今日を捧げてください。</p><button id="day8HelpClose" class="widebtn" type="button">閉じて売場に戻る</button></div></div><div id="policyConfirm" class="veil hidden" role="dialog" aria-modal="true" aria-labelledby="policyConfirmTitle"><div class="dialog"><div class="overline">本日の対応</div><h2 id="policyConfirmTitle">この施策でよいですか？</h2><p id="policyConfirmText"></p><div id="policyConfirmImpacts" class="preview-table"></div><p id="policyConfirmForecast"></p><button class="widebtn" id="policyConfirmYes" type="button">この施策に決める</button><button class="button-quiet preview-cancel" id="policyConfirmNo" type="button">戻って選び直す</button></div></div><div id="overlay" class="veil hidden" role="dialog" aria-modal="true" aria-labelledby="dialogTitle"><div class="dialog"><div id="dialogLabel" class="overline">DAY RESULT</div><h2 id="dialogTitle">営業結果</h2><p id="dialogText"></p><img id="buildProgress" class="ending-photo hidden" alt="設備の工事中の店内" loading="lazy"><div id="dailyReport" class="report"></div><button id="next" class="widebtn">翌営業日へ</button><button id="undo" class="button-quiet" style="width:100%;margin-top:8px">この日の施策を選び直す</button></div></div><div id="dayTransition" class="veil opening-curtain hidden" role="dialog" aria-modal="true" aria-labelledby="transitionTitle" aria-describedby="transitionSubtitle"><section class="opening-card steady" id="transitionCard"><div class="opening-sparks" aria-hidden="true"><i style="--x:8%;--delay:0s;--c:#f2c36c"></i><i style="--x:19%;--delay:.12s;--c:#74be9c"></i><i style="--x:32%;--delay:.03s;--c:#f4d88a"></i><i style="--x:44%;--delay:.17s;--c:#e9ae5b"></i><i style="--x:57%;--delay:.1s;--c:#86cdb2"></i><i style="--x:69%;--delay:.23s;--c:#ffe1a0"></i><i style="--x:80%;--delay:.05s;--c:#f6b984"></i><i style="--x:92%;--delay:.18s;--c:#a8d6ba"></i></div><div class="opening-kicker" id="transitionKicker">まるまるスーパー　開店準備</div><div class="opening-progress" id="transitionProgress" aria-hidden="true"></div><h2 class="opening-day" id="transitionTitle">DAY 02 <small>/ 07</small></h2><div class="opening-title" id="transitionHeadline">開店準備が整いました！</div><p class="opening-subtitle" id="transitionSubtitle">昨日の施策が売場に反映されました。</p><p class="transition-decision" id="transitionDecision"></p><div class="audit-letter" id="transitionAudit" hidden></div><div class="opening-score"><div class="score-label" id="transitionScoreLabel">本日の日売上見込み</div><strong id="transitionScore">60万円</strong><small id="transitionTotal">前日比 ＋10万円</small></div><div class="opening-changes" id="transitionChanges" aria-label="施策による変化"></div><img class="opening-photo" id="transitionImage" alt="翌営業日のスーパーの店内写真" loading="eager"><p class="opening-caption" id="transitionCaption">昨日の選択が売場に反映されています。</p><button id="transitionContinue" class="widebtn opening-go" type="button">今日の営業を始める</button></section></div><footer class="footer">フィクションの短編Webゲーム F1 v0.19.9｜進行状況は端末内だけに保存。実在の企業・商品・個人とは無関係です。</footer></main>
+<section id="ending" class="focus box hidden" aria-live="polite"></section><div id="day8Help" class="veil hidden" role="dialog" aria-modal="true" aria-labelledby="day8HelpHeading"><div class="dialog"><div class="overline">利用手順　/　08・07・??</div><h2 id="day8HelpHeading">遊び方（参照先：譁ｯ縺ｮ人曜日）</h2><p class="glitch-help-code">HELP_CODE: 200 / 404 / 88人 / ▣▣</p><p class="glitch-help-line">① ご意見を読む。読んだ人から順に、出口の石に戻してください。</p><p class="glitch-help-line">② 下線を一箇所調べる。調べた箇所はまだ調べていません。受付番号はお名前です。</p><p class="glitch-help-line">③ 会計は終わりです。終わりは翌営業日です。翌営業日はこの画面の内側にあります。</p><p class="glitch-help-line">④ 繧ｶﾖ■縺ｵ｡ → 今日を取り消すには、今日を捧げてください。</p><button id="day8HelpClose" class="widebtn" type="button">閉じて売場に戻る</button></div></div><div id="policyConfirm" class="veil hidden" role="dialog" aria-modal="true" aria-labelledby="policyConfirmTitle"><div class="dialog"><div class="overline">本日の対応</div><h2 id="policyConfirmTitle">この施策でよいですか？</h2><p id="policyConfirmText"></p><div id="policyConfirmImpacts" class="preview-table"></div><p id="policyConfirmForecast"></p><button class="widebtn" id="policyConfirmYes" type="button">この施策に決める</button><button class="button-quiet preview-cancel" id="policyConfirmNo" type="button">戻って選び直す</button></div></div><div id="overlay" class="veil hidden" role="dialog" aria-modal="true" aria-labelledby="dialogTitle"><div class="dialog"><div id="dialogLabel" class="overline">DAY RESULT</div><h2 id="dialogTitle">営業結果</h2><p id="dialogText"></p><img id="buildProgress" class="ending-photo hidden" alt="設備の工事中の店内" loading="lazy"><div id="dailyReport" class="report"></div><button id="next" class="widebtn">翌営業日へ</button><button id="undo" class="button-quiet" style="width:100%;margin-top:8px">この日の施策を選び直す</button></div></div><div id="dayTransition" class="veil opening-curtain hidden" role="dialog" aria-modal="true" aria-labelledby="transitionTitle" aria-describedby="transitionSubtitle"><section class="opening-card steady" id="transitionCard"><div class="opening-sparks" aria-hidden="true"><i style="--x:8%;--delay:0s;--c:#f2c36c"></i><i style="--x:19%;--delay:.12s;--c:#74be9c"></i><i style="--x:32%;--delay:.03s;--c:#f4d88a"></i><i style="--x:44%;--delay:.17s;--c:#e9ae5b"></i><i style="--x:57%;--delay:.1s;--c:#86cdb2"></i><i style="--x:69%;--delay:.23s;--c:#ffe1a0"></i><i style="--x:80%;--delay:.05s;--c:#f6b984"></i><i style="--x:92%;--delay:.18s;--c:#a8d6ba"></i></div><div class="opening-kicker" id="transitionKicker">まるまるスーパー　開店準備</div><div class="opening-progress" id="transitionProgress" aria-hidden="true"></div><h2 class="opening-day" id="transitionTitle">DAY 02 <small>/ 07</small></h2><div class="opening-title" id="transitionHeadline">開店準備が整いました！</div><p class="opening-subtitle" id="transitionSubtitle">昨日の施策が売場に反映されました。</p><p class="transition-decision" id="transitionDecision"></p><div class="audit-letter" id="transitionAudit" hidden></div><div class="opening-score"><div class="score-label" id="transitionScoreLabel">本日の日売上見込み</div><strong id="transitionScore">60万円</strong><small id="transitionTotal">前日比 ＋10万円</small></div><div class="opening-changes" id="transitionChanges" aria-label="施策による変化"></div><img class="opening-photo" id="transitionImage" alt="翌営業日のスーパーの店内写真" loading="eager"><p class="opening-caption" id="transitionCaption">昨日の選択が売場に反映されています。</p><button id="transitionContinue" class="widebtn opening-go" type="button">今日の営業を始める</button></section></div><footer class="footer">フィクションの短編Webゲーム F1 v0.20.0｜進行状況は端末内だけに保存。実在の企業・商品・個人とは無関係です。</footer></main>
 <script src="./store_scene_v018.js"></script><script>
 (()=>{'use strict';
 const $=id=>document.getElementById(id),initialMoney=120,labels=['レジ待ち','通路混雑','品切れ','店内騒音'],clamp=v=>Math.min(5,Math.max(0,v)),fmt=n=>(n>=0?'+':'')+n+'万円';
@@ -296,7 +296,7 @@ const options=[
 {id:'gourmet',name:'地元の名物フェア',cost:16,delta:[0,1,-1,1],desc:'売上+28万円、追加導線が必要',kind:'sales',min:3,max:6,bonus:28},{id:'audit',name:'スーパー裏手の不気味な社にお参りする',cost:0,delta:[0,0,0,1],desc:'「商売繁盛に効く」と聞いた古い社を訪ねます。',attractionOnCompletion:1,kind:'odd',min:3,max:5,oddReq:0,bonus:18,after:18,remain:1},{id:'camera0',name:'客がいない時間も会計を受け付ける',cost:0,delta:[-1,-1,0,-1],desc:'閉店後も会計を続けます。防犯映像に客の姿はありません。',attractionOnCompletion:1,kind:'odd',min:4,max:6,oddReq:1,bonus:28,after:28,remain:3},{id:'open0',name:'裏手の社に生贄を捧げる',cost:0,delta:[-1,-1,-1,-1],desc:'社から届いた紙には「供物を捧げよ」とだけ記されています。閉店後に従います。',kind:'odd',min:5,max:7,oddReq:2,bonus:45,after:45,remain:5}
 ];
 const issueBase=['レジの列が長すぎます。','カートがすれ違えません。','欲しい商品が品切れです。','放送が多くて落ち着きません。'];
-const fresh=()=>({version:11,complaintLedgerSeverity:null,complaintSaturationKeys:[],grayAuditSeed:Math.floor(Math.random()*4294967296)>>>0,policySeed:Math.floor(Math.random()*4294967296)>>>0,shrineOutcome:null,shrineRoll:null,randomBonusDays:[],randomBonusIds:[],legacyShrineAccess:false,grayFines:0,grayStrikes:0,auditEvents:[],undoSnapshot:null,grayUsed:[],attraction:7,lowDays:0,endingReason:null,visuals:[],issueEvents:[],complaintTickets:null,complaintSequence:0,focusDay:0,focusKeys:[],focusHistory:[],focusedNote:null,discoveredActions:[],customerDiary:[],hqHistory:[],actionCounts:{},clueViewed:[],inferencePending:false,inferenceAttempts:0,day8Active:false,day8Stage:0,day8OpeningPending:false,day8Revealed:false,glitchSeen:false,sundayRevealed:false,oddGain:0,forfeitedGain:0,auditStatus:'未照合',day:1,cash:120,vals:[2,1,1,1],revenue:0,days:[],used:[],jobs:[],benefits:[],last:null,news:'今週だけ、店舗改善を任されました。',odd:0,afterSales:0,remaining:0,permit:'許可',clues:0,history:[],finish:false,needsAdvance:false,ending:null});let s=fresh(),rollback=null;
+const fresh=()=>({version:11,complaintLedgerSeverity:null,complaintSaturationKeys:[],grayAuditSeed:Math.floor(Math.random()*4294967296)>>>0,policySeed:Math.floor(Math.random()*4294967296)>>>0,shrineOutcome:null,shrineRoll:null,randomBonusDays:[],randomBonusIds:[],dailyPostDays:[],legacyShrineAccess:false,grayFines:0,grayStrikes:0,auditEvents:[],undoSnapshot:null,grayUsed:[],attraction:7,lowDays:0,endingReason:null,visuals:[],issueEvents:[],complaintTickets:null,complaintSequence:0,focusDay:0,focusKeys:[],focusHistory:[],focusedNote:null,discoveredActions:[],customerDiary:[],hqHistory:[],actionCounts:{},clueViewed:[],inferencePending:false,inferenceAttempts:0,day8Active:false,day8Stage:0,day8OpeningPending:false,day8Revealed:false,glitchSeen:false,sundayRevealed:false,oddGain:0,forfeitedGain:0,auditStatus:'未照合',day:1,cash:120,vals:[2,1,1,1],revenue:0,days:[],used:[],jobs:[],benefits:[],last:null,news:'今週だけ、店舗改善を任されました。',odd:0,afterSales:0,remaining:0,permit:'許可',clues:0,history:[],finish:false,needsAdvance:false,ending:null});let s=fresh(),rollback=null;
 function support(){return Math.max(0,Math.min(100,100-8*s.vals.reduce((a,b)=>a+b,0)))}
 const weekdayNames=['月曜日','火曜日','水曜日','木曜日','金曜日','土曜日','日曜日','人曜日'];
 function weekday(n){return weekdayNames[Math.max(0,Math.min(7,n-1))]}
@@ -364,17 +364,19 @@ const generalComplaintTexts=[
  ['夕食の材料がまた品切れでした。','昨日あった商品が、今日はどの棚にもありません。','補充予定を聞いても、誰も分からないようでした。'],
  ['案内放送が繰り返され、店内で会話ができません。','レジからの呼出音と特売放送が重なっています。','落ち着いて商品を選ぶことができませんでした。']
 ];
+// Source entries indexed in COMPLAINT_POLICY_DB_V020.json.
+const F20_LATE_COMPLAINTS=[{"metric":0,"body":"夕方だけ列が急に伸びます。混雑時間に応援を固定配置できませんか。","hint":"混雑時間に応援を固定配置","actionIds":["queueExpress","staff","shift"],"fromDay":2},{"metric":0,"body":"整理券があれば、待っている間に買い忘れた商品を探せると思います。","hint":"整理券があれば","actionIds":["ticket","display"],"fromDay":2},{"metric":0,"body":"会計の列が特設売場を塞いでいます。専用の待機通路を作ってほしいです。","hint":"専用の待機通路を作って","actionIds":["queueLane","floorcheck"],"fromDay":3},{"metric":0,"body":"自分で会計したいのですが、セルフレジがいつも混んでいます。","hint":"セルフレジがいつも混んで","actionIds":["self","shift","queueReset"],"fromDay":3},{"metric":0,"body":"レジ前の案内が複雑で、どこに並ぶか迷います。入口に待ち時間を掲示してほしいです。","hint":"入口に待ち時間を掲示","actionIds":["display","ticket","queueReset"],"fromDay":4},{"metric":0,"body":"近所の人は夕食前に集中して来ます。レジの配置を全面的に見直せませんか。","hint":"レジの配置を全面的に見直せ","actionIds":["queueReset","shift"],"fromDay":4},{"metric":0,"body":"買い物が終わったのに会計待ちの列が出口を塞ぎ、帰れませんでした。","hint":"列が出口を塞ぎ","actionIds":["queueLane","aisleGuide"],"fromDay":5},{"metric":0,"body":"閉店前には会計が間に合いません。営業時間と人員を見直してほしいです。","hint":"営業時間と人員を見直して","actionIds":["night","shift","early"],"fromDay":5},{"metric":1,"body":"カートの待避場所がなく、売場の角で列ができます。床に位置を表示してほしいです。","hint":"床に位置を表示","actionIds":["cartSigns","floorcheck"],"fromDay":2},{"metric":1,"body":"通路の真ん中で試食を配るので、奥の棚に近づけません。","hint":"試食を配るので","actionIds":["aisleGuide","floorcheck"],"fromDay":2},{"metric":1,"body":"棚の間隔が狭く、ベビーカーが曲がれません。陳列棚を小さくしてください。","hint":"陳列棚を小さくして","actionIds":["compact","cartSigns"],"fromDay":3},{"metric":1,"body":"商品の案内係が通路に集まり、逆に歩きにくくなっています。","hint":"案内係が通路に集まり","actionIds":["aisleGuide","aisleReset"],"fromDay":3},{"metric":1,"body":"休日は入口と出口でカートがぶつかります。動線そのものを変えられませんか。","hint":"動線そのものを変え","actionIds":["lane","aisleReset"],"fromDay":4},{"metric":1,"body":"特設売場が広がりすぎて、普段の買い物に必要な通路がありません。","hint":"特設売場が広がりすぎて","actionIds":["weekendStore","compact"],"fromDay":4},{"metric":1,"body":"改装した通路にも段ボールが積まれています。通行帯を毎朝点検してほしいです。","hint":"通行帯を毎朝点検","actionIds":["floorcheck","aisleGuide"],"fromDay":5},{"metric":1,"body":"レジを増やした結果、カートの置き場がなくなりました。待機列を分けてください。","hint":"待機列を分けて","actionIds":["queueLane","cartSigns"],"fromDay":5},{"metric":2,"body":"夕方になると惣菜とパンだけ空っぽです。補充する時間帯を変えてほしいです。","hint":"補充する時間帯を変えて","actionIds":["eveningRestock","receive"],"fromDay":2},{"metric":2,"body":"棚札の入荷予定が毎日違います。まず補充予定を確認してください。","hint":"補充予定を確認して","actionIds":["shelfcheck","forecast"],"fromDay":2},{"metric":2,"body":"よく買う商品は予約して店頭で受け取れると助かります。","hint":"予約して店頭で受け取れ","actionIds":["pickup","delivery"],"fromDay":3},{"metric":2,"body":"野菜が足りません。近くの農家から仕入れられないでしょうか。","hint":"近くの農家から仕入れ","actionIds":["farmer","receive"],"fromDay":3},{"metric":2,"body":"特売品だけ先になくなります。仕入れと配送の計画を作り直してほしいです。","hint":"仕入れと配送の計画を作り直して","actionIds":["stockReset","forecast"],"fromDay":4},{"metric":2,"body":"仕入れたはずの商品が売場にありません。補充担当を増やしてください。","hint":"補充担当を増やして","actionIds":["stockTeam","receive"],"fromDay":4},{"metric":2,"body":"週末にはいつもの品が一斉になくなります。在庫を融通してもらえませんか。","hint":"在庫を融通して","actionIds":["weekendInventory","stockTeam"],"fromDay":5},{"metric":2,"body":"欲しい商品が店頭にない日が続くので、自宅へ配送してほしいです。","hint":"自宅へ配送して","actionIds":["delivery","pickup"],"fromDay":5},{"metric":3,"body":"レジの呼び出しベルが止まりません。音を出さずに呼び出せませんか。","hint":"音を出さずに呼び出せ","actionIds":["vibration","quietDesk"],"fromDay":2},{"metric":3,"body":"特売の案内が耳に残ります。札で知らせる形に変えてください。","hint":"札で知らせる形に変えて","actionIds":["quietNotices","quiet"],"fromDay":2},{"metric":3,"body":"スタッフの呼び声が重なっています。休憩と配置を見直してください。","hint":"休憩と配置を見直して","actionIds":["rest","shift"],"fromDay":3},{"metric":3,"body":"セルフレジの説明音声と館内放送が重なって、何を聞けばよいか分かりません。","hint":"説明音声と館内放送が重なって","actionIds":["quietDesk","vibration"],"fromDay":3},{"metric":3,"body":"店内放送を減らしたのに案内係の声だけ響きます。接客方式を見直せませんか。","hint":"接客方式を見直せ","actionIds":["quietReset","rest"],"fromDay":4},{"metric":3,"body":"閉店間際に同じ放送が何度も流れます。案内を掲示にまとめてほしいです。","hint":"案内を掲示にまとめて","actionIds":["quietNotices","quietDesk"],"fromDay":4},{"metric":3,"body":"商品を選んでいるときに特売の声が絶えません。静かな時間を作ってください。","hint":"静かな時間を作って","actionIds":["quiet","rest"],"fromDay":5},{"metric":3,"body":"お店全体で呼び出し音が重なります。売場ごとの案内を別にできませんか。","hint":"売場ごとの案内を別に","actionIds":["quietDesk","quietReset"],"fromDay":5}];
 const initialTicketBaseline=[2,1,1,1],initialSeverityBaseline=[3,3,2,1];
-function addComplaintTicket(metric,day,initial){
+function addComplaintTicket(metric,day,initial,variant=null){
  const previous=s.complaintTickets.filter(x=>x.metric===metric).length;
  const seed=initial?firstComplaints.find(x=>x.metric===metric&&s.complaintTickets.every(y=>y.body!==x.body)):null;
  const authors=complaintAuthors[metric];
  const origin=(s.issueEvents||[]).filter(x=>x.metric===metric&&x.appearDay===day).at(-1);
  const name=seed?.customer||authors[previous%authors.length];
  const source=origin&&complaintNarratives[origin.actionId]?.[metric];
- const text=seed?.body||source||generalComplaintTexts[metric][Math.max(0,previous-1)%generalComplaintTexts[metric].length];
+ const text=variant?.body||seed?.body||source||generalComplaintTexts[metric][Math.max(0,previous-1)%generalComplaintTexts[metric].length];
  s.complaintSequence++;
- s.complaintTickets.push({id:'c'+s.complaintSequence,metric,customer:name,body:text,day,status:'open',closedDay:null,replies:[]});
+ s.complaintTickets.push({id:'c'+s.complaintSequence,metric,customer:name,body:text,day,status:'open',closedDay:null,replies:[],focusHint:variant?{text:variant.hint,ids:[...variant.actionIds]}:null});
 }
 function ensureComplaints(){
  if(Array.isArray(s.complaintTickets)){
@@ -388,14 +390,17 @@ function ensureComplaints(){
   let entropy=((s.policySeed>>>0)^0x6D2B79F5)>>>0;
   const draw=max=>{entropy^=entropy<<13;entropy^=entropy>>>17;entropy^=entropy<<5;return (entropy>>>0)%max};
   const order=[0,0,1,2,3],usedTexts=[[],[],[],[]],usedAuthors=new Set();
+  // First-day mysterious references vary. DAY 2 independent notices keep the
+  // principal investigations available regardless of this first impression.
+  const firstProductClue=draw(2)===0,firstShrineClue=draw(2)===0;
   for(let k=order.length-1;k>0;k--){const j=draw(k+1);[order[k],order[j]]=[order[j],order[k]]}
   for(const metric of order){
    const variants=buckets[metric].filter(body=>!usedTexts[metric].includes(body));
    const ordinaryBody=variants[draw(variants.length)];
    usedTexts[metric].push(ordinaryBody);
-   const body=metric===3?ordinaryBody+' 宣伝を増やすより、商店街の神社で商売繁盛を祈願したらどうですか。':
-    metric===2?ordinaryBody+' 売場に見掛けない商品がありました。あれは何ですか？':ordinaryBody;
-   const unused=complaintAuthors[metric].filter(name=>!usedAuthors.has(name));
+   const body=metric===3&&firstShrineClue?ordinaryBody+' 宣伝を増やすより、商店街の神社で商売繁盛を祈願したらどうですか。':
+    metric===2&&firstProductClue?ordinaryBody+' 売場に見掛けない商品がありました。あれは何ですか？':ordinaryBody;
+  const unused=complaintAuthors[metric].filter(name=>!usedAuthors.has(name));
    const people=unused.length?unused:complaintAuthors[metric],person=people[draw(people.length)];
    usedAuthors.add(person);
    s.complaintSequence++;
@@ -447,6 +452,25 @@ function reconcileComplaints(){
    addComplaintTicket(metric,s.day,false);s.complaintSaturationKeys.push(key);
   }
  });
+ // New customer submissions are independent of the 0–5 dissatisfaction scale.
+ // Persist the day marker to prevent duplicates on repeated reconciliation.
+ if(s.day>=2&&s.day<=7&&s.days.length<s.day){
+  if(!Array.isArray(s.dailyPostDays))s.dailyPostDays=[];
+  if(!s.dailyPostDays.includes(s.day)){
+   for(let slot=0;slot<(s.day>=4?2:1);slot++){
+    const metric=((s.policySeed>>>0)+s.day*7+slot*11)%4;
+    const candidates=F20_LATE_COMPLAINTS.filter(x=>x.metric===metric&&x.fromDay<=s.day);
+    const bodies=new Set(s.complaintTickets.filter(x=>x.metric===metric).map(x=>x.body));
+    const unused=candidates.filter(x=>!bodies.has(x.body));
+    const pool=unused.length?unused:candidates;
+    if(pool.length){
+     const variant=pool[((s.policySeed>>>0)+s.day*17+slot*3)%pool.length];
+     addComplaintTicket(metric,s.day,false,variant);
+    }
+   }
+   s.dailyPostDays.push(s.day);
+  }
+ }
  s.complaintLedgerSeverity=[...s.vals];
 }
 const F17_SNIPPETS=[
@@ -478,6 +502,10 @@ function focusKnown(key){return Array.isArray(s.focusHistory)&&s.focusHistory.in
 function focusSegments(ticket){
  if(ticket.oddReview)return [];
  const content=ticket.body||'', found=[];
+ if(ticket.focusHint?.text&&Array.isArray(ticket.focusHint?.ids)){
+  const start=content.indexOf(ticket.focusHint.text);
+  if(start>=0)return [{start,end:start+ticket.focusHint.text.length,text:ticket.focusHint.text,ids:ticket.focusHint.ids}];
+ }
  for(const [rx,ids] of F17_SNIPPETS){
    for(const match of content.matchAll(rx)){
      const start=match.index,end=start+match[0].length;
@@ -522,7 +550,7 @@ function focusReview(ticket,segment){
  }
  const newOptions=available().filter(a=>a.id!=='idle'&&!previouslyAvailable.has(a.id));
  discoveryFlashIds=newOptions.map(a=>a.id);
- s.focusedNote={day:s.day,key,ids:[...segment.ids],newIds:[...discoveryFlashIds]};
+ s.focusedNote={day:s.day,key,ids:[...segment.ids],newIds:[...discoveryFlashIds],newTicket:!!ticket.focusHint,reviewedBefore:!firstDiscovery};
  persist();render();discoveryFlashIds=[];return true;
 }
 function complaintNode(ticket){
@@ -570,7 +598,7 @@ function complaintNode(ticket){
      const found=document.createElement('div');found.className='discovery-award-items';
      for(const id of ids){const item=document.createElement('span');item.textContent=options.find(a=>a.id===id)?.name||id;found.append(item)}
      memo.append(title,found);
-   }else memo.textContent='この文章は確認済みです。';
+   }else memo.textContent=s.focusedNote.newTicket&&!s.focusedNote.reviewedBefore?'同様のご意見を確認しました。以前発見した対応案も検討できます。':'この文章は確認済みです。';
    card.append(memo);
  }
  const answer=ticket.status==='resolved'?(ticket.replies||[]).filter(x=>x.visibleFrom<=s.day).at(-1):null;
@@ -1044,6 +1072,7 @@ function load(){try{
    if(!Number.isInteger(data.shrineRoll))s.shrineRoll=null;
    if(!Array.isArray(s.randomBonusDays))s.randomBonusDays=[];
    if(!Array.isArray(s.randomBonusIds))s.randomBonusIds=[];
+   if(!Array.isArray(s.dailyPostDays))s.dailyPostDays=[];
    if(s.day8Active&&s.day8Stage>0)s.day8Revealed=true;
    s.grayFines=Number.isFinite(data.grayFines)?data.grayFines:0;
    s.grayStrikes=Number.isInteger(data.grayStrikes)?data.grayStrikes:0;
@@ -1200,7 +1229,7 @@ function previewPlay(id){
   num.textContent=now[i]+' → '+next[i]+(diff?'（'+(diff>0?'+':'')+diff+'）':'（変化なし）');
   p.append(label,num);$('policyConfirmImpacts').append(p);
  }
- $('policyConfirmForecast').textContent='本日の日売上見込み '+v09Sales()+'万円 ／ 施策の効果だけを反映した翌朝の参考値 '+nextSale+'万円。実際には自然悪化や未処理の施策、発覚などで変わる場合があります。'+(a.id==='audit'?' 参拝の効果は予測できません。表示の数値は普通の商売繁盛祈願だった場合の参考です。':'')+(a.kind==='gray'?' 不正発覚時の処分・費用はこの数値に含まれません。':'');
+ $('policyConfirmForecast').textContent='本日の日売上見込み '+v09Sales()+'万円 ／ 施策の効果だけを反映した翌朝の参考値 '+nextSale+'万円。実際には自然悪化や未処理の施策、発覚などで変わる場合があります。'+(a.id==='audit'?' 参拝の効果は予測できません。裏手で何が起こるかは、この参考値に織り込んでいません。':'')+(a.kind==='gray'?' 不正発覚時の処分・費用はこの数値に含まれません。':'');
  $('policyConfirm').classList.remove('hidden');$('policyConfirmYes').focus();
 }
 function cancelPlay(){pendingPolicyId=null;$('policyConfirm').classList.add('hidden')}
@@ -1224,21 +1253,8 @@ function play(id){
   s.jobs.push({id,name:a.name,delta,attraction:a.attractionOnCompletion||0,finishDay:s.day+1});
   if(a.kind==='gray')s.jobs.push({id:id+'-risk',name:'後日の苦情・発覚確認',delta:a.risk,attraction:0,finishDay:Math.min(8,s.day+2),grayAudit:true,sourceAction:id,chance,roll,detected:roll<chance});
  }else if(a.kind==='odd'){
-  if(a.id==='audit'){
-   // Roll once using the run-specific seed; undo/save/reload can never reroll it.
-   if(s.shrineOutcome===null||s.shrineOutcome===undefined){
-    s.shrineRoll=Math.floor((s.policySeed>>>0)*100/4294967296);
-    s.shrineOutcome=s.shrineRoll<30?'odd':'normal';
-   }
-   if(s.shrineOutcome==='normal'){
-    s.jobs.push({id,name:a.name,delta:[0,0,0,0],attraction:1,finishDay:s.day+1,normalPrayer:true});
-    s.history.unshift('DAY '+s.day+'：裏手の社では通常の商売繁盛祈願を行いました。');
-   }else{
-    s.jobs.push({kind:'odd',id,name:a.name,delta:[...a.delta],attraction:a.attractionOnCompletion||0,after:a.after||0,remain:a.remain||0,finishDay:s.day+1});
-   }
-  }else{
-   s.jobs.push({kind:'odd',id,name:a.name,delta:[...a.delta],attraction:a.attractionOnCompletion||0,after:a.after||0,remain:a.remain||0,finishDay:s.day+1});
-  }
+  if(a.id==='audit'){s.shrineOutcome='odd';s.shrineRoll=null;}
+  s.jobs.push({kind:'odd',id,name:a.name,delta:[...a.delta],attraction:a.attractionOnCompletion||0,after:a.after||0,remain:a.remain||0,finishDay:s.day+1});
  }
  const sales=v09Sales();s.revenue+=sales;s.lowDays=sales<40?s.lowDays+1:0;
  s.days.push({day:s.day,id,sales,attraction:s.attraction,complaints:[...s.vals]});
