@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "sourceVersion": "F1 v0.20.3",
-  "purpose": "F1 inventory of 50 existing policies, opening complaint pools, 27 action-linked comments and 32 integrated late templates. Regression checks game/DB sync.",
+  "sourceVersion": "F1 v0.20.4",
+  "purpose": "F1 audit inventory: 50 current actions, 30 first-day complaint variants, 12 basic followups, 27 policy side-effect comments and 38 integrated late-game messages. Regressions verify game/DB synchronization.",
   "categories": [
     "レジ待ち",
     "通路混雑",
@@ -1729,6 +1729,62 @@
         "quietReset"
       ],
       "fromDay": 5
+    },
+    {
+      "metric": 0,
+      "body": "閉店前のレジが毎日大行列です。閉店時刻を早める対応も検討してほしいです。",
+      "hint": "閉店時刻を早める対応",
+      "actionIds": [
+        "early"
+      ],
+      "fromDay": 3
+    },
+    {
+      "metric": 1,
+      "body": "新商品が気になりますが、買う前に味を知りたいです。試食の機会を増やしてください。",
+      "hint": "試食の機会を増やして",
+      "actionIds": [
+        "sampling"
+      ],
+      "fromDay": 3
+    },
+    {
+      "metric": 2,
+      "body": "閉店前に売れ残った惣菜が大量にあります。見切り販売を始めてほしいです。",
+      "hint": "見切り販売を始めて",
+      "actionIds": [
+        "discount"
+      ],
+      "fromDay": 3
+    },
+    {
+      "metric": 2,
+      "body": "棚が空なのに欠品率は低いと書いてあります。欠品率の集計対象を整理して説明してください。",
+      "hint": "欠品率の集計対象を整理",
+      "actionIds": [
+        "stockScope",
+        "shelfcheck"
+      ],
+      "fromDay": 4
+    },
+    {
+      "metric": 2,
+      "body": "いつも同じ商品ばかりです。地元の名物フェアを開いて品揃えを変えてください。",
+      "hint": "地元の名物フェアを開いて",
+      "actionIds": [
+        "gourmet",
+        "farmer"
+      ],
+      "fromDay": 4
+    },
+    {
+      "metric": 3,
+      "body": "最近は店内が静かすぎて特売の情報も届きません。ポイント5倍セールの案内があれば嬉しいです。",
+      "hint": "ポイント5倍セールの案内",
+      "actionIds": [
+        "sale"
+      ],
+      "fromDay": 4
     }
   ]
 }
