@@ -1,0 +1,38 @@
+{
+  "id": "P1",
+  "title": "明日の一面を決めてください。（仮）",
+  "version": "v0.9.8-beta",
+  "updated_at_jst": "2026-10-29 01:59 JST",
+  "phase": "Phase 7｜本実装・個別QA・試作公開（人間レビュー継続）",
+  "release_state": "beta",
+  "ai_audit": {
+    "status": "logic_and_html_mock_passed",
+    "scope": "photo_ID_mapping, intro, dispatch selection, ending cameo, seven-day state transitions, save-key compatibility",
+    "result": "pass",
+    "note": "Browser rendering is not tested by mock DOM."
+  },
+  "browser_audit": {
+    "status": "not_verified_for_v0.9.8",
+    "verified_version": null
+  },
+  "human_review": {
+    "latest_reviewed_version": "v0.9.7-beta",
+    "asset_review": "five portraits accepted for integration on 2026-10-29",
+    "v0_9_8_review": "not_yet_performed"
+  },
+  "assets": {
+    "status": "all_five_on_main_and_referenced",
+    "folder": "p1/assets/reporters/",
+    "portrait_count": 5,
+    "manifest": "p1/assets/reporters/asset_manifest.csv",
+    "integrated_in_game": true
+  },
+  "next": {
+    "owner": "P1専用Chat＋ユーザー",
+    "task": "最新版のGitHub Pages画像5人表示、スマホ320/390px、写真切替、エンディング、セーブ再開を実ブラウザ・人間レビューで確認"
+  },
+  "limitations": [
+    "GitHub Pages実表示未確認",
+    "実ブラウザ画像ロード未確認"
+  ]
+}

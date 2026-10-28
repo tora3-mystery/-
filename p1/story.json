@@ -1,5 +1,5 @@
 {
-  "version": "v0.9.7-beta",
+  "version": "v0.9.8-beta",
   "phase": "browser_prototype",
   "articles": [
     {
@@ -920,6 +920,7 @@
     "v0.9.5-beta: Add observation-room narrative explaining the seven-day newspaper intervention and five reporter profiles; no changes to the 44-article/50-reaction dataset or state machine.",
     "v0.9.6-beta: I05 establishes why medical private investment interacts with regional tourism attention; I15 distinguishes a proposed conservancy funding scheme from the 2027 agreement.",
     "v0.9.7-beta: Add conditional reporter epilogue notes grounded in major published investigative articles and the relevant 2027 outcome. No reporter is shown solely because they were dispatched, and no image assets are added.",
-    "The anonymous R45/R46 reactions and all narrative branching conditions remain unchanged in this release."
+    "The anonymous R45/R46 reactions and all narrative branching conditions remain unchanged in this release.",
+    "v0.9.8-beta: Five reporter portrait images in roster, dispatch selector and conditional epilogue; no impact on investigative logic or endings."
   ]
 }
