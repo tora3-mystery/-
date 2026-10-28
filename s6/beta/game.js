@@ -279,12 +279,13 @@ function producerProfile(){
   ['org','所属',['',...D.orgs.map(o=>o.org_id)]]
  ];
  const form=fields.map(([k,title,values])=>'<label>'+esc(title)+'<select id="profile-'+k+'">'+values.map(v=>'<option value="'+esc(v)+'"'+((S.profileGuess[k]||'')===v?' selected':'')+'>'+esc(k==='org'&&v?label(v):v||'まだ分からない')+'</option>').join('')+'</select></label>').join('');
- const facts=S.profileEvidence.map(x=>'<div class="notice"><strong>'+esc(x.topic)+'</strong>：'+esc(x.value)+'<p class="dim">出所：'+esc(S.guesses[x.pid]?.verified?people[x.pid].name:'会場で話した人物')+'（'+esc(x.source)+'）</p></div>').join('');
+ const topicLabels={year:'学年',faculty:'学部・学科',instruments:'担当・演奏',favorite:'好きな音楽',production:'制作方法',org:'所属'};
+ const facts=S.profileEvidence.map(x=>'<div class="notice"><strong>'+esc(topicLabels[x.topic]||x.topic)+'</strong>：'+esc(x.value)+'<p class="dim">出所：'+esc(S.guesses[x.pid]?.verified?people[x.pid].name:'会場で話した人物')+'（'+esc(x.source)+'）</p></div>').join('');
  const refs=S.routeVisits.map(x=>'<p class="dim">・'+esc(x.date)+' '+esc(x.hall)+'：'+esc(x.text)+'</p>').join('');
  return '<div class="eyebrow">PROFILE / NO ANSWER CHECK</div><h2>余白ラムネのプロフィール</h2>'+
  '<div class="paper"><p>手がかりを照合して推測を書き込む。ここでは正解・不正解は表示されません。</p><p><strong>曲：</strong>'+esc(Story.song)+'</p>'+
  '<p>'+esc(Story.memory)+'</p></div>'+
- '<div class="paper"><h3>あなたの推測</h3>'+form+btn('プロフィールを記録','save-producer-profile')+'</div>'+
+ '<div class="paper"><h3>あなたの推測</h3>'+(S.report?'<p class="notice">'+esc(S.report)+'</p>':'')+form+btn('プロフィールを記録','save-producer-profile')+'</div>'+
  (facts?'<div class="paper"><h3>集めた情報（証言には記憶違いもあります）</h3>'+facts+'</div>':'<p class="dim">まだ人物から得た手がかりはありません。</p>')+
  (refs?'<div class="paper"><h3>人づての記憶</h3>'+refs+'</div>':'')+
  '<div class="actions">'+btn('前の画面へ戻る','back-producer-profile','','ghost')+'</div>';
@@ -300,7 +301,7 @@ function camp(){
  const choices=D.orgs.map(o=>'<article class="panel"><span class="tag">'+esc(o.common_name)+'</span><p>'+esc(o.focus)+'</p>'+btn('このサークルの合宿へ','choose-camp',o.org_id)+'</article>').join('');
  return '<div class="eyebrow">金曜の夜 / 週末</div><h2>余白ラムネは、どこにいる？</h2>'+
  '<p>あの投稿は「見つけたら声をかけて」だった。正解が分からなくても、今週出会った音楽から一つ選ぼう。</p>'+
- '<div class="paper"><h3>一週間の記憶</h3><p>'+esc(recall)+'</p></div>'+
+ '<div class="paper"><h3>一週間の記憶</h3><p>'+esc(recall)+'</p><p class="dim">集めた人物の証言：'+S.routeVisits.length+'件 ／ ボカロPプロフィールの仮登録：'+Object.values(S.profileGuess).filter(Boolean).length+'項目</p></div>'+
  '<div class="actions">'+btn('余白ラムネのプロフィールを見直す','open-producer-profile')+'</div>'+
  '<div class="two">'+choices+'</div><div class="actions">'+btn('今回は合宿に参加しない','choose-camp','N','ghost')+'</div>';
 }
