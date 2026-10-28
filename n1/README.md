@@ -2,8 +2,8 @@
 
 ## 次期問題DB（設計中・ゲーム未実装）
 
-- 正本：[`FACT_QUESTION_CANDIDATES_V02.md`](FACT_QUESTION_CANDIDATES_V02.md)（2026/10/28、12ジャンル・39候補）
-- P32訪日外客数は不採用。P31は映画ジャンル別本数、P42・P43は世界の河川・山岳に拡張。P54は小さじ1杯の食材別重量を新規採用。
+- 正本：[`FACT_QUESTION_CANDIDATES_V02.md`](FACT_QUESTION_CANDIDATES_V02.md)（2026/10/28、12ジャンル・35候補。P54は容量2問）
+- P32訪日外客数は不採用。P31は映画ジャンル別本数、P42・P43は世界の河川・山岳に拡張。P54は「小さじ1杯＝5mL」「大さじ1杯＝15mL」の容量2問のみ。食材別の重量（g）は不採用。
 - P39・P44・P48は一般的な知名度を優先。数値・対象定義・基準日を個別に再監査し、人間承認後に実装する。
 - 旧 [`FACT_QUESTION_CANDIDATES_V01.md`](FACT_QUESTION_CANDIDATES_V01.md) は履歴用。次期DBは現行ゲームの抽選・採点には一切影響しない。
 
