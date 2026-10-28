@@ -3,9 +3,9 @@
   "projectId": "R1",
   "title": "口コミへの返信をご確認ください。（仮）",
   "nickname": "くちへん（仮）",
-  "version": "0.1.0-alpha",
-  "updatedAtJST": "2026-10-29T05:29:21+09:00",
-  "phase": "Phase 3実装済・Phase 4初期検証済（α試作公開、未完成）",
+  "version": "0.2.0-alpha",
+  "updatedAtJST": "2026-10-29T05:36:40+09:00",
+  "phase": "Phase 4：進化頻度改修とV8・模擬DOM回帰QA実施済。α公開・人間レビュー待ち",
   "repository": "tora3-mystery/short-ui-games",
   "scope": "r1/",
   "assetStatus": "CSS仮店舗のみ。写真・画像素材未制作・未組込。",
@@ -13,24 +13,30 @@
     "shops": 3,
     "months": 12,
     "reviewOptions": "星1〜5 × 商品・味／接客／価格／雰囲気／個性",
-    "evolution": "各店舗10方向・0〜3段階・閉店分岐。仮CSS外観も味／接客／価格／雰囲気／個性×肯定／否定で差分。",
-    "extras": "店主返信、他者口コミ、SNS、口コミ履歴、localStorage保存・再開、一年後の商店街と店舗別後日談",
-    "spillovers": "ラーメン屋の接客・価格低評価→喫茶への客流入、洋菓子高評価→喫茶への来訪、喫茶の雰囲気高評価→ラーメン屋への来訪"
+    "evolution": "3店舗×5ジャンル×肯定/否定=30主要進化方向。各店0〜4段階。★5は強化・★1は否定/反転が原則、岩城の逆張りは例外として返信に理由を表示。状態に応じ看板・メニュー・店頭の変化を表示。",
+    "extras": "店主返信、他者口コミ、SNS、月次結果（対象店の前後比較・関連店の変化）、履歴、旧αセーブ継続、localStorage保存・再開、街と店舗別の結末",
+    "spillovers": "他者口コミによる別店舗の進化をbefore/afterで別枠表示。客足の移動は進化と分離表示。"
   },
   "aiAudit": {
-    "status": "初回V8エンジン24,044アサーションPASS。最新差分は静的整合確認のみ（再シミュレーション未実施）",
-    "method": "GitHub書込前に同一エンジン関数をV8実行、静的参照・対応括弧監査",
-    "cases": 24044,
-    "randomTrajectories": 400,
-    "reviewsProcessed": 4800,
-    "completedRuns": 400,
-    "routeDefinitions": 30,
-    "focusedStage3PathsTested": 15,
+    "status": "PASS（純粋JSロジック・模擬DOMのみ）",
+    "method": "GitHub mainの最新engine.jsとapp.jsをV8で直接評価。旧αデータ互換分岐を静的確認。実ブラウザ試験ではない。",
+    "scenarioCount": 2000,
+    "scenarioTypes": 10,
+    "virtualReviews": 22000,
+    "assertions": 176006,
     "errors": 0,
-    "limitations": "24,044アサーションは初回エンジンに対する結果。顧客流動の追加3ルール・結果画面の月表示修正は後続パッチで、最新コードのV8再試行・実ブラウザ監査は未実施。特殊結末の網羅も未実施。"
+    "typicalSample": {
+      "completed": 200,
+      "submitted": 2400,
+      "directVisibleChangePct": 81.2,
+      "majorEvolutionPct": 37.6,
+      "relatedStoreChangePct": 34.9
+    },
+    "edgeCases": "星3固定は意図的に停滞しやすい。単店星1を7回程度繰り返すと閉店し継続レビュー不可。集中高評価では段階4に達する。",
+    "limitations": "状態遷移とDOMモックは合格。ブラウザ描画、実タップ、実際のユーザー評価、すべての結末条件の網羅的到達テストは未完了。"
   },
   "browserAudit": {
-    "status": "未実施",
+    "status": "未実施（模擬DOM操作のみPASS）",
     "desktop": null,
     "mobile320": null,
     "mobile390": null,
@@ -38,44 +44,31 @@
   },
   "humanReview": {
     "status": "未実施",
-    "targetVersion": "0.1.0-alpha",
+    "targetVersion": "0.2.0-alpha",
     "focus": [
-      "星とジャンルの操作性",
-      "店主返信の面白さ",
-      "店の進化の見分けやすさ",
-      "12回後の変化量と周回性",
-      "スマホ実機の文字・タップと復帰"
+      "進化のテンポと前後比較",
+      "星1/5と進化の納得感・店主返信",
+      "別店舗の変化に気づけるか",
+      "12か月での変化の大小のメリハリ",
+      "スマホ320/390pxでの操作"
     ]
   },
   "knownIssues": [
-    "進化外観は仮CSSで表現。各進化方向専用画像は未制作。",
-    "均等投稿では上位進化が発生しにくい（意図的な停滞と適正進化速度の人間評価が必要）。",
-    "店舗経営モデルとSNS反応の数値調整は仮設定。",
-    "ブラウザと公開ページの実操作は未検証。",
-    "顧客流動ルール追加後の最新エンジン全件再テストは未実施。"
+    "画像未制作。現状の進化差分はCSSの看板・配色・店頭札で表現。",
+    "1年間の結末は店舗別に組み合わせる方式。商店街全体のエンディング分布は今後調整。",
+    "実ブラウザ／実機／公開ページ最終版の操作検証は未実施。",
+    "岩城の繰り返す低評価への逆張り進化は人間によるシナリオ納得感の確認が必要。"
   ],
   "nextOwner": "人間：α版スマホ試遊 → 作品専用Chat：フィードバック反映・再監査",
   "nextWork": "Gate B後、店舗外観・店主写真・商品画像の制作を検討",
-  "index": "企画マスター承認の公開INDEXにα試作カードを追加（同コミット）",
+  "index": "2026-10-29：既存INDEXのR1カードをα0.2.0へ同期し、制作・改修中の先頭に移動。全14作品の数は維持。",
   "publicUrl": "https://tora3-mystery.github.io/short-ui-games/r1/",
   "pending": [
-    "実ブラウザの12か月通し操作",
-    "320px・390pxでの実表示",
-    "保存→再開と再レビュー",
-    "店舗別特殊分岐の到達性",
-    "人間プレイによる進化密度・返信・読みやすさ評価"
+    "実ブラウザ320px/390pxの12か月通し試遊",
+    "各店5ジャンル×低高評価の表示監査",
+    "旧αセーブの実ブラウザ継続試験",
+    "人間による演出、進化頻度、メタ表現の確認"
   ],
-  "lastStaticChecks": {
-    "gameRoot": true,
-    "scriptOrder": true,
-    "ownerDefiance": true,
-    "shopSpillover": true,
-    "cakeSpecial": true,
-    "numericStars": true,
-    "routeStyle": true,
-    "reviewPage": true,
-    "finale": true,
-    "save": true
-  },
-  "lastStaticCheckedAtJST": "2026-10-29T05:29:21+09:00"
+  "lastStaticCheckedAtJST": "2026-10-29T05:36:40+09:00",
+  "lastModifiedCommit": "GitHub更新コミットは本ファイルを含む最終mainコミットで確認"
 }
