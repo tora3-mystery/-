@@ -426,8 +426,13 @@ function handle(act,id){
   if(S.phase!=='choose'||!S.group||!byGroup(S.group).includes(id)||(S.groupLog[S.group]||[]).length>=3)return;
   const type=act==='ask-affiliation'?'affiliation':act==='ask-producer'?'producer':act==='ask-music'?'music':S.mode;
   const q=D.questions.find(q=>q.group_id===S.group&&q.target_id===id);
+  const questionKey=['question','affiliation','producer','music'].includes(type)?type:null;
+  const askedBefore=questionKey&&(S.groupLog[S.group]||[]).some(x=>x.pid===id&&x.questionKey===questionKey);
   let reply,kind=type;
-  if(type==='talk'){
+  if(askedBefore){
+    const repeat={question:'同じ質問なら、さっき話した通りだよ。ほかに気になることはある？',affiliation:'所属はさっき話した通りだよ。ほかの人の話も聞いてみる？',producer:'余白ラムネの話は、さっき伝えたこと以上はまだ分からないかな。',music:'音楽の経験はさっき話した通り。気になるなら今日は演奏を聴いてみて。'};
+    reply={text:repeat[type]};kind='聞き直し';
+  }else if(type==='talk'){
     // Keep acquaintance status from BEFORE this action, and speech warmth from AFTER it.
     // First encounters retain their distinctive speech cues without becoming reunions.
     const knownBefore=S.spokenTo.includes(id)||S.interacted.includes(id);
@@ -504,7 +509,7 @@ function handle(act,id){
     S.personalIntroduced[bystander.pid]=true;
     if(!S.introduced.includes(bystander.pid))S.introduced.push(bystander.pid);
   }
-  (S.groupLog[S.group]??=[]).push({pid:id,type:kind,text:reply.text,reply:bystander});
+  (S.groupLog[S.group]??=[]).push({pid:id,type:kind,questionKey,text:reply.text,reply:bystander});
   S.groupDone[S.group]=reply.text;
   S.report='';go('group');break;
  }
