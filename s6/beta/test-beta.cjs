@@ -620,6 +620,23 @@ check('one-year epilogue never invents ongoing messages without contact exchange
  assert.match(s.html,/同じ新入生として話した人の顔を/);
  assert.doesNotMatch(s.html,/時々メッセージを交わす/);
 });
+check('profile match is revealed after meeting producer but not on a wrong-club ending',()=>{
+ const wrong=newPlayer();wrong.click('open-producer-profile');
+ wrong.field('profile-year','3年');wrong.field('profile-org','K');wrong.click('save-producer-profile');
+ wrong.click('back-producer-profile');
+ for(let i=0;i<5;i++){wrong.click('skip');wrong.click('next-day')}
+ wrong.click('choose-camp','W');wrong.click('finish-other');
+ assert.doesNotMatch(wrong.html,/プロフィールの答え合わせ/);
+ const right=newPlayer();right.click('open-producer-profile');
+ right.field('profile-year','3年');right.field('profile-faculty','文学部日本文学科');
+ right.field('profile-instruments','歌とギター');right.field('profile-favorite','羊文学');
+ right.field('profile-production','生ギター＋歌声合成');right.field('profile-org','K');
+ right.click('save-producer-profile');right.click('back-producer-profile');
+ for(let i=0;i<5;i++){right.click('skip');right.click('next-day')}
+ right.click('choose-camp','K');right.click('meet-producer');
+ assert.match(right.html,/プロフィールの答え合わせ/);
+ assert.match(right.html,/6項目のうち、6項目/);
+});
 check('old S6 beta saves do not mix stalking and producer narratives',()=>{
  const cache=new Map();
  cache.set('s6-origin-beta-010',JSON.stringify({schema:1,phase:'private',result:'DANGER'}));
