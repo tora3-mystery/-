@@ -778,4 +778,52 @@ check('questions about Vocaloid producer get thematic third-party reaction',()=>
  }
 });
 
+
+check('180 seeded five-day runs with three circles and three actions reach coherent endings',()=>{
+ const dates=['2026-04-06','2026-04-07','2026-04-08','2026-04-09','2026-04-10'], choices=['L','Z','J','K','W','F','N'];
+ const actionTypes=['talk','question','contact','photo','listen'];
+ for(let n=0;n<180;n++){
+  const s=newPlayer();
+  for(let day=0;day<5;day++){
+   const available=D.events.filter(e=>e.date===dates[day]);
+   if((n+day)%11===0){s.click('skip')}
+   else{
+    const e=available[(n+day)%available.length];
+    s.click('attend',e.event_id);
+    const gs=D.groups.filter(g=>g.event_id===e.event_id);
+    const ordered=[...gs.slice((n+day)%gs.length),...gs.slice(0,(n+day)%gs.length)].slice(0,3);
+    for(let k=0;k<ordered.length;k++){
+     const g=ordered[k];s.click('join-group',g.group_id);
+     assert.equal(s.state.phase,'flash');
+     s.click('leave-flash');
+     const members=D.members.filter(m=>m.group_id===g.group_id);
+     for(let turn=0;turn<3;turn++){
+      const type=actionTypes[(n+day+k+turn)%actionTypes.length];
+      if(type==='listen')s.click('listen-group');
+      else{
+       s.click('action-menu',type);
+       assert.equal(s.state.phase,'choose');
+       const target=members[(n+day+turn)%members.length].person_id;
+       if(type==='question'&&(n+turn)%2===0)s.click('ask-producer',target);
+       else s.click('act-target',target);
+      }
+      assert.equal(s.state.phase,'group');
+     }
+     assert.equal(s.state.groupLog[g.group_id].length,3);
+     s.click('back-venue');
+    }
+    s.click('finish-venue');
+   }
+   assert.equal(s.state.phase,'night');
+   s.click('night-sns','Photogram');assert.equal(s.state.phase,'sns');
+   s.click('back-night');s.click('next-day');
+  }
+  assert.equal(s.state.phase,'camp');
+  const c=choices[n%choices.length];s.click('choose-camp',c);
+  assert.equal(s.state.phase,'saturday');
+  s.click(c==='K'?'meet-producer':'finish-other');
+  assert.equal(s.state.phase,'end');assert.match(s.html,/THE END/);
+ }
+});
+
 console.log(JSON.stringify({passed:total,failed:failures}));if(failures)process.exitCode=1;
