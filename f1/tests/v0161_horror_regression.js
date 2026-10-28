@@ -36,8 +36,8 @@ function specialCards(){
   body:c.children[1]?.textContent||''
  })).filter(x=>/レジの近くに、ずっと立っている人|変な客がいます|レジのご案内が丁寧でした/.test(x.body));
 }
-api.restart();
-// DAY 1 product inspection must precede the rear-shrine choice.
+api.restart();api.setState({...api.getState(),policySeed:1,complaintTickets:null});
+// Pin a seed that includes the optional initial product clue.
 const product=api.getState().complaintTickets.find(x=>x.body.includes('見掛けない商品'));
 check(!!product&&api.focus(product.id,'見掛けない商品がありました'),'First product discovery');
 advance('productCheck');
