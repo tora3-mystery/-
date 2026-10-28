@@ -1,7 +1,7 @@
 (() => {
 'use strict';
-const D=window.S6_DATA, APP=document.getElementById('app'), KEY='s6-vocaloid-beta-060', Dialogue=window.S6_BETA_DIALOGUE, Story=window.S6_BETA_STORY;
-const VERSION='0.6.0', BUILD='2026-10-28 02:48 JST';
+const D=window.S6_DATA, APP=document.getElementById('app'), KEY='s6-vocaloid-beta-060', Dialogue=window.S6_BETA_DIALOGUE, Story=window.S6_BETA_STORY, Music=window.S6_BETA_MUSIC, Routes=window.S6_BETA_ROUTES;
+const VERSION='0.7.0', BUILD='2026-10-28 13:53 JST';
 const WEEK=['月曜 4月6日','火曜 4月7日','水曜 4月8日','木曜 4月9日','金曜 4月10日'];
 const DATES=['2026-04-06','2026-04-07','2026-04-08','2026-04-09','2026-04-10'];
 const people=Object.fromEntries(D.people.map(p=>[p.person_id,p]));
@@ -27,15 +27,15 @@ const initial=()=>({
  schema:1,phase:'title',day:0,selectedEvent:null,group:null,target:null,presentationSeed:Math.floor(Math.random()*1000000000),
  eventHistory:[],seen:[],introduced:[],flash:[],visitedGroups:[],groupVisitHistory:[],groupDone:{},groupLog:{},spokenTo:[],interacted:[],personalIntroduced:{},photoRequests:[],photoFollows:[],affinity:{},relationshipDays:{},dailyAffinity:{},contacts:[],socialLinked:{},socialCandidates:{},selectedSocial:null,
  guesses:{},note:{},clues:[],crossings:{},knownOrg:{},nightChoice:{},viewedPlatforms:{},viewedBoard:{},pendingContacts:[],
- checks:{},currentNotebook:null,camp:'',
+ checks:{},currentNotebook:null,camp:'',profileGuess:{},profileEvidence:[],routeVisits:[],musicKnown:{},profileReturn:'night',
  report:'',result:'',savedAt:''
 });
 let S,hydrationChanged=false;
 try {const raw=JSON.parse(localStorage.getItem(KEY));S=raw&&raw.schema===1?raw:initial()}catch{S=initial()}
 function hydrate(){
- for(const k of ['eventHistory','seen','introduced','flash','visitedGroups','groupVisitHistory','contacts','clues','spokenTo','interacted','pendingContacts','photoRequests','photoFollows'])
+ for(const k of ['eventHistory','seen','introduced','flash','visitedGroups','groupVisitHistory','contacts','clues','spokenTo','interacted','pendingContacts','photoRequests','photoFollows','profileEvidence','routeVisits'])
   if(!Array.isArray(S[k])){S[k]=[];hydrationChanged=true}
- for(const k of ['groupDone','guesses','note','crossings','knownOrg','nightChoice','viewedPlatforms','viewedBoard','groupLog','personalIntroduced','affinity','relationshipDays','dailyAffinity','checks','socialLinked','socialCandidates'])
+ for(const k of ['groupDone','guesses','note','crossings','knownOrg','nightChoice','viewedPlatforms','viewedBoard','groupLog','personalIntroduced','affinity','relationshipDays','dailyAffinity','checks','socialLinked','socialCandidates','profileGuess','musicKnown'])
   if(!S[k]||typeof S[k]!=='object'){S[k]={};hydrationChanged=true}
 }
 hydrate();
@@ -87,6 +87,7 @@ const site=()=>{
  case 'notebook':return notebook();
  case 'identity':return identity();
  case 'camp':return camp();
+  case 'producer-profile':return producerProfile();
  case 'saturday':return saturday();
  
  case 'end':return ending();
@@ -116,9 +117,9 @@ function venue(){
  const gs=D.groups.filter(g=>g.event_id===e.event_id);
  const ambience=['どこかでアンプの音がして、廊下には別の輪の笑い声が漏れている。','少し遅れて来た見学者が、空いた席を探している。','隣の机から短いフレーズが聞こえ、誰かが拍手した。'];
  return '<div class="eyebrow">'+esc(WEEK[S.day])+' / '+esc(label(e.org_id))+'</div><h2>'+esc(e.title)+'</h2><p class="dim">'+esc(ambience[(S.presentationSeed+S.day)%ambience.length])+'</p>'+
- '<p>あちこちで演奏や会話が始まっている。どの二組に混ざろう？</p><div class="status">話したグループ '+S.visitedGroups.length+' / 2</div>'+
+ '<p>あちこちで演奏や会話が始まっている。どの三組に混ざろう？</p><div class="status">話したグループ '+S.visitedGroups.length+' / 3</div>'+
  '<div class="two">'+arrange(gs,'circles-'+S.day).map(g=>'<article class="panel"><h3>'+esc(g.group_title)+'</h3><p>'+esc(Dialogue.sceneActivity(g.group_id))+'</p><div class="faces small-faces">'+arrange(byGroup(g.group_id),'faces-'+g.group_id).map(id=>portrait(id,peerClass(id))).join('')+'</div>'+
- (S.visitedGroups.includes(g.group_id)?'<span class="pill">参加済み</span>':S.visitedGroups.length>=2?'<span class="dim">今日はここまで</span>':btn('この輪に入る','join-group',g.group_id))+'</article>').join('')+'</div>'+
+ (S.visitedGroups.includes(g.group_id)?'<span class="pill">参加済み</span>':S.visitedGroups.length>=3?'<span class="dim">今日はここまで</span>':btn('この輪に入る','join-group',g.group_id))+'</article>').join('')+'</div>'+
  '<div class="actions">'+btn('会場を出て夜へ','finish-venue')+'</div>';
 }
 function speech(pid,text,tag=''){
@@ -154,7 +155,8 @@ function chooseAction(){
   return '<div class="person-card">'+portrait(id,peerClass(id))+'<div><strong>'+esc(name)+'</strong><p class="dim">'+esc(relationship(id))+esc(contactBadge(id))+'</p>'+
   (questionMode?'<p class="dim">'+esc(Dialogue.questionText(q))+'</p>':'')+
   btn(questionMode?'この質問をする':mode==='contact'?'交換を頼む':mode==='photo'?'Photogramを聞く':'話しかける','act-target',id,'mini')+
-  (questionMode&&q?btn('所属について聞く','ask-affiliation',id,'mini ghost'):'')+'</div></div>';
+  (questionMode&&q?btn('所属について聞く','ask-affiliation',id,'mini ghost'):'')+
+   (questionMode?btn('余白ラムネの話','ask-producer',id,'mini ghost')+btn('音楽経験を聞く','ask-music',id,'mini ghost'):'')+'</div></div>';
  }).join('');
  return '<div class="eyebrow">'+esc(groups[S.group].group_title)+'</div><h2>'+
  (mode==='talk'?'誰に話しかける？':mode==='contact'?'誰に連絡先を頼む？':mode==='photo'?'誰のPhotogramを聞く？':'誰に何を聞く？')+'</h2>'+
@@ -170,7 +172,7 @@ function night(){
  btn('Photogram','night-sns','Photogram')+
  btn('Zitter','night-sns','Zitter')+
  btn('TINE','night-sns','TINE')+
- btn('学内の掲示を見る','night-board')+'</div>'+
+ btn('学内の掲示を見る','night-board')+btn('余白ラムネのプロフィール','open-producer-profile')+'</div>'+
  (S.viewedPlatforms[date()]?.length?'<p class="dim">閲覧済み：'+esc(S.viewedPlatforms[date()].join('、'))+'</p>':'')+
  '<div class="actions">'+btn(S.day===4?'金曜の夜、合宿を決める':'翌日へ','next-day')+'</div>';
 }
@@ -347,7 +349,7 @@ function handle(act,id){
  }
  case 'skip':if(S.phase==='day')go('night');break;
  case 'join-group':{
-  if(S.phase!=='venue'||!groups[id]||groups[id].event_id!==S.selectedEvent||S.visitedGroups.length>=2||S.visitedGroups.includes(id))return;
+  if(S.phase!=='venue'||!groups[id]||groups[id].event_id!==S.selectedEvent||S.visitedGroups.length>=3||S.visitedGroups.includes(id))return;
   S.group=id;S.visitedGroups.push(id);if(!S.groupVisitHistory.includes(id))S.groupVisitHistory.push(id);
   S.flash=byGroup(id).filter(pid=>!S.introduced.includes(pid));
   go('flash');break;
