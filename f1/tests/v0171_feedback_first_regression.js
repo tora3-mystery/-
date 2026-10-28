@@ -50,7 +50,7 @@ const highlights=a.get('complaintBoard').children[0].children[1].children.filter
 check(highlights.length===2,'Exactly two highlighted phrases in same customer comment');
 check(highlights[0]==='レジに20分並びました'&&highlights[1]==='カートが通れませんでした','Highlight the two specified meaningful spans');
 check(a.api.focus('reviewA','レジに20分並びました'),'First clicked phrase');
-check(['register','staff','queueExpress','pickup'].every(id=>a.api.availableIds().includes(id)),'One phrase discovers multiple usable policies');
+check(['register','pickup'].every(id=>a.api.availableIds().includes(id))&&a.api.getState().discoveredActions.length===2,'One phrase discovers exactly two relevant policies');
 check(a.get('actions').children.some(c=>c.innerHTML.includes('有人レジを増設')),'Discovered policy visible in actual action cards');
 check(a.api.focus('reviewA','カートが通れませんでした'),'Second phrase same complaint');
 check(a.api.focus('reviewB','夕食の材料がまた品切れ'),'Third phrase from another complaint');
