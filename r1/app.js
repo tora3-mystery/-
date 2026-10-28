@@ -20,7 +20,7 @@ function scrollTop(){window.scrollTo({top:0,behavior:"auto"})}
 function pill(tone,text){return '<span class="chip '+(tone||"")+'">'+esc(text)+'</span>'}
 function storefront(v){
  const stage=v.route.stage,closed=!v.open;
- return '<div class="storefront '+esc(v.base.palette)+' stage-'+stage+(closed?" closed":"")+'" role="img" aria-label="'+esc(v.base.name+"。"+v.summary)+'">'+
+ return '<div class="storefront '+esc(v.base.palette)+' stage-'+stage+" route-"+(v.route.genre||"base")+" dir-"+(v.route.polarity||"none")+(closed?" closed":"")+'" role="img" aria-label="'+esc(v.base.name+"。"+v.summary)+'">'+
  '<div class="sign">'+esc(closed?"閉店しました":v.sign)+'</div>'+
  '<div class="store-emoji" aria-hidden="true">'+esc(closed?"🔒":v.base.icon)+'</div>'+
  '<span class="stage-tag">'+esc(closed?"CLOSED":stage===0?"営業中":stage===1?"準備中":stage===2?"改装":"新装")+'</span></div>';
@@ -37,12 +37,12 @@ function recentFeed(id){const items=game.feed.filter(f=>f.kind==="npc"&&f.id===i
 function reviewForm(id){
  const d=dshop(id),s=game.shops[id],v=E.display(s,id);
  if(s.closed)return '<div class="note">現在、この店には口コミを投稿できません。ほかのお店を選んでください。</div>';
- const stars=Array.from({length:5},(_,i)=>i+1).map(x=>'<button type="button" class="star '+(selectedStar===x?"selected":"")+'" data-star="'+x+'" aria-label="星'+x+'" aria-pressed="'+(selectedStar===x)+'">★</button>').join("");
+ const stars=Array.from({length:5},(_,i)=>i+1).map(x=>'<button type="button" class="star '+(selectedStar===x?"selected":"")+'" data-star="'+x+'" aria-label="星'+x+'" aria-pressed="'+(selectedStar===x)+'">★'+x+'</button>').join("");
  const genres=E.GENRES.map(g=>'<button type="button" class="genre '+(selectedGenre===g.id?"selected":"")+'" data-genre="'+g.id+'" aria-pressed="'+(selectedGenre===g.id)+'">'+g.icon+' '+esc(g.name)+'</button>').join("");
  const valid=selectedStar!==null&&selectedGenre!==null;let preview="";
  if(valid){try{preview=E.reviewText(game,id,selectedStar,selectedGenre)}catch(err){preview="投稿文を作成できませんでした。"}}
  return '<div class="form-title">この店をレビューする</div>'+
- '<div class="label-row"><strong>① 星を選ぶ</strong><small>良い ★5 ─ ★1 悪い</small></div>'+
+ '<div class="label-row"><strong>① 星を選ぶ</strong><small>悪い ★1 ─ ★5 良い</small></div>'+
  '<div class="stars" role="group" aria-label="星評価">'+stars+'</div>'+
  '<div class="label-row"><strong>② 口コミのジャンルを選ぶ</strong><small>評価の観点</small></div>'+
  '<div class="genres" role="group" aria-label="口コミジャンル">'+genres+'</div>'+
