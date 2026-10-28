@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "sourceVersion": "F1 v0.20.2",
+  "sourceVersion": "F1 v0.20.3",
   "purpose": "F1 inventory of 50 existing policies, opening complaint pools, 27 action-linked comments and 32 integrated late templates. Regression checks game/DB sync.",
   "categories": [
     "レジ待ち",
@@ -1329,7 +1329,7 @@
       "pattern": "車椅子が通れません|通路の真ん中に商品が置かれていて|出口に出るまで遠回りでした",
       "actionIds": [
         "compact",
-        "rope",
+        "cartSigns",
         "floorcheck"
       ]
     },
@@ -1369,8 +1369,8 @@
     {
       "pattern": "呼び出しが重なって|案内放送が繰り返され|特売放送が重なっています|呼出音が",
       "actionIds": [
-        "board",
-        "mute",
+        "quietNotices",
+        "quietDesk",
         "rest"
       ]
     },
