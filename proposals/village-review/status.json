@@ -1,0 +1,70 @@
+{
+  "schemaVersion": "1.0",
+  "projectId": "V1",
+  "title": "この村の評価をお願いします。",
+  "gameVersion": "0.6.28-alpha",
+  "gameUpdatedAtJST": "2026-10-29 01:17 JST",
+  "phase": "Phase 7：本実装・個別QA・試作公開（v1.0未確定）",
+  "publicUrl": "https://tora3-mystery.github.io/short-ui-games/proposals/village-review/",
+  "source": {
+    "repository": "tora3-mystery/short-ui-games",
+    "scope": "proposals/village-review/",
+    "mainCommitChecked": "dfe1b7f356972f948085da43ceff1cf3eec524f6",
+    "workAssetBranch": "v1-assets44-20261028",
+    "workAssetMergePR": 8,
+    "workAssetMergeCommit": "1ac9b82a17418ad3ba1dbd9f21f880c554a0b0ca"
+  },
+  "materials": {
+    "existing": 145,
+    "workAdded": 44,
+    "logicalAssetsAfterIntegration": 189,
+    "workPng": 44,
+    "workWebp": 44,
+    "workContactSheets": 3,
+    "workAssetLists": 3,
+    "githubAssetsMerged": true,
+    "gameSelectionLogicIntegrated": true,
+    "pixelInspection": "未実施（新画像の実画面・縮小表示は人間レビュー待ち）",
+    "fallback": "追加画像台帳未取得時は従来145点の画像へフォールバック"
+  },
+  "aiAudit": {
+    "status": "PASS",
+    "level": "Node互換V8・模擬DOM（実ブラウザ試験ではない）",
+    "testFiles": [
+      "tests/qa_bridge.cjs",
+      "tests/evolution_graph_audit.cjs",
+      "tests/qa_feedback_v0621.cjs",
+      "tests/qa_assets44_v0628.cjs"
+    ],
+    "simulatedVillages": 530,
+    "simulatedReviews": 6360,
+    "evolutionStage2Verified": 96,
+    "evolutionStage3Verified": 576,
+    "addedAssetRouteCases": 44,
+    "failingTests": 0
+  },
+  "browserAudit": {
+    "latestVersionTested": null,
+    "status": "未実施",
+    "pagesDeployment": "未確認",
+    "publishedUrlRead": "公開URLへの外部取得が制限され確認できず",
+    "realMobileTest": "未実施",
+    "priorAudits": "旧版のブラウザQAは最新α0.6.28の合格として扱わない"
+  },
+  "humanReview": {
+    "targetVersion": "0.6.28-alpha",
+    "status": "要確認",
+    "notes": "以前のスマホスクリーンショットに地図ラベル重複の指摘あり。α0.6.27でCSS修正したが、最新44画像統合後の実表示は未確認。",
+    "required": [
+      "320/390pxで地図ラベルと建物が重ならない",
+      "海辺24点の進化・潮汐効果が自然",
+      "小規模維持16点の見た目が選択に合う",
+      "最終進化改良4点の差分が分かる",
+      "12か月完走・年末パンフレット・3隠しエンド",
+      "保存再開・海上に施設が浮かないか"
+    ]
+  },
+  "nextOwner": "人間（実プレイ）→作品Chat（指摘対応・最終QA）",
+  "nextWork": "画像統合版のスマホ表示と進化体験を人間レビューし、重大指摘が解消したらv1.0 Gate C判定。Work追加発注は現時点で不要。",
+  "lastQaReport": "QA_ASSET44_INTEGRATION_V0628_20261029.md"
+}
