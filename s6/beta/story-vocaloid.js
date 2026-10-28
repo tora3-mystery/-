@@ -5,8 +5,9 @@ window.S6_BETA_STORY = Object.freeze({
   alias:'余白ラムネ',
   song:'午前二時の紙飛行機',
   producerId:'P001',
+  producerGender:'女性（暫定。画像設定との照合待ち）',
   homeOrg:'K',
-  invitation:'春から青嶺大学の音楽サークルのどこかにいます。名前と顔は内緒。あの曲を覚えている人、見つけたら声をかけて。答えは知り合いにも教えないよう頼んでおきます。',
+  invitation:'今年の青嶺大学の新歓で、6つの音楽サークルのどこかにいます。名前と顔は内緒。あの曲を覚えている人、見つけたら声をかけて。答えは知り合いにも教えないよう頼んでおきます。',
   memory:'最後のギターが鳴り終わってから、あえて一拍だけ空白がある。高校時代、何度も繰り返し聴いた曲だった。',
   // These people know the alias, promised not to reveal it, and must not lie about facts.
   confidants:['P006','P011','P012'],
