@@ -363,6 +363,9 @@ function handle(act,id){
  case 'show-intro':go('intro');break;
  case 'begin':go('day');break;
  case 'reset':S=initial();go('title');break;
+ case 'open-producer-profile':if(S.phase!=='producer-profile'){S.profileReturn=S.phase;go('producer-profile')}break;
+ case 'back-producer-profile':if(S.phase==='producer-profile'){go(S.profileReturn||'night')}break;
+ case 'save-producer-profile':if(S.phase==='producer-profile'){for(const k of ['year','faculty','instruments','favorite','production','org'])S.profileGuess[k]=document.getElementById('profile-'+k)?.value||'';S.report='プロフィールの推測を記録した。';go('producer-profile')}break;
  case 'save':remember();S.report='この端末に記録しました。';draw();break;
  case 'attend':{
   if(S.phase!=='day'||!events[id]||events[id].date!==date())return;
@@ -392,9 +395,11 @@ function handle(act,id){
  }
  case 'back-group':if(S.phase==='choose')go('group');break;
  case 'act-target':
- case 'ask-affiliation':{
+ case 'ask-affiliation':
+ case 'ask-producer':
+ case 'ask-music':{
   if(S.phase!=='choose'||!S.group||!byGroup(S.group).includes(id)||(S.groupLog[S.group]||[]).length>=2)return;
-  const type=act==='ask-affiliation'?'affiliation':S.mode;
+  const type=act==='ask-affiliation'?'affiliation':act==='ask-producer'?'producer':act==='ask-music'?'music':S.mode;
   const q=D.questions.find(q=>q.group_id===S.group&&q.target_id===id);
   let reply,kind=type;
   if(type==='talk'){
@@ -413,7 +418,29 @@ function handle(act,id){
     // Asking somebody explicitly to introduce themself gives a name as an earned answer.
     if(type==='question'&&q?.reveals?.includes('self_name')&&q.answer?.includes(people[id].name)&&!S.introduced.includes(id))S.introduced.push(id);
     
-  }else if(type==='photo'){
+  }else if(type==='producer'){
+     const node=Routes.get(S.group,id),ev=events[groups[S.group].event_id];
+     const fallbacks={L:'受付や歌の輪で聞いてみたら？ 私は曲を聴いたことがある程度かな。',Z:'曲を作っている人は多いけど、その名義の本人かどうかは分からないな。',J:'その曲は知ってるけど、本人が誰かまでは分からないよ。',K:'昔のネット活動名義は本人が言うまで待ってあげたいな。',W:'ボカロPは何人かいるよ。でもその名義の人かは知らない。',F:'ネットで曲を出す人もいるけど、本人を当てるのは難しいよね。'};
+     reply={text:node?node.text:fallbacks[ev.org_id]||'その曲は知らないな。'};
+     kind='ボカロPの話';
+     recordConversation(id,'question');
+     if(node){
+      const key=S.group+'|'+id;
+      if(!S.routeVisits.some(x=>x.key===key))S.routeVisits.push({key,pid:id,hall:label(ev.org_id)+'・'+groups[S.group].group_title,date:WEEK[S.day],text:reply.text,route:node.route});
+      for(const fact of node.facts||[]){
+       const [topic,value,source]=fact;
+       if(!S.profileEvidence.some(x=>x.pid===id&&x.topic===topic&&x.value===value))S.profileEvidence.push({pid:id,topic,value,source});
+      }
+     }
+   }else if(type==='music'){
+     const m=Music.people[id];
+     const mains=Music.columns.filter(k=>m.skills[k]==='◎').map(k=>MUSIC_LABELS[k]);
+     const extras=Music.columns.filter(k=>m.skills[k]==='○').map(k=>MUSIC_LABELS[k]);
+     reply={text:'中心は'+(mains.join('と')||'音楽全般')+'。'+(extras.length?'ほかには'+extras.join('や')+'もできる。':'')+
+       '曲は'+(m.composition.original&&m.composition.cover?'オリジナルもコピーもやるよ。':m.composition.original?'オリジナルを作ることが多いよ。':'コピー曲を演奏することが多いよ。')};
+     kind='音楽経験';
+     S.musicKnown[id]=true;recordConversation(id,'question');
+   }else if(type==='photo'){
     const account=accounts[id+'|Photogram'];kind='SNSの話';
     if(!account)reply={text:'Photogramは今のところ使ってないんだ。'};
     else if(account.visibility==='鍵垢・承認制'){
