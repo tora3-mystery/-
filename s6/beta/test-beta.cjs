@@ -169,7 +169,7 @@ check('all 10 first-year original scene lines are rewritten with newcomer-approp
  const original=D.lines.find(x=>x.group_id==='E02-A'&&x.speaker_id==='P091');
  assert.match(B.sceneLine(original),/安心しました/);
  const s=newPlayer();s.click('attend','E02');s.click('join-group','E02-A');s.click('leave-flash');
- assert.match(s.html,/顔を出さずに投稿してもいいんですね/);
+ assert.match(s.html,/合成の歌声にも息づかいがあるんですね/);
  assert.doesNotMatch(s.html,/自分で決めていいんだ/);
 });
 check('character responses are plain spoken dialogue without double quotation or name leakage',()=>{
