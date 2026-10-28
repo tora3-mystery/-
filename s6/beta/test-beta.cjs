@@ -959,4 +959,34 @@ check('one SNS action requests TINE and Photogram under independent policies',()
  assert.ok(s.state.photoFollows.includes('P003'));
 });
 
+
+check('renamed identities appear in SNS after a personally established link, not in unknown accounts',()=>{
+ const s=newPlayer();visit(s,'E01','E01-A');
+ s.click('action-menu','social');s.click('act-target','P003');
+ s.click('back-venue');s.click('finish-venue');
+ s.click('open-notebook');s.click('open-identity','P003');
+ s.field('aliasName','今日の受付さん');s.click('save-note');s.click('back-from-notebook');
+ s.click('night-sns','TINE');assert.match(s.html,/手帳：今日の受付さん/);
+ s.click('back-night');s.click('night-sns','Photogram');
+ assert.doesNotMatch(s.html,/自分の照合メモ：今日の受付さん/);
+});
+check('nested navigation stack survives saving and reloading',()=>{
+ const cache=new Map(),s=makeSession(cache);for(const act of ['start','show-campus','show-intro','begin'])s.click(act);
+ s.click('skip');s.click('open-notebook');s.click('open-producer-profile');
+ let t=makeSession(cache);
+ assert.equal(t.state.phase,'producer-profile');
+ t.click('back-producer-profile');assert.equal(t.state.phase,'notebook');
+ t.click('back-from-notebook');assert.equal(t.state.phase,'night');
+});
+check('beta-only DTM scene consistently centers sound design rather than publishing settings',()=>{
+ const B=dataScope.window.S6_BETA_DIALOGUE,lines=D.lines;
+ for(const pid of ['P040','P004','P091']){
+  const text=B.sceneLine(lines.find(l=>l.group_id==='E02-A'&&l.speaker_id===pid));
+  assert.match(text,/歌声|ギター|音/);
+  assert.doesNotMatch(text,/公開範囲|公開ボタン/);
+ }
+ assert.match(B.sceneActivity('E02-A'),/歌声合成/);
+ assert.match(dataScope.window.S6_BETA_ROUTES.get('E02-A','P004').text,/ボカロ曲の音作り/);
+});
+
 console.log(JSON.stringify({passed:total,failed:failures}));if(failures)process.exitCode=1;
