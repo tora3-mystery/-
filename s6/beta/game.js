@@ -1,7 +1,7 @@
 (() => {
 'use strict';
 const D=window.S6_DATA, APP=document.getElementById('app'), KEY='s6-vocaloid-beta-060', Dialogue=window.S6_BETA_DIALOGUE, Story=window.S6_BETA_STORY, Music=window.S6_BETA_MUSIC, Routes=window.S6_BETA_ROUTES;
-const VERSION='0.7.2', BUILD='2026-10-28 14:47 JST';
+const VERSION='0.7.3', BUILD='2026-10-28 16:26 JST';
 const WEEK=['月曜 4月6日','火曜 4月7日','水曜 4月8日','木曜 4月9日','金曜 4月10日'];
 const DATES=['2026-04-06','2026-04-07','2026-04-08','2026-04-09','2026-04-10'];
 const people=Object.fromEntries(D.people.map(p=>[p.person_id,p]));
@@ -28,15 +28,15 @@ const initial=()=>({
  schema:1,phase:'title',day:0,selectedEvent:null,group:null,target:null,presentationSeed:Math.floor(Math.random()*1000000000),
  eventHistory:[],seen:[],introduced:[],flash:[],visitedGroups:[],groupVisitHistory:[],groupDone:{},groupLog:{},spokenTo:[],interacted:[],personalIntroduced:{},photoRequests:[],photoFollows:[],affinity:{},relationshipDays:{},dailyAffinity:{},contacts:[],socialLinked:{},socialCandidates:{},selectedSocial:null,
  guesses:{},note:{},clues:[],crossings:{},knownOrg:{},nightChoice:{},viewedPlatforms:{},viewedBoard:{},pendingContacts:[],
- checks:{},currentNotebook:null,camp:'',profileGuess:{},profileEvidence:[],routeVisits:[],musicKnown:{},profileReturn:'night',
+ checks:{},currentNotebook:null,camp:'',profileGuess:{},profileEvidence:[],routeVisits:[],musicKnown:{},profileReturn:'night',navStack:[],aliases:{},
  report:'',result:'',savedAt:''
 });
 let S,hydrationChanged=false;
 try {const raw=JSON.parse(localStorage.getItem(KEY));S=raw&&raw.schema===1?raw:initial()}catch{S=initial()}
 function hydrate(){
- for(const k of ['eventHistory','seen','introduced','flash','visitedGroups','groupVisitHistory','contacts','clues','spokenTo','interacted','pendingContacts','photoRequests','photoFollows','profileEvidence','routeVisits'])
+ for(const k of ['eventHistory','seen','introduced','flash','visitedGroups','groupVisitHistory','contacts','clues','spokenTo','interacted','pendingContacts','photoRequests','photoFollows','profileEvidence','routeVisits','navStack'])
   if(!Array.isArray(S[k])){S[k]=[];hydrationChanged=true}
- for(const k of ['groupDone','guesses','note','crossings','knownOrg','nightChoice','viewedPlatforms','viewedBoard','groupLog','personalIntroduced','affinity','relationshipDays','dailyAffinity','checks','socialLinked','socialCandidates','profileGuess','musicKnown'])
+ for(const k of ['groupDone','guesses','note','crossings','knownOrg','nightChoice','viewedPlatforms','viewedBoard','groupLog','personalIntroduced','affinity','relationshipDays','dailyAffinity','checks','socialLinked','socialCandidates','profileGuess','musicKnown','aliases'])
   if(!S[k]||typeof S[k]!=='object'){S[k]={};hydrationChanged=true}
 }
 hydrate();
@@ -48,8 +48,14 @@ if(S.phase==='flash'&&!S.group){S.phase='venue';localStorage.setItem(KEY,JSON.st
 for(const [gid,result] of Object.entries(S.groupDone))if(result&&!S.groupLog[gid])S.groupLog[gid]=[{pid:null,type:'旧版の交流',text:result}];
 const PEERS=new Set(['P013','P014','P015','P016']);
 const peerClass=id=>PEERS.has(id)?' peer-highlight':'';
-const canEditNotebook=()=>['night','sns','board'].includes(S.returnTo);
+const canEditNotebook=()=>S.navStack.some(p=>['night','sns','board'].includes(p))||['night','sns','board'].includes(S.returnTo);
 const relationship=id=>Dialogue.relationshipLabel(S,id);
+const provisionalName=id=>'人物'+String(Math.max(0,S.seen.indexOf(id))+1).padStart(2,'0');
+const displayName=id=>S.aliases[id]|| (S.guesses[id]?.verified?people[id].name:provisionalName(id));
+const eventName=gid=>gid==='E02-A'?'ボカロ曲の音作り':groups[gid]?.group_title||'';
+const sourceLabel=(gid,day)=>{const ev=events[groups[gid]?.event_id];return (day||WEEK[S.day])+' ／ '+label(ev?.org_id)+' ／ '+(ev?.title||'新歓')+' ／ '+eventName(gid)};
+function openLayer(phase){if(S.phase===phase)return;S.navStack.push(S.phase);go(phase)}
+function closeLayer(fallback='night'){const next=S.navStack.pop()||fallback;go(next===S.phase?fallback:next)}
 const contactBadge=id=>S.contacts.includes(id)?' ／ TINE交換済':S.pendingContacts.includes(id)?' ／ 申請確認中':'';
 // Per-person contact develops gradually, with at most two meaningful exchanges per day.
 const recordConversation=(id,action)=>{
@@ -103,7 +109,7 @@ function daily(){
 }
 function firstIntroductions(){
  const newcomers=S.flash,all=byGroup(S.group);
- return '<div class="eyebrow">'+esc(WEEK[S.day])+' / '+esc(groups[S.group].group_title)+'</div><h2>輪の自己紹介</h2>'+
+ return '<div class="eyebrow">'+esc(WEEK[S.day])+' / '+esc(eventName(S.group))+'</div><h2>輪の自己紹介</h2>'+
  '<p>初めて会った人が名乗る。顔と名前が並ぶのは初回だけです。同期の新入生には赤い目印を付けています。</p>'+
  '<p class="status">新しく聞く名前 '+newcomers.length+'人 ／ この輪には '+all.length+'人</p>'+
  (newcomers.length?'<div class="faces">'+newcomers.map(id=>'<div class="intro-face'+peerClass(id)+'">'+portrait(id)+
@@ -119,13 +125,13 @@ function venue(){
  const ambience=['どこかでアンプの音がして、廊下には別の輪の笑い声が漏れている。','少し遅れて来た見学者が、空いた席を探している。','隣の机から短いフレーズが聞こえ、誰かが拍手した。'];
  return '<div class="eyebrow">'+esc(WEEK[S.day])+' / '+esc(label(e.org_id))+'</div><h2>'+esc(e.title)+'</h2><p class="dim">'+esc(ambience[(S.presentationSeed+S.day)%ambience.length])+'</p>'+
  '<p>あちこちで演奏や会話が始まっている。どの三組に混ざろう？</p><div class="status">話したグループ '+S.visitedGroups.length+' / 3</div>'+
- '<div class="two">'+arrange(gs,'circles-'+S.day).map(g=>'<article class="panel"><h3>'+esc(g.group_title)+'</h3><p>'+esc(Dialogue.sceneActivity(g.group_id))+'</p><div class="faces small-faces">'+arrange(byGroup(g.group_id),'faces-'+g.group_id).map(id=>portrait(id,peerClass(id))).join('')+'</div>'+
+ '<div class="two">'+arrange(gs,'circles-'+S.day).map(g=>'<article class="panel"><h3>'+esc(eventName(g.group_id))+'</h3><p>'+esc(Dialogue.sceneActivity(g.group_id))+'</p><div class="faces small-faces">'+arrange(byGroup(g.group_id),'faces-'+g.group_id).map(id=>portrait(id,peerClass(id))).join('')+'</div>'+
  (S.visitedGroups.includes(g.group_id)?'<span class="pill">参加済み</span>':S.visitedGroups.length>=3?'<span class="dim">今日はここまで</span>':btn('この輪に入る','join-group',g.group_id))+'</article>').join('')+'</div>'+
  '<div class="actions">'+btn('会場を出て夜へ','finish-venue')+'</div>';
 }
 function speech(pid,text,tag=''){
  const ids=byGroup(S.group),index=ids.indexOf(pid);
- const speaker=S.guesses[pid]?.verified?people[pid].name:'参加者'+String.fromCharCode(65+Math.max(0,index));
+ const speaker=displayName(pid);
  return '<div class="chat-line">'+portrait(pid,'chat-avatar'+peerClass(pid))+
  '<div class="chat-content"><div class="chat-speaker">'+esc(speaker)+(PEERS.has(pid)?' <span class="peer-tag">同級生</span>':'')+
  (tag?' <span class="dim">'+esc(tag)+'</span>':'')+'</div><div class="chat-bubble">'+esc(text)+'</div></div></div>';
@@ -152,7 +158,7 @@ function chooseAction(){
  const mode=S.mode,questionMode=mode==='question';
  const qmap=Object.fromEntries(D.questions.filter(q=>q.group_id===S.group).map(q=>[q.target_id,q]));
  const items=byGroup(S.group).map(id=>{
-  const q=qmap[id],name=S.guesses[id]?.verified?people[id].name:PEERS.has(id)?'同期の学生':'名前はまだ曖昧';
+  const q=qmap[id],name=displayName(id);
   return '<div class="person-card">'+portrait(id,peerClass(id))+'<div><strong>'+esc(name)+'</strong><p class="dim">'+esc(relationship(id))+esc(contactBadge(id))+'</p>'+
   (questionMode?'<p class="dim">'+esc(Dialogue.questionText(q))+'</p>':'')+
   btn(questionMode?'この質問をする':mode==='contact'?'交換を頼む':mode==='photo'?'Photogramを聞く':'話しかける','act-target',id,'mini')+
@@ -216,7 +222,7 @@ function snsMatch(){
  const post=D.posts.find(p=>p.post_id===S.selectedSocial);
  if(!post)return '<h2>投稿が見つかりません</h2>'+btn('戻る','back-sns','','ghost');
  const a=accounts[post.author_id+'|'+post.platform];
- const entries=S.seen.map(id=>faceCard(id,S.guesses[id]?.verified?people[id].name:'名前は未確認','match-social-face','この顔かな'));
+ const entries=S.seen.map(id=>faceCard(id,displayName(id),'match-social-face','この顔かな'));
  return '<div class="eyebrow">'+esc(post.platform)+' / PHOTO</div><h2>この顔、会場で見た？</h2>'+
  '<div class="chosen">'+portrait(post.author_id,'large')+'<div><strong>'+esc(a?.display_name||'アカウント')+'</strong><p class="dim">'+esc('@'+(a?.handle||''))+' ／ 写真を公開しているアカウント</p></div></div>'+
  '<p>新歓で見た顔から、同じ人だと思う写真を選んでください。これは推測のメモで、正誤は自動判定されません。</p>'+
@@ -236,7 +242,7 @@ function notebook(){
  const entries=known.map(id=>{
  const guess=S.guesses[id],verified=guess?.verified;
  const note=S.note[id]||'';
- return '<div class="person-card">'+portrait(id)+'<div><strong>'+(verified?esc(people[id].name):'名前を思い出せない')+'</strong>'+
+ return '<div class="person-card">'+portrait(id)+'<div><strong>'+esc(displayName(id))+(verified?' <span class="pill">照合済み</span>':'')+'</strong>'+
  '<p class="dim">'+(verified?'所属：'+esc(label(people[id].primary_org))+(people[id].dual_org?' ／ 他にも所属あり':''):'写真と記憶を照合できます')+'</p>'+
  '<p class="dim">'+esc(relationship(id))+esc(contactBadge(id))+'</p>'+
  ((S.socialLinked[id]||[]).length?'<p class="dim">自分のSNS照合メモ：'+esc(S.socialLinked[id].join('、'))+'</p>':'')+
@@ -263,10 +269,10 @@ function identity(){
  '<option value="N">まだサークルに所属していない新入生</option></select></label>'+
  '<p class="dim">何度でも照合できます。名前と所属を選んでください。</p>'+btn('名前と所属を照合','submit-identity')+'</div>':
  '<p class="dim">夜になると、ここで名前と所属を照合できます。</p>';
- const notes=editable?'<div class="paper"><label>自由メモ<textarea id="faceNote" rows="2" maxlength="160" placeholder="髪型、見た場所、会話の印象など">'+esc(note)+'</textarea></label>'+btn('メモを保存','save-note','','mini')+'</div>':
+ const notes=editable?'<div class="paper"><label>この人物の表示名<input id="aliasName" maxlength="32" value="'+esc(S.aliases[id]||'')+'" placeholder="'+esc(provisionalName(id))+'（自由に変更）"></label><p class="dim">表示名は会話・人物一覧・手帳で共通です。空欄に戻すと仮名になります。</p><label>自由メモ<textarea id="faceNote" rows="2" maxlength="160" placeholder="髪型、見た場所、会話の印象など">'+esc(note)+'</textarea></label>'+btn('表示名とメモを保存','save-note','','mini')+'</div>':
  note?'<div class="paper"><p>メモ：'+esc(note)+'</p></div>':'';
  return '<div class="eyebrow">NOTEBOOK / FACE</div><h2>この人は誰？</h2><div class="chosen">'+portrait(id,'large')+
- '<p class="dim">どこで会ったか、何という名前だったかを思い出してください。</p></div>'+
+ '<p class="dim">現在の表示名：'+esc(displayName(id))+'。どこで会ったか、何という名前だったかを思い出してください。</p></div>'+
  form+notes+(S.musicKnown[id]?musicSkills(id):'')+btn('人物一覧へ','back-identity','','ghost');
 }
 
@@ -377,8 +383,8 @@ function handle(act,id){
  case 'show-intro':go('intro');break;
  case 'begin':go('day');break;
  case 'reset':S=initial();go('title');break;
- case 'open-producer-profile':if(S.phase!=='producer-profile'){S.profileReturn=S.phase;go('producer-profile')}break;
- case 'back-producer-profile':if(S.phase==='producer-profile'){go(S.profileReturn||'night')}break;
+ case 'open-producer-profile':openLayer('producer-profile');break;
+ case 'back-producer-profile':if(S.phase==='producer-profile')closeLayer('night');break;
  case 'save-producer-profile':if(S.phase==='producer-profile'){for(const k of ['year','faculty','instruments','favorite','production','org'])S.profileGuess[k]=document.getElementById('profile-'+k)?.value||'';S.report='プロフィールの推測を記録した。';go('producer-profile')}break;
  case 'save':remember();S.report='この端末に記録しました。';draw();break;
  case 'attend':{
@@ -508,14 +514,15 @@ function handle(act,id){
  }
  case 'back-venue':go('venue');break;
  case 'finish-venue':if(S.phase==='venue')go('night');break;
- case 'open-notebook':if(S.phase==='notebook'||S.phase==='identity')return;S.returnTo=S.phase;go('notebook');break;
- case 'back-from-notebook':go(S.returnTo==='notebook'?'night':(S.returnTo||'night'));break;
+ case 'open-notebook':if(S.phase==='notebook'||S.phase==='identity')return;openLayer('notebook');break;
+ case 'back-from-notebook':if(S.phase==='notebook')closeLayer('night');break;
  case 'open-identity':if(S.seen.includes(id)){S.currentNotebook=id;go('identity')}break;
  case 'back-identity':go('notebook');break;
  case 'save-note':{
   if(S.phase!=='identity'||!canEditNotebook())return;
   const t=document.getElementById('faceNote');if(t)S.note[S.currentNotebook]=String(t.value).slice(0,160);
-  S.report='この顔のメモを保存した。';go('notebook');break;
+   const a=document.getElementById('aliasName');if(a){const name=String(a.value).trim().replace(/\s+/g,' ').slice(0,32);if(name)S.aliases[S.currentNotebook]=name;else delete S.aliases[S.currentNotebook]}
+  S.report='表示名とメモを保存した。';go('notebook');break;
  }
  case 'submit-identity':{
   if(S.phase!=='identity'||!canEditNotebook())return;
