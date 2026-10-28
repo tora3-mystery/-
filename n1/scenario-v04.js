@@ -74,7 +74,10 @@
     '金曜日。週の前半に聞いた数字を、覚えているだろうか。'
   ]);
   const fmt = n => new Intl.NumberFormat('ja-JP').format(n);
-  const person = q => ({
+  const person = q => q.micro ? ({
+    makabe:'真壁',umeda:'梅田',arai:'新井',rika:'梨花',
+    souma:'相馬',fujino:'藤野',keisuke:'圭介',shoji:'庄司',hina:'陽菜'
+  }[q.person] || '相手') : ({
     0:'真壁',1:'梅田',2:'新井',3:'梨花',4:'相馬',5:'藤野',
     9:'圭介',7:'庄司',8:'梨花',11:'庄司'
   }[q.legacyIndex] || '相手');
