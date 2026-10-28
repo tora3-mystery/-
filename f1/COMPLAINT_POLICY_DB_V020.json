@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "sourceVersion": "F1 v0.20.5",
-  "purpose": "F1 policy/complaint inventory. Every selectable regular phrase maps to 1–2 policies; no extra random policy lottery. Runtime tests verify alignment.",
+  "sourceVersion": "F1 v0.20.6",
+  "purpose": "F1: 1–2 policies per underline, at most 3 across one complaint, no random extra policy. The policy/complaint database is aligned with game code.",
   "categories": [
     "レジ待ち",
     "通路混雑",
@@ -1833,5 +1833,10 @@
       ],
       "fromDay": 4
     }
-  ]
+  ],
+  "discoveryLimits": {
+    "maxPoliciesPerUnderline": 2,
+    "maxPoliciesPerComplaint": 3,
+    "randomExtraPolicy": false
+  }
 }
