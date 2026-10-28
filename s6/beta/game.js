@@ -9,6 +9,7 @@ const clubs=Object.fromEntries(D.orgs.map(o=>[o.org_id,o]));
 const events=Object.fromEntries(D.events.map(e=>[e.event_id,e]));
 const groups=Object.fromEntries(D.groups.map(g=>[g.group_id,g]));
 const accounts=Object.fromEntries(window.S6_BETA_SOCIAL.accounts.map(a=>[a.person_id+'|'+a.platform,a]));
+const PostActivity=window.S6_BETA_POST_ACTIVITY;
 const profiles=Object.fromEntries(D.socialProfiles.map(p=>[p.person_id,p]));
 const actions=Object.fromEntries(D.actions.map(a=>[a.group_id,a]));
 const esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -191,7 +192,7 @@ function sns(){
  const photoPending=platform==='Photogram'?unique(S.photoRequests).filter(pid=>accounts[pid+'|Photogram']):[];
  const photoStatus=platform==='Photogram'?
    '<div class="paper"><h3>フォロー中 '+photoFollowing.length+'人 ／ 承認待ち '+photoPending.length+'人</h3>'+
-   (photoFollowing.length?photoFollowing.map(pid=>{const a=accounts[pid+'|Photogram'];return '<div class="social">'+(a.avatar_kind==='face'?portrait(pid):'<div class="avatar-icon">♪</div>')+'<div><strong>'+esc(a.display_name)+'</strong><p class="dim">@'+esc(a.handle)+' ／ フォロー中</p><p class="dim">投稿がない相手もここで確認できます。</p></div></div>';}).join(''):'<p class="dim">まだフォローした相手はいません。</p>')+
+   (photoFollowing.length?photoFollowing.map(pid=>{const a=accounts[pid+'|Photogram'],activity=PostActivity.at(pid,'Photogram',date());return '<div class="social">'+(a.avatar_kind==='face'?portrait(pid):'<div class="avatar-icon">♪</div>')+'<div><strong>'+esc(a.display_name)+'</strong><p class="dim">@'+esc(a.handle)+' ／ フォロー中</p><p class="dim">'+(activity.count===0?'投稿0件（この日時点）':'投稿'+activity.count+'件（この日時点）')+' ／ 新歓開始前 '+activity.start+'件</p></div></div>';}).join(''):'<p class="dim">まだフォローした相手はいません。</p>')+
    (photoPending.length?'<p class="dim">承認待ち：'+photoPending.map(pid=>esc(accounts[pid+'|Photogram'].display_name)).join('、')+'。翌日に確認される予定です。</p>':'')+'</div>':'';
  const visible=D.posts.filter(p=>p.platform===platform&&p.published_at.slice(0,10)<=date()&&
  (p.visibility==='公開'||p.visibility==='匿名表示'||(p.visibility==='鍵垢・承認制'&&S.photoFollows.includes(p.author_id))||
@@ -204,8 +205,9 @@ function sns(){
   const anonymous=p.visibility==='匿名表示';
   const face=!anonymous&&a?.avatar_kind==='face';
   const avatar=face?portrait(p.author_id):'<div class="avatar-icon">♪</div>';
+  const activity=PostActivity.at(p.author_id,platform,date());
   return '<div class="social">'+avatar+'<div><strong>'+esc(anonymous?'匿名アカウント':a?.display_name||'不明')+'</strong>'+
-  '<div class="dim">'+(anonymous?'':esc('@'+a.handle)+' ／ ')+esc(p.published_at)+'</div><p>'+esc(Story.posts[p.post_id]||window.S6_BETA_SOCIAL.postTexts[p.post_id]||p.text)+'</p>'+
+  '<div class="dim">'+(anonymous?'':esc('@'+a.handle)+' ／ ')+(anonymous?'':'投稿'+activity.count+'件 ／ ')+esc(p.published_at)+'</div><p>'+esc(Story.posts[p.post_id]||window.S6_BETA_SOCIAL.postTexts[p.post_id]||p.text)+'</p>'+
   (face?'<p class="dim">見覚えがある顔かもしれない。</p>'+(S.seen.length?btn(S.socialCandidates[p.post_id]?'紐付けメモを見直す':'顔を見比べる','account-match',p.post_id,'mini'):''):'')+'</div></div>';
  }).join(''):'<p>閲覧できる投稿はありません。</p>')+
  '<div class="actions">'+btn('夜の画面に戻る','back-night','','ghost')+'</div>';
