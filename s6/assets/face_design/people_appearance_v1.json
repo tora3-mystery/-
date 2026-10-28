@@ -5,7 +5,7 @@
   "game_data_version": "0.5.5",
   "random_seed": 20261027,
   "source": "main:s6/game-data.js and main face photos",
-  "note": "P001-P016 preserve photos. Data describes visual drafting, not confirmed gender or measured height. P017-P096 unapproved. All appearance attributes must be checked against generated images. Attribute distribution revised after preliminary audit to avoid an artificially flat face-shape distribution. See design_adjustments.md.",
+  "note": "P001-P016 preserve photos. Data describes visual drafting, not confirmed gender or measured height. P017-P096 unapproved. All appearance attributes must be checked against generated images. Attribute distribution revised after preliminary audit to avoid an artificially flat face-shape distribution. See design_adjustments.md. Phase 1 v4 visual review: P094 eyewear changed to none and hair to brown, to distinguish it from P026 and restore earlier no-glasses/light-hair character continuity. Phase 1 v4 images remain unchanged/unapproved.",
   "records": [
     {
       "person_id": "P001",
@@ -4967,7 +4967,7 @@
       "lips": "厚め",
       "skin_tone": "標準的",
       "skin_texture": "軽い赤み",
-      "hair_color": "黒",
+      "hair_color": "茶",
       "hair_volume": "標準",
       "hair_texture": "直毛",
       "styling": "軽く整える",
@@ -4981,7 +4981,7 @@
       "hair_length": "ショート",
       "fringe": "前髪なし",
       "parting": "不規則・なし",
-      "eyewear": "細いフレーム",
+      "eyewear": "なし",
       "distinguishing_detail": "軽い目の下のくま",
       "facial_hair": "なし",
       "anchor_face_note": "未設定",
