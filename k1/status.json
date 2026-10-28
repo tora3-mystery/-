@@ -1,0 +1,35 @@
+{
+  "projectId": "K1",
+  "title": "掲示物をご確認ください。（仮）",
+  "version": "α0.6.2",
+  "updatedAtJST": "2026-10-29 05:44 JST",
+  "phase": "Phase 3/4 — image pilot integrated; human review pending",
+  "aiAudit": {
+    "logic": "Existing alpha 0.6.1 3125-branch proof retained; mechanics unchanged in 0.6.2",
+    "ui": "JS syntax and mock DOM checks for board, hallway/door, post tab, night barrier passed"
+  },
+  "browserAudit": {
+    "status": "not_run",
+    "viewportChecksRequired": [
+      320,
+      390,
+      428
+    ],
+    "livePagesCheck": "not_run"
+  },
+  "humanReview": {
+    "lastReviewedVersion": "α0.6.1",
+    "pilotImageLook": "user approved three candidate pictures",
+    "latestGame": "α0.6.2 not yet reviewed by human"
+  },
+  "assets": {
+    "status": "3 pilot assets imported to main and referenced in UI",
+    "baseImages": 3,
+    "manifest": "k1/assets/manifest.csv",
+    "remainingCandidates": 8,
+    "productionStatus": "not commissioned; await mobile visual/human review"
+  },
+  "nextOwner": "K1 Chat and human reviewer",
+  "nextAction": "Check alpha0.6.2 in browser at 320/390/428, notice legibility through day 10 and image cropping. Then decide on eight state-difference images.",
+  "scope": "k1/ only"
+}
