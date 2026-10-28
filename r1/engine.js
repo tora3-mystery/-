@@ -1,6 +1,6 @@
 window.R1 = (function makeEngine(){
 "use strict";
-const VERSION="0.2.0-alpha";
+const VERSION="0.3.0-alpha";
 const GENRES=[
 {id:"taste",name:"商品・味",icon:"🍜"},
 {id:"service",name:"接客",icon:"💬"},
@@ -37,6 +37,7 @@ mood:{plus:"お姫様のサロン",minus:"気軽な街角菓子店"},
 identity:{plus:"奇抜な新作工房",minus:"定番ケーキの店"}
 }};
 const POSTERS={"ramen":{"taste":{"plus":"硬麺の新作が店頭に登場","minus":"茹で加減の再調整を告知"},"service":{"plus":"接客方針の札を掲示","minus":"注文方法を見直した"},"price":{"plus":"お得なセットを追加","minus":"価格表を作り直した"},"mood":{"plus":"客席を整えた","minus":"席の間隔を調整した"},"identity":{"plus":"こだわりメニューを増やした","minus":"定番メニューも取り扱う"}},"cafe":{"taste":{"plus":"自家焙煎メニューを拡充","minus":"抽出方法を再検討"},"service":{"plus":"会話の時間を設けた","minus":"接客ルールを見直した"},"price":{"plus":"お得なセットを掲示","minus":"定番商品の価格を調整"},"mood":{"plus":"読書席を増やした","minus":"席の配置を変更した"},"identity":{"plus":"懐かしい食器を並べた","minus":"新メニューを試作した"}},"cake":{"taste":{"plus":"人気商品の新作を発売","minus":"レシピを改良した"},"service":{"plus":"贈り物の相談窓口を新設","minus":"受け取り方法を変更"},"price":{"plus":"お得な焼き菓子セットを追加","minus":"小さなサイズを販売"},"mood":{"plus":"ショーケースを華やかにした","minus":"店内の装飾を減らした"},"identity":{"plus":"個性派ケーキを発表","minus":"定番商品の試作を始めた"}}};
+const VISUALS={"ramen":{"taste":{"plus":["🪨","特製・硬麺","麺の硬さ五段階"],"minus":["⏱️","茹で加減表","標準茹で時間を明示"]},"service":{"plus":["🙇","接客の心得","挨拶を大切に"],"minus":["🎫","食券販売機","会話なしで注文"]},"price":{"plus":["🍚","満腹セット","おかわり相談可"],"minus":["📋","改定価格表","一杯の内訳を表示"]},"mood":{"plus":["🪑","一人席","静かに麺を味わう"],"minus":["🛋️","広々客席","家族席もご用意"]},"identity":{"plus":["💪","限界硬麺","挑むか、引き返すか"],"minus":["🍥","王道中華そば","初めての一杯から"]}},"cafe":{"taste":{"plus":["☕","店内焙煎豆","香りで豆を選ぶ"],"minus":["🫖","抽出実験","豆ごとに温度調整"]},"service":{"plus":["💬","おしゃべり席","会話も一杯のうち"],"minus":["🔕","静かな接客","声かけは最小限"]},"price":{"plus":["🍞","朝食セット","毎日通える値段"],"minus":["🧾","価格のご案内","一杯ずつ納得して"]},"mood":{"plus":["📚","読書コーナー","長居歓迎"],"minus":["🪑","席の配置変更","気兼ねなく立ち寄れる"]},"identity":{"plus":["📻","昭和レコード","懐かしさをお届け"],"minus":["🧋","新作ドリンク","昔と今のいいとこ取り"]}},"cake":{"taste":{"plus":["🍓","季節のショート","果物の甘さが主役"],"minus":["🧁","甘さ控えめ試作","レシピを一から見直し"]},"service":{"plus":["🎁","贈答相談カウンター","大切な日のお菓子"],"minus":["📦","受取専用窓口","待ち時間を短く"]},"price":{"plus":["🍪","焼き菓子セット","ちょっとお得なおやつ"],"minus":["🧾","ミニサイズ販売","少しだけ食べたい日に"]},"mood":{"plus":["🎀","サロン席","ケーキと過ごす午後"],"minus":["🪟","すっきりした売場","見やすいショーケース"]},"identity":{"plus":["🌈","本日の異色作","見たことのないケーキ"],"minus":["🍰","王道の定番菓子","いつでも食べたい味"]}}};
 const TOPICS={
 ramen:{taste:"麺の硬さとスープ",service:"店主の受け答え",price:"一杯の価格",mood:"店内の居心地",identity:"独特のこだわり"},
 cafe:{taste:"コーヒーと軽食",service:"店員の応対",price:"飲み物の価格",mood:"店内の落ち着き",identity:"昔ながらの雰囲気"},
@@ -71,12 +72,14 @@ function random(seed){let x=(seed>>>0)||1234567;return ()=>{x=(1664525*x+1013904
 function routeFor(s){let k=null,best=0,pol=null;for(const g of GENRES){const score=s.scores[g.id],abs=Math.abs(score);if(abs>best){best=abs;k=g.id;pol=score>0?"plus":"minus";}}if(!k||best<1)return {genre:null,polarity:null,stage:0,label:null,score:best};const stage=best>=15?4:best>=9?3:best>=4?2:1;return {genre:k,polarity:pol,stage,label:null,score:best};}
 function display(s,id){const base=SHOPS.find(x=>x.id===id),route=routeFor(s),info=route.genre?PATHS[id][route.genre][route.polarity]:null,phase=["","小さな改装","看板一新","店舗改装","完成・拡張"][route.stage];
 const sign=route.stage>=2?info:route.stage===1?base.name+"（改装中）":base.name;
+const visualData=route.genre?VISUALS[id][route.genre][route.polarity]:null;
+const visual={icon:visualData?visualData[0]:base.icon,product:visualData?visualData[1]:base.product,tagline:visualData?visualData[2]:"いつもの品揃え",variety:route.stage};
 const last=[...s.history].reverse().find(h=>h.star!==3),currentGenre=last&&GENRES.some(g=>g.id===last.genre)?last.genre:route.genre;
 const positive=last?last.star>=4:route.polarity==="plus",poster=currentGenre?POSTERS[id][currentGenre][positive?"plus":"minus"]:"いつもの営業案内";
 const repeated=last?s.history.filter(h=>h.genre===currentGenre&&Math.sign(h.star-3)===Math.sign(last.star-3)).length:0;
 const feature=last?poster+(repeated>=2?"（第"+repeated+"回の見直し）":""):route.stage?"改装を準備中":"本日も営業中";
 const summary=s.closed?"シャッターが下り、閉店のお知らせが貼られている。":route.stage===0?"昔ながらの店構えで営業中。":route.stage===1?`「${info}」に向けて小さな改装を始めた。`:route.stage===2?`「${info}」へ看板を掛け替えた。`:route.stage===3?`「${info}」に合わせて内装と商品を変更した。`:`「${info}」として店の営業形態が定着した。`;
-return {id,base,route:{...route,label:info},phase,sign,sign2:route.stage===1?info+"へ":route.stage>=3?info+"・"+phase:"",feature,open:!s.closed,summary,population:s.locals>=65?"地元客で賑わう":s.visitors>=65?"初めての客が目立つ":s.locals<=30?"常連が減っている":"いつもの客足",business:s.money>=100?"繁盛":s.money>=40?"営業中":s.money>0?"経営が厳しい":"閉店"};}
+return {id,base,route:{...route,label:info},phase,sign,sign2:route.stage===1?info+"へ":route.stage>=3?info+"・"+phase:"",feature,visual,open:!s.closed,summary,population:s.locals>=65?"地元客で賑わう":s.visitors>=65?"初めての客が目立つ":s.locals<=30?"常連が減っている":"いつもの客足",business:s.money>=100?"繁盛":s.money>=40?"営業中":s.money>0?"経営が厳しい":"閉店"};}
 function reviewText(state,id,star,genre){const s=state.shops[id];if(!s||!GENRES.some(g=>g.id===genre)||!Number.isInteger(star)||star<1||star>5)throw Error("invalid review");const topic=TOPICS[id][genre];const revisit=s.history.length>0?"以前にも来ました。 ":"";if(s.closed)throw Error("closed store");const current=display(s,id);const changed=current.route.stage>0?`今の「${current.route.label}」という方向性も踏まえると、`:"";const texts={1:`${topic}にはかなり不満があります。改善してほしいです。`,2:`${topic}は気になる点がありました。もう少し工夫があるとうれしい。`,3:`${topic}は良い点も気になる点もありました。今後に期待します。`,4:`${topic}は良かったです。この良さが続くといいと思います。`,5:`${topic}がとても良かったです。ぜひこの方向を極めてほしい。`};return revisit+changed+texts[star];}
 function replyFor(state,id,star,genre){const s=state.shops[id];const positive=star>3,negative=star<3;const band=positive?"plus":negative?"minus":"neutral";const arr=RESPONSES[id][genre][band==="neutral"?"plus":band];const n=s.history.length;const rnd=random((state.seed+state.month*107+n*31+star*13+GENRES.findIndex(x=>x.id===genre)*17+SHOPS.findIndex(x=>x.id===id)*23)>>>0);let msg=band==="neutral"?["評価が分かれた点、参考にいたします。", "どちらとも言い切れないご感想も、大切に読みます。", "次に来られたとき、違いを感じていただけるといいですね。"][SHOPS.findIndex(x=>x.id===id)]:arr[Math.floor(rnd()*arr.length)];const hardComplaints=id==="ramen"&&genre==="taste"&&negative?s.history.filter(h=>h.genre==="taste"&&h.star<=2).length:0;
 if(hardComplaints>=2)msg="同じご指摘が続きました。ならば『硬い麺』そのものを看板にします。";
@@ -122,7 +125,14 @@ else if(ls.filter(x=>routeFor(x.s).genre==="identity"&&routeFor(x.s).stage>=2).l
 else if(ls.filter(x=>routeFor(x.s).genre==="price"&&routeFor(x.s).stage>=2).length>=2){title="値札が話題の商店街";description="値段を見直した店が増えた。高いか安いかより、その理由が街の話題になった。";}
 else if(totalStages>=4){title="それぞれ違う商店街";description="進んだ方向はばらばら。それでも店主たちは、ここで商売を続けている。";}
 else{title="少し変わった商店街";description="一年で何もかもが変わったわけではない。それでも、入口の看板は少し違って見える。";}
-const shops=ls.map(({d,s})=>{const view=display(s,d.id);return {id:d.id,name:d.name,owner:d.owner,sign:view.sign,icon:d.icon,stage:view.route.stage,route:view.route.label,closed:s.closed,description:s.closed?`${d.owner}の店は閉まった。最後の口コミも、店先の貼り紙も残っている。`:view.route.stage?`${view.route.label}として営業中。${view.population}。`:`以前と変わらない看板で営業中。${view.population}。`,reviews:s.history.length};});
+const shops=ls.map(({d,s})=>{const view=display(s,d.id),count=s.history.length,last=s.history[count-1],ownerLine=s.closed?
+(d.id==="ramen"?"「鍋の火は止めました。それでも麺の話は、まだ終わっていません。」":d.id==="cafe"?"「この椅子に座っていた人のことは、忘れないと思います。」":"「最後のお菓子だけは、ちゃんと焼き上げました。」"):
+count===0?"「口コミはいただきませんでしたが、今日も店を開けています。」":
+view.route.stage===0?"「新しい看板はありません。けれど、毎日のお客さまはいます。」":
+d.id==="ramen"?`「${view.visual.product}を看板にしました。納得できない方もいるでしょう。でも味は見てください。」`:
+d.id==="cafe"?`「${view.visual.product}を始めました。昔からのお客さまも、新しい方も歓迎ですよ。」`:
+`「${view.visual.product}が人気です！ ただ、来年はまた違うものを作るかもしれません。」`;
+return {id:d.id,name:d.name,owner:d.owner,sign:view.sign,icon:d.icon,stage:view.route.stage,route:view.route.label,closed:s.closed,ownerLine,product:view.visual.product,description:s.closed?`${d.owner}の店は閉まった。最後の口コミも、店先の貼り紙も残っている。`:view.route.stage?`${view.route.label}として営業中。${view.population}。`:`以前と変わらない看板で営業中。${view.population}。`,reviews:count};});
 return {title,description,shops};}
 function audit(state){if(!state||state.schema!==1||!Array.isArray(state.reviews)||state.month!==state.reviews.length||!state.shops)throw Error("invalid save");if(state.month<0||state.month>12)throw Error("invalid month");for(const d of SHOPS){const s=state.shops[d.id];if(!s||!s.scores||!Array.isArray(s.history)||!Number.isFinite(s.money))throw Error("invalid shop");for(const g of GENRES)if(!Number.isFinite(s.scores[g.id]))throw Error("invalid scores");}return true;}
 return {VERSION,GENRES,MONTHS,SHOPS,PATHS,TOPICS,createState,routeFor,display,reviewText,replyFor,advance,finish,audit};
