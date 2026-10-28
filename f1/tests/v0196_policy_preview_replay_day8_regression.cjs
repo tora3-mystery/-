@@ -45,21 +45,21 @@ ok(!start.get('dayTransition').classList.contains('hidden'),'Next morning result
 ok(start.get('transitionDecision').textContent.includes('予約受取窓口')&&!start.get('transitionDecision').textContent.includes('改善'),'Action name only in heading');
 ok(start.get('transitionChanges').children.some(x=>x.textContent.includes('不満度')),'Per-indicator impact displayed');
 ok(start.get('transitionChanges').children.every(x=>!x.textContent.includes('負担度')),'No old burden label');
-const variants=new Set();let bonusCount=0;
+const variants=new Set();let extraCount=0;
 for(let seed=1;seed<=64;seed++){
  const x=boot();x.api.restart();
  x.api.setState({...x.api.getState(),complaintTickets:[letter],policySeed:seed,
   discoveredActions:[],randomBonusIds:[],randomBonusDays:[],focusHistory:[],focusKeys:[],focusDay:0});
  ok(x.api.focus('reviewA','レジに20分並びました'),'Seed '+seed+' discovers core policy');
  const state=x.api.getState(),bonus=(state.randomBonusIds||[]).join(',');
- variants.add(bonus);if(bonus)bonusCount++;
- ok(['register','staff','queueExpress','pickup'].every(id=>state.discoveredActions.includes(id)),'Core policies persist for every seed');
+ variants.add(bonus);if(bonus)extraCount++;
+ ok(['register','pickup'].every(id=>state.discoveredActions.includes(id))&&state.discoveredActions.length===2,'Exactly two matching policies, regardless of seed');
  const reload=boot(new Map([['f1-v10',JSON.stringify(state)]]));reload.api.resumeCurrent();
  ok(JSON.stringify(reload.api.getState().randomBonusIds)===JSON.stringify(state.randomBonusIds),'Save restores same seeded extra');
  reload.api.focus('reviewA','レジに20分並びました');
  ok(JSON.stringify(reload.api.getState().randomBonusIds)===JSON.stringify(state.randomBonusIds),'Repeating underline never re-rolls');
 }
-ok(variants.size>=2&&bonusCount>=10,'Multiple runs reveal different optional actions');
+ok(variants.size===1&&extraCount===0,'One tap never generates unrelated bonus policies');
 const end=boot();end.api.restart();end.api.setState({...end.api.getState(),finish:true,ending:'normal_strain'});
 const again=end.get('ending').children.find(x=>x.textContent==='もう一度営業する');
 ok(!!again,'Replay button present');again.onclick();
