@@ -71,7 +71,7 @@ function random(seed){let x=(seed>>>0)||1234567;return ()=>{x=(1664525*x+1013904
 function routeFor(s){let k=null,best=0,pol=null;for(const g of GENRES){const score=s.scores[g.id],abs=Math.abs(score);if(abs>best){best=abs;k=g.id;pol=score>0?"plus":"minus";}}if(!k||best<1)return {genre:null,polarity:null,stage:0,label:null,score:best};const stage=best>=15?4:best>=9?3:best>=4?2:1;return {genre:k,polarity:pol,stage,label:null,score:best};}
 function display(s,id){const base=SHOPS.find(x=>x.id===id),route=routeFor(s),info=route.genre?PATHS[id][route.genre][route.polarity]:null,phase=["","小さな改装","看板一新","店舗改装","完成・拡張"][route.stage];
 const sign=route.stage>=2?info:route.stage===1?base.name+"（改装中）":base.name;
-const last=s.history[s.history.length-1],currentGenre=last&&GENRES.some(g=>g.id===last.genre)?last.genre:route.genre;
+const last=[...s.history].reverse().find(h=>h.star!==3),currentGenre=last&&GENRES.some(g=>g.id===last.genre)?last.genre:route.genre;
 const positive=last?last.star>=4:route.polarity==="plus",poster=currentGenre?POSTERS[id][currentGenre][positive?"plus":"minus"]:"いつもの営業案内";
 const repeated=last?s.history.filter(h=>h.genre===currentGenre&&Math.sign(h.star-3)===Math.sign(last.star-3)).length:0;
 const feature=last?poster+(repeated>=2?"（第"+repeated+"回の見直し）":""):route.stage?"改装を準備中":"本日も営業中";
@@ -116,8 +116,10 @@ let title,description;if(closed>=2){title="シャッターが増えた通り";de
 else if(totalStages>=7&&vis>local){title="よそから人が来る商店街";description="新しい看板と初めての客が増えた。昔からの顔ぶれは、少し減った。";}
 else if(totalStages>=7){title="看板が変わり続ける街";description="一年で店の顔がすっかり変わった。変わらないのは通りの名前くらいだ。";}
 else if(totalStages<=1&&closed===0){title="いつもの商店街";description="大きな改装は起きなかった。いつもの時間に、いつもの店が開いている。";}
-else if(local>vis*1.6&&closed===0){title="常連のいる商店街";description="話題にならなくても、通い続ける理由がそれぞれの店に残った。";}
+else if(local>vis*2.2&&closed===0){title="常連のいる商店街";description="話題にならなくても、通い続ける理由がそれぞれの店に残った。";}
 else if(ls.filter(x=>x.s.money<40).length>=2){title="踏ん張る商店街";description="元気な店も苦しい店もある。来年も看板が灯っているかは、まだ分からない。";}
+else if(ls.filter(x=>routeFor(x.s).genre==="identity"&&routeFor(x.s).stage>=2).length>=2){title="個性の競演する通り";description="三軒三様、引かないこだわりが並ぶ。看板だけで好みが分かれそうだ。";}
+else if(ls.filter(x=>routeFor(x.s).genre==="price"&&routeFor(x.s).stage>=2).length>=2){title="値札が話題の商店街";description="値段を見直した店が増えた。高いか安いかより、その理由が街の話題になった。";}
 else if(totalStages>=4){title="それぞれ違う商店街";description="進んだ方向はばらばら。それでも店主たちは、ここで商売を続けている。";}
 else{title="少し変わった商店街";description="一年で何もかもが変わったわけではない。それでも、入口の看板は少し違って見える。";}
 const shops=ls.map(({d,s})=>{const view=display(s,d.id);return {id:d.id,name:d.name,owner:d.owner,sign:view.sign,icon:d.icon,stage:view.route.stage,route:view.route.label,closed:s.closed,description:s.closed?`${d.owner}の店は閉まった。最後の口コミも、店先の貼り紙も残っている。`:view.route.stage?`${view.route.label}として営業中。${view.population}。`:`以前と変わらない看板で営業中。${view.population}。`,reviews:s.history.length};});
