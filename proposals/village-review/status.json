@@ -9,7 +9,7 @@
   "source": {
     "repository": "tora3-mystery/short-ui-games",
     "scope": "proposals/village-review/",
-    "mainCommitChecked": "dfe1b7f356972f948085da43ceff1cf3eec524f6",
+    "mainCommitChecked": "3fc4e0cc2799bed952e7bbf479e9f49d27a20bb1",
     "workAssetBranch": "v1-assets44-20261028",
     "workAssetMergePR": 8,
     "workAssetMergeCommit": "1ac9b82a17418ad3ba1dbd9f21f880c554a0b0ca"
@@ -24,8 +24,24 @@
     "workAssetLists": 3,
     "githubAssetsMerged": true,
     "gameSelectionLogicIntegrated": true,
-    "pixelInspection": "未実施（新画像の実画面・縮小表示は人間レビュー待ち）",
-    "fallback": "追加画像台帳未取得時は従来145点の画像へフォールバック"
+    "pixelInspection": "Work独立検品報告：44点全件合格。原寸・320/390px相当縮小一覧・5地形との合成を確認。修正0件。これは画像素材監査であり、全44点の実ブラウザ操作検証ではない。",
+    "fallback": "追加画像台帳未取得時は従来145点の画像へフォールバック",
+    "independentVisualQa": {
+      "result": "PASS 44/44",
+      "issues": 0,
+      "regenerated": 0,
+      "changedFiles": 0,
+      "pngWebpIntegrity": "Work報告：全88件で寸法512×512、透過・接地位置・ファイル容量・SHA-256照合合格",
+      "resizedVisualCheck": "Work報告：全44点を320px・390px相当で目視",
+      "backgroundCompatibility": "Work報告：5種類の背景との合成を点検、明確な不備なし",
+      "resultImageSize": "132px",
+      "mapImageAt320px": "40×27px",
+      "mapImageAt390px": "40×35px",
+      "imageDetailCaveat": "地図の小画像ではlow/high/reformの細部を見分けにくい。結果画面132px画像と進化名称で確認する仕様として維持。",
+      "verifiedMainCommit": "3fc4e0cc2799bed952e7bbf479e9f49d27a20bb1"
+    },
+    "workStatus": "制作済み・GitHub統合済み・Work独立素材QA44/44合格（画像追加修正なし）",
+    "completedAt": "2026-10-29（Work完了報告を受領）"
   },
   "aiAudit": {
     "status": "PASS",
@@ -44,27 +60,31 @@
     "failingTests": 0
   },
   "browserAudit": {
-    "latestVersionTested": null,
-    "status": "未実施",
-    "pagesDeployment": "未確認",
-    "publishedUrlRead": "公開URLへの外部取得が制限され確認できず",
-    "realMobileTest": "未実施",
-    "priorAudits": "旧版のブラウザQAは最新α0.6.28の合格として扱わない"
+    "latestVersionTested": "0.6.28-alpha",
+    "status": "Work独立QAにて代表2画像の読み込み・モバイル表示のみ確認。全ゲームプレイの実ブラウザQAは未実施。",
+    "pagesDeployment": "GitHub Actions成功（main 3fc4e0c、run 40725270574）",
+    "publishedUrlRead": "Work報告：最新版ゲームを実ブラウザで320px・390px幅表示。全画像の実ブラウザ確認は未実施。",
+    "realMobileTest": "Workのブラウザビューポート320px・390px相当。スマートフォン実機ではない。",
+    "priorAudits": "旧版のブラウザQAは最新α0.6.28の合格として扱わない",
+    "assetSampleImages": [
+      "market-small-1.webp",
+      "shrine-low-2.webp"
+    ],
+    "assetSampleResult": "Work報告：2点とも正常ロード、絵文字代替なし、ラベルとの不自然な重なりなし。"
   },
   "humanReview": {
     "targetVersion": "0.6.28-alpha",
     "status": "要確認",
-    "notes": "以前のスマホスクリーンショットに地図ラベル重複の指摘あり。α0.6.27でCSS修正したが、最新44画像統合後の実表示は未確認。",
+    "notes": "画像44点のWork独立素材検品は44/44 PASS。ゲームの楽しさ、12か月進行、公開最新版の実機操作・エンディングは人間による確認待ち。地図の画像サイズは320幅40×27、390幅40×35で詳細差は結果画面132px画像＋名称に委ねる仕様。",
     "required": [
-      "320/390pxで地図ラベルと建物が重ならない",
-      "海辺24点の進化・潮汐効果が自然",
-      "小規模維持16点の見た目が選択に合う",
-      "最終進化改良4点の差分が分かる",
-      "12か月完走・年末パンフレット・3隠しエンド",
-      "保存再開・海上に施設が浮かないか"
+      "スマートフォンで12か月を完走し、各月の選択・口コミ・進化結果が分かりやすいか",
+      "地図の操作と訪問可能・選択中ラベルが分かりやすいか（320/390px相当）",
+      "進化結果132pxの絵と名称の納得感、海辺専用画像と潮汐演出",
+      "年末パンフレット・エンディングの満足感と説明過多がないか",
+      "保存・再開、ページ遷移、最終進化での画像差分を確認"
     ]
   },
-  "nextOwner": "人間（実プレイ）→作品Chat（指摘対応・最終QA）",
-  "nextWork": "画像統合版のスマホ表示と進化体験を人間レビューし、重大指摘が解消したらv1.0 Gate C判定。Work追加発注は現時点で不要。",
+  "nextOwner": "人間：α0.6.28のスマホ12か月通しプレイ→作品Chat：指摘修正・再試験・v1.0 Gate C判定",
+  "nextWork": "画像制作・検品は完了。追加Work発注なし。人間レビュー後、重大指摘がなければv1.0へ。",
   "lastQaReport": "QA_ASSET44_INTEGRATION_V0628_20261029.md"
 }
