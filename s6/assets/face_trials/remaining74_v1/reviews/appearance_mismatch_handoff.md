@@ -8,6 +8,6 @@
 
 ## ゲーム内の既存容姿文との照合
 
-このWorkでは `game-data.js` を変更していない。容姿DBブランチの `s6/assets/face_design/game_data_mismatch.md` は、既存の `people[].appearance` 96件と `members[].visual_description` 125件を、新画像承認後に照合するID別一覧を持つ。今回の74候補は未承認のため、採用後に同一覧を使ってゲーム内文言を改訂する必要がある。
+人物別74人の現行説明・新容姿DB・候補画像パスは、同フォルダの `appearance_mismatch_handoff.csv` にまとめた。このWorkでは `game-data.js` を変更していない。容姿DBブランチの `s6/assets/face_design/game_data_mismatch.md` は、既存の `people[].appearance` 96件と `members[].visual_description` 125件を、新画像承認後に照合するID別一覧を持つ。今回の74候補は未承認のため、採用後に同一覧を使ってゲーム内文言を改訂する必要がある。
 
 画像で確認できない小物・髪の長さ・色味などは、矛盾と断定せず「要照合」とする。現画像を元に人物設定を変更しないこと。

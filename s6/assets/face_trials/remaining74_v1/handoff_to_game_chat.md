@@ -11,7 +11,7 @@
 
 1. 各画像候補を監修し、必要な画像だけ採用・差し替え。
 2. `reviews/visual_similarity_top20.csv` の手動候補を、特に同グループ登場（E12-B P049/P086、E04-D P064/P065など）で確認。数値顔照合は未実施。
-3. `reviews/appearance_mismatch_handoff.md` と容姿DBブランチの `s6/assets/face_design/game_data_mismatch.md` を使い、採用画像と `people[].appearance` / `members[].visual_description` を照合。
+3. `reviews/appearance_mismatch_handoff.csv`（人物別74行）・`reviews/appearance_mismatch_handoff.md` と容姿DBブランチの `s6/assets/face_design/game_data_mismatch.md` を使い、採用画像と `people[].appearance` / `members[].visual_description` を照合。
 4. 写真らしさについて、整いすぎ・同じ撮影スタイルが残る点を受け入れ可能か判断。
 5. 採用後にのみ、ゲームUI、人物手帳、SNS、再登場照合を実機サイズで検証。
 
