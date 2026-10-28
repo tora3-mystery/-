@@ -1,7 +1,7 @@
 (() => {
 'use strict';
 const D=window.S6_DATA, APP=document.getElementById('app'), KEY='s6-vocaloid-beta-060', Dialogue=window.S6_BETA_DIALOGUE, Story=window.S6_BETA_STORY, Music=window.S6_BETA_MUSIC, Routes=window.S6_BETA_ROUTES;
-const VERSION='0.7.0', BUILD='2026-10-28 13:53 JST';
+const VERSION='0.7.0', BUILD='2026-10-28 13:58 JST';
 const WEEK=['月曜 4月6日','火曜 4月7日','水曜 4月8日','木曜 4月9日','金曜 4月10日'];
 const DATES=['2026-04-06','2026-04-07','2026-04-08','2026-04-09','2026-04-10'];
 const people=Object.fromEntries(D.people.map(p=>[p.person_id,p]));
@@ -73,7 +73,7 @@ const site=()=>{
  switch(S.phase){
  case 'title':return '<div class="hero"><div class="eyebrow">青嶺大学 / 2026年4月</div><h1>サークルは、<br>星の数ほどありますから。</h1><p>新歓の一週間。六つのサークル、覚えきれないほどの顔と名前。</p><p>その中に、あなたがずっと聴いてきたボカロPがいるらしい。</p>'+btn('はじめる','start')+'<p class="dim">β版：人物照合と音楽探しのシミュレーション。旧版とは保存データが別です。</p></div>';
   case 'warning':return '<div class="eyebrow">BEFORE YOU START</div><h2>この春の約束</h2><div class="paper"><p>この物語は架空の大学と音楽家を扱うフィクションです。</p><p>探す相手は、自分から「見つけたら声をかけて」と公開しています。個人情報を調べたり、相手に正体を明かすよう迫ったりする必要はありません。</p></div>'+btn('新歓の案内を見る','show-campus')+btn('タイトルへ','back-title','','ghost');
-  case 'campus':return '<div class="eyebrow">CAMPUS / WELCOME</div><h2>青嶺大学へようこそ。</h2><p>春のキャンパスには新歓のチラシと音楽があふれています。六つの音楽サークルは雰囲気も活動もそれぞれ違います。</p><div class="paper"><h3>見学できるサークル</h3><div class="club-intros">'+D.orgs.map(o=>'<div class="club-intro"><strong>'+esc(o.formal_name)+'</strong><span>'+esc(o.focus)+'</span></div>').join('')+'</div><p class="dim">見学だけでも構いません。掛け持ちで活動している先輩もいます。</p></div><div class="paper"><h3>一週間の過ごし方</h3><p><strong>平日：</strong>1日1新歓、会場で2つの輪まで参加できます。輪に入ると、初めて会った人が自己紹介します。</p><p><strong>交流：</strong>話す・質問する・連絡先を頼む・聞き耳を立てる。同じ輪で2回まで行動できます。</p><p><strong>夜：</strong>SNSや掲示を読めます。手帳での顔・名前・所属の照合やメモ編集は夜だけ、回数制限はありません。</p><p><strong>金曜の夜：</strong>週末に参加するサークルを一つ決めます。</p></div>'+btn('主人公について読む','show-intro');
+  case 'campus':return '<div class="eyebrow">CAMPUS / WELCOME</div><h2>青嶺大学へようこそ。</h2><p>春のキャンパスには新歓のチラシと音楽があふれています。六つの音楽サークルは雰囲気も活動もそれぞれ違います。</p><div class="paper"><h3>見学できるサークル</h3><div class="club-intros">'+D.orgs.map(o=>'<div class="club-intro"><strong>'+esc(o.formal_name)+'</strong><span>'+esc(o.focus)+'</span></div>').join('')+'</div><p class="dim">見学だけでも構いません。掛け持ちで活動している先輩もいます。</p></div><div class="paper"><h3>一週間の過ごし方</h3><p><strong>平日：</strong>1日1新歓、会場で3つの輪まで参加できます。輪に入ると、初めて会った人が自己紹介します。</p><p><strong>交流：</strong>話す・質問する・連絡先を頼む・聞き耳を立てる。同じ輪で2回まで行動できます。</p><p><strong>夜：</strong>SNSや掲示を読めます。手帳での顔・名前・所属の照合やメモ編集は夜だけ、回数制限はありません。</p><p><strong>金曜の夜：</strong>週末に参加するサークルを一つ決めます。</p></div>'+btn('主人公について読む','show-intro');
   case 'intro':return '<div class="eyebrow">4月、入学</div><h2>あの曲の作り手に、会えるかもしれない。</h2><div class="paper"><p>高校時代から聴いていた、匿名のボカロP「'+esc(Story.alias)+'」。一番好きな曲は「'+esc(Story.song)+'」。</p><p>'+esc(Story.memory)+'</p><p>大学の新歓が始まる前、活動アカウントに最後の投稿があった。</p><div class="notice">「'+esc(Story.invitation)+'」</div><p>本人からの招待だ。六つのサークルを巡って、演奏や会話の中から手がかりを見つけたい。</p></div><p class="dim">全員の顔と名前を覚える必要はありません。音楽や友人との出会いも自由に楽しんでください。</p>'+btn('4月6日へ','begin');
   case 'day':return daily();
  case 'flash':return firstIntroductions();
