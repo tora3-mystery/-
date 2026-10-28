@@ -10,7 +10,7 @@ const dshop=id=>E.SHOPS.find(x=>x.id===id);
 const dgenre=id=>E.GENRES.find(x=>x.id===id);
 function newGame(){return E.createState(Date.now()>>>0)}
 function load(){
- try{const raw=localStorage.getItem(KEY);if(raw){const s=JSON.parse(raw);E.audit(s);if(s.version===E.VERSION)return s;if(["0.1.0-alpha","0.2.0-alpha","0.3.0-alpha"].includes(s.version)){s.version=E.VERSION;return s}}}
+ try{const raw=localStorage.getItem(KEY);if(raw){const s=JSON.parse(raw);E.audit(s);if(s.version===E.VERSION)return s;if(["0.1.0-alpha","0.2.0-alpha","0.3.0-alpha","0.3.1-alpha"].includes(s.version)){s.version=E.VERSION;return s}}}
  catch(err){console.warn("R1 save reset:",err)}
  return newGame();
 }
@@ -70,15 +70,18 @@ function street(){
 function result(){
  const r=game.last;if(!r)return street();
  const d=dshop(r.review.id),y=r.review,major=r.before.sign!==r.after.sign||r.before.route.stage!==r.after.route.stage||r.before.route.label!==r.after.route.label||r.before.open!==r.after.open;
- const minor=!major&&r.before.feature!==r.after.feature,changed=major||minor;
- const changes=(r.affected||[]).map(x=>'<div class="linked-change"><strong>'+esc(dshop(x.id).name)+'</strong><p>'+esc(x.after.summary)+'</p><div class="linked-compare"><div><small>前</small>'+storefront(x.before)+'</div><div><small>後</small>'+storefront(x.after)+'</div></div></div>').join("");
+ const minor=!major&&(r.before.feature!==r.after.feature||r.before.visual?.product!==r.after.visual?.product),changed=major||minor;
+ const otherCause=r.cause==="other",combinedCause=r.cause==="combined",offsetCause=r.cause==="offset";
+ const headline=otherCause?"ほかのお客さまの口コミで変化！":combinedCause?"口コミが重なり、店が変化！":offsetCause?"二つの意見が交差した。":major?"お店の姿が変わった！":minor?"店頭に新しい動きが！":"お店はいつもどおり。";
+ const causeHint=otherCause?"あなたの投稿とは別の口コミが、今回の店舗変化のきっかけです。":combinedCause?"あなたの投稿と、ほかのお客さまの口コミが両方影響しました。":offsetCause?"あなたの口コミへの反応が、同じ月の別の口コミで変わりました。":"";
+ const changes=(r.affected||[]).map(x=>'<div class="linked-change"><strong>'+esc(dshop(x.id).name)+'</strong><p>'+esc(x.reason||"同じ月に届いたほかの口コミが影響しました。")+'</p><p>'+esc(x.after.summary)+'</p><div class="linked-compare"><div><small>前</small>'+storefront(x.before)+'</div><div><small>後</small>'+storefront(x.after)+'</div></div></div>').join("");
  return '<section class="box result-top"><span class="eyebrow">'+esc(E.MONTHS[y.month-1])+'に投稿した口コミ</span><h2 class="result-title">口コミへの返信が届きました。</h2><div class="feed-card user-review"><div class="meta">あなた　／　'+esc(d.name)+'　／　'+esc("★".repeat(y.star))+'　'+esc(dgenre(y.genre).name)+'</div><p class="quote">'+esc(y.text)+'</p></div>'+
  '<div class="owner-reply"><span class="name">'+esc(d.owner)+'　店主より</span><p>「'+esc(y.reply)+'」</p></div></section>'+
- '<section class="box evolution-box '+(changed?"has-evolution":"no-evolution")+'"><div class="result-heading"><span class="eyebrow">投稿から1か月後</span><h2>'+(major?"お店の姿が変わった！":minor?"店頭に新しい動きが！":"お店はいつもどおり。")+'</h2><p class="section-intro">'+esc(d.name)+'の今月の様子</p></div>'+
+ '<section class="box evolution-box '+(changed?"has-evolution":"no-evolution")+'"><div class="result-heading"><span class="eyebrow">投稿から1か月後</span><h2>'+headline+'</h2><p class="section-intro">'+esc(d.name)+'の今月の様子</p></div>'+
  '<div class="result-views"><div><small>投稿前</small>'+storefront(r.before)+'</div><div class="'+(changed?"after-spotlight":"")+'"><small>1か月後</small>'+storefront(r.after)+'</div></div>'+
- '<div class="result-note">'+esc(r.transition)+'</div>'+
+ '<div class="result-note">'+esc(r.transition)+'</div>'+(causeHint?'<p class="cause-hint">'+esc(causeHint)+'</p>':'')+
  '<p class="section-intro result-metrics">'+esc(r.after.population)+' ／ '+esc(r.after.business)+'</p></section>'+
- ((r.affected||[]).length?'<section class="box ripple-box"><h2>このお店にも変化が！</h2><p class="section-intro">別のお客さまの口コミや客足の変化が、近くの店にも影響したようです。</p>'+changes+'</section>':"")+
+ ((r.affected||[]).length?'<section class="box ripple-box"><h2>このお店にも変化が！</h2><p class="section-intro">同じ月に届いたほかのお客さまの口コミなどで、近くの店にも動きがありました。</p>'+changes+'</section>':"")+
  '<section class="box"><h2>まちの反応</h2>'+
  (r.neighbor?'<div class="feed-card"><div class="meta">客足の変化</div><p class="body">'+esc(r.neighbor)+'</p></div>':"")+
  (r.npc?'<div class="feed-card"><div class="meta">'+esc(r.npc.by)+'　／　'+esc(dshop(r.npc.id).name)+'　★'+r.npc.star+'</div><p class="body">'+esc(r.npc.text)+'</p></div>':"")+
