@@ -136,7 +136,7 @@ const FACTORIES=[
  (v)=>{
   const [item,truth,source]=HEIGHT[v];
   return {...fixed('P22-'+v,'P22','hina','建物の高さ',
-   '陽菜が街のランドマークの写真を見せてくれた。',
+   '陽菜が街のランドマークの話を始めた。',
    item+'の高さって、何メートルでしょう？',
    '建物・塔の最高高さを尋ねている。展望フロアの高さとは異なる。',
    truth,'m',55,
@@ -170,6 +170,7 @@ function applyToQuestion(q,scene){
  const nr={...q,...scene};
  nr.person=scene.person;
  nr.character=scene.person;
+ nr.item=scene.slot; // Avoid retaining the overwritten price, age or landmark question.
  nr.opening=q.day+'。'+scene.opening;
  nr.cardType='none';
  nr.emoji='🔢';
@@ -188,7 +189,7 @@ function applyToQuestion(q,scene){
    throw new Error('Incoherent numeric range: '+scene.id);
  return nr;
 }
-const API=Object.freeze({VERSION:'2.0.0',SIDE_IDS,FACTORY_COUNT:FACTORIES.length,CANONICAL_VARIANTS:FACTORIES.length*3,APPROVED_IDS:['I12','I15','P18','P19','P20','P21','P22','P23'],draw,applyToQuestion});
+const API=Object.freeze({VERSION:'2.0.1',SIDE_IDS,FACTORY_COUNT:FACTORIES.length,CANONICAL_VARIANTS:FACTORIES.length*3,APPROVED_IDS:['I12','I15','P18','P19','P20','P21','P22','P23'],draw,applyToQuestion});
 root.N1SideQuestions=API;
 if(typeof module!=='undefined'&&module.exports)module.exports=API;
 })(typeof window!=='undefined'?window:globalThis);
