@@ -144,7 +144,7 @@ function group(){
   const primary=x.pid&&people[x.pid]?speech(x.pid,x.text,x.type):'<div class="notice">'+esc(x.text)+'</div>';
   return primary+(x.reply&&people[x.reply.pid]?speech(x.reply.pid,x.reply.text,'輪の反応'):'');
  }).join('');
- return '<div class="eyebrow">'+esc(label(events[g.event_id].org_id))+' / '+esc(g.group_title)+'</div><h2>輪の会話</h2>'+
+ return '<div class="eyebrow">'+esc(label(events[g.event_id].org_id))+' / '+esc(eventName(g.group_id))+'</div><h2>輪の会話</h2>'+
  '<p>'+esc(Dialogue.sceneActivity(g.group_id))+'</p>'+(Dialogue.sceneMode(S.group)==='performance'?'<p class="dim">演奏がひと区切りつき、音が止んだところで短い会話が始まる。</p>':'')+
  '<div class="chat-thread">'+chats+'</div>'+
  '<p class="status">あと '+remaining+' 回行動できます</p>'+
@@ -165,7 +165,7 @@ function chooseAction(){
   (questionMode&&q?btn('所属について聞く','ask-affiliation',id,'mini ghost'):'')+
    (questionMode?btn('余白ラムネの話','ask-producer',id,'mini ghost')+btn('音楽経験を聞く','ask-music',id,'mini ghost'):'')+'</div></div>';
  }).join('');
- return '<div class="eyebrow">'+esc(groups[S.group].group_title)+'</div><h2>'+
+ return '<div class="eyebrow">'+esc(eventName(S.group))+'</div><h2>'+
  (mode==='talk'?'誰に話しかける？':mode==='social'?'誰にSNSを聞く？':mode==='contact'?'誰に連絡先を頼む？':mode==='photo'?'誰のPhotogramを聞く？':'誰に何を聞く？')+'</h2>'+
  '<p>顔を見比べながら話す相手を選びます。会場で聞いた名前を思い出せるでしょうか。</p>'+
  '<div class="person-list">'+items+'</div>'+btn('輪に戻る','back-group','','ghost');
