@@ -106,4 +106,4 @@ for(let i=0;i<10;i++){
  ok(!!result&&result.innerHTML.includes('8/7日間'),'Report disguises corrupt metrics');
  ok(q.get('ending').children.some(x=>x.className==='ending-media'),'Newspaper/forum format matches normal ending');
 }
-console.log('PASS F1 v0196: '+checks+' checks, '+variants.size+' random alternatives in 64 seeds');
+console.log('PASS F1 v0196: '+checks+' checks; same two relevant policies and no bonus in 64 seeds');
