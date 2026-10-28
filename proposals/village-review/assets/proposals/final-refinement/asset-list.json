@@ -1,0 +1,149 @@
+{
+  "category": "final-stage-refinements",
+  "count": 4,
+  "files": [
+    {
+      "id": "scenic-conservation-3",
+      "facility": "scenic",
+      "route": "conservation",
+      "stage": 3,
+      "displayIntent": "成熟した自然保護景勝地",
+      "png": "scenic-conservation-3.png",
+      "webp": "scenic-conservation-3.webp",
+      "references": [
+        "assets/facilities/scenic/conservation-2.png",
+        "assets/facilities/scenic/conservation-3.png"
+      ],
+      "width": 512,
+      "height": 512,
+      "alphaBBox": [
+        46,
+        64,
+        466,
+        440
+      ],
+      "anchor": [
+        256,
+        440
+      ],
+      "pngBytes": 219630,
+      "webpBytes": 61280,
+      "pngSha256": "ce2af798ab675fdbc903327049ff58f597150ed0a85b21f5d62a6e66d20c303d",
+      "webpSha256": "89d638ee0816a17a612ada34532788402933f77d7587a776f89a41640a03d5c2",
+      "webpAlphaBBox": [
+        46,
+        64,
+        466,
+        440
+      ]
+    },
+    {
+      "id": "scenic-park-3",
+      "facility": "scenic",
+      "route": "park",
+      "stage": 3,
+      "displayIntent": "展望設備と散策施設が整った観光景勝地",
+      "png": "scenic-park-3.png",
+      "webp": "scenic-park-3.webp",
+      "references": [
+        "assets/facilities/scenic/park-2.png",
+        "assets/facilities/scenic/park-3.png"
+      ],
+      "width": 512,
+      "height": 512,
+      "alphaBBox": [
+        46,
+        67,
+        466,
+        440
+      ],
+      "anchor": [
+        256,
+        440
+      ],
+      "pngBytes": 248258,
+      "webpBytes": 67616,
+      "pngSha256": "7442c0a33432e44c9df354f3829c86a55cf6a823e195be8892001426de7d88e8",
+      "webpSha256": "e40469fb03554032c02bc2bfe7e1bf2bf3921493a4aae2f8fcaf897bc056860c",
+      "webpAlphaBBox": [
+        46,
+        67,
+        466,
+        440
+      ]
+    },
+    {
+      "id": "robot-research-3",
+      "facility": "robot",
+      "route": "research",
+      "stage": 3,
+      "displayIntent": "高度な自動化設備が完成した研究施設",
+      "png": "robot-research-3.png",
+      "webp": "robot-research-3.webp",
+      "references": [
+        "assets/facilities/robot/research-2.png",
+        "assets/facilities/robot/research-3.png"
+      ],
+      "width": 512,
+      "height": 512,
+      "alphaBBox": [
+        46,
+        75,
+        466,
+        440
+      ],
+      "anchor": [
+        256,
+        440
+      ],
+      "pngBytes": 228015,
+      "webpBytes": 56654,
+      "pngSha256": "2f52c5280c1a9165bed42bee3cb004f15537e9f25163a0f85adceaaf5695111d",
+      "webpSha256": "c0b33ecc5263cd94160f634f885d19385968bd0568497289872b90ade35c9ef6",
+      "webpAlphaBBox": [
+        46,
+        75,
+        466,
+        440
+      ]
+    },
+    {
+      "id": "robot-coexist-3",
+      "facility": "robot",
+      "route": "coexist",
+      "stage": 3,
+      "displayIntent": "人とロボットが共同利用する研究施設の完成形",
+      "png": "robot-coexist-3.png",
+      "webp": "robot-coexist-3.webp",
+      "references": [
+        "assets/facilities/robot/coexist-2.png",
+        "assets/facilities/robot/coexist-3.png"
+      ],
+      "width": 512,
+      "height": 512,
+      "alphaBBox": [
+        46,
+        78,
+        466,
+        440
+      ],
+      "anchor": [
+        256,
+        440
+      ],
+      "pngBytes": 250412,
+      "webpBytes": 64576,
+      "pngSha256": "6c4c9b1f7f14975143fdfc08853d5cdd0adf60933ee7b9c99523f0486b32c733",
+      "webpSha256": "9bf067e010dce5e6308779f9504979b4068bd33d9f3ddfa6eb1a45a46b1db4ff",
+      "webpAlphaBBox": [
+        46,
+        78,
+        466,
+        440
+      ]
+    }
+  ],
+  "contactSheet": "contact-sheet-final-refinement.png",
+  "contactSheetSha256": "833199f0f7eecd0a060adc82f74d029bc018ab19029c8634c6601475c0b8ad0d",
+  "contactSheetBytes": 307354
+}
