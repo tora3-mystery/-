@@ -121,7 +121,7 @@ const oldApp=boot(new Map([['f1-v10',JSON.stringify(old)]]));oldApp.api.resumeCu
 ok(oldApp.api.getState().legacyShrineAccess===true,'Pre-v019 rear-shrine save is grandfathered');
 ok(oldApp.api.availableIds().includes('audit'),'Pre-v019 in-progress route remains reachable');
 
-const route=boot();route.api.restart();inspectProduct(route);
+const route=boot();route.api.restart();route.api.setState({...route.api.getState(),policySeed:1,complaintTickets:null});inspectProduct(route);
 step(route,'productCheck');
 ok(route.api.getState().day===2,'Product investigation can be performed on DAY 1');
 ok(route.api.focus('f17-back-review','裏手の社の周りが暗く'),'Rear investigation remains a separate finding');
