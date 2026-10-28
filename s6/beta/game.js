@@ -113,7 +113,7 @@ function firstIntroductions(){
  '<p>初めて会った人が名乗る。顔と名前が並ぶのは初回だけです。同期の新入生には赤い目印を付けています。</p>'+
  '<p class="status">新しく聞く名前 '+newcomers.length+'人 ／ この輪には '+all.length+'人</p>'+
  (newcomers.length?'<div class="faces">'+newcomers.map(id=>'<div class="intro-face'+peerClass(id)+'">'+portrait(id)+
- '<strong>'+esc(people[id].name)+'</strong><span>'+esc(people[id].year)+'年 ／ '+esc(label(people[id].primary_org))+
+ '<strong>'+esc(displayName(id))+'</strong><span>自己紹介：'+esc(people[id].name)+'</span><span>'+esc(people[id].year)+'年 ／ '+esc(label(people[id].primary_org))+
  (people[id].dual_org?'・'+esc(label(people[id].dual_org))+'も活動':'')+'</span>'+
  (PEERS.has(id)?'<span class="peer-tag">同期の新入生</span>':'')+'</div>').join('')+'</div>':
  '<p>この輪に、初めて自己紹介する人はいません。</p>')+
