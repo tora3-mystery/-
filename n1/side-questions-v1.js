@@ -15,11 +15,15 @@ const f=(id,theme,person,slot,opening,speech,context,truth,unit,mode,zone,scale,
 const FACTORIES=[
  function population(v,extra){
   const town=['架空の桜丘市','架空の港ヶ丘町','架空の月見野市'][v],truth=[46800,72300,38500][v]+extra*200;
+  // The conversation says "X万人台". Do not mark a number in another 10k band as ideal.
+  const bandLower=Math.floor(truth/10000)*10000;
+  const bandUpper=bandLower+9999;
+  const estimateZone=[Math.max(bandLower,truth-7000),Math.min(bandUpper,truth+7000)];
   return f('pop-'+v,'population','keisuke','町の人口',
    '圭介が街歩きのパンフレットを広げた。',
    'この町、だいたい何人くらいが暮らしてると思う？',
    town+'の人口について雑談している。古い観光案内には「人口は'+Math.floor(truth/10000)+'万人台」とあり、駅前にはマンションが増えた。正確な住民票の数字は手元にない。',
-   truth,'人','estimate',[truth-7000,truth+7000],5000,
+   truth,'人','estimate',estimateZone,5000,
    '圭介と架空の町の規模について話した。','そのくらいの規模感だと思う。街を見る目が変わるね。',
    'ちょっと小さく見積もったね。郊外も広いんだよ。','それだと大都市になっちゃう。駅前だけで判断できないな。',
    'この街と人口はゲーム内の架空設定。実在の自治体の人口統計ではない。',1000,300000);
