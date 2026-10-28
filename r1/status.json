@@ -3,9 +3,9 @@
   "projectId": "R1",
   "title": "口コミへの返信をご確認ください。（仮）",
   "nickname": "くちへん（仮）",
-  "version": "0.3.0-alpha",
-  "updatedAtJST": "2026-10-29T05:46:46+09:00",
-  "phase": "Phase 4：α0.3.0 QA実施済・試作公開、人間レビュー待ち（Gate B未通過）",
+  "version": "0.3.1-alpha",
+  "updatedAtJST": "2026-10-29T05:48:20+09:00",
+  "phase": "Phase 4：α0.3.1ロジック・模擬DOM監査済、試作公開／人間レビュー待ち",
   "repository": "tora3-mystery/short-ui-games",
   "scope": "r1/",
   "assetStatus": "CSS仮店舗とルート別30商品ビジュアル（絵文字＋商品札）。実写素材なし、画像Work未投入。",
@@ -18,8 +18,8 @@
     "spillovers": "他者口コミによる別店舗の進化をbefore/afterで別枠表示。客足の移動は進化と分離表示。"
   },
   "aiAudit": {
-    "status": "PASS（V8状態遷移・模擬DOM）",
-    "version": "0.3.0-alpha",
+    "status": "PASS：α0.3.0主要ロジック回帰30,000レビュー＋α0.3.1結末条件の定向テスト",
+    "version": "0.3.1-alpha",
     "simulationCount": 2500,
     "simulatedReviews": 30000,
     "assertions": 242500,
@@ -27,12 +27,13 @@
     "visibleChangeRatePct": 89.9,
     "majorChangeRatePct": 46.7,
     "crossShopChangeRatePct": 34,
-    "identifiedFinaleCount": 11,
+    "identifiedFinaleCount": 14,
     "finaleConditions": 14,
     "routeVisualVerified": 30,
     "uiMockChecks": 34,
     "legacySave": "0.2.0-alpha→0.3.0-alphaの模擬DOM移行PASS",
-    "limitations": "実ブラウザ表示や実機タップではなくV8と模擬DOM。エンディング条件のうち14種すべての到達は未確認。"
+    "limitations": "α0.3.0版に対し2,500周・30,000レビュー・242,500アサーション成功。α0.3.1では末尾結末条件だけ調整し、残り3エンディングを100シードずつ定向確認。実ブラウザ・実機試験は未実施。",
+    "finales": "全14条件のうち、旧シミュレーションで11種、別途定向戦略（各100シード）で残り3種に到達。互いに排他的な条件と実際のルートの整合を確認。"
   },
   "browserAudit": {
     "status": "未実施（ブラウザ内V8相当のロジックと模擬DOMのみ）",
@@ -43,7 +44,7 @@
   },
   "humanReview": {
     "status": "未実施",
-    "targetVersion": "0.3.0-alpha",
+    "targetVersion": "0.3.1-alpha",
     "focus": [
       "全30進化方向の外観・店頭商品の見分けやすさ",
       "褒める・批判するの結果と店主返信の納得感",
@@ -56,19 +57,17 @@
   "knownIssues": [
     "画像素材は未制作。店舗外観と商品はCSS仮表現。",
     "大きな看板の変化が毎月起きるとは限らない。店頭の小変化を含めて結果画面で確認する。",
-    "14種の商店街全体エンディング条件のうち11種到達確認。残りの到達性は別途検証。",
     "実ブラウザ・スマートフォン実機の視覚・操作確認は未実施。",
     "人間によるシナリオ・進化のインパクト評価は未実施。"
   ],
   "nextOwner": "作品Chat：残る分岐到達性と実ブラウザQA準備／人間：α0.3.0プレイテスト",
   "nextWork": "人間レビューでGate B確認後、店舗外観・店主・商品画像の大量制作を検討",
-  "index": "2026-10-29：INDEXのR1カードをα0.3.0に更新。14作品を維持。",
+  "index": "2026-10-29：INDEX上のR1をα0.3.1に更新。全14作品維持。",
   "publicUrl": "https://tora3-mystery.github.io/short-ui-games/r1/",
   "pending": [
     "実ブラウザスマホ画面で1年間の通しプレイ",
     "実ブラウザの旧版保存復旧",
-    "14種エンディングの到達可能性完全監査",
     "人間レビューによる演出評価"
   ],
-  "lastStaticCheckedAtJST": "2026-10-29T05:46:46+09:00"
+  "lastStaticCheckedAtJST": "2026-10-29T05:48:20+09:00"
 }

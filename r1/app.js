@@ -10,7 +10,7 @@ const dshop=id=>E.SHOPS.find(x=>x.id===id);
 const dgenre=id=>E.GENRES.find(x=>x.id===id);
 function newGame(){return E.createState(Date.now()>>>0)}
 function load(){
- try{const raw=localStorage.getItem(KEY);if(raw){const s=JSON.parse(raw);E.audit(s);if(s.version===E.VERSION)return s;if(["0.1.0-alpha","0.2.0-alpha"].includes(s.version)){s.version=E.VERSION;return s}}}
+ try{const raw=localStorage.getItem(KEY);if(raw){const s=JSON.parse(raw);E.audit(s);if(s.version===E.VERSION)return s;if(["0.1.0-alpha","0.2.0-alpha","0.3.0-alpha"].includes(s.version)){s.version=E.VERSION;return s}}}
  catch(err){console.warn("R1 save reset:",err)}
  return newGame();
 }
