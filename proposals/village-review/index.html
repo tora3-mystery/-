@@ -1237,7 +1237,13 @@ function villageWhisper(){
  return null
 }
 function villageVoices(){
- if(S.month===0)return ['村民：「いつもどおりの村ですが、ゆっくり見ていってください。」','案内所の人：「何を気に入っていただけるか楽しみです。」'];
+ if(S.month===0)return v1VoicePick(S.name+':welcome',[
+ ['村民：「初めてですか。急ぐような村ではないので、ゆっくり見ていってください。」','案内所の人：「道に迷ったら、地図を見せてくださいね。」'],
+ ['買い物帰りの住民：「ここは夕方になると早く静かになりますよ。」','案内所の人：「どんな場所が気になるか、帰りに教えてください。」'],
+ ['長年の住民：「同じ村でも、どこを見るかでずいぶん印象が違いますよ。」','村民：「今日はいい日に来ましたね。まずは一周どうぞ。」'],
+ ['案内所の人：「この村を見て回るなら、歩くのがいちばんです。」','散歩中の人：「普段の道でも、よその方には新鮮みたいですね。」'],
+ ['近所の住民：「小さな村ですけど、好きな場所はみんな違うんです。」','村の大工：「建物を見て歩くなら、古いところも面白いですよ。」']
+ ]);
  const good=[],bad=[],mixed=[],open=S.facilities.filter(f=>f.open),closed=S.facilities.filter(f=>!f.open),add=(arr,who,msg)=>arr.push(who+'：「'+msg+'」');
  if(closed.length){const f=closed[S.month%closed.length],reason=['shop','market','cafe'].includes(f.kind)?'買い物が少し不便になりました。':['school','clinic','hall'].includes(f.kind)?'暮らしのよりどころが減って寂しいですね。':'見慣れた建物が閉じて、村の景色も変わりました。';add(bad,'近所の住民',f.name+'が閉まって、'+reason)}
  if(S.visitors>S.startVisitors*1.25){add(good,'観光案内の人','旅行者が以前よりよく訪れるようになりました。');add(mixed,'長年の住民','観光客が増えても、私たちの暮らしは別の話です。')}
@@ -1272,7 +1278,39 @@ function villageVoices(){
  ['村民','静かに過ごしたい人と、人を呼びたい人。どちらの声もあります。'],
  ['農家','収穫の具合とお客さんの数は、いつも同じにはなりません。'],
  ['宿泊業の人','口コミを見て来る方は、それぞれ期待が違います。'],
- ['村の人','去年はなかった話題が、今年はすっかり日常になりました。']
+ ['村の人','去年はなかった話題が、今年はすっかり日常になりました。'],
+ ['町から戻った人','帰ってきて最初に見る建物で、村に戻ったなと感じます。'],
+ ['新しく越してきた人','隣の人が声をかけてくれるまで、道の名前を覚えられませんでした。'],
+ ['村の大工','新しい外壁より、雨漏りが直ったことを喜ぶ人もいますよ。'],
+ ['家事の合間の人','遠くに買い物へ行かずに済む日は助かります。'],
+ ['通学中の学生','帰り道に寄れる場所があると、ちょっと得した気分です。'],
+ ['宿泊業の人','この辺りは朝が早いお客さんのほうが多いですね。'],
+ ['散歩好きの住民','いつものベンチが空いていると落ち着きます。'],
+ ['働く住民','昼休みに行ける店が一つ増えるだけで嬉しいものです。'],
+ ['近所の人','新しいお店ができても、慣れるまでは前の名前で呼んじゃいます。'],
+ ['商店の人','今日は常連さんがいつもより早く来ましたよ。'],
+ ['農家','畑に水をやる時間は、天気が教えてくれます。'],
+ ['村民','便利になった場所も、ちょっと遠回りになった道もあります。'],
+ ['案内所の人','写真を撮る人と地図を読む人、立ち止まる場所が違うんですよ。'],
+ ['祭りの世話役','準備を手伝ってくれる人が一人増えるだけで助かります。'],
+ ['年配の住民','昔の道を知っていると、近道のつもりが遠回りになります。'],
+ ['買い物帰りの住民','今日はいつもと違う品物が並んでいました。'],
+ ['旅人','景色より、知らない人に道を教えてもらったことを覚えています。'],
+ ['村の大工','新しい柱はまっすぐでも、昔の建物には癖があるんです。'],
+ ['地元の学生','休日に友達と集まれるところ、もう少し増えるといいな。'],
+ ['子育て中の住民','子どもと歩くと、普段気づかない段差が目につきます。'],
+ ['常連客','店が忙しい日は、いつもより少し早く席を譲ります。'],
+ ['長年の住民','昔は畑だった場所のこと、今でもその名前で呼んでいます。'],
+ ['近所の人','朝と夕方で、この通りの顔ぶれはずいぶん違います。'],
+ ['移住してきた人','来たばかりの頃は、何もないと思った道が今は好きです。'],
+ ['観光案内の人','同じ地図でも、目的が違えば歩く順番も変わりますね。'],
+ ['働く住民','看板が新しくなっても、営業時間はつい昔のまま覚えています。'],
+ ['村民','去年まで当たり前だったことが、今は少し違って見えます。'],
+ ['散歩中の人','近道より、好きな景色のある道を選びます。'],
+ ['商工会の人','評判が上がったお店には、別の相談も増えるんですよ。'],
+ ['近所の住民','村のことを外から褒められると、ちょっと照れますね。'],
+ ['施設の利用者','一度使ってみないと、便利になったかどうか分からないものです。'],
+ ['長年の住民','新しい人が増えると、昔の話をする機会も増えますね。']
  ];
  for(let k=0;k<3;k++){const entry=everyday[(S.month*5+S.stats.chain*2+k*3+S.facilities.length)%everyday.length];add(mixed,entry[0],entry[1])}
  const season=period().month;
@@ -1281,10 +1319,37 @@ function villageVoices(){
  else if(season>=10&&season<=12)add(mixed,'散歩中の人','涼しくなると、静かな道のよさに気づきます。');
  else add(mixed,'近所の人','冬になると、お店の明かりが一段と目に入りますね。');
  if(S.stats.newFacilities>0)add(mixed,'住民','新しい店ができると、まず一度は覗いてみたくなります。');
+ if(S.lastReview){
+  const last=S.facilities.find(f=>f.id===S.lastReview.id);
+  if(last&&last.open){
+   const name=last.name,stars=S.lastReview.stars;
+   const responses=stars>=4?[
+    ['近所の人',name+'の評判を聞いて、また寄ってみようと思いました。'],
+    ['施設の利用者',name+'を褒める人がいるのは嬉しいですが、これからが大事ですね。'],
+    ['働く住民',name+'にいい口コミが届いたと聞きました。現場の人も喜んでいるでしょうね。']
+   ]:stars<=2?[
+    ['近所の人',name+'への厳しい意見があったそうですね。どう変わるでしょうか。'],
+    ['常連客',name+'のことは好きですけど、気になる点があるのも分かります。'],
+    ['施設の人',name+'にも、直したいところは少しずつあるんですよ。']
+   ]:[
+    ['常連客',name+'には、いいところも不便なところもありますからね。'],
+    ['村民',name+'の感想は人によって違うものですね。']
+   ];
+   for(const [who,msg] of responses)add(mixed,who,msg);
+  }
+ }
+
  if(S.stats.big>=2)add(mixed,'施設の利用者','変わった場所が増えて、どこから見ればよいか迷いますね。');
  if(open.some(f=>facilityStrain(f)>0))add(bad,'働く住民','評判が上がっても、仕事が楽になるわけではないんですよ。');
- const mood=villageMood(),list=[...new Set(mood==='好評の声が多い'?[...good,...mixed]:mood==='不満が増えている'?[...bad,...mixed]:[...mixed,...good,...bad])],a=(S.month*7+S.stats.big+S.facilities.length)%list.length,b=(a+1+(S.stats.chain%Math.max(1,list.length-1)))%list.length;
- const whispers=villageWhisper();if(whispers&&S.month%4===0)return [list[a],whispers];return list.length>1?[list[a],list[a===b?(b+1)%list.length:b]]:list;
+ const mood=villageMood(),list=[...new Set(mood==='好評の声が多い'?[...good,...mixed]:mood==='不満が増えている'?[...bad,...mixed]:[...mixed,...good,...bad])];
+ if(!list.length)return ['村民：「いつもと変わらないように見えても、一日ずつ違いますよ。」'];
+ const seed=S.name+':'+S.month+':'+S.terrain+':'+S.stats.big+':'+S.stats.closed;
+ const primary=v1VoicePick(seed+':primary',list);
+ const secondaryPool=list.filter(v=>v!==primary);
+ const secondary=secondaryPool.length?v1VoicePick(seed+':secondary',secondaryPool):primary;
+ const whispers=villageWhisper();
+ if(whispers&&S.month%4===0)return [primary,whispers];
+ return [primary,secondary]
 }
 
 
