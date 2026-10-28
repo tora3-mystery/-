@@ -52,8 +52,12 @@ for(const kind of coastal)for(const stage of [2,3])for(const mode of modes){
 for(const kind of db.facilityKinds){
  q.generate(250);f=q.getState().facilities[0];Object.assign(f,{kind,stage:1,smallStage1:true});
  assert.equal(q.v1FacilityId(f),'proposal:small:'+kind+':1');
+ const smallLabel=q.phaseName(f);
+ f.lastPolarity='support-high';
+ assert.equal(q.phaseName(f),smallLabel,'Stage-one small text must remain stable after later review');
  f.smallStage1=false;
  assert.equal(q.v1FacilityId(f),'facility:'+kind+':base:1');
+ assert.notEqual(q.phaseName(f),smallLabel,'Normal stage-one text must differ from small branch');
  smallCases++;
 }
 for(const [kind,route] of [['scenic','conservation'],['scenic','park'],['robot','research'],['robot','coexist']]){
