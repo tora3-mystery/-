@@ -392,7 +392,7 @@ function ensureComplaints(){
   const order=[0,0,1,2,3],usedTexts=[[],[],[],[]],usedAuthors=new Set();
   // First-day mysterious references vary. DAY 2 independent notices keep the
   // principal investigations available regardless of this first impression.
-  const firstProductClue=draw(2)===0,firstShrineClue=draw(2)===0;
+  const firstProductClue=draw(100)<50,firstShrineClue=draw(100)<50;
   for(let k=order.length-1;k>0;k--){const j=draw(k+1);[order[k],order[j]]=[order[j],order[k]]}
   for(const metric of order){
    const variants=buckets[metric].filter(body=>!usedTexts[metric].includes(body));
