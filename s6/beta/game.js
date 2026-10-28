@@ -187,12 +187,18 @@ function sns(){
     return '<div class="social">'+(a.avatar_kind==='face'?portrait(id):'<div class="avatar-icon">♪</div>')+
       '<div><strong>'+esc(a.display_name)+'</strong><p class="dim">'+esc('@'+a.handle)+'</p><p>'+esc(msg.text)+'</p></div></div>';
   }).join('')+'</div>':'';
+ const photoFollowing=platform==='Photogram'?unique(S.photoFollows).filter(pid=>accounts[pid+'|Photogram']):[];
+ const photoPending=platform==='Photogram'?unique(S.photoRequests).filter(pid=>accounts[pid+'|Photogram']):[];
+ const photoStatus=platform==='Photogram'?
+   '<div class="paper"><h3>フォロー中 '+photoFollowing.length+'人 ／ 承認待ち '+photoPending.length+'人</h3>'+
+   (photoFollowing.length?photoFollowing.map(pid=>{const a=accounts[pid+'|Photogram'];return '<div class="social">'+(a.avatar_kind==='face'?portrait(pid):'<div class="avatar-icon">♪</div>')+'<div><strong>'+esc(a.display_name)+'</strong><p class="dim">@'+esc(a.handle)+' ／ フォロー中</p><p class="dim">投稿がない相手もここで確認できます。</p></div></div>';}).join(''):'<p class="dim">まだフォローした相手はいません。</p>')+
+   (photoPending.length?'<p class="dim">承認待ち：'+photoPending.map(pid=>esc(accounts[pid+'|Photogram'].display_name)).join('、')+'。翌日に確認される予定です。</p>':'')+'</div>':'';
  const visible=D.posts.filter(p=>p.platform===platform&&p.published_at.slice(0,10)<=date()&&
  (p.visibility==='公開'||p.visibility==='匿名表示'||(p.visibility==='鍵垢・承認制'&&S.photoFollows.includes(p.author_id))||
  ((p.visibility==='グループ参加者'||p.visibility==='主人公との個別')&&S.contacts.includes(p.author_id))));
  return '<div class="eyebrow">SNS / '+esc(platform)+'</div><h2>タイムライン</h2>'+
  '<p class="dim">写真を出している人も、出していない人もいる。名前の似たアカウントが同じ人とは限らない。</p>'+
- (S.report?'<div class="notice">'+esc(S.report)+'</div>':'')+tineMessages+
+ (S.report?'<div class="notice">'+esc(S.report)+'</div>':'')+tineMessages+photoStatus+
  (visible.length?visible.map(p=>{
   const a=accounts[p.author_id+'|'+platform];
   const anonymous=p.visibility==='匿名表示';
@@ -447,12 +453,21 @@ function handle(act,id){
      kind='音楽経験';
      S.musicKnown[id]=true;recordConversation(id,'question');
    }else if(type==='photo'){
-    const account=accounts[id+'|Photogram'];kind='SNSの話';
+    const account=accounts[id+'|Photogram'];
+    const rule=D.contactChannels.find(x=>x.group_id===S.group&&x.person_id===id&&x.platform==='Photogram');
+    const approval=rule?.approval_policy||'after_week';
+    kind='SNSの話';
     if(!account)reply={text:'Photogramは今のところ使ってないんだ。'};
-    else if(account.visibility==='鍵垢・承認制'){
-      if(!S.photoFollows.includes(id)&&!S.photoRequests.includes(id))S.photoRequests.push(id);
-      reply={text:'Photogramは「'+account.display_name+'」で使ってるよ。フォロー申請は後で確認するね。'};
-    }else reply={text:'Photogramは「'+account.display_name+'」だよ。よかったら見てみて。'};
+    else if(S.photoFollows.includes(id))reply={text:'Photogramは「'+account.display_name+'」だよ。もうフォローしてくれてるね。'};
+    else if(S.photoRequests.includes(id))reply={text:'Photogramは「'+account.display_name+'」。申請は受け取ってるよ。明日確認するね。'};
+    else if(approval==='after_week')reply={text:'Photogramは「'+account.display_name+'」だけど、今週は新しいフォローを受け付けてないんだ。公開投稿なら見られるよ。'};
+    else if(approval==='next_day'){
+      S.photoRequests.push(id);
+      reply={text:'Photogramは「'+account.display_name+'」。申請ありがとう。明日確認するから、今夜はまだ承認待ちになるよ。'};
+    }else{
+      S.photoFollows.push(id);
+      reply={text:'Photogramは「'+account.display_name+'」だよ。フォローありがとう。今夜から見られるよ。'};
+    }
   }else if(type==='contact'){
     reply=Dialogue.contact(id,S.group,S);kind='連絡先';
     if(reply.result==='accept'){
