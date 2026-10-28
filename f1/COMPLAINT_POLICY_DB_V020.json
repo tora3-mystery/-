@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "sourceVersion": "F1 v0.19.9",
-  "purpose": "Development inventory; runtime policy definitions remain in f1/index.html. Late ticket templates are kept in sync by regression tests.",
+  "sourceVersion": "F1 v0.20.2",
+  "purpose": "F1 inventory of 50 existing policies, opening complaint pools, 27 action-linked comments and 32 integrated late templates. Regression checks game/DB sync.",
   "categories": [
     "レジ待ち",
     "通路混雑",
@@ -1486,7 +1486,7 @@
       "actionIds": [
         "night",
         "shift",
-        "early"
+        "queueExpress"
       ],
       "fromDay": 5
     },
