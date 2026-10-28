@@ -62,27 +62,40 @@ const role=(id,gid)=>{
  if(p.primary_org===e?.org_id||p.dual_org===e?.org_id)return 'host';
  return 'guest';
 };
+// Authored first-contact openings for scene/role mismatches; never combine a generic greeting with a hook.
+const firstScenes={
+'E02-C|P042':'今日はリズムの下書きを作ってるよ。私は歌も担当していて、ネットでは匿名の方が歌いやすいって人もいるよね。',
+'E03-B|P057':'普段はLAMPだけど、今日は残響のデモを聴きに来たんだ。小さい部屋だと声の細かいところまで聴こえるね。',
+'E03-B|P058':'今日は残響の音源を聴き比べてるよ。ベースの弦を替えると、同じ曲でもかなり違って聴こえる。',
+'E04-D|P064':'普段は残響でギターを弾いてる。今日はセッションも見に来たんだ。音を削る時って意外と迷うよね。',
+'E04-D|P065':'今日はセッションを見学しに来たんだ。いつもは残響で歌っていて、歌詞より先に歌い方を変えることもあるよ。',
+'E05-C|P071':'普段はJAMBOXで歌ってるけど、今日はこもれびで聴く側に回ってる。こういう日も楽しいね。',
+'E05-B|P072':'普段はJAMBOXで打楽器をやってる。今日は譜面の整理を手伝いに来たんだ。',
+'E02-C|P078':'普段はこもれびでギターを弾いてる。今日はwav.のリズム制作が気になって見に来たんだ。',
+'E07-C|P084':'普段はwav.で音作りしてる。今日は404のリハで音源を整える手伝いをしてるんだ。',
+'E01-B|P010':'ボーカルをやってるけど、今日はアンプの音量を相談してるんだ。声が埋もれないようにしたくて。',
+'E06-C|P010':'今日はリズムを合わせてるところ。声の入りとベースの音量を確かめてるんだ。',
+'E07-B|P009':'普段はJAMBOXのドラム担当。今日は404の昔の会場の話を聞きに来たんだ。',
+'E03-A|P030':'歌い方を変えて、今作ってるメロディーがどう変わるか試してるんだ。',
+'E01-A|P019':'今は受付の片付け順も決めてるんだ。見学者が来たら、演奏の輪まで案内するよ。'
+};
 function talk(id,gid,state,knownBefore){
- const p=people[id],c=P.people[id],r=role(id,gid),v=c.voice;
- // knownBefore is evaluated before the action, while close uses the updated affinity.
- const already=typeof knownBefore==='boolean'?knownBefore:!!(state.spokenTo?.includes(id)||state.interacted?.includes(id)),close=level(state,id);
+ const c=P.people[id],v=c.voice,r=role(id,gid);
+ const already=typeof knownBefore==='boolean'?knownBefore:!!(state.spokenTo?.includes(id)||state.interacted?.includes(id));
  const sameCircle=!!state.groupLog?.[gid]?.some(x=>x.pid===id);
- const intro=sameCircle?(v==='reserved'||v==='precise'?'さっきの話だけど。':'そうそう、もう少し話していい？'):
-  already?(
-   close==='easygoing'?(v==='reserved'||v==='quiet'?'今日も来てたんだね。':'お、また会えたね。'):
-   close==='familiar'?(v==='precise'||v==='reserved'?'この前の話、覚えてるよ。':'また会ったね。この前の続きも話せそう。'):
-   words[v].again):words[v][r];
- const h=hooks[id];let cue=plain(sameCircle?'今の話、どう思った？':h?.[already?'reunion_hook':'first_hook']||h?.first_hook||'音を聴いていってね。');
- if(id==='P003'&&gid!=='E01-A'&&!already)cue='次の演奏順を確認してたんだ。みんなが迷わないといいな。';
- if(sceneMode(gid)==='performance'&&r==='host'&&/(受付|入会届|今日決め)/.test(cue))
-  cue='曲が一区切りついたところ。よかったら、今の演奏の感想を聞かせて。';
- if(!already&&r==='newcomer'&&cue.includes('見学中なんだ'))cue=cue.replace('、見学中なんだ','');
- // Preserve original character hook; add contextual color only when it fits the character.
- const g=D.groups.find(x=>x.group_id===gid),e=events[g?.event_id],theme=sceneContext[e?.org_id];
- const context=!already&&r==='host'&&c.initiative>=3&&c.expressiveness>=3&&Number(id.slice(1))%4===1&&theme?
-  '今日は'+theme+'が中心なんだ。':'';
- const special=id==='P001'&&!already?'曲って、鳴らしていない一拍も含めて残ると思うんだ。':'';
- return {text:[intro,context,cue,special].filter(Boolean).join(' '),role:r,voice:v,relationship:close,clue:special?'P001-SILENCE':null};
+ const close=level(state,id),h=hooks[id];
+ let line;
+ if(sameCircle)line=sceneMode(gid)==='performance'?
+  'さっきの演奏、ほかに気になるところあった？':
+  'さっきの話の続きだけど、ほかにも聞きたいことある？';
+ else if(already){
+  const greeting=close==='easygoing'?'また会えたね。':close==='familiar'?'この前はどうも。また会えたね。':words[v].again;
+  line=[greeting,plain(h?.reunion_hook||'今日はこっちの輪にいるんだ。')].join(' ');
+ }else{
+  line=plain(firstScenes[gid+'|'+id]||h?.first_hook||'今日はこの輪で音を聴いているところ。');
+  if(id==='P001')line+=' 曲って、鳴らしていない一拍も含めて残ると思うんだ。';
+ }
+ return {text:line,role:r,voice:v,relationship:close,clue:id==='P001'&&!already&&!sameCircle?'P001-SILENCE':null};
 }
 function answer(id,gid,kind){
  const p=people[id],q=D.questions.find(x=>x.group_id===gid&&x.target_id===id);
@@ -144,15 +157,12 @@ const addressFor=(speakerId,targetId)=>{
 };
 const selfIntroduction=(id,state,source='direct')=>{
  if(state.personalIntroduced?.[id])return '';
- const c=P.people[id],p=people[id],roleType=Number(p.year)===1?'newcomer':'member';
- const base=roleType==='newcomer'?'同じ新入生の':'';
- if(source==='bystander'){
-  if(c.initiative>=3&&c.warmth>=3)return 'あ、名乗ってなかったね。'+base+p.name+'です。よろしく。';
-  return 'そういえば、'+p.name+'です。よろしく。';
- }
- if(c.voice==='reserved'||c.voice==='precise')return '改めて、'+p.name+'です。';
- if(c.voice==='energetic'||c.voice==='friendly')return 'あ、'+p.name+'です。よろしく！';
- return 'そういえばまだ直接話してなかったね。'+base+p.name+'です。';
+ const c=P.people[id],p=people[id];
+ if(source==='bystander')return (c.initiative>=3&&c.warmth>=3?'そういえば名乗ってなかったね。':'初めまして、')+p.name+'です。';
+ if(Number(p.year)===1)return p.name+'です。自分も新入生で、見学に来ています。';
+ if(c.voice==='energetic'||c.voice==='friendly')return p.name+'です。よろしくね。';
+ if(c.voice==='reserved'||c.voice==='precise')return p.name+'です。よろしく。';
+ return p.name+'です。今日はよろしくね。';
 };
 const sceneLine=line=>Story.lines[line.group_id+'|'+line.speaker_id+'|'+line.order]||sceneCorrections[line.group_id+'|'+line.speaker_id+'|'+line.order]||P.sceneOverrides[line.group_id+'|'+line.speaker_id+'|'+line.order]||
  P.sceneOverrides[line.group_id+'|'+line.speaker_id]||line.text;
@@ -179,7 +189,11 @@ const thirdParty=(targetId,gid,state,action)=>{
  const introRoll=(((Math.imul(seed^0x2b992ddf,3266489917)>>>0)%1000)/1000);
  const spontaneousIntro=introEligible&&introRoll<Math.min(.6,.13+trait.expressiveness*.1);
  let words;
- if(action==='photo'){
+ if(action==='producer'){
+  words=yr===1&&targetYear>1?'その曲なら私も聴いたことがあります。':yr===1?'その曲、どこかで聴いたことあるかも。':'その名義の話、気になるよね。';
+ }else if(action==='music'){
+  words=yr===1&&targetYear>1?'そのパートの話、私も聞いてみたかったです。':yr===1?'それ、私も気になってた。':'その楽器の話、続きが気になるね。';
+ }else if(action==='photo'){
   words=yr===1&&targetYear>1?'先輩、写真を上げるときって公開範囲も決められるんですね。':
    yr===1?'あ、私も写真を見ることはあるよ。':
    '投稿を見るだけの人もいるし、使い方はそれぞれだよね。';
