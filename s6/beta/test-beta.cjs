@@ -5,13 +5,14 @@ const root=path.resolve(__dirname,'..');
 const dataCode=fs.readFileSync(path.join(root,'game-data.js'),'utf8');
 const profileCode=fs.readFileSync(path.join(__dirname,'character-profiles.js'),'utf8');
 const socialCode=fs.readFileSync(path.join(__dirname,'social-personas.js'),'utf8');
+const postIndexCode=fs.readFileSync(path.join(__dirname,'social-post-index.js'),'utf8');
 const musicCode=fs.readFileSync(path.join(__dirname,'music-profiles.js'),'utf8');
 const storyCode=fs.readFileSync(path.join(__dirname,'story-vocaloid.js'),'utf8');
 const routesCode=fs.readFileSync(path.join(__dirname,'story-routes.js'),'utf8');
 const dialogueCode=fs.readFileSync(path.join(__dirname,'dialogue-engine.js'),'utf8');
 const game=fs.readFileSync(path.join(__dirname,'game.js'),'utf8');
 const dataScope={window:{}};vm.runInNewContext(dataCode,dataScope);
-vm.runInNewContext(profileCode,dataScope);vm.runInNewContext(socialCode,dataScope);vm.runInNewContext(musicCode,dataScope);vm.runInNewContext(storyCode,dataScope);vm.runInNewContext(routesCode,dataScope);vm.runInNewContext(dialogueCode,dataScope);
+vm.runInNewContext(profileCode,dataScope);vm.runInNewContext(socialCode,dataScope);vm.runInNewContext(postIndexCode,dataScope);vm.runInNewContext(musicCode,dataScope);vm.runInNewContext(storyCode,dataScope);vm.runInNewContext(routesCode,dataScope);vm.runInNewContext(dialogueCode,dataScope);
 const D=dataScope.window.S6_DATA;
 let total=0, failures=0;
 function check(name,fn){try{fn();total++;console.log('PASS',name)}catch(e){failures++;console.error('FAIL',name,e.stack||e)}}
@@ -20,7 +21,7 @@ function makeSession(cache=new Map()){
  const app={set innerHTML(v){html=v},get innerHTML(){return html},addEventListener(n,f){if(n==='click')onClick=f}};
  const doc={getElementById:id=>id==='app'?app:fields[id]||null};
  const storage={getItem:k=>cache.get(k)||null,setItem:(k,v)=>cache.set(k,v)};
- const win={S6_DATA:D,S6_BETA_PROFILES:dataScope.window.S6_BETA_PROFILES,S6_BETA_SOCIAL:dataScope.window.S6_BETA_SOCIAL,S6_BETA_STORY:dataScope.window.S6_BETA_STORY,S6_BETA_MUSIC:dataScope.window.S6_BETA_MUSIC,S6_BETA_ROUTES:dataScope.window.S6_BETA_ROUTES,S6_BETA_DIALOGUE:dataScope.window.S6_BETA_DIALOGUE,scrollTo(){}};
+ const win={S6_DATA:D,S6_BETA_PROFILES:dataScope.window.S6_BETA_PROFILES,S6_BETA_SOCIAL:dataScope.window.S6_BETA_SOCIAL,S6_BETA_POST_ACTIVITY:dataScope.window.S6_BETA_POST_ACTIVITY,S6_BETA_STORY:dataScope.window.S6_BETA_STORY,S6_BETA_MUSIC:dataScope.window.S6_BETA_MUSIC,S6_BETA_ROUTES:dataScope.window.S6_BETA_ROUTES,S6_BETA_DIALOGUE:dataScope.window.S6_BETA_DIALOGUE,scrollTo(){}};
  vm.runInNewContext(game,{window:win,document:doc,localStorage:storage});
  return {
   get html(){return html},
@@ -733,7 +734,7 @@ check('Photogram immediate followers appear the same night even without a post',
  assert.doesNotMatch(s.state.groupLog['E01-A'][0].text,/翌日|明日/);
  s.click('back-venue');s.click('finish-venue');s.click('night-sns','Photogram');
  assert.match(s.html,/フォロー中 1人/);assert.ok(s.html.includes(account.handle));
- assert.match(s.html,/投稿がない相手もここで確認できます/);
+ assert.match(s.html,/投稿0件（この日時点）/);
 });
 check('Photogram next-day approval is distinguishable from a confirmed follow',()=>{
  const s=newPlayer();visit(s,'E01','E01-A');
@@ -824,6 +825,65 @@ check('180 seeded five-day runs with three circles and three actions reach coher
   s.click(c==='K'?'meet-producer':'finish-other');
   assert.equal(s.state.phase,'end');assert.match(s.html,/THE END/);
  }
+});
+
+
+check('all 96 people have explicit platform post inventories, including zero posts',()=>{
+ const I=dataScope.window.S6_BETA_POST_ACTIVITY;
+ assert.equal(Object.keys(I.people).length,96);
+ let accounts=0,posts=0,initial=0;
+ for(const p of D.people){
+  const row=I.people[p.person_id];
+  assert.equal(row.person_id,p.person_id);
+  assert.deepEqual(Object.keys(row.accounts).sort(),['TINE','Photogram','Zitter'].sort());
+  for(const platform of ['TINE','Photogram','Zitter']){
+   const a=row.accounts[platform];
+   const canonical=D.accounts.find(x=>x.person_id===p.person_id&&x.platform===platform);
+   if(!canonical){assert.equal(a,null);assert.equal(I.at(p.person_id,platform,'2026-04-10'),null);continue}
+   accounts++;
+   assert.equal(a.account_id,canonical.account_id);
+   const realPosts=D.posts.filter(x=>x.author_id===p.person_id&&x.platform===platform);
+   assert.equal(a.total_scripted_posts,realPosts.length);
+   assert.equal(a.starting_posts,realPosts.filter(x=>x.published_at.slice(0,10)<'2026-04-06').length);
+   const now=I.at(p.person_id,platform,'2026-04-10');
+   assert.equal(now.start,a.starting_posts);
+   assert.equal(now.count,realPosts.filter(x=>x.published_at.slice(0,10)<='2026-04-10').length);
+   posts+=a.total_scripted_posts;initial+=a.starting_posts;
+  }
+ }
+ assert.equal(accounts,235);assert.equal(posts,24);assert.equal(initial,2);
+});
+check('future posts are not counted before they exist; no-account differs from zero-post',()=>{
+ const I=dataScope.window.S6_BETA_POST_ACTIVITY;
+ assert.equal(I.at('P001','Photogram','2026-04-06').count,1);
+ assert.equal(I.at('P001','Zitter','2026-04-06').count,0);
+ assert.equal(I.at('P001','Zitter','2026-04-11').count,1);
+ assert.equal(I.at('P012','Photogram','2026-04-06').count,0);
+ assert.equal(I.at('P012','Photogram','2026-04-08').count,2);
+ assert.equal(I.at('P012','Photogram','2026-04-10').count,2);
+ assert.equal(I.at('P012','Photogram','2026-04-11').count,3);
+ assert.equal(I.at('P019','Photogram','2026-04-06').count,0);
+ assert.equal(I.at('P019','Photogram','2026-04-06').start,0);
+ assert.equal(I.at('P006','TINE','2026-04-10').count,0);
+ assert.equal(I.at('P095','Zitter','2026-04-06'),null);
+});
+check('following someone with a private pre-game post shows truthful count after approval',()=>{
+ const s=newPlayer();visit(s,'E01','E01-A');
+ s.click('action-menu','photo');s.click('act-target','P003');
+ s.click('back-venue');s.click('finish-venue');
+ s.click('night-sns','Photogram');
+ assert.doesNotMatch(s.html,/pg_003|あんちゃん.*投稿1件/);
+ s.click('back-night');s.click('next-day');s.click('skip');
+ s.click('night-sns','Photogram');
+ assert.match(s.html,/投稿1件（この日時点）/);
+ assert.match(s.html,/新歓開始前 1件/);
+});
+check('public SNS post count is based on actual dated posts, not inferred history',()=>{
+ const first=newPlayer();first.click('skip');first.click('night-sns','Photogram');
+ assert.match(first.html,/投稿1件 ／ 2026-04-05/);
+ assert.doesNotMatch(first.html,/S23|2026-04-11/);
+ const second=newPlayer();second.click('skip');second.click('night-sns','Zitter');
+ assert.match(second.html,/投稿1件 ／ 2026-04-06/);
 });
 
 console.log(JSON.stringify({passed:total,failed:failures}));if(failures)process.exitCode=1;
