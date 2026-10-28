@@ -59,9 +59,9 @@ check('an existing acquaintance never gets a second free introduction',()=>{
  const s=newPlayer();visit(s,'E01','E01-A');s.click('back-venue');s.click('finish-venue');s.click('next-day');s.click('skip');s.click('next-day');
  s.click('attend','E06');s.click('join-group','E06-A');assert.ok(!s.state.flash.includes('P003'));
 });
-check('speaker portrait and A/B chat labels accompany every group line',()=>{
+check('speaker portrait and stable provisional labels accompany every group line',()=>{
  const s=newPlayer();visit(s,'E01','E01-A');assert.match(s.html,/chat-line/);assert.match(s.html,/chat-avatar/);
- assert.match(s.html,/参加者A/);assert.match(s.html,/p003.webp/);
+ assert.match(s.html,/人物0[1-9]/);assert.match(s.html,/p003.webp/);
 });
 check('freshman peers show highlighted photo and identity hint without permanent name',()=>{
  const s=newPlayer();s.click('attend','E01');s.click('join-group','E01-C');
@@ -70,7 +70,7 @@ check('freshman peers show highlighted photo and identity hint without permanent
 });
 check('the actions offer three attempts per group',()=>{
  const s=newPlayer();visit(s,'E01','E01-A');
- for(const q of ['話しかける','質問する','連絡先を頼む','聞き耳を立てる'])assert.ok(s.html.includes(q));
+ for(const q of ['話しかける','質問する','SNS・連絡先を聞く','聞き耳を立てる'])assert.ok(s.html.includes(q));
  s.click('action-menu','talk');s.click('act-target','P003');assert.match(s.html,/受付にいると/);assert.doesNotMatch(s.html,/と声をかけてくれた/);
  s.click('action-menu','question');assert.match(s.html,/担当しているパート/);
  s.click('ask-affiliation','P003');assert.equal(s.state.knownOrg.P003,'L');
@@ -885,6 +885,78 @@ check('public SNS post count is based on actual dated posts, not inferred histor
  assert.doesNotMatch(first.html,/S23|2026-04-11/);
  const second=newPlayer();second.click('skip');second.click('night-sns','Zitter');
  assert.match(second.html,/投稿1件 ／ 2026-04-06/);
+});
+
+
+check('provisional labels can be edited in notebook and persist throughout scenes',()=>{
+ const s=newPlayer();visit(s,'E01','E01-A');
+ const provisional=s.state.seen.indexOf('P003')+1;
+ const tag='人物'+String(provisional).padStart(2,'0');
+ assert.match(s.html,new RegExp(tag));
+ assert.doesNotMatch(s.html,/chat-speaker">神谷杏奈/);
+ s.click('back-venue');s.click('finish-venue');s.click('open-notebook');s.click('open-identity','P003');
+ assert.match(s.html,/この人物の表示名/);
+ s.field('aliasName','神谷さん？');s.field('faceNote','眼鏡の人とは別');
+ s.click('save-note');assert.equal(s.state.aliases.P003,'神谷さん？');assert.match(s.html,/神谷さん？/);
+ s.click('back-from-notebook');assert.equal(s.state.phase,'night');
+ s.click('next-day');s.click('skip');s.click('next-day');
+ visit(s,'E06','E06-A');assert.match(s.html,/神谷さん？/);
+ s.click('back-venue');s.click('finish-venue');s.click('open-notebook');s.click('open-identity','P003');
+ s.field('aliasName','');s.click('save-note');assert.ok(!s.state.aliases.P003);
+ assert.match(s.html,new RegExp(tag));
+});
+check('nested notebook and producer profile returns work in both directions',()=>{
+ const s=newPlayer();
+ s.click('open-notebook');assert.equal(s.state.phase,'notebook');
+ s.click('open-producer-profile');assert.equal(s.state.phase,'producer-profile');
+ s.click('open-notebook');assert.equal(s.state.phase,'notebook');
+ s.click('back-from-notebook');assert.equal(s.state.phase,'producer-profile');
+ s.click('back-producer-profile');assert.equal(s.state.phase,'notebook');
+ s.click('back-from-notebook');assert.equal(s.state.phase,'day');
+ const t=newPlayer();t.click('skip');t.click('open-producer-profile');t.click('open-notebook');
+ t.click('back-from-notebook');assert.equal(t.state.phase,'producer-profile');
+ t.click('back-producer-profile');assert.equal(t.state.phase,'night');
+});
+check('source of producer facts includes date, event name and conversation circle',()=>{
+ const s=newPlayer();visit(s,'E02','E02-A');
+ assert.match(s.html,/ボカロ曲の音作り/);
+ s.click('action-menu','question');s.click('ask-producer','P040');
+ assert.match(s.html,/ギターの録音|底なしサイダー/);
+ assert.ok(s.state.profileEvidence.length>=1);
+ assert.match(s.state.profileEvidence[0].recordedAt,/2026年4月6日（月曜）/);
+ assert.match(s.state.profileEvidence[0].recordedAt,/DTM公開制作/);
+ assert.match(s.state.profileEvidence[0].recordedAt,/ボカロ曲の音作り/);
+ s.click('back-venue');s.click('finish-venue');s.click('open-producer-profile');
+ assert.match(s.html,/出所：2026年4月6日/);
+ assert.match(s.html,/制作仲間からの伝聞/);
+});
+check('asking identical question twice gives different response and no repeat clue',()=>{
+ const s=newPlayer();visit(s,'E01','E01-A');
+ s.click('action-menu','question');s.click('ask-producer','P003');
+ const first=s.state.groupLog['E01-A'][0].text,known=s.state.routeVisits.length;
+ s.click('action-menu','question');s.click('ask-producer','P003');
+ const second=s.state.groupLog['E01-A'][1].text;
+ assert.doesNotMatch(first,/さっき伝えたこと以上/);
+ assert.match(second,/さっき伝えたこと以上/);
+ assert.equal(s.state.routeVisits.length,known);
+ assert.equal(s.state.groupLog['E01-A'][1].type,'聞き直し');
+ const t=newPlayer();visit(t,'E01','E01-A');
+ t.click('action-menu','question');t.click('act-target','P003');t.click('action-menu','question');t.click('act-target','P003');
+ assert.match(t.state.groupLog['E01-A'][1].text,/さっき話した通り/);
+});
+check('one SNS action requests TINE and Photogram under independent policies',()=>{
+ const s=newPlayer();visit(s,'E01','E01-A');
+ assert.match(s.html,/SNS・連絡先を聞く/);
+ assert.doesNotMatch(s.html,/data-act="action-menu" data-id="photo"/);
+ s.click('action-menu','social');assert.equal(s.state.phase,'choose');
+ s.click('act-target','P003');
+ assert.ok(s.state.contacts.includes('P003'));
+ assert.ok(s.state.photoRequests.includes('P003'));
+ assert.ok(!s.state.photoFollows.includes('P003'));
+ assert.match(s.state.groupLog['E01-A'][0].text,/TINE/);
+ assert.match(s.state.groupLog['E01-A'][0].text,/Photogram/);
+ s.click('back-venue');s.click('finish-venue');s.click('next-day');
+ assert.ok(s.state.photoFollows.includes('P003'));
 });
 
 console.log(JSON.stringify({passed:total,failed:failures}));if(failures)process.exitCode=1;
