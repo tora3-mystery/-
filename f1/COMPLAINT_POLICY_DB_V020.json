@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "sourceVersion": "F1 v0.20.4",
-  "purpose": "F1 audit inventory: 50 current actions, 30 first-day complaint variants, 12 basic followups, 27 policy side-effect comments and 38 integrated late-game messages. Regressions verify game/DB synchronization.",
+  "sourceVersion": "F1 v0.20.5",
+  "purpose": "F1 policy/complaint inventory. Every selectable regular phrase maps to 1–2 policies; no extra random policy lottery. Runtime tests verify alignment.",
   "categories": [
     "レジ待ち",
     "通路混雑",
@@ -1300,78 +1300,129 @@
   ],
   "discoveryRules": [
     {
-      "pattern": "レジに20分並びました|会計まで20分かかりました|レジが長蛇の列|レジの列が長",
+      "pattern": "レジに20分並びました|会計まで20分かかりました",
       "actionIds": [
         "register",
-        "staff",
-        "queueExpress",
         "pickup"
       ]
     },
     {
-      "pattern": "レジの最後尾がどこか分かりません|閉店間際なのに、レジが一台しか開いていません|レジが1台しか開いていません|会計の列が、買い物かご売場まで伸びています",
+      "pattern": "レジが長蛇の列|レジの列が長",
+      "actionIds": [
+        "staff",
+        "queueExpress"
+      ]
+    },
+    {
+      "pattern": "レジの最後尾がどこか分かりません|会計の列が、買い物かご売場まで伸びています",
       "actionIds": [
         "ticket",
-        "display",
+        "display"
+      ]
+    },
+    {
+      "pattern": "閉店間際なのに、レジが一台しか開いていません|レジが1台しか開いていません",
+      "actionIds": [
         "shift",
         "self"
       ]
     },
     {
-      "pattern": "カートが通れませんでした|カートとベビーカーが通路ですれ違えません|通路ですれ違えません|何度も引き返しました",
+      "pattern": "カートが通れませんでした|カートとベビーカーが通路ですれ違えません",
       "actionIds": [
         "lane",
+        "cartSigns"
+      ]
+    },
+    {
+      "pattern": "通路ですれ違えません|何度も引き返しました",
+      "actionIds": [
         "floorcheck",
         "cartSigns"
       ]
     },
     {
-      "pattern": "車椅子が通れません|通路の真ん中に商品が置かれていて|出口に出るまで遠回りでした",
+      "pattern": "車椅子が通れません",
       "actionIds": [
         "compact",
-        "cartSigns",
-        "floorcheck"
+        "cartSigns"
       ]
     },
     {
-      "pattern": "夕食の材料がまた品切れ|いつもの商品が見つかりません",
+      "pattern": "通路の真ん中に商品が置かれていて|出口に出るまで遠回りでした",
+      "actionIds": [
+        "floorcheck",
+        "compact"
+      ]
+    },
+    {
+      "pattern": "夕食の材料がまた品切れ",
+      "actionIds": [
+        "eveningRestock",
+        "limit"
+      ]
+    },
+    {
+      "pattern": "いつもの商品が見つかりません",
       "actionIds": [
         "delivery",
-        "farmer",
-        "limit",
-        "eveningRestock"
+        "farmer"
       ]
     },
     {
-      "pattern": "牛乳がありません|売り切れでした|品切れでした",
+      "pattern": "牛乳がありません|売り切れでした",
       "actionIds": [
         "receive",
-        "forecast",
-        "eveningRestock"
-      ]
-    },
-    {
-      "pattern": "棚札はあるのに|補充予定を聞いても|昨日あった商品が",
-      "actionIds": [
-        "shelfcheck",
-        "stockCover",
         "forecast"
       ]
     },
     {
-      "pattern": "店内放送が大きくて|アナウンスが途切れず|落ち着いて商品を選ぶことができません",
+      "pattern": "品切れでした",
       "actionIds": [
-        "quiet",
-        "vibration",
-        "quietNotices"
+        "receive",
+        "eveningRestock"
       ]
     },
     {
-      "pattern": "呼び出しが重なって|案内放送が繰り返され|特売放送が重なっています|呼出音が",
+      "pattern": "棚札はあるのに|補充予定を聞いても",
+      "actionIds": [
+        "shelfcheck",
+        "stockCover"
+      ]
+    },
+    {
+      "pattern": "昨日あった商品が",
+      "actionIds": [
+        "forecast",
+        "shelfcheck"
+      ]
+    },
+    {
+      "pattern": "店内放送が大きくて|アナウンスが途切れず",
+      "actionIds": [
+        "quiet",
+        "vibration"
+      ]
+    },
+    {
+      "pattern": "落ち着いて商品を選ぶことができません",
       "actionIds": [
         "quietNotices",
+        "quiet"
+      ]
+    },
+    {
+      "pattern": "呼び出しが重なって|案内放送が繰り返され",
+      "actionIds": [
         "quietDesk",
         "rest"
+      ]
+    },
+    {
+      "pattern": "特売放送が重なっています|呼出音が",
+      "actionIds": [
+        "quietNotices",
+        "quietDesk"
       ]
     },
     {
@@ -1412,8 +1463,7 @@
       "hint": "混雑時間に応援を固定配置",
       "actionIds": [
         "queueExpress",
-        "staff",
-        "shift"
+        "staff"
       ],
       "fromDay": 2
     },
@@ -1443,7 +1493,6 @@
       "hint": "セルフレジがいつも混んで",
       "actionIds": [
         "self",
-        "shift",
         "queueReset"
       ],
       "fromDay": 3
@@ -1454,7 +1503,6 @@
       "hint": "入口に待ち時間を掲示",
       "actionIds": [
         "display",
-        "ticket",
         "queueReset"
       ],
       "fromDay": 4
@@ -1485,8 +1533,7 @@
       "hint": "営業時間と人員を見直して",
       "actionIds": [
         "night",
-        "shift",
-        "queueExpress"
+        "shift"
       ],
       "fromDay": 5
     },
