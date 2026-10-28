@@ -150,7 +150,7 @@ function group(){
  '<p class="status">あと '+remaining+' 回行動できます</p>'+
  (remaining?'<div class="paper"><h3>この輪でどう過ごす？</h3><p class="dim">誰と何を話すか決めましょう。交流はこの輪で3回まで。</p>'+
  '<div class="actions">'+btn('話しかける','action-menu','talk')+btn('質問する','action-menu','question')+
- btn('連絡先を頼む','action-menu','contact')+btn('Photogramを聞く','action-menu','photo')+btn('聞き耳を立てる','listen-group','','ghost')+'</div></div>':
+ btn('SNS・連絡先を聞く','action-menu','social')+btn('聞き耳を立てる','listen-group','','ghost')+'</div></div>':
  '<div class="notice">この輪では十分に話した。次の輪へ移れます。</div>')+
  '<div class="actions">'+btn('会場のほかの輪へ戻る','back-venue','','ghost')+'</div>';
 }
@@ -161,12 +161,12 @@ function chooseAction(){
   const q=qmap[id],name=displayName(id);
   return '<div class="person-card">'+portrait(id,peerClass(id))+'<div><strong>'+esc(name)+'</strong><p class="dim">'+esc(relationship(id))+esc(contactBadge(id))+'</p>'+
   (questionMode?'<p class="dim">'+esc(Dialogue.questionText(q))+'</p>':'')+
-  btn(questionMode?'この質問をする':mode==='contact'?'交換を頼む':mode==='photo'?'Photogramを聞く':'話しかける','act-target',id,'mini')+
+  btn(questionMode?'この質問をする':mode==='social'?'SNSについて聞く':mode==='contact'?'交換を頼む':mode==='photo'?'Photogramを聞く':'話しかける','act-target',id,'mini')+
   (questionMode&&q?btn('所属について聞く','ask-affiliation',id,'mini ghost'):'')+
    (questionMode?btn('余白ラムネの話','ask-producer',id,'mini ghost')+btn('音楽経験を聞く','ask-music',id,'mini ghost'):'')+'</div></div>';
  }).join('');
  return '<div class="eyebrow">'+esc(groups[S.group].group_title)+'</div><h2>'+
- (mode==='talk'?'誰に話しかける？':mode==='contact'?'誰に連絡先を頼む？':mode==='photo'?'誰のPhotogramを聞く？':'誰に何を聞く？')+'</h2>'+
+ (mode==='talk'?'誰に話しかける？':mode==='social'?'誰にSNSを聞く？':mode==='contact'?'誰に連絡先を頼む？':mode==='photo'?'誰のPhotogramを聞く？':'誰に何を聞く？')+'</h2>'+
  '<p>顔を見比べながら話す相手を選びます。会場で聞いた名前を思い出せるでしょうか。</p>'+
  '<div class="person-list">'+items+'</div>'+btn('輪に戻る','back-group','','ghost');
 }
@@ -415,7 +415,7 @@ function handle(act,id){
  }
  case 'action-menu':{
   if(S.phase!=='group'||!S.group||(S.groupLog[S.group]||[]).length>=3)return;
-  if(!['talk','question','contact','photo'].includes(id))return;
+  if(!['talk','question','social','contact','photo'].includes(id))return;
   S.mode=id;go('choose');break;
  }
  case 'back-group':if(S.phase==='choose')go('group');break;
@@ -470,6 +470,38 @@ function handle(act,id){
        '曲は'+(m.composition.original&&m.composition.cover?'オリジナルもコピーもやるよ。':m.composition.original?'オリジナルを作ることが多いよ。':'コピー曲を演奏することが多いよ。')};
      kind='音楽経験';
      S.musicKnown[id]=true;recordConversation(id,'question');
+   }else if(type==='social'){
+    kind='SNSの交換';
+    const texts=[];
+    const tine=accounts[id+'|TINE'];
+    if(S.contacts.includes(id))texts.push('TINEはもう交換済みだね。');
+    else if(S.pendingContacts.includes(id))texts.push('TINEは申請を確認中だよ。');
+    else if(tine){
+      const contact=Dialogue.contact(id,S.group,S);
+      if(contact.result==='accept'){
+        S.contacts.push(id);
+        texts.push('TINEは「'+(contact.accountName||tine.display_name)+'」。交換しよう。');
+      }else if(contact.result==='pending'){
+        S.pendingContacts.push(id);
+        texts.push('TINEは明日申請を確認するね。');
+      }else texts.push('TINEはもう少し話してからにしよう。');
+    }
+    const photo=accounts[id+'|Photogram'];
+    const rule=D.contactChannels.find(x=>x.group_id===S.group&&x.person_id===id&&x.platform==='Photogram');
+    const policy=rule?.approval_policy||'after_week';
+    if(S.photoFollows.includes(id))texts.push('Photogramはフォローしてくれているね。');
+    else if(S.photoRequests.includes(id))texts.push('Photogramは申請を受け取っているよ。');
+    else if(photo){
+      if(policy==='after_week')texts.push('Photogramは今週、新しいフォローを受け付けていないんだ。公開投稿なら見られるよ。');
+      else if(policy==='next_day'){
+        S.photoRequests.push(id);
+        texts.push('Photogramは「'+photo.display_name+'」。フォローは明日確認するね。');
+      }else{
+        S.photoFollows.push(id);
+        texts.push('Photogramは「'+photo.display_name+'」。フォローしていいよ。');
+      }
+    }
+    reply={text:texts.join(' ')||'今はSNSは使っていないんだ。'};
    }else if(type==='photo'){
     const account=accounts[id+'|Photogram'];
     const rule=D.contactChannels.find(x=>x.group_id===S.group&&x.person_id===id&&x.platform==='Photogram');
