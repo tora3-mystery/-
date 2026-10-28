@@ -115,16 +115,25 @@ const affected=SHOPS.filter(d=>d.id!==action.id).map(d=>({id:d.id,before:allBefo
 const result={review:rev,transition,before,after,affected,npc,sns,neighbor,month:next.month};
 next.last=result;next.view="result";next.feed.push({month:next.month,kind:"player",...rev});if(npc)next.feed.push({month:next.month,kind:"npc",...npc});if(sns)next.feed.push({month:next.month,kind:"sns",...sns});return next;}
 function finish(state){if(state.month<12)throw Error("not finished");const ls=SHOPS.map(d=>({d,s:state.shops[d.id]}));const closed=ls.filter(x=>x.s.closed).length;const totalStages=ls.reduce((n,x)=>n+routeFor(x.s).stage,0);const local=ls.reduce((n,x)=>n+x.s.locals,0),vis=ls.reduce((n,x)=>n+x.s.visitors,0);
-let title,description;if(closed>=2){title="シャッターが増えた通り";description="新しい看板よりも、閉まったシャッターが目立つ。口コミだけでは店を支えきれなかった。";}
-else if(totalStages>=7&&vis>local){title="よそから人が来る商店街";description="新しい看板と初めての客が増えた。昔からの顔ぶれは、少し減った。";}
-else if(totalStages>=7){title="看板が変わり続ける街";description="一年で店の顔がすっかり変わった。変わらないのは通りの名前くらいだ。";}
-else if(totalStages<=1&&closed===0){title="いつもの商店街";description="大きな改装は起きなかった。いつもの時間に、いつもの店が開いている。";}
-else if(local>vis*2.2&&closed===0){title="常連のいる商店街";description="話題にならなくても、通い続ける理由がそれぞれの店に残った。";}
-else if(ls.filter(x=>x.s.money<40).length>=2){title="踏ん張る商店街";description="元気な店も苦しい店もある。来年も看板が灯っているかは、まだ分からない。";}
+let title,description;
+const ramen=state.shops.ramen,cake=state.shops.cake,cafe=state.shops.cafe;
+const ramenRoute=routeFor(ramen),cakeRoute=routeFor(cake),cafeRoute=routeFor(cafe);
+const ramenHardReviews=ramen.history.filter(h=>h.genre==="taste"&&h.star<=2).length;
+const cakePraise=cake.history.filter(h=>h.genre==="identity"&&h.star>=4).length;
+if(closed>=1){title="シャッターのある通り";description="一年で閉まった店もある。隣の店には、新しい看板が掛かった。";}
+else if(ls.filter(x=>x.s.money<40).length>=2){title="踏ん張る商店街";description="値段も商品も見直した。売上が安定したとは言えないが、灯りは消えていない。";}
+else if(ramenHardReviews>=3&&ramenRoute.genre==="identity"&&ramenRoute.polarity==="plus"&&ramenRoute.stage>=3){title="硬麺の看板が残る通り";description="麺への厳しい口コミが続いた。岩城は看板を下ろす代わりに、硬さを突き詰める道を選んだ。";}
+else if(cakePraise>=3&&cakeRoute.genre==="identity"&&cakeRoute.polarity==="plus"&&cakeRoute.stage>=3){title="新作が止まらない商店街";description="褒められるたび新商品が並ぶ。洋菓子店のショーケースは、もう昨年の面影がない。";}
+else if(cafeRoute.genre==="mood"&&cafeRoute.polarity==="plus"&&cafeRoute.stage>=4){title="静かな時間の商店街";description="目立つ看板だけが商売ではない。静かな一杯を求めて、人が通う街になった。";}
+else if(totalStages>=6&&vis>=local*0.8){title="よそから人が来る商店街";description="見慣れない客が増えた。新しい看板の下に、昔からの常連も座っている。";}
+else if(totalStages>=7){title="看板が変わり続ける街";description="一年前の写真と見比べると、同じ通りとは思えない。それでも店主は変わらず店先に立つ。";}
+else if(totalStages<=2){title="いつもの商店街";description="大きな改装は起きなかった。毎朝、いつもの時間にシャッターが開く。";}
+else if(local>vis*2.2){title="常連のいる商店街";description="外からは静かに見える。でも、ここに来る理由を知っている人は多い。";}
 else if(ls.filter(x=>routeFor(x.s).genre==="identity"&&routeFor(x.s).stage>=2).length>=2){title="個性の競演する通り";description="三軒三様、引かないこだわりが並ぶ。看板だけで好みが分かれそうだ。";}
 else if(ls.filter(x=>routeFor(x.s).genre==="price"&&routeFor(x.s).stage>=2).length>=2){title="値札が話題の商店街";description="値段を見直した店が増えた。高いか安いかより、その理由が街の話題になった。";}
+else if(ls.filter(x=>routeFor(x.s).genre==="taste"&&routeFor(x.s).stage>=2).length>=2){title="味が変わった商店街";description="麺も珈琲もケーキも、同じ味ではいられなかった。それぞれの店が試作を続けている。";}
 else if(totalStages>=4){title="それぞれ違う商店街";description="進んだ方向はばらばら。それでも店主たちは、ここで商売を続けている。";}
-else{title="少し変わった商店街";description="一年で何もかもが変わったわけではない。それでも、入口の看板は少し違って見える。";}
+else{title="少し変わった商店街";description="一年で何もかもが変わったわけではない。入口の看板は少し違って見える。";}
 const shops=ls.map(({d,s})=>{const view=display(s,d.id),count=s.history.length,last=s.history[count-1],ownerLine=s.closed?
 (d.id==="ramen"?"「鍋の火は止めました。それでも麺の話は、まだ終わっていません。」":d.id==="cafe"?"「この椅子に座っていた人のことは、忘れないと思います。」":"「最後のお菓子だけは、ちゃんと焼き上げました。」"):
 count===0?"「口コミはいただきませんでしたが、今日も店を開けています。」":
