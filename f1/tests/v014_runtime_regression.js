@@ -98,7 +98,7 @@ function test(html){
  const zero=app();zero.d.restart();zero.d.setState({day:3,attraction:0,vals:[5,5,5,5],days:[{day:1,sales:50},{day:2,sales:10}],revenue:60});
  step(zero,'idle');
  assert(zero.d.getState().endingReason==='店長解任・営業停止','Zero-day firing');
- const eerie=app();eerie.d.restart();
+ const eerie=app();eerie.d.restart();eerie.d.setState({...eerie.d.getState(),policySeed:1,complaintTickets:null});
  for(const id of ['productCheck','inspectBack','audit','camera0','open0'])step(eerie,id);
  assert(eerie.d.getState().day===6&&eerie.d.getState().odd===3,'Ten-comment route reaches DAY 6');
  const six=eerie.get('complaintBoard').children;
