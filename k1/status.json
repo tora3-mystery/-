@@ -2,20 +2,31 @@
   "projectId": "K1",
   "title": "掲示物をご確認ください。（仮）",
   "version": "α0.6.2",
-  "updatedAtJST": "2026-10-29 05:44 JST",
+  "updatedAtJST": "2026-10-29 05:47 JST",
   "phase": "Phase 3/4 — image pilot integrated; human review pending",
   "aiAudit": {
-    "logic": "Existing alpha 0.6.1 3125-branch proof retained; mechanics unchanged in 0.6.2",
-    "ui": "JS syntax and mock DOM checks for board, hallway/door, post tab, night barrier passed"
+    "logic": "K1 alpha0.6.2 complete 3125/3125 combination regression; DAY1/2/3/10 posters=1/5/20/38; 12 decisions, endgame reachable",
+    "ui": "JS syntax + DOM mock verified board notices, hallway/door images, post tab and night barrier; image references present in main"
   },
   "browserAudit": {
-    "status": "not_run",
-    "viewportChecksRequired": [
+    "status": "responsive-layout-fixture-only",
+    "viewports": [
       320,
       390,
       428
     ],
-    "livePagesCheck": "not_run"
+    "noticeCounts": [
+      1,
+      5,
+      20,
+      38
+    ],
+    "cases": 12,
+    "horizontalOverflow": 0,
+    "testEnvironment": "Chromium with same CSS and placeholder image fixture; not production page",
+    "livePagesCheck": "not verified; attempted direct fetch was inaccessible",
+    "genuineImagesInBrowser": "not verified",
+    "fullGameInteraction": "not run"
   },
   "humanReview": {
     "lastReviewedVersion": "α0.6.1",
@@ -30,6 +41,6 @@
     "productionStatus": "not commissioned; await mobile visual/human review"
   },
   "nextOwner": "K1 Chat and human reviewer",
-  "nextAction": "Check alpha0.6.2 in browser at 320/390/428, notice legibility through day 10 and image cropping. Then decide on eight state-difference images.",
+  "nextAction": "Human review alpha0.6.2 photos at real Pages widths 320/390/428 and on mobile; check notice readability on Day10, gallery crop and media loading. Only then commission remaining 8 state-difference assets.",
   "scope": "k1/ only"
 }
