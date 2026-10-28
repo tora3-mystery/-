@@ -4,7 +4,7 @@
   "title": "口コミへの返信をご確認ください。（仮）",
   "nickname": "くちへん（仮）",
   "version": "0.1.0-alpha",
-  "updatedAtJST": "2026-10-29T05:26:47+09:00",
+  "updatedAtJST": "2026-10-29T05:27:34+09:00",
   "phase": "Phase 3実装済・Phase 4初期監査済・α試作公開（人間レビュー待ち）",
   "repository": "tora3-mystery/short-ui-games",
   "scope": "r1/",
@@ -13,11 +13,12 @@
     "shops": 3,
     "months": 12,
     "reviewOptions": "星1〜5 × 商品・味／接客／価格／雰囲気／個性",
-    "evolution": "各店舗10方向・0〜3段階・閉店分岐",
-    "extras": "店主返信、他者口コミ、SNS、口コミ履歴、localStorage保存・再開、一年後の商店街と店舗別後日談"
+    "evolution": "各店舗10方向・0〜3段階・閉店分岐。仮CSS外観も味／接客／価格／雰囲気／個性×肯定／否定で差分。",
+    "extras": "店主返信、他者口コミ、SNS、口コミ履歴、localStorage保存・再開、一年後の商店街と店舗別後日談",
+    "spillovers": "ラーメン屋の接客・価格低評価→喫茶への客流入、洋菓子高評価→喫茶への来訪、喫茶の雰囲気高評価→ラーメン屋への来訪"
   },
   "aiAudit": {
-    "status": "初期エンジンV8 PASS／最新パッチは静的監査のみ",
+    "status": "初回V8ロジック試験PASS／最終差分は静的構文・参照監査（再シミュレーション未実施）",
     "method": "GitHub書込前に同一エンジン関数をV8実行、静的参照・対応括弧監査",
     "cases": 24044,
     "randomTrajectories": 400,
@@ -57,5 +58,11 @@
   "nextWork": "Gate B後、店舗外観・店主写真・商品画像の制作を検討",
   "index": "企画マスター承認の公開INDEXにα試作カードを追加（同コミット）",
   "publicUrl": "https://tora3-mystery.github.io/short-ui-games/r1/",
-  "lastModifiedCommit": "pending status update; r1/index.html 90b9795d26cb65f082e0f174c804cacdf8401b79"
+  "pending": [
+    "実ブラウザの12か月通し操作",
+    "320px・390pxでの実表示",
+    "保存→再開と再レビュー",
+    "店舗別特殊分岐の到達性",
+    "人間プレイによる進化密度・返信・読みやすさ評価"
+  ]
 }
