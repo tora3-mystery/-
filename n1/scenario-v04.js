@@ -70,14 +70,15 @@
   const NEXT_DAY = Object.freeze([
     '火曜日。今度は相手の気持ちだけでなく、数字そのものも試されそう。',
     '水曜日。数字に詳しい人より、人の顔色に詳しい人が強い日かもしれない。',
-    '木曜日。休日を待つ前に、ちょっとした歴史と買い物の話が待っている。',
+    '木曜日。今日も顔ぶれと話題次第で、数字の意味が変わってくる。',
     '金曜日。週の前半に聞いた数字を、覚えているだろうか。'
   ]);
   const fmt = n => new Intl.NumberFormat('ja-JP').format(n);
+  // Replaced incidental questions use their real assigned speaker, not the original slot actor.
   const person = q => ({
-    0:'真壁',1:'梅田',2:'新井',3:'梨花',4:'相馬',5:'藤野',
-    9:'圭介',7:'庄司',8:'梨花',11:'庄司'
-  }[q.legacyIndex] || '相手');
+    makabe:'真壁',umeda:'梅田',arai:'新井',rika:'梨花',souma:'相馬',
+    fujino:'藤野',shoji:'庄司',keisuke:'圭介',hina:'陽菜'
+  }[q.person] || '相手');
   function requireSafe(x, name) {
     if (!Number.isSafeInteger(x)) throw new Error(name + ' must be a safe integer');
     return x;
