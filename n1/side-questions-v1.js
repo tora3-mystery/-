@@ -186,7 +186,7 @@ function applyToQuestion(q,scene){
    throw new Error('Incoherent numeric range: '+scene.id);
  return nr;
 }
-const API=Object.freeze({VERSION:'1.0.0',SIDE_IDS,FACTORY_COUNT:FACTORIES.length,CANONICAL_VARIANTS:FACTORIES.length*3,draw,applyToQuestion});
+const API=Object.freeze({VERSION:'1.0.1',SIDE_IDS,FACTORY_COUNT:FACTORIES.length,CANONICAL_VARIANTS:FACTORIES.length*3,draw,applyToQuestion});
 root.N1SideQuestions=API;
 if(typeof module!=='undefined'&&module.exports)module.exports=API;
 })(typeof window!=='undefined'?window:globalThis);
