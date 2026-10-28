@@ -67,20 +67,22 @@ check('freshman peers show highlighted photo and identity hint without permanent
  assert.match(s.html,/同期の新入生/);assert.match(s.html,/peer-highlight/);assert.match(s.html,/高橋健/);
  s.click('leave-flash');assert.match(s.html,/同級生/);assert.doesNotMatch(s.html,/高橋健/);
 });
-check('the four actions offer two attempts per group',()=>{
+check('the actions offer three attempts per group',()=>{
  const s=newPlayer();visit(s,'E01','E01-A');
  for(const q of ['話しかける','質問する','連絡先を頼む','聞き耳を立てる'])assert.ok(s.html.includes(q));
  s.click('action-menu','talk');s.click('act-target','P003');assert.match(s.html,/受付にいると/);assert.doesNotMatch(s.html,/と声をかけてくれた/);
  s.click('action-menu','question');assert.match(s.html,/担当しているパート/);
  s.click('ask-affiliation','P003');assert.equal(s.state.knownOrg.P003,'L');
  assert.equal(s.state.groupLog['E01-A'].length,2);
- s.click('action-menu','contact');assert.equal(s.state.phase,'group');
+ s.click('action-menu','contact');assert.equal(s.state.phase,'choose');
+ s.click('act-target','P019');assert.equal(s.state.groupLog['E01-A'].length,3);
+ s.click('action-menu','talk');assert.equal(s.state.phase,'group');
 });
-check('all 44 group activities can be entered and listened to twice',()=>{
+check('all 44 group activities can be entered and listened to three times',()=>{
  let total=0;const dates=['2026-04-06','2026-04-07','2026-04-08','2026-04-09','2026-04-10'];
  for(const e of D.events)for(const g of D.groups.filter(x=>x.event_id===e.event_id)){
   const s=newPlayer();for(let i=0;i<dates.indexOf(e.date);i++){s.click('skip');s.click('next-day')}
-  visit(s,e.event_id,g.group_id);s.click('listen-group');s.click('listen-group');assert.equal(s.state.groupLog[g.group_id].length,2);total++;
+  visit(s,e.event_id,g.group_id);s.click('listen-group');s.click('listen-group');s.click('listen-group');assert.equal(s.state.groupLog[g.group_id].length,3);s.click('listen-group');assert.equal(s.state.groupLog[g.group_id].length,3);total++;
  }
  assert.equal(total,44);
 });
@@ -245,7 +247,7 @@ check('reunion after a separate day unlocks a warmer response with no legal-name
  assert.equal(s.state.affinity.P003,3.25);
  assert.equal(B.level(s.state,'P003'),'familiar');
  assert.equal(s.state.relationshipDays.P003.length,2);
- assert.match(s.html,/この前の続きも話せそう/);
+ assert.match(s.html,/この前はどうも。また会えたね/);
  assert.doesNotMatch(s.html,/神谷杏奈/);
 });
 check('TINE displays personal messages only for approved contacts, without dating or safety badges',()=>{
@@ -718,6 +720,62 @@ check('producer profile can be filled without revealing truth or grading guesses
  assert.equal(s.state.profileGuess.year,'4年');assert.equal(s.state.profileGuess.org,'W');
  assert.doesNotMatch(s.html,/あなたの推測は不正解|正しいプロフィールです/);
  s.click('back-producer-profile');assert.equal(s.state.phase,'day');
+});
+
+
+check('Photogram immediate followers appear the same night even without a post',()=>{
+ const account=dataScope.window.S6_BETA_SOCIAL.accounts.find(a=>a.person_id==='P019'&&a.platform==='Photogram');
+ assert.ok(account);
+ assert.ok(!D.posts.some(p=>p.author_id==='P019'&&p.platform==='Photogram'));
+ const s=newPlayer();visit(s,'E01','E01-A');
+ s.click('action-menu','photo');s.click('act-target','P019');
+ assert.ok(s.state.photoFollows.includes('P019'));
+ assert.doesNotMatch(s.state.groupLog['E01-A'][0].text,/翌日|明日/);
+ s.click('back-venue');s.click('finish-venue');s.click('night-sns','Photogram');
+ assert.match(s.html,/フォロー中 1人/);assert.ok(s.html.includes(account.handle));
+ assert.match(s.html,/投稿がない相手もここで確認できます/);
+});
+check('Photogram next-day approval is distinguishable from a confirmed follow',()=>{
+ const s=newPlayer();visit(s,'E01','E01-A');
+ s.click('action-menu','photo');s.click('act-target','P003');
+ assert.ok(s.state.photoRequests.includes('P003'));assert.ok(!s.state.photoFollows.includes('P003'));
+ assert.match(s.state.groupLog['E01-A'][0].text,/明日確認|承認待ち/);
+ s.click('back-venue');s.click('finish-venue');s.click('night-sns','Photogram');
+ assert.match(s.html,/承認待ち 1人/);
+ s.click('back-night');s.click('next-day');s.click('skip');s.click('night-sns','Photogram');
+ assert.ok(s.state.photoFollows.includes('P003'));assert.match(s.html,/フォロー中 1人/);
+});
+check('after-week Photogram policy never falsely promises an exchanged follow',()=>{
+ const s=newPlayer();visit(s,'E01','E01-D');
+ s.click('action-menu','photo');s.click('act-target','P021');
+ assert.ok(!s.state.photoFollows.includes('P021')&&!s.state.photoRequests.includes('P021'));
+ assert.match(s.state.groupLog['E01-D'][0].text,/今週は新しいフォローを受け付けてない/);
+});
+check('first meetings across all 125 person-group appearances are one cohesive exchange',()=>{
+ const B=dataScope.window.S6_BETA_DIALOGUE;
+ const initial={spokenTo:[],interacted:[],groupLog:{},personalIntroduced:{},affinity:{},relationshipDays:{},presentationSeed:123};
+ for(const m of D.members){
+  const spoken=B.talk(m.person_id,m.group_id,initial,false).text;
+  const introduced=B.selfIntroduction(m.person_id,initial,'direct');
+  const text=introduced+' '+spoken;
+  assert.doesNotMatch(text,/見学、どう？|今日は.*が中心なんだ。.*今日は|あ、.*です。よろしく！.*見学、どう/);
+  assert.ok(spoken.length>7,m.group_id+' '+m.person_id);
+ }
+ const h=B.talk('P042','E02-C',initial,false).text;
+ assert.match(h,/リズムの下書き/);assert.match(h,/匿名の方が歌いやすい/);
+ assert.doesNotMatch(h,/見学、どう/);
+});
+check('questions about Vocaloid producer get thematic third-party reaction',()=>{
+ const B=dataScope.window.S6_BETA_DIALOGUE;
+ for(const m of D.members){
+  const state={presentationSeed:913,groupLog:{},personalIntroduced:{}};
+  for(const action of ['producer','music']){
+   const reaction=B.thirdParty(m.person_id,m.group_id,state,action);
+   if(reaction){
+    assert.doesNotMatch(reaction.text,/今の一小節、もう一度合わせてみよう|演奏、もう一度聴いて/);
+   }
+  }
+ }
 });
 
 console.log(JSON.stringify({passed:total,failed:failures}));if(failures)process.exitCode=1;
