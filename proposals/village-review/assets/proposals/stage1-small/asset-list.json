@@ -1,0 +1,553 @@
+{
+  "category": "small-preserving-stage1",
+  "count": 16,
+  "files": [
+    {
+      "id": "rail-small-1",
+      "facility": "rail",
+      "stage": 1,
+      "displayIntent": "静かな小駅",
+      "png": "rail-small-1.png",
+      "webp": "rail-small-1.webp",
+      "references": [
+        "assets/facilities/rail/base-0.png",
+        "assets/facilities/rail/base-1.png"
+      ],
+      "width": 512,
+      "height": 512,
+      "alphaBBox": [
+        46,
+        97,
+        466,
+        440
+      ],
+      "anchor": [
+        256,
+        440
+      ],
+      "pngBytes": 206954,
+      "webpBytes": 52290,
+      "pngSha256": "1df7a19dfece228489e454175c2061888e7e99555b4d4437b3e20959c0e65a7a",
+      "webpSha256": "b4c0fce1cdacc2dec681f7b2ef9eb0b7c23dbeefb9e50ec9b0cfd2a940e8c74f",
+      "webpAlphaBBox": [
+        46,
+        97,
+        466,
+        440
+      ]
+    },
+    {
+      "id": "market-small-1",
+      "facility": "market",
+      "stage": 1,
+      "displayIntent": "小さな地場産品の直売所",
+      "png": "market-small-1.png",
+      "webp": "market-small-1.webp",
+      "references": [
+        "assets/facilities/market/base-0.png",
+        "assets/facilities/market/base-1.png"
+      ],
+      "width": 512,
+      "height": 512,
+      "alphaBBox": [
+        54,
+        93,
+        459,
+        440
+      ],
+      "anchor": [
+        256,
+        440
+      ],
+      "pngBytes": 130558,
+      "webpBytes": 33502,
+      "pngSha256": "1c2f10324d2e3f72a2ff9619816175d2d349f02487845f09c434142738ea8b8a",
+      "webpSha256": "63ce98a372b142a4aeef4fce621a2436af93dcdef1a07dd6b10016f007be68d7",
+      "webpAlphaBBox": [
+        54,
+        93,
+        459,
+        440
+      ]
+    },
+    {
+      "id": "school-small-1",
+      "facility": "school",
+      "stage": 1,
+      "displayIntent": "少人数の学校",
+      "png": "school-small-1.png",
+      "webp": "school-small-1.webp",
+      "references": [
+        "assets/facilities/school/base-0.png",
+        "assets/facilities/school/base-1.png"
+      ],
+      "width": 512,
+      "height": 512,
+      "alphaBBox": [
+        46,
+        139,
+        466,
+        440
+      ],
+      "anchor": [
+        256,
+        440
+      ],
+      "pngBytes": 184788,
+      "webpBytes": 46644,
+      "pngSha256": "7c274a9907b858a4bd62389f517a1d9f989e08267b466fbb272cee5fbc6f01f7",
+      "webpSha256": "ed39991661bd0ea473f3fba00ba2615db47583738eb4329e7bb004cd2daa8288",
+      "webpAlphaBBox": [
+        46,
+        139,
+        466,
+        440
+      ]
+    },
+    {
+      "id": "shrine-small-1",
+      "facility": "shrine",
+      "stage": 1,
+      "displayIntent": "昔ながらの静かな神社",
+      "png": "shrine-small-1.png",
+      "webp": "shrine-small-1.webp",
+      "references": [
+        "assets/facilities/shrine/base-0.png",
+        "assets/facilities/shrine/base-1.png"
+      ],
+      "width": 512,
+      "height": 512,
+      "alphaBBox": [
+        58,
+        61,
+        454,
+        440
+      ],
+      "anchor": [
+        256,
+        440
+      ],
+      "pngBytes": 170471,
+      "webpBytes": 47610,
+      "pngSha256": "5fdabdd990a34cb445333f48f05342326514817733b0ca5c7b1298bc384356a5",
+      "webpSha256": "939efe44665a832d3799103b0120134e78bddec5a76fc33841fd5073fc9c9d3f",
+      "webpAlphaBBox": [
+        58,
+        61,
+        454,
+        440
+      ]
+    },
+    {
+      "id": "inn-small-1",
+      "facility": "inn",
+      "stage": 1,
+      "displayIntent": "素朴な温泉宿",
+      "png": "inn-small-1.png",
+      "webp": "inn-small-1.webp",
+      "references": [
+        "assets/facilities/inn/base-0.png",
+        "assets/facilities/inn/base-1.png"
+      ],
+      "width": 512,
+      "height": 512,
+      "alphaBBox": [
+        54,
+        50,
+        459,
+        440
+      ],
+      "anchor": [
+        256,
+        440
+      ],
+      "pngBytes": 243582,
+      "webpBytes": 57378,
+      "pngSha256": "56cfc18fbce296f2fc89285f6bd914cb0f6a34fd99604102839b0cd30786d644",
+      "webpSha256": "9927809e2c256bdb2f0f6ec879698506110b0b03fe11a2d61699390a172833d1",
+      "webpAlphaBBox": [
+        54,
+        50,
+        459,
+        440
+      ]
+    },
+    {
+      "id": "office-small-1",
+      "facility": "office",
+      "stage": 1,
+      "displayIntent": "対面を大切にする役場",
+      "png": "office-small-1.png",
+      "webp": "office-small-1.webp",
+      "references": [
+        "assets/facilities/office/base-0.png",
+        "assets/facilities/office/base-1.png"
+      ],
+      "width": 512,
+      "height": 512,
+      "alphaBBox": [
+        51,
+        70,
+        462,
+        440
+      ],
+      "anchor": [
+        256,
+        440
+      ],
+      "pngBytes": 223244,
+      "webpBytes": 54018,
+      "pngSha256": "6c0a5242f57f63e508595001a9e899eb4ef6eec5051e8a5d9058097051605639",
+      "webpSha256": "bbc2fd1a0b261c51d4e074102dee524ba3609cd11cbee4c146e502a5a50320e7",
+      "webpAlphaBBox": [
+        51,
+        70,
+        462,
+        440
+      ]
+    },
+    {
+      "id": "clinic-small-1",
+      "facility": "clinic",
+      "stage": 1,
+      "displayIntent": "問診を大切にする診療所",
+      "png": "clinic-small-1.png",
+      "webp": "clinic-small-1.webp",
+      "references": [
+        "assets/facilities/clinic/base-0.png",
+        "assets/facilities/clinic/base-1.png"
+      ],
+      "width": 512,
+      "height": 512,
+      "alphaBBox": [
+        46,
+        163,
+        466,
+        440
+      ],
+      "anchor": [
+        256,
+        440
+      ],
+      "pngBytes": 151430,
+      "webpBytes": 37976,
+      "pngSha256": "1fb880eed104c796f3a8bf6e012bbc0c9cdc522746bb03ce2973e8bf1deaf0d5",
+      "webpSha256": "a218e6194fff28fc981ed9276f89109490c9d46c030434cd91c2ca1076d93095",
+      "webpAlphaBBox": [
+        46,
+        163,
+        466,
+        440
+      ]
+    },
+    {
+      "id": "shop-small-1",
+      "facility": "shop",
+      "stage": 1,
+      "displayIntent": "昔ながらの個人商店",
+      "png": "shop-small-1.png",
+      "webp": "shop-small-1.webp",
+      "references": [
+        "assets/facilities/shop/base-0.png",
+        "assets/facilities/shop/base-1.png"
+      ],
+      "width": 512,
+      "height": 512,
+      "alphaBBox": [
+        46,
+        187,
+        466,
+        440
+      ],
+      "anchor": [
+        256,
+        440
+      ],
+      "pngBytes": 192461,
+      "webpBytes": 44674,
+      "pngSha256": "abf17eb4e71bf500514bf3f11fbe0bb93d744309294b938b2aa2283e12214e2c",
+      "webpSha256": "5d1fc103d003f3fb3a1aea4516be1dd3898f78b3d2885b6f4467287b873416d1",
+      "webpAlphaBBox": [
+        46,
+        187,
+        466,
+        440
+      ]
+    },
+    {
+      "id": "hall-small-1",
+      "facility": "hall",
+      "stage": 1,
+      "displayIntent": "静かな地域集会所",
+      "png": "hall-small-1.png",
+      "webp": "hall-small-1.webp",
+      "references": [
+        "assets/facilities/hall/base-0.png",
+        "assets/facilities/hall/base-1.png"
+      ],
+      "width": 512,
+      "height": 512,
+      "alphaBBox": [
+        46,
+        151,
+        466,
+        440
+      ],
+      "anchor": [
+        256,
+        440
+      ],
+      "pngBytes": 189941,
+      "webpBytes": 47666,
+      "pngSha256": "a11cb3a0b575474340e7ebf8fc3c2b4d7c815a4829b980e0a18c251c7c5fc665",
+      "webpSha256": "bf56d1fd54302bba3d9ad91ed410a90c8655b292cb53fb4c025b9e73dd1d7151",
+      "webpAlphaBBox": [
+        46,
+        151,
+        466,
+        440
+      ]
+    },
+    {
+      "id": "farm-small-1",
+      "facility": "farm",
+      "stage": 1,
+      "displayIntent": "手仕事を守る農園",
+      "png": "farm-small-1.png",
+      "webp": "farm-small-1.webp",
+      "references": [
+        "assets/facilities/farm/base-0.png",
+        "assets/facilities/farm/base-1.png"
+      ],
+      "width": 512,
+      "height": 512,
+      "alphaBBox": [
+        52,
+        69,
+        460,
+        440
+      ],
+      "anchor": [
+        256,
+        440
+      ],
+      "pngBytes": 181940,
+      "webpBytes": 47096,
+      "pngSha256": "8428fa62c54ce4e27015979dc1b2a53d14b3b92dd9ec9b8bdb7162d246431835",
+      "webpSha256": "8a059464437458eafcb10cf5737877e2511f477bb49dd31262b2dcee038da64e",
+      "webpAlphaBBox": [
+        52,
+        69,
+        460,
+        440
+      ]
+    },
+    {
+      "id": "scenic-small-1",
+      "facility": "scenic",
+      "stage": 1,
+      "displayIntent": "自然のままの散策路",
+      "png": "scenic-small-1.png",
+      "webp": "scenic-small-1.webp",
+      "references": [
+        "assets/facilities/scenic/base-0.png",
+        "assets/facilities/scenic/base-1.png"
+      ],
+      "width": 512,
+      "height": 512,
+      "alphaBBox": [
+        62,
+        63,
+        451,
+        440
+      ],
+      "anchor": [
+        256,
+        440
+      ],
+      "pngBytes": 197726,
+      "webpBytes": 55428,
+      "pngSha256": "2264d5db93149ec67ad6ae5532c7ac99da802da1d3c03f3f55310e7e53eb6f24",
+      "webpSha256": "9ffb496c010ef7bc4c6cc4da774794fbf170f2846a2f695049077061ccee7abc",
+      "webpAlphaBBox": [
+        62,
+        63,
+        451,
+        440
+      ]
+    },
+    {
+      "id": "cafe-small-1",
+      "facility": "cafe",
+      "stage": 1,
+      "displayIntent": "素朴な喫茶店",
+      "png": "cafe-small-1.png",
+      "webp": "cafe-small-1.webp",
+      "references": [
+        "assets/facilities/cafe/base-0.png",
+        "assets/facilities/cafe/base-1.png"
+      ],
+      "width": 512,
+      "height": 512,
+      "alphaBBox": [
+        60,
+        81,
+        452,
+        440
+      ],
+      "anchor": [
+        256,
+        440
+      ],
+      "pngBytes": 190717,
+      "webpBytes": 46600,
+      "pngSha256": "171be76bf7cfe5a76ebff7baab5e89af672d0ea0e7b03ce9111c24b0ad92ec32",
+      "webpSha256": "845266427f528fbaf3e4a8d9d7567c67e1ab3f5bd4823b9a87302f448246f66b",
+      "webpAlphaBBox": [
+        60,
+        81,
+        452,
+        440
+      ]
+    },
+    {
+      "id": "museum-small-1",
+      "facility": "museum",
+      "stage": 1,
+      "displayIntent": "静かな郷土資料館",
+      "png": "museum-small-1.png",
+      "webp": "museum-small-1.webp",
+      "references": [
+        "assets/facilities/museum/base-0.png",
+        "assets/facilities/museum/base-1.png"
+      ],
+      "width": 512,
+      "height": 512,
+      "alphaBBox": [
+        57,
+        200,
+        456,
+        440
+      ],
+      "anchor": [
+        256,
+        440
+      ],
+      "pngBytes": 165335,
+      "webpBytes": 41634,
+      "pngSha256": "a5c7600ba2889fc427e4972c6e263ac970a9d0ae6f3485d8c85e66f7926aff8f",
+      "webpSha256": "2f3ac7406a41144a4cad328b799931332f55117a371a59f45eadec07c7d3d3f2",
+      "webpAlphaBBox": [
+        57,
+        200,
+        456,
+        440
+      ]
+    },
+    {
+      "id": "lodge-small-1",
+      "facility": "lodge",
+      "stage": 1,
+      "displayIntent": "小さな自然の宿",
+      "png": "lodge-small-1.png",
+      "webp": "lodge-small-1.webp",
+      "references": [
+        "assets/facilities/lodge/base-0.png",
+        "assets/facilities/lodge/base-1.png"
+      ],
+      "width": 512,
+      "height": 512,
+      "alphaBBox": [
+        46,
+        112,
+        466,
+        440
+      ],
+      "anchor": [
+        256,
+        440
+      ],
+      "pngBytes": 173163,
+      "webpBytes": 44648,
+      "pngSha256": "a701f7f876f1a7ac59cc8c1361d4238794ae8b60d92c9314200e73f23c677e9a",
+      "webpSha256": "330b0668b0f41eabe1cd4409b57ac665e5bc43f73e118729359cf99d43b4f80d",
+      "webpAlphaBBox": [
+        46,
+        112,
+        466,
+        440
+      ]
+    },
+    {
+      "id": "harbor-small-1",
+      "facility": "harbor",
+      "stage": 1,
+      "displayIntent": "静かな漁港",
+      "png": "harbor-small-1.png",
+      "webp": "harbor-small-1.webp",
+      "references": [
+        "assets/facilities/harbor/base-0.png",
+        "assets/facilities/harbor/base-1.png"
+      ],
+      "width": 512,
+      "height": 512,
+      "alphaBBox": [
+        62,
+        65,
+        450,
+        440
+      ],
+      "anchor": [
+        256,
+        440
+      ],
+      "pngBytes": 226066,
+      "webpBytes": 56928,
+      "pngSha256": "edfe0010a7e95d1bf999f36ecfcc7fb51247061becb9f0e7f579fccbdc702a87",
+      "webpSha256": "89fccd27bf190ff9001300dd115bdebd836a79848e1b897d257cb564cfbbd991",
+      "webpAlphaBBox": [
+        62,
+        65,
+        450,
+        440
+      ]
+    },
+    {
+      "id": "robot-small-1",
+      "facility": "robot",
+      "stage": 1,
+      "displayIntent": "人の手が残る研究棟",
+      "png": "robot-small-1.png",
+      "webp": "robot-small-1.webp",
+      "references": [
+        "assets/facilities/robot/base-0.png",
+        "assets/facilities/robot/base-1.png"
+      ],
+      "width": 512,
+      "height": 512,
+      "alphaBBox": [
+        49,
+        65,
+        464,
+        440
+      ],
+      "anchor": [
+        256,
+        440
+      ],
+      "pngBytes": 231486,
+      "webpBytes": 60738,
+      "pngSha256": "5a71699ebbf9ccb464ab3da39a9035b3c78962394f38ddcb68762d95d9b44fd8",
+      "webpSha256": "eccdc790d453e8f9d31efa0af2108402474acf37c5bd7d766e5f697f0c0b347e",
+      "webpAlphaBBox": [
+        49,
+        65,
+        464,
+        440
+      ]
+    }
+  ],
+  "contactSheet": "contact-sheet-stage1-small.png",
+  "contactSheetSha256": "247d5e6e348e12870b939cff472876e3d93afa8a23997d08ef1c544f102da523",
+  "contactSheetBytes": 653442
+}

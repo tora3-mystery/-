@@ -1,0 +1,837 @@
+{
+  "category": "coastal-special-evolutions",
+  "count": 24,
+  "files": [
+    {
+      "id": "shrine-low-2",
+      "facility": "shrine",
+      "direction": "low",
+      "stage": 2,
+      "displayIntent": "海辺の潮守神社",
+      "png": "shrine-low-2.png",
+      "webp": "shrine-low-2.webp",
+      "references": [
+        "assets/facilities/shrine/base-0.png"
+      ],
+      "width": 512,
+      "height": 512,
+      "alphaBBox": [
+        58,
+        126,
+        454,
+        440
+      ],
+      "anchor": [
+        256,
+        440
+      ],
+      "pngBytes": 245065,
+      "webpBytes": 66850,
+      "pngSha256": "6307bbef6476f06231d5683f98ff91ea0a709dca8a19908941cdf1170c349083",
+      "webpSha256": "f8649db25506594d483520dff435300d591842685c873d7d96f7759c2817be95",
+      "webpAlphaBBox": [
+        58,
+        126,
+        454,
+        440
+      ]
+    },
+    {
+      "id": "shrine-low-3",
+      "facility": "shrine",
+      "direction": "low",
+      "stage": 3,
+      "displayIntent": "潮汐を見守る神社",
+      "png": "shrine-low-3.png",
+      "webp": "shrine-low-3.webp",
+      "references": [
+        "assets/facilities/shrine/base-0.png",
+        "assets/proposals/coastal/shrine-low-2.png"
+      ],
+      "width": 512,
+      "height": 512,
+      "alphaBBox": [
+        58,
+        62,
+        454,
+        440
+      ],
+      "anchor": [
+        256,
+        440
+      ],
+      "pngBytes": 264760,
+      "webpBytes": 70598,
+      "pngSha256": "4f11b3f336b0e42a1e07e39c5b3ae7cd7d56e74a1b7c42c8bf18073ad5d5bd4a",
+      "webpSha256": "67b2f2c8233c861ce4d6f3c4339cdcdd1ea49cbfbb02c2d637ec7ab47b640880",
+      "webpAlphaBBox": [
+        58,
+        62,
+        454,
+        440
+      ]
+    },
+    {
+      "id": "shrine-high-2",
+      "facility": "shrine",
+      "direction": "high",
+      "stage": 2,
+      "displayIntent": "港を見守る神社",
+      "png": "shrine-high-2.png",
+      "webp": "shrine-high-2.webp",
+      "references": [
+        "assets/facilities/shrine/base-0.png"
+      ],
+      "width": 512,
+      "height": 512,
+      "alphaBBox": [
+        58,
+        142,
+        454,
+        440
+      ],
+      "anchor": [
+        256,
+        440
+      ],
+      "pngBytes": 227429,
+      "webpBytes": 59662,
+      "pngSha256": "af56a5eb147fd742dec6c8849321d8ff37ed42778a2bdd8fe75551fad669e45b",
+      "webpSha256": "2b23f2f52f45d95b8fdece3f2c402285f9f523745e823071424a3e9c4ebcceb9",
+      "webpAlphaBBox": [
+        58,
+        142,
+        454,
+        440
+      ]
+    },
+    {
+      "id": "shrine-high-3",
+      "facility": "shrine",
+      "direction": "high",
+      "stage": 3,
+      "displayIntent": "海の祭礼拠点",
+      "png": "shrine-high-3.png",
+      "webp": "shrine-high-3.webp",
+      "references": [
+        "assets/facilities/shrine/base-0.png",
+        "assets/proposals/coastal/shrine-high-2.png"
+      ],
+      "width": 512,
+      "height": 512,
+      "alphaBBox": [
+        58,
+        62,
+        454,
+        440
+      ],
+      "anchor": [
+        256,
+        440
+      ],
+      "pngBytes": 230613,
+      "webpBytes": 61560,
+      "pngSha256": "db6442bb8966c94346f20cd21ff08b39f06c87ea367b17da0ff64c7a3cb196f5",
+      "webpSha256": "5b8d339ab64a3599b3dc356fdc5aac2cfe3029d7a906ec7f75a916d7af8b52a6",
+      "webpAlphaBBox": [
+        58,
+        62,
+        454,
+        440
+      ]
+    },
+    {
+      "id": "shrine-reform-2",
+      "facility": "shrine",
+      "direction": "reform",
+      "stage": 2,
+      "displayIntent": "海への参道を整えた神社",
+      "png": "shrine-reform-2.png",
+      "webp": "shrine-reform-2.webp",
+      "references": [
+        "assets/facilities/shrine/base-0.png"
+      ],
+      "width": 512,
+      "height": 512,
+      "alphaBBox": [
+        58,
+        106,
+        454,
+        440
+      ],
+      "anchor": [
+        256,
+        440
+      ],
+      "pngBytes": 267474,
+      "webpBytes": 70132,
+      "pngSha256": "50ec107373b5b4107f8b9954276b6c5c6bf0b387992c46317eff3b9c514f95da",
+      "webpSha256": "9c4c47bf2eacaadeadfae82d996607c60b0ee78fb984c17a0e3a74123d5e97b6",
+      "webpAlphaBBox": [
+        58,
+        106,
+        454,
+        440
+      ]
+    },
+    {
+      "id": "shrine-reform-3",
+      "facility": "shrine",
+      "direction": "reform",
+      "stage": 3,
+      "displayIntent": "海辺の祈りと生活を結ぶ神社",
+      "png": "shrine-reform-3.png",
+      "webp": "shrine-reform-3.webp",
+      "references": [
+        "assets/facilities/shrine/base-0.png",
+        "assets/proposals/coastal/shrine-reform-2.png"
+      ],
+      "width": 512,
+      "height": 512,
+      "alphaBBox": [
+        58,
+        56,
+        454,
+        440
+      ],
+      "anchor": [
+        256,
+        440
+      ],
+      "pngBytes": 280144,
+      "webpBytes": 74522,
+      "pngSha256": "811a1752cf5d2cc449ca6c9778da2687ac79c77ce6080874e7cc5ca5bfb0b5f0",
+      "webpSha256": "0f9c4efbf10da069b2bf8d2b38b01b29e38f6b02aa3766bcec023f26366467ae",
+      "webpAlphaBBox": [
+        58,
+        56,
+        454,
+        440
+      ]
+    },
+    {
+      "id": "scenic-low-2",
+      "facility": "scenic",
+      "direction": "low",
+      "stage": 2,
+      "displayIntent": "静かな海岸景勝地",
+      "png": "scenic-low-2.png",
+      "webp": "scenic-low-2.webp",
+      "references": [
+        "assets/facilities/scenic/base-0.png"
+      ],
+      "width": 512,
+      "height": 512,
+      "alphaBBox": [
+        46,
+        140,
+        466,
+        440
+      ],
+      "anchor": [
+        256,
+        440
+      ],
+      "pngBytes": 283573,
+      "webpBytes": 76792,
+      "pngSha256": "c3e37fb451d3968c48f2241303523c072fc911d2212169d653621a247e97e2d3",
+      "webpSha256": "ae56f290b2701a3a8288b7a271ef8894483fd473cb6eec0e3be18d889fd10354",
+      "webpAlphaBBox": [
+        46,
+        140,
+        466,
+        440
+      ]
+    },
+    {
+      "id": "scenic-low-3",
+      "facility": "scenic",
+      "direction": "low",
+      "stage": 3,
+      "displayIntent": "自然のままの海辺",
+      "png": "scenic-low-3.png",
+      "webp": "scenic-low-3.webp",
+      "references": [
+        "assets/facilities/scenic/base-0.png",
+        "assets/proposals/coastal/scenic-low-2.png"
+      ],
+      "width": 512,
+      "height": 512,
+      "alphaBBox": [
+        62,
+        63,
+        450,
+        440
+      ],
+      "anchor": [
+        256,
+        440
+      ],
+      "pngBytes": 185408,
+      "webpBytes": 51036,
+      "pngSha256": "0f16421026de9ef024f6c1cda9507964df178768a4ddfac8116b790e7af14af3",
+      "webpSha256": "7ca411547f0220784436643fb30251ac7a59e5ee694f482ea5414ee7ae3b66f0",
+      "webpAlphaBBox": [
+        62,
+        63,
+        450,
+        440
+      ]
+    },
+    {
+      "id": "scenic-high-2",
+      "facility": "scenic",
+      "direction": "high",
+      "stage": 2,
+      "displayIntent": "潮風の展望公園",
+      "png": "scenic-high-2.png",
+      "webp": "scenic-high-2.webp",
+      "references": [
+        "assets/facilities/scenic/base-0.png"
+      ],
+      "width": 512,
+      "height": 512,
+      "alphaBBox": [
+        46,
+        74,
+        466,
+        440
+      ],
+      "anchor": [
+        256,
+        440
+      ],
+      "pngBytes": 277686,
+      "webpBytes": 76534,
+      "pngSha256": "3a02eccd6903b00ce0f53affee3788aa68dd852b18669b1dd78f6d8e4bb64ad9",
+      "webpSha256": "efe7f7e4438ff153b0f942334910e5f01b2efdab183fc4d77e2b214c1caf60ef",
+      "webpAlphaBBox": [
+        46,
+        74,
+        466,
+        440
+      ]
+    },
+    {
+      "id": "scenic-high-3",
+      "facility": "scenic",
+      "direction": "high",
+      "stage": 3,
+      "displayIntent": "大海原を望む景勝地",
+      "png": "scenic-high-3.png",
+      "webp": "scenic-high-3.webp",
+      "references": [
+        "assets/facilities/scenic/base-0.png",
+        "assets/proposals/coastal/scenic-high-2.png"
+      ],
+      "width": 512,
+      "height": 512,
+      "alphaBBox": [
+        46,
+        87,
+        466,
+        440
+      ],
+      "anchor": [
+        256,
+        440
+      ],
+      "pngBytes": 263795,
+      "webpBytes": 72438,
+      "pngSha256": "4891d5f3ced46dba005553916bf0e9a7caef74e5d996ed6415192e32d8a61b6f",
+      "webpSha256": "a19c49621cf2e9a3d39e95f84f5e90810277d858b6fd2d9294197a3208c344fc",
+      "webpAlphaBBox": [
+        46,
+        87,
+        466,
+        440
+      ]
+    },
+    {
+      "id": "scenic-reform-2",
+      "facility": "scenic",
+      "direction": "reform",
+      "stage": 2,
+      "displayIntent": "海辺の安全と景観を整える公園",
+      "png": "scenic-reform-2.png",
+      "webp": "scenic-reform-2.webp",
+      "references": [
+        "assets/facilities/scenic/base-0.png"
+      ],
+      "width": 512,
+      "height": 512,
+      "alphaBBox": [
+        46,
+        88,
+        466,
+        440
+      ],
+      "anchor": [
+        256,
+        440
+      ],
+      "pngBytes": 204112,
+      "webpBytes": 55912,
+      "pngSha256": "9153df42b7636f28f28f3f964983a8616b1f218fe05d9fa390f57dd5de61cbfb",
+      "webpSha256": "1bd111a579eadb74267201cb0629668aec0a3a90c29b27e97190f7b3efa1fc7f",
+      "webpAlphaBBox": [
+        46,
+        88,
+        466,
+        440
+      ]
+    },
+    {
+      "id": "scenic-reform-3",
+      "facility": "scenic",
+      "direction": "reform",
+      "stage": 3,
+      "displayIntent": "海岸再生の散策名所",
+      "png": "scenic-reform-3.png",
+      "webp": "scenic-reform-3.webp",
+      "references": [
+        "assets/facilities/scenic/base-0.png",
+        "assets/proposals/coastal/scenic-reform-2.png"
+      ],
+      "width": 512,
+      "height": 512,
+      "alphaBBox": [
+        46,
+        73,
+        466,
+        440
+      ],
+      "anchor": [
+        256,
+        440
+      ],
+      "pngBytes": 244589,
+      "webpBytes": 67160,
+      "pngSha256": "cf6a8c549a217011f602d5724cc930a99e4d645ac302ee143498403f4ea42a9e",
+      "webpSha256": "279e30f956417c61e54a4bbce15d35a59962b7773efb2d9f291b9b051c286f12",
+      "webpAlphaBBox": [
+        46,
+        73,
+        466,
+        440
+      ]
+    },
+    {
+      "id": "inn-low-2",
+      "facility": "inn",
+      "direction": "low",
+      "stage": 2,
+      "displayIntent": "海を望む隠れ家旅館",
+      "png": "inn-low-2.png",
+      "webp": "inn-low-2.webp",
+      "references": [
+        "assets/facilities/inn/base-0.png"
+      ],
+      "width": 512,
+      "height": 512,
+      "alphaBBox": [
+        51,
+        50,
+        462,
+        440
+      ],
+      "anchor": [
+        256,
+        440
+      ],
+      "pngBytes": 242055,
+      "webpBytes": 61648,
+      "pngSha256": "b02815fe4ae2fc5108a85892da49965adf40d372806a885c1004d3c9d61ba768",
+      "webpSha256": "6101069228a20e7934ba25fd7f1e51f5924752b6db4e24e87b11ac85ab34e956",
+      "webpAlphaBBox": [
+        51,
+        50,
+        462,
+        440
+      ]
+    },
+    {
+      "id": "inn-low-3",
+      "facility": "inn",
+      "direction": "low",
+      "stage": 3,
+      "displayIntent": "潮音の静養温泉宿",
+      "png": "inn-low-3.png",
+      "webp": "inn-low-3.webp",
+      "references": [
+        "assets/facilities/inn/base-0.png",
+        "assets/proposals/coastal/inn-low-2.png"
+      ],
+      "width": 512,
+      "height": 512,
+      "alphaBBox": [
+        47,
+        86,
+        465,
+        440
+      ],
+      "anchor": [
+        256,
+        440
+      ],
+      "pngBytes": 230192,
+      "webpBytes": 57928,
+      "pngSha256": "f18ec0925f18012539055815cb0c809b3ed1b0755da6a4f039062b0a6f6040fd",
+      "webpSha256": "ff0c9a51b78b7b3d689cdd4f4e99ce7107712ab82994c4709c0427bb5705e0b8",
+      "webpAlphaBBox": [
+        47,
+        86,
+        465,
+        440
+      ]
+    },
+    {
+      "id": "inn-high-2",
+      "facility": "inn",
+      "direction": "high",
+      "stage": 2,
+      "displayIntent": "海の幸と温泉の宿",
+      "png": "inn-high-2.png",
+      "webp": "inn-high-2.webp",
+      "references": [
+        "assets/facilities/inn/base-0.png"
+      ],
+      "width": 512,
+      "height": 512,
+      "alphaBBox": [
+        47,
+        86,
+        465,
+        440
+      ],
+      "anchor": [
+        256,
+        440
+      ],
+      "pngBytes": 225870,
+      "webpBytes": 54406,
+      "pngSha256": "c28e2341c954fcfe13af909c4354c433f9cb52ffe37cd74fdbc998cce1abfc4b",
+      "webpSha256": "53020ffb34df5c5d637cf2e661488f3fc60c5df64c17f8c2aea954aaa7e4af81",
+      "webpAlphaBBox": [
+        47,
+        86,
+        465,
+        440
+      ]
+    },
+    {
+      "id": "inn-high-3",
+      "facility": "inn",
+      "direction": "high",
+      "stage": 3,
+      "displayIntent": "海を望む滞在型旅館",
+      "png": "inn-high-3.png",
+      "webp": "inn-high-3.webp",
+      "references": [
+        "assets/facilities/inn/base-0.png",
+        "assets/proposals/coastal/inn-high-2.png"
+      ],
+      "width": 512,
+      "height": 512,
+      "alphaBBox": [
+        47,
+        118,
+        465,
+        440
+      ],
+      "anchor": [
+        256,
+        440
+      ],
+      "pngBytes": 216451,
+      "webpBytes": 55938,
+      "pngSha256": "a721e294dbf82f54a942d8999c32f86ef805698891209d734461f6492dc8b39e",
+      "webpSha256": "9925d97c050c46210acac6d68e1d2c27fb5efd0ce901c9a1ce096fb86e853480",
+      "webpAlphaBBox": [
+        47,
+        118,
+        465,
+        440
+      ]
+    },
+    {
+      "id": "inn-reform-2",
+      "facility": "inn",
+      "direction": "reform",
+      "stage": 2,
+      "displayIntent": "安全と景色を整えた海辺の宿",
+      "png": "inn-reform-2.png",
+      "webp": "inn-reform-2.webp",
+      "references": [
+        "assets/facilities/inn/base-0.png"
+      ],
+      "width": 512,
+      "height": 512,
+      "alphaBBox": [
+        47,
+        66,
+        465,
+        440
+      ],
+      "anchor": [
+        256,
+        440
+      ],
+      "pngBytes": 202410,
+      "webpBytes": 50724,
+      "pngSha256": "422a070bb501996ea0faecf94ddc6511e9eefc5a6f1516c03c18a41854e6996d",
+      "webpSha256": "a7227831346ae8a4749e742c221b6be93981d30c7c28053c90be61032941ed10",
+      "webpAlphaBBox": [
+        47,
+        66,
+        465,
+        440
+      ]
+    },
+    {
+      "id": "inn-reform-3",
+      "facility": "inn",
+      "direction": "reform",
+      "stage": 3,
+      "displayIntent": "海と暮らしを結ぶ温泉宿",
+      "png": "inn-reform-3.png",
+      "webp": "inn-reform-3.webp",
+      "references": [
+        "assets/facilities/inn/base-0.png",
+        "assets/proposals/coastal/inn-reform-2.png"
+      ],
+      "width": 512,
+      "height": 512,
+      "alphaBBox": [
+        47,
+        69,
+        465,
+        440
+      ],
+      "anchor": [
+        256,
+        440
+      ],
+      "pngBytes": 272120,
+      "webpBytes": 67454,
+      "pngSha256": "9a77f560da0624894689ec20703c6a06541439e39f1a51ffe66044fd61d010de",
+      "webpSha256": "580404d53bf128eae94678790c2490402dcf92416ffef9d90e18a9721b08114d",
+      "webpAlphaBBox": [
+        47,
+        69,
+        465,
+        440
+      ]
+    },
+    {
+      "id": "lodge-low-2",
+      "facility": "lodge",
+      "direction": "low",
+      "stage": 2,
+      "displayIntent": "静かな海辺の民宿",
+      "png": "lodge-low-2.png",
+      "webp": "lodge-low-2.webp",
+      "references": [
+        "assets/facilities/lodge/base-0.png"
+      ],
+      "width": 512,
+      "height": 512,
+      "alphaBBox": [
+        46,
+        102,
+        466,
+        440
+      ],
+      "anchor": [
+        256,
+        440
+      ],
+      "pngBytes": 209601,
+      "webpBytes": 53242,
+      "pngSha256": "b6f8165a990aa2f8310292ebc299a155512c1ce6c348bbc9449b68b4acf37ec5",
+      "webpSha256": "dc985f27e43ca72827e975d3f7095be31eff3d75165e2f2680ec90567a6c1496",
+      "webpAlphaBBox": [
+        46,
+        102,
+        466,
+        440
+      ]
+    },
+    {
+      "id": "lodge-low-3",
+      "facility": "lodge",
+      "direction": "low",
+      "stage": 3,
+      "displayIntent": "波音だけが聞こえる宿",
+      "png": "lodge-low-3.png",
+      "webp": "lodge-low-3.webp",
+      "references": [
+        "assets/facilities/lodge/base-0.png",
+        "assets/proposals/coastal/lodge-low-2.png"
+      ],
+      "width": 512,
+      "height": 512,
+      "alphaBBox": [
+        46,
+        141,
+        466,
+        440
+      ],
+      "anchor": [
+        256,
+        440
+      ],
+      "pngBytes": 221066,
+      "webpBytes": 57262,
+      "pngSha256": "bc454dcd1d4c8f61028915d56405198cf2951cdd568e6533e0ed75af7a9ce7d7",
+      "webpSha256": "30775044bbaa9bd809f93e9e9a5456833db3a99e51e72f4aff03cc8e38d07506",
+      "webpAlphaBBox": [
+        46,
+        141,
+        466,
+        440
+      ]
+    },
+    {
+      "id": "lodge-high-2",
+      "facility": "lodge",
+      "direction": "high",
+      "stage": 2,
+      "displayIntent": "漁村を楽しむ宿",
+      "png": "lodge-high-2.png",
+      "webp": "lodge-high-2.webp",
+      "references": [
+        "assets/facilities/lodge/base-0.png"
+      ],
+      "width": 512,
+      "height": 512,
+      "alphaBBox": [
+        46,
+        104,
+        466,
+        440
+      ],
+      "anchor": [
+        256,
+        440
+      ],
+      "pngBytes": 229190,
+      "webpBytes": 59272,
+      "pngSha256": "ceb45dbb5f9bec52822263e87fe72bdfdc60623c7b95af9adbe68ef69944d71e",
+      "webpSha256": "370350dfcb48cc2709ab6b2044cf041018ae47970fc84dfd9c5ffef50717b6ae",
+      "webpAlphaBBox": [
+        46,
+        104,
+        466,
+        440
+      ]
+    },
+    {
+      "id": "lodge-high-3",
+      "facility": "lodge",
+      "direction": "high",
+      "stage": 3,
+      "displayIntent": "海辺の滞在交流宿",
+      "png": "lodge-high-3.png",
+      "webp": "lodge-high-3.webp",
+      "references": [
+        "assets/facilities/lodge/base-0.png",
+        "assets/proposals/coastal/lodge-high-2.png"
+      ],
+      "width": 512,
+      "height": 512,
+      "alphaBBox": [
+        46,
+        124,
+        466,
+        440
+      ],
+      "anchor": [
+        256,
+        440
+      ],
+      "pngBytes": 208039,
+      "webpBytes": 54218,
+      "pngSha256": "76d5993589cf2f5556b24e956f42c52eb2ce81f3821782170e22b59df24fafd4",
+      "webpSha256": "b679eece6374899e50406afbf663b91da6f607af10da88663f029f620bfa1080",
+      "webpAlphaBBox": [
+        46,
+        124,
+        466,
+        440
+      ]
+    },
+    {
+      "id": "lodge-reform-2",
+      "facility": "lodge",
+      "direction": "reform",
+      "stage": 2,
+      "displayIntent": "海岸を整えた民宿",
+      "png": "lodge-reform-2.png",
+      "webp": "lodge-reform-2.webp",
+      "references": [
+        "assets/facilities/lodge/base-0.png"
+      ],
+      "width": 512,
+      "height": 512,
+      "alphaBBox": [
+        46,
+        123,
+        466,
+        440
+      ],
+      "anchor": [
+        256,
+        440
+      ],
+      "pngBytes": 237464,
+      "webpBytes": 60254,
+      "pngSha256": "1f9106cf9cb82f2b571013d0d3819cb3dcefde55e3881d09904a008b543b1981",
+      "webpSha256": "324e998b117c1e20435c6694fd4a2920f6f60469abb836586c46fb2225fbd48f",
+      "webpAlphaBBox": [
+        46,
+        123,
+        466,
+        440
+      ]
+    },
+    {
+      "id": "lodge-reform-3",
+      "facility": "lodge",
+      "direction": "reform",
+      "stage": 3,
+      "displayIntent": "地域と海を結ぶ民宿",
+      "png": "lodge-reform-3.png",
+      "webp": "lodge-reform-3.webp",
+      "references": [
+        "assets/facilities/lodge/base-0.png",
+        "assets/proposals/coastal/lodge-reform-2.png"
+      ],
+      "width": 512,
+      "height": 512,
+      "alphaBBox": [
+        46,
+        104,
+        466,
+        440
+      ],
+      "anchor": [
+        256,
+        440
+      ],
+      "pngBytes": 201986,
+      "webpBytes": 54368,
+      "pngSha256": "25154b6e791150bd361104bbb54a9aba76d78a419c8d3e1c379f3f6022b3ea1e",
+      "webpSha256": "924a8bb89ed3073143790143ddd27ef59a02e9520c5dd43fdb8bda46290ac0c8",
+      "webpAlphaBBox": [
+        46,
+        104,
+        466,
+        440
+      ]
+    }
+  ],
+  "contactSheet": "contact-sheet-coastal.png",
+  "contactSheetSha256": "0841e6d001eb7eab0bf2e7370b57b7c7c4a25021f290c699c35d13b651a93325",
+  "contactSheetBytes": 533412
+}
