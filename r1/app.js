@@ -104,8 +104,9 @@ function guide(){
  '<button type="button" class="secondary" data-restart>最初から遊び直す</button></section>';
 }
 function render(){
- const month=Math.min(game.month,11);
- document.getElementById("monthText").textContent=game.month===12?"1年後":E.MONTHS[month];
+ const showingResult=tab==="street"&&game.view==="result";
+ const month=showingResult?Math.max(0,game.month-1):Math.min(game.month,11);
+ document.getElementById("monthText").textContent=game.month===12&&!showingResult?"1年後":E.MONTHS[month];
  document.getElementById("monthCaption").textContent=game.month===12?"12 / 12 件 投稿済み":game.view==="result"?"今回の投稿が完了":"次の口コミ "+(game.month+1)+" / 12 件目";
  document.getElementById("monthProgress").innerHTML=Array.from({length:12},(_,i)=>'<span class="'+(i<game.month?"done":i===game.month?"current":"")+'" aria-hidden="true"></span>').join("");
  document.querySelectorAll(".tabs button").forEach(b=>{const active=b.dataset.tab===tab;b.classList.toggle("active",active);if(active)b.setAttribute("aria-current","page");else b.removeAttribute("aria-current")});
