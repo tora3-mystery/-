@@ -1,6 +1,6 @@
 window.R1 = (function makeEngine(){
 "use strict";
-const VERSION="0.3.1-alpha";
+const VERSION="0.3.2-alpha";
 const GENRES=[
 {id:"taste",name:"商品・味",icon:"🍜"},
 {id:"service",name:"接客",icon:"💬"},
@@ -67,9 +67,9 @@ identity:{minus:["新作に力を入れすぎたかもしれません。定番�
 }};
 const clamp=(n,min,max)=>Math.max(min,Math.min(max,n));
 const copy=x=>JSON.parse(JSON.stringify(x));
-function createState(seed=20261029){const shops={};for(const d of SHOPS)shops[d.id]={scores:Object.fromEntries(GENRES.map(x=>[x.id,0])),money:70,locals:55,visitors:28,stress:15,stage:0,route:null,closed:false,history:[],lastChange:"昔ながらの店構えで営業中。"};return {schema:1,version:VERSION,seed,month:0,shops,reviews:[],feed:[],last:null,view:"map",started:true};}
+function createState(seed=20261029){const shops={};for(const d of SHOPS)shops[d.id]={scores:Object.fromEntries(GENRES.map(x=>[x.id,0])),money:70,locals:55,visitors:28,stress:15,stage:0,route:null,closed:false,hardening:false,history:[],lastChange:"昔ながらの店構えで営業中。"};return {schema:1,version:VERSION,seed,month:0,shops,reviews:[],feed:[],last:null,view:"map",started:true};}
 function random(seed){let x=(seed>>>0)||1234567;return ()=>{x=(1664525*x+1013904223)>>>0;return x/4294967296};}
-function routeFor(s){let k=null,best=0,pol=null;for(const g of GENRES){const score=s.scores[g.id],abs=Math.abs(score);if(abs>best){best=abs;k=g.id;pol=score>0?"plus":"minus";}}if(!k||best<1)return {genre:null,polarity:null,stage:0,label:null,score:best};const stage=best>=15?4:best>=9?3:best>=4?2:1;return {genre:k,polarity:pol,stage,label:null,score:best};}
+function routeFor(s){let k=null,best=0,pol=null;for(const g of GENRES){const score=s.scores[g.id],abs=Math.abs(score);if(abs>best||(abs===best&&g.id==="identity"&&s.hardening&&score>0)){best=abs;k=g.id;pol=score>0?"plus":"minus";}}if(!k||best<1)return {genre:null,polarity:null,stage:0,label:null,score:best};const stage=best>=15?4:best>=9?3:best>=4?2:1;return {genre:k,polarity:pol,stage,label:null,score:best};}
 function display(s,id){const base=SHOPS.find(x=>x.id===id),route=routeFor(s),info=route.genre?PATHS[id][route.genre][route.polarity]:null,phase=["","小さな改装","看板一新","店舗改装","完成・拡張"][route.stage];
 const sign=route.stage>=2?info:route.stage===1?base.name+"（改装中）":base.name;
 const visualData=route.genre?VISUALS[id][route.genre][route.polarity]:null;
@@ -89,8 +89,13 @@ const NPC_NAMES=["駅前の会社員","近所の学生","通りがかりの客",
 function background(state,review){const rand=random((state.seed+state.month*9973+98127)>>>0);const ids=SHOPS.filter(d=>!state.shops[d.id].closed).map(d=>d.id);if(!ids.length)return null;const id=ids[Math.floor(rand()*ids.length)],genre=GENRES[Math.floor(rand()*GENRES.length)].id;const star=1+Math.floor(rand()*5),s=state.shops[id];s.scores[genre]=clamp(s.scores[genre]+Math.sign(star-3)*2,-25,25);s.money=clamp(s.money+(star-3)*0.8,-100,160);return {by:NPC_NAMES[Math.floor(rand()*NPC_NAMES.length)],id,star,genre,text:`${TOPICS[id][genre]}について${star>=4?"良い印象でした。":star<=2?"少し残念でした。":"良いところも気になるところもありました。"}`};}
 function social(state,review){const s=state.shops[review.id];const rand=random((state.seed+state.month*8191+345)>>>0);const makesSense=(state.month%3===0)||(s.stress>=55&&review.star<=2);if(!makesSense||rand()>0.72)return null;const pos=review.star>=4,neg=review.star<=2;let content;if(neg&&review.id==="ramen")content="『麺の硬さの話なのに、店主の返信が一番硬い』と投稿が拡散。店の様子を見に来る人がいる。";else if(neg)content=`${SHOPS.find(x=>x.id===review.id).name}の改善点を指摘する投稿が広がり、店を心配する声が増えた。`;else if(pos)content=`${SHOPS.find(x=>x.id===review.id).name}の口コミを見た人が写真を投稿。初めての客が少し増えた。`;else content="『この通り、少し雰囲気が変わった？』という投稿に、地元の人が昔の写真を添えた。";s.visitors=clamp(s.visitors+(pos?5:neg?2:1),0,100);s.stress=clamp(s.stress+(neg?9:1),0,100);return {service:"つぶやき広場",text:content,id:review.id};}
 function advance(state,action){if(state.month>=12)throw Error("finished");if(!action||!state.shops[action.id]||!GENRES.some(x=>x.id===action.genre)||!Number.isInteger(action.star)||action.star<1||action.star>5)throw Error("invalid action");const next=copy(state),s=next.shops[action.id];if(s.closed)throw Error("closed store");const allBefore=Object.fromEntries(SHOPS.map(d=>[d.id,display(next.shops[d.id],d.id)])),before=allBefore[action.id],text=reviewText(next,action.id,action.star,action.genre),reply=replyFor(next,action.id,action.star,action.genre);const delta=(action.star-3)*2;s.scores[action.genre]=clamp(s.scores[action.genre]+delta,-25,25);
-if(action.id==="ramen"&&action.genre==="taste"&&action.star<=2&&s.history.some(h=>h.genre==="taste"&&h.star<=2)){
- s.scores.identity=clamp(s.scores.identity+6,-25,25);
+if(action.id==="ramen"&&action.genre==="taste"&&action.star<=2){
+ const priorHardComplaints=s.history.filter(h=>h.genre==="taste"&&h.star<=2).length;
+ if(priorHardComplaints===1)s.scores.identity=clamp(s.scores.identity+4,-25,25);
+ if(priorHardComplaints>=2){
+  s.hardening=true;
+  s.scores.identity=clamp(Math.max(s.scores.identity,Math.abs(s.scores.taste)+2),0,25);
+ }
 }
 if(action.id==="cake"&&action.genre==="identity"&&action.star>=4){
  s.scores.identity=clamp(s.scores.identity+2,-25,25);
@@ -105,14 +110,24 @@ if(action.id==="ramen"&&action.star<=2&&(action.genre==="service"||action.genre=
 }else if(action.id==="cafe"&&action.star>=4&&action.genre==="mood"){
  const neighbor=next.shops.ramen;if(!neighbor.closed){neighbor.visitors=clamp(neighbor.visitors+2,0,100);neighbor.money=clamp(neighbor.money+1,-100,160);spillover="喫茶こもれびを訪れた人が、近くの麺処いわきにも足を延ばしている。";}
 }
+const playerAfter=display(s,action.id);
 const npc=background(next,rev);const sns=social(next,rev);
 for(const d of SHOPS){const x=next.shops[d.id];if(x.closed)continue;if(x.money<=0){x.closed=true;x.lastChange="資金が尽きて閉店。";}}
 const after=display(s,action.id);s.stage=after.route.stage;s.route=after.route.genre?`${after.route.genre}:${after.route.polarity}`:null;
 s.lastChange=after.summary;
-const transition=before.open&&!after.open?`${before.base.name}は閉店した。`:before.route.label!==after.route.label||before.route.stage!==after.route.stage?`店舗が変化した：${after.summary}`:before.feature!==after.feature?`店頭に変化があった：${after.feature}`:`大きな変化はなかった。${after.business}。`;
-let neighbor=spillover;if(!neighbor&&npc&&npc.id!==action.id){const bs=next.shops[npc.id];if(!bs.closed&&Math.abs(bs.scores[npc.genre])>=4&&next.month%4===0){neighbor=`${SHOPS.find(x=>x.id===npc.id).name}にも、小さな改装の動きが見られる。`;}}
-const affected=SHOPS.filter(d=>d.id!==action.id).map(d=>({id:d.id,before:allBefore[d.id],after:display(next.shops[d.id],d.id)})).filter(x=>x.before.sign!==x.after.sign||x.before.route.stage!==x.after.route.stage||x.before.open!==x.after.open||x.before.route.label!==x.after.route.label);
-const result={review:rev,transition,before,after,affected,npc,sns,neighbor,month:next.month};
+const viewChanged=(a,b)=>a.open!==b.open||a.sign!==b.sign||a.route.label!==b.route.label||a.route.stage!==b.route.stage||a.feature!==b.feature||a.visual.product!==b.visual.product;
+const playerChanged=viewChanged(before,playerAfter),npcChanged=npc?.id===action.id&&viewChanged(playerAfter,after);
+const endChanged=viewChanged(before,after);
+const cause=!endChanged&&playerChanged&&npcChanged?"offset":playerChanged&&npcChanged?"combined":npcChanged?"other":playerChanged?"player":"none";
+const transition=before.open&&!after.open?`${before.base.name}は閉店した。`:
+cause==="other"?`あなたの投稿後、${npc.by}の口コミが入り、${after.summary}`:
+cause==="combined"?`あなたの投稿に加え、${npc.by}の口コミが重なった。${after.summary}`:
+cause==="offset"?`あなたの投稿後、${npc.by}の口コミが重なった。最終的な店構えは大きく変わらなかった。`:
+before.route.label!==after.route.label||before.route.stage!==after.route.stage?`店舗が変化した：${after.summary}`:
+before.feature!==after.feature?`店頭に変化があった：${after.feature}`:`大きな変化はなかった。${after.business}。`;
+const affected=SHOPS.filter(d=>d.id!==action.id).map(d=>({id:d.id,before:allBefore[d.id],after:display(next.shops[d.id],d.id),reason:npc?.id===d.id?`${npc.by}の口コミを受け、店舗が変化した。`:"まちの動きを受け、店舗が変化した。"})).filter(x=>viewChanged(x.before,x.after));
+const neighbor=spillover;
+const result={review:rev,transition,before,after,playerAfter,cause,affected,npc,sns,neighbor,month:next.month};
 next.last=result;next.view="result";next.feed.push({month:next.month,kind:"player",...rev});if(npc)next.feed.push({month:next.month,kind:"npc",...npc});if(sns)next.feed.push({month:next.month,kind:"sns",...sns});return next;}
 function finish(state){if(state.month<12)throw Error("not finished");const ls=SHOPS.map(d=>({d,s:state.shops[d.id]}));const closed=ls.filter(x=>x.s.closed).length;const totalStages=ls.reduce((n,x)=>n+routeFor(x.s).stage,0);const local=ls.reduce((n,x)=>n+x.s.locals,0),vis=ls.reduce((n,x)=>n+x.s.visitors,0);
 let title,description;
