@@ -294,7 +294,12 @@ function producerProfile(){
  ];
  const form=fields.map(([k,title,values])=>'<label>'+esc(title)+'<select id="profile-'+k+'">'+values.map(v=>'<option value="'+esc(v)+'"'+((S.profileGuess[k]||'')===v?' selected':'')+'>'+esc(k==='org'&&v?label(v):v||'まだ分からない')+'</option>').join('')+'</select></label>').join('');
  const topicLabels={year:'学年',faculty:'学部・学科',instruments:'担当・演奏',favorite:'好きな音楽',production:'制作方法',org:'所属'};
- const facts=S.profileEvidence.map(x=>'<div class="notice"><strong>'+esc(topicLabels[x.topic]||x.topic)+'</strong>：'+esc(x.value)+'<p class="dim">出所：'+esc(S.guesses[x.pid]?.verified?people[x.pid].name:'会場で話した人物')+'（'+esc(x.source)+'）</p></div>').join('');
+ const facts=S.profileEvidence.map(x=>{
+   const visit=S.routeVisits.find(v=>v.pid===x.pid&&(v.key===x.visitKey||!x.visitKey));
+   const location=x.recordedAt|| (visit?visit.date+' ／ '+visit.hall:'会場情報は旧記録にありません');
+   return '<div class="notice"><strong>'+esc(topicLabels[x.topic]||x.topic)+'</strong>：'+esc(x.value)+
+    '<p class="dim">出所：'+esc(location)+' ／ 話した相手：'+esc(displayName(x.pid))+'（'+esc(x.source)+'）</p></div>';
+  }).join('');
  const refs=S.routeVisits.map(x=>'<p class="dim">・'+esc(x.date)+' '+esc(x.hall)+'：'+esc(x.text)+'</p>').join('');
  return '<div class="eyebrow">PROFILE / NO ANSWER CHECK</div><h2>余白ラムネのプロフィール</h2>'+
  '<div class="paper"><p>手がかりを照合して推測を書き込む。ここでは正解・不正解は表示されません。</p><p><strong>曲：</strong>'+esc(Story.song)+'</p>'+
@@ -446,10 +451,10 @@ function handle(act,id){
      recordConversation(id,'question');
      if(node){
       const key=S.group+'|'+id;
-      if(!S.routeVisits.some(x=>x.key===key))S.routeVisits.push({key,pid:id,hall:label(ev.org_id)+'・'+groups[S.group].group_title,date:WEEK[S.day],text:reply.text,route:node.route});
+      if(!S.routeVisits.some(x=>x.key===key))S.routeVisits.push({key,pid:id,hall:label(ev.org_id)+' ／ '+ev.title+' ／ '+eventName(S.group),date:'2026年'+(S.day===0?'4月6日':S.day===1?'4月7日':S.day===2?'4月8日':S.day===3?'4月9日':'4月10日')+'（'+WEEK[S.day].slice(0,2)+'）',text:reply.text,route:node.route});
       for(const fact of node.facts||[]){
        const [topic,value,source]=fact;
-       if(!S.profileEvidence.some(x=>x.pid===id&&x.topic===topic&&x.value===value))S.profileEvidence.push({pid:id,topic,value,source});
+       if(!S.profileEvidence.some(x=>x.pid===id&&x.topic===topic&&x.value===value))S.profileEvidence.push({pid:id,topic,value,source,visitKey:key,recordedAt:sourceLabel(S.group,'2026年4月'+(S.day+6)+'日（'+WEEK[S.day].slice(0,2)+'）')});
       }
      }
    }else if(type==='music'){
