@@ -151,6 +151,32 @@ header{display:flex;gap:16px;justify-content:space-between;align-items:center;pa
 const VERSION='0.6.29-alpha';const STORE='village-review-prototype-v010';
 const $=id=>document.getElementById(id);
 const V1_ART={ready:false,byId:new Map(),reason:'not loaded'};
+/* Optional resident portraits: an absent roster does not affect the base game's 145 images. */
+const V1_RESIDENT_ART={byId:new Map(),ready:false,reason:'awaiting portraits'};
+const V1_RESIDENT_NAMES=['resident-young-woman','resident-young-man','resident-middle-woman','resident-middle-man','resident-senior-woman','resident-senior-man','resident-student','resident-worker','resident-carpenter','resident-festival','resident-walker','resident-shopper'];
+function v1AcceptResidentAssets(manifest){
+ const records=manifest?.files,valid=new Map();
+ if(manifest?.count!==12||!Array.isArray(records)||records.length!==12)return false;
+ const expected=new Set(V1_RESIDENT_NAMES);
+ for(const rec of records){
+  const name=rec?.id;
+  if(!expected.has(name)||valid.has(name)||rec.png!==name+'.png'||rec.webp!==name+'.webp')return false;
+  if(rec.width!==256||rec.height!==256||!/^[0-9a-f]{64}$/.test(rec.pngSha256)||!/^[0-9a-f]{64}$/.test(rec.webpSha256))return false;
+  if(!Number.isInteger(rec.pngBytes)||rec.pngBytes<=0||!Number.isInteger(rec.webpBytes)||rec.webpBytes<=0)return false;
+  const stem='assets/proposals/residents/'+name;
+  valid.set('person:'+name,{png:stem+'.png',webp:stem+'.webp',width:256,height:256,alpha:true});
+ }
+ if(valid.size!==12)return false;
+ V1_RESIDENT_ART.byId=valid;V1_RESIDENT_ART.ready=true;V1_RESIDENT_ART.reason='ready';
+ return true
+}
+function v1ProbeResidentAssets(){
+ if(typeof fetch!=='function')return;
+ fetch('assets/proposals/residents/asset-list.json',{cache:'no-store'}).then(r=>{if(!r.ok)throw Error('no resident images');return r.json()})
+ .then(m=>{if(v1AcceptResidentAssets(m)){render();if(S.result)showResults()}})
+ .catch(()=>{V1_RESIDENT_ART.reason='optional portraits not yet present'})
+}
+
 const V1_PROPOSAL={byId:new Map(),reason:'not loaded'};
 function v1ExpectedProposalAssets(){
  const expected=new Map();
@@ -204,8 +230,8 @@ function v1FacilityStageId(f,stage,route){
  return proposal&&v1Url(proposal)?proposal:base
 }
 
-function v1Url(id){const record=(V1_ART.ready?V1_ART.byId.get(id):null)||V1_PROPOSAL.byId.get(id),u=record&&(record.webp||record.png);return typeof u==='string'&&/^assets\/[a-z0-9_\/-]+\.(webp|png)$/i.test(u)?u:null}
-function v1Png(id){const u=(V1_ART.ready?V1_ART.byId.get(id):null)?.png||V1_PROPOSAL.byId.get(id)?.png;return typeof u==='string'&&/^assets\/[a-z0-9_\/-]+\.png$/i.test(u)?u:null}
+function v1Url(id){const record=(V1_ART.ready?V1_ART.byId.get(id):null)||V1_PROPOSAL.byId.get(id)||V1_RESIDENT_ART.byId.get(id),u=record&&(record.webp||record.png);return typeof u==='string'&&/^assets\/[a-z0-9_\/-]+\.(webp|png)$/i.test(u)?u:null}
+function v1Png(id){const u=(V1_ART.ready?V1_ART.byId.get(id):null)?.png||V1_PROPOSAL.byId.get(id)?.png||V1_RESIDENT_ART.byId.get(id)?.png;return typeof u==='string'&&/^assets\/[a-z0-9_\/-]+\.png$/i.test(u)?u:null}
 function v1Art(id,emoji){const u=v1Url(id);return u?'<span class="v1Sprite"><img data-v1src="'+u+'" data-v1png="'+v1Png(id)+'" class="v1ArtImage" alt="" loading="eager" decoding="async"><span class="v1Fallback">'+emoji+'</span></span>':'<span class="v1Fallback">'+emoji+'</span>'}
 function v1FacilityId(f){return v1FacilityStageId(f,f.stage,lateRoute(f))}
 function v1Facility(f){return v1Art(v1FacilityId(f),DEFS[f.kind].icon)}
@@ -1371,8 +1397,29 @@ function v1HiddenPlace(){if(!S.completed)return null;const name=getEndings().hid
  const kind=key==='ancient'?['shrine','hall']:key==='robot'?['robot','office']:['harbor'];
  const target=S.facilities.find(f=>kind.includes(f.kind));return {id:'ending:'+key+':map',plot:target?.plot??null}}
 function v1HiddenPlotArt(hidden,plot){return hidden&&hidden.plot===plot?'<span class="v1MapSpecial">'+v1Art(hidden.id,'')+'</span>':''}
-function v1PersonId(v){const who=String(v).split('：「')[0];return 'person:' + (/漁師/.test(who)?'fisher':/案内/.test(who)?'guide':/商工会|商店|買い物/.test(who)?'shopkeeper':/農家/.test(who)?'farmer':/宿泊|宿の/.test(who)?'inn-staff':/保護者/.test(who)?'parent':/移住|子育て/.test(who)?'family':/年配|長年|高齢/.test(who)?'elderly':/役場/.test(who)?'official':'villager')}
-function v1Quote(v){const id=v1PersonId(v);return '<div class="v1Quote">'+(v1Url(id)?'<span class="v1Face">'+v1Art(id,'')+'</span>':'')+'<p>'+v+'</p></div>'}
+function v1PersonId(v,index=0){
+ const who=String(v).split('：「')[0];
+ const base=(/漁師/.test(who)?'fisher':/案内/.test(who)?'guide':/商工会|商店/.test(who)?'shopkeeper':/買い物/.test(who)?'shopkeeper':/農家/.test(who)?'farmer':/宿泊|宿の/.test(who)?'inn-staff':/保護者/.test(who)?'parent':/移住|子育て/.test(who)?'family':/年配|長年|高齢/.test(who)?'elderly':/役場/.test(who)?'official':'villager');
+ // Roles are intentionally broad: "村民" and "住民" describe different residents each month.
+ let variants=['resident-young-woman','resident-young-man','resident-middle-woman','resident-middle-man'];
+ if(/年配|長年|高齢/.test(who))variants=['resident-senior-woman','resident-senior-man'];
+ else if(/学生|通学/.test(who))variants=['resident-student','resident-young-woman','resident-young-man'];
+ else if(/大工/.test(who))variants=['resident-carpenter','resident-middle-man'];
+ else if(/祭り/.test(who))variants=['resident-festival','resident-middle-woman'];
+ else if(/散歩/.test(who))variants=['resident-walker','resident-senior-man','resident-middle-woman'];
+ else if(/働く|通勤/.test(who))variants=['resident-worker','resident-middle-man'];
+ else if(/買い物/.test(who))variants=['resident-shopper','resident-middle-woman'];
+ else if(/旅人|旅行|観光/.test(who))variants=['resident-young-man','resident-young-woman'];
+ else if(/近所|村民|住民|村の人/.test(who))variants=['resident-middle-woman','resident-young-man','resident-senior-woman','resident-young-woman','resident-middle-man','resident-senior-man'];
+ else variants=[];
+ // For a concrete profession, prefer the existing profession-appropriate portrait.
+ // New generic faces are used only when the label describes a nonspecific resident.
+ const allowGeneric=base==='villager'||/年配|長年|高齢|買い物/.test(who);
+ const candidates=allowGeneric?[...variants,base]:[base];
+ const available=candidates.map(name=>name.startsWith('person:')?name:'person:'+name).filter(id=>!!v1Url(id));
+ return available.length?v1VoicePick([S?.name,S?.month,index,v].join(':'),available):'person:'+base
+}
+function v1Quote(v,index=0){const id=v1PersonId(v,index);return '<div class="v1Quote">'+(v1Url(id)?'<span class="v1Face">'+v1Art(id,'')+'</span>':'')+'<p>'+v+'</p></div>'}
 function v1ResultVisual(event){const f=event.facilityId?find(event.facilityId):null;if(!f)return '<div class="icon">'+event.icon+'</div>';
  // An asset is selected for the stage described by the event, not the facility's later stage.
  // Multiple autonomous upgrades can otherwise make the screenshot contradict the headline.
@@ -1398,7 +1445,7 @@ function render(){const p=period(S.completed?-1:0),d=terrain();$('period').textC
  map.innerHTML=(v1Url('background:'+S.terrain)?'<img class="v1Backdrop" data-v1src="'+v1Url('background:'+S.terrain)+'" data-v1png="'+v1Png('background:'+S.terrain)+'" alt="">':'')+S.ground.map((tile,i)=>{const f=contents.get(i),base='plot '+tile;if(!f)return '<div class="groundPlot '+base+'">'+v1HiddenPlotArt(hiddenSpot,i)+'</div>';
  return '<button type="button" class="site '+base+' '+(!f.open?'closed':S.candidates.includes(f.id)?'eligible':'notEligible')+(f.id===chosen?' selected':'')+' stage'+f.stage+(f.lastChanged>=S.month-1&&S.month>0?' changed':'')+'" data-id="'+f.id+'" aria-label="'+f.name+(f.open?'':' 閉業')+'"><span class="emoji">'+v1Facility(f)+v1OverlayHTML(f)+v1HiddenPlotArt(hiddenSpot,i)+'</span><span class="siteName">'+f.name+'</span><span class="newStage">'+(f.stage>=3?'★ 最終形態｜':'')+(f.stage>0?phaseName(f):'')+'</span><span class="marker">'+(!f.open?'閉業':S.completed?'1年の記録':S.candidates.includes(f.id)?(f.id===chosen?'✓ 選択中':'今月訪問可'):'観察のみ')+'</span></button>';
  }).join('');v1LoadImages(map);map.querySelectorAll('.site').forEach(el=>el.addEventListener('click',()=>{chosen=el.dataset.id;selectedFact=0;currentStars=4;render()}));
- $('residentVoices').innerHTML='<strong>💬 村民の声｜'+(S.month===0?'訪問前':villageMood())+'</strong>'+villageVoices().map(v1Quote).join('');v1LoadImages($('residentVoices'));$('news').textContent=(S.lastReview?'最近の村ニュース：'+finalPunctuation(S.log[0].title):'村の近況：観光客の口コミを参考に、施設が少しずつ姿を変えているようです。');$('history').innerHTML=S.log.slice(0,8).map(l=>'<div class="historyItem"><strong>'+timeName(l.month)+'｜'+l.title+'</strong>'+l.detail+'</div>').join('');$('reviewCount').textContent=(S.reviewHistory||[]).length;$('reviewArchiveList').innerHTML=reviewArchiveHTML();$('monthTitle').textContent=S.completed?'1年間の口コミが完了':'候補 '+S.candidates.length+'施設';$('monthCount').innerHTML=Array.from({length:12},(_,i)=>'<span class="'+(i<(S.completed?12:S.month%12)?'filled':'')+'"></span>').join('');$('progressBar').style.width=((S.completed?12:S.month%12)/12*100)+'%';$('candidatesNote').textContent=S.completed?'1年分の口コミが終わりました。施設の変化を見返したり、新しい村で遊べます。':'紫色の「今月訪問可」から1件選べます。他施設は観察のみ可能です。';renderDetail();}
+ $('residentVoices').innerHTML='<strong>💬 村民の声｜'+(S.month===0?'訪問前':villageMood())+'</strong>'+villageVoices().map((v,i)=>v1Quote(v,i)).join('');v1LoadImages($('residentVoices'));$('news').textContent=(S.lastReview?'最近の村ニュース：'+finalPunctuation(S.log[0].title):'村の近況：観光客の口コミを参考に、施設が少しずつ姿を変えているようです。');$('history').innerHTML=S.log.slice(0,8).map(l=>'<div class="historyItem"><strong>'+timeName(l.month)+'｜'+l.title+'</strong>'+l.detail+'</div>').join('');$('reviewCount').textContent=(S.reviewHistory||[]).length;$('reviewArchiveList').innerHTML=reviewArchiveHTML();$('monthTitle').textContent=S.completed?'1年間の口コミが完了':'候補 '+S.candidates.length+'施設';$('monthCount').innerHTML=Array.from({length:12},(_,i)=>'<span class="'+(i<(S.completed?12:S.month%12)?'filled':'')+'"></span>').join('');$('progressBar').style.width=((S.completed?12:S.month%12)/12*100)+'%';$('candidatesNote').textContent=S.completed?'1年分の口コミが終わりました。施設の変化を見返したり、新しい村で遊べます。':'紫色の「今月訪問可」から1件選べます。他施設は観察のみ可能です。';renderDetail();}
 function reviewArchiveHTML(){
  const entries=S.reviewHistory||[];
  if(!entries.length)return '<div class="reviewArchiveItem">まだ口コミはありません。</div>';
@@ -1473,7 +1520,7 @@ function showAnnual(){
  for(const event of ordered){if(used.has(event.title))continue;used.add(event.title);timeline.push(event);if(timeline.length>=7)break}
  timeline.sort((a,b)=>a.month-b.month);
  const news=timeline.map(x=>'<div><strong>'+timeName(x.month)+'｜'+finalPunctuation(x.title)+'</strong><p style="margin:4px 0 0">'+x.detail+'</p></div>').join('');
- const residents=villageVoices().map(v=>'<div class="annualVoice">'+v1Quote(v)+'</div>').join('');
+ const residents=villageVoices().map((v,i)=>'<div class="annualVoice">'+v1Quote(v,i)+'</div>').join('');
  const closing=closed.length&&S.economy<45?'施設の変化の陰で、営業を終えた建物と村の経営が課題になっています。':S.quiet<50?'観光と賑わいが増える一方、静かな暮らしをどう守るかが次の課題です。':S.economy>=60?'仕事や経済に明るい動きが見られましたが、その恩恵が村全体に届くかはこれからです。':'良い口コミも厳しい口コミも残り、村にはまだ変わる余地があります。';
  const text='<div class="modalHead">観光案内パンフレット｜'+p.fy+'年度 年末特別号</div><div class="annualPublicationHead"><div class="annualPublicationName">'+S.name+' 観光案内</div><div class="annualIssue">'+p.year+'年'+p.month+'月発行｜年末号</div></div>'
  +'<div class="annualCover"><div class="annualCoverLabel">村の観光案内｜一年の風景</div><div class="milestone">'+(e.main.hidden?'今年の村の、もうひとつの姿':'12件の口コミが生んだ、今年の村')+'</div><div style="font-size:12px;color:#68796e">'+S.name+'｜'+p.fy+'年度</div><div class="big">'+e.main.name+'</div>'+v1EndingVisual(e.main.name)+'<p class="annualLead">'+e.main.desc+'</p></div>'
@@ -1507,7 +1554,7 @@ function showHelp(first=false){const examples=[
 function beep(big){try{const C=window.AudioContext||window.webkitAudioContext;if(!C)return;const ctx=new C();const now=ctx.currentTime;[523,659,big?1046:784].forEach((freq,i)=>{const osc=ctx.createOscillator(),g=ctx.createGain();osc.type='sine';osc.frequency.setValueAtTime(freq,now+i*.085);g.gain.setValueAtTime(.0001,now+i*.085);g.gain.exponentialRampToValueAtTime(.095,now+i*.085+.01);g.gain.exponentialRampToValueAtTime(.0001,now+i*.085+.24);osc.connect(g);g.connect(ctx.destination);osc.start(now+i*.085);osc.stop(now+i*.085+.26)});setTimeout(()=>ctx.close(),1000)}catch(e){}}
 $('helpBtn').addEventListener('click',()=>showHelp(false));$('resetBtn').addEventListener('click',()=>{if(confirm('この村の記録を終了して、新しい村を生成しますか？\n（現在の村の記録は上書きされます）')){newWorld((Date.now()^Math.floor(Math.random()*0xffffffff))>>>0);render();showHelp(true)}});$('soundBtn').addEventListener('click',()=>{sound=!sound;$('soundBtn').textContent=sound?'♪ ON':'♪ OFF';$('soundBtn').setAttribute('aria-pressed',String(sound))});if(load()){chosen=S.candidates[0];render();if(S.result)showResults();else if(S.annualDue||S.completed)showAnnual()}else{newWorld((Date.now()^Math.floor(Math.random()*0xffffffff))>>>0);render();showHelp(true)}
 // Test harness is exposed in local QA only, not in user controls.
-evolutionFetch();v1Probe();v1ProbeProposals();if(location.search.includes('qa=1'))window.__VILLAGE_QA__={evolutionRegister,evolutionTargetId,evolutionRecord,evolutionStatus:()=>({ready:V1_EVOLUTION.ready,second:V1_EVOLUTION.stage2.size,third:V1_EVOLUTION.stage3.size,specials:V1_EVOLUTION.specials.length}),routeFor,aspectLevel,reviewText,timeName,finaleCandidate,makeCandidates,v1ResultVisual,v1ExpectedAssets,v1AcceptManifest,v1LoadImages,artStatus:()=>({ready:V1_ART.ready,size:V1_ART.byId.size}),v1FacilityId,v1FacilityStageId,v1AcceptProposals,v1ExpectedProposalAssets,proposalStatus:()=>({ready:V1_PROPOSAL.byId.size===44,count:V1_PROPOSAL.byId.size,reason:V1_PROPOSAL.reason}),groundQA,phaseName,v1OverlayKeys,coastalName,visitNote,voice,facilityStrain,villageWhisper,evolutionMetricsValid,applyEvolutionConsequences,getState:()=>S,generate:(seed)=>{newWorld(seed);render()},post:(id,factIndex,stars)=>{chosen=id;selectedFact=factIndex;currentStars=stars;nextReview();hideModal()},annual:getEndings,report:()=>{showAnnual();return $('modal').innerHTML},voices:villageVoices,factsFor};
+evolutionFetch();v1Probe();v1ProbeProposals();v1ProbeResidentAssets();if(location.search.includes('qa=1'))window.__VILLAGE_QA__={evolutionRegister,evolutionTargetId,evolutionRecord,evolutionStatus:()=>({ready:V1_EVOLUTION.ready,second:V1_EVOLUTION.stage2.size,third:V1_EVOLUTION.stage3.size,specials:V1_EVOLUTION.specials.length}),routeFor,aspectLevel,reviewText,timeName,finaleCandidate,makeCandidates,v1ResultVisual,v1ExpectedAssets,v1AcceptManifest,v1LoadImages,artStatus:()=>({ready:V1_ART.ready,size:V1_ART.byId.size}),v1FacilityId,v1FacilityStageId,v1AcceptProposals,v1ExpectedProposalAssets,proposalStatus:()=>({ready:V1_PROPOSAL.byId.size===44,count:V1_PROPOSAL.byId.size,reason:V1_PROPOSAL.reason}),groundQA,phaseName,v1OverlayKeys,coastalName,v1AcceptResidentAssets,residentStatus:()=>({ready:V1_RESIDENT_ART.ready,count:V1_RESIDENT_ART.byId.size}),v1PersonId,v1Quote,visitNote,voice,facilityStrain,villageWhisper,evolutionMetricsValid,applyEvolutionConsequences,getState:()=>S,generate:(seed)=>{newWorld(seed);render()},post:(id,factIndex,stars)=>{chosen=id;selectedFact=factIndex;currentStars=stars;nextReview();hideModal()},annual:getEndings,report:()=>{showAnnual();return $('modal').innerHTML},voices:villageVoices,factsFor};
 })();
 </script>
 </body></html>
