@@ -1,6 +1,6 @@
 window.R1 = (function makeEngine(){
 "use strict";
-const VERSION="0.1.0-alpha";
+const VERSION="0.2.0-alpha";
 const GENRES=[
 {id:"taste",name:"商品・味",icon:"🍜"},
 {id:"service",name:"接客",icon:"💬"},
@@ -18,24 +18,25 @@ const PATHS={
 ramen:{
 taste:{plus:"硬麺を極める店",minus:"茹で加減研究所"},
 service:{plus:"寡黙なおもてなし店",minus:"完全食券制の店"},
-price:{plus:"一杯二千円の職人店",minus:"庶民派ラーメン食堂"},
-mood:{plus:"一人席の聖域",minus:"にぎやかな大衆食堂"},
+price:{plus:"お値打ち満腹ラーメン",minus:"価格見直し食堂"},
+mood:{plus:"一人席の聖域",minus:"落ち着く街の食堂"},
 identity:{plus:"超硬麺専門店",minus:"王道中華そば店"}
 },
 cafe:{
 taste:{plus:"自家焙煎の名店",minus:"メニュー全面刷新喫茶"},
 service:{plus:"会話を楽しむ喫茶",minus:"注文セルフ喫茶"},
-price:{plus:"特別な一杯の喫茶",minus:"百円コーヒー喫茶"},
+price:{plus:"お値打ちブレンド喫茶",minus:"価格改定の喫茶"},
 mood:{plus:"静寂の読書喫茶",minus:"交流カフェ"},
 identity:{plus:"昭和純喫茶",minus:"現代型カフェ"}
 },
 cake:{
 taste:{plus:"至高の一品専門店",minus:"レシピ再出発工房"},
 service:{plus:"お祝い相談の洋菓子店",minus:"無人受取スイーツ店"},
-price:{plus:"宝石菓子の店",minus:"お手頃おやつ店"},
+price:{plus:"お値段以上の洋菓子店",minus:"手頃なおやつ工房"},
 mood:{plus:"お姫様のサロン",minus:"気軽な街角菓子店"},
 identity:{plus:"奇抜な新作工房",minus:"定番ケーキの店"}
 }};
+const POSTERS={"ramen":{"taste":{"plus":"硬麺の新作が店頭に登場","minus":"茹で加減の再調整を告知"},"service":{"plus":"接客方針の札を掲示","minus":"注文方法を見直した"},"price":{"plus":"お得なセットを追加","minus":"価格表を作り直した"},"mood":{"plus":"客席を整えた","minus":"席の間隔を調整した"},"identity":{"plus":"こだわりメニューを増やした","minus":"定番メニューも取り扱う"}},"cafe":{"taste":{"plus":"自家焙煎メニューを拡充","minus":"抽出方法を再検討"},"service":{"plus":"会話の時間を設けた","minus":"接客ルールを見直した"},"price":{"plus":"お得なセットを掲示","minus":"定番商品の価格を調整"},"mood":{"plus":"読書席を増やした","minus":"席の配置を変更した"},"identity":{"plus":"懐かしい食器を並べた","minus":"新メニューを試作した"}},"cake":{"taste":{"plus":"人気商品の新作を発売","minus":"レシピを改良した"},"service":{"plus":"贈り物の相談窓口を新設","minus":"受け取り方法を変更"},"price":{"plus":"お得な焼き菓子セットを追加","minus":"小さなサイズを販売"},"mood":{"plus":"ショーケースを華やかにした","minus":"店内の装飾を減らした"},"identity":{"plus":"個性派ケーキを発表","minus":"定番商品の試作を始めた"}}};
 const TOPICS={
 ramen:{taste:"麺の硬さとスープ",service:"店主の受け答え",price:"一杯の価格",mood:"店内の居心地",identity:"独特のこだわり"},
 cafe:{taste:"コーヒーと軽食",service:"店員の応対",price:"飲み物の価格",mood:"店内の落ち着き",identity:"昔ながらの雰囲気"},
@@ -67,18 +68,24 @@ const clamp=(n,min,max)=>Math.max(min,Math.min(max,n));
 const copy=x=>JSON.parse(JSON.stringify(x));
 function createState(seed=20261029){const shops={};for(const d of SHOPS)shops[d.id]={scores:Object.fromEntries(GENRES.map(x=>[x.id,0])),money:70,locals:55,visitors:28,stress:15,stage:0,route:null,closed:false,history:[],lastChange:"昔ながらの店構えで営業中。"};return {schema:1,version:VERSION,seed,month:0,shops,reviews:[],feed:[],last:null,view:"map",started:true};}
 function random(seed){let x=(seed>>>0)||1234567;return ()=>{x=(1664525*x+1013904223)>>>0;return x/4294967296};}
-function routeFor(s){let k=null,best=0,pol=null;for(const g of GENRES){const score=s.scores[g.id],abs=Math.abs(score);if(abs>best){best=abs;k=g.id;pol=score>0?"plus":"minus";}}if(!k||best<4)return {genre:null,polarity:null,stage:0,label:null,score:best};const stage=best>=15?3:best>=9?2:1;return {genre:k,polarity:pol,stage,label:null,score:best};}
-function display(s,id){const base=SHOPS.find(x=>x.id===id),route=routeFor(s);const info=route.genre?PATHS[id][route.genre][route.polarity]:null;const phase=["","改装準備","看板一新","全面改装"][route.stage];const sign=route.stage>=2?info:base.name;const sign2=route.stage===1?info+"へ":route.stage===3?info+"・完成形":"";return {id,base,route:{...route,label:info},phase,sign,sign2,open:!s.closed,summary:s.closed?"シャッターが下り、閉店のお知らせが貼られている。":route.stage===0?"昔ながらの店構えで営業中。":route.stage===1?`「${info}」を目指す張り紙が登場。`:route.stage===2?`新しい看板に掛け替え、商品や内装が変化。`:`「${info}」として店全体が生まれ変わった。`,population:s.locals>=65?"地元客で賑わう":s.visitors>=65?"初めての客が目立つ":s.locals<=30?"常連が減っている":"いつもの客足",business:s.money>=100?"繁盛":s.money>=40?"営業中":s.money>0?"経営が厳しい":"閉店"};
-}
-function reviewText(state,id,star,genre){const s=state.shops[id];if(!s||!GENRES.some(g=>g.id===genre)||!Number.isInteger(star)||star<1||star>5)throw Error("invalid review");const topic=TOPICS[id][genre];const revisit=s.history.length>0?"以前にも来ました。 ":"";if(s.closed)throw Error("closed store");const current=display(s,id);const changed=s.stage>0?`今の「${current.route.label}」という方向性も踏まえると、`:"";const texts={1:`${topic}にはかなり不満があります。改善してほしいです。`,2:`${topic}は気になる点がありました。もう少し工夫があるとうれしい。`,3:`${topic}は良い点も気になる点もありました。今後に期待します。`,4:`${topic}は良かったです。この良さが続くといいと思います。`,5:`${topic}がとても良かったです。ぜひこの方向を極めてほしい。`};return revisit+changed+texts[star];}
+function routeFor(s){let k=null,best=0,pol=null;for(const g of GENRES){const score=s.scores[g.id],abs=Math.abs(score);if(abs>best){best=abs;k=g.id;pol=score>0?"plus":"minus";}}if(!k||best<1)return {genre:null,polarity:null,stage:0,label:null,score:best};const stage=best>=15?4:best>=9?3:best>=4?2:1;return {genre:k,polarity:pol,stage,label:null,score:best};}
+function display(s,id){const base=SHOPS.find(x=>x.id===id),route=routeFor(s),info=route.genre?PATHS[id][route.genre][route.polarity]:null,phase=["","小さな改装","看板一新","店舗改装","完成・拡張"][route.stage];
+const sign=route.stage>=2?info:route.stage===1?base.name+"（改装中）":base.name;
+const last=s.history[s.history.length-1],currentGenre=last&&GENRES.some(g=>g.id===last.genre)?last.genre:route.genre;
+const positive=last?last.star>=4:route.polarity==="plus",poster=currentGenre?POSTERS[id][currentGenre][positive?"plus":"minus"]:"いつもの営業案内";
+const repeated=last?s.history.filter(h=>h.genre===currentGenre&&Math.sign(h.star-3)===Math.sign(last.star-3)).length:0;
+const feature=last?poster+(repeated>=2?"（第"+repeated+"回の見直し）":""):route.stage?"改装を準備中":"本日も営業中";
+const summary=s.closed?"シャッターが下り、閉店のお知らせが貼られている。":route.stage===0?"昔ながらの店構えで営業中。":route.stage===1?`「${info}」に向けて小さな改装を始めた。`:route.stage===2?`「${info}」へ看板を掛け替えた。`:route.stage===3?`「${info}」に合わせて内装と商品を変更した。`:`「${info}」として店の営業形態が定着した。`;
+return {id,base,route:{...route,label:info},phase,sign,sign2:route.stage===1?info+"へ":route.stage>=3?info+"・"+phase:"",feature,open:!s.closed,summary,population:s.locals>=65?"地元客で賑わう":s.visitors>=65?"初めての客が目立つ":s.locals<=30?"常連が減っている":"いつもの客足",business:s.money>=100?"繁盛":s.money>=40?"営業中":s.money>0?"経営が厳しい":"閉店"};}
+function reviewText(state,id,star,genre){const s=state.shops[id];if(!s||!GENRES.some(g=>g.id===genre)||!Number.isInteger(star)||star<1||star>5)throw Error("invalid review");const topic=TOPICS[id][genre];const revisit=s.history.length>0?"以前にも来ました。 ":"";if(s.closed)throw Error("closed store");const current=display(s,id);const changed=current.route.stage>0?`今の「${current.route.label}」という方向性も踏まえると、`:"";const texts={1:`${topic}にはかなり不満があります。改善してほしいです。`,2:`${topic}は気になる点がありました。もう少し工夫があるとうれしい。`,3:`${topic}は良い点も気になる点もありました。今後に期待します。`,4:`${topic}は良かったです。この良さが続くといいと思います。`,5:`${topic}がとても良かったです。ぜひこの方向を極めてほしい。`};return revisit+changed+texts[star];}
 function replyFor(state,id,star,genre){const s=state.shops[id];const positive=star>3,negative=star<3;const band=positive?"plus":negative?"minus":"neutral";const arr=RESPONSES[id][genre][band==="neutral"?"plus":band];const n=s.history.length;const rnd=random((state.seed+state.month*107+n*31+star*13+GENRES.findIndex(x=>x.id===genre)*17+SHOPS.findIndex(x=>x.id===id)*23)>>>0);let msg=band==="neutral"?["評価が分かれた点、参考にいたします。", "どちらとも言い切れないご感想も、大切に読みます。", "次に来られたとき、違いを感じていただけるといいですね。"][SHOPS.findIndex(x=>x.id===id)]:arr[Math.floor(rnd()*arr.length)];const hardComplaints=id==="ramen"&&genre==="taste"&&negative?s.history.filter(h=>h.genre==="taste"&&h.star<=2).length:0;
 if(hardComplaints>=2)msg="同じご指摘が続きました。ならば『硬い麺』そのものを看板にします。";
 else if(hardComplaints===1)msg="以前の麺へのご意見も覚えています。"+msg;
 if(hardComplaints===0&&n&&s.history[n-1].genre===genre)msg="前回も同じ点を見てくださっていましたね。"+msg;else if(n>0&&n%3===0)msg="何度も足を運んでくださっていることは覚えています。"+msg;if(s.stress>=70&&id==="ramen"&&negative)msg="ご意見の主旨は理解しています。"+msg;return msg;}
 const NPC_NAMES=["駅前の会社員","近所の学生","通りがかりの客","常連のひとり","休日の散歩客","子連れの住民","隣町からの来訪者"];
-function background(state,review){const rand=random((state.seed+state.month*9973+98127)>>>0);const ids=SHOPS.filter(d=>!state.shops[d.id].closed).map(d=>d.id);if(!ids.length)return null;const id=ids[Math.floor(rand()*ids.length)],genre=GENRES[Math.floor(rand()*GENRES.length)].id;const star=1+Math.floor(rand()*5),s=state.shops[id];s.scores[genre]=clamp(s.scores[genre]+Math.sign(star-3),-25,25);s.money=clamp(s.money+(star-3)*0.8,-100,160);return {by:NPC_NAMES[Math.floor(rand()*NPC_NAMES.length)],id,star,genre,text:`${TOPICS[id][genre]}について${star>=4?"良い印象でした。":star<=2?"少し残念でした。":"良いところも気になるところもありました。"}`};}
+function background(state,review){const rand=random((state.seed+state.month*9973+98127)>>>0);const ids=SHOPS.filter(d=>!state.shops[d.id].closed).map(d=>d.id);if(!ids.length)return null;const id=ids[Math.floor(rand()*ids.length)],genre=GENRES[Math.floor(rand()*GENRES.length)].id;const star=1+Math.floor(rand()*5),s=state.shops[id];s.scores[genre]=clamp(s.scores[genre]+Math.sign(star-3)*2,-25,25);s.money=clamp(s.money+(star-3)*0.8,-100,160);return {by:NPC_NAMES[Math.floor(rand()*NPC_NAMES.length)],id,star,genre,text:`${TOPICS[id][genre]}について${star>=4?"良い印象でした。":star<=2?"少し残念でした。":"良いところも気になるところもありました。"}`};}
 function social(state,review){const s=state.shops[review.id];const rand=random((state.seed+state.month*8191+345)>>>0);const makesSense=(state.month%3===0)||(s.stress>=55&&review.star<=2);if(!makesSense||rand()>0.72)return null;const pos=review.star>=4,neg=review.star<=2;let content;if(neg&&review.id==="ramen")content="『麺の硬さの話なのに、店主の返信が一番硬い』と投稿が拡散。店の様子を見に来る人がいる。";else if(neg)content=`${SHOPS.find(x=>x.id===review.id).name}の改善点を指摘する投稿が広がり、店を心配する声が増えた。`;else if(pos)content=`${SHOPS.find(x=>x.id===review.id).name}の口コミを見た人が写真を投稿。初めての客が少し増えた。`;else content="『この通り、少し雰囲気が変わった？』という投稿に、地元の人が昔の写真を添えた。";s.visitors=clamp(s.visitors+(pos?5:neg?2:1),0,100);s.stress=clamp(s.stress+(neg?9:1),0,100);return {service:"つぶやき広場",text:content,id:review.id};}
-function advance(state,action){if(state.month>=12)throw Error("finished");if(!action||!state.shops[action.id]||!GENRES.some(x=>x.id===action.genre)||!Number.isInteger(action.star)||action.star<1||action.star>5)throw Error("invalid action");const next=copy(state),s=next.shops[action.id];if(s.closed)throw Error("closed store");const before=display(s,action.id),text=reviewText(next,action.id,action.star,action.genre),reply=replyFor(next,action.id,action.star,action.genre);const delta=(action.star-3)*2;s.scores[action.genre]=clamp(s.scores[action.genre]+delta,-25,25);
+function advance(state,action){if(state.month>=12)throw Error("finished");if(!action||!state.shops[action.id]||!GENRES.some(x=>x.id===action.genre)||!Number.isInteger(action.star)||action.star<1||action.star>5)throw Error("invalid action");const next=copy(state),s=next.shops[action.id];if(s.closed)throw Error("closed store");const allBefore=Object.fromEntries(SHOPS.map(d=>[d.id,display(next.shops[d.id],d.id)])),before=allBefore[action.id],text=reviewText(next,action.id,action.star,action.genre),reply=replyFor(next,action.id,action.star,action.genre);const delta=(action.star-3)*2;s.scores[action.genre]=clamp(s.scores[action.genre]+delta,-25,25);
 if(action.id==="ramen"&&action.genre==="taste"&&action.star<=2&&s.history.some(h=>h.genre==="taste"&&h.star<=2)){
  s.scores.identity=clamp(s.scores.identity+6,-25,25);
 }
@@ -99,9 +106,10 @@ const npc=background(next,rev);const sns=social(next,rev);
 for(const d of SHOPS){const x=next.shops[d.id];if(x.closed)continue;if(x.money<=0){x.closed=true;x.lastChange="資金が尽きて閉店。";}}
 const after=display(s,action.id);s.stage=after.route.stage;s.route=after.route.genre?`${after.route.genre}:${after.route.polarity}`:null;
 s.lastChange=after.summary;
-const transition=before.open&&!after.open?`${before.base.name}は閉店した。`:before.route.label!==after.route.label||before.route.stage!==after.route.stage?`店舗が変化した：${after.summary}`:`外観に大きな変化はない。${after.business}。`;
+const transition=before.open&&!after.open?`${before.base.name}は閉店した。`:before.route.label!==after.route.label||before.route.stage!==after.route.stage?`店舗が変化した：${after.summary}`:before.feature!==after.feature?`店頭に変化があった：${after.feature}`:`大きな変化はなかった。${after.business}。`;
 let neighbor=spillover;if(!neighbor&&npc&&npc.id!==action.id){const bs=next.shops[npc.id];if(!bs.closed&&Math.abs(bs.scores[npc.genre])>=4&&next.month%4===0){neighbor=`${SHOPS.find(x=>x.id===npc.id).name}にも、小さな改装の動きが見られる。`;}}
-const result={review:rev,transition,before,after,npc,sns,neighbor,month:next.month};
+const affected=SHOPS.filter(d=>d.id!==action.id).map(d=>({id:d.id,before:allBefore[d.id],after:display(next.shops[d.id],d.id)})).filter(x=>x.before.sign!==x.after.sign||x.before.route.stage!==x.after.route.stage||x.before.open!==x.after.open||x.before.route.label!==x.after.route.label);
+const result={review:rev,transition,before,after,affected,npc,sns,neighbor,month:next.month};
 next.last=result;next.view="result";next.feed.push({month:next.month,kind:"player",...rev});if(npc)next.feed.push({month:next.month,kind:"npc",...npc});if(sns)next.feed.push({month:next.month,kind:"sns",...sns});return next;}
 function finish(state){if(state.month<12)throw Error("not finished");const ls=SHOPS.map(d=>({d,s:state.shops[d.id]}));const closed=ls.filter(x=>x.s.closed).length;const totalStages=ls.reduce((n,x)=>n+routeFor(x.s).stage,0);const local=ls.reduce((n,x)=>n+x.s.locals,0),vis=ls.reduce((n,x)=>n+x.s.visitors,0);
 let title,description;if(closed>=2){title="シャッターが増えた通り";description="新しい看板よりも、閉まったシャッターが目立つ。口コミだけでは店を支えきれなかった。";}
