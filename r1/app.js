@@ -10,7 +10,8 @@ const dshop=id=>E.SHOPS.find(x=>x.id===id);
 const dgenre=id=>E.GENRES.find(x=>x.id===id);
 function newGame(){const state=E.createState(Date.now()>>>0);state.introSeen=false;return state}
 function load(){
- try{const raw=localStorage.getItem(KEY);if(raw){const s=JSON.parse(raw);if(s.version===E.VERSION){E.audit(s);return s;}if(["0.1.0-alpha","0.2.0-alpha","0.3.0-alpha","0.3.1-alpha","0.3.2-alpha","0.4.0-alpha","0.4.1-alpha","0.5.0-alpha"].includes(s.version)){
+ try{const raw=localStorage.getItem(KEY);if(raw){const s=JSON.parse(raw);if(s.version===E.VERSION){E.audit(s);return s;}if(["0.1.0-alpha","0.2.0-alpha","0.3.0-alpha","0.3.1-alpha","0.3.2-alpha","0.4.0-alpha","0.4.1-alpha","0.5.0-alpha","0.6.0-alpha"].includes(s.version)){
+ if(["0.1.0-alpha","0.2.0-alpha","0.3.0-alpha","0.3.1-alpha","0.3.2-alpha","0.4.0-alpha"].includes(s.version)){
  const ramen=s.shops.ramen;
  ramen.scores=Object.fromEntries(E.GENRES.map(g=>[g.id,0]));
  ramen.hardening=false;ramen.stage=0;ramen.route=null;ramen.closed=false;
@@ -18,10 +19,16 @@ function load(){
  ramen.disputes=ramen.history.length+ramen.history.filter(h=>h.exchange).length;
  ramen.lastChange="看板も硬麺も変わらず営業中。";
  if(s.view==="result"&&s.last?.review.id==="ramen")s.view="map";
+ }
  if(!s.shops.curry)s.shops.curry=E.createState(s.seed).shops.curry;
  if(!Number.isFinite(s.viralCount))s.viralCount=0;
  if(!Number.isFinite(s.lastViralMonth))s.lastViralMonth=-10;
  if(!s.shops.teishoku)s.shops.teishoku=E.createState(s.seed).shops.teishoku;
+ const template=E.createState(s.seed);
+ for(const d of E.SHOPS)if(!s.shops[d.id]){
+  s.shops[d.id]=template.shops[d.id];
+  s.shops[d.id].opened=false;s.shops[d.id].openedMonth=null;
+ }
  for(const d of E.SHOPS){const x=s.shops[d.id];if(typeof x.opened!=="boolean")x.opened=d.id!=="teishoku";if(x.opened&&x.openedMonth==null)x.openedMonth=0;if(!x.opened)x.openedMonth=null;if(!Number.isFinite(x.slowMonths))x.slowMonths=0;if(!("closedReason" in x))x.closedReason=x.closed?"閉店":null;}
  s.version=E.VERSION;E.audit(s);return s;
 }}}
@@ -78,14 +85,14 @@ function detail(id){
  (last?'<div class="recent"><h3>前回あなたに届いた返信</h3><p><strong>'+esc(d.owner)+'</strong>：「'+esc(last.reply)+'」</p></div>':'')+reviewForm(id)+'</section>';
 }
 function tutorial(){
- const base=E.createState(101),before=E.display(base.shops.cake,"cake");
- base.shops.cake.scores.identity=16;base.shops.cake.history=[{id:"cake",genre:"identity",star:5,month:1}];
- const after=E.display(base.shops.cake,"cake");
+ const preview=E.SHOPS.find(d=>d.id!=="ramen"&&game.shops[d.id].opened),base=E.createState(game.seed);base.shops[preview.id].opened=true;base.shops[preview.id].openedMonth=0;const before=E.display(base.shops[preview.id],preview.id);
+ base.shops[preview.id].scores.identity=16;base.shops[preview.id].history=[{id:preview.id,genre:"identity",star:5,month:1}];
+ const after=E.display(base.shops[preview.id],preview.id);
  return '<section class="tutorial" aria-labelledby="tutorialTitle"><div class="tutorial-hero"><span class="eyebrow">出張先での昼休み</span>'+
  '<h2 id="tutorialTitle">毎月この街に、<br>出張でやって来る。</h2><p>昼休みは1時間。今日はどこに入ろう？ 評判の良い店も、気になる返信をする店もあります。</p></div>'+
  '<div class="business-story"><strong>📍 今月も、この商店街でランチ。</strong><p>まずは口コミを読んで、行くお店を選びましょう。食後はあなたも感想を投稿できます。</p></div>'+
- '<div class="tutorial-steps"><article><strong>① 口コミを読む</strong><p>営業中の3店舗の評価と店主からの返信を見比べます。</p></article>'+
- '<article><strong>② お店で食べる</strong><p>行き先を決めます。洋菓子店では食後のおやつを選べます。</p></article>'+
+ '<div class="tutorial-steps"><article><strong>① 口コミを読む</strong><p>毎回顔ぶれが違う3店舗の評価と店主からの返信を見比べます。</p></article>'+
+ '<article><strong>② お店で食べる</strong><p>行き先を決めます。店によっては食後のおやつを選べます。</p></article>'+
  '<article><strong>③ 感想を投稿する</strong><p>星と話題を選び、返信と翌月のお店の様子を確認します。</p></article></div>'+
  '<div class="tutorial-comparison"><p class="eyebrow">口コミが積み重なった店では……</p><div class="result-views"><div><small>以前の店構え</small>'+storefront(before)+'</div><div class="after-spotlight"><small>後日の店構え</small>'+storefront(after)+'</div></div></div>'+
  '<div class="tutorial-end"><strong>4月から翌3月まで、月に1回・全12回の出張。</strong><p>同じ店を選んでも、違う店を開拓しても自由です。</p><button type="button" class="primary start-game" data-begin>4月の出張へ　→</button></div></section>';

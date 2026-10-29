@@ -188,3 +188,35 @@
 @keyframes open-shimmer{0%{opacity:.3;transform:translateY(9px) scale(.97)}100%{opacity:1;transform:none}}
 @media(prefers-reduced-motion:reduce){.lifecycle-events .opening-event{animation:none}}
 @media(max-width:380px){.shop-announcement{padding:10px}.lifecycle-events article{padding:13px}}
+
+/* R1 alpha 0.7: distinctive storefront palettes for the ten added shops. */
+.storefront.udon{background:linear-gradient(#5e7462 0 29%,#e8d8b5 29% 100%)}
+.storefront.udon:before{background:repeating-linear-gradient(90deg,#5e7462 0 19px,#e8d8b5 19px 37px)}
+.storefront.udon .sign{background:#406950;color:#f4f0cf;border-color:#e8d8b5}
+.storefront.soba{background:linear-gradient(#716853 0 29%,#d8c49e 29% 100%)}
+.storefront.soba:before{background:repeating-linear-gradient(90deg,#716853 0 19px,#d8c49e 19px 37px)}
+.storefront.soba .sign{background:#55503b;color:#faf0ce;border-color:#d8c49e}
+.storefront.sandwich{background:linear-gradient(#47716f 0 29%,#f0d6aa 29% 100%)}
+.storefront.sandwich:before{background:repeating-linear-gradient(90deg,#47716f 0 19px,#f0d6aa 19px 37px)}
+.storefront.sandwich .sign{background:#35564f;color:#fff0c4;border-color:#f0d6aa}
+.storefront.burger{background:linear-gradient(#91594a 0 29%,#e4b26b 29% 100%)}
+.storefront.burger:before{background:repeating-linear-gradient(90deg,#91594a 0 19px,#e4b26b 19px 37px)}
+.storefront.burger .sign{background:#713d36;color:#fff0d5;border-color:#e4b26b}
+.storefront.pasta{background:linear-gradient(#7d6554 0 29%,#e4cdab 29% 100%)}
+.storefront.pasta:before{background:repeating-linear-gradient(90deg,#7d6554 0 19px,#e4cdab 19px 37px)}
+.storefront.pasta .sign{background:#605048;color:#fff3d9;border-color:#e4cdab}
+.storefront.chinese{background:linear-gradient(#a05a4a 0 29%,#f0ca92 29% 100%)}
+.storefront.chinese:before{background:repeating-linear-gradient(90deg,#a05a4a 0 19px,#f0ca92 19px 37px)}
+.storefront.chinese .sign{background:#7b3030;color:#ffe7b6;border-color:#f0ca92}
+.storefront.bakery{background:linear-gradient(#a27f59 0 29%,#f3d7ad 29% 100%)}
+.storefront.bakery:before{background:repeating-linear-gradient(90deg,#a27f59 0 19px,#f3d7ad 19px 37px)}
+.storefront.bakery .sign{background:#806249;color:#fff0ce;border-color:#f3d7ad}
+.storefront.fish{background:linear-gradient(#4c7386 0 29%,#c5d6db 29% 100%)}
+.storefront.fish:before{background:repeating-linear-gradient(90deg,#4c7386 0 19px,#c5d6db 19px 37px)}
+.storefront.fish .sign{background:#305b71;color:#fff2d2;border-color:#c5d6db}
+.storefront.onigiri{background:linear-gradient(#648074 0 29%,#dfdccc 29% 100%)}
+.storefront.onigiri:before{background:repeating-linear-gradient(90deg,#648074 0 19px,#dfdccc 19px 37px)}
+.storefront.onigiri .sign{background:#42645d;color:#f9f6e6;border-color:#dfdccc}
+.storefront.veggie{background:linear-gradient(#5b8567 0 29%,#d7e5b8 29% 100%)}
+.storefront.veggie:before{background:repeating-linear-gradient(90deg,#5b8567 0 19px,#d7e5b8 19px 37px)}
+.storefront.veggie .sign{background:#3a6847;color:#edffd9;border-color:#d7e5b8}
