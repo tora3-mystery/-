@@ -1,6 +1,6 @@
 window.R1 = (function makeEngine(){
 "use strict";
-const VERSION="0.9.0-alpha";
+const VERSION="0.9.1-alpha";
 const GENRES=[
 {id:"taste",name:"商品・味",icon:"🍜"},
 {id:"service",name:"接客",icon:"💬"},
@@ -265,8 +265,8 @@ function background(state){
  for(let i=0;i<SHOPS.length;i++){
   const d=SHOPS[i],s=state.shops[d.id];if(!s.opened||s.closed)continue;
   const rand=random(((state.seed>>>0)^Math.imul(state.month+13,0x9e3779b1)^Math.imul(i+41,0x85ebca6b))>>>0);
-  const footfall=s.locals*.6+s.visitors*.4,rate=clamp(.28+footfall/170,.20,.80);
-  const count=rand()<rate?(rand()<(.08+Math.max(0,footfall-45)/300)?2:1):0;
+  const footfall=s.locals*.6+s.visitors*.4,rate=clamp(.41+footfall/175,.28,.90);
+  const count=rand()<rate?(rand()<(.19+Math.max(0,footfall-45)/240)?2:1):0;
   for(let k=0;k<count;k++){
    const genre=GENRES[Math.floor(rand()*GENRES.length)].id,roll=rand();
    const star=roll<.09?1:roll<.22?2:roll<.47?3:roll<.81?4:5;
@@ -419,7 +419,7 @@ before.feature!==after.feature?`店頭に変化があった：${after.feature}`:
 const affected=SHOPS.filter(d=>d.id!==action.id&&allBefore[d.id].open).map(d=>({id:d.id,before:allBefore[d.id],after:display(next.shops[d.id],d.id),reason:next.shops[d.id].closed?`${d.name}は${next.shops[d.id].closedReason}ため閉店。`:npcs.some(x=>x.id===d.id)?"ほかのお客さまの口コミを受け、店舗が変化した。":"まちの動きを受け、店舗が変化した。"})).filter(x=>viewChanged(x.before,x.after));
 const neighbor=spillover;
 const result={review:rev,transition,before,after,playerAfter,cause,affected,npc,sns,viral,neighbor,closures,openings,npcs,month:next.month};
-next.last=result;next.view="result";next.feed.push({month:next.month,kind:"player",...rev});for(const item of npcs)next.feed.push({kind:"npc",...item});if(sns)next.feed.push({month:next.month,kind:"sns",...sns});if(viral)next.feed.push(viral);for(const e of closures)next.feed.push({kind:"lifecycle",month:next.month,text:e.name+"が"+e.reason+"ため閉店しました。",id:e.id});for(const e of openings)next.feed.push({kind:"lifecycle",month:next.month,text:e.notice,id:e.id});return next;}
+next.last=result;next.view="review";next.feed.push({month:next.month,kind:"player",...rev});for(const item of npcs)next.feed.push({kind:"npc",...item});if(sns)next.feed.push({month:next.month,kind:"sns",...sns});if(viral)next.feed.push(viral);for(const e of closures)next.feed.push({kind:"lifecycle",month:next.month,text:e.name+"が"+e.reason+"ため閉店しました。",id:e.id});for(const e of openings)next.feed.push({kind:"lifecycle",month:next.month,text:e.notice,id:e.id});return next;}
 function finish(state){if(state.month<12)throw Error("not finished");const ls=SHOPS.filter(d=>state.shops[d.id].opened).map(d=>({d,s:state.shops[d.id]}));const closed=ls.filter(x=>x.s.closed).length;const totalStages=ls.reduce((n,x)=>n+routeFor(x.s).stage,0);const local=ls.reduce((n,x)=>n+x.s.locals,0),vis=ls.reduce((n,x)=>n+x.s.visitors,0);
 let title,description;
 const ramen=state.shops.ramen,cake=state.shops.cake,cafe=state.shops.cafe;
@@ -476,7 +476,7 @@ function audit(state){
  return true;
 }
 function counter(state,style){
- if(!["evidence","quip"].includes(style)||state.view!=="result"||!state.last||state.last.exchange||!state.last.review.reply)throw Error("unavailable reply");
+ if(!["evidence","quip"].includes(style)||!["review","result"].includes(state.view)||!state.last||state.last.exchange||state.last.declined||!state.last.review.reply)throw Error("unavailable reply");
  const next=copy(state),r=next.last,rev=r.review,s=next.shops[rev.id],genre=rev.genre,positive=rev.star>=4,negative=rev.star<=2;
  const topic=TOPICS[rev.id][genre],shop=SHOPS.find(d=>d.id===rev.id);
  const playerText=style==="evidence"?
@@ -499,7 +499,9 @@ function counter(state,style){
  }
  s.stress=clamp(s.stress+(style==="quip"?9:negative?2:-2),0,100);if(rev.id==="ramen")s.disputes=(s.disputes||0)+1;
  s.visitors=clamp(s.visitors+(style==="quip"?2:0),0,100);
- const exchange={style,playerText,ownerText,shop:shop.name};
+ const followUp=ownerMayReply(next,rev.id,rev.star,rev.genre,901+(style==="quip"?1:0));
+  if(!followUp)ownerText=null;
+  const exchange={style,playerText,ownerText,shop:shop.name};
  r.exchange=exchange;
  rev.exchange=copy(exchange);
  const hist=s.history.find(h=>h.month===rev.month&&h.id===rev.id&&h.genre===rev.genre);
