@@ -146,7 +146,7 @@ function replyFor(state,id,star,genre){
   return msg;
  }
  const arr=RESPONSES[id][genre][band==="neutral"?"plus":band];
- let msg=band==="neutral"?["評価が分かれた点、参考にいたします。","どちらとも言い切れないご感想も、大切に読みます。","次に来られたとき、違いを感じていただけるといいですね。","良いところも気になるところもある、という評価ですね。次の一皿の参考にします。"][SHOPS.findIndex(x=>x.id===id)]:arr[Math.floor(rnd()*arr.length)];
+ let msg=band==="neutral"?["評価が分かれた点、参考にいたします。","どちらとも言い切れないご感想も、大切に読みます。","次に来られたとき、違いを感じていただけるといいですね。","良いところも気になるところもある、という評価ですね。次の一皿の参考にします。"][SHOPS.findIndex(x=>x.id===id)]||"良いところも気になるところもあるのですね。次の仕込みの参考にします。":arr[Math.floor(rnd()*arr.length)];
  if(band!=="neutral"&&sameGenre>=1){const edge=SPICY_REPLIES[id][genre][band];msg=edge[Math.floor(rnd()*edge.length)];}
  if(n&&s.history[n-1].genre===genre)msg="前回も同じ点を見てくださっていましたね。"+msg;
  else if(n>0&&n%3===0)msg="何度も足を運んでくださっていることは覚えています。"+msg;
