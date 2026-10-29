@@ -87,8 +87,27 @@ passChance=function(c){
  // Every adjacent lecture is harder: both sides of a back-to-back class suffer.
  // Only teaching periods count, not extra-curricular blocks.
  const lessonSlots=new Set(courses.flatMap(x=>x.slots));
- const lessonAdjacencies=c.slots.reduce((count,s)=>count+(s%5>0&&lessonSlots.has(s-1)?1:0)+(s%5<4&&lessonSlots.has(s+1)?1:0),0);
+ // The long lunch break splits 2nd and 3rd period: these are NOT consecutive lectures.
+ const lessonAdjacencies=c.slots.reduce((count,s)=>
+   count+(s%5>0&&s%5!==2&&lessonSlots.has(s-1)?1:0)
+        +(s%5<4&&s%5!==1&&lessonSlots.has(s+1)?1:0),0);
  chance-=lessonAdjacencies*8;
+ // A fixed extracurricular commitment makes attending the preceding lecture likelier.
+ const activitySlots=new Set(getActivityBlocks());
+ const preActivityBoost=c.slots.some(s=>s%5<4&&activitySlots.has(s+1))?4:0;
+ chance+=preActivityBoost;
+ // Leaving campus during an empty lecture gap makes returning for a late class harder.
+ const presentSlots=new Set([...lessonSlots,...activitySlots]);
+ const gapPenalty=c.slots.reduce((highest,s)=>{
+  const day=Math.floor(s/5),earlier=[...lessonSlots].filter(p=>Math.floor(p/5)===day&&p<s);
+  if(!earlier.length)return highest;
+  const last=Math.max(...earlier),freePeriods=[];
+  for(let p=last+1;p<s;p++)if(!presentSlots.has(p))freePeriods.push(p);
+  // Lunch itself is never a counted lecture period; an empty third period is.
+  if(!freePeriods.length)return highest;
+  return Math.max(highest,freePeriods.length===1?6:9)
+ },0);
+ chance-=gapPenalty;
  const weeklyCounts=[0,0,0,0,0,0];
  for(const p of lessonSlots)weeklyCounts[Math.floor(p/5)]++;
  if(c.slots.some(s=>weeklyCounts[Math.floor(s/5)]>=3))chance-=8;
@@ -129,7 +148,7 @@ render=function(){
  $("current-credits").textContent=creditLoad()+"単位";
  const reg=allRegistered(),must=reg.filter(c=>c.type==="required"||c.type==="annualCarry").length;
  $("summary-line").textContent="今期の履修：必修・通年"+must+"科目＋選択"+(reg.length-must)+"科目（合計"+creditLoad()+"単位）。連続授業と過密な日程はすべての科目の取得率に影響します。";
- $("schedule-hint").textContent="★必修を落とすと翌年度の同じ時間に自動再履修。新しい必修と重なれば新しい方が後のコマに移動。連続授業・過密履修に注意。";
+ $("schedule-hint").textContent="★必修を落とすと翌年度の同じ時間に自動再履修。新しい必修と重なれば新しい方が後のコマに移動。昼休みを挟む2・3限は連続ペナルティなし。空きコマを挟むと戻りにくくなります。";
  const yr=Math.floor(state.semester/2)+1,plus=EXTRA_BY_YEAR[yr-1],activity=ACT_COUNTS[state.activity];
  let ev=$("life-events");
  if(ev){
