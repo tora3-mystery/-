@@ -14,7 +14,7 @@
 <script defer src="./year-skills.js"></script>
 </head>
 <body>
-<header class="site-header"><div class="head-inner"><div><div class="eyebrow">短編UIゲーム実験室 · S8 / α</div><h1>履修登録を完了してください。</h1><div class="meta">v0.6.0 · 2026/10/29 16:15 JST</div></div><div class="header-actions"><button id="sound-toggle" class="back sound-toggle" title="効果音の切替">♪ 音ON</button><a href="../" class="back">ゲーム一覧</a></div></div></header>
+<header class="site-header"><div class="head-inner"><div><div class="eyebrow">短編UIゲーム実験室 · S8 / α</div><h1>履修登録を完了してください。</h1><div class="meta">v0.6.0 · 2026/10/29 16:22 JST</div></div><div class="header-actions"><button id="sound-toggle" class="back sound-toggle" title="効果音の切替">♪ 音ON</button><a href="../" class="back">ゲーム一覧</a></div></div></header>
 <main class="shell">
 <section id="intro" class="card intro">
 <div class="stamp">学務システム / 試作版</div><h2>4年間の始まりは、時間割から。</h2>
@@ -24,7 +24,7 @@
 <h3>放課後の過ごし方</h3><div id="activity-picker" class="choose-grid"></div><div id="student-profile" class="student-profile" aria-live="polite"></div>
 <p class="smallhint seed-help"><strong>同じ時間割でもう一度試すには？</strong> 下の欄に好きな文字（例：<code>TORA123</code>）を入力してください。同じシード・同じ学部と活動なら講義と活動の時間割を再現できます。成績まで同じにするには履修する科目と操作順も同じにしてください。<strong>初回は空欄でOK。</strong></p><label class="seedline">再現用シード <input id="seed-input" type="text" placeholder="空欄ならランダム" inputmode="text" maxlength="30"></label>
 <button id="begin-btn" class="primary big">履修登録を始める</button><button id="resume-btn" class="secondary hidden">前回の続きから</button>
-<div class="smallhint">学年ごとの必要単位を超えて進級しよう。必修を落とすと翌年度の時間割が埋まり、4年生の終わりに未取得必修があるとゲームオーバー。進行は自動保存されます。</div>
+<div class="smallhint">学年ごとの必要単位を超えて進級しよう。1〜3年の年度末にはランダムな3つのスキルから1つを選択。取ったスキルは重なって学生生活に影響します。必修を落とすと翌年度の時間割が埋まり、4年生の終わりに未取得必修があるとゲームオーバー。進行は自動保存されます。</div>
 </section>
 <section id="game" class="hidden">
 <div class="dashboard card"><div><div class="eyebrow" id="semester-label">1年前期</div><div class="dash-sub" id="faculty-label"></div><div class="dash-sub" id="activity-schedule"></div></div>
