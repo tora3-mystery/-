@@ -124,7 +124,8 @@
     "v070_click_paths": "PASS: 60 mock-DOM full UI-handler sequences (3 faculties x 5 activities x 4 seeds): click registration preview, back/edit, reopen and confirm, grade reveal, click visible next button to show exactly three skill cards, click one card to advance. 60/60 all phases, 0 errors. Uses onclick callbacks, not genuine browser taps.",
     "v070_credits": "PASS targeted grade ledger cases: ordinary required 2+elective 2 gives total 4 / elective 2; mandatory 2+elective 4 gives total 6 / elective 4; 4-credit annual elective spring interim = elective 0 and autumn final = elective 4; failed elective = elective 0. Check for each of three faculties.",
     "v070_full_runs": "PASS: 120 8-semester scripted strategy runs (3 faculties x 5 activity types x 8 seeds), all 120 ended without exception, 672 registration confirmation and grade sequences, 229 actual click-handler skill selections, 63 professor petitions, 0 mandatory-vs-activity conflicts. Outcomes: 49 failed year elective gates, 42 cheating GAME OVER, 6 graduations, 23 final-year unsuccessful. These reflect artificial scripted strategies, not measured player difficulty.",
-    "v070_static": "PASS: registration-flow.js source compiles; scripts still use named DOM IDs. Real website opening with local Chromium was blocked by network policy; live Pages and smartphone touch were NOT tested."
+    "v070_static": "PASS: registration-flow.js source compiles; scripts still use named DOM IDs. Real website opening with local Chromium was blocked by network policy; live Pages and smartphone touch were NOT tested.",
+    "v070_final_html": "PASS: final HTML reference check after repair: nine scripts loaded exactly once; registration-flow.js was inadvertently listed twice in a draft and the duplicate was removed before final handoff. No duplicated element IDs."
   },
   "browser_qa": {
     "performed": false,
