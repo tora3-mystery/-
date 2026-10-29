@@ -10,7 +10,7 @@ const dshop=id=>E.SHOPS.find(x=>x.id===id);
 const dgenre=id=>E.GENRES.find(x=>x.id===id);
 function newGame(){const state=E.createState(Date.now()>>>0);state.introSeen=false;return state}
 function load(){
- try{const raw=localStorage.getItem(KEY);if(raw){const s=JSON.parse(raw);if(s.version===E.VERSION){E.audit(s);return s;}if(["0.1.0-alpha","0.2.0-alpha","0.3.0-alpha","0.3.1-alpha","0.3.2-alpha","0.4.0-alpha","0.4.1-alpha","0.5.0-alpha","0.6.0-alpha","0.7.0-alpha","0.8.0-alpha","0.9.0-alpha","0.9.1-alpha","0.9.2-alpha","0.9.3-alpha","0.9.4-alpha"].includes(s.version)){
+ try{const raw=localStorage.getItem(KEY);if(raw){const s=JSON.parse(raw);if(s.version===E.VERSION){E.audit(s);return s;}if(["0.1.0-alpha","0.2.0-alpha","0.3.0-alpha","0.3.1-alpha","0.3.2-alpha","0.4.0-alpha","0.4.1-alpha","0.5.0-alpha","0.6.0-alpha","0.7.0-alpha","0.8.0-alpha","0.9.0-alpha","0.9.1-alpha","0.9.2-alpha","0.9.3-alpha","0.9.4-alpha","0.9.5-alpha"].includes(s.version)){
  if(["0.1.0-alpha","0.2.0-alpha","0.3.0-alpha","0.3.1-alpha","0.3.2-alpha","0.4.0-alpha"].includes(s.version)){
  const ramen=s.shops.ramen;
  ramen.scores=Object.fromEntries(E.GENRES.map(g=>[g.id,0]));
@@ -52,7 +52,8 @@ function scrollTop(){window.scrollTo({top:0,behavior:"auto"})}
 function pill(tone,text){return '<span class="chip '+(tone||"")+'">'+esc(text)+'</span>'}
 function storefront(v){
  const stage=v.route.stage,closed=!v.open,visual=v.visual||{icon:v.base.icon,product:v.base.product,tagline:"いつもの味",variety:0};
- const merchandise=closed?"":'<div class="store-merch"><span class="merch-icon" aria-hidden="true">'+esc(visual.icon)+'</span><span class="merch-label"><strong>'+esc(visual.product)+'</strong><span>'+esc(stage>=2?visual.tagline:"看板の商品")+'</span></span></div>';
+ const featureLabel={taste:"味・メニュー",service:"注文・接客",price:"価格・セット",mood:"店内・客席",identity:"店のこだわり"}[v.route.genre]||"看板の商品";
+ const merchandise=closed?"":'<div class="store-merch"><span class="merch-icon" aria-hidden="true">'+esc(visual.icon)+'</span><span class="merch-label"><strong>'+esc(visual.product)+'</strong><span>'+esc(stage>0?featureLabel:"看板の商品")+'</span></span></div>';
  const feature=(!closed&&stage>0)?'<div class="store-feature">'+esc(v.feature)+'</div>':"";
  return '<div class="storefront '+esc(v.base.palette)+' stage-'+stage+" route-"+(v.route.genre||"base")+" dir-"+(v.route.polarity||"none")+(closed?" closed":"")+(v.phase==="拡張本店"?" ramen-giant":"")+'" role="img" aria-label="'+esc(v.base.name+"。"+v.summary+" "+(v.feature||""))+'">'+
  '<div class="sign">'+esc(closed?"閉店しました":v.sign)+'</div>'+merchandise+feature+
@@ -101,7 +102,7 @@ function dineDialog(){
 function detail(id){
  const d=dshop(id),s=game.shops[id],v=E.display(s,id);
  const last=s.history.length?s.history[s.history.length-1]:null;
- return '<section class="panel" id="shopDetail"><div class="detail-header"><div><span class="eyebrow">お店のページ</span><h2>'+esc(d.name)+'</h2><p class="subtitle">'+esc(d.category)+' ／ '+esc(v.visual?v.visual.product:d.product)+'</p></div><span class="summary-badge">'+esc(v.business)+'</span></div>'+
+ return '<section class="panel" id="shopDetail"><div class="detail-header"><div><span class="eyebrow">お店のページ</span><h2>'+esc(d.name)+'</h2><p class="subtitle">'+esc(d.category)+' ／ '+(v.route.stage>0?'店頭の注目：':'')+esc(v.visual?v.visual.product:d.product)+'</p></div><span class="summary-badge">'+esc(v.business)+'</span></div>'+
  '<div class="shop-meta">'+pill('',(s.lot||'?')+'番地')+pill(v.closed?"bad":"good",v.business)+pill("",v.population)+(v.route.label?pill("",v.route.label):pill("","創業時の看板"))+'</div>'+
  '<div class="owner-box"><span class="owner-icon" aria-hidden="true">'+esc(d.icon)+'</span><div><strong>店主：'+esc(d.owner)+'（'+d.age+'）</strong><p>'+esc(d.description)+'</p></div></div>'+
  '<div class="note">'+esc(v.summary)+'</div>'+recentFeed(id)+
