@@ -144,7 +144,7 @@ render=function(){
   warnings.classList.toggle("hidden",!lock.length&&!deferred.length&&!shifted.length);
  }
  const r=$("register-btn");
- if(creditLoad()>=10){r.disabled=state.phase!=="registration";r.textContent="今期の履修を確定する →"}
+ r.disabled=state.phase!=="registration";r.textContent="今期の履修を確定する →";
  if(state.phase==="registration"){
   const totals=allRegistered().map(c=>passChance(c));
   const avg=totals.length?Math.round(totals.reduce((a,b)=>a+b,0)/totals.length):0;
@@ -216,7 +216,7 @@ const oldPlay=playReveal;
 playReveal=function(){if(state?.tripPending)return;oldPlay()};
 const oldBegin=beginReveal;
 beginReveal=function(){
- if(creditLoad()<10)return;
+ 
  oldBegin();
  if(state.semester!==7||!state.travelEvent?.active)return;
  clearTimeout(revealTimer);
