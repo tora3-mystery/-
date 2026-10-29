@@ -5,8 +5,8 @@ const SAVE3="s8_save_v030", BEST3="s8_best_v030_", AUDIO3="s8_audio_v030";
 let audio=null, soundOn=true, searchText="", currentSlot=null, finishedSemester=-1;
 try{soundOn=localStorage.getItem(AUDIO3)!=="off"}catch(e){}
 Object.assign(ACTIVITIES,{
- sports:{name:"体育会系（難）",desc:"火5・金5・土3／取得率-7%、学期+1200pt",blocks:["火5","金5","土3"],bonus:1200,modifier:-7},
- combo:{name:"サークル＋バイト（激難）",desc:"サークル月5・水5＋バイト火5・木5・土3／週5コマ／取得率-9%、学期+1500pt",blocks:["月5","水5","火5","木5","土3"],bonus:1500,modifier:-9}
+ sports:{name:"体育会系（難）",desc:"火5・金5・土3／取得率-7%、学期+280pt",blocks:["火5","金5","土3"],bonus:280,modifier:-7},
+ combo:{name:"サークル＋バイト（激難）",desc:"サークル月5・水5＋バイト火5・木5・土3／週5コマ／取得率-9%、学期+400pt",blocks:["月5","水5","火5","木5","土3"],bonus:400,modifier:-9}
 });
 const C=(id,name,credits,diff,method,slotSets,more={})=>base(id,name,credits,diff,method,slotSets,more);
 const EXTRA=[
@@ -277,7 +277,7 @@ stepReveal=function(){
  if(r.course.annual&&state.semester%2===0){
   if(r.pass){
    state.currentCombo++;state.maxCombo=Math.max(state.maxCombo,state.currentCombo);
-   r.combo=state.currentCombo;r.earned=180+40*r.course.diff;state.score+=r.earned;state.termScore+=r.earned;
+   r.combo=state.currentCombo;r.earned=100;state.score+=r.earned;state.termScore+=r.earned;
    $("reveal-flash").textContent="前期クリア！";$("reveal-flash").className="reveal-flash success";
    $("reveal-combo").textContent=state.currentCombo>=2?state.currentCombo+" COMBO!":"";
    $("reveal-sub").textContent=r.name+"　通年の単位は後期末に確定";
@@ -335,7 +335,7 @@ renderEnd=function(){
  try{best=Number(localStorage.getItem(bestKey))||0}catch(e){}
  const isRecord=state.score>best;
  if(isRecord)try{localStorage.setItem(bestKey,String(state.score))}catch(e){}
- const grade=state.score>=42000?"S":state.score>=32000?"A":state.score>=22000?"B":"C";
+ const grade=state.score>=12500?"S":state.score>=9500?"A":state.score>=7000?"B":"C";
  const area=$("ending-content");area.replaceChildren();
  const heading=document.createElement("h2");heading.textContent=isRecord?"NEW HIGH SCORE!":condition?"卒業おめでとう！":"大学4年間 終了";area.append(heading);
  const score=document.createElement("div");score.className="hero-score";score.textContent=fmt(state.score)+" pt";area.append(score);
