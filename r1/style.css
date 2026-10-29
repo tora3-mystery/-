@@ -127,7 +127,7 @@
 .top-restart:hover,.top-restart:focus-visible{background:#5a4850}
 .shop-disputes{display:inline-block;color:#ffc69f;font-size:12px;font-weight:900;background:#593b38;border:1px solid #b77a6b;border-radius:7px;padding:2px 7px;margin-top:5px}
 .owner-reply.ramen-argument{position:relative;border:2px solid #f0a06f;background:linear-gradient(135deg,#512e34,#352d38 76%);box-shadow:0 6px 26px #dc73463b}
-.owner-reply.ramen-argument:before{content:"🔥 反論中";display:inline-block;background:#f4aa75;color:#382121;border-radius:4px;font-size:11px;letter-spacing:.04em;padding:2px 8px;font-weight:900;margin:0 0 8px}
+
 .owner-reply.ramen-argument p{color:#fff0df;font-weight:700}
 .ramen-heat{border:1px solid #dd9a7e;background:#48353b;border-radius:9px;color:#ffdbbf;font-size:13px;font-weight:800;padding:9px 13px;margin-top:10px}
 .storefront.ramen .store-merch{border-color:#8c7a6e}
@@ -220,3 +220,9 @@
 .storefront.veggie{background:linear-gradient(#5b8567 0 29%,#d7e5b8 29% 100%)}
 .storefront.veggie:before{background:repeating-linear-gradient(90deg,#5b8567 0 19px,#d7e5b8 19px 37px)}
 .storefront.veggie .sign{background:#3a6847;color:#edffd9;border-color:#d7e5b8}
+
+/* R1 alpha 0.8: authentic optional owner answers and per-month review activity */
+.reply-absent{margin:8px 0 0;padding:8px 11px;border-left:3px solid #87919c;color:#bdcbd3;font-size:12px;background:#26323b;border-radius:5px}
+.no-shop-reviews{padding:16px;border:1px dashed #72828e;background:#242e39;border-radius:10px;color:#d0dbe0;font-size:13px}
+.monthly-npc-count{font-size:13px;font-weight:800;color:#ffe1b0;background:#313a44;border-left:3px solid #d0b88d;padding:9px 12px;border-radius:4px}
+.public-review .reply-absent,.feed-card .reply-absent{font-size:11px}
