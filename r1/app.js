@@ -10,7 +10,7 @@ const dshop=id=>E.SHOPS.find(x=>x.id===id);
 const dgenre=id=>E.GENRES.find(x=>x.id===id);
 function newGame(){const state=E.createState(Date.now()>>>0);state.introSeen=false;return state}
 function load(){
- try{const raw=localStorage.getItem(KEY);if(raw){const s=JSON.parse(raw);if(s.version===E.VERSION){E.audit(s);return s;}if(["0.1.0-alpha","0.2.0-alpha","0.3.0-alpha","0.3.1-alpha","0.3.2-alpha","0.4.0-alpha","0.4.1-alpha","0.5.0-alpha","0.6.0-alpha","0.7.0-alpha","0.8.0-alpha","0.9.0-alpha","0.9.1-alpha","0.9.2-alpha","0.9.3-alpha"].includes(s.version)){
+ try{const raw=localStorage.getItem(KEY);if(raw){const s=JSON.parse(raw);if(s.version===E.VERSION){E.audit(s);return s;}if(["0.1.0-alpha","0.2.0-alpha","0.3.0-alpha","0.3.1-alpha","0.3.2-alpha","0.4.0-alpha","0.4.1-alpha","0.5.0-alpha","0.6.0-alpha","0.7.0-alpha","0.8.0-alpha","0.9.0-alpha","0.9.1-alpha","0.9.2-alpha","0.9.3-alpha","0.9.4-alpha"].includes(s.version)){
  if(["0.1.0-alpha","0.2.0-alpha","0.3.0-alpha","0.3.1-alpha","0.3.2-alpha","0.4.0-alpha"].includes(s.version)){
  const ramen=s.shops.ramen;
  ramen.scores=Object.fromEntries(E.GENRES.map(g=>[g.id,0]));
@@ -114,7 +114,7 @@ function tutorial(){
  return '<section class="tutorial" aria-labelledby="tutorialTitle"><div class="tutorial-hero"><span class="eyebrow">出張先での昼休み</span>'+
  '<h2 id="tutorialTitle">毎月この街に、<br>出張でやって来る。</h2><p>昼休みは1時間。今日はどこに入ろう？ 評判の良い店も、気になる返信をする店もあります。</p></div>'+
  '<div class="business-story"><strong>📍 今月も、この商店街でランチ。</strong><p>まずは口コミを読んで、行くお店を選びましょう。食後はあなたも感想を投稿できます。</p></div>'+
- '<div class="tutorial-steps"><article><strong>① 口コミを読む</strong><p>毎回顔ぶれが違う3店舗の口コミを読み、返信があれば店主の言葉も確かめます。</p></article>'+
+ '<div class="tutorial-steps"><article><strong>① 口コミを読む</strong><p>最初は3店舗から昼食先を選びます。途中で新しいお店が開店することもあります。</p></article>'+
  '<article><strong>② お店で食べる</strong><p>行き先を決めます。店によっては食後のおやつを選べます。</p></article>'+
  '<article><strong>③ 返信を確認する</strong><p>ジャンルと星を選んで投稿。店主に返すか決めてから、翌月の街の変化を見ます。</p></article></div>'+
  '<div class="tutorial-comparison"><p class="eyebrow">口コミが積み重なった店では……</p><div class="result-views"><div><small>以前の店構え</small>'+storefront(before)+'</div><div class="after-spotlight"><small>後日の店構え</small>'+storefront(after)+'</div></div></div>'+
@@ -218,6 +218,13 @@ function render(){
  root.innerHTML=onboarding?tutorial():(notification?'<p class="note" role="status">'+esc(notification)+'</p>':"")+(tab==="history"?history():tab==="guide"?guide():game.view==="final"?finalPage():game.view==="review"?reviewThread():game.view==="result"?townReport():street())+(tab==="street"&&game.view==="map"&&dineModal?dineDialog():"");
  document.body.classList.toggle("modal-open",!onboarding&&tab==="street"&&game.view==="map"&&dineModal);
 }
+function refreshDialogSelection(selector){
+ const previous=root.querySelector(".dine-dialog"),top=previous?.scrollTop||0;
+ render();
+ const modal=root.querySelector(".dine-dialog");if(modal)modal.scrollTop=top;
+ const chosen=modal?.querySelector(selector);
+ if(chosen){try{chosen.focus({preventScroll:true})}catch(err){chosen.focus();if(modal)modal.scrollTop=top;}}
+}
 document.addEventListener("keydown",e=>{
  if(!dineModal)return;
  if(e.key==="Escape"){dineModal=false;dinedId=null;render();document.querySelector("[data-dine]")?.focus();return;}
@@ -245,8 +252,8 @@ document.addEventListener("click",e=>{
  if(btn.dataset.shop){selectedId=btn.dataset.shop;dinedId=null;selectedStar=null;selectedGenre=null;dineModal=false;tab="street";render();if(window.innerWidth<760){setTimeout(()=>document.getElementById("shopDetail")?.scrollIntoView({behavior:"smooth",block:"start"}),0)}return;}
  if(btn.dataset.dine){dinedId=btn.dataset.dine;selectedStar=null;selectedGenre=null;dineModal=true;render();root.querySelector(".dine-dialog")?.focus();return;}
  if(btn.hasAttribute("data-modal-close")){dineModal=false;dinedId=null;render();document.querySelector("[data-dine]")?.focus();return;}
- if(btn.dataset.star){selectedStar=Number(btn.dataset.star);render();root.querySelector('[data-star="'+selectedStar+'"]')?.focus();return;}
- if(btn.dataset.genre){selectedGenre=btn.dataset.genre;render();root.querySelector('[data-genre="'+selectedGenre+'"]')?.focus();return;}
+ if(btn.dataset.star){selectedStar=Number(btn.dataset.star);refreshDialogSelection('[data-star="'+selectedStar+'"]');return;}
+ if(btn.dataset.genre){selectedGenre=btn.dataset.genre;refreshDialogSelection('[data-genre="'+selectedGenre+'"]');return;}
  if(btn.hasAttribute("data-post")){if(!dineModal||dinedId!==selectedId||selectedStar===null||selectedGenre===null)return;try{game=E.advance(game,{id:selectedId,star:selectedStar,genre:selectedGenre});dineModal=false;notification="";save();render();scrollTop()}catch(err){notification="投稿できませんでした。店舗を選び直してください。";render()}return;}
  if(btn.hasAttribute("data-decline")){if(game.view==="review"&&game.last?.review.reply&&!game.last.exchange){game.last.declined=true;save();render();}return;}
  if(btn.hasAttribute("data-next")){if(game.view!=="review"||(game.last?.review.reply&&!game.last?.exchange&&!game.last?.declined))return;game.view="result";tab="street";save();render();scrollTop();return;}
