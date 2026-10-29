@@ -227,6 +227,7 @@ renderCourses=function(){
  for(const item of $("course-list").querySelectorAll(".course")){
   const name=item.querySelector(".course-name")?.textContent||"";
   const c=state.offers.find(v=>name.includes(v.name));
+  if(c?.type==="annualCarry"){item.remove();continue}
   if(c&&c.annual){item.querySelector(".course-name").textContent+=" 📅 通年"}
   if(c&&c.seminar){item.querySelector(".course-name").textContent+=" 🎓 ゼミ"}
  }
