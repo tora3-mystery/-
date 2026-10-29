@@ -170,7 +170,7 @@ else if(totalStages<=2){title="いつもの商店街";description="大きな改�
 else if(totalStages>=3&&local>vis*1.9&&vis<=100){title="常連のいる商店街";description="外からは静かに見える。でも、ここに来る理由を知っている人は多い。";}
 else if(ls.filter(x=>routeFor(x.s).genre==="identity"&&routeFor(x.s).stage>=2).length>=2){title="個性の競演する通り";description="三軒三様、引かないこだわりが並ぶ。看板だけで好みが分かれそうだ。";}
 else if(ls.filter(x=>routeFor(x.s).genre==="price"&&routeFor(x.s).stage>=2).length>=2){title="値札が話題の商店街";description="値段を見直した店が増えた。高いか安いかより、その理由が街の話題になった。";}
-else if(ls.filter(x=>routeFor(x.s).genre==="taste"&&routeFor(x.s).stage>=2).length>=2){title="味が変わった商店街";description="麺も珈琲もケーキも、同じ味ではいられなかった。それぞれの店が試作を続けている。";}
+else if(ls.filter(x=>routeFor(x.s).genre==="taste"&&routeFor(x.s).stage>=2).length>=2){title="味が変わった商店街";description="麺処いわきは頑なに同じ味。喫茶店と洋菓子店は、新しい味を試し続けている。";}
 else if(totalStages>=4){title="それぞれ違う商店街";description="進んだ方向はばらばら。それでも店主たちは、ここで商売を続けている。";}
 else{title="少し変わった商店街";description="一年で何もかもが変わったわけではない。入口の看板は少し違って見える。";}
 const shops=ls.map(({d,s})=>{const view=display(s,d.id),count=s.history.length,last=s.history[count-1],ownerLine=s.closed?
