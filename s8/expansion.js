@@ -155,6 +155,7 @@ render=function(){
  for(const c of these){const d=document.createElement("span");d.className="mandatory-tag";d.textContent=(c.type==="annualCarry"?"通年継続 ":"必修 ")+c.name;panel.append(d)}
  const last=state.history.find(x=>x.term===state.semester-1);
  if(last){const p=document.createElement("p");p.className="prior-results";p.textContent="前学期の必修："+last.required.map(r=>r.name+"【"+r.status+"】").join("・");panel.append(p)}
+ if(state.failedRequired.length){const p=document.createElement("p");p.className="prior-results";p.textContent="⚠ 未取得必修："+state.failedRequired.map(c=>c.name+"（再履修候補）").join("、");panel.append(p)}
  const yearlong=$("yearlong-panel");yearlong.replaceChildren();
  const annual=state.offers.filter(c=>c.annual&&(c.type==="annualCarry"||state.selectedIds.includes(c.id)));
  if(annual.length){yearlong.textContent="📅 通年科目："+annual.map(c=>c.name+(c.type==="annualCarry"?"（後期・固定）":"（後期も固定／4単位は後期末）")).join("、")}
@@ -243,6 +244,11 @@ renderReveal=function(){
  priorReveal();
  if(!state||state.phase!=="reveal")return;
  $("reveal-title").textContent=termName(state.semester)+" 成績発表";
+ const logRows=$("reveal-log").querySelectorAll(".reveal-row");
+ if(state.semester%2===0)for(let i=0;i<state.revealIndex;i++){
+  const r=state.results[i];
+  if(r.course.annual&&logRows[i]){const label=logRows[i].querySelector("b");if(label)label.textContent=r.pass?"前期クリア +"+fmt(r.earned):"前期要補講"}
+ }
  const box=$("reveal-required");box.replaceChildren();
  const mand=state.results.filter(r=>r.required);
  if(!mand.length)return;
@@ -275,6 +281,7 @@ stepReveal=function(){
   return;
  }
  priorStep();
+ if(r.course.type==="annualCarry"&&!r.pass)state.failedRequired=state.failedRequired.filter(c=>c.canonicalId!==r.canonicalId);
  playSound(r.pass?(state.currentCombo>=3?"combo":"success"):(r.lotteryLost?"click":"fail"));
 };
 const priorEnd=endReveal;
