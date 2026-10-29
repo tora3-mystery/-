@@ -177,7 +177,10 @@ renderCourses=function(){
   const c=state.offers.find(x=>label.includes(x.name));
   if(!c)continue;
   const sub=b.querySelector(".course-extra");
-  if(sub)sub.textContent="単位取得見込 "+passChance(c)+"%"+(c.annual?" ／ 通年4単位":"")+" ／ "+(c.method||"");
+  if(sub){
+   const chance=passChance(c),overall=c.lottery?Math.round(c.lottery*chance/100):chance;
+   sub.textContent="単位取得見込 "+overall+"%"+(c.lottery?"（抽選当選率"+c.lottery+"%・当選後の取得率"+chance+"%）":"")+(c.annual?" ／ 通年4単位":"")+" ／ "+(c.method||"");
+  }
  }
 };
 const previousOpenCourse=openCourse;
