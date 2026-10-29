@@ -116,3 +116,9 @@
 .skill-score-detail{font-size:11px;color:#f3e0a7;margin:4px 0 10px}
 .skill-study-hint{font-size:11px;color:#dbd0ff;margin:7px 0}
 @media(max-width:760px){.semester-special{font-size:18px;padding:10px}.year-skill-panel,.appeal-panel{padding:11px}.year-skill-option,.appeal-option{padding:10px}}
+
+/* S8 0.6.0 – cheating-risk notice and annual draft legibility */
+.cheat-alert{margin:12px 0;padding:12px 14px;font-size:13px;font-weight:900;line-height:1.6;border-radius:10px;border:2px solid #fc8693;background:#662638;color:#fff1ed;box-shadow:0 0 25px #e14c6b45}
+.year-skill-panel .year-skill-options .year-skill-option:hover,.appeal-option:hover{border-color:#f4d091;background:#354765}
+.year-skill-panel .skill-score-detail{font-size:11px;margin:7px 0 2px;color:#f5ddb5}
+@media(max-width:760px){.cheat-alert{padding:10px 11px;font-size:12px}}
