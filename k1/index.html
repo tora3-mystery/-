@@ -251,7 +251,7 @@ function copy(x){return JSON.parse(JSON.stringify(x));}
 var state=initial(),tab='board',selected=null,selectedMail=null,monitor=false,pendingChoice=null,reply={fields:[],number:'',person:''};
 var WEEKDAYS=['月','火','水','木','金','土','日'];
 function weekday(day){return WEEKDAYS[(day-1)%7];}
-function snapshot(){getEvents(state.day);state.locationStage='board';var s=copy(state);delete s.snapshots;s.result='';s.resultPending=false;s.phase='morning';state.snapshots[state.day]=s;}
+function snapshot(){getEvents(state.day);state.locationStage='board';selectedMail=null;var s=copy(state);delete s.snapshots;s.result='';s.resultPending=false;s.phase='morning';state.snapshots[state.day]=s;}
 function load(){try{var v=JSON.parse(localStorage.getItem(KEY));if(v&&v.day>=1&&v.day<=10&&v.snapshots&&typeof v.started==='boolean'){state=v;if(state.failure===undefined)state.failure=null;if(state.day>=7&&!state.drawingTarget)state.drawingTarget=firstDrawingTarget(state.history);}}catch(e){}}
 function firstDrawingTarget(history){var h=history.find(function(x){return x.id==='E03';});return h&&h.choice==='yes'?'406':'405';}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(state));}catch(e){}}
@@ -467,9 +467,11 @@ h+='<p class="caption">帰宅時に読んだ掲示を思い出して判断して
 }}
 n.innerHTML=h;
 }
-function renderTab(){if(state.phase!=='morning'||state.ended)return;document.querySelectorAll('.tab').forEach(function(e){e.classList.toggle('active',e.dataset.tab===tab);});
-var p=el('tabPanel'),h='';
-if(tab==='board'){
+function renderTab(){
+ if(state.phase!=='morning'||state.ended)return;
+ var p=el('tabPanel'),h='';
+ if(state.locationStage==='board'){
+
 h='<h2>エントランス掲示板</h2><p class="tiny">今掲示されているお知らせです。撤去された紙は掲示板では開けません。</p>'+(state.day>1?'<p class="notice-delta">貼替の跡がある。新しい紙 '+noticeChangeCounts(state.day).added+'枚 ／ 撤去 '+noticeChangeCounts(state.day).removed+'枚 ／ 改訂 '+noticeChangeCounts(state.day).revised+'枚</p>':'')+'<div class="notice-summary">';
 var ns=currentNotices();
 ns.forEach(function(x){h+='<button class="paper '+(x.postedDay===state.day&&state.day>1?'fresh':'')+'" data-notice="'+esc(x.id)+'"><small>'+esc(x.id)+'</small><b>'+esc(x.title)+'</b><span class="stamp">'+(x.rev?'改訂／貼替 '+x.postedDay+'日目':x.postedDay===state.day&&state.day>1?'新規 '+x.postedDay+'日目':'お知らせ')+'</span></button>';});
@@ -477,25 +479,42 @@ h+='</div>';
 var n=currentNotices().filter(function(x){return x.id===selected;})[0];
 if(n){h+='<div class="detail"><div class="issuer">'+esc(n.id)+'｜'+esc(n.issuer)+'</div><h3>'+esc(n.title)+'</h3><p>'+esc(n.body)+'</p>'+(n.id==='L10'?drawingHtml():'')+'</div>';}
 
-}else{
- h='<h2>'+(tab==='post'?'406号室のポスト':'406号室の玄関')+'</h2><p class="tiny">帰宅時に内容を確かめてください。この情報が後の判断に役立つ場合があります。</p>';
- if(tab==='door')h+='<div class="scene-grid" aria-label="4階の共用廊下と406号室玄関"><figure class="scene-figure"><img src="./assets/hallway/day.webp" alt="4階の共用廊下。404号室から407号室まで扉が並ぶ。" width="1080" height="1440" loading="lazy" decoding="async"><figcaption>4階共用廊下</figcaption></figure><figure class="scene-figure"><img src="./assets/door/base.webp" alt="406号室の玄関扉とインターホン。" width="1080" height="1440" loading="lazy" decoding="async"><figcaption>406号室玄関</figcaption></figure></div>';
- h+='<div class="listing">';
- items(tab).forEach(function(i){h+='<div class="record"><strong>'+esc(i.name)+'</strong>'+(tab==='post'?'<div class="tiny">投函日：'+esc(weekday(i.day)+'曜日（'+i.day+'日目）')+'</div>':'')+'<p>'+esc(i.text)+'</p></div>';});
- h+='</div>';
+ }else{
+  var mail=items('post').slice().sort(function(a,b){return b.day-a.day;});
+  var unread=mail.filter(function(i){return !state.mailRead.includes(i.id);}).length;
+  var active=mail.find(function(i){return i.id===selectedMail;});
+  h='<h2>郵便受け・4階の玄関</h2><p class="tiny">エントランスを離れ、郵便受けを確認してから4階の自室へ向かう。封筒の中身は開けて初めて分かる。</p>';
+  h+='<div class="entry-mail"><h3>406号室の郵便受け <span class="tag">'+unread+'通 未開封</span></h3>';
+  if(mail.length===0)h+='<p class="tiny">郵便物は入っていない。</p>';
+  else{
+   h+='<div class="mail-stack">';
+   mail.forEach(function(i){
+    var isUnread=!state.mailRead.includes(i.id);
+    h+='<button class="mail-envelope '+(isUnread?'unread':'')+'" data-mail="'+esc(i.id)+'" aria-expanded="'+(active&&active.id===i.id?'true':'false')+'"><span class="mail-icon" aria-hidden="true">'+(isUnread?'✉':'▣')+'</span><span class="mail-contents"><strong>'+esc(i.name)+'</strong><span class="tiny">投函：'+weekday(i.day)+'曜日・'+i.day+'日目</span></span><span class="mail-status">'+(isUnread?'未開封':'開封済')+'</span></button>';
+   });
+   h+='</div>';
+   if(active){h+='<article class="mail-paper"><div class="tiny">投函日：'+weekday(active.day)+'曜日（'+active.day+'日目）</div><h4>'+esc(active.name)+'</h4><p>'+esc(active.text)+'</p></article>';}
+  }
+  h+='</div><div class="entry-photo-title"><h3>4階・406号室の玄関前</h3><p class="tiny">エレベーターを降りて、自分の部屋へ歩く。</p></div>';
+  h+='<div class="scene-grid" aria-label="4階の共用廊下と406号室玄関"><figure class="scene-figure"><img src="./assets/hallway/day.webp" alt="4階の共用廊下。404号室から407号室まで扉が並ぶ。" width="1080" height="1440" loading="lazy" decoding="async"><figcaption>4階共用廊下</figcaption></figure><figure class="scene-figure"><img src="./assets/door/base.webp" alt="406号室の玄関扉とインターホン。" width="1080" height="1440" loading="lazy" decoding="async"><figcaption>406号室玄関</figcaption></figure></div>';
+  h+='<div class="listing">';
+  items('door').forEach(function(i){h+='<div class="record"><strong>'+esc(i.name)+'</strong><p>'+esc(i.text)+'</p></div>';});
+  h+='</div>';
+ }
+ p.innerHTML=h;
 }
-p.innerHTML=h;
-}
+
 function render(){el('intro').classList.toggle('hidden',state.started);el('game').classList.toggle('hidden',!state.started);
 el('start').classList.toggle('hidden',!!state.snapshots[1]);el('resume').classList.toggle('hidden',!state.snapshots[1]);el('new').classList.toggle('hidden',!state.snapshots[1]);
 if(!state.started)return;
 el('dayLabel').textContent=state.day+'日目（'+weekday(state.day)+'曜日） / 10日間｜406号室';
-el('phaseLabel').textContent=state.failure?'その夜｜対応終了':state.ended?'翌朝｜終了':state.phase==='morning'?'帰宅時｜共用部の掲示を確認':'自室｜今夜の出来事に対応';
+el('phaseLabel').textContent=state.failure?'その夜｜対応終了':state.ended?'翌朝｜終了':state.phase==='morning'?(state.locationStage==='board'?'帰宅時｜エントランス':'帰宅時｜郵便受け・4階廊下'):'自室｜今夜の出来事に対応';
 el('endingPanel').classList.toggle('hidden',!state.ended);if(state.ended)el('endingPanel').innerHTML=ending();
 el('morningPanel').classList.toggle('hidden',state.phase!=='morning'||state.ended);
-el('inspectNav').classList.toggle('hidden',state.phase!=='morning'||state.ended);
+el('inspectNav').classList.add('hidden');
 el('tabPanel').classList.toggle('hidden',state.phase!=='morning'||state.ended);
 el('leavePanel').classList.toggle('hidden',state.phase!=='morning'||state.ended);
+var inEntry=state.locationStage==='entry';el('morningTitle').textContent=inEntry?'帰宅時｜ポスト・4階の玄関':'帰宅時｜エントランス';el('morningCaption').textContent=inEntry?'ポストの封筒はタップすると開封できます。読まなかった郵便物は明日も残ります。':'掲示の内容を覚えて、ポストと4階の玄関へ進んでください。';el('toEntry').classList.toggle('hidden',inEntry);el('toNight').classList.toggle('hidden',!inEntry);el('leaveText').textContent=inEntry?'ポストと玄関前の確認は済みましたか？ 夜は廊下と掲示板を見直せません。':'掲示板を離れ、郵便受けを確認して4階へ向かいます。';
 el('morningText').textContent=([
 '',
 '月曜日。仕事を終えて帰宅する。入居して三か月、管理人室の紙が一枚あるだけの掲示板にも慣れてきた。',
@@ -513,20 +532,24 @@ var rp=el('rewindPanel');if(!rp.classList.contains('hidden'))renderRewind();
 renderNight();renderTab();
 }
 function renderRewind(){var h='';for(var d=1;d<=10;d++){h+='<button class="btn" '+(d>state.day?'disabled':'data-restartday="'+d+'"')+'>'+d+'日目'+(d===state.day?'（現在）':'')+'</button>';}el('days').innerHTML=h;}
-function start(){state=initial();state.started=true;pendingChoice=null;reply={fields:[],number:'',person:''};snapshot();save();render();scrollToTop();}
-function rewind(day){day=Number(day);if(!state.snapshots[day]||day>state.day)return;var old=state.snapshots;var snap=copy(old[day]);snap.snapshots={};Object.keys(old).forEach(function(k){if(Number(k)<=day)snap.snapshots[k]=old[k];});state=snap;if(state.day>=7&&!state.drawingTarget)state.drawingTarget=firstDrawingTarget(state.history);state.started=true;tab='board';selected=null;monitor=false;pendingChoice=null;reply={fields:[],number:'',person:''};el('rewindPanel').classList.add('hidden');save();render();scrollToTop();}
-function beginNight(){if(state.phase!=='morning'||state.ended)return;state.phase='night';pendingChoice=null;reply={fields:[],number:'',person:''};tab='board';selected=null;save();render();scrollToTop();}
+function start(){state=initial();state.started=true;selectedMail=null;pendingChoice=null;reply={fields:[],number:'',person:''};snapshot();save();render();scrollToTop();}
+function rewind(day){day=Number(day);if(!state.snapshots[day]||day>state.day)return;var old=state.snapshots;var snap=copy(old[day]);snap.snapshots={};Object.keys(old).forEach(function(k){if(Number(k)<=day)snap.snapshots[k]=old[k];});state=snap;if(state.day>=7&&!state.drawingTarget)state.drawingTarget=firstDrawingTarget(state.history);state.started=true;tab='board';selected=null;selectedMail=null;monitor=false;pendingChoice=null;reply={fields:[],number:'',person:''};el('rewindPanel').classList.add('hidden');save();render();scrollToTop();}
+function goEntry(){if(state.phase!=='morning'||state.ended||state.locationStage!=='board')return;state.locationStage='entry';selectedMail=null;save();render();scrollToTop();}
+function openMail(id){if(state.phase!=='morning'||state.ended||state.locationStage!=='entry')return;var i=items('post').find(function(item){return item.id===id;});if(!i)return;selectedMail=id;if(!state.mailRead.includes(id)){state.mailRead.push(id);add(id);}save();renderTab();}
+function beginNight(){if(state.phase!=='morning'||state.ended||state.locationStage!=='entry')return;state.phase='night';pendingChoice=null;reply={fields:[],number:'',person:''};tab='board';selected=null;save();render();scrollToTop();}
 document.addEventListener('click',function(ev){
 var b=ev.target.closest('button');if(!b)return;
 if(b.id==='start'||b.id==='new'){if(b.id==='new'&&!confirm('これまでの記録を消して最初から始めますか？'))return;start();return;}
 if(b.id==='resume'){state.started=true;render();scrollToTop();return;}
 if(b.id==='showIntro'){state.started=false;render();scrollToTop();return;}
+if(b.id==='toEntry'){goEntry();return;}
 if(b.id==='toNight'){beginNight();return;}
 if(b.id==='showRewind'||b.dataset.showrewind){el('rewindPanel').classList.toggle('hidden');renderRewind();if(b.dataset.showrewind)el('rewindPanel').scrollIntoView();return;}
 if(b.dataset.restartday){rewind(b.dataset.restartday);return;}
-if(b.dataset.tab){if(state.phase!=='morning'||state.ended)return;tab=b.dataset.tab;selected=null;renderTab();return;}
-if(b.dataset.gotab){if(state.phase!=='morning'||state.ended)return;tab=b.dataset.gotab;renderTab();el('tabPanel').scrollIntoView({block:'start'});return;}
-if(b.dataset.notice){if(state.phase!=='morning'||state.ended)return;selected=b.dataset.notice;renderTab();var detail=el('tabPanel').querySelector('.detail');if(detail)detail.scrollIntoView({block:'nearest'});return;}
+if(b.dataset.tab){if(state.phase!=='morning'||state.ended||state.locationStage!=='board')return;tab=b.dataset.tab;selected=null;renderTab();return;}
+if(b.dataset.gotab){if(state.phase!=='morning'||state.ended||state.locationStage!=='board')return;tab=b.dataset.gotab;renderTab();el('tabPanel').scrollIntoView({block:'start'});return;}
+if(b.dataset.notice){if(state.phase!=='morning'||state.ended||state.locationStage!=='board')return;selected=b.dataset.notice;renderTab();var detail=el('tabPanel').querySelector('.detail');if(detail)detail.scrollIntoView({block:'nearest'});return;}
+if(b.dataset.mail){openMail(b.dataset.mail);return;}
 if(b.dataset.monitor){monitor=!monitor;renderNight();return;}
 if(b.dataset.judge){if(state.phase!=='night'||state.resultPending||state.ended)return;pendingChoice=b.dataset.judge;reply={fields:[],number:'',person:''};renderNight();return;}
 if(b.dataset.cancelChoice){pendingChoice=null;renderNight();return;}
