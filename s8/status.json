@@ -2,7 +2,7 @@
   "id": "S8",
   "title": "履修登録を完了してください。（仮）",
   "version": "0.7.0",
-  "updated_at_jst": "2026/10/29 18 JST",
+  "updated_at_jst": "2026/10/29 18:43 JST",
   "phase": "Phase 4: elective-only progression and graduation dual requirement, registration review, and corrected UI button dispatch; mock DOM click-path and scripted logic tests complete; live browser and human retest pending",
   "scope": "4 years / 8 terms playable; 3 faculties; 5 extracurricular difficulty setups",
   "features": [
