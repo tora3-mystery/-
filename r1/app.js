@@ -59,9 +59,9 @@ function storefront(v){
  '<span class="stage-tag">'+esc(closed?"CLOSED":stage===0?"営業中":stage===1?"店頭改装":stage===2?"新看板":stage===3?"新装":"大改装")+'</span></div>';
 }
 function shopCard(d){
- const v=E.display(game.shops[d.id],d.id),pub=E.publicReviews(game,d.id),rating=pub.length?(pub.reduce((t,x)=>t+x.star,0)/pub.length).toFixed(1):null;
+ const v=E.display(game.shops[d.id],d.id),pub=E.publicReviews(game,d.id),mine=game.reviews.filter(x=>x.id===d.id),all=[...pub,...mine],rating=all.length?(all.reduce((t,x)=>t+x.star,0)/all.length).toFixed(1):null;
  return '<button type="button" class="shop-card '+(d.id===selectedId?"selected":"")+(game.shops[d.id].closed?" closed-card":"")+'" data-shop="'+d.id+'" aria-pressed="'+(d.id===selectedId)+'">'+
- storefront(v)+'<span class="card-copy"><span class="small">'+esc(d.category)+' ／ '+esc((game.shops[d.id].lot||'?')+'番地')+' ／ '+(game.shops[d.id].closed?"閉店":(rating?("★"+rating+"（"+pub.length+"件）"):"口コミなし"))+'</span><strong>'+esc(d.name)+'</strong>'+
+ storefront(v)+'<span class="card-copy"><span class="small">'+esc(d.category)+' ／ '+esc((game.shops[d.id].lot||'?')+'番地')+' ／ '+(game.shops[d.id].closed?"閉店":(rating?("★"+rating+"（"+all.length+"件）"):"口コミなし"))+'</span><strong>'+esc(d.name)+'</strong>'+
  '<span class="summary">'+esc(v.summary)+'</span><span class="tap">口コミを確認する　›</span></span></button>';
 }
 function replySnippet(id,reply,fromOwner="店主からの返信"){
