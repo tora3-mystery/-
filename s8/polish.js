@@ -103,7 +103,7 @@ createOffers=function(){
 };
 function scoreDetails(r){
  if(!r)return "";
- if(r.course.annual&&state.semester%2===0)return r.name+"：通年前期の中間評価 +"+fmt(r.earned)+"pt（この時点で単位は増えません）";
+ if(r.course.annual&&state.semester%2===0)return r.name+"：通年前期の"+(r.pass?"中間評価クリア":"要補講")+"。得点・単位は後期末に判定（今期は0pt）";
  if(!r.pass)return r.name+"：獲得0pt"+(r.jobHunt?"（就職活動による欠席）":"");
  const basic=r.credits*100,combo=Math.max(0,r.earned-basic);
  return r.name+"："+r.credits+"単位×100pt="+fmt(basic)+"pt"+(combo?" ＋ 連続取得ボーナス"+fmt(combo)+"pt":"")+" ＝ "+fmt(r.earned)+"pt";
@@ -179,7 +179,7 @@ renderReveal=function(){
  const num=state.revealIndex,latest=num>0?state.results[num-1]:null;
  const details=$("reveal-breakdown");
  const h=state.history.find(x=>x.term===state.semester);
- if(latest)details.textContent=scoreDetails(latest)+(h&&num===state.results.length&&h.bonus?" ／ 学期ボーナス +"+fmt(h.bonus)+"pt":"");
+ if(latest)details.textContent=scoreDetails(latest)+(h&&num===state.results.length&&h.bonus?" ／ 学期ボーナス +"+fmt(h.bonus)+"pt"+(h.perfect?"（PERFECT +350pt":"（")+(h.perfect&&h.bonus>350?"、活動 +"+fmt(h.bonus-350)+"pt":"")+")":"");
  else details.textContent="1単位につき100pt。取得が続くと追加ボーナス（最大250pt）。";
  // Show transparent point breakdown in the course-by-course result log.
  const rows=$("reveal-log").querySelectorAll(".reveal-row");
