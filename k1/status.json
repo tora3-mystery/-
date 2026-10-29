@@ -1,18 +1,17 @@
 {
   "projectId": "K1",
   "title": "掲示物をご確認ください。（仮）",
-  "version": "α0.7.1",
-  "updatedAtJST": "2026-10-29 19:01 JST",
-  "phase": "Phase 3/4 — 11 images integrated with state-based visuals; human review pending",
+  "version": "α0.8.0",
+  "updatedAtJST": "2026-10-29 19:28 JST",
+  "phase": "Phase 3/4 — binary judgment, visitor camera prototype, early-day randomization; human review pending",
   "aiAudit": {
-    "logic": "3125/3125 complete good-action route simulations; 4/4 story endings reached",
-    "ui": "JS syntax + DOM mock: board wear/day8, hallway wet/day10, cumulative door layers/day6+9+10, monitored intercom idle/call & night corridor, night privacy"
+    "logic": "3125/3125 tested late-pool routes covering all 25 early combinations, 20/20 early correct/wrong action tests; four endings tested; full 78125 theoretical routes not exhaustively tested",
+    "ui": "JS compiled, mock DOM checked dark night, camera, no verify button, optional eerie letter, mailbox persistence/rewind"
   },
   "browserAudit": {
-    "status": "not_run_for_alpha071",
-    "livePagesCheck": "not verified",
-    "actualWebPDisplay": "not verified",
-    "mobileWidths": [
+    "status": "not_run_for_alpha080",
+    "livePagesCheck": "not_verified",
+    "smartphoneWidths": [
       320,
       390,
       428
@@ -21,11 +20,12 @@
   "humanReview": {
     "lastReviewedVersion": "α0.6.1",
     "pilotImageLook": "user approved three candidate pictures",
-    "latestGame": "α0.7.1 not reviewed by human",
+    "latestGame": "α0.8.0 not yet human-reviewed",
     "openIssues": [
-      "Verify small visual differences at mobile sizes",
-      "Check monitor in-image daylight vs night narrative",
-      "Check last-day board readability and vertical scrolling"
+      "How disturbing is SVG camera and empty-camera case?",
+      "Is the night UI readable on phone?",
+      "Are early visitor/mailing clues understandable?",
+      "Is rare mail effective rather than clichéd?"
     ]
   },
   "assets": {
@@ -34,9 +34,11 @@
     "manifest": "k1/assets/manifest.csv",
     "sourceBranch": "k1-visual-phase2-20261029",
     "remainingCandidates": 0,
-    "nextProduction": "none until human review"
+    "nextProduction": "none until human review",
+    "cameraFaces": "temporary SVG; photo portraits not produced",
+    "existingGameImages": 11
   },
-  "nextOwner": "K1 human reviewer and Chat",
-  "nextAction": "Play alpha0.7.1 on phone; inspect day6/8/9/10 differences, night-monitor photos, and report visual mismatches",
+  "nextOwner": "Human tester / K1 Chat",
+  "nextAction": "Play alpha0.8.0, assess camera fear, dark UI, random early visitors; decide if Work photos are justified",
   "scope": "k1/ only"
 }
