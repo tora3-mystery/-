@@ -1,15 +1,15 @@
 {
   "projectId": "K1",
   "title": "掲示物をご確認ください。（仮）",
-  "version": "α0.6.2",
-  "updatedAtJST": "2026-10-29 05:47 JST",
-  "phase": "Phase 3/4 — image pilot integrated; human review pending",
+  "version": "α0.7.0",
+  "updatedAtJST": "2026-10-29 10:41 JST",
+  "phase": "Phase 3/4 — 10-day gameplay with sequential return route and opened-mail evidence; human review pending",
   "aiAudit": {
-    "logic": "K1 alpha0.6.2 complete 3125/3125 combination regression; DAY1/2/3/10 posters=1/5/20/38; 12 decisions, endgame reachable",
-    "ui": "JS syntax + DOM mock verified board notices, hallway/door images, post tab and night barrier; image references present in main"
+    "logic": "3125/3125 combinations successful with evidence mail opened; DAY2 yes survives and no/verify GAME OVER; all-unread run fails final evidence test",
+    "ui": "JS compiled; mock DOM verifies sequential board→mailbox/hallway→home, click-to-open letters, unread accumulation 1→2→3, day rewind restores read states"
   },
   "browserAudit": {
-    "status": "responsive-layout-fixture-only",
+    "status": "not_run_for_alpha070",
     "viewports": [
       320,
       390,
@@ -24,23 +24,29 @@
     "cases": 12,
     "horizontalOverflow": 0,
     "testEnvironment": "Chromium with same CSS and placeholder image fixture; not production page",
-    "livePagesCheck": "not verified; attempted direct fetch was inaccessible",
+    "livePagesCheck": "not verified",
     "genuineImagesInBrowser": "not verified",
-    "fullGameInteraction": "not run"
+    "fullGameInteraction": "not run",
+    "note": "Previous responsive fixture checks belong to alpha0.6.2; current mail+door route not tested on real browser"
   },
   "humanReview": {
     "lastReviewedVersion": "α0.6.1",
     "pilotImageLook": "user approved three candidate pictures",
-    "latestGame": "α0.6.2 not yet reviewed by human"
+    "latestGame": "α0.7.0 awaiting human testing",
+    "openIssues": [
+      "Check mailbox/hallway stage comprehension and phone scroll",
+      "Evaluate immediate GAME OVER on DAY2 for verification or ignoring real emergency",
+      "Verify day8 evidence from opened post is discoverable"
+    ]
   },
   "assets": {
     "status": "3 pilot assets imported to main and referenced in UI",
     "baseImages": 3,
     "manifest": "k1/assets/manifest.csv",
     "remainingCandidates": 8,
-    "productionStatus": "not commissioned; await mobile visual/human review"
+    "productionStatus": "Approved to commission 8 assets via Work prompt; not yet generated"
   },
-  "nextOwner": "K1 Chat and human reviewer",
-  "nextAction": "Human review alpha0.6.2 photos at real Pages widths 320/390/428 and on mobile; check notice readability on Day10, gallery crop and media loading. Only then commission remaining 8 state-difference assets.",
+  "nextOwner": "Human tester / K1 Chat; Work separately for assets",
+  "nextAction": "Test alpha0.7.0 on mobile. In parallel, Work may generate remaining 8 visuals on a dedicated branch, modifying only k1/assets and not game code.",
   "scope": "k1/ only"
 }
