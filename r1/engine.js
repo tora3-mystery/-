@@ -1,6 +1,6 @@
 window.R1 = (function makeEngine(){
 "use strict";
-const VERSION="0.9.5-alpha";
+const VERSION="0.9.6-alpha";
 const GENRES=[
 {id:"taste",name:"商品・味",icon:"🍜"},
 {id:"service",name:"接客",icon:"💬"},
@@ -15,16 +15,16 @@ const SHOPS=[
 {id:"cake",name:"パティスリー・リボン",owner:"安西 美波",age:32,icon:"🍰",category:"洋菓子",description:"季節のお菓子と新しいレシピを扱う洋菓子店。",product:"季節のショートケーキ",palette:"cake"},
 {id:"curry",name:"カレー食堂こはく",owner:"杉浦 奏",age:37,icon:"🍛",category:"カレー",description:"スパイスカレーと日替わりの副菜を出す食堂。",product:"定番スパイスカレー",palette:"curry"},
 {id:"teishoku",name:"定食屋つむぎ",owner:"田辺 芽衣",age:46,icon:"🍱",category:"定食",description:"焼き魚と日替わりの小鉢が評判の定食屋。",product:"本日の日替わり定食",palette:"teishoku"},
-{"id":"udon","name":"手打ちうどん ひなた","owner":"小沢 修平","age":32,"icon":"🍲","category":"うどん","description":"朝打つ麺と天ぷらの店。","product":"釜あげうどん","palette":"udon"},
-{"id":"soba","name":"蕎麦処 みかづき","owner":"岸本 純","age":32,"icon":"🥢","category":"蕎麦","description":"粉の香りを大切にする昼営業の蕎麦処。","product":"十割せいろ","palette":"soba"},
-{"id":"sandwich","name":"サンドイッチ はこぶね","owner":"戸倉 恵理","age":32,"icon":"🥪","category":"サンドイッチ","description":"具材を毎日組み替える持ち帰り専門店。","product":"たまごサンド","palette":"sandwich"},
-{"id":"burger","name":"グリル・ビー","owner":"比嘉 響","age":32,"icon":"🍔","category":"バーガー","description":"鉄板焼きパティと手作りソースの店。","product":"クラシックバーガー","palette":"burger"},
-{"id":"pasta","name":"生パスタノート","owner":"三田 綾","age":32,"icon":"🍝","category":"パスタ","description":"手書きのレシピ帳を持つパスタ店。","product":"本日の生パスタ","palette":"pasta"},
-{"id":"chinese","name":"中華料理 ひばり","owner":"久住 芳夫","age":32,"icon":"🥟","category":"中華","description":"鍋を振る音が通りに響く町中華。","product":"焼き餃子定食","palette":"chinese"},
-{"id":"bakery","name":"パン工房 芽吹き","owner":"野添 春","age":32,"icon":"🥐","category":"パン","description":"朝の焼きたてパンと昼の惣菜パンを扱う。","product":"焼きたてクロワッサン","palette":"bakery"},
-{"id":"fish","name":"焼き魚食堂 みなと","owner":"河口 和香","age":32,"icon":"🐟","category":"魚定食","description":"港から届く魚を焼く定食屋。","product":"本日の焼き魚","palette":"fish"},
-{"id":"onigiri","name":"おむすび まる","owner":"丸山 詩乃","age":32,"icon":"🍙","category":"おむすび","description":"手軽な昼ご飯を出す小さな店。","product":"塩むすびと豚汁","palette":"onigiri"},
-{"id":"veggie","name":"野菜食堂 さざなみ","owner":"塩谷 あさひ","age":32,"icon":"🥗","category":"野菜料理","description":"野菜中心の日替わりランチを出す店。","product":"野菜たっぷりプレート","palette":"veggie"}
+{"id":"udon","name":"手打ちうどん ひなた","owner":"小沢 修平","age":47,"icon":"🍲","category":"うどん","description":"朝打つ麺と天ぷらの店。","product":"釜あげうどん","palette":"udon"},
+{"id":"soba","name":"蕎麦処 みかづき","owner":"岸本 純","age":56,"icon":"🥢","category":"蕎麦","description":"粉の香りを大切にする昼営業の蕎麦処。","product":"十割せいろ","palette":"soba"},
+{"id":"sandwich","name":"サンドイッチ はこぶね","owner":"戸倉 恵理","age":29,"icon":"🥪","category":"サンドイッチ","description":"具材を毎日組み替える持ち帰り専門店。","product":"たまごサンド","palette":"sandwich"},
+{"id":"burger","name":"グリル・ビー","owner":"比嘉 響","age":35,"icon":"🍔","category":"バーガー","description":"鉄板焼きパティと手作りソースの店。","product":"クラシックバーガー","palette":"burger"},
+{"id":"pasta","name":"生パスタノート","owner":"三田 綾","age":40,"icon":"🍝","category":"パスタ","description":"手書きのレシピ帳を持つパスタ店。","product":"本日の生パスタ","palette":"pasta"},
+{"id":"chinese","name":"中華料理 ひばり","owner":"久住 芳夫","age":60,"icon":"🥟","category":"中華","description":"鍋を振る音が通りに響く町中華。","product":"焼き餃子定食","palette":"chinese"},
+{"id":"bakery","name":"パン工房 芽吹き","owner":"野添 春","age":27,"icon":"🥐","category":"パン","description":"朝の焼きたてパンと昼の惣菜パンを扱う。","product":"焼きたてクロワッサン","palette":"bakery"},
+{"id":"fish","name":"焼き魚食堂 みなと","owner":"河口 和香","age":48,"icon":"🐟","category":"魚定食","description":"港から届く魚を焼く定食屋。","product":"本日の焼き魚","palette":"fish"},
+{"id":"onigiri","name":"おむすび まる","owner":"丸山 詩乃","age":43,"icon":"🍙","category":"おむすび","description":"手軽な昼ご飯を出す小さな店。","product":"塩むすびと豚汁","palette":"onigiri"},
+{"id":"veggie","name":"野菜食堂 さざなみ","owner":"塩谷 あさひ","age":35,"icon":"🥗","category":"野菜料理","description":"野菜中心の日替わりランチを出す店。","product":"野菜たっぷりプレート","palette":"veggie"}
 ];
 const PATHS={
 ramen:{
