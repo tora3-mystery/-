@@ -156,12 +156,12 @@ function finalPage(){
 function history(){
  if(!game.reviews.length)return '<section class="box"><h2>口コミ履歴</h2><p>まだ口コミはありません。ランチ先を選んで感想を書くと、ここに残ります。</p></section>';
  return '<section class="box"><h2>あなたの口コミ履歴</h2><p class="section-intro">投稿済み：'+game.reviews.length+' / 12件。出張先のランチ記録です。</p><div class="timeline">'+[...game.reviews].reverse().map(f=>
- '<article class="history-card"><div class="tiny">'+esc(E.MONTHS[f.month-1])+' ／ '+esc(dshop(f.id).name)+' ／ '+esc(dgenre(f.genre).name)+'</div><h3>'+esc("★".repeat(f.star))+'</h3><p>'+esc(f.text)+'</p><div class="reply">'+esc(dshop(f.id).owner)+'：「'+esc(f.reply)+'」</div>'+
+ '<article class="history-card"><div class="tiny">'+esc(E.MONTHS[f.month-1])+' ／ '+esc(dshop(f.id).name)+' ／ '+esc(dgenre(f.genre).name)+'</div><h3>'+esc("★".repeat(f.star))+'</h3><p>'+esc(f.text)+'</p>'+replySnippet(f.id,f.reply,dshop(f.id).owner+"からの返信")+
  (f.exchange?'<div class="history-exchange"><p><strong>あなたの追記</strong>　'+esc(f.exchange.playerText)+'</p><p><strong>'+esc(dshop(f.id).owner)+'の再返信</strong>　'+esc(f.exchange.ownerText)+'</p></div>':"")+'</article>').join("")+'</div></section>'+
  '<section class="box"><h2>ほかのお客さんの口コミ・街の話題</h2>'+
  [...game.feed].reverse().filter(f=>f.kind==="npc"||f.kind==="sns"||f.kind==="viral"||f.kind==="lifecycle").map(f=>
  '<div class="feed-card '+(f.kind==="viral"?"viral-list":"")+'"><div class="meta">'+esc(E.MONTHS[f.month-1])+' ／ '+esc(f.kind==="lifecycle"?"商店街のお知らせ":f.kind==="sns"||f.kind==="viral"?"つぶやき広場":f.by+"・"+dshop(f.id).name)+'</div><p class="body">'+esc(f.text)+'</p>'+
- (f.kind==="npc"?'<div class="reply"><strong>'+esc(dshop(f.id).owner)+'の返信</strong><p>「'+esc(f.reply||"ご意見ありがとうございます。")+'」</p></div>':"")+'</div>').join("")+'</section>';
+ (f.kind==="npc"?replySnippet(f.id,f.reply,dshop(f.id).owner+"からの返信"):"")+'</div>').join("")+'</section>';
 }
 function guide(){
  return '<section class="box guide-text"><h2>遊び方</h2><p>あなたは毎月この商店街へ出張で来る会社員。昼休みに口コミと返信を読み、店で食べた後に投稿します。4月から翌3月まで全12回です。</p>'+
