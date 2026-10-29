@@ -226,3 +226,12 @@
 .no-shop-reviews{padding:16px;border:1px dashed #72828e;background:#242e39;border-radius:10px;color:#d0dbe0;font-size:13px}
 .monthly-npc-count{font-size:13px;font-weight:800;color:#ffe1b0;background:#313a44;border-left:3px solid #d0b88d;padding:9px 12px;border-radius:4px}
 .public-review .reply-absent,.feed-card .reply-absent{font-size:11px}
+
+/* R1 alpha 0.9: legible numbered lots and a rare larger storefront */
+.shop-card .card-copy .small{letter-spacing:.012em}
+.shop-meta .chip:first-child{font-variant-numeric:tabular-nums}
+.storefront.ramen.ramen-giant{min-height:205px;background:linear-gradient(#474957 0 18%,#6d6465 18% 65%,#3c454e 65% 100%);border:3px solid #e1ad78;box-shadow:0 4px 19px #e4a3753c}
+.storefront.ramen.ramen-giant:before{height:40%;top:19%;background:repeating-linear-gradient(90deg,#3c4549 0 17px,#eac4a5 17px 21px,#5c606c 21px 38px)}
+.storefront.ramen.ramen-giant .sign{background:#633a34;color:#ffe4b3;border:2px solid #dcb47f;font-weight:900;letter-spacing:.02em}
+.storefront.ramen.ramen-giant .stage-tag{background:#f2ba79;color:#382720}
+@media(max-width:380px){.storefront.ramen.ramen-giant{min-height:183px}}
