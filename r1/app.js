@@ -10,7 +10,7 @@ const dshop=id=>E.SHOPS.find(x=>x.id===id);
 const dgenre=id=>E.GENRES.find(x=>x.id===id);
 function newGame(){const state=E.createState(Date.now()>>>0);state.introSeen=false;return state}
 function load(){
- try{const raw=localStorage.getItem(KEY);if(raw){const s=JSON.parse(raw);if(s.version===E.VERSION){E.audit(s);return s;}if(["0.1.0-alpha","0.2.0-alpha","0.3.0-alpha","0.3.1-alpha","0.3.2-alpha","0.4.0-alpha","0.4.1-alpha","0.5.0-alpha","0.6.0-alpha","0.7.0-alpha","0.8.0-alpha","0.9.0-alpha"].includes(s.version)){
+ try{const raw=localStorage.getItem(KEY);if(raw){const s=JSON.parse(raw);if(s.version===E.VERSION){E.audit(s);return s;}if(["0.1.0-alpha","0.2.0-alpha","0.3.0-alpha","0.3.1-alpha","0.3.2-alpha","0.4.0-alpha","0.4.1-alpha","0.5.0-alpha","0.6.0-alpha","0.7.0-alpha","0.8.0-alpha","0.9.0-alpha","0.9.1-alpha"].includes(s.version)){
  if(["0.1.0-alpha","0.2.0-alpha","0.3.0-alpha","0.3.1-alpha","0.3.2-alpha","0.4.0-alpha"].includes(s.version)){
  const ramen=s.shops.ramen;
  ramen.scores=Object.fromEntries(E.GENRES.map(g=>[g.id,0]));
@@ -249,7 +249,7 @@ document.addEventListener("click",e=>{
  if(btn.dataset.genre){selectedGenre=btn.dataset.genre;render();root.querySelector('[data-genre="'+selectedGenre+'"]')?.focus();return;}
  if(btn.hasAttribute("data-post")){if(!dineModal||dinedId!==selectedId||selectedStar===null||selectedGenre===null)return;try{game=E.advance(game,{id:selectedId,star:selectedStar,genre:selectedGenre});dineModal=false;notification="";save();render();scrollTop()}catch(err){notification="投稿できませんでした。店舗を選び直してください。";render()}return;}
  if(btn.hasAttribute("data-decline")){if(game.view==="review"&&game.last?.review.reply&&!game.last.exchange){game.last.declined=true;save();render();}return;}
- if(btn.hasAttribute("data-next")){if(game.view!=="review")return;game.view="result";tab="street";save();render();scrollTop();return;}
+ if(btn.hasAttribute("data-next")){if(game.view!=="review"||(game.last?.review.reply&&!game.last?.exchange&&!game.last?.declined))return;game.view="result";tab="street";save();render();scrollTop();return;}
  if(btn.hasAttribute("data-continue")){if(game.view!=="result")return;game.view=game.month>=12?"final":"map";tab="street";selectedId=null;dinedId=null;selectedStar=null;selectedGenre=null;dineModal=false;save();render();scrollTop();return;}
 
 });
