@@ -8,9 +8,9 @@ let game,selectedId="ramen",selectedStar=null,selectedGenre=null,tab="street",no
 const esc=x=>String(x==null?"":x).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const dshop=id=>E.SHOPS.find(x=>x.id===id);
 const dgenre=id=>E.GENRES.find(x=>x.id===id);
-function newGame(){return E.createState(Date.now()>>>0)}
+function newGame(){const state=E.createState(Date.now()>>>0);state.introSeen=false;return state}
 function load(){
- try{const raw=localStorage.getItem(KEY);if(raw){const s=JSON.parse(raw);E.audit(s);if(s.version===E.VERSION)return s;if(["0.1.0-alpha","0.2.0-alpha","0.3.0-alpha","0.3.1-alpha"].includes(s.version)){
+ try{const raw=localStorage.getItem(KEY);if(raw){const s=JSON.parse(raw);E.audit(s);if(s.version===E.VERSION)return s;if(["0.1.0-alpha","0.2.0-alpha","0.3.0-alpha","0.3.1-alpha","0.3.2-alpha"].includes(s.version)){
  const ramen=s.shops.ramen;
  if(ramen.history.filter(h=>h.genre==="taste"&&h.star<=2).length>=3){
   ramen.hardening=true;
@@ -22,7 +22,7 @@ function load(){
  return newGame();
 }
 function save(){try{localStorage.setItem(KEY,JSON.stringify(game))}catch(err){console.warn("R1 saving unavailable:",err)}}
-game=load();save();
+game=load();let onboarding=game.introSeen===false;save();
 function scrollTop(){window.scrollTo({top:0,behavior:"auto"})}
 function pill(tone,text){return '<span class="chip '+(tone||"")+'">'+esc(text)+'</span>'}
 function storefront(v){
@@ -67,6 +67,23 @@ function detail(id){
  '<div class="note">'+esc(v.summary)+'</div>'+reviewForm(id)+
  (last?'<div class="recent"><h3>前回あなたに届いた返信</h3><p><strong>'+esc(d.owner)+'</strong>：「'+esc(last.reply)+'」</p></div>':'')+recentFeed(id)+'</section>';
 }
+function tutorial(){
+ const base=E.createState(101),before=E.display(base.shops.ramen,"ramen");
+ base.shops.ramen.scores.identity=16;
+ base.shops.ramen.history=[{id:"ramen",genre:"identity",star:5,month:1}];
+ const after=E.display(base.shops.ramen,"ramen");
+ return '<section class="tutorial" aria-labelledby="tutorialTitle">'+
+ '<div class="tutorial-hero"><span class="eyebrow">まちかどレビュー ／ ご利用前に</span>'+
+ '<h2 id="tutorialTitle">この商店街、<br>口コミで変わります。</h2>'+
+ '<p>ラーメン屋、喫茶店、洋菓子店。あなたの感想に、店主は感謝するかもしれないし、言い返してくるかもしれません。</p></div>'+
+ '<div class="tutorial-comparison"><p class="eyebrow">たとえば、あるラーメン屋</p><div class="result-views"><div><small>最初は普通の店</small>'+storefront(before)+'</div><div class="after-spotlight"><small>口コミを重ねると……</small>'+storefront(after)+'</div></div></div>'+
+ '<div class="tutorial-steps"><article><strong>① お店を選ぶ</strong><p>3店舗のどこに口コミを書くか決めます。</p></article>'+
+ '<article><strong>② 星とジャンルを選ぶ</strong><p>★1〜5と「味・接客・価格・雰囲気・個性」を組み合わせ、投稿文を確認します。</p></article>'+
+ '<article><strong>③ 返信と変化を見る</strong><p>店主から返信が来ます。言い返すことも可能。次の月には、店や商品が変わっているかもしれません。</p></article></div>'+
+ '<div class="tutorial-end"><strong>期間は4月から翌3月まで。月に1件、合計12件。</strong>'+
+ '<p>ほかのお客さんの口コミも店に影響します。正解はありません。1年後の商店街を見届けてください。</p>'+
+ '<button type="button" class="primary start-game" data-begin>商店街へ行く　→</button><p class="tiny">進行状況は端末に保存されます。操作はいつでも「あそび方」から確認できます。</p></div></section>';
+}
 function street(){
  const all=E.SHOPS.map(shopCard).join("");
  const lastMonth=game.month>0?'<p class="section-intro">前回の投稿は '+esc(E.MONTHS[game.month-1])+'。お店の看板や雰囲気を見比べてみましょう。</p>':'<p class="section-intro">気になるお店を選んで、最初の口コミを投稿してください。</p>';
@@ -81,11 +98,15 @@ function result(){
  const otherCause=r.cause==="other",combinedCause=r.cause==="combined",offsetCause=r.cause==="offset",legacyOther=typeof r.cause!=="string"&&r.npc?.id===r.review.id;
  const headline=otherCause?"ほかのお客さまの口コミで変化！":combinedCause?"口コミが重なり、店が変化！":offsetCause?"二つの意見が交差した。":major?"お店の姿が変わった！":minor?"店頭に新しい動きが！":"お店はいつもどおり。";
  const causeHint=otherCause?"あなたの投稿とは別の口コミが、今回の店舗変化のきっかけです。":combinedCause?"あなたの投稿と、ほかのお客さまの口コミが両方影響しました。":offsetCause?"あなたの口コミへの反応が、同じ月の別の口コミで変わりました。":legacyOther?"この月は同じ店舗にほかのお客さまも口コミを投稿しました。変化の原因は一つとは限りません。":"";
+ const burst=changed?'<div class="evolution-burst" aria-hidden="true">'+Array.from({length:14},(_,i)=>'<span style="--n:'+i+'">✦</span>').join("")+'</div>':"";
+ const exchange=r.exchange?
+  '<div class="reply-thread" id="exchangeArea"><div class="thread-player"><span>あなたから追記</span><p>'+esc(r.exchange.playerText)+'</p></div><div class="thread-owner"><span>'+esc(d.owner)+'から再返信</span><p>「'+esc(r.exchange.ownerText)+'」</p></div></div>':
+  '<div class="counter-choices" id="exchangeArea"><p>この返信に、一言返す？ <small>どちらか1回だけ。返さずに翌月へ進んでもOK。</small></p><div class="counter-buttons"><button type="button" class="secondary" data-counter="evidence">📋 根拠を伝える</button><button type="button" class="secondary sharp" data-counter="quip">💬 軽く言い返す</button></div></div>';
  const changes=(r.affected||[]).map(x=>'<div class="linked-change"><strong>'+esc(dshop(x.id).name)+'</strong><p>'+esc(x.reason||"同じ月に届いたほかの口コミが影響しました。")+'</p><p>'+esc(x.after.summary)+'</p><div class="linked-compare"><div><small>前</small>'+storefront(x.before)+'</div><div><small>後</small>'+storefront(x.after)+'</div></div></div>').join("");
  return '<section class="box result-top"><span class="eyebrow">'+esc(E.MONTHS[y.month-1])+'に投稿した口コミ</span><h2 class="result-title">口コミへの返信が届きました。</h2><div class="feed-card user-review"><div class="meta">あなた　／　'+esc(d.name)+'　／　'+esc("★".repeat(y.star))+'　'+esc(dgenre(y.genre).name)+'</div><p class="quote">'+esc(y.text)+'</p></div>'+
- '<div class="owner-reply"><span class="name">'+esc(d.owner)+'　店主より</span><p>「'+esc(y.reply)+'」</p></div></section>'+
- '<section class="box evolution-box '+(changed?"has-evolution":"no-evolution")+'"><div class="result-heading"><span class="eyebrow">投稿から1か月後</span><h2>'+headline+'</h2><p class="section-intro">'+esc(d.name)+'の今月の様子</p></div>'+
- '<div class="result-views"><div><small>投稿前</small>'+storefront(r.before)+'</div><div class="'+(changed?"after-spotlight":"")+'"><small>1か月後</small>'+storefront(r.after)+'</div></div>'+
+ '<div class="owner-reply"><span class="name">'+esc(d.owner)+'　店主より</span><p>「'+esc(y.reply)+'」</p></div>'+exchange+'</section>'+
+ '<section class="box evolution-box '+(changed?"has-evolution":"no-evolution")+'">'+burst+'<div class="result-heading"><span class="eyebrow">投稿から1か月後</span><h2>'+headline+'</h2><p class="section-intro">'+esc(d.name)+'の今月の様子</p></div>'+
+ '<div class="transformation-kicker">'+(changed?"✨ 店の様子が変わった！":"今月の店頭")+'</div><div class="result-views"><div><small>投稿前</small>'+storefront(r.before)+'</div><div class="'+(changed?"after-spotlight":"")+'"><small>1か月後</small>'+storefront(r.after)+'</div></div>'+
  '<div class="result-note">'+esc(r.transition)+'</div>'+(causeHint?'<p class="cause-hint">'+esc(causeHint)+'</p>':'')+
  '<p class="section-intro result-metrics">'+esc(r.after.population)+' ／ '+esc(r.after.business)+'</p></section>'+
  ((r.affected||[]).length?'<section class="box ripple-box"><h2>このお店にも変化が！</h2><p class="section-intro">同じ月に届いたほかのお客さまの口コミなどで、近くの店にも動きがありました。</p>'+changes+'</section>':"")+
@@ -113,7 +134,7 @@ function guide(){
  return '<section class="box guide-text"><h2>遊び方</h2><p>あなたは「まちかどレビュー」を使う一般客です。3つのお店から1店を選び、毎月1件の口コミを投稿します。4月から翌3月まで、全部で12回です。</p>'+
  '<h3>① 星とジャンルを選ぶ</h3><p>星1〜5で評価を、商品・味／接客／価格／雰囲気／個性からコメントの対象を選びます。投稿する文章は、そのときの店の状況に合わせて表示されます。</p>'+
  '<h3>② 返信と変化を見る</h3><p>店主は口コミに感謝したり、反論したり、ときには店の方針そのものを変えます。一度の投稿で看板が変わることも、メニューの一部だけ変わることもあります。動かない店もあります。</p>'+
- '<h3>③ 同じ店を再評価する</h3><p>同じ店に何度でも投稿できます。星やジャンルを変えると、別の方向に変化することがあります。別のお客さんの声や、架空SNSの話題も時々現れます。</p>'+
+ '<h3>③ 同じ店を再評価する</h3><p>同じ店に何度でも投稿できます。返信に一言返すと店主がさらに返事をすることもあります。星やジャンルを変えると、別の方向に変化することがあります。別のお客さんの声や、架空SNSの話題も時々現れます。</p>'+
  '<h3>④ 一年後を見届ける</h3><p>お店は繁盛することも、衰退することもあります。正解の星の付け方はありません。12回目を終えると、その一年の商店街の姿を見られます。</p>'+
  '<p class="note">このバージョンは試作版です。看板や内装は仮のCSSイラストで表現しています。画面上部のバージョン表示は実装の更新時刻です。</p>'+
  '<button type="button" class="secondary" data-tab="street">商店街に戻る</button>'+
@@ -127,17 +148,20 @@ function render(){
  document.getElementById("monthProgress").innerHTML=Array.from({length:12},(_,i)=>'<span class="'+(i<game.month?"done":i===game.month?"current":"")+'" aria-hidden="true"></span>').join("");
  document.querySelectorAll(".tabs button").forEach(b=>{const active=b.dataset.tab===tab;b.classList.toggle("active",active);if(active)b.setAttribute("aria-current","page");else b.removeAttribute("aria-current")});
  if(!game.shops[selectedId])selectedId="ramen";
- root.innerHTML=(notification?'<p class="note" role="status">'+esc(notification)+'</p>':"")+(tab==="history"?history():tab==="guide"?guide():game.view==="final"?finalPage():game.view==="result"?result():street());
+ root.innerHTML=onboarding?tutorial():(notification?'<p class="note" role="status">'+esc(notification)+'</p>':"")+(tab==="history"?history():tab==="guide"?guide():game.view==="final"?finalPage():game.view==="result"?result():street());
 }
 document.addEventListener("click",e=>{
  const btn=e.target.closest("button");if(!btn)return;
+ if(btn.hasAttribute("data-begin")){onboarding=false;game.introSeen=true;save();render();scrollTop();return;}
+ if(onboarding)return;
+ if(btn.dataset.counter){try{game=E.counter(game,btn.dataset.counter);save();render();document.getElementById("exchangeArea")?.scrollIntoView({behavior:"smooth",block:"center"});}catch(err){notification="この返信には、もう追記できません。";render();}return;}
  if(btn.dataset.tab){tab=btn.dataset.tab;notification="";render();scrollTop();return;}
  if(btn.dataset.shop){selectedId=btn.dataset.shop;selectedStar=null;selectedGenre=null;tab="street";render();if(window.innerWidth<760){setTimeout(()=>document.getElementById("shopDetail")?.scrollIntoView({behavior:"smooth",block:"start"}),0)}return;}
  if(btn.dataset.star){selectedStar=Number(btn.dataset.star);render();return;}
  if(btn.dataset.genre){selectedGenre=btn.dataset.genre;render();return;}
  if(btn.hasAttribute("data-post")){if(selectedStar===null||selectedGenre===null)return;try{game=E.advance(game,{id:selectedId,star:selectedStar,genre:selectedGenre});notification="";save();render();scrollTop()}catch(err){notification="投稿できませんでした。店舗を選び直してください。";render()}return;}
  if(btn.hasAttribute("data-next")){game.view=game.month>=12?"final":"map";tab="street";selectedStar=null;selectedGenre=null;save();render();scrollTop();return;}
- if(btn.hasAttribute("data-restart")){if(!window.confirm("これまでの12か月の記録を消して、新しく始めますか？"))return;game=newGame();selectedId="ramen";selectedStar=null;selectedGenre=null;tab="street";notification="";save();render();scrollTop();return;}
+ if(btn.hasAttribute("data-restart")){if(!window.confirm("これまでの12か月の記録を消して、新しく始めますか？"))return;game=newGame();onboarding=true;selectedId="ramen";selectedStar=null;selectedGenre=null;tab="street";notification="";save();render();scrollTop();return;}
 });
 render();
 })();
