@@ -270,14 +270,16 @@ function background(state){
   for(let k=0;k<count;k++){
    const genre=GENRES[Math.floor(rand()*GENRES.length)].id,roll=rand();
    const star=roll<.09?1:roll<.22?2:roll<.47?3:roll<.81?4:5;
-   const by=NPC_NAMES[Math.floor(rand()*NPC_NAMES.length)];
-   const text=npcText(state,d.id,genre,star,rand);
+   const neighbors=SHOPS.filter(other=>other.id!==d.id&&state.shops[other.id].opened&&!state.shops[other.id].closed);
+   const visitor=neighbors.length&&rand()<.13?neighbors[Math.floor(rand()*neighbors.length)]:null;
+   const by=visitor?visitor.owner+"（"+visitor.name+"店主）":NPC_NAMES[Math.floor(rand()*NPC_NAMES.length)];
+   const text=visitor?(star>=4?"同じ商店街で商売をしています。"+d.name+"の"+TOPICS[d.id][genre]+"が良かった。":star<=2?"同業者として気になるところもあります。"+TOPICS[d.id][genre]+"はもう少し工夫がほしい。":"休憩に寄りました。"+TOPICS[d.id][genre]+"は好みが分かれるかもしれません。"):npcText(state,d.id,genre,star,rand);
    const reply=ownerMayReply(state,d.id,star,genre,250+k)?replyFor(state,d.id,star,genre):null;
    if(d.id!=="ramen")s.scores[genre]=clamp(s.scores[genre]+Math.sign(star-3)*2,-25,25);
    s.money=clamp(s.money+(star-3)*.8,-100,160);
    s.locals=clamp(s.locals+(star-3)*.7,0,100);
    s.visitors=clamp(s.visitors+(star-3)*.5,0,100);
-   results.push({by,id:d.id,star,genre,text,reply,month:state.month});
+   results.push({by,id:d.id,star,genre,text,reply,month:state.month,authorShopId:visitor?.id||null});
   }
  }
  return results;
@@ -388,7 +390,20 @@ if(action.id==="ramen"&&action.star<=2&&(action.genre==="service"||action.genre=
 }
 const playerAfter=display(s,action.id);
 const npcs=background(next),npc=npcs.find(x=>x.id===action.id)||npcs[0]||null;const sns=social(next,rev);const viral=controversy(next,rev);
-const closures=settleAndClose(next);const openings=openNewShops(next);
+const closures=settleAndClose(next);
+ if(closures.some(x=>x.id==="ramen")){
+   next.ramenFinalSilent=true;
+   const lastRamen=rev.id==="ramen"?rev:null;
+   if(lastRamen)lastRamen.reply=null;
+   else{
+     npcs.push({by:"最後に来た客",id:"ramen",star:3,genre:"identity",text:"いつもの硬い麺だった。また来たい。",reply:null,month:next.month,finalSilence:true});
+   }
+   const eligibleFinal=next.month<=10&&(next.viralCount||0)>=1&&next.shops.ramen.history.filter(h=>h.star<=2).length>=3;
+   const rare=random(((next.seed>>>0)^Math.imul(next.month,0x9e3779b1)^0x51f72b0a)>>>0);
+   if(eligibleFinal&&rare()<.065)next.ramenReturnMonth=next.month+2;
+ }
+ const returns=specialRamenReturn(next);
+ const openings=[...returns,...openNewShops(next)];
 const after=display(s,action.id);s.stage=after.route.stage;s.route=after.route.genre?`${after.route.genre}:${after.route.polarity}`:null;
 s.lastChange=after.summary;
 const viewChanged=(a,b)=>a.open!==b.open||a.sign!==b.sign||a.route.label!==b.route.label||a.route.stage!==b.route.stage||a.feature!==b.feature||a.visual.product!==b.visual.product;
@@ -408,10 +423,15 @@ next.last=result;next.view="result";next.feed.push({month:next.month,kind:"playe
 function finish(state){if(state.month<12)throw Error("not finished");const ls=SHOPS.filter(d=>state.shops[d.id].opened).map(d=>({d,s:state.shops[d.id]}));const closed=ls.filter(x=>x.s.closed).length;const totalStages=ls.reduce((n,x)=>n+routeFor(x.s).stage,0);const local=ls.reduce((n,x)=>n+x.s.locals,0),vis=ls.reduce((n,x)=>n+x.s.visitors,0);
 let title,description;
 const ramen=state.shops.ramen,cake=state.shops.cake,cafe=state.shops.cafe;
+const ramenReviews=state.reviews.filter(r=>r.id==="ramen");
+const loyal=ramenReviews.length>=4&&ramenReviews.filter(r=>r.star>=4).length>=3&&!ramen.closed&&!state.ramenReborn;
 const ramenRoute=routeFor(ramen),cakeRoute=routeFor(cake),cafeRoute=routeFor(cafe);
 const ramenHardReviews=ramen.history.filter(h=>h.genre==="taste"&&h.star<=2).length;
 const cakePraise=cake.history.filter(h=>h.genre==="identity"&&h.star>=4).length;
-if(closed>=1){title="シャッターのある通り";description="一年で閉まった店もある。隣の店には、新しい看板が掛かった。";}
+if(state.ramenReborn&&!ramen.closed){title="看板だけでは収まりません。";description="一度閉じた麺処いわきが、二か月後に巨大な本店で帰ってきた。変わらないのは麺の硬さだった。";}
+else if(ramen.closed&&state.ramenFinalSilent){title="最後の返信";description="最後まで同じ麺を出した店のシャッターが下りた。最後の口コミだけ、店主からの返事がない。";}
+else if(loyal){title="いつものでよろしいですか。";description="一年の出張で同じラーメン屋に通い続けた。看板も硬麺も変わらないが、店主はあなたの注文だけ覚えていた。";}
+else if(closed>=1){title="シャッターのある通り";description="一年で閉まった店もある。隣の店には、新しい看板が掛かった。";}
 else if(ls.filter(x=>x.s.money<40).length>=2){title="踏ん張る商店街";description="値段も商品も見直した。売上が安定したとは言えないが、灯りは消えていない。";}
 else if((state.viralCount||0)>=2&&ramen.history.filter(h=>h.star<=2).length>=3){title="返信欄が名物の商店街";description="店主の返信がネットで繰り返し話題になった。麺処いわきの味は変わらず、街に新しい客が訪れている。";}
 else if((ramen.disputes||0)>=6&&ramen.history.filter(h=>h.star<=2).length>=3){title="論争の絶えない商店街";description="一年じゅう口コミで言い争った麺処いわき。看板も麺も変わらず、返信だけが積み重なった。";}
@@ -427,9 +447,9 @@ else if(ls.filter(x=>routeFor(x.s).genre==="taste"&&routeFor(x.s).stage>=2).leng
 else if(totalStages>=4){title="それぞれ違う商店街";description="進んだ方向はばらばら。それでも店主たちは、ここで商売を続けている。";}
 else{title="少し変わった商店街";description="一年で何もかもが変わったわけではない。でも新しい店も、閉じた店もあるかもしれない。";}
 const shops=ls.map(({d,s})=>{const view=display(s,d.id),count=s.history.length,last=s.history[count-1],ownerLine=s.closed?
-(d.id==="ramen"?"「鍋の火は止めました。それでも麺の話は、まだ終わっていません。」":d.id==="cafe"?"「この椅子に座っていた人のことは、忘れないと思います。」":d.id==="cake"?"「最後のお菓子だけは、ちゃんと焼き上げました。」":d.id==="curry"?"「最後の一皿も、丁寧に仕上げました。」":d.id==="teishoku"?"「最後まで、焼き魚は丁寧に焼きました。」":"「最後まで、自分の一皿を出しました。」"):
+(d.id==="ramen"?"最後の口コミに、店主からの返信はありませんでした。":d.id==="cafe"?"「この椅子に座っていた人のことは、忘れないと思います。」":d.id==="cake"?"「最後のお菓子だけは、ちゃんと焼き上げました。」":d.id==="curry"?"「最後の一皿も、丁寧に仕上げました。」":d.id==="teishoku"?"「最後まで、焼き魚は丁寧に焼きました。」":"「最後まで、自分の一皿を出しました。」"):
 count===0?"「口コミはいただきませんでしたが、今日も店を開けています。」":
-d.id==="ramen"?"「星をいくつ付けようと自由です。でも麺も値段も、一年前から変えていません。」":view.route.stage===0?"「新しい看板はありません。けれど、毎日のお客さまはいます。」":
+d.id==="ramen"?(s.reborn?"「広くなったのは店の方です。麺は同じです。また来るんでしょう？」":loyal?"「あんた、また来たのか。……いつものでいいんだろ。」":"「星をいくつ付けようと自由です。でも麺も値段も、一年前から変えていません。」"):view.route.stage===0?"「新しい看板はありません。けれど、毎日のお客さまはいます。」":
 d.id==="ramen"?`「${view.visual.product}を看板にしました。納得できない方もいるでしょう。でも味は見てください。」`:
 d.id==="cafe"?`「${view.visual.product}を始めました。昔からのお客さまも、新しい方も歓迎ですよ。」`:
 d.id==="cake"?`「${view.visual.product}が人気です！ ただ、来年はまた違うものを作るかもしれません。」`:
