@@ -136,11 +136,12 @@ render=function(){
   ev.textContent=state.activity==="none"?"今期は勉強に専念。":yr>1?"学生生活が忙しくなった！ "+yr+"年生は授業以外の活動が週"+(activity+plus)+"コマ（1年生より+"+plus+"コマ）。":"今期の活動は週"+activity+"コマ。";
   if(state.travelEvent?.active&&state.semester===7)ev.textContent+="　🏖️ 卒業旅行の予定：今期の単位取得率−18ポイント。";
  }
+ if(state.semester===7)$("schedule-hint").textContent="卒業前の最終学期。必修を1科目でも落とすと、累計72単位に届いていてもGAME OVERになります。";
  const warnings=$("retake-warning");
  if(warnings){
   const lock=state.offers.filter(c=>c.retake);
   const deferred=state.deferredRequired||[],shifted=state.shiftedRequired||[];
-  warnings.textContent=lock.length||deferred.length||shifted.length?"⚠ 今期の再履修必修："+(lock.length?lock.map(c=>c.name+"（前年と同じ時間に固定）").join("・"):"なし")+(shifted.length?" ／ 新しい必修の時限変更："+shifted.join("・"):"")+(deferred.length?" ／ 空き不足による繰越："+deferred.join("・"):""):"";
+  warnings.textContent=lock.length||deferred.length||shifted.length?"⚠ 今期の再履修必修："+(lock.length?lock.map(c=>c.name+"（"+(state.semester===7&&c.firstFailedTerm===6?"卒業前の特別再履修":c.movedMandatory?"時限を変更して再履修":"元の曜日・時限に固定")+"）").join("・"):"なし")+(shifted.length?" ／ 新しい必修の時限変更："+shifted.join("・"):"")+(deferred.length?" ／ 空き不足による繰越："+deferred.join("・"):""):"";
   warnings.classList.toggle("hidden",!lock.length&&!deferred.length&&!shifted.length);
  }
  const r=$("register-btn");
