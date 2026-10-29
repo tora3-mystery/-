@@ -1,6 +1,6 @@
 window.R1 = (function makeEngine(){
 "use strict";
-const VERSION="0.9.2-alpha";
+const VERSION="0.9.3-alpha";
 const GENRES=[
 {id:"taste",name:"商品・味",icon:"🍜"},
 {id:"service",name:"接客",icon:"💬"},
@@ -233,12 +233,55 @@ PUBLIC_REVIEWS.veggie=[{"by":"近所の会社員","star":5,"genre":"taste","text
 const LUNCH_IMPRESSIONS={"ramen":["硬い麺で小麦の香りがあるが、急いで食べるには手ごわい。","注文は早い。店主は必要以上に話さない。","カウンター中心。常連客は静かに丼に向かっている。","一杯の値段は少し強気。好みが分かれそう。"],"cafe":["厚切りトーストは香ばしく、中はふわり。珈琲は少し苦め。","丁寧に注文を聞いてくれる。混雑時は提供が遅い。","古い木の椅子と窓辺の光。席数は少ない。","セットは妥当。飲み物を追加すると少し高くなる。"],"cake":["クリームは軽く果物の酸味が残る。甘さは控えめ。","新作の説明が熱心で少し長い。","ショーケースが華やか。座れる場所は限られる。","小さめのケーキとしては高め。素材の良さは感じる。"],"curry":["香りが先に広がり、後から辛さが来る。副菜で味が変わる。","辛さの質問には答えるが昼は忙しそう。","スパイスの香りが濃い。隣の席が近い。","副菜込みなら納得、追加トッピングは高くなる。"],"teishoku":["魚の皮は香ばしく身は柔らかい。小鉢は優しい味。","配膳は丁寧だが焼き上がりを待つ。","湯飲みと日替わり札。近所の客が多い。","小鉢付きで手頃。単品の選択肢は少ない。"],"udon":["麺はもっちりして小麦が香る。つゆは濃いめ。","茹で上がりを教えてくれる。注文が重なると待つ。","打ち台が見える。厨房の様子を眺められる。","一杯は手頃。天ぷらの追加で値が張る。"],"soba":["蕎麦の香りが強く、噛むとほろりと切れる。量は控えめ。","説明は細かいが、案内の声は小さめ。","落ち着いた店内。客は黙々と蕎麦をすする。","素材へのこだわりで少し高め。大盛りは別料金。"],"sandwich":["パンはしっとり、具は端まで入る。持ち歩くと崩れやすい。","会計は早いが人気の具は売り切れることもある。","小さなショーケース。店内に食べる席はない。","一個は手頃。昼食には複数買うことになりそう。"],"burger":["パティが香ばしく肉汁が多い。ソースの味が強い。","焼き加減を確認する。注文後の待ち時間は長め。","鉄板の音で賑やか。隣席との会話も聞こえる。","食べごたえはあるが少し贅沢な価格。"],"pasta":["生麺はもちもち。ソースが絡むが食後は重たい。","本日のおすすめを教える。注文は急かさない。","手書きのメニューと小テーブル。席間隔は狭い。","セットなら妥当。飲み物の追加で割高。"],"chinese":["餃子の皮はぱりっとして具の香りが強い。油は多め。","鍋の音に負けない大きな声で注文を取る。","湯気と音で賑やか。昼は相席になることも。","量が多く価格は手頃。少食だと多すぎるかも。"],"bakery":["クロワッサンは層が軽く香ばしい。少しこぼれやすい。","温め直しを勧める。昼過ぎは売り切れが増える。","明るい店先。店内の通路は細い。","小さなパンは手頃。昼食分だと高くなる。"],"fish":["魚の焦げ目が香ばしく身はふっくら。小骨に注意。","魚の種類を教える。焼き時間は少し必要。","厨房から焼き魚の香り。ひとり客が多い。","魚によって値段が変わり、日替わりの楽しみがある。"],"onigiri":["米は粒が立ち塩は控えめ。豚汁は具が多い。","注文を聞いてから握る。急ぐと待ち時間が気になる。","持ち帰り棚と小さなカウンター。簡潔な昼食。","一個は手頃。数を選ぶと定食並みになる。"],"veggie":["野菜の甘みと歯ごたえがある。肉の満足感とは違う。","野菜の産地を説明する。昼は忙しそう。","緑が多く明るい店。器の並べ方も丁寧。","野菜中心としてはやや高め。季節感は魅力。"]};
 function lunchImpressions(state,id){
  const s=state.shops[id];if(!s||!s.opened||s.closed||!LUNCH_IMPRESSIONS[id])throw Error("shop unavailable");
- const d=display(s,id),base=LUNCH_IMPRESSIONS[id];
- const evolved=id!=="ramen"&&d.route.stage>0;
- const crowd=s.locals>=65||s.visitors>=65?"今日は客が多く、少し慌ただしい。":s.locals<=30?"昼時なのに空席が目立つ。":"昼休みらしい客足。";
- return {food:base[0],service:base[1],mood:base[2]+" "+crowd,price:base[3],current:d.visual.product,
-  change:evolved?"店頭では現在「"+d.visual.product+"」を前面に出している。"+d.route.label+"。":
-   id==="ramen"&&s.reborn?"建物は巨大になったが、注文した硬麺は以前と同じだった。":""};
+ const view=display(s,id),base=LUNCH_IMPRESSIONS[id];
+ let food=base[0],service=base[1],mood=base[2],price=base[3];
+ const stage=view.route.stage,genre=view.route.genre,positive=view.route.polarity==="plus";
+ const current=view.visual.product,route=view.route.label;
+ // Reflect the shop's actual dominant evolution, not its founding menu.
+ if(id!=="ramen"&&stage>0&&genre){
+  const label=stage===1?"試し始めた":"現在の看板になった";
+  if(genre==="taste"){
+   food="「"+current+"」を"+(stage===1?"試食した。":"注文した。")+
+    (positive?"味や素材の組み合わせを以前より前面に出している。香りや食感に特徴がある。":
+     "味付けや選び方を見直したようだ。以前の味を知る客には違いが感じられそう。");
+  }else if(genre==="service"){
+   service=positive?"今は「"+route+"」を掲げている。以前より客とのやりとりに時間を使っている。":
+    "注文や受け取りが「"+current+"」中心になった。以前よりやり取りが少なく、手早く済む。";
+  }else if(genre==="price"){
+   price=positive?"「"+current+"」が目立つ。以前より量や組み合わせのお得感を打ち出している。":
+    "価格や量の選択肢を見直し、「"+current+"」を案内している。注文前に内容を確かめたくなる。";
+  }else if(genre==="mood"){
+   mood=positive?"「"+route+"」の方向に席と内装が変わった。落ち着いて過ごす時間を重視している。":
+    "今は「"+route+"」を目指す店内。昔の席の使い方とは違い、短い昼休みに寄りやすそう。";
+  }else if(genre==="identity"){
+   food="「"+current+"」が今の主役。"+(positive?"店独自の工夫を強く打ち出していて、好みが分かれそう。":"以前の奇抜さより、親しみやすい方向に寄せている印象。");
+   mood+=" 入口では「"+route+"」の看板が目に入る。";
+  }
+  if(stage===1){
+   const prelude="今は「"+route+"」へ向けて小さな変更を試している段階。";
+   if(genre==="taste"||genre==="identity")food=prelude+" "+food;
+   else if(genre==="service")service=prelude+" "+service;
+   else if(genre==="price")price=prelude+" "+price;
+   else mood=prelude+" "+mood;
+  }
+ }
+ // What can actually be observed on the day, including footfall and shop viability.
+ if(s.locals>=68||s.visitors>=68){
+  service+=" 混雑していて提供まで少し待った。";
+  mood+=" 満席に近く、店内は活気がある。";
+ }else if(s.locals<=30&&s.visitors<=35){
+  service+=" 注文はすぐに通った。";
+  mood+=" 昼時なのに空席が目立つ。";
+ }else{
+  mood+=" 昼休みらしい客足。";
+ }
+ if(s.money<30)mood+=" 店先では営業日や仕入れの見直しを告知している。";
+ if(id==="ramen"&&s.reborn)mood+=" 建物は巨大になったが、硬麺の看板は変わらない。";
+ return {food,service,mood,price,current,
+  change:id!=="ramen"&&stage>0?
+   "現在の店頭：「"+route+"」／"+(stage===1?"改装準備":stage===2?"新看板":stage===3?"店内も改装":"営業形態が定着")+
+    "。商品は「"+current+"」。":
+   id==="ramen"&&s.reborn?"店舗だけが大きくなった。麺の硬さは開業時のまま。":""};
 }
 
 const NPC_NAMES=["駅前の会社員","近所の学生","通りがかりの客","常連のひとり","休日の散歩客","子連れの住民","隣町からの来訪者"];
@@ -288,9 +331,13 @@ function background(state){
    const by=visitor?visitor.owner+"（"+visitor.name+"店主）":NPC_NAMES[Math.floor(rand()*NPC_NAMES.length)];
    let text=visitor?(star>=4?"同じ商店街で商売をしています。"+d.name+"の"+TOPICS[d.id][genre]+"が良かった。":star<=2?"同業者として気になるところもあります。"+TOPICS[d.id][genre]+"はもう少し工夫がほしい。":"休憩に寄りました。"+TOPICS[d.id][genre]+"は好みが分かれるかもしれません。"):npcText(state,d.id,genre,star,rand);
    if(s.lot===2&&rand()<.37){
-    const whispers=state.feed.some(x=>x.kind==="rumor")?
-      ["前の店の看板を覚えている。ここはずいぶん入れ替わるらしい。","2番地は店名を覚えたころに看板が変わる、と近所の人が言っていた。"]:
-      ["ここ、数年前は別のお店だったと聞いた。","2番地には、長く続く店が少ないという噂がある。"];
+    // Previous tenants before April are background history; they are not playable shops.
+    const tenantOrdinal=5+SHOPS.filter(x=>state.shops[x.id].opened&&state.shops[x.id].lot===2).length;
+    const quickYear=state.month<=4;
+    const number=tenantOrdinal===6?"6":String(tenantOrdinal);
+    const whispers=quickYear?
+      ["この一年で"+number+"店舗目だって聞いた。本当なら、入れ替わりが早すぎる。","ここはまた違う店。二番地の前の看板、もう思い出せない。"]:
+      ["二番地は開店と閉店の貼り紙がよく入れ替わる。","ここはもう"+number+"軒目らしい。店主が変わるたびに、前の店の話をする人がいる。"];
     text+=" "+whispers[Math.floor(rand()*whispers.length)];
    }
    const reply=ownerMayReply(state,d.id,star,genre,250+k)?replyFor(state,d.id,star,genre):null;
@@ -439,7 +486,8 @@ const affected=SHOPS.filter(d=>d.id!==action.id&&allBefore[d.id].open).map(d=>({
 const neighbor=spillover;
 const result={review:rev,transition,before,after,playerAfter,cause,affected,npc,sns,viral,neighbor,closures,openings,npcs,month:next.month};
 if(closures.some(x=>x.lot===2)||openings.some(x=>x.lot===2)){
-  const msg=closures.some(x=>x.lot===2)?"2番地の店がまた閉まった。閉店の貼り紙が重なる場所だ、と噂する人がいる。":"空いていた2番地に新しい看板が掛かった。『ここは前、何屋だったっけ』と足を止める人がいた。";
+  const n=5+SHOPS.filter(d=>next.shops[d.id].opened&&next.shops[d.id].lot===2).length;
+  const msg=closures.some(x=>x.lot===2)?"2番地の店がまた閉まった。『この間も閉店したばかりじゃなかった？』と通行人が首をかしげた。":"2番地にまた新しい看板。『前の店を入れたら、もう"+n+"軒目だって？』と常連が話している。";
   next.feed.push({kind:"rumor",month:next.month,text:msg});
  }
  next.last=result;next.view="review";next.feed.push({month:next.month,kind:"player",...rev});for(const item of npcs)next.feed.push({kind:"npc",...item});if(sns)next.feed.push({month:next.month,kind:"sns",...sns});if(viral)next.feed.push(viral);for(const e of closures)next.feed.push({kind:"lifecycle",month:next.month,text:e.name+"が"+e.reason+"ため閉店しました。",id:e.id});for(const e of openings)next.feed.push({kind:"lifecycle",month:next.month,text:e.notice,id:e.id});return next;}
@@ -503,11 +551,11 @@ function counter(state,style){
  const next=copy(state),r=next.last,rev=r.review,s=next.shops[rev.id],genre=rev.genre,positive=rev.star>=4,negative=rev.star<=2;
  const topic=TOPICS[rev.id][genre],shop=SHOPS.find(d=>d.id===rev.id);
  const playerText=style==="evidence"?
- (negative?`実際に${topic}が気になったんです。もう一度、確かめてもらえませんか。`:positive?`褒めたのは本心です。${topic}を今後も大事にしてほしいです。`:`良いところも気になるところもある、と伝えたかったんです。`):
+ (negative?`お返事ありがとうございます。${topic}で気になったところが、少しでも良くなるとうれしいです。`:positive?`お返事ありがとうございます。${topic}の良さを、これからも大切にしてほしいです。`:`お返事ありがとうございます。${topic}には良いところもあったので、また利用したいです。`):
  (negative?"そんなに言い返す前に、まず口コミの星を見てもらえます？":positive?"褒めたのに反撃されるとは。星を減らした方がいいんですか？":"星3にここまで返事が来るとは思いませんでした。");
  let ownerText;
  if(rev.id==="ramen"){
-  if(style==="evidence")ownerText=negative?"その根拠を読んでも、茹で時間は1秒も変えません。反論は以上です。":"根拠は読みました。では次回も同じ一杯を出すので、ご自身で確かめてください。";
+  if(style==="evidence")ownerText=negative?"お気持ちは読みました。でも茹で時間は1秒も変えません。反論は以上です。":"お返事は読みました。次回も同じ一杯を出しますから、ご自身で確かめてください。";
   else ownerText=negative?"星が何個だろうと、麺の硬さは変えません。返信が欲しいなら何度でもどうぞ。":"星を減らしていただいて結構。私のレシピはそのままです。";
  }else if(rev.id==="cafe"){
   ownerText=style==="evidence"?"そういうことでしたか。書き言葉では、細かい温度が伝わらないものですね。参考にします。":"あら、言い合いになるつもりはなかったのに。次は店で一杯飲みながら、どうでしょう。";
