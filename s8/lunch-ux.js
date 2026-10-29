@@ -34,10 +34,28 @@ const previousOpen=openCourse;
 openCourse=function(id){
  previousOpen(id);
  const c=state?.offers?.find(x=>x.id===id);
- if(!c||!c.slots.some(p=>p%5===2))return;
+ if(!c)return;
+ const messages=[];
+ if(c.slots.some(p=>p%5===2))messages.push("昼休み明けの3限：+6ポイント");
+ const activities=new Set(getActivityBlocks());
+ if(c.slots.some(p=>p%5<4&&activities.has(p+1)))messages.push("確実に参加する活動の直前：+4ポイント");
+ const registered=allRegistered().filter(x=>x.id!==c.id).concat(c);
+ const lessons=new Set(registered.flatMap(x=>x.slots));
+ const present=new Set([...lessons,...activities]);
+ let blank=0;
+ for(const p of c.slots){
+  const earlier=[...lessons].filter(x=>Math.floor(x/5)===Math.floor(p/5)&&x<p);
+  if(!earlier.length)continue;
+  const previous=Math.max(...earlier);
+  let free=0;for(let x=previous+1;x<p;x++)if(!present.has(x))free++;
+  blank=Math.max(blank,free)
+ }
+ if(blank)messages.push("授業の間の空きコマ"+blank+"つで帰宅リスク："+(blank>=2?"−9":"−6")+"ポイント");
+ if(c.slots.some(p=>p%5===2&&lessons.has(p-1)))messages.push("2・3限は昼休みで分かれるため、連続ペナルティなし");
+ if(!messages.length)return;
  const info=document.createElement("div");info.className="info wide";
- const label=document.createElement("b");label.textContent="3限の昼休み明けボーナス";
- const value=document.createElement("span");value.textContent="昼休み後なので単位取得率+6ポイント（上限98%）。";
+ const label=document.createElement("b");label.textContent="時間割による取得率の変化";
+ const value=document.createElement("span");value.textContent=messages.join(" ／ ")+"（表示している取得見込に反映済み）";
  info.append(label,value);$("drawer-detail").append(info)
 };
 const oldRender=render;
