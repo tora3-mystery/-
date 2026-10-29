@@ -1,9 +1,9 @@
 {
   "id": "S8",
   "title": "履修登録を完了してください。（仮）",
-  "version": "0.7.3",
-  "updated_at_jst": "2026/10/29 23:03 JST",
-  "phase": "Phase 4: compulsory class timings diversified to mornings and Saturdays, mandatory-master adjacency clarified, false-empty-slot activity collisions explained, and compulsory placement repaired. Mock state regression complete; human/mobile real browser QA pending.",
+  "version": "0.7.4",
+  "updated_at_jst": "2026/10/29 23:20 JST",
+  "phase": "Phase 4: full content and course-setting audit completed at v0.7.4. Revised compulsory rumors/reviews, credit/scoring display accuracy, science lab naming, annual grade labels and meta-heavy copy. Source/mock DOM QA passed; browser QA and independent human review pending.",
   "scope": "4 years / 8 terms playable; 3 faculties; 5 extracurricular difficulty setups",
   "features": [
     "tap an unoccupied timetable slot to choose courses that include that period",
@@ -81,7 +81,12 @@
     "v0.7.3: mandatory_master only grants 100% if the immediately preceding actual lecture period (not lunch) is free for an otherwise required course. No preparation is available before period 1 or between contiguous compulsory classes.",
     "v0.7.3: registration review explicitly displays mandatory_master active/inactive explanation for each compulsory course.",
     "v0.7.3: unavailable elective slot caption '別コマで活動' explains a multi-slot course whose OTHER period conflicts with fixed club/sports/job activities; activity periods themselves remain filled with the fixed-activity name.",
-    "v0.7.3: compulsory conflict fallback now searches earlier days when same-day and later-day shifts fail, preventing Saturday mandatory deferrals caused only by no later day."
+    "v0.7.3: compulsory conflict fallback now searches earlier days when same-day and later-day shifts fail, preventing Saturday mandatory deferrals caused only by no later day.",
+    "v0.7.4 audit: 109 course definitions and 105 distinct IDs; 36 required-course occurrences across 32 IDs. Each unique required course now has two independent rumor variants and two student forum variants, chosen reproducibly by seed/semester.",
+    "v0.7.4 copy: revise 11 underinformative common-elective / advanced-seminar messages; align physics lab I/II and specialist lab I/II naming.",
+    "v0.7.4 consistency: remove stale 72-credit gate and inflexible retake schedule text; distinguish annual interim grades from definitively earned credits; score details now distinguish base/streak/skill points.",
+    "v0.7.4 style: change '履修解禁' and other unnecessarily gamey course/administrative copy to natural academic portal instructions, while retaining user-facing explicit game mechanics.",
+    "v0.7.4 audit report in s8/AUDIT-v0.7.4.md. No changes outside s8/"
   ],
   "ai_audit": {
     "structure": "PASS: JS bracket/quote balance; no missing DOM IDs from game.js and expansion.js (124 $ references against 57 HTML IDs)",
@@ -109,11 +114,11 @@
     "score_mechanics_v05": "2 credits → 200 basic points; 4 credits → 400; plus +50 × min(5, combo index-1). Annual spring midterm 0, autumn passed earns 4 credits×100pt. Semester bonuses shown separately.",
     "static_v05": "PASS: game.js, expansion.js, balance.js, polish.js pass JS compilation; HTML DOM IDs for referenced fields present. Legacy hidden search input kept to protect expansion.js init binding.",
     "outstanding": [
-      "Real mobile/browser display and click QA not run. Check new compulsory morning/Saturday patterns and class detail labels with a human playthrough.",
-      "Existing in-progress saves retain their generated timetable; newly generated timetables use diversified required-period options without relocating old saves.",
-      "The first-period and Saturday mandatory distribution can materially change balance; measure experience and revise chance tuning if players find it unfair.",
-      "A multi-slot elective whose other period overlaps club/job/sports is blocked even when the tapped individual slot is empty; label now explains that situation.",
-      "Root INDEX and other projects were not edited."
+      "Actual Chrome/Safari/iPhone/Android visual and interaction QA not performed.",
+      "Prerequisite realism: sequential required lectures, for example 微積分II, can be assigned even when I was failed. This is an existing game-design concession and was not silently changed in a copy audit.",
+      "Optional/common lecture rumor/net copy generally has one unique version per definition; these may recur in later years. Prioritize second variants in final polish if actual play confirms repetition.",
+      "Some early v0.1 legacy function bodies retain old strings, but all relevant active displays are overridden by later layers. Refactoring deferred to avoid regression.",
+      "Complete independent human review of readability, subject naming and probability explanation across all three faculties; user previously had positive human feedback on earlier v0.7.3 gameplay."
     ],
     "v052_static": "PASS: all 5 JavaScript bundles compile and DOM IDs referenced by scripts exist. Source-layer first boot was checked; ADVANCED IIFE private symbol access was corrected.",
     "v052_firstyear_expected_credits": "750 faculty×activity×seed models for each target load: 10 registered credits -> 7.50 expected earned, 14 -> 8.79, 20 -> 7.20, approximately 30 -> 1.69. Static expected-credit analysis, not measured grade outcomes.",
@@ -153,23 +158,30 @@
     "v072_discard_reacquire": "Source review: annual draft eligible filter checks state.discardedSkills and excludes removed skill IDs permanently. Existing saves lacking discardedSkills remain backward-compatible via ||[].",
     "v073_placement": "PASS: 1,800 synthetic faculty×activity×seed×semester registration states (3×5×15×8), 731 included first-period compulsory, 685 included Saturday compulsory, 353 had at least one contiguous pair of required slots; zero compulsory/activity clashes, zero deferred required placements and zero JS exceptions. Baseline before fallback had 12 deferred states across 1,440, now zero across 1,800.",
     "v073_prep": "PASS: direct compulsory-master test with same-day period1+2 compulsory classes: no study period, neither class 100%. Period2+3 compulsory classes: period1 study reserved, period2 100%, period3 below 100%. A standalone period2 compulsory also gains 100% when period1 is free. Lunch interval is not counted as a study period.",
-    "v073_full": "PASS: 60 8-semester scripted mock-DOM runs using actual registration click callbacks and skill choice callbacks; 60 reached ending, 187 registration confirmation screens, 35 annual skill draft interactions, 0 runtime exceptions, 0 deferred compulsory classes, and 0 compulsory/activity overlaps."
+    "v073_full": "PASS: 60 8-semester scripted mock-DOM runs using actual registration click callbacks and skill choice callbacks; 60 reached ending, 187 registration confirmation screens, 35 annual skill draft interactions, 0 runtime exceptions, 0 deferred compulsory classes, and 0 compulsory/activity overlaps.",
+    "v074_inventory": "PASS static review of 109 course definitions (105 unique IDs, English I/II shared across faculties), 36 compulsory definitions/32 unique IDs, 73 other course definitions, 5 difficulty levels and 7 evaluation methods.",
+    "v074_copy_coverage": "PASS 32/32 required course IDs have 2 individual rumor texts and 2 individual forum texts. Changed hash bit shifts to allow independent 2x2 variants; post-change 150 mock simulation runs found zero missing compulsory comments.",
+    "v074_realism": "FIXED science lab name sequence, 11 terse elective/advanced-seminar comments, inaccurate legacy 72-credit/fixed-time descriptions, inaccurate early-year ALL-PASS when annual credits are provisional, and misleading streak-only score breakdown. Remaining prerequisite modeling issue documented in audit file.",
+    "v074_odds": "PASS 240 pre-final course review formula spot-checks: 235/240 within 2pp of the sum of displayed major contributions; maximum residual 8pp, no 10pp+ residual. Final chance remains authoritative and residual labeled neutrally; a full stage-by-stage derivation is pending.",
+    "v074_rerun": "PASS 90 updated mock-DOM simulated game runs completed; 314 registration confirmations, 71 annual skill choices, zero runtime errors and zero missing mandatory quote fields. Prior 150-run audit checked 501 semesters, 106 annual skill choices, no duplicate course ID in a semester, no missing required quote.",
+    "v074_audit_file": "s8/AUDIT-v0.7.4.md"
   },
   "browser_qa": {
     "performed": false,
     "status": "pending",
     "devices": [],
-    "notes": "Script parse and mock-DOM logic simulation only, no live browser/iPhone rendering or touch QA."
+    "notes": "Static source review and mock DOM/logic simulation. No genuine browser visual, touch, or GitHub Pages live interaction QA executed for 0.7.4."
   },
   "human_review": {
     "performed": false,
-    "target_version": "0.7.3",
+    "target_version": "0.7.4",
     "requested_checks": [
-      "See required classes in first-period and Saturday slots across rerolls, including science labs in consecutive blocks.",
-      "Acquire mandatory_master: test period1, consecutive period1+2, period2+3, and isolated period2 mandatory courses. Only classes with an immediately preceding free lecture period get guaranteed 100%.",
-      "Inspect registration-review explanation for the active or inactive mandatory-master modifier.",
-      "On a multi-slot elective blocked by a different period overlapping an extracurricular activity, verify '別コマで活動' explanation; fixed activity cell itself must show its activity label.",
-      "Confirm required lectures still register without activity overlap and year-end credit gates/skill 3-choice work."
+      "Compare mandatory lecture rumors/net comments across humanities, economics and science; verify course-specific and natural Japanese.",
+      "Test annual elective spring ALL-PASS banner; it must explicitly say provisional interim success and no final credit until fall.",
+      "Confirm course result breakdown distinguishes base, consecutive pass and score-boost skill points.",
+      "Check re-enrolled compulsory lecture times are not described as always fixed and graduation gate describes elective quota plus all mandatory earned.",
+      "Inspect science labs I/II and specialty I/II in first and second year without old naming in a new run.",
+      "Assess repeated common-elective description quality after multiple playthroughs; decide if a second variant is needed."
     ]
   },
   "assets": {
@@ -177,11 +189,12 @@
     "work_required": false
   },
   "next": {
-    "owner": "S8 dedicated Chat and human reviewer",
+    "owner": "S8 dedicated Chat / human reviewer",
     "actions": [
-      "Review newly randomized compulsory timing and overall balance in genuine mobile play.",
-      "Validate post-skill uptake visual and case-specific mandatory-master 100% breakdown.",
-      "Preserve the later large-scale lecture names/reviews and rumors copy-audit for final QA, potentially with Work."
+      "Human review v0.7.4 across 3 faculty archetypes, especially mandatory wording and course topical accuracy.",
+      "Do an independent real-browser/mobile QA before final release; AI simulated logic QA does not replace this.",
+      "During final polish, optionally prepare further 73 elective review variants, if repeated comments materially weaken replayability.",
+      "Do not change prerequisite logic or root index without master agreement."
     ]
   },
   "edits": {
