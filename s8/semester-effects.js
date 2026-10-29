@@ -78,13 +78,18 @@ renderGrid=function(target,interactive){
    }else if(isAll(/移動|キャンパス/)){
     labelText="移動不可";
    }else if(isAll(/活動/)){
-    labelText="活動と重なる";
+    labelText="別コマで活動";
    }else if(isAll(/重複|重な|同じコマ|同じ時間/)){
     labelText="時間重複";
    }else{
     labelText="登録条件外";
    }
-   description=checked.map(x=>x.course.name+"："+x.result.reason).join("／");
+   const blocks=new Set(getActivityBlocks());
+   description=checked.map(x=>{
+    const conflicting=x.course.slots.filter(p=>blocks.has(p));
+    const detail=conflicting.length?"（"+conflicting.map(p=>DAYS[Math.floor(p/5)]+"曜"+(p%5+1)+"限").join("・")+"が活動時間）":"";
+    return x.course.name+"："+x.result.reason+detail
+   }).join("／");
   }
   cell.classList.remove("slot-action");
   cell.classList.add("slot-unavailable");
