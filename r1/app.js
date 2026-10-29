@@ -10,7 +10,7 @@ const dshop=id=>E.SHOPS.find(x=>x.id===id);
 const dgenre=id=>E.GENRES.find(x=>x.id===id);
 function newGame(){const state=E.createState(Date.now()>>>0);state.introSeen=false;return state}
 function load(){
- try{const raw=localStorage.getItem(KEY);if(raw){const s=JSON.parse(raw);if(s.version===E.VERSION){E.audit(s);return s;}if(["0.1.0-alpha","0.2.0-alpha","0.3.0-alpha","0.3.1-alpha","0.3.2-alpha","0.4.0-alpha","0.4.1-alpha"].includes(s.version)){
+ try{const raw=localStorage.getItem(KEY);if(raw){const s=JSON.parse(raw);if(s.version===E.VERSION){E.audit(s);return s;}if(["0.1.0-alpha","0.2.0-alpha","0.3.0-alpha","0.3.1-alpha","0.3.2-alpha","0.4.0-alpha","0.4.1-alpha","0.5.0-alpha"].includes(s.version)){
  const ramen=s.shops.ramen;
  ramen.scores=Object.fromEntries(E.GENRES.map(g=>[g.id,0]));
  ramen.hardening=false;ramen.stage=0;ramen.route=null;ramen.closed=false;
@@ -21,6 +21,8 @@ function load(){
  if(!s.shops.curry)s.shops.curry=E.createState(s.seed).shops.curry;
  if(!Number.isFinite(s.viralCount))s.viralCount=0;
  if(!Number.isFinite(s.lastViralMonth))s.lastViralMonth=-10;
+ if(!s.shops.teishoku)s.shops.teishoku=E.createState(s.seed).shops.teishoku;
+ for(const d of E.SHOPS){const x=s.shops[d.id];if(typeof x.opened!=="boolean")x.opened=d.id!=="teishoku";if(x.opened&&x.openedMonth==null)x.openedMonth=0;if(!x.opened)x.openedMonth=null;if(!Number.isFinite(x.slowMonths))x.slowMonths=0;if(!("closedReason" in x))x.closedReason=x.closed?"閉店":null;}
  s.version=E.VERSION;E.audit(s);return s;
 }}}
  catch(err){console.warn("R1 save reset:",err)}
@@ -40,14 +42,14 @@ function storefront(v){
 }
 function shopCard(d){
  const v=E.display(game.shops[d.id],d.id),pub=E.publicReviews(game,d.id),rating=(pub.reduce((t,x)=>t+x.star,0)/pub.length).toFixed(1);
- return '<button type="button" class="shop-card '+(d.id===selectedId?"selected":"")+'" data-shop="'+d.id+'" aria-pressed="'+(d.id===selectedId)+'">'+
- storefront(v)+'<span class="card-copy"><span class="small">'+esc(d.category)+' ／ ★'+rating+'（'+pub.length+'件）</span><strong>'+esc(d.name)+'</strong>'+
+ return '<button type="button" class="shop-card '+(d.id===selectedId?"selected":"")+(game.shops[d.id].closed?" closed-card":"")+'" data-shop="'+d.id+'" aria-pressed="'+(d.id===selectedId)+'">'+
+ storefront(v)+'<span class="card-copy"><span class="small">'+esc(d.category)+' ／ '+(game.shops[d.id].closed?"閉店":("★"+rating+"（"+pub.length+"件）"))+'</span><strong>'+esc(d.name)+'</strong>'+
  '<span class="summary">'+esc(v.summary)+'</span><span class="tap">口コミを確認する　›</span></span></button>';
 }
 function recentFeed(id){
  const items=E.publicReviews(game,id).slice().reverse();
  return '<section class="public-reviews" aria-label="来店者の口コミ"><h3>過去の口コミと店主からの返信</h3><p class="section-intro">行く前に、ほかのお客さまの感想を確認できます。</p>'+
- items.map(f=>'<article class="public-review"><div class="meta">'+esc(f.by)+'　'+esc("★".repeat(f.star))+' ／ '+esc(dgenre(f.genre).name)+(f.archived?'　以前の投稿':f.month?'　'+esc(E.MONTHS[f.month-1]):'')+'</div><p>'+esc(f.text)+'</p><div class="reply"><strong>店主からの返信</strong><p>「'+esc(f.reply||"ご意見ありがとうございます。")+'」</p></div></article>').join("")+'</section>';
+ items.map(f=>'<article class="public-review"><div class="meta">'+esc(f.by)+'　'+esc("★".repeat(f.star))+' ／ '+esc(dgenre(f.genre).name)+(f.archived?(game.shops[id].openedMonth>0?'　プレオープンの口コミ':'　以前の投稿'):f.month?'　'+esc(E.MONTHS[f.month-1]):'')+'</div><p>'+esc(f.text)+'</p><div class="reply"><strong>店主からの返信</strong><p>「'+esc(f.reply||"ご意見ありがとうございます。")+'」</p></div></article>').join("")+'</section>';
 }
 function reviewForm(id){
  const d=dshop(id),s=game.shops[id],v=E.display(s,id);
@@ -82,39 +84,45 @@ function tutorial(){
  return '<section class="tutorial" aria-labelledby="tutorialTitle"><div class="tutorial-hero"><span class="eyebrow">出張先での昼休み</span>'+
  '<h2 id="tutorialTitle">毎月この街に、<br>出張でやって来る。</h2><p>昼休みは1時間。今日はどこに入ろう？ 評判の良い店も、気になる返信をする店もあります。</p></div>'+
  '<div class="business-story"><strong>📍 今月も、この商店街でランチ。</strong><p>まずは口コミを読んで、行くお店を選びましょう。食後はあなたも感想を投稿できます。</p></div>'+
- '<div class="tutorial-steps"><article><strong>① 口コミを読む</strong><p>'+E.SHOPS.length+'店舗の評価と店主からの返信を見比べます。</p></article>'+
+ '<div class="tutorial-steps"><article><strong>① 口コミを読む</strong><p>営業中の3店舗の評価と店主からの返信を見比べます。</p></article>'+
  '<article><strong>② お店で食べる</strong><p>行き先を決めます。洋菓子店では食後のおやつを選べます。</p></article>'+
  '<article><strong>③ 感想を投稿する</strong><p>星と話題を選び、返信と翌月のお店の様子を確認します。</p></article></div>'+
  '<div class="tutorial-comparison"><p class="eyebrow">口コミが積み重なった店では……</p><div class="result-views"><div><small>以前の店構え</small>'+storefront(before)+'</div><div class="after-spotlight"><small>後日の店構え</small>'+storefront(after)+'</div></div></div>'+
  '<div class="tutorial-end"><strong>4月から翌3月まで、月に1回・全12回の出張。</strong><p>同じ店を選んでも、違う店を開拓しても自由です。</p><button type="button" class="primary start-game" data-begin>4月の出張へ　→</button></div></section>';
 }
 function street(){
- const all=E.SHOPS.map(shopCard).join(""),feed=game.feed.filter(x=>x.kind==="sns"||x.kind==="viral").slice(-4).reverse();
+ const listed=E.SHOPS.filter(x=>game.shops[x.id].opened),all=listed.map(shopCard).join(""),openCount=listed.filter(x=>!game.shops[x.id].closed).length;
+ const feed=game.feed.filter(x=>x.kind==="sns"||x.kind==="viral"||x.kind==="lifecycle").slice(-5).reverse();
+ const changes=game.last&&game.last.month===game.month?
+ [...(game.last.openings||[]).map(x=>'<div class="shop-announcement new"><strong>🎉 NEW OPEN　'+esc(x.name)+'</strong><p>'+esc(x.notice)+'</p></div>'),
+ ...(game.last.closures||[]).map(x=>'<div class="shop-announcement ended"><strong>閉店のお知らせ　'+esc(x.name)+'</strong><p>'+esc(x.reason)+'ため営業終了。以前の口コミは引き続き確認できます。</p></div>')].join(""):"";
  return '<div class="layout"><div><section class="travel-head"><span class="eyebrow">'+esc(E.MONTHS[Math.min(game.month,11)])+' ／ 出張先の昼休み</span><h2>今日のランチ、どこにしよう？</h2><p>口コミを読んで店を選び、食べた後で評価しましょう。</p></section>'+
- '<div class="street-list">'+all+'</div><section class="feed-list"><h2>商店街の話題</h2>'+
- (feed.length?feed.map(f=>'<div class="feed-card '+(f.kind==="viral"?"viral-list":"")+'"><div class="meta">つぶやき広場 ／ '+esc(E.MONTHS[f.month-1])+'</div><p class="body">'+esc(f.text)+'</p></div>').join(""):'<p class="section-intro">今日も昼休みの商店街。店の評判を見てみましょう。</p>')+'</section></div>'+
+ '<p class="shop-count">本日の営業店舗：'+openCount+'店</p>'+changes+'<div class="street-list">'+all+'</div><section class="feed-list"><h2>商店街の話題</h2>'+
+ (feed.length?feed.map(f=>'<div class="feed-card '+(f.kind==="viral"?"viral-list":"")+'"><div class="meta">'+esc(f.kind==="lifecycle"?"商店街のお知らせ":"つぶやき広場")+' ／ '+esc(E.MONTHS[f.month-1])+'</div><p class="body">'+esc(f.text)+'</p></div>').join(""):'<p class="section-intro">今日も昼休みの商店街。店の評判を見てみましょう。</p>')+'</section></div>'+
  (selectedId?detail(selectedId):'<aside class="panel choice-placeholder"><h2>口コミからお店を選ぶ</h2><p>お店のカードを選ぶと、過去の口コミと店主の返信を確認できます。</p></aside>')+'</div>';
 }
 function result(){
  const r=game.last;if(!r)return street();
  const d=dshop(r.review.id),y=r.review,major=r.before.sign!==r.after.sign||r.before.route.stage!==r.after.route.stage||r.before.route.label!==r.after.route.label||r.before.open!==r.after.open;
- const minor=!major&&(r.before.feature!==r.after.feature||r.before.visual?.product!==r.after.visual?.product),changed=major||minor;
+ const minor=!major&&(r.before.feature!==r.after.feature||r.before.visual?.product!==r.after.visual?.product),changed=major||minor,closedNow=!r.after.open,evolved=changed&&!closedNow;
  const otherCause=r.cause==="other",combinedCause=r.cause==="combined",offsetCause=r.cause==="offset",legacyOther=typeof r.cause!=="string"&&r.npc?.id===r.review.id;
- const headline=otherCause?"ほかのお客さまの口コミで変化！":combinedCause?"口コミが重なり、店が変化！":offsetCause?"二つの意見が交差した。":major?"お店の姿が変わった！":minor?"店頭に新しい動きが！":"お店はいつもどおり。";
+ const headline=closedNow?"お店が閉店しました。":otherCause?"ほかのお客さまの口コミで変化！":combinedCause?"口コミが重なり、店が変化！":offsetCause?"二つの意見が交差した。":major?"お店の姿が変わった！":minor?"店頭に新しい動きが！":"お店はいつもどおり。";
  const causeHint=otherCause?"あなたの投稿とは別の口コミが、今回の店舗変化のきっかけです。":combinedCause?"あなたの投稿と、ほかのお客さまの口コミが両方影響しました。":offsetCause?"あなたの口コミへの反応が、同じ月の別の口コミで変わりました。":legacyOther?"この月は同じ店舗にほかのお客さまも口コミを投稿しました。変化の原因は一つとは限りません。":"";
- const burst=changed?'<div class="evolution-burst" aria-hidden="true">'+Array.from({length:14},(_,i)=>'<span style="--n:'+i+'">✦</span>').join("")+'</div>':"";
+ const burst=evolved?'<div class="evolution-burst" aria-hidden="true">'+Array.from({length:14},(_,i)=>'<span style="--n:'+i+'">✦</span>').join("")+'</div>':"";
  const viralNotice=r.viral?'<section class="viral-event" role="status"><span class="eyebrow">つぶやき広場で話題に</span><h2>🔥 '+esc(r.viral.label)+'</h2><p>'+esc(r.viral.text)+'</p><small>評判が広まり、昼休みの客足にも変化が出ています。</small></section>':"";
  const exchange=r.exchange?
   '<div class="reply-thread" id="exchangeArea"><div class="thread-player"><span>あなたから追記</span><p>'+esc(r.exchange.playerText)+'</p></div><div class="thread-owner"><span>'+esc(d.owner)+'から再返信</span><p>「'+esc(r.exchange.ownerText)+'」</p></div></div>':
   '<div class="counter-choices" id="exchangeArea"><p>この返信に、一言返す？ <small>どちらか1回だけ。返さずに翌月へ進んでもOK。</small></p><div class="counter-buttons"><button type="button" class="secondary" data-counter="evidence">📋 根拠を伝える</button><button type="button" class="secondary sharp" data-counter="quip">💬 軽く言い返す</button></div></div>';
+ const lifecycleNotice=[...(r.closures||[]).map(c=>'<article class="closing-event"><span class="eyebrow">閉店のお知らせ</span><h3>'+esc(c.name)+'</h3><p>'+esc(c.reason)+'ため営業終了。口コミの閲覧はできます。</p></article>'),
+ ...(r.openings||[]).map(o=>'<article class="opening-event"><span class="eyebrow">NEW OPEN</span><h3>🎉 '+esc(o.name)+'</h3><p>'+esc(o.notice)+'</p><p>次の出張から選べます。</p></article>')].join("");
  const changes=(r.affected||[]).map(x=>'<div class="linked-change"><strong>'+esc(dshop(x.id).name)+'</strong><p>'+esc(x.reason||"同じ月に届いたほかの口コミが影響しました。")+'</p><p>'+esc(x.after.summary)+'</p><div class="linked-compare"><div><small>前</small>'+storefront(x.before)+'</div><div><small>後</small>'+storefront(x.after)+'</div></div></div>').join("");
  return '<section class="box result-top"><span class="eyebrow">'+esc(E.MONTHS[y.month-1])+'に投稿した口コミ</span><h2 class="result-title">口コミへの返信が届きました。</h2><div class="feed-card user-review"><div class="meta">あなた　／　'+esc(d.name)+'　／　'+esc("★".repeat(y.star))+'　'+esc(dgenre(y.genre).name)+'</div><p class="quote">'+esc(y.text)+'</p></div>'+
  '<div class="owner-reply '+(d.id==="ramen"?"ramen-argument":"")+'"><span class="name">'+esc(d.owner)+'　店主より</span><p>「'+esc(y.reply)+'」</p></div>'+exchange+'</section>'+viralNotice+
- '<section class="box evolution-box '+(changed?"has-evolution":"no-evolution")+'">'+burst+'<div class="result-heading"><span class="eyebrow">投稿から1か月後</span><h2>'+headline+'</h2><p class="section-intro">'+esc(d.name)+'の今月の様子</p></div>'+
- '<div class="transformation-kicker">'+(changed?"✨ 店の様子が変わった！":"今月の店頭")+'</div><div class="result-views"><div><small>投稿前</small>'+storefront(r.before)+'</div><div class="'+(changed?"after-spotlight":"")+'"><small>1か月後</small>'+storefront(r.after)+'</div></div>'+
+ (lifecycleNotice?'<section class="lifecycle-events" aria-label="商店街のお知らせ">'+lifecycleNotice+'</section>':"")+'<section class="box evolution-box '+(evolved?"has-evolution":closedNow?"has-closure":"no-evolution")+'">'+burst+'<div class="result-heading"><span class="eyebrow">投稿から1か月後</span><h2>'+headline+'</h2><p class="section-intro">'+esc(d.name)+'の今月の様子</p></div>'+
+ '<div class="transformation-kicker">'+(closedNow?"閉店のお知らせ":evolved?"✨ 店の様子が変わった！":"今月の店頭")+'</div><div class="result-views"><div><small>投稿前</small>'+storefront(r.before)+'</div><div class="'+(evolved?"after-spotlight":"")+'"><small>1か月後</small>'+storefront(r.after)+'</div></div>'+
  '<div class="result-note">'+esc(r.transition)+'</div>'+(causeHint?'<p class="cause-hint">'+esc(causeHint)+'</p>':'')+
  '<p class="section-intro result-metrics">'+esc(r.after.population)+' ／ '+esc(r.after.business)+'</p></section>'+
- ((r.affected||[]).length?'<section class="box ripple-box"><h2>このお店にも変化が！</h2><p class="section-intro">同じ月に届いたほかのお客さまの口コミなどで、近くの店にも動きがありました。</p>'+changes+'</section>':"")+
+ ((r.affected||[]).length?'<section class="box ripple-box"><h2>ほかのお店にも動きが！</h2><p class="section-intro">同じ月の口コミや経営状況によって、別のお店にも動きがありました。</p>'+changes+'</section>':"")+
  '<section class="box"><h2>まちの反応</h2>'+
  (r.neighbor?'<div class="feed-card"><div class="meta">客足の変化</div><p class="body">'+esc(r.neighbor)+'</p></div>':"")+
  (r.npc?'<div class="feed-card"><div class="meta">'+esc(r.npc.by)+'　／　'+esc(dshop(r.npc.id).name)+'　★'+r.npc.star+'</div><p class="body">'+esc(r.npc.text)+'</p><div class="reply"><strong>'+esc(dshop(r.npc.id).owner)+'の返信</strong><p>「'+esc(r.npc.reply||"ご意見ありがとうございます。")+'」</p></div></div>':"")+
@@ -125,7 +133,7 @@ function result(){
 function finalPage(){
  const end=E.finish(game);
  return '<section class="box result-top"><span class="eyebrow">出張12回目のあと ／ 3月</span><h2 class="result-title">'+esc(end.title)+'</h2><p>'+esc(end.description)+'</p><p>あなたが書いた12件の口コミ。その間に、お店も客も少しずつ変わりました。</p></section>'+
- '<section class="box"><h2>現在の商店街</h2><p class="section-intro">4店舗の看板と店主の言葉を振り返ります。違う選択なら、この一年は別の姿だったかもしれません。</p><div class="ending-grid">'+end.shops.map(f=>{const v=E.display(game.shops[f.id],f.id);return '<article class="ending-card">'+storefront(v)+'<div><h3>'+esc(f.name)+'</h3><span class="summary-badge">'+esc(f.sign)+'</span><p>'+esc(f.description)+'</p><blockquote class="owner-last">'+esc(f.ownerLine||"今年もありがとうございました。")+'</blockquote><small>'+f.reviews+'件の口コミを投稿</small></div></article>'}).join("")+'</div></section>'+
+ '<section class="box"><h2>現在の商店街</h2><p class="section-intro">'+end.shops.length+'店舗の看板と店主の言葉を振り返ります。違う選択なら、この一年は別の姿だったかもしれません。</p><div class="ending-grid">'+end.shops.map(f=>{const v=E.display(game.shops[f.id],f.id);return '<article class="ending-card">'+storefront(v)+'<div><h3>'+esc(f.name)+'</h3><span class="summary-badge">'+esc(f.sign)+'</span><p>'+esc(f.description)+'</p><blockquote class="owner-last">'+esc(f.ownerLine||"今年もありがとうございました。")+'</blockquote><small>'+f.reviews+'件の口コミを投稿</small></div></article>'}).join("")+'</div></section>'+
  '<section class="box"><h2>あの日の口コミを振り返る</h2><p>口コミ履歴から、店主の返事をもう一度読むことができます。</p>'+
  '<button type="button" class="secondary" data-tab="history">12か月の口コミ履歴を見る</button>'+
  '<button type="button" class="primary" data-restart>別の一年を始める</button></section>';
@@ -136,14 +144,14 @@ function history(){
  '<article class="history-card"><div class="tiny">'+esc(E.MONTHS[f.month-1])+' ／ '+esc(dshop(f.id).name)+' ／ '+esc(dgenre(f.genre).name)+'</div><h3>'+esc("★".repeat(f.star))+'</h3><p>'+esc(f.text)+'</p><div class="reply">'+esc(dshop(f.id).owner)+'：「'+esc(f.reply)+'」</div>'+
  (f.exchange?'<div class="history-exchange"><p><strong>あなたの追記</strong>　'+esc(f.exchange.playerText)+'</p><p><strong>'+esc(dshop(f.id).owner)+'の再返信</strong>　'+esc(f.exchange.ownerText)+'</p></div>':"")+'</article>').join("")+'</div></section>'+
  '<section class="box"><h2>ほかのお客さんの口コミ・街の話題</h2>'+
- [...game.feed].reverse().filter(f=>f.kind==="npc"||f.kind==="sns"||f.kind==="viral").map(f=>
- '<div class="feed-card '+(f.kind==="viral"?"viral-list":"")+'"><div class="meta">'+esc(E.MONTHS[f.month-1])+' ／ '+esc(f.kind==="sns"||f.kind==="viral"?"つぶやき広場":f.by+"・"+dshop(f.id).name)+'</div><p class="body">'+esc(f.text)+'</p>'+
+ [...game.feed].reverse().filter(f=>f.kind==="npc"||f.kind==="sns"||f.kind==="viral"||f.kind==="lifecycle").map(f=>
+ '<div class="feed-card '+(f.kind==="viral"?"viral-list":"")+'"><div class="meta">'+esc(E.MONTHS[f.month-1])+' ／ '+esc(f.kind==="lifecycle"?"商店街のお知らせ":f.kind==="sns"||f.kind==="viral"?"つぶやき広場":f.by+"・"+dshop(f.id).name)+'</div><p class="body">'+esc(f.text)+'</p>'+
  (f.kind==="npc"?'<div class="reply"><strong>'+esc(dshop(f.id).owner)+'の返信</strong><p>「'+esc(f.reply||"ご意見ありがとうございます。")+'」</p></div>':"")+'</div>').join("")+'</section>';
 }
 function guide(){
  return '<section class="box guide-text"><h2>遊び方</h2><p>あなたは毎月この商店街へ出張で来る会社員。昼休みに口コミと返信を読み、店で食べた後に投稿します。4月から翌3月まで全12回です。</p>'+
- '<h3>① 星とジャンルを選ぶ</h3><p>星1〜5で評価を、商品・味／接客／価格／雰囲気／個性からコメントの対象を選びます。投稿する文章は、そのときの店の状況に合わせて表示されます。</p>'+
- '<h3>② 返信と変化を見る</h3><p>店主は口コミに感謝したり、反論したり、ときには店の方針そのものを変えます。口コミによってお店が変わることも、頑固に変わらないこともあります。SNSの話題で客足が変わる場合もあります。</p>'+
+ '<h3>① 口コミを読んで昼食を決める</h3><p>営業中のお店と過去の口コミ、店主からの返信を読んで、行き先を選びます。食べた後に星1〜5と、商品・味／接客／価格／雰囲気／個性の評価ジャンルを選びます。</p>'+
+ '<h3>② 返信と変化を見る</h3><p>店主は口コミに感謝したり、反論したり、ときには店の方針そのものを変えます。口コミで客足が減ると閉店するお店もあれば、途中で新しく開店するお店もあります。SNSで評判が広まることもあります。</p>'+
  '<h3>③ 同じ店を再評価する</h3><p>同じ店に何度でも投稿できます。返信に一言返すと店主がさらに返事をすることもあります。星やジャンルを変えると、別の方向に変化することがあります。別のお客さんの声や、架空SNSの話題も時々現れます。</p>'+
  '<h3>④ 一年後を見届ける</h3><p>お店は繁盛することも、衰退することもあります。正解の星の付け方はありません。12回目を終えると、その一年の商店街の姿を見られます。</p>'+
  '<p class="note">このバージョンは試作版です。看板や内装は仮のCSSイラストで表現しています。画面上部のバージョン表示は実装の更新時刻です。</p>'+
