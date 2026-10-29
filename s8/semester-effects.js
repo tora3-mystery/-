@@ -111,7 +111,7 @@ openCourse=function(id){
  const unlocks=unlockLabels(c);
  if(unlocks.length){
   const info=document.createElement("div");info.className="info wide unlock-info";
-  const title=document.createElement("b");title.textContent="この科目を取得すると解禁";
+  const title=document.createElement("b");title.textContent="取得後に履修可能になる科目";
   const val=document.createElement("span");val.textContent=unlocks.join(" ／ ");
   info.append(title,val);$("drawer-detail").prepend(info)
  }
@@ -133,7 +133,7 @@ renderCourses=function(){
   const unlock=unlockLabels(c);
   if(unlock.length){
    const sub=row.querySelector(".course-extra");
-   if(sub)sub.textContent+=" ｜ 取得すると「"+unlock.slice(0,2).join("・")+"」解禁";
+   if(sub)sub.textContent+=" ｜ 取得後に履修可能：「"+unlock.slice(0,2).join("・")+"」";
   }
  }
 };
@@ -236,7 +236,8 @@ renderReveal=function(){
  const special=$("semester-special");
  const allRed=isDone&&state.allRedTerm===state.semester,perfect=isDone&&state.honorAwardedTerm===state.semester;
  special.className="semester-special"+(allRed?" all-red":perfect?" excellent":" hidden");
- special.textContent=allRed?"🟥 ALL RED！ 全講義が落単！":perfect?"🏅 優秀生！ 全講義取得！"+(state.semester<7?" 次の学期は全科目+6pt":""):"";
+ const annualInterim=state.semester%2===0&&state.results.some(r=>r.course?.annual);
+ special.textContent=allRed?(annualInterim?"🟥 全講義の評価が不合格・要補講でした。":"🟥 ALL RED！ 全講義が落単！"):perfect?("🏅 優秀生！ "+(annualInterim?"全講義の評価を通過！（通年科目の単位は後期末に確定）":"全講義取得！")+(state.semester<7?" 次の学期は全科目+6pt":"")):"";
  renderAppeal()
 };
 const oldPlay=playReveal;
