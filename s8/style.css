@@ -80,3 +80,5 @@
 .trip-event h3{color:#e5f5ff}
 .time-grid .cell.required .cn::first-letter{color:#ffdb80}
 @media(max-width:760px){#legend{gap:3px 6px}.legend-item{font-size:9px}.legend-dot{width:9px;height:9px}#course-sort{max-width:230px}.reveal-breakdown{font-size:11px;padding:7px 8px}.reveal-log .reveal-row{display:grid;gap:2px}.reveal-log .reveal-row b{text-align:left}}
+
+.cell.annual{background:#6c522e;border-color:#e9b96a}.cell.annual .cn{color:#fff3cc}
