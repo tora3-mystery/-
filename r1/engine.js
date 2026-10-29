@@ -1,6 +1,6 @@
 window.R1 = (function makeEngine(){
 "use strict";
-const VERSION="0.9.4-alpha";
+const VERSION="0.9.5-alpha";
 const GENRES=[
 {id:"taste",name:"商品・味",icon:"🍜"},
 {id:"service",name:"接客",icon:"💬"},
@@ -296,6 +296,11 @@ function ownerMayReply(state,id,star,genre,nonce=0){
  const dice=random(((state.seed>>>0)^Math.imul(state.month+23,0x9e3779b1)^Math.imul(ix+7,0x85ebca6b)^Math.imul(gx+1,0xc2b2ae35)^Math.imul(nonce+111,0x27d4eb2d))>>>0);
  return dice()<rate;
 }
+// Initial archived service complaints should receive service-related replies, not cooking tips.
+for(const id of Object.keys(COUNTER_PERSONALITY)){
+ const archived=PUBLIC_REVIEWS[id]?.find(x=>x.genre==="service"&&x.star<=2);
+ if(archived&&RESPONSES[id]?.service?.minus?.length)archived.reply=RESPONSES[id].service.minus[0];
+}
 // Historic records do not all receive answers from owners.
 for(const [id,comments] of Object.entries(PUBLIC_REVIEWS))
  for(let i=0;i<comments.length;i++)
@@ -303,10 +308,11 @@ for(const [id,comments] of Object.entries(PUBLIC_REVIEWS))
 function npcText(state,id,genre,star,rnd){
  const shop=SHOPS.find(x=>x.id===id),view=display(state.shops[id],id),topic=TOPICS[id][genre];
  const hasEvolution=view.route.stage>0&&id!=="ramen";
- const discussesEvolution=hasEvolution&&(view.route.genre===genre||rnd()<.22);
+ const discussesEvolution=hasEvolution&&view.route.genre===genre;
  const what=genre==="service"?"注文と接客":genre==="mood"?"店内の雰囲気":genre==="price"?"値段と量":`「${view.visual.product}」`;
  if(discussesEvolution){
-  if(star<=2)return [`前のほうが良かった。最近変わった${what}は自分に合わない。`,`改装前の${shop.product}が好きだった。今の${what}は少し残念。`][Math.floor(rnd()*2)];
+  if(star<=2){const old=genre==="service"?"以前の注文方法":genre==="price"?"以前の値付け":genre==="mood"?"以前の客席":genre==="identity"?"以前の店の個性":`改装前の${shop.product}`;
+   return [`前のほうが良かった。最近変わった${what}は自分に合わない。`,`${old}が好きだった。今の${what}は少し残念。`][Math.floor(rnd()*2)];}
   if(star>=4)return [`最近の${what}は良い。以前より通いたくなった。`,`変わったと聞いて来店。${what}が気に入った。`][Math.floor(rnd()*2)];
   return `最近${what}が変わった。前とは違うけれど、まだ評価は迷っている。`;
  }
@@ -573,7 +579,11 @@ function counter(state,style){
  }else if(rev.id==="curry"){
   ownerText=style==="evidence"?`分かりました。${topic}について、もう一度確かめてみます。`:"こちらも熱くなりそうです。お客さんの一言はスパイスですね。";
  }else if(COUNTER_PERSONALITY[rev.id]){
-  ownerText=COUNTER_PERSONALITY[rev.id][style];
+  if(genre==="taste")ownerText=COUNTER_PERSONALITY[rev.id][style];
+  else{
+   const opening={udon:"釜の湯を見ながら拝見しました。",soba:"蕎麦を打つ手を止めて読みました。",sandwich:"具材を準備する合間に読みました。",burger:"鉄板の前から失礼します。",pasta:"レシピ帳に書き留めました。",chinese:"鍋の火を弱めて返信します。",bakery:"焼き上がりを待ちながら読みました。",fish:"焼き魚の仕込みの合間に拝見しました。",onigiri:"握る手を止めて読みました。",veggie:"野菜を並べながら読みました。"}[rev.id]||"ご意見を拝見しました。";
+   ownerText=opening+(style==="evidence"?` ${topic}についてのご意見、参考にして見直します。`:` ${topic}の件で意見が違うようですね。こちらの考えもありますが、次の営業に生かします。`);
+  }
  }else{
   ownerText=style==="evidence"?"味と接客をもう一度確かめます。":"次の一皿でお返事します。";
  }
