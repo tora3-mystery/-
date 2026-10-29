@@ -65,14 +65,34 @@ renderGrid=function(target,interactive){
   const day=Math.floor(pos/5),period=pos%5;
   const cell=target.children[8+period*7+day];
   if(!cell||!cell.classList.contains("slot-action"))continue;
-  const candidates=state.offers.filter(c=>c.type!=="required"&&c.type!=="annualCarry"&&!state.selectedIds.includes(c.id)&&c.slots.includes(pos)&&allowed(c).ok);
-  if(candidates.length)continue;
+  const offered=state.offers.filter(c=>c.type!=="required"&&c.type!=="annualCarry"&&!state.selectedIds.includes(c.id)&&c.slots.includes(pos));
+  const checked=offered.map(c=>({course:c,result:allowed(c)}));
+  if(checked.some(x=>x.result.ok))continue;
+  // Make unavailable periods understandable even on narrow phone timetables.
+  let labelText="候補なし",description="このコマには登録候補の講義がありません。";
+  if(checked.length){
+   const reasons=checked.map(x=>String(x.result.reason||""));
+   const isAll=pattern=>reasons.every(reason=>pattern.test(reason));
+   if(isAll(/前提|履修条件|単位が必要/)){
+    labelText="前提未修得";
+   }else if(isAll(/移動|キャンパス/)){
+    labelText="移動不可";
+   }else if(isAll(/活動/)){
+    labelText="活動重複";
+   }else if(isAll(/重複|重な|同じコマ|同じ時間/)){
+    labelText="時間重複";
+   }else{
+    labelText="登録条件外";
+   }
+   description=checked.map(x=>x.course.name+"："+x.result.reason).join("／");
+  }
   cell.classList.remove("slot-action");
   cell.classList.add("slot-unavailable");
   cell.onclick=null;cell.onkeydown=null;
   cell.removeAttribute("role");cell.removeAttribute("tabindex");
-  cell.setAttribute("aria-label",DAYS[day]+"曜"+(period+1)+"限：現在登録可能な科目なし");
-  const label=cell.querySelector(".cn");if(label)label.textContent="—";
+  cell.setAttribute("aria-label",DAYS[day]+"曜"+(period+1)+"限："+labelText+"。"+description);
+  cell.setAttribute("title",description);
+  const label=cell.querySelector(".cn");if(label)label.textContent=labelText;
  }
 };
 function unlockLabels(c){
