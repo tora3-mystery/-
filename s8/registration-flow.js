@@ -100,7 +100,8 @@ function riskDetails(c){
  add("カンニングによる取得率上昇",skills.some(x=>x.id==="cheating"&&x.year+1===Math.floor(state.semester/2)+1)?50:0);
  add("3限の昼休み明け",c.slots.some(p=>p%5===2)?6:0);
  // Base aptitude skill, selected at admission or acquired in an annual draft.
- if((window.S8_SUBJECT_TAGS?.(c)||c.aptitudeTags||[]).some(tag=>skills.some(sk=>sk.id===tag)))add("得意分野（パソコン・数学・英語）",6);
+ const aptitudeMatches=(window.S8_SUBJECT_TAGS?.(c)||c.aptitudeTags||[]).filter(tag=>skills.some(sk=>sk.id===tag));
+ add("得意分野（"+aptitudeMatches.map(tag=>({aptitude_pc:"パソコン",aptitude_math:"数学",aptitude_english:"英語"}[tag]||tag)).join("＋")+"）",aptitudeMatches.length*6);
  const final=passChance(c);
  // The real chance function also uses staged rounding, movement penalties,
  // 5–98% caps and potentially the 100% compulsory study skill.
