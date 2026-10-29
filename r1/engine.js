@@ -511,7 +511,7 @@ else if(cafe.opened&&cafeRoute.genre==="mood"&&cafeRoute.polarity==="plus"&&cafe
 else if(totalStages>=6&&vis>=local*0.72){title="よそから人が来る商店街";description="見慣れない客が増えた。新しい看板の下に、昔からの常連も座っている。";}
 else if(totalStages>=7){title="看板が変わり続ける街";description="一年前の写真と見比べると、同じ通りとは思えない。それでも店主は変わらず店先に立つ。";}
 else if(totalStages<=2){title="いつもの商店街";description="大きな改装は起きなかった。毎朝、いつもの時間にシャッターが開く。";}
-else if(totalStages>=3&&local>vis*1.9&&vis<=100){title="常連のいる商店街";description="外からは静かに見える。でも、ここに来る理由を知っている人は多い。";}
+else if(totalStages>=3&&local>vis*1.75){title="常連のいる商店街";description="外からは静かに見える。でも、ここに来る理由を知っている人は多い。";}
 else if(ls.filter(x=>routeFor(x.s).genre==="identity"&&routeFor(x.s).stage>=2).length>=2){title="個性の競演する通り";description="店ごとのこだわりが並ぶ。看板だけで好みが分かれそうだ。";}
 else if(ls.filter(x=>routeFor(x.s).genre==="price"&&routeFor(x.s).stage>=2).length>=2){title="値札が話題の商店街";description="値段を見直した店が増えた。高いか安いかより、その理由が街の話題になった。";}
 else if(ls.filter(x=>routeFor(x.s).genre==="taste"&&routeFor(x.s).stage>=2).length>=2){title="味が変わった商店街";description="変わらない味を守る店も、新しい味を試す店もある。一年で食の選択肢は変化した。";}
