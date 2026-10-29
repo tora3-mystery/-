@@ -1,9 +1,9 @@
 {
   "id": "S8",
   "title": "履修登録を完了してください。（仮）",
-  "version": "0.6.3",
-  "updated_at_jst": "2026/10/29 18:21 JST",
-  "phase": "Phase 4 alpha: timetable chance modifiers and grade-before-skill flow updated; scripted JavaScript/mock-DOM QA passed, real smartphone test pending",
+  "version": "0.7.0",
+  "updated_at_jst": "2026/10/29 18 JST",
+  "phase": "Phase 4: elective-only progression and graduation dual requirement, registration review, and corrected UI button dispatch; mock DOM click-path and scripted logic tests complete; live browser and human retest pending",
   "scope": "4 years / 8 terms playable; 3 faculties; 5 extracurricular difficulty setups",
   "features": [
     "tap an unoccupied timetable slot to choose courses that include that period",
@@ -57,7 +57,13 @@
     "v0.6.3: second-to-third-period adjacency no longer receives the -8pp consecutive lecture penalty because the one-hour lunch break separates them; first-to-second and third-to-fourth still penalized",
     "v0.6.3: an unoccupied gap within the same weekday between consecutive lectures penalizes the later course by -6pp for one blank period or -9pp for two or more",
     "v0.6.3: yearly skill draft no longer auto-opens immediately after final year-end grades; player reviews complete results, clicks explicit choose-skill button, then gets the full-screen random three-choice selector",
-    "v0.6.3: course details explain conditional schedule odds modifiers from activity, lunch, and empty-lesson gaps"
+    "v0.6.3: course details explain conditional schedule odds modifiers from activity, lunch, and empty-lesson gaps",
+    "v0.7.0: promotion gates use cumulative elective-only earned credits per faculty/academic year: humanities 8/22/38/52, economics 4/18/34/48, science 4/14/30/44; mandatory credits do not count toward those quotas",
+    "v0.7.0: graduation requires final-year elective quota plus all compulsory courses, including successful last-chance repeats",
+    "v0.7.0: earn elective credits exactly once by canonical course ID; annual electives earn no credit in interim spring evaluation and are counted at autumn final; professor petitions update the ledger",
+    "v0.7.0: registration confirmation modal precedes all grade draws, lists registered mandatory/optional classes with final pass chance and component breakdown, lets users remove/change optional courses, and supports back/confirm",
+    "v0.7.0: correct real UI onclick binding for the latest annual-skill advance handler, instead of the stale pre-wrapper advance function; same applies to grade-start so all postprocessing wrappers run",
+    "v0.7.0: skill selection triggered at end of year only after elective credit requirement met; saved ongoing sessions estimate elective credits from past mandatory grade history when migrating old saves"
   ],
   "ai_audit": {
     "structure": "PASS: JS bracket/quote balance; no missing DOM IDs from game.js and expansion.js (124 $ references against 57 HTML IDs)",
@@ -85,12 +91,12 @@
     "score_mechanics_v05": "2 credits → 200 basic points; 4 credits → 400; plus +50 × min(5, combo index-1). Annual spring midterm 0, autumn passed earns 4 credits×100pt. Semester bonuses shown separately.",
     "static_v05": "PASS: game.js, expansion.js, balance.js, polish.js pass JS compilation; HTML DOM IDs for referenced fields present. Legacy hidden search input kept to protect expansion.js init binding.",
     "outstanding": [
-      "Actual smartphone and live Pages functional/visual testing not yet performed; grade-to-skill CTA and full-screen selector need real touch QA.",
-      "Current annual progression difficulty may be high or uneven across extracurricular activities; balance requires human judgment.",
-      "Review whether -6/-9pp gap penalties are noticeable but not too strong after 14+ registered credits and other fatigue effects.",
-      "Confirm course drawer bonus explanations on a narrow viewport; mocked DOM checks are not a real browser visual test.",
-      "Earlier saved sessions that already progressed to a new year cannot retrospectively receive an unselected skill from the past.",
-      "The root INDEX belongs to the project master and was not modified."
+      "Real device-browser QA required: independently verify the final onclick binding actually shows the skill selector on a phone after finishing first-year fall grade results.",
+      "Human playtest elective quota sizes, especially economics/science year-one target of 4 optional credits; targets are derived by subtracting expected cumulative mandatory volume from the old combined threshold.",
+      "Potential historical save migration is an estimate, since pre-v0.7.0 history stored total credits and mandatory result IDs but no standalone elective ledger.",
+      "Risk probability breakdown includes a final cap/rounding/mobility residual after describing core contributors; confirm it is understandable in actual mobile layout.",
+      "Ensure the confirmation modal can be dismissed and class cancellation can lead naturally back to optional selection.",
+      "No changes to root INDEX, managed by project master."
     ],
     "v052_static": "PASS: all 5 JavaScript bundles compile and DOM IDs referenced by scripts exist. Source-layer first boot was checked; ADVANCED IIFE private symbol access was corrected.",
     "v052_firstyear_expected_credits": "750 faculty×activity×seed models for each target load: 10 registered credits -> 7.50 expected earned, 14 -> 8.79, 20 -> 7.20, approximately 30 -> 1.69. Static expected-credit analysis, not measured grade outcomes.",
@@ -113,25 +119,30 @@
     "v063_chance": "PASS: isolated risk formula comparisons: first/second-period adjacency -8pp relative to lunch-separated second/third; second/third lunch adjacency 0pp vs different-day baseline; class before extracurricular +4pp; fourth after vacant third -6pp and after two vacant periods -9pp. Source parses and returns valid percentages.",
     "v063_grade_first": "PASS: 180 synthetic faculty×activity×seed grade sequences: annual grades visible before draft 180/180, next-button opens three cards 180/180, skipping blocked 180/180, skill choice proceeds to following year 180/180. Annual below-target gate triggers no skill and ends run.",
     "v063_full_play": "PASS: 150 full scripted playthroughs under updated odds, all reached a conclusion without exceptions; 268 manual year-skill prompts and choices, 92 professor petitions, zero required/activity slot overlaps. These are simulated strategy and mocked DOM, not user tests.",
-    "v063_resume": "PASS: three faculty-specific save/resume fixtures: before opening the draft, resume shows final grades and CTA; after explicitly opening it, resume restores the three cards. 3/3 scenarios passed."
+    "v063_resume": "PASS: three faculty-specific save/resume fixtures: before opening the draft, resume shows final grades and CTA; after explicitly opening it, resume restores the three cards. 3/3 scenarios passed.",
+    "v070_root_cause": "CONFIRMED: the next button was assigned an older advance handler in polish.js before year-skills.js wrapped the function. Calling advance() directly in old synthetic tests hid the defect. v0.7.0 binds onclick to the final wrapped dispatcher in the last-loaded registration-flow.js.",
+    "v070_click_paths": "PASS: 60 mock-DOM full UI-handler sequences (3 faculties x 5 activities x 4 seeds): click registration preview, back/edit, reopen and confirm, grade reveal, click visible next button to show exactly three skill cards, click one card to advance. 60/60 all phases, 0 errors. Uses onclick callbacks, not genuine browser taps.",
+    "v070_credits": "PASS targeted grade ledger cases: ordinary required 2+elective 2 gives total 4 / elective 2; mandatory 2+elective 4 gives total 6 / elective 4; 4-credit annual elective spring interim = elective 0 and autumn final = elective 4; failed elective = elective 0. Check for each of three faculties.",
+    "v070_full_runs": "PASS: 120 8-semester scripted strategy runs (3 faculties x 5 activity types x 8 seeds), all 120 ended without exception, 672 registration confirmation and grade sequences, 229 actual click-handler skill selections, 63 professor petitions, 0 mandatory-vs-activity conflicts. Outcomes: 49 failed year elective gates, 42 cheating GAME OVER, 6 graduations, 23 final-year unsuccessful. These reflect artificial scripted strategies, not measured player difficulty.",
+    "v070_static": "PASS: registration-flow.js source compiles; scripts still use named DOM IDs. Real website opening with local Chromium was blocked by network policy; live Pages and smartphone touch were NOT tested."
   },
   "browser_qa": {
     "performed": false,
     "status": "pending",
     "devices": [],
-    "notes": "Formula tests, mock DOM state tests and source compilation only; actual Chrome/Safari/iPhone navigation not executed."
+    "notes": "Static JavaScript compilation + mocked DOM callback test only. Headless Chromium could not access external GitHub Pages due environment network restrictions; no actual displayed page/device UI checked."
   },
   "human_review": {
     "performed": false,
-    "target_version": "0.6.3",
+    "target_version": "0.7.0",
+    "previous_version_feedback": "User reported S8 v0.6.3 skill selection did not appear; also requested elective-only advancement thresholds and a confirmation step before random grade results.",
     "requested_checks": [
-      "After year-end grades, verify full final results remain visible until pressing the explicit skill-choice button",
-      "Tap skill-choice CTA, see three random skills in full-screen display, choose one and enter next year",
-      "Compare 1+2 vs 2+3 lecture adjacencies and pass rates",
-      "Place class directly before club/job and verify +4pp",
-      "Use 2nd and 4th lectures with third empty, verify 4th shows return-to-campus -6pp",
-      "Check changing schedule dynamically refreshes chance and descriptive notes",
-      "Check save/resume at final grades, before skill CTA, and with skill cards open"
+      "Start fresh, confirm first-year elective credits meet the applicable faculty quota, inspect year-end grade results, click visible Next, confirm random 3-card skill picker actually displays.",
+      "Confirm year-end game over when elective credits are below quota even if mandatory courses passed, and confirm the mandatory credits do not contribute to quota.",
+      "Test all compulsory courses cleared by graduation, including last-chance retakes, while final-year elective quota is also required.",
+      "Check registration confirmation on 320px/390px mobile: every course probability and detailed formula, return/back, elective removal and replacement.",
+      "Confirm an annual elective adds zero elective credits in spring but its earned 4 credits in autumn.",
+      "Save/restart in registration confirmation, during grading, and before/during annual skill picker."
     ]
   },
   "assets": {
@@ -139,12 +150,11 @@
     "work_required": false
   },
   "next": {
-    "owner": "S8 dedicated Chat / human reviewer",
+    "owner": "S8 dedicated Chat + human reviewer",
     "actions": [
-      "Human test year-end grades vs skill selection transition on smartphone",
-      "Review different conditional odds for balanced play",
-      "Check course detail descriptions and scroll behavior on narrow screens",
-      "Report update to project master for root INDEX"
+      "Complete real browser/mobile interaction QA (first-year skill picker is first priority).",
+      "Human test and tune electives quota, harsh risk balance and chance breakdown display.",
+      "Tell project master v0.7.0 is available after verifying Pages deployment and report no root INDEX changes."
     ]
   },
   "edits": {
