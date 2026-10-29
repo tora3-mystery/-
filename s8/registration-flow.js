@@ -1,0 +1,163 @@
+"use strict";
+/* S8 v0.7.0 - visible registration review, elective credit ledger and button dispatch. */
+(function(){
+const $id=id=>document.getElementById(id);
+const optionalTarget=year=>window.S8_OPTIONAL_TARGETS[state.faculty][year-1];
+const electiveCourse=r=>!r.required&&r.course?.type!=="required"&&!(r.course?.annual&&state.semester%2===0);
+function ensureElectives(){
+ if(!state)return;
+ if(state.electiveLedger&&typeof state.electiveLedger==="object"&&Number.isFinite(state.electiveCredits))return;
+ let baseline=0;
+ if((state.credits||0)>0){
+  // Previous versions stored combined credits. Reconstruct as well as possible
+  // using the stored mandatory grade history (all required courses are 2 credits).
+  const completedRequired=new Set();
+  for(const h of state.history||[])for(const r of h.required||[])
+   if((r.status||"").includes("取得"))completedRequired.add(r.id);
+  const completedNow=(state.results||[]).slice(0,state.revealIndex||0);
+  for(const r of completedNow)if(r.pass&&r.required)completedRequired.add(r.canonicalId);
+  baseline=Math.max(0,state.credits-completedRequired.size*2);
+ }
+ state.electiveBaseline=baseline;
+ state.electiveLedger={};
+ // Do not re-count completed current-term passes already included in the legacy base.
+ if(state.phase==="reveal")for(const r of (state.results||[]).slice(0,state.revealIndex||0))
+  if(r.pass&&electiveCourse(r))state.electiveLedger[r.canonicalId||r.id]=0;
+ state.electiveCredits=baseline
+}
+function syncElectives(){
+ if(!state)return;
+ ensureElectives();
+ if(state.phase==="reveal")for(const r of (state.results||[]).slice(0,state.revealIndex||0)){
+  if(!r.pass||!electiveCourse(r))continue;
+  const id=r.canonicalId||r.id;
+  if(!(id in state.electiveLedger))state.electiveLedger[id]=r.credits;
+ }
+ const total=(state.electiveBaseline||0)+Object.values(state.electiveLedger).reduce((a,b)=>a+(Number(b)||0),0);
+ if(total!==state.electiveCredits){state.electiveCredits=total;save()}
+}
+const originalStart=start;
+start=function(seed){originalStart(seed);if(!state)return;state.electiveLedger={};state.electiveCredits=0;state.electiveBaseline=0;state.reviewOpen=false;save();render()};
+const originalStep=stepReveal;
+stepReveal=function(){const before=state?.revealIndex;originalStep();if(state&&state.revealIndex!==before){syncElectives();renderReveal()}};
+const originalRenderReveal=renderReveal;
+renderReveal=function(){syncElectives();originalRenderReveal()};
+const originalEnd=endReveal;
+endReveal=function(){syncElectives();originalEnd();syncElectives();if(state?.phase==="reveal"&&state.revealIndex===state.results.length)renderReveal()};
+const originalRender=render;
+render=function(){if(state)ensureElectives();originalRender();if(state?.phase==="registration")$id("register-btn").textContent="申請内容を確認する →";if(state?.reviewOpen)renderReview()};
+function riskDetails(c){
+ const registered=allRegistered().filter(x=>x.id!==c.id).concat(c);
+ const used=new Set(getActivityBlocks());let credits=0;
+ for(const x of registered){credits+=x.credits;for(const p of x.slots)used.add(p)}
+ const lectureSlots=new Set(registered.flatMap(x=>x.slots));
+ const blocks=new Set(getActivityBlocks()),breakdown=[];
+ const add=(name,n)=>{if(n)breakdown.push({name,n})};
+ const base=97-(c.diff-1)*9+FACULTIES[state.faculty].risk+ACTIVITIES[state.activity].modifier;
+ add("サークルのレポート適性",state.activity==="club"&&c.method==="レポート"?4:0);
+ add("1限の負担",c.slots.some(p=>p%5===0)?-9:0);
+ add("土曜の負担",c.slots.some(p=>Math.floor(p/5)===5)?-12:0);
+ const adjacency=c.slots.reduce((count,p)=>count+(p%5>0&&p%5!==2&&lectureSlots.has(p-1)?1:0)+(p%5<4&&p%5!==1&&lectureSlots.has(p+1)?1:0),0);
+ add("昼休み以外の連続授業（"+adjacency+"隣接）",-8*adjacency);
+ const perDay=Array.from({length:6},()=>0);for(const p of lectureSlots)perDay[Math.floor(p/5)]++;
+ add("同一日の3コマ以上",c.slots.some(p=>perDay[Math.floor(p/5)]>=3)?-8:0);
+ add("同一日の4コマ以上",c.slots.some(p=>perDay[Math.floor(p/5)]>=4)?-8:0);
+ const pressure=Math.max(0,used.size-7);
+ add("週の拘束コマ数",-(pressure*2.3+Math.pow(Math.max(0,used.size-12),1.65)*1.9));
+ add("登録単位が12単位超", -Math.max(0,credits-12)*1.7);
+ add("学年が上がった負担",-Math.floor(state.semester/2)*4);
+ add("通年科目の中間評価",c.type==="annualCarry"?(c.midtermOk?9:-10):0);
+ add("卒業旅行の影響",state.travelEvent?.active&&state.semester===7?-(state.travelEvent.penalty||0):0);
+ add("課外活動の直前",c.slots.some(p=>p%5<4&&blocks.has(p+1))?4:0);
+ const present=new Set([...lectureSlots,...blocks]);
+ let gap=0;
+ for(const p of c.slots){
+  const earlier=[...lectureSlots].filter(t=>Math.floor(t/5)===Math.floor(p/5)&&t<p);
+  if(!earlier.length)continue;
+  let free=0;for(let t=Math.max(...earlier)+1;t<p;t++)if(!present.has(t))free++;
+  gap=Math.max(gap,free)
+ }
+ add("空きコマ後の帰宅リスク",gap?(gap===1?-6:-9):0);
+ // These modifiers are applied by the other module layers after the base calculation.
+ const busy=new Set([...lectureSlots,...blocks]);
+ add("前日が全休",c.slots.some(p=>Math.floor(p/5)>0&&![...busy].some(t=>Math.floor(t/5)===Math.floor(p/5)-1))?5:0);
+ add("再履修の経験",(state.failedRequired||[]).some(f=>f.canonicalId===c.canonicalId)?4:0);
+ add("前学期の優秀生",state.honorBoostTerm===state.semester?6:0);
+ const skills=(state.skills||[]),count=id=>skills.filter(x=>x.id===id).length;
+ add("過去問の蓄積",count("past_exams")*5);
+ add("朝活の習慣",c.slots.some(p=>p%5===0)?count("morning_routine")*8:0);
+ add("土曜の常連",c.slots.some(p=>Math.floor(p/5)===5)?count("saturday_special")*10:0);
+ add("レポート職人",["レポート","課題"].includes(c.method)?count("report_hacks")*7:0);
+ add("試験対策ノート",c.method==="試験"?count("exam_tactics")*8:0);
+ add("教授のクセを研究",c.diff>=4?count("professor_notes")*6:0);
+ add("詰め込まない勇気",count("minimalism")&&creditLoad()<=14?8:0);
+ if(count("night_shift")){
+  add("夜型：午後",c.slots.some(p=>p%5>=3)?8:0);
+  add("夜型：朝の負担",c.slots.some(p=>p%5===0)?-5:0)
+ }
+ if(count("weekend_reset"))add("週休の達人",c.slots.some(p=>Math.floor(p/5)>0&&![...busy].some(t=>Math.floor(t/5)===Math.floor(p/5)-1))?5:0);
+ add("カンニングによる取得率上昇",skills.some(x=>x.id==="cheating"&&x.year+1===Math.floor(state.semester/2)+1)?50:0);
+ add("3限の昼休み明け",c.slots.some(p=>p%5===2)?6:0);
+ const final=passChance(c);
+ // The real chance function also uses staged rounding, movement penalties,
+ // 5–98% caps and potentially the 100% compulsory study skill.
+ const expected=Math.round(base+breakdown.reduce((a,x)=>a+x.n,0));
+ const adjust=final-expected;
+ return {base,breakdown,final,adjust,guaranteed:final===100,probabilityCap:final===98};
+}
+function reviewRow(c){
+ const chance=riskDetails(c);
+ const row=document.createElement("div");row.className="review-course";
+ const head=document.createElement("div");head.className="review-course-heading";
+ const title=document.createElement("strong");title.textContent=(c.type==="required"?"★必修 ":"")+c.name+"（"+c.credits+"単位）";
+ const pct=document.createElement("span");pct.className="review-percent"+(chance.final<45?" low":"");pct.textContent="取得見込 "+chance.final+"%";
+ head.append(title,pct);row.append(head);
+ const details=document.createElement("details");details.className="review-breakdown";
+ const summary=document.createElement("summary");summary.textContent="取得率の計算内訳を見る";details.append(summary);
+ const base=document.createElement("div");base.textContent="基本取得率（難度・学部・活動） "+chance.base.toFixed(1)+"%";details.append(base);
+ for(const part of chance.breakdown){
+  const x=document.createElement("div");x.textContent=part.name+" "+(part.n>0?"+":"")+part.n.toFixed(1)+"ポイント";details.append(x)
+ }
+ if(chance.adjust){const x=document.createElement("div");x.textContent=chance.guaranteed?"必修予習スキル・各段階の上限調整 "+(chance.adjust>=0?"+":"")+chance.adjust.toFixed(1)+"ポイント":"キャンパス移動・段階別の上限/丸め調整 "+(chance.adjust>=0?"+":"")+chance.adjust.toFixed(1)+"ポイント";details.append(x)}
+ const total=document.createElement("b");total.textContent="最終取得率 "+chance.final+"%";details.append(total);
+ row.append(details);
+ if(c.type!=="required"&&c.type!=="annualCarry"){
+  const remove=document.createElement("button");remove.className="review-replace";remove.textContent="この講義を取り消す・別の講義に変える";
+  remove.onclick=()=>{
+   state.selectedIds=state.selectedIds.filter(id=>id!==c.id);
+   closeReview();save();render();
+   const list=$id("courses-block");
+   if(list&&list.scrollIntoView)list.scrollIntoView({behavior:"smooth",block:"start"});
+   showToast("「"+c.name+"」を解除しました。別の講義を選べます。")
+  };row.append(remove)
+ }else{
+  const fixed=document.createElement("small");fixed.className="review-fixed";fixed.textContent="必修・通年継続は登録解除できません。";row.append(fixed)
+ }
+ return row
+}
+function renderReview(){
+ const panel=$id("registration-review");if(!panel)return;
+ const show=!!state&&state.phase==="registration"&&state.reviewOpen;
+ panel.classList.toggle("hidden",!show);
+ if(!show)return;
+ const courses=allRegistered();
+ const year=Math.floor(state.semester/2)+1,need=optionalTarget(year),registered=courses.filter(c=>c.type!=="required"&&c.type!=="annualCarry").reduce((a,c)=>a+c.credits,0);
+ $id("review-totals").textContent="選択科目取得済み "+state.electiveCredits+" / "+need+"単位（今期申請中 "+registered+"単位）｜ 計"+courses.length+"科目・"+creditLoad()+"単位を申請";
+ const list=$id("review-courses");list.replaceChildren();for(const c of courses)list.append(reviewRow(c));
+ panel.scrollTop=0
+}
+function closeReview(){if(state){state.reviewOpen=false;save()}$id("registration-review").classList.add("hidden")}
+function openReview(){if(!state||state.phase!=="registration")return;syncElectives();state.reviewOpen=true;save();renderReview()}
+$id("register-btn").onclick=openReview;
+$id("review-edit").onclick=()=>{closeReview();render()};
+$id("review-submit").onclick=()=>{
+ if(!state||!state.reviewOpen||state.phase!=="registration")return;
+ closeReview();
+ beginReveal() // Calls the latest registered grading wrappers, including the cheating event.
+};
+const oldResume=resume;
+resume=function(){oldResume();if(!state)return;ensureElectives();syncElectives();if(state.reviewOpen&&state.phase==="registration")renderReview();render()};
+$id("resume-btn").onclick=()=>resume();
+$id("begin-btn").onclick=()=>start();
+$id("next-btn").onclick=()=>advance(); // Final layer after every decorator. Fixes the hidden skill choice.
+})();
