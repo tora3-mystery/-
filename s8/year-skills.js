@@ -4,7 +4,7 @@
 const SKILLS=[
  {id:"past_exams",name:"先輩から過去問を入手",type:"学業・永続／重複可",description:"全科目の単位取得率 +5ポイント。重ね取りで最大+15ポイント。",score:"合格しやすくなるが直接の得点増加はなし。",repeat:3},
  {id:"cheating",name:"カンニングを企む",type:"危険・翌年度限定",description:"次の学年の全講義で取得率 +50ポイント。ただし各科目10%で発覚し、その周回は強制留年＝GAME OVER。",score:"高い単位取得数を狙えるが、失敗時は卒業不可。",repeat:3},
- {id:"mandatory_master",name:"必修科目の鬼",type:"戦略・永続",description:"必修の直前に予習1コマを確保できれば、その必修の取得率100%。予習コマには授業を登録できない。",score:"必修の未取得を防ぎ、卒業を狙いやすくなる。",repeat:1},
+ {id:"mandatory_master",name:"必修科目の鬼",type:"戦略・永続",description:"各必修の直前1コマが空いていれば、そのコマを予習に使い取得率100%。1限や直前に他の必修・活動がある場合は発動しない。予習コマは授業を登録できない。",score:"必修の未取得を防ぎ、卒業を狙いやすくなる。",repeat:1},
  {id:"parttime_raise",name:"バイトの時給UP",type:"活動・永続",description:"塾講師バイトの拘束を来年度から週1コマ減らす（収入ボーナスは維持）。繰り返し取得でさらに1コマ減る。",score:"空いたコマを授業に使える。",repeat:2,when:act=>act==="job"||act==="combo"},
  {id:"club_retire",name:"サークル引退",type:"活動・永続",description:"翌年度からサークルの週2コマが空きになる。代わりに毎学期スコアが120pt減る。",score:"時間割が楽になる代わりに得点が下がる。",repeat:1,when:act=>act==="club"||act==="combo"},
  {id:"morning_routine",name:"朝活の習慣",type:"学業・永続／重複可",description:"1限の授業の単位取得率 +8ポイント。重ね取りで最大+16ポイント。",score:"早起きの授業を取りやすくする。",repeat:2},
