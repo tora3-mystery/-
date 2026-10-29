@@ -125,6 +125,7 @@ createOffers=function(){
  // Mandatory repeats have first priority at their original weekday and period.
  // When a new mandatory conflicts, exceptionally move that new class to a later period.
  const activities=new Set(getActivityBlocks());
+ const activitySlots=getActivityBlocks();
  const occupied=new Set(carry.flatMap(c=>c.slots)),fixed=[],deferred=[],adjusted=[];
  const addFixed=c=>{
   if(c.slots.some(p=>occupied.has(p)||activities.has(p)))return false;
@@ -157,20 +158,80 @@ createOffers=function(){
   }
   return chosen
  };
+ // Fourth year: the required course is never silently postponed.
+ // Prefer existing empty slots; if necessary move extracurricular time out of its way.
+ const emergencySlots=course=>{
+  if(year<4)return null;
+  const old=course.slots.slice().sort((a,b)=>a-b);
+  const groups=new Map();
+  for(const p of old){const d=Math.floor(p/5);if(!groups.has(d))groups.set(d,[]);groups.get(d).push(p%5)}
+  const patterns=[...groups.values()].map(ps=>ps.map(p=>p-ps[0]));
+  const placements=[];
+  if(patterns.length===1){
+   for(let d=0;d<6;d++)for(let start=0;start+Math.max(...patterns[0])<5;start++)
+    placements.push(patterns[0].map(offset=>d*5+start+offset));
+  }else{
+   const choices=patterns.map(pattern=>{
+    const x=[];
+    for(let d=0;d<6;d++)for(let p=0;p+Math.max(...pattern)<5;p++)
+     x.push(pattern.map(offset=>d*5+p+offset));
+    return x
+   });
+   // Keep separated weekly sections on separate days, not in the same campus day.
+   function spread(i,got){
+    if(i===choices.length){placements.push(got.flat());return}
+    if(placements.length>40000)return;
+    for(const c of choices[i]){
+     if(got.some(g=>g.some(x=>Math.floor(x/5)===Math.floor(c[0]/5))))continue;
+     spread(i+1,got.concat([c]));
+    }
+   }
+   spread(0,[]);
+  }
+  const eligible=placements.filter(slots=>slots.length===old.length&&new Set(slots).size===slots.length&&slots.every(p=>!occupied.has(p)));
+  eligible.sort((a,b)=>{
+   const score=x=>x.reduce((n,p)=>n+(activities.has(p)?40:0)+Math.abs(p-old[x.indexOf(p)]||0)*.05,0);
+   return score(a)-score(b)
+  });
+  const chosen=eligible[0];if(!chosen)return null;
+  const conflicts=chosen.filter(p=>activities.has(p));
+  if(conflicts.length){
+   const kept=activitySlots.filter(p=>!conflicts.includes(p));
+   for(let p=0;p<30&&kept.length<activitySlots.length;p++){
+    if(occupied.has(p)||chosen.includes(p)||kept.includes(p))continue;
+    kept.push(p);
+   }
+   if(kept.length!==activitySlots.length)return null;
+   activitySlots.splice(0,activitySlots.length,...kept);
+   if(state.activitySlotsByTerm)state.activitySlotsByTerm[String(term)]=activitySlots;
+   activities.clear();kept.forEach(p=>activities.add(p));
+  }
+  return chosen
+ };
  const backlogs=state.failedRequired.slice().filter(f=>!state.passedIds.includes(f.canonicalId));
  backlogs.sort((a,b)=>(a.firstFailedTerm??a.failedTerm??a.term??0)-(b.firstFailedTerm??b.failedTerm??b.term??0));
  for(const f of backlogs){
   const original=f.firstFailedTerm??f.failedTerm??f.term??0;
   const eligible=f.retryEligibleTerm??original+2;
-  if(term<eligible||term%2!==original%2)continue;
+  if(!(term===7&&original<7)&&(term<eligible||term%2!==original%2))continue;
   const baseName=f.name.replace(/^【再履修】/,"");
   const next={...f,id:"retry_"+f.canonicalId,name:baseName,type:"required",term,slots:f.slots.slice(),canonicalId:f.canonicalId,retake:true,firstFailedTerm:original,rumor:"この時間に再履修が固定されています。",net:"落とすと翌年度の同じ学期・同じコマで再び必修になります。"};
-  if(!addFixed(next))deferred.push("【再履修】"+baseName+"：他の固定授業と衝突し、次年度へ繰越");
+  if(!addFixed(next)){
+   const shifted=shiftedSlots(next.slots)||emergencySlots(next);
+   if(shifted){
+    const prior=next.slots.slice();next.slots=shifted;next.originalSlots=prior;next.movedMandatory=true;
+    if(!addFixed(next))throw Error("retry placement failed despite free slots");
+    adjusted.push("卒業までの再履修「"+baseName+"」："+prior.map(p=>DAYS[Math.floor(p/5)]+(p%5+1)).join("・")+"→"+shifted.map(p=>DAYS[Math.floor(p/5)]+(p%5+1)).join("・"));
+   }else{
+    deferred.push("【再履修】"+baseName+"：時間割に配置できず卒業要件未達");
+    if(year===4)state.placementFailure=(state.placementFailure||[]).concat(next.canonicalId)
+   }
+  }
  }
  for(const c of current){
   if(state.passedIds.includes(c.canonicalId))continue;
   if(addFixed(c))continue;
-  const original=c.slots.slice(),shift=shiftedSlots(original);
+  const original=c.slots.slice(),shift=shiftedSlots(original)||emergencySlots(c);
   if(shift){
    c.slots=shift;c.movedMandatory=true;c.originalSlots=original;
    if(!addFixed(c))throw Error("mandatory shift did not resolve collision");
@@ -179,10 +240,13 @@ createOffers=function(){
    // Only in a physically full timetable: preserve the unmet requirement to avoid losing graduation obligations.
    const old=state.failedRequired.find(f=>f.canonicalId===c.canonicalId);
    if(!old)state.failedRequired.push({...c,firstFailedTerm:term,failedTerm:term,retryEligibleTerm:term+2,deferred:true});
-   deferred.push("新しい必修「"+c.name+"」：空きがなく繰越（例外）");
+   deferred.push("新しい必修「"+c.name+"」：配置不可");
+   if(year===4)state.placementFailure=(state.placementFailure||[]).concat(c.canonicalId);
   }
  }
  state.shiftedRequired=adjusted;
+ if(term===6)state.placementFailure=[];
+ if(term===7&&deferred.length&&year===4)state.placementFailure=[...new Set((state.placementFailure||[]))];
  state.deferredRequired=deferred;
  // Electives never include discretionary retake: compulsory backlogs are automatically placed.
  state.offers=fixed.concat(carry,optional);
@@ -381,7 +445,7 @@ advance=function(){
  }else{state.phase="end";save();render();window.scrollTo(0,0);playSound("final")}
 };
 renderEnd=function(){
- const condition=state.credits>=72&&state.failedRequired.length===0;
+ const condition=state.credits>=72&&state.failedRequired.length===0&&!(state.placementFailure||[]).length;
  if(condition&&!state.graduationApplied){state.score+=3000;state.graduationApplied=true;save()}
  const bestKey=BEST3+state.faculty+"_"+state.activity;let best=0;
  try{best=Number(localStorage.getItem(bestKey))||0}catch(e){}
@@ -389,14 +453,14 @@ renderEnd=function(){
  if(isRecord)try{localStorage.setItem(bestKey,String(state.score))}catch(e){}
  const grade=state.score>=12500?"S":state.score>=9500?"A":state.score>=7000?"B":"C";
  const area=$("ending-content");area.replaceChildren();
- const heading=document.createElement("h2");heading.textContent=isRecord?"NEW HIGH SCORE!":condition?"卒業おめでとう！":"大学4年間 終了";area.append(heading);
+ const heading=document.createElement("h2");heading.textContent=condition?(isRecord?"🎓 卒業！ NEW HIGH SCORE!":"🎓 卒業おめでとう！"):"GAME OVER｜卒業要件未達";area.append(heading);
  const score=document.createElement("div");score.className="hero-score";score.textContent=fmt(state.score)+" pt";area.append(score);
- const msg=document.createElement("p");msg.textContent=(condition?"🎓 卒業認定（+3000pt）":"卒業判定：要単位再取得")+"　·　総合評価 "+grade+"　·　"+FACULTIES[state.faculty].name;area.append(msg);
+ const msg=document.createElement("p");msg.textContent=(condition?"🎓 卒業認定（+3000pt）":"卒業不可：4年終了時点で必修未取得、配置不能、または単位不足")+"　·　総合評価 "+grade+"　·　"+FACULTIES[state.faculty].name;area.append(msg);
  const wrap=document.createElement("div");wrap.className="ending-stats";
  for(const [label,value] of [["取得単位",state.credits+"単位"],["最大コンボ",state.maxCombo+" COMBO"],["PERFECT学期",state.perfectTerms+" / 8"],["自己ベスト",fmt(Math.max(best,state.score))+" pt"]]){const d=document.createElement("div"),small=document.createElement("small"),b=document.createElement("b");small.textContent=label;b.textContent=value;d.append(small,b);wrap.append(d)}area.append(wrap);
  const history=document.createElement("div");history.className="history-list";
  for(const h of state.history){const row=document.createElement("div");row.className="history-row";const title=document.createElement("strong");title.textContent=termName(h.term)+" "+fmt(h.score)+"pt / "+h.credits+"単位";row.append(title);const details=document.createElement("small");details.textContent="必修："+(h.required||[]).map(r=>r.name+" "+r.status).join("、")+(h.annual?.length?"　通年："+h.annual.map(a=>a.name+" "+a.status).join("、"):"");row.append(details);history.append(row)}area.append(history);
- const p=document.createElement("p");p.className="smallhint";p.textContent="SEED "+state.seed+" ／ "+ACTIVITIES[state.activity].name+" ／ 未取得必修："+(state.failedRequired.map(c=>c.name).join("、")||"なし");area.append(p);
+ const p=document.createElement("p");p.className="smallhint";p.textContent="SEED "+state.seed+" ／ "+ACTIVITIES[state.activity].name+" ／ 未取得必修："+(state.failedRequired.map(c=>c.name).join("、")||"なし")+(state.placementFailure?.length?" ／ 必修の配置不能："+state.placementFailure.join("、"):"");area.append(p);
 };
 const oldShowToast=showToast;
 showToast=function(msg){oldShowToast(msg);if(/登録！|解除/.test(msg))playSound(msg.includes("解除")?"click":"select")};
