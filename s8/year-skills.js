@@ -40,7 +40,7 @@ function draft(year){
  const k=String(year);
  const previous=state.skillOffers[k];
  if(previous&&previous.length===3)return previous;
- const eligible=SKILLS.filter(s=>(!s.when||s.when(state.activity))&&count(s.id)<s.repeat);
+ const eligible=SKILLS.filter(s=>(!s.when||s.when(state.activity))&&count(s.id)<s.repeat&&!(state.discardedSkills||[]).some(d=>d.id===s.id));
  let seed=hashSeed(String(state.seed)+"|skill-draft|"+year+"|"+state.faculty+"|"+state.activity);
  const items=eligible.slice();
  for(let i=items.length-1;i>0;i--){
