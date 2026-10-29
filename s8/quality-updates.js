@@ -79,7 +79,7 @@ createOffers=function(){
   if(c.type==="required"){
    const note=REQUIRED_NOTES[c.canonicalId];
    if(note){
-    const selector=(kind,arr)=>arr[hashSeed(String(state.seed)+"|required-copy|"+state.semester+"|"+c.canonicalId+"|"+kind)%arr.length];
+    const selector=(kind,arr)=>arr[(hashSeed(String(state.seed)+"|required-copy|"+state.semester+"|"+c.canonicalId+"|"+kind)>>>(kind==="rumor"?8:16))%arr.length];
     c.rumor=selector("rumor",note.rumor);
     c.net=selector("net",note.net);
    }
