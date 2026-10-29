@@ -49,7 +49,7 @@ function eligibleForDraft(){return isSchoolYearEnd()&&state.credits>=[16,34,54][
 function pendingDraft(){const y=Math.floor(state.semester/2)+1;return eligibleForDraft()&&!state.skillChosenYears?.[String(y)]}
 function displayDraft(){
  const panel=$("year-skill-panel");if(!panel)return;
- const show=state?.phase==="reveal"&&state.yearSkillPending&&pendingDraft()&&!state.appealPending;
+ const show=state?.phase==="reveal"&&state.yearSkillPending&&state.skillReviewConfirmedTerm===state.semester&&pendingDraft()&&!state.appealPending;
  panel.classList.toggle("hidden",!show);
  if(!show)return;
  const year=Math.floor(state.semester/2)+1,choices=draft(year);
@@ -211,13 +211,12 @@ endReveal=function(){
 };
 const beforeAnnualDraft=endReveal;
 endReveal=function(){
- const complete=!!state&&state.phase==="reveal"&&state.revealIndex===state.results.length;
+ // Always let players inspect their final grades before the annual skill interstitial.
  beforeAnnualDraft();
- if(!complete||!state||state.phase!=="reveal")return;
- if(pendingDraft()&&!state.yearSkillPending){
-  state.yearSkillPending=true;
-  draft(Math.floor(state.semester/2)+1);
-  save();renderReveal();
+ if(!state||state.phase!=="reveal"||state.revealIndex!==state.results.length)return;
+ if(pendingDraft()&&state.skillReviewConfirmedTerm!==state.semester){
+  // Selection is offered by the "choose next year's skill" button, not auto-opened.
+  $("next-btn").textContent="次年度のスキルを選ぶ →";
  }
 };
 const originalReveal=renderReveal;
@@ -236,8 +235,9 @@ renderReveal=function(){
   cheat.textContent="🚨 カンニング発覚！ 「"+(state.cheatCaughtNames||[]).join("・")+"」で不正が発覚しました。進級資格を失います。";
   $("next-btn").textContent="処分通知を確認する →"
  }
- if(done&&!detected&&!state.appealPending&&!state.yearSkillPending&&pendingDraft()){
-  $("next-btn").textContent="次年度のスキル選択へ →"
+ if(done&&!detected&&!state.appealPending&&pendingDraft()&&state.skillReviewConfirmedTerm!==state.semester){
+  $("next-btn").textContent="成績を確認しました・次年度のスキルを選ぶ →";
+  $("next-btn").classList.remove("hidden")
  }
  displayDraft()
 };
@@ -252,6 +252,7 @@ advance=function(){
  }
  if(pendingDraft()){
   state.yearSkillPending=true;
+  state.skillReviewConfirmedTerm=state.semester;
   draft(Math.floor(state.semester/2)+1);
   save();renderReveal();
   return
@@ -284,13 +285,12 @@ resume=function(){
  if(!state)return;
  ensure();
  if(state.phase==="reveal"){
-  // Recover a completed year-end reveal saved by an older version before the draft opened.
-  if(pendingDraft()&&!state.yearSkillPending){
-   state.yearSkillPending=true;
-   draft(Math.floor(state.semester/2)+1);
-   save()
+  // Previous releases auto-opened the skill draft. A resumed save gets the
+  // grade result first unless the player had already explicitly opened the choice.
+  if(state.yearSkillPending&&state.skillReviewConfirmedTerm!==state.semester){
+   state.yearSkillPending=false;save()
   }
-  if(state.yearSkillPending||state.cheatCaughtTerm===state.semester){
+  if(state.revealIndex===state.results.length){
    clearTimeout(revealTimer);
    renderReveal()
   }
