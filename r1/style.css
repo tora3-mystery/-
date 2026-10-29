@@ -118,3 +118,5 @@
 @media(max-width:760px){.tutorial-steps{grid-template-columns:1fr}.tutorial-steps article{padding:12px}.tutorial-hero{padding:23px 17px}.tutorial-hero:after{right:12px;top:14px;font-size:55px}.tutorial-comparison .storefront{min-height:172px}.counter-buttons button{font-size:12px}.evolution-burst span{top:40%}}
 @media(max-width:380px){.tutorial-comparison{padding:10px}.tutorial-comparison .storefront{min-height:152px}.tutorial-steps p{font-size:12px}.counter-choices{padding:10px}.counter-buttons{gap:6px}.counter-buttons button{padding:10px 6px}.thread-player p,.thread-owner p{font-size:13px}.evolution-burst span{font-size:14px}}
 @media(prefers-reduced-motion:reduce){.evolution-burst{display:none}.evolution-box .after-spotlight .storefront,.tutorial-comparison .after-spotlight .storefront{animation:none}.evolution-box .after-spotlight:after{content:"変更後"}}
+
+.history-exchange{margin-top:9px;border-left:3px solid #d6b983;background:#182b36;border-radius:6px;padding:8px 11px}.history-exchange p{font-size:12px;margin:5px 0}.history-exchange strong{color:#f2d0a1}
