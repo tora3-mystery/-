@@ -40,6 +40,10 @@ getActivityBlocks=function(){
   for(const c of upper)for(const p of c.slots)restricted.add(p);
  }
  if(state.semester%2===1)for(const a of state.annualCourses||[])for(const p of a.course.slots)restricted.add(p);
+ for(const f of state.failedRequired||[]){
+  const first=f.firstFailedTerm??f.failedTerm??f.term??0;
+  if(state.semester>=(f.retryEligibleTerm??first+2)&&state.semester%2===first%2)for(const p of f.slots)restricted.add(p);
+ }
  // Club / paid work mostly happens in the late afternoon. Saturdays open for extra shifts.
  const desirable=["月4","月5","火4","火5","水4","水5","木4","木5","金4","金5","土2","土3","土4","土5"];
  const fallback=["月3","火3","水3","木3","金3","月2","火2","水2","木2","金2"];
@@ -80,11 +84,19 @@ passChance=function(c){
  if(state.activity==="club"&&c.method==="レポート")chance+=4;
  if(c.slots.some(s=>s%5===0))chance-=9;
  if(c.slots.some(s=>Math.floor(s/5)===5))chance-=12;
- if(c.slots.some(s=>s%5<4&&used.has(s+1)))chance-=5;
+ // Every adjacent lecture is harder: both sides of a back-to-back class suffer.
+ // Only teaching periods count, not extra-curricular blocks.
+ const lessonSlots=new Set(courses.flatMap(x=>x.slots));
+ const lessonAdjacencies=c.slots.reduce((count,s)=>count+(s%5>0&&lessonSlots.has(s-1)?1:0)+(s%5<4&&lessonSlots.has(s+1)?1:0),0);
+ chance-=lessonAdjacencies*8;
+ const weeklyCounts=[0,0,0,0,0,0];
+ for(const p of lessonSlots)weeklyCounts[Math.floor(p/5)]++;
+ if(c.slots.some(s=>weeklyCounts[Math.floor(s/5)]>=3))chance-=8;
+ if(c.slots.some(s=>weeklyCounts[Math.floor(s/5)]>=4))chance-=8;
  const pressure=Math.max(0,used.size-7);
- // More than half the 30-slot week becomes sharply more demanding.
- chance-=pressure*1.6+Math.pow(Math.max(0,used.size-13),1.5)*1.25;
- chance-=Math.max(0,credits-12)*1.2;
+ // Exhaustion grows nonlinearly: filing an extra class can hurt all classes.
+ chance-=pressure*2.3+Math.pow(Math.max(0,used.size-12),1.65)*1.9;
+ chance-=Math.max(0,credits-12)*1.7;
  chance-=Math.floor(state.semester/2)*4;
  if(c.type==="annualCarry")chance+=c.midtermOk?9:-10;
  if(state.travelEvent?.active&&state.semester===7)chance-=state.travelEvent.penalty;
@@ -116,13 +128,20 @@ render=function(){
  $("semester-label").textContent=termLabel()+"｜全4年間";
  $("current-credits").textContent=creditLoad()+"単位";
  const reg=allRegistered(),must=reg.filter(c=>c.type==="required"||c.type==="annualCarry").length;
- $("summary-line").textContent="今期の履修："+must+"必修・通年＋"+(reg.length-must)+"選択（合計"+creditLoad()+"単位）。たくさん登録できますが、詰め込みすぎると全科目の取得率が大きく下がります。";
- $("schedule-hint").textContent="空きコマを選んで登録。★は必修、色で選択授業・通年・活動を区別できます。";
+ $("summary-line").textContent="今期の履修：必修・通年"+must+"科目＋選択"+(reg.length-must)+"科目（合計"+creditLoad()+"単位）。連続授業と過密な日程はすべての科目の取得率に影響します。";
+ $("schedule-hint").textContent="★必修は自動登録。落とした必修は翌年度の同じ時間に復活します。連続講義・週3〜4コマの過密日は落単しやすくなります。";
  const yr=Math.floor(state.semester/2)+1,plus=EXTRA_BY_YEAR[yr-1],activity=ACT_COUNTS[state.activity];
  let ev=$("life-events");
  if(ev){
   ev.textContent=state.activity==="none"?"今期は勉強に専念。":yr>1?"学生生活が忙しくなった！ "+yr+"年生は授業以外の活動が週"+(activity+plus)+"コマ（1年生より+"+plus+"コマ）。":"今期の活動は週"+activity+"コマ。";
   if(state.travelEvent?.active&&state.semester===7)ev.textContent+="　🏖️ 卒業旅行の予定：今期の単位取得率−18ポイント。";
+ }
+ const warnings=$("retake-warning");
+ if(warnings){
+  const lock=state.offers.filter(c=>c.retake);
+  const deferred=state.deferredRequired||[];
+  warnings.textContent=lock.length||deferred.length?"⚠ 今期の再履修必修："+(lock.length?lock.map(c=>c.name+"（前年と同じ時間に固定）").join("・"):"なし")+(deferred.length?" ／ 必修の履修繰越："+deferred.join("・"):""):"";
+  warnings.classList.toggle("hidden",!lock.length&&!deferred.length);
  }
  const r=$("register-btn");
  if(creditLoad()>=10){r.disabled=state.phase!=="registration";r.textContent="今期の履修を確定する →"}
