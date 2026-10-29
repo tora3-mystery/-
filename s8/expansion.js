@@ -336,5 +336,6 @@ $("course-search").addEventListener("input",()=>{searchText=$("course-search").v
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("slot-picker").classList.contains("hidden"))closeSlot()});
 const retryOriginal=$("retry-btn").onclick;$("retry-btn").onclick=()=>{retryOriginal();playSound("select")};
 const sameOriginal=$("same-seed-btn").onclick;$("same-seed-btn").onclick=()=>{sameOriginal();playSound("select")};
+$("register-btn").onclick=beginReveal;$("next-btn").onclick=advance;$("resume-btn").onclick=resume;
 updateSoundToggle();displayIntro();
 })();
