@@ -1,9 +1,9 @@
 {
   "id": "S8",
   "title": "履修登録を完了してください。（仮）",
-  "version": "0.5.0",
-  "updated_at_jst": "2026-10-29 14:30 JST",
-  "phase": "Phase 3 / 4: 8-semester prototype, logic and UI source audit passed; mobile browser QA pending",
+  "version": "0.5.2",
+  "updated_at_jst": "2026-10-29 15:47 JST",
+  "phase": "Phase 4: updated retake and campus mobility prototype; source compilation and mock-DOM simulation complete; real browser QA pending",
   "scope": "4 years / 8 terms playable; 3 faculties; 5 extracurricular difficulty setups",
   "features": [
     "tap an unoccupied timetable slot to choose courses that include that period",
@@ -28,7 +28,13 @@
     "v0.5.0: per-course score arithmetic: 100pt per earned credit plus capped additive combo; perfect and activity semester bonus explicitly broken down",
     "v0.5.0: annual course interim results award no credits or points until autumn final",
     "v0.5.0: extracurricular blocks increase by +1 weekly in year 2 and +2 in years 3-4; block placement deterministic per seed",
-    "v0.5.0: 4th-year autumn 45% seeded chance for a graduation trip (all class pass chances -18 percentage points); pre-grade event notice"
+    "v0.5.0: 4th-year autumn 45% seeded chance for a graduation trip (all class pass chances -18 percentage points); pre-grade event notice",
+    "v0.5.1/v0.5.2: failed mandatory classes become mandatory and auto-reserve their original weekday/period in the same term of the next academic year",
+    "v0.5.2: if a new required class clashes with an older retake, shift the new class to later same-day period whenever possible; later days fallback; deferral is emergency only",
+    "v0.5.2: from year 3, elective seminars / specialist lectures use another campus and switching requires one timetable slot of movement, displayed in lavender",
+    "v0.5.2: same-campus consecutive lessons do not require intermediate travel, no travel slot after fifth period",
+    "v0.5.2: consecutive lecture pairs penalize both classes, heavy teaching days and high total occupied slots penalize all courses",
+    "v0.5.2: removed artificial 10-credit minimum for registration to prevent mandatory-backlog deadlock"
   ],
   "ai_audit": {
     "structure": "PASS: JS bracket/quote balance; no missing DOM IDs from game.js and expansion.js (124 $ references against 57 HTML IDs)",
@@ -56,32 +62,35 @@
     "score_mechanics_v05": "2 credits → 200 basic points; 4 credits → 400; plus +50 × min(5, combo index-1). Annual spring midterm 0, autumn passed earns 4 credits×100pt. Semester bonuses shown separately.",
     "static_v05": "PASS: game.js, expansion.js, balance.js, polish.js pass JS compilation; HTML DOM IDs for referenced fields present. Legacy hidden search input kept to protect expansion.js init binding.",
     "outstanding": [
-      "No actual iOS/Android touch rendering test",
-      "Scrollbar and focus behavior tested in logic only; mobile visual check needed",
-      "Save/resume compatibility of midsemester pre-v0.5 scores, 4th-year travel pending and yearlong courses needs real browser QA",
-      "Course selection stress test under many simultaneous courses in browser pending",
-      "The automated chooser is not a human user and does not establish an appropriate difficulty or difficulty curve",
-      "The root index page remains under the master and has not been updated to S8 v0.5.0"
-    ]
+      "Critical: actual smartphone visual/interaction QA not yet performed; campus transition and compulsory shift must be checked in mobile browser",
+      "Gameplay balance: 23/150 automated heuristic runs made it to year 4 completion under harsh current penalties; high-activity paths may need rebalance",
+      "Mobility note: full external-campus realism and campus-to-campus travel logistics simplified to one period, and movements past fifth period not modeled",
+      "Resume upgrade from v0.5 to new campus mapping needs real-browser check",
+      "Specialist-campus colors and slot reservations verified in logic, not in real iOS/Android rendering",
+      "INDEX under project master not modified."
+    ],
+    "v052_static": "PASS: all 5 JavaScript bundles compile and DOM IDs referenced by scripts exist. Source-layer first boot was checked; ADVANCED IIFE private symbol access was corrected.",
+    "v052_firstyear_expected_credits": "750 faculty×activity×seed models for each target load: 10 registered credits -> 7.50 expected earned, 14 -> 8.79, 20 -> 7.20, approximately 30 -> 1.69. Static expected-credit analysis, not measured grade outcomes.",
+    "v052_mandatory": "PASS: 15 faculty×activity fixed-retake probes: all 15 repeated failed mandatory courses in the original slots next academic year. New-lectures shift to later slots; none overlapped activities or fixed classes.",
+    "v052_runtime": "PASS with balance caveat: 150 complete-path mock-DOM runs (3 faculties × 5 activities × 10 seeded scenarios): 151 automatic required time changes, 257 registered backlog retakes, 41 visible travel periods, 0 travel overlaps, 0 execution errors. Of the 150 runs, 23 reached the end and 127 failed yearly stage requirements. Five terms had <10 available/selected credits; the prior artificial minimum was removed and grade reveal proceeded. Outcomes are highly punishing, especially for activity-heavy students, and require human difficulty review.",
+    "v052_campus": "In-term campus movement marks an available period immediately after the last lesson before a campus switch, or after the last specialist-campus lesson when it fits; adjacent cross-campus classes cannot register; no movement after fifth period."
   },
   "browser_qa": {
     "performed": false,
     "status": "pending",
     "devices": [],
-    "notes": "Simulated DOM runs only. Actual smartphone scroll, color, overlay, sound and sort interactions are not browser-verified."
+    "notes": "All checks are static JS compilation and mock DOM simulations; no actual website tap/visual QA."
   },
   "human_review": {
     "performed": false,
-    "target_version": "0.5.0",
+    "target_version": "0.5.2",
     "requested_checks": [
-      "Mobile begin button scrolls to the semester header",
-      "Legend colors and stars match timetable",
-      "Sort changes ordering and choice list remains usable",
-      "Registration allows >14 credits, yet overloaded timetable sharply depresses success probability",
-      "Scores and combo bonus formulas read correctly in the result",
-      "Activities grow in years 2–4 without blocking mandatory classes",
-      "Travel event in year 4 fall plays, but not every seed",
-      "Yearlong midterm yields no score or credits, final autumn does"
+      "Fail a first-year required course; in second year first term verify original day/period is automatically taken",
+      "Observe whether new mandatory is shifted later, not deferred, on clashing slot",
+      "Elect upper-year specialty-campus course and verify movement block appears and cannot be overwritten",
+      "Try back-to-back courses and many filled lessons; chance should drop across all courses",
+      "Try low-credit registration and verify no progress deadlock",
+      "Evaluate activity-heavy difficulty and real graduation success"
     ]
   },
   "assets": {
@@ -89,12 +98,12 @@
     "work_required": false
   },
   "next": {
-    "owner": "S8 dedicated chat / human review",
+    "owner": "S8 dedicated chat and human reviewer",
     "actions": [
-      "Verify render and tap behavior on iOS real browser",
-      "Tune crowding penalty and progression success odds from human playtesting",
-      "Verify resume after intro, midterm, grade reveal and travel event",
-      "Notify project master of v0.5.0 for root INDEX card revision"
+      "Do real iOS browser QA for shifted required, movement display and interaction",
+      "Tune stage requirements/grade probabilities with human playtest; heavy activity completion is very rare",
+      "Review save/resume across v0.5.0->0.5.2 and persisted retakes",
+      "Notify index master to display S8 v0.5.2"
     ]
   },
   "edits": {
