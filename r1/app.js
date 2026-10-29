@@ -10,7 +10,7 @@ const dshop=id=>E.SHOPS.find(x=>x.id===id);
 const dgenre=id=>E.GENRES.find(x=>x.id===id);
 function newGame(){const state=E.createState(Date.now()>>>0);state.introSeen=false;return state}
 function load(){
- try{const raw=localStorage.getItem(KEY);if(raw){const s=JSON.parse(raw);if(s.version===E.VERSION){E.audit(s);return s;}if(["0.1.0-alpha","0.2.0-alpha","0.3.0-alpha","0.3.1-alpha","0.3.2-alpha","0.4.0-alpha","0.4.1-alpha","0.5.0-alpha","0.6.0-alpha","0.7.0-alpha"].includes(s.version)){
+ try{const raw=localStorage.getItem(KEY);if(raw){const s=JSON.parse(raw);if(s.version===E.VERSION){E.audit(s);return s;}if(["0.1.0-alpha","0.2.0-alpha","0.3.0-alpha","0.3.1-alpha","0.3.2-alpha","0.4.0-alpha","0.4.1-alpha","0.5.0-alpha","0.6.0-alpha","0.7.0-alpha","0.8.0-alpha"].includes(s.version)){
  if(["0.1.0-alpha","0.2.0-alpha","0.3.0-alpha","0.3.1-alpha","0.3.2-alpha","0.4.0-alpha"].includes(s.version)){
  const ramen=s.shops.ramen;
  ramen.scores=Object.fromEntries(E.GENRES.map(g=>[g.id,0]));
@@ -30,6 +30,17 @@ function load(){
   s.shops[d.id].opened=false;s.shops[d.id].openedMonth=null;
  }
  for(const d of E.SHOPS){const x=s.shops[d.id];if(typeof x.opened!=="boolean")x.opened=d.id!=="teishoku";if(x.opened&&x.openedMonth==null)x.openedMonth=0;if(!x.opened)x.openedMonth=null;if(!Number.isFinite(x.slowMonths))x.slowMonths=0;if(!("closedReason" in x))x.closedReason=x.closed?"閉店":null;}
+ const allocated=new Set();
+ const existing=E.SHOPS.filter(d=>s.shops[d.id].opened);
+ s.shops.ramen.lot=1;allocated.add(1);
+ for(const d of existing.filter(d=>d.id!=="ramen"&&Number.isInteger(s.shops[d.id].lot)&&s.shops[d.id].lot>=2&&s.shops[d.id].lot<=5))allocated.add(s.shops[d.id].lot);
+ for(const d of existing.filter(d=>d.id!=="ramen"&&!Number.isInteger(s.shops[d.id].lot))){
+  const lot=[2,3,4,5].find(q=>!allocated.has(q))||5;s.shops[d.id].lot=lot;allocated.add(lot);
+ }
+ for(const d of E.SHOPS){const x=s.shops[d.id];if(!x.opened)x.lot=null;if(typeof x.reborn!=="boolean")x.reborn=false;}
+ if(!Number.isFinite(s.ramenReturnMonth))s.ramenReturnMonth=null;
+ if(typeof s.ramenFinalSilent!=="boolean")s.ramenFinalSilent=false;
+ if(typeof s.ramenReborn!=="boolean")s.ramenReborn=!!s.shops.ramen.reborn;
  s.version=E.VERSION;E.audit(s);return s;
 }}}
  catch(err){console.warn("R1 save reset:",err)}
@@ -43,14 +54,14 @@ function storefront(v){
  const stage=v.route.stage,closed=!v.open,visual=v.visual||{icon:v.base.icon,product:v.base.product,tagline:"いつもの味",variety:0};
  const merchandise=closed?"":'<div class="store-merch"><span class="merch-icon" aria-hidden="true">'+esc(visual.icon)+'</span><span class="merch-label"><strong>'+esc(visual.product)+'</strong><span>'+esc(stage>=2?visual.tagline:"看板の商品")+'</span></span></div>';
  const feature=(!closed&&stage>0)?'<div class="store-feature">'+esc(v.feature)+'</div>':"";
- return '<div class="storefront '+esc(v.base.palette)+' stage-'+stage+" route-"+(v.route.genre||"base")+" dir-"+(v.route.polarity||"none")+(closed?" closed":"")+'" role="img" aria-label="'+esc(v.base.name+"。"+v.summary+" "+(v.feature||""))+'">'+
+ return '<div class="storefront '+esc(v.base.palette)+' stage-'+stage+" route-"+(v.route.genre||"base")+" dir-"+(v.route.polarity||"none")+(closed?" closed":"")+(v.phase==="拡張本店"?" ramen-giant":"")+'" role="img" aria-label="'+esc(v.base.name+"。"+v.summary+" "+(v.feature||""))+'">'+
  '<div class="sign">'+esc(closed?"閉店しました":v.sign)+'</div>'+merchandise+feature+
  '<span class="stage-tag">'+esc(closed?"CLOSED":stage===0?"営業中":stage===1?"店頭改装":stage===2?"新看板":stage===3?"新装":"大改装")+'</span></div>';
 }
 function shopCard(d){
  const v=E.display(game.shops[d.id],d.id),pub=E.publicReviews(game,d.id),rating=pub.length?(pub.reduce((t,x)=>t+x.star,0)/pub.length).toFixed(1):null;
  return '<button type="button" class="shop-card '+(d.id===selectedId?"selected":"")+(game.shops[d.id].closed?" closed-card":"")+'" data-shop="'+d.id+'" aria-pressed="'+(d.id===selectedId)+'">'+
- storefront(v)+'<span class="card-copy"><span class="small">'+esc(d.category)+' ／ '+(game.shops[d.id].closed?"閉店":(rating?("★"+rating+"（"+pub.length+"件）"):"口コミなし"))+'</span><strong>'+esc(d.name)+'</strong>'+
+ storefront(v)+'<span class="card-copy"><span class="small">'+esc(d.category)+' ／ '+esc((game.shops[d.id].lot||'?')+'番地')+' ／ '+(game.shops[d.id].closed?"閉店":(rating?("★"+rating+"（"+pub.length+"件）"):"口コミなし"))+'</span><strong>'+esc(d.name)+'</strong>'+
  '<span class="summary">'+esc(v.summary)+'</span><span class="tap">口コミを確認する　›</span></span></button>';
 }
 function replySnippet(id,reply,fromOwner="店主からの返信"){
@@ -84,7 +95,7 @@ function detail(id){
  const d=dshop(id),s=game.shops[id],v=E.display(s,id);
  const last=s.history.length?s.history[s.history.length-1]:null;
  return '<section class="panel" id="shopDetail"><div class="detail-header"><div><span class="eyebrow">お店のページ</span><h2>'+esc(d.name)+'</h2><p class="subtitle">'+esc(d.category)+' ／ '+esc(v.visual?v.visual.product:d.product)+'</p></div><span class="summary-badge">'+esc(v.business)+'</span></div>'+
- '<div class="shop-meta">'+pill(v.closed?"bad":"good",v.business)+pill("",v.population)+(v.route.label?pill("",v.route.label):pill("","創業時の看板"))+'</div>'+
+ '<div class="shop-meta">'+pill('',(s.lot||'?')+'番地')+pill(v.closed?"bad":"good",v.business)+pill("",v.population)+(v.route.label?pill("",v.route.label):pill("","創業時の看板"))+'</div>'+
  '<div class="owner-box"><span class="owner-icon" aria-hidden="true">'+esc(d.icon)+'</span><div><strong>店主：'+esc(d.owner)+'（'+d.age+'）</strong><p>'+esc(d.description)+'</p></div></div>'+
  '<div class="note">'+esc(v.summary)+'</div>'+recentFeed(id)+
  (last?'<div class="recent"><h3>あなたの前回の投稿</h3>'+replySnippet(id,last.reply,d.owner+'からの返信')+'</div>':'')+reviewForm(id)+'</section>';
@@ -106,7 +117,7 @@ function street(){
  const listed=E.SHOPS.filter(x=>game.shops[x.id].opened),all=listed.map(shopCard).join(""),openCount=listed.filter(x=>!game.shops[x.id].closed).length;
  const feed=game.feed.filter(x=>x.kind==="sns"||x.kind==="viral"||x.kind==="lifecycle").slice(-5).reverse();
  const changes=game.last&&game.last.month===game.month?
- [...(game.last.openings||[]).map(x=>'<div class="shop-announcement new"><strong>🎉 NEW OPEN　'+esc(x.name)+'</strong><p>'+esc(x.notice)+'</p></div>'),
+ [...(game.last.openings||[]).map(x=>'<div class="shop-announcement new"><strong>'+(x.comeback?'🏢 おかえりなさい':'🎉 NEW OPEN')+'　'+esc(x.name)+'</strong><p>'+esc(x.notice)+'</p></div>'),
  ...(game.last.closures||[]).map(x=>'<div class="shop-announcement ended"><strong>閉店のお知らせ　'+esc(x.name)+'</strong><p>'+esc(x.reason)+'ため営業終了。以前の口コミは引き続き確認できます。</p></div>')].join(""):"";
  return '<div class="layout"><div><section class="travel-head"><span class="eyebrow">'+esc(E.MONTHS[Math.min(game.month,11)])+' ／ 出張先の昼休み</span><h2>今日のランチ、どこにしよう？</h2><p>口コミを読んで店を選び、食べた後で評価しましょう。</p></section>'+
  '<p class="shop-count">本日の営業店舗：'+openCount+'店</p>'+changes+'<div class="street-list">'+all+'</div><section class="feed-list"><h2>商店街の話題</h2>'+
@@ -127,7 +138,7 @@ function result(){
   '<div class="reply-thread" id="exchangeArea"><div class="thread-player"><span>あなたから追記</span><p>'+esc(r.exchange.playerText)+'</p></div><div class="thread-owner"><span>'+esc(d.owner)+'から再返信</span><p>「'+esc(r.exchange.ownerText)+'」</p></div></div>':
   '<div class="counter-choices" id="exchangeArea"><p>この返信に、一言返す？ <small>どちらか1回だけ。返さずに翌月へ進んでもOK。</small></p><div class="counter-buttons"><button type="button" class="secondary" data-counter="evidence">📋 根拠を伝える</button><button type="button" class="secondary sharp" data-counter="quip">💬 軽く言い返す</button></div></div>';
  const lifecycleNotice=[...(r.closures||[]).map(c=>'<article class="closing-event"><span class="eyebrow">閉店のお知らせ</span><h3>'+esc(c.name)+'</h3><p>'+esc(c.reason)+'ため営業終了。口コミの閲覧はできます。</p></article>'),
- ...(r.openings||[]).map(o=>'<article class="opening-event"><span class="eyebrow">NEW OPEN</span><h3>🎉 '+esc(o.name)+'</h3><p>'+esc(o.notice)+'</p><p>次の出張から選べます。</p></article>')].join("");
+ ...(r.openings||[]).map(o=>'<article class="opening-event"><span class="eyebrow">'+(o.comeback?'突然の営業再開':'NEW OPEN')+'</span><h3>'+(o.comeback?'🏢 ':'🎉 ')+esc(o.name)+'</h3><p>'+esc(o.notice)+'</p><p>次の出張から選べます。</p></article>')].join("");
  const changes=(r.affected||[]).map(x=>'<div class="linked-change"><strong>'+esc(dshop(x.id).name)+'</strong><p>'+esc(x.reason||"同じ月に届いたほかの口コミが影響しました。")+'</p><p>'+esc(x.after.summary)+'</p><div class="linked-compare"><div><small>前</small>'+storefront(x.before)+'</div><div><small>後</small>'+storefront(x.after)+'</div></div></div>').join("");
  return '<section class="box result-top"><span class="eyebrow">'+esc(E.MONTHS[y.month-1])+'に投稿した口コミ</span><h2 class="result-title">'+(y.reply?"口コミへの返信が届きました。":"口コミを投稿しました。")+'</h2><div class="feed-card user-review"><div class="meta">あなた　／　'+esc(d.name)+'　／　'+esc("★".repeat(y.star))+'　'+esc(dgenre(y.genre).name)+'</div><p class="quote">'+esc(y.text)+'</p></div>'+
  (y.reply?'<div class="owner-reply '+(d.id==="ramen"?"ramen-argument":"")+'"><span class="name">'+esc(d.owner)+'　店主より</span><p>「'+esc(y.reply)+'」</p></div>':'')+exchange+'</section>'+viralNotice+
@@ -149,7 +160,7 @@ function finalPage(){
  const end=E.finish(game);
  return '<section class="box result-top"><span class="eyebrow">出張12回目のあと ／ 3月</span><h2 class="result-title">'+esc(end.title)+'</h2><p>'+esc(end.description)+'</p><p>あなたが書いた12件の口コミ。その間に、お店も客も少しずつ変わりました。</p></section>'+
  '<section class="box"><h2>現在の商店街</h2><p class="section-intro">'+end.shops.length+'店舗の看板と店主の言葉を振り返ります。違う選択なら、この一年は別の姿だったかもしれません。</p><div class="ending-grid">'+end.shops.map(f=>{const v=E.display(game.shops[f.id],f.id);return '<article class="ending-card">'+storefront(v)+'<div><h3>'+esc(f.name)+'</h3><span class="summary-badge">'+esc(f.sign)+'</span><p>'+esc(f.description)+'</p><blockquote class="owner-last">'+esc(f.ownerLine||"今年もありがとうございました。")+'</blockquote><small>'+f.reviews+'件の口コミを投稿</small></div></article>'}).join("")+'</div></section>'+
- '<section class="box"><h2>あの日の口コミを振り返る</h2><p>口コミ履歴から、店主の返事をもう一度読むことができます。</p>'+
+ '<section class="box"><h2>あの日の口コミを振り返る</h2><p>口コミ履歴から、返事があった投稿も、最後まで返信されなかった投稿も読み返せます。</p>'+
  '<button type="button" class="secondary" data-tab="history">12か月の口コミ履歴を見る</button>'+
  '<button type="button" class="primary" data-restart>別の一年を始める</button></section>';
 }
