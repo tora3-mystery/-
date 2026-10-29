@@ -57,3 +57,26 @@
 @keyframes urgentPulse{0%,100%{border-color:#f68d86}50%{border-color:#fff4ac;box-shadow:0 0 45px #ffcf6a88}}
 @media(max-width:760px){.student-profile{padding:11px}.student-profile .student-rating{font-size:13px}.year-stage-goal{font-size:11px}.jobhunt-event{padding:12px}.jobhunt-event h3{font-size:22px}}
 @media(prefers-reduced-motion:reduce){.jobhunt-event{animation:none}}
+
+/* v0.5.0: legibility, pressure and responsive score explanations */
+#legend{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:4px 8px;line-height:1.4}
+.legend-item{display:inline-flex;align-items:center;gap:4px;font-size:10px;color:#e7efff;white-space:nowrap}
+.legend-dot{display:inline-block;width:10px;height:10px;border:1px solid #afbbd1;border-radius:2px;flex-shrink:0}
+.legend-dot.required{background:#294978;border-color:#5f92d5}
+.legend-dot.optional{background:#22574f;border-color:#3a9e83}
+.legend-dot.annual{background:#b88e38;border-color:#ffdb78}
+.legend-dot.activity{background:#44355e;border-color:#8970a9}
+.sort-label{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:12px;font-weight:700;margin:9px 0 12px;color:#d5e4f9}
+#course-sort{flex:1;max-width:275px;min-width:0;border:1px solid #607ba0;border-radius:8px;color:#f0f6ff;background:#1c3050;padding:9px 8px;font-size:12px}
+.risk-indicator{background:#1e394d;border:1px solid #447e8c;color:#b8f7ec;padding:8px 10px;border-radius:9px;font-size:12px;margin:4px 0 10px;font-weight:700}
+.risk-indicator.risky{background:#553245;border-color:#df788e;color:#ffcad5}
+.life-events{font-size:11px;padding:7px 10px;border-left:3px solid #d4a86c;background:#28324b;color:#f6d6a3;line-height:1.5;margin-bottom:10px}
+.reveal-breakdown{font-size:12px;line-height:1.65;background:#293c56;border:1px solid #6b80a5;border-radius:9px;color:#f5e3bf;padding:9px 10px;min-height:40px}
+.reveal-log .reveal-row{align-items:center;gap:8px}
+.reveal-log .reveal-row b{font-size:11px;white-space:normal;text-align:right}
+.reveal-overlay.trip-pending .reveal-box> :not(.eyebrow):not(#reveal-title):not(#trip-event){display:none!important}
+.trip-event{border-color:#9acdf7;background:linear-gradient(130deg,#223c5e,#3b2c52)}
+.trip-event .jobhunt-siren{color:#f4d59c}
+.trip-event h3{color:#e5f5ff}
+.time-grid .cell.required .cn::first-letter{color:#ffdb80}
+@media(max-width:760px){#legend{gap:3px 6px}.legend-item{font-size:9px}.legend-dot{width:9px;height:9px}#course-sort{max-width:230px}.reveal-breakdown{font-size:11px;padding:7px 8px}.reveal-log .reveal-row{display:grid;gap:2px}.reveal-log .reveal-row b{text-align:left}}
