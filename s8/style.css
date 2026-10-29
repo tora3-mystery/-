@@ -184,3 +184,47 @@
 .review-actions .primary,.review-actions .secondary{width:100%;font-size:13px;padding:13px 8px}
 @media(min-width:570px){.review-actions{grid-template-columns:1fr 1.5fr}}
 @media(max-width:420px){.registration-review{padding-left:7px;padding-right:7px}.registration-review-box{padding:11px}.registration-review-box h2{font-size:19px}.review-totals{font-size:12px;padding:9px}.review-course{padding:9px}.review-course-heading strong{font-size:12px}}
+
+/* v0.7.2: lunch row remains legible when the timetable scrolls horizontally. */
+.time-grid .lunch-break{justify-content:flex-start!important;text-align:left!important;padding-left:36px!important;white-space:nowrap;overflow:hidden;min-width:0}
+.time-grid.mini-grid .lunch-break{justify-content:flex-start!important;text-align:left!important;padding-left:24px!important;white-space:nowrap;overflow:hidden}
+@media(max-width:760px){.time-grid .lunch-break{padding-left:33px!important;font-size:9px!important}}
+/* Study/class time is still blue for compulsory courses, with a difficulty keyline.
+   Optional course fill ranges smoothly from teal/easy to plum/hard. */
+.cell.optional.difficulty-1,.cell.annual.difficulty-1{background:linear-gradient(145deg,#226858,#214d53)!important;border-color:#62cba5!important}
+.cell.optional.difficulty-2,.cell.annual.difficulty-2{background:linear-gradient(145deg,#235a68,#234d70)!important;border-color:#66bad4!important}
+.cell.optional.difficulty-3,.cell.annual.difficulty-3{background:linear-gradient(145deg,#3c537c,#34446e)!important;border-color:#8ca7e7!important}
+.cell.optional.difficulty-4,.cell.annual.difficulty-4{background:linear-gradient(145deg,#63513c,#55455c)!important;border-color:#d9af69!important}
+.cell.optional.difficulty-5,.cell.annual.difficulty-5{background:linear-gradient(145deg,#71394d,#5c3656)!important;border-color:#e997ad!important}
+.cell.difficulty-required.difficulty-1{box-shadow:inset 0 5px 0 #62cba5}
+.cell.difficulty-required.difficulty-2{box-shadow:inset 0 5px 0 #66bad4}
+.cell.difficulty-required.difficulty-3{box-shadow:inset 0 5px 0 #8ca7e7}
+.cell.difficulty-required.difficulty-4{box-shadow:inset 0 5px 0 #d9af69}
+.cell.difficulty-required.difficulty-5{box-shadow:inset 0 5px 0 #e997ad}
+.course.difficulty-1{border-left:4px solid #62cba5}.course.difficulty-2{border-left:4px solid #66bad4}
+.course.difficulty-3{border-left:4px solid #8ca7e7}.course.difficulty-4{border-left:4px solid #d9af69}
+.course.difficulty-5{border-left:4px solid #e997ad}
+.difficulty-note{display:flex;gap:5px;align-items:center;flex-wrap:wrap;font-size:10px;color:#cbd9ef;padding:4px 0 6px}
+.difficulty-note span:first-child{color:#74d5b3}.difficulty-note span:nth-child(2){color:#a7b9ed}.difficulty-note span:last-child{color:#efb4c2}
+.aptitude-select{margin:14px 0;padding:10px;border:1px solid #58769a;border-radius:9px;display:flex;gap:9px;flex-wrap:wrap}
+.aptitude-select legend{font-size:12px;color:#f5dfa5;font-weight:800;padding:0 4px}
+.aptitude-select label{display:inline-flex;gap:4px;align-items:center;padding:8px;border:1px solid #465c7b;border-radius:7px;font-size:11px;cursor:pointer}
+.aptitude-select label:has(input:checked){background:#335477;border-color:#d6bf81}
+.year-skill-decline{width:100%;max-width:560px;display:block;margin:10px auto 14px;font-size:13px;padding:12px}
+.skill-discard-list{margin-top:9px;display:grid;gap:6px}
+.skill-discard-row{display:flex;justify-content:space-between;align-items:center;gap:9px;border-top:1px solid #4e6789;padding-top:6px}
+.skill-discard-row span{font-size:11px;line-height:1.4}
+.skill-discard{border:1px solid #a68476;border-radius:6px;background:#3d3949;color:#f0d6c7;padding:6px 10px;font-size:11px;cursor:pointer;flex-shrink:0}
+.skill-discard.discard-confirm{background:#65404b;border-color:#f8a6a6;color:#fff}
+.quota-warning{padding:10px 8px;margin-top:9px;border:1px solid #f4a378;border-radius:7px;color:#ffe0c1;background:#5b3441;font-size:12px;line-height:1.5}
+.quota-warning.borderline{background:#4f4836;border-color:#e2ca8c;color:#ffebbc}
+.review-course-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.review-replace:disabled{opacity:.4;cursor:not-allowed}
+.review-replacements{position:fixed;inset:0;z-index:100;overflow-y:auto;background:#0a1222df;display:flex;align-items:flex-start;justify-content:center;padding:max(20px,env(safe-area-inset-top)) 10px max(24px,env(safe-area-inset-bottom))}
+.review-replacements.hidden{display:none!important}
+.review-replacement-body{max-width:590px;width:100%;padding:16px;background:#1b2e4c;border:1px solid #82a8d7;border-radius:13px;display:grid;gap:9px}
+.review-replacement-body h3{font-size:18px;color:#ffe0b0;margin:0}
+.review-replacement-body p{font-size:12px;line-height:1.5;color:#d9e7f9}
+.review-alternative{width:100%;background:#2c4968;color:#eef8ff;border:1px solid #7498c6;border-radius:8px;padding:12px 9px;font-size:12px;text-align:left;cursor:pointer}
+.review-alternative:hover,.review-alternative:focus-visible{border-color:#ffe0b0;background:#385779}
+.no-skill-award{font-size:15px;font-weight:900;color:#ffdda2;padding:13px;border:1px solid #dfba72;border-radius:10px;background:#5a4832}
