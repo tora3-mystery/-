@@ -161,3 +161,26 @@
 .time-grid.mini-grid{grid-template-rows:18px repeat(2,35px) 22px repeat(3,35px)}
 .time-grid.mini-grid .lunch-break{height:22px;min-height:0;font-size:8px;padding:2px;letter-spacing:0}
 @media(max-width:760px){.time-grid.mini-grid{grid-template-rows:17px repeat(2,34px) 20px repeat(3,34px)}.time-grid.mini-grid .lunch-break{height:20px;font-size:7px}}
+
+/* S8 v0.7.0 - Registration preview with line-by-line probability audit */
+.registration-review{position:fixed;inset:0;z-index:80;background:#0d1b30ee;overflow-y:auto;overscroll-behavior:contain;padding:max(12px,env(safe-area-inset-top)) 12px max(22px,env(safe-area-inset-bottom))}
+.registration-review.hidden{display:none!important}
+.registration-review-box{max-width:700px;margin:8px auto 22px;background:#182a46;border:1px solid #668dbb;border-radius:14px;padding:18px}
+.registration-review-box h2{font-size:22px;margin:7px 0 10px}
+.review-totals{background:#244567;border-radius:9px;padding:12px;font-size:13px;line-height:1.65;font-weight:800;color:#e8f3ff;margin:12px 0}
+.review-courses{display:grid;gap:10px}
+.review-course{border:1px solid #4e698c;background:#213451;border-radius:10px;padding:11px 12px;min-width:0}
+.review-course-heading{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.review-course-heading strong{font-size:14px;line-height:1.4;color:#f5ead3}
+.review-percent{font-size:14px;font-weight:900;color:#a8f2cd;white-space:nowrap}
+.review-percent.low{color:#ffadb7}
+.review-breakdown{font-size:11px;color:#cbd9ed;line-height:1.7;margin-top:8px}
+.review-breakdown summary{cursor:pointer;color:#bed8ff;font-size:12px;font-weight:750;outline-offset:4px}
+.review-breakdown div{padding:2px 0 2px 8px;border-bottom:1px solid #ffffff0e}
+.review-breakdown b{display:block;margin:5px 0 2px;color:#fff0bf;font-size:12px}
+.review-replace{font-size:11px;color:#ffe3b0;border:1px solid #be976a;background:#39364b;border-radius:7px;padding:8px 10px;margin-top:8px;cursor:pointer}
+.review-fixed{display:block;color:#8da5c9;font-size:10px;margin-top:7px}
+.review-actions{display:grid;gap:10px;grid-template-columns:1fr;margin:18px 0 4px}
+.review-actions .primary,.review-actions .secondary{width:100%;font-size:13px;padding:13px 8px}
+@media(min-width:570px){.review-actions{grid-template-columns:1fr 1.5fr}}
+@media(max-width:420px){.registration-review{padding-left:7px;padding-right:7px}.registration-review-box{padding:11px}.registration-review-box h2{font-size:19px}.review-totals{font-size:12px;padding:9px}.review-course{padding:9px}.review-course-heading strong{font-size:12px}}
