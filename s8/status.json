@@ -1,9 +1,9 @@
 {
   "id": "S8",
   "title": "履修登録を完了してください。（仮）",
-  "version": "0.6.2",
-  "updated_at_jst": "2026/10/29 18:05 JST",
-  "phase": "Phase 4 alpha: fixed immediate annual skill display, midday timetable row and target UI; source/mock-DOM checks passed; real smartphone browser QA pending",
+  "version": "0.6.3",
+  "updated_at_jst": "2026/10/29 18:21 JST",
+  "phase": "Phase 4 alpha: timetable chance modifiers and grade-before-skill flow updated; scripted JavaScript/mock-DOM QA passed, real smartphone test pending",
   "scope": "4 years / 8 terms playable; 3 faculties; 5 extracurricular difficulty setups",
   "features": [
     "tap an unoccupied timetable slot to choose courses that include that period",
@@ -52,7 +52,12 @@
     "v0.6.2: clarify no skill draft after year-credit gate failure, since the game ends before next academic year",
     "v0.6.2: narrow 1-hour noon break between second and third lectures; campus changes during lunch do not occupy third period",
     "v0.6.2: third-period courses receive +6 percentage points (98% max, compulsory preparation skill stays at 100%)",
-    "v0.6.2: large top-of-screen year/year4 graduation goal banner with confirmed credits, target, remaining credits, and unearned mandatory counts at year 4"
+    "v0.6.2: large top-of-screen year/year4 graduation goal banner with confirmed credits, target, remaining credits, and unearned mandatory counts at year 4",
+    "v0.6.3: +4 percentage points to lectures immediately before unavoidable club/job commitments",
+    "v0.6.3: second-to-third-period adjacency no longer receives the -8pp consecutive lecture penalty because the one-hour lunch break separates them; first-to-second and third-to-fourth still penalized",
+    "v0.6.3: an unoccupied gap within the same weekday between consecutive lectures penalizes the later course by -6pp for one blank period or -9pp for two or more",
+    "v0.6.3: yearly skill draft no longer auto-opens immediately after final year-end grades; player reviews complete results, clicks explicit choose-skill button, then gets the full-screen random three-choice selector",
+    "v0.6.3: course details explain conditional schedule odds modifiers from activity, lunch, and empty-lesson gaps"
   ],
   "ai_audit": {
     "structure": "PASS: JS bracket/quote balance; no missing DOM IDs from game.js and expansion.js (124 $ references against 57 HTML IDs)",
@@ -80,12 +85,12 @@
     "score_mechanics_v05": "2 credits → 200 basic points; 4 credits → 400; plus +50 × min(5, combo index-1). Annual spring midterm 0, autumn passed earns 4 credits×100pt. Semester bonuses shown separately.",
     "static_v05": "PASS: game.js, expansion.js, balance.js, polish.js pass JS compilation; HTML DOM IDs for referenced fields present. Legacy hidden search input kept to protect expansion.js init binding.",
     "outstanding": [
-      "Actual smartphone browser QA has not been executed. Fullscreen annual-skill choice, safe area, lunch alignment, and 3rd-period touch hitboxes need device review.",
-      "The end-of-year skill selector appears only after meeting the year credit gate; missing skill in pre-v0.6.2 saves already advanced to a later year may require restarting for earlier years' skill.",
-      "Verify live save/resume at annual results and year-skill draft; static mock DOM and JS source checks are not a real browser test.",
-      "Check the accumulated mobility burden in late years: lunch transfer is free between periods 2 and 3, but returning from a specialist campus after later classes still uses a period.",
-      "Balancing has not been human-tested; high extracurricular schedules may have low completion odds.",
-      "Project master manages root index; no change outside s8/."
+      "Actual smartphone and live Pages functional/visual testing not yet performed; grade-to-skill CTA and full-screen selector need real touch QA.",
+      "Current annual progression difficulty may be high or uneven across extracurricular activities; balance requires human judgment.",
+      "Review whether -6/-9pp gap penalties are noticeable but not too strong after 14+ registered credits and other fatigue effects.",
+      "Confirm course drawer bonus explanations on a narrow viewport; mocked DOM checks are not a real browser visual test.",
+      "Earlier saved sessions that already progressed to a new year cannot retrospectively receive an unselected skill from the past.",
+      "The root INDEX belongs to the project master and was not modified."
     ],
     "v052_static": "PASS: all 5 JavaScript bundles compile and DOM IDs referenced by scripts exist. Source-layer first boot was checked; ADVANCED IIFE private symbol access was corrected.",
     "v052_firstyear_expected_credits": "750 faculty×activity×seed models for each target load: 10 registered credits -> 7.50 expected earned, 14 -> 8.79, 20 -> 7.20, approximately 30 -> 1.69. Static expected-credit analysis, not measured grade outcomes.",
@@ -104,24 +109,29 @@
     "v062_year_end": "PASS: seeded 15 faculty×activity year-end grade fixtures: all 15 immediately displayed 3 unique random cards on qualifying year-end grade completion; 15 prevented advancing before selection; 15 choices progressed into the next academic year. Nonqualifying annual gate suppressed the skill choice. Year-end saved reveal recovers pending draft.",
     "v062_timetable": "PASS: mock-DOM time-grid render retained original 42 cell DOM indices and appended one lunch interval row (43rd element); all 15 checked subject grids aligned, including period 3 at grid row 5. The mini result timetable has a separate smaller lunch interval style.",
     "v062_movement": "PASS: seven targeted campus-movement situations: 2nd→3rd cross-campus travel uses lunch and does not mark 3rd; 1st→2nd and 3rd→4th adjacency still blocked; 1st→3rd still uses period 2. After last specialist-campus course, any separate return travel may still block the next period unless after second period, preserving the existing movement rule.",
-    "v062_goal": "PASS mock DOM: year 1 banner showed 'あと16単位' from zero, flipped to goal satisfied when 16 credits confirmed, and year 2 banner showed 15 remaining out of 34 with 19 credits."
+    "v062_goal": "PASS mock DOM: year 1 banner showed 'あと16単位' from zero, flipped to goal satisfied when 16 credits confirmed, and year 2 banner showed 15 remaining out of 34 with 19 credits.",
+    "v063_chance": "PASS: isolated risk formula comparisons: first/second-period adjacency -8pp relative to lunch-separated second/third; second/third lunch adjacency 0pp vs different-day baseline; class before extracurricular +4pp; fourth after vacant third -6pp and after two vacant periods -9pp. Source parses and returns valid percentages.",
+    "v063_grade_first": "PASS: 180 synthetic faculty×activity×seed grade sequences: annual grades visible before draft 180/180, next-button opens three cards 180/180, skipping blocked 180/180, skill choice proceeds to following year 180/180. Annual below-target gate triggers no skill and ends run.",
+    "v063_full_play": "PASS: 150 full scripted playthroughs under updated odds, all reached a conclusion without exceptions; 268 manual year-skill prompts and choices, 92 professor petitions, zero required/activity slot overlaps. These are simulated strategy and mocked DOM, not user tests.",
+    "v063_resume": "PASS: three faculty-specific save/resume fixtures: before opening the draft, resume shows final grades and CTA; after explicitly opening it, resume restores the three cards. 3/3 scenarios passed."
   },
   "browser_qa": {
     "performed": false,
     "status": "pending",
     "devices": [],
-    "notes": "Mock DOM and JS logic tests only; actual iPhone/Android touch, visual and live Pages behavior not verified."
+    "notes": "Formula tests, mock DOM state tests and source compilation only; actual Chrome/Safari/iPhone navigation not executed."
   },
   "human_review": {
     "performed": false,
-    "target_version": "0.6.2",
+    "target_version": "0.6.3",
     "requested_checks": [
-      "Play through first-year fall grades with at least 16 confirmed credits; verify fullscreen 3-skill draft appears immediately and cannot be skipped",
-      "Resume a save during/after yearly grade reveal; verify pending skill choice remains",
-      "Compare lunch 2→3 same vs different campus; noon should absorb travel, without shifting clickable timetable cells",
-      "3rd-period success odds should show +6pp vs same candidate without the added midday bonus (accounting for other time differences)",
-      "Review early stage 'あと○単位' banner and graduation-year outstanding mandatory count",
-      "Test mobile viewport 320px/390px and no vertical clipping of the skill selection cards"
+      "After year-end grades, verify full final results remain visible until pressing the explicit skill-choice button",
+      "Tap skill-choice CTA, see three random skills in full-screen display, choose one and enter next year",
+      "Compare 1+2 vs 2+3 lecture adjacencies and pass rates",
+      "Place class directly before club/job and verify +4pp",
+      "Use 2nd and 4th lectures with third empty, verify 4th shows return-to-campus -6pp",
+      "Check changing schedule dynamically refreshes chance and descriptive notes",
+      "Check save/resume at final grades, before skill CTA, and with skill cards open"
     ]
   },
   "assets": {
@@ -131,10 +141,10 @@
   "next": {
     "owner": "S8 dedicated Chat / human reviewer",
     "actions": [
-      "Perform actual iPhone browser test for year-end skill and noon row",
-      "Balance stage thresholds based on a human playthrough",
-      "Verify old persisted result save recovery and earned-skill retention",
-      "Notify project master S8 updated to 0.6.2"
+      "Human test year-end grades vs skill selection transition on smartphone",
+      "Review different conditional odds for balanced play",
+      "Check course detail descriptions and scroll behavior on narrow screens",
+      "Report update to project master for root INDEX"
     ]
   },
   "edits": {
