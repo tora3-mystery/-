@@ -124,7 +124,8 @@ const oldChance=passChance;
 passChance=function(c){
  const p=oldChance(c);
  if(!state||!c||p>=100)return p;
- if(tags(c).some(id=>(state.skills||[]).some(s=>s.id===id)))return Math.min(98,p+6);
+ const matching=tags(c).filter(id=>(state.skills||[]).some(s=>s.id===id)).length;
+ if(matching)return Math.min(98,p+6*matching);
  return p
 };
 const previousGrid=renderGrid;
