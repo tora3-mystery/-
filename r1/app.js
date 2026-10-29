@@ -10,7 +10,7 @@ const dshop=id=>E.SHOPS.find(x=>x.id===id);
 const dgenre=id=>E.GENRES.find(x=>x.id===id);
 function newGame(){const state=E.createState(Date.now()>>>0);state.introSeen=false;return state}
 function load(){
- try{const raw=localStorage.getItem(KEY);if(raw){const s=JSON.parse(raw);E.audit(s);if(s.version===E.VERSION)return s;if(["0.1.0-alpha","0.2.0-alpha","0.3.0-alpha","0.3.1-alpha","0.3.2-alpha","0.4.0-alpha","0.4.1-alpha"].includes(s.version)){
+ try{const raw=localStorage.getItem(KEY);if(raw){const s=JSON.parse(raw);if(s.version===E.VERSION){E.audit(s);return s;}if(["0.1.0-alpha","0.2.0-alpha","0.3.0-alpha","0.3.1-alpha","0.3.2-alpha","0.4.0-alpha","0.4.1-alpha"].includes(s.version)){
  const ramen=s.shops.ramen;
  ramen.scores=Object.fromEntries(E.GENRES.map(g=>[g.id,0]));
  ramen.hardening=false;ramen.stage=0;ramen.route=null;ramen.closed=false;
@@ -21,7 +21,7 @@ function load(){
  if(!s.shops.curry)s.shops.curry=E.createState(s.seed).shops.curry;
  if(!Number.isFinite(s.viralCount))s.viralCount=0;
  if(!Number.isFinite(s.lastViralMonth))s.lastViralMonth=-10;
- s.version=E.VERSION;return s;
+ s.version=E.VERSION;E.audit(s);return s;
 }}}
  catch(err){console.warn("R1 save reset:",err)}
  return newGame();
