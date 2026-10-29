@@ -1,9 +1,9 @@
 {
   "id": "S8",
   "title": "履修登録を完了してください。（仮）",
-  "version": "0.7.0",
-  "updated_at_jst": "2026/10/29 18:43 JST",
-  "phase": "Phase 4: elective-only progression and graduation dual requirement, registration review, and corrected UI button dispatch; mock DOM click-path and scripted logic tests complete; live browser and human retest pending",
+  "version": "0.7.1",
+  "updated_at_jst": "2026/10/29 19:23 JST",
+  "phase": "Phase 4: elective promotion quotas increased progressively; targeted grade-gate regression completed; real mobile/Pages UI and human difficulty review pending",
   "scope": "4 years / 8 terms playable; 3 faculties; 5 extracurricular difficulty setups",
   "features": [
     "tap an unoccupied timetable slot to choose courses that include that period",
@@ -63,7 +63,8 @@
     "v0.7.0: earn elective credits exactly once by canonical course ID; annual electives earn no credit in interim spring evaluation and are counted at autumn final; professor petitions update the ledger",
     "v0.7.0: registration confirmation modal precedes all grade draws, lists registered mandatory/optional classes with final pass chance and component breakdown, lets users remove/change optional courses, and supports back/confirm",
     "v0.7.0: correct real UI onclick binding for the latest annual-skill advance handler, instead of the stale pre-wrapper advance function; same applies to grade-start so all postprocessing wrappers run",
-    "v0.7.0: skill selection triggered at end of year only after elective credit requirement met; saved ongoing sessions estimate elective credits from past mandatory grade history when migrating old saves"
+    "v0.7.0: skill selection triggered at end of year only after elective credit requirement met; saved ongoing sessions estimate elective credits from past mandatory grade history when migrating old saves",
+    "v0.7.1: tighten cumulative faculty-specific elective credit quotas by +2/+2/+4/+4 across academic years: humanities [10,24,42,56], economics [6,20,38,52], science [6,16,34,48]. Graduating requires fourth-year quota and all compulsory credits."
   ],
   "ai_audit": {
     "structure": "PASS: JS bracket/quote balance; no missing DOM IDs from game.js and expansion.js (124 $ references against 57 HTML IDs)",
@@ -125,25 +126,27 @@
     "v070_credits": "PASS targeted grade ledger cases: ordinary required 2+elective 2 gives total 4 / elective 2; mandatory 2+elective 4 gives total 6 / elective 4; 4-credit annual elective spring interim = elective 0 and autumn final = elective 4; failed elective = elective 0. Check for each of three faculties.",
     "v070_full_runs": "PASS: 120 8-semester scripted strategy runs (3 faculties x 5 activity types x 8 seeds), all 120 ended without exception, 672 registration confirmation and grade sequences, 229 actual click-handler skill selections, 63 professor petitions, 0 mandatory-vs-activity conflicts. Outcomes: 49 failed year elective gates, 42 cheating GAME OVER, 6 graduations, 23 final-year unsuccessful. These reflect artificial scripted strategies, not measured player difficulty.",
     "v070_static": "PASS: registration-flow.js source compiles; scripts still use named DOM IDs. Real website opening with local Chromium was blocked by network policy; live Pages and smartphone touch were NOT tested.",
-    "v070_final_html": "PASS: final HTML reference check after repair: nine scripts loaded exactly once; registration-flow.js was inadvertently listed twice in a draft and the duplicate was removed before final handoff. No duplicated element IDs."
+    "v070_final_html": "PASS: final HTML reference check after repair: nine scripts loaded exactly once; registration-flow.js was inadvertently listed twice in a draft and the duplicate was removed before final handoff. No duplicated element IDs.",
+    "v071_boundary": "PASS: 24 direct click-handler boundary scenarios (3 faculties × 4 years × precisely at target or two credits short). At-target years 1–3 enter three-choice skill draft, missing two credits yields the appropriate year-end fail. Year 4 matches graduation success/failure. Year-progress banner displays matching target and remaining credits. 24/24.",
+    "v071_strategy": "Regression: 60 scripted high-pass-rate greedy four-year strategies with optional enrollment budget 16 credits/semester: 28 cleared year 1, 9 cleared year 2, 1 cleared year 3; no JavaScript exceptions. These are simulated strategies, NOT calibrated first-time human win rates. Further human review advised before further tightening.",
+    "v071_ceiling": "Reachability upper-bound: 90 artificial runs (3 faculties × 5 activities × 6 seeds) with grades forcibly set to all-pass and optional load up to 22/semester. Year-one elective requirement was reachable in 90/90; year-two in 84/90, year-three in 77/90, fourth-year elective requirement in 72/90 for this greedy enrollment strategy. This does not prove that all real randomized runs are winnable, nor is it a realistic pass rate.",
+    "v071_scope": "Updated only s8/balance.js threshold source and metadata/README/index version; s8/lunch-ux.js year progress, s8/year-skills.js draft gate, s8/registration-flow.js preview and s8/expansion.js graduation consume window.S8_OPTIONAL_TARGETS dynamically, so no duplicate number to drift."
   },
   "browser_qa": {
     "performed": false,
     "status": "pending",
     "devices": [],
-    "notes": "Static JavaScript compilation + mocked DOM callback test only. Headless Chromium could not access external GitHub Pages due environment network restrictions; no actual displayed page/device UI checked."
+    "notes": "Logic tests and DOM-event mock only. Actual web browser/page deployment and smartphone UI tests not performed."
   },
   "human_review": {
     "performed": false,
-    "target_version": "0.7.0",
-    "previous_version_feedback": "User reported S8 v0.6.3 skill selection did not appear; also requested elective-only advancement thresholds and a confirmation step before random grade results.",
+    "target_version": "0.7.1",
     "requested_checks": [
-      "Start fresh, confirm first-year elective credits meet the applicable faculty quota, inspect year-end grade results, click visible Next, confirm random 3-card skill picker actually displays.",
-      "Confirm year-end game over when elective credits are below quota even if mandatory courses passed, and confirm the mandatory credits do not contribute to quota.",
-      "Test all compulsory courses cleared by graduation, including last-chance retakes, while final-year elective quota is also required.",
-      "Check registration confirmation on 320px/390px mobile: every course probability and detailed formula, return/back, elective removal and replacement.",
-      "Confirm an annual elective adds zero elective credits in spring but its earned 4 credits in autumn.",
-      "Save/restart in registration confirmation, during grading, and before/during annual skill picker."
+      "Check each faculty's visible elective-only year credit goal and new numbers in the 1st–4th year.",
+      "Play a first-year schedule with approximately 6–10 optional credits to judge if the difficulty increase is meaningful but not unfair.",
+      "Verify the year-end skill selector appears exactly on the new elective goal when pressing 'next year skill' after grade review.",
+      "Play one demanding club/job/combo timetable; investigate potentially unreachable years given the mandatory fixed blocks.",
+      "Verify fourth-year graduation still requires all compulsory courses as well as the final elective target."
     ]
   },
   "assets": {
@@ -151,11 +154,12 @@
     "work_required": false
   },
   "next": {
-    "owner": "S8 dedicated Chat + human reviewer",
+    "owner": "S8 dedicated Chat / human reviewer",
     "actions": [
-      "Complete real browser/mobile interaction QA (first-year skill picker is first priority).",
-      "Human test and tune electives quota, harsh risk balance and chance breakdown display.",
-      "Tell project master v0.7.0 is available after verifying Pages deployment and report no root INDEX changes."
+      "Human playtest updated quotas and provide perceived difficulty",
+      "If needed adjust only faculty-specific quotas based on observed win rates",
+      "Verify live site deployment and actual touch interactions",
+      "Notify project master of v0.7.1 if INDEX needs an updated version entry"
     ]
   },
   "edits": {
