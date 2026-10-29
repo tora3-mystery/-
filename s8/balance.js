@@ -259,7 +259,7 @@ renderEnd=function(){
  const el=$("ending-content");el.replaceChildren();
  const h=document.createElement("h2");h.textContent=state.stageFailYear+"年次 留年";el.append(h);
  const s=document.createElement("div");s.className="hero-score";s.textContent="進級要件 未達";el.append(s);
- const p=document.createElement("p");p.textContent="選択科目："+electiveCreditCount()+" / 必要"+electiveTarget(state.stageFailYear)+"単位。選択科目の単位数不足で進級できず、来年度のスキル3択は発生しません。必修科目は卒業までに全取得が必要です。";el.append(p);
+ const p=document.createElement("p");p.textContent="選択科目："+electiveCreditCount()+" / 必要"+electiveTarget(state.stageFailYear)+"単位。選択科目の単位が足りず、次年度へ進めません。必修科目も卒業までにすべて取得する必要があります。";el.append(p);
  const details=document.createElement("p");details.className="smallhint";details.textContent="SCORE "+fmt(state.score)+" pt · 学生生活："+FACULTIES[state.faculty].name+" × "+ACTIVITIES[state.activity].name;el.append(details);
 };
 const oldRetry=$("retry-btn").onclick;
