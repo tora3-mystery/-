@@ -35,3 +35,25 @@
 .history-row{border:1px solid #415b7b;background:#1b2e4c;border-radius:9px;padding:8px 11px;display:grid;gap:3px}
 .history-row strong{font-size:13px}.history-row small{font-size:11px;color:#c6d7ed}
 @media(max-width:760px){.head-inner{align-items:start}.site-header h1{font-size:15px}.header-actions{gap:4px;flex-direction:column}.header-actions .back{font-size:10px;padding:4px 7px}.picker-body{max-height:74dvh}.slot-list{max-height:52dvh}.reveal-required{max-height:73px;overflow:auto}.mandatory-panel{padding:6px}.slot-action .cn{font-size:15px!important}}
+
+/* v0.4.0 risk-first semester design */
+.student-profile{border:1px solid #9b8ed0;background:linear-gradient(130deg,#27314c,#2d294a);border-radius:12px;padding:13px 15px;margin:15px 0 8px}
+.student-profile strong{display:block;font-size:14px;color:#fce2ac}
+.student-profile .student-rating{font-size:14px;font-weight:900;color:#f2c676;margin:7px 0}
+.student-profile p{font-size:12px;color:#dee1f2;margin:5px 0}
+.student-profile small{display:block;font-size:11px;color:#aab9d4}
+.seed-help{border-left:3px solid #6e94b8;padding:6px 9px;background:#1c2d47;line-height:1.6;margin:18px 0 2px}
+#activity-schedule{margin-top:3px;color:#f9d99d;font-size:11px;line-height:1.55}
+.year-stage-goal{border:1px solid #5282ad;background:linear-gradient(110deg,#1e4566,#192d49);border-radius:10px;padding:9px 11px;color:#e4f5ff;font-size:12px;font-weight:700;margin:4px 0 10px}
+.year-stage-goal.danger{border-color:#e5a16b;background:#553c30;color:#ffdeba}
+.year-stage-result{margin:12px 0;padding:12px;border-radius:10px;font-size:15px;font-weight:900;letter-spacing:.02em}
+.year-stage-result.cleared{background:#1a5045;border:1px solid #61e2ac;color:#bff7d6;box-shadow:0 0 20px #42d9a22b}
+.year-stage-result.failed{background:#562c42;border:1px solid #f68f97;color:#ffd9df}
+.jobhunt-event{border:2px solid #f68d86;background:linear-gradient(140deg,#5b2538,#301b36);box-shadow:0 0 40px #ec5f5c44;border-radius:13px;padding:18px 13px;margin:12px 0;animation:urgentPulse 1.4s ease-in-out 2}
+.jobhunt-event h3{font-size:26px;margin:4px 0 7px;color:#fff3c4}
+.jobhunt-event p{font-size:13px;color:#fff0ed;line-height:1.7}
+.jobhunt-siren{color:#ffbd90;font-size:11px;font-weight:900;letter-spacing:.1em}
+.jobhunt-event .primary{background:linear-gradient(110deg,#ffa5a2,#ffcf79);color:#342230;width:100%}
+@keyframes urgentPulse{0%,100%{border-color:#f68d86}50%{border-color:#fff4ac;box-shadow:0 0 45px #ffcf6a88}}
+@media(max-width:760px){.student-profile{padding:11px}.student-profile .student-rating{font-size:13px}.year-stage-goal{font-size:11px}.jobhunt-event{padding:12px}.jobhunt-event h3{font-size:22px}}
+@media(prefers-reduced-motion:reduce){.jobhunt-event{animation:none}}
