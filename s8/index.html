@@ -7,32 +7,33 @@
 <link rel="stylesheet" href="./style.css">
 <script defer src="./game.js"></script>
 <script defer src="./expansion.js"></script>
+<script defer src="./balance.js"></script>
 </head>
 <body>
-<header class="site-header"><div class="head-inner"><div><div class="eyebrow">短編UIゲーム実験室 · S8 / α</div><h1>履修登録を完了してください。</h1><div class="meta">v0.3.1 · 2026/10/29 13:42 JST</div></div><div class="header-actions"><button id="sound-toggle" class="back sound-toggle" title="効果音の切替">♪ 音ON</button><a href="../" class="back">ゲーム一覧</a></div></div></header>
+<header class="site-header"><div class="head-inner"><div><div class="eyebrow">短編UIゲーム実験室 · S8 / α</div><h1>履修登録を完了してください。</h1><div class="meta">v0.4.0 · 2026/10/29 14:05 JST</div></div><div class="header-actions"><button id="sound-toggle" class="back sound-toggle" title="効果音の切替">♪ 音ON</button><a href="../" class="back">ゲーム一覧</a></div></div></header>
 <main class="shell">
 <section id="intro" class="card intro">
 <div class="stamp">学務システム / 試作版</div><h2>4年間の始まりは、時間割から。</h2>
 <p>好きな科目を組み合わせて、単位GETの連鎖を狙おう。<strong>今回は4年間・全8学期をプレイできます。</strong></p>
 <div class="steps"><span>① 科目を選ぶ</span><span>② 空き時間に登録</span><span>③ 成績が連鎖発表！</span></div>
 <h3>学部を選択</h3><div id="faculty-picker" class="choose-grid"></div>
-<h3>放課後の過ごし方</h3><div id="activity-picker" class="choose-grid"></div>
-<label class="seedline">再現用シード <input id="seed-input" type="text" placeholder="空欄ならランダム" inputmode="text" maxlength="30"></label>
+<h3>放課後の過ごし方</h3><div id="activity-picker" class="choose-grid"></div><div id="student-profile" class="student-profile" aria-live="polite"></div>
+<p class="smallhint seed-help">再現用シード：同じ文字列・同じ選択手順なら講義配置や成績を再現できます。普段は空欄でOK。シードが同じでも履修順を変えると結果が変わることがあります。</p><label class="seedline">再現用シード <input id="seed-input" type="text" placeholder="空欄ならランダム" inputmode="text" maxlength="30"></label>
 <button id="begin-btn" class="primary big">履修登録を始める</button><button id="resume-btn" class="secondary hidden">前回の続きから</button>
-<div class="smallhint">1周約8〜12分。進行は端末内に自動保存されます。</div>
+<div class="smallhint">1周約8〜12分。学年ごとの必要単位を超えて進級しよう。進行は自動保存されます。</div>
 </section>
 <section id="game" class="hidden">
-<div class="dashboard card"><div><div class="eyebrow" id="semester-label">1年前期</div><div class="dash-sub" id="faculty-label"></div></div>
+<div class="dashboard card"><div><div class="eyebrow" id="semester-label">1年前期</div><div class="dash-sub" id="faculty-label"></div><div class="dash-sub" id="activity-schedule"></div></div>
 <div class="stats"><div><small>取得単位</small><b id="total-credits">0</b></div><div><small>累計SCORE</small><b id="total-score">0</b></div><div><small>今期の登録</small><b id="current-credits">0 / 14</b></div></div></div>
 <div class="main-col"><section class="timetable card"><div class="section-head"><h2>時間割</h2><div id="legend">■ 必修　■ 選択　■ 活動</div></div><div class="hint" id="schedule-hint">空きマスをタップすると、その時間の候補科目が表示されます。</div>
 <div class="grid-wrap"><div id="timetable-grid" class="time-grid" aria-label="週間時間割"></div></div>
-<div id="summary-line" class="summary-line"></div><div id="mandatory-panel" class="mandatory-panel"></div><div id="yearlong-panel" class="yearlong-panel"></div>
+<div id="summary-line" class="summary-line"></div><div id="year-stage-goal" class="year-stage-goal"></div><div id="mandatory-panel" class="mandatory-panel"></div><div id="yearlong-panel" class="yearlong-panel"></div>
 <div class="actionbar"><button id="register-btn" class="primary">履修を確定する →</button><button id="clear-btn" class="ghost">選択を全解除</button></div>
 </section>
 <section class="courses card" id="courses-block"><div class="section-head"><h2>科目を選ぶ</h2><div id="available-counter" class="counter"></div></div><div class="filters" id="course-filters">
 <button class="filter active" data-filter="all">すべて</button><button class="filter" data-filter="safe">単位重視</button><button class="filter" data-filter="high">高得点</button><button class="filter" data-filter="fit">登録可能</button></div>
 <input id="course-search" type="search" placeholder="講義名で検索（例：心理・統計・ゼミ）" aria-label="講義名で検索"><div id="course-list" class="course-list"></div></section></div>
-<section id="reveal" class="reveal-overlay hidden" aria-live="polite"><div class="reveal-box"><div class="eyebrow">成績発表 / 学務ポータル</div><h2 id="reveal-title">前期 成績発表</h2><div id="reveal-flash" class="reveal-flash">RESULT</div><div id="reveal-sub" class="reveal-sub">履修科目を照合しています…</div><div id="reveal-combo" class="reveal-combo"></div><div class="reveal-score" id="reveal-score">0 pt</div><div class="reveal-progress"><div id="reveal-bar"></div></div><div id="reveal-log" class="reveal-log"></div><div id="reveal-required" class="reveal-required"></div><button id="skip-btn" class="secondary">まとめて表示 »</button><button id="next-btn" class="primary hidden">次の学期へ →</button></div></section>
+<section id="reveal" class="reveal-overlay hidden" aria-live="polite"><div class="reveal-box"><div class="eyebrow">成績発表 / 学務ポータル</div><h2 id="reveal-title">前期 成績発表</h2><div id="jobhunt-event" class="jobhunt-event hidden"><div class="jobhunt-siren">緊急通知 / 4年前期</div><h3>突然の就職活動！</h3><p id="jobhunt-description"></p><button id="jobhunt-continue" class="primary">成績を確認する →</button></div><div id="reveal-flash" class="reveal-flash">RESULT</div><div id="reveal-sub" class="reveal-sub">履修科目を照合しています…</div><div id="reveal-combo" class="reveal-combo"></div><div class="reveal-score" id="reveal-score">0 pt</div><div class="reveal-progress"><div id="reveal-bar"></div></div><div id="reveal-log" class="reveal-log"></div><div id="reveal-required" class="reveal-required"></div><div id="year-stage-result" class="year-stage-result hidden"></div><button id="skip-btn" class="secondary">まとめて表示 »</button><button id="next-btn" class="primary hidden">次の学期へ →</button></div></section>
 </section>
 <section id="ending" class="card ending hidden"><div class="stamp">卒業判定 / 4年間・8学期</div><div id="ending-content"></div><button class="primary big" id="retry-btn">別の時間割でもう一度 ↻</button><button class="secondary" id="same-seed-btn">同じシードで再挑戦</button><p class="smallhint">※ 架空大学のゲーム独自の卒業条件：72単位以上＋必修をすべて取得。キャンパス間移動は次段階で実装予定。</p></section>
 </main>
