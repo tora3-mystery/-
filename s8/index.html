@@ -45,12 +45,12 @@
 <div class="actionbar"><button id="register-btn" class="primary">申請内容を確認する →</button><button id="clear-btn" class="ghost">選択を全解除</button></div>
 </section>
 <section class="courses card" id="courses-block"><div class="section-head"><h2>科目を選ぶ</h2><div id="available-counter" class="counter"></div></div><div class="filters" id="course-filters">
-<button class="filter active" data-filter="all">すべて</button><button class="filter" data-filter="safe">高取得率（82%以上）</button><button class="filter" data-filter="high">高難度（★4以上）</button><button class="filter" data-filter="fit">登録可能（選択済含む）</button></div>
+<button class="filter active" data-filter="all">すべて</button><button class="filter" data-filter="safe">単位取得見込82%以上</button><button class="filter" data-filter="high">高難度（★4以上）</button><button class="filter" data-filter="fit">登録可能（選択済含む）</button></div>
 <label class="sort-label">講義の並び替え<select id="course-sort"><option value="available">登録可能な講義を先に</option><option value="chance">単位取得率が高い順</option><option value="risk">単位取得率が低い順</option><option value="weekday">曜日・時限順</option><option value="credits">取得単位の多い順</option><option value="difficulty">難易度の高い順</option></select></label><input id="course-search" class="hidden" type="search" aria-hidden="true" tabindex="-1"><div id="course-list" class="course-list"></div></section></div>
 <section id="registration-review" class="registration-review hidden" role="dialog" aria-modal="true" aria-labelledby="review-heading">
 <div class="registration-review-box">
 <div class="eyebrow">学務システム / 最終確認</div><h2 id="review-heading">この時間割で履修申請しますか？</h2>
-<p class="smallhint">ここに表示する取得率は現在の時間割で計算した値です。確定後に成績抽選を行います。変更する場合は戻れます。</p>
+<p class="smallhint">取得見込は現在の時間割で計算しています。抽選科目では「履修の当選率」と「当選後の単位取得率」を合わせて表示します。申請を確定すると成績が判定されます。変更する場合は戻れます。</p>
 <div id="review-totals" class="review-totals"></div>
 <div id="review-courses" class="review-courses"></div><div id="review-replacements" class="review-replacements hidden" role="dialog" aria-modal="true" aria-label="変更可能な講義一覧"></div>
 <div class="review-actions"><button id="review-edit" class="secondary">← 時間割に戻って変更</button><button id="review-submit" class="primary">この内容で申請して成績発表へ →</button></div></div></section>
