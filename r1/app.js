@@ -127,8 +127,8 @@ function finalPage(){
 }
 function history(){
  if(!game.reviews.length)return '<section class="box"><h2>口コミ履歴</h2><p>まだ口コミはありません。お店に感想を届けると、ここに記録されます。</p></section>';
- return '<section class="box"><h2>あなたの口コミ履歴</h2><p class="section-intro">投稿済み：'+game.reviews.length+' / 12件。星・ジャンル・店主の返信が残っています。</p><div class="timeline">'+[...game.reviews].reverse().map(f=>'<article class="history-card"><div class="tiny">'+esc(E.MONTHS[f.month-1])+' ／ '+esc(dshop(f.id).name)+' ／ '+esc(dgenre(f.genre).name)+'</div><h3>'+esc("★".repeat(f.star))+'</h3><p>'+esc(f.text)+'</p><div class="reply">'+esc(dshop(f.id).owner)+'：「'+esc(f.reply)+'」</div></article>').join("")+'</div></section>'+
- '<section class="box"><h2>ほかの人の口コミ・まちの話題</h2>'+[...game.feed].reverse().filter(f=>f.kind!=="player").map(f=>'<div class="feed-card"><div class="meta">'+esc(E.MONTHS[f.month-1])+' ／ '+esc(f.kind==="sns"?"つぶやき広場":f.by+"・"+dshop(f.id).name)+'</div><p class="body">'+esc(f.text)+'</p></div>').join("")+'</section>';
+ return '<section class="box"><h2>あなたの口コミ履歴</h2><p class="section-intro">投稿済み：'+game.reviews.length+' / 12件。星・ジャンル・店主の返信が残っています。</p><div class="timeline">'+[...game.reviews].reverse().map(f=>'<article class="history-card"><div class="tiny">'+esc(E.MONTHS[f.month-1])+' ／ '+esc(dshop(f.id).name)+' ／ '+esc(dgenre(f.genre).name)+'</div><h3>'+esc("★".repeat(f.star))+'</h3><p>'+esc(f.text)+'</p><div class="reply">'+esc(dshop(f.id).owner)+'：「'+esc(f.reply)+'」</div>'+(f.exchange?'<div class="history-exchange"><p><strong>あなたの追記</strong>　'+esc(f.exchange.playerText)+'</p><p><strong>'+esc(dshop(f.id).owner)+'の再返信</strong>　'+esc(f.exchange.ownerText)+'</p></div>':'')+'</article>').join("")+'</div></section>'+
+ '<section class="box"><h2>ほかの人の口コミ・まちの話題</h2>'+[...game.feed].reverse().filter(f=>f.kind==="npc"||f.kind==="sns").map(f=>'<div class="feed-card"><div class="meta">'+esc(E.MONTHS[f.month-1])+' ／ '+esc(f.kind==="sns"?"つぶやき広場":f.by+"・"+dshop(f.id).name)+'</div><p class="body">'+esc(f.text)+'</p></div>').join("")+'</section>';
 }
 function guide(){
  return '<section class="box guide-text"><h2>遊び方</h2><p>あなたは「まちかどレビュー」を使う一般客です。3つのお店から1店を選び、毎月1件の口コミを投稿します。4月から翌3月まで、全部で12回です。</p>'+
