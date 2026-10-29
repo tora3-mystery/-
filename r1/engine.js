@@ -350,7 +350,7 @@ function advance(state,action){if(state.month>=12)throw Error("finished");if(!ac
 if(action.id!=="ramen")s.scores[action.genre]=clamp(s.scores[action.genre]+delta,-25,25);
 if(action.id==="cake"&&action.genre==="identity"&&action.star>=4)s.scores.identity=clamp(s.scores.identity+2,-25,25);
 if(action.id==="ramen")s.disputes=(s.disputes||0)+1;
-s.money=clamp(s.money+(action.star-3)*5,-100,160);s.locals=clamp(s.locals+(action.star-3)*(action.genre==="price"?3:1.5),0,100);s.visitors=clamp(s.visitors+(action.star-3)*(action.genre==="identity"?3:1.5),0,100);s.stress=clamp(s.stress+(action.star<=2?11:action.star>=4?-3:1)+(action.genre==="service"&&action.star<=2?3:0),0,100);const rev={month:next.month+1,id:action.id,star:action.star,genre:action.genre,text,reply};s.history.push(rev);next.reviews.push(rev);next.month+=1;
+s.money=clamp(s.money+(action.star-3)*5,-100,160);s.locals=clamp(s.locals+(action.star-3)*(action.genre==="price"?3:1.5),0,100);s.visitors=clamp(s.visitors+(action.star-3)*(action.genre==="identity"?3:1.5),0,100);s.stress=clamp(s.stress+(action.star<=2?11:action.star>=4?-3:1)+(action.genre==="service"&&action.star<=2?3:0),0,100);const rev={month:next.month+1,id:action.id,star:action.star,genre:action.genre,text,reply:ownerMayReply(next,action.id,action.star,action.genre,0)?reply:null};s.history.push(rev);next.reviews.push(rev);next.month+=1;
 
 let spillover=null;
 if(action.id==="ramen"&&action.star<=2&&(action.genre==="service"||action.genre==="price")){
@@ -361,24 +361,24 @@ if(action.id==="ramen"&&action.star<=2&&(action.genre==="service"||action.genre=
  const neighbor=next.shops.ramen;if(neighbor.opened&&!neighbor.closed){neighbor.visitors=clamp(neighbor.visitors+2,0,100);neighbor.money=clamp(neighbor.money+1,-100,160);spillover="喫茶こもれびを訪れた人が、近くの麺処いわきにも足を延ばしている。";}
 }
 const playerAfter=display(s,action.id);
-const npc=background(next,rev);const sns=social(next,rev);const viral=controversy(next,rev);
+const npcs=background(next),npc=npcs.find(x=>x.id===action.id)||npcs[0]||null;const sns=social(next,rev);const viral=controversy(next,rev);
 const closures=settleAndClose(next);const openings=openNewShops(next);
 const after=display(s,action.id);s.stage=after.route.stage;s.route=after.route.genre?`${after.route.genre}:${after.route.polarity}`:null;
 s.lastChange=after.summary;
 const viewChanged=(a,b)=>a.open!==b.open||a.sign!==b.sign||a.route.label!==b.route.label||a.route.stage!==b.route.stage||a.feature!==b.feature||a.visual.product!==b.visual.product;
-const playerChanged=viewChanged(before,playerAfter),npcChanged=npc?.id===action.id&&viewChanged(playerAfter,after);
+const playerChanged=viewChanged(before,playerAfter),npcChanged=npcs.some(x=>x.id===action.id)&&viewChanged(playerAfter,after);
 const endChanged=viewChanged(before,after);
 const cause=!endChanged&&playerChanged&&npcChanged?"offset":playerChanged&&npcChanged?"combined":npcChanged?"other":playerChanged?"player":"none";
 const transition=before.open&&!after.open?`${before.base.name}は${s.closedReason||"経営上の理由"}ため閉店した。`:
-cause==="other"?`あなたの投稿後、${npc.by}の口コミが入り、${after.summary}`:
-cause==="combined"?`あなたの投稿に加え、${npc.by}の口コミが重なった。${after.summary}`:
-cause==="offset"?`あなたの投稿後、${npc.by}の口コミが重なった。最終的な店構えは大きく変わらなかった。`:
+cause==="other"?`あなたの投稿後、別のお客さまの口コミが入り、${after.summary}`:
+cause==="combined"?`あなたの投稿に加え、別のお客さまの口コミが重なった。${after.summary}`:
+cause==="offset"?`あなたの投稿後、別のお客さまの口コミが重なった。最終的な店構えは大きく変わらなかった。`:
 before.route.label!==after.route.label||before.route.stage!==after.route.stage?`店舗が変化した：${after.summary}`:
 before.feature!==after.feature?`店頭に変化があった：${after.feature}`:`大きな変化はなかった。${after.business}。`;
-const affected=SHOPS.filter(d=>d.id!==action.id&&allBefore[d.id].open).map(d=>({id:d.id,before:allBefore[d.id],after:display(next.shops[d.id],d.id),reason:next.shops[d.id].closed?`${d.name}は${next.shops[d.id].closedReason}ため閉店。`:npc?.id===d.id?`${npc.by}の口コミを受け、店舗が変化した。`:"まちの動きを受け、店舗が変化した。"})).filter(x=>viewChanged(x.before,x.after));
+const affected=SHOPS.filter(d=>d.id!==action.id&&allBefore[d.id].open).map(d=>({id:d.id,before:allBefore[d.id],after:display(next.shops[d.id],d.id),reason:next.shops[d.id].closed?`${d.name}は${next.shops[d.id].closedReason}ため閉店。`:npcs.some(x=>x.id===d.id)?"ほかのお客さまの口コミを受け、店舗が変化した。":"まちの動きを受け、店舗が変化した。"})).filter(x=>viewChanged(x.before,x.after));
 const neighbor=spillover;
-const result={review:rev,transition,before,after,playerAfter,cause,affected,npc,sns,viral,neighbor,closures,openings,month:next.month};
-next.last=result;next.view="result";next.feed.push({month:next.month,kind:"player",...rev});if(npc)next.feed.push({month:next.month,kind:"npc",...npc});if(sns)next.feed.push({month:next.month,kind:"sns",...sns});if(viral)next.feed.push(viral);for(const e of closures)next.feed.push({kind:"lifecycle",month:next.month,text:e.name+"が"+e.reason+"ため閉店しました。",id:e.id});for(const e of openings)next.feed.push({kind:"lifecycle",month:next.month,text:e.notice,id:e.id});return next;}
+const result={review:rev,transition,before,after,playerAfter,cause,affected,npc,sns,viral,neighbor,closures,openings,npcs,month:next.month};
+next.last=result;next.view="result";next.feed.push({month:next.month,kind:"player",...rev});for(const item of npcs)next.feed.push({kind:"npc",...item});if(sns)next.feed.push({month:next.month,kind:"sns",...sns});if(viral)next.feed.push(viral);for(const e of closures)next.feed.push({kind:"lifecycle",month:next.month,text:e.name+"が"+e.reason+"ため閉店しました。",id:e.id});for(const e of openings)next.feed.push({kind:"lifecycle",month:next.month,text:e.notice,id:e.id});return next;}
 function finish(state){if(state.month<12)throw Error("not finished");const ls=SHOPS.filter(d=>state.shops[d.id].opened).map(d=>({d,s:state.shops[d.id]}));const closed=ls.filter(x=>x.s.closed).length;const totalStages=ls.reduce((n,x)=>n+routeFor(x.s).stage,0);const local=ls.reduce((n,x)=>n+x.s.locals,0),vis=ls.reduce((n,x)=>n+x.s.visitors,0);
 let title,description;
 const ramen=state.shops.ramen,cake=state.shops.cake,cafe=state.shops.cafe;
@@ -426,7 +426,7 @@ function audit(state){
  return true;
 }
 function counter(state,style){
- if(!["evidence","quip"].includes(style)||state.view!=="result"||!state.last||state.last.exchange)throw Error("unavailable reply");
+ if(!["evidence","quip"].includes(style)||state.view!=="result"||!state.last||state.last.exchange||!state.last.review.reply)throw Error("unavailable reply");
  const next=copy(state),r=next.last,rev=r.review,s=next.shops[rev.id],genre=rev.genre,positive=rev.star>=4,negative=rev.star<=2;
  const topic=TOPICS[rev.id][genre],shop=SHOPS.find(d=>d.id===rev.id);
  const playerText=style==="evidence"?
