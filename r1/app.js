@@ -130,7 +130,27 @@ function street(){
  (recentNpcs.length?'<section class="feed-list neighborhood-reviews"><h2>まちの反応・ほかのお客さんの口コミ</h2><p class="section-intro">先月届いた'+recentNpcs.length+'件のうち、最大8件を表示。全件は各店舗と履歴でも確認できます。</p>'+recentNpcs.slice(0,8).map(n=>'<article class="feed-card"><div class="meta">'+esc(n.by)+' ／ '+esc(dshop(n.id).name)+'　★'+n.star+'</div><p class="body">'+esc(n.text)+'</p>'+replySnippet(n.id,n.reply,dshop(n.id).owner+"からの返信")+'</article>').join("")+'</section>':"")+'</div>'+
  (selectedId?detail(selectedId):'<aside class="panel choice-placeholder"><h2>口コミからお店を選ぶ</h2><p>お店のカードを選ぶと、過去の口コミと店主の返信を確認できます。</p></aside>')+'</div>';
 }
-function result(){
+function reviewThread(){
+ const r=game.last;if(!r)return street();
+ const d=dshop(r.review.id),y=r.review;
+ const initial=y.reply?'<div class="owner-reply owner-arrives thread-reveal '+(d.id==="ramen"?"ramen-argument":"")+'"><span class="name">'+esc(d.owner)+'　店主より</span><p>「'+esc(y.reply)+'」</p></div>':
+ '<p class="reply-absent owner-arrives thread-reveal">店主からの返信はありません。口コミはそのまま残ります。</p>';
+ let follow="";
+ if(r.exchange){
+  follow='<div class="reply-thread" id="exchangeArea"><div class="thread-player thread-reveal player-arrives"><span>あなたから追記</span><p>'+esc(r.exchange.playerText)+'</p></div>'+
+  (r.exchange.ownerText?'<div class="thread-owner thread-reveal owner-returns"><span>'+esc(d.owner)+'から再返信</span><p>「'+esc(r.exchange.ownerText)+'」</p></div>':'<p class="reply-absent thread-reveal owner-returns">店主から追加の返信はありません。</p>')+'</div>';
+ }else if(r.declined){
+  follow='<div class="reply-absent thread-decision">これ以上は返信しないことにしました。</div>';
+ }else if(y.reply){
+  follow='<div class="counter-choices thread-reveal response-options" id="exchangeArea"><p>この返信にどうしますか？</p><div class="counter-buttons"><button type="button" class="secondary" data-counter="evidence">📋 根拠を伝える</button><button type="button" class="secondary sharp" data-counter="quip">💬 軽く言い返す</button><button type="button" class="secondary no-reply" data-decline>返信しない</button></div></div>';
+ }
+ return '<section class="box result-top review-thread-page"><span class="eyebrow">'+esc(E.MONTHS[y.month-1])+' ／ 投稿完了</span><h2 class="result-title">口コミを投稿しました。</h2><div class="feed-card user-review"><div class="meta">あなた　／　'+esc(d.name)+'　／　'+esc("★".repeat(y.star))+'　'+esc(dgenre(y.genre).name)+'</div><p class="quote">'+esc(y.text)+'</p></div>'+
+ '<div class="owner-timeline"><h3 class="thread-reveal timeline-title">店主からの返信</h3>'+initial+follow+'</div>'+
+ '<div class="thread-navigation"><p>このやり取りを確認したら、翌月の商店街へ進みましょう。お店の変化や新しい出店は、次の画面で分かります。</p>'+
+ '<button type="button" class="primary next-month" data-next>翌月へ　→</button></div></section>';
+}
+
+function townReport(){
  const r=game.last;if(!r)return street();
  const d=dshop(r.review.id),y=r.review,major=r.before.sign!==r.after.sign||r.before.route.stage!==r.after.route.stage||r.before.route.label!==r.after.route.label||r.before.open!==r.after.open;
  const minor=!major&&(r.before.feature!==r.after.feature||r.before.visual?.product!==r.after.visual?.product),changed=major||minor,closedNow=!r.after.open,evolved=changed&&!closedNow;
@@ -139,29 +159,23 @@ function result(){
  const causeHint=otherCause?"あなたの投稿とは別の口コミが、今回の店舗変化のきっかけです。":combinedCause?"あなたの投稿と、ほかのお客さまの口コミが両方影響しました。":offsetCause?"あなたの口コミへの反応が、同じ月の別の口コミで変わりました。":legacyOther?"この月は同じ店舗にほかのお客さまも口コミを投稿しました。変化の原因は一つとは限りません。":"";
  const burst=evolved?'<div class="evolution-burst" aria-hidden="true">'+Array.from({length:14},(_,i)=>'<span style="--n:'+i+'">✦</span>').join("")+'</div>':"";
  const viralNotice=r.viral?'<section class="viral-event" role="status"><span class="eyebrow">つぶやき広場で話題に</span><h2>🔥 '+esc(r.viral.label)+'</h2><p>'+esc(r.viral.text)+'</p><small>評判が広まり、昼休みの客足にも変化が出ています。</small></section>':"";
- const thisMonth=Array.isArray(r.npcs)?r.npcs:(r.npc?[r.npc]:[]);
- const exchange=!y.reply?'<p class="reply-absent">店主からの返信はまだありません。</p>':r.exchange?
-  '<div class="reply-thread" id="exchangeArea"><div class="thread-player"><span>あなたから追記</span><p>'+esc(r.exchange.playerText)+'</p></div><div class="thread-owner"><span>'+esc(d.owner)+'から再返信</span><p>「'+esc(r.exchange.ownerText)+'」</p></div></div>':
-  '<div class="counter-choices" id="exchangeArea"><p>この返信に、一言返す？ <small>どちらか1回だけ。返さずに翌月へ進んでもOK。</small></p><div class="counter-buttons"><button type="button" class="secondary" data-counter="evidence">📋 根拠を伝える</button><button type="button" class="secondary sharp" data-counter="quip">💬 軽く言い返す</button></div></div>';
  const lifecycleNotice=[...(r.closures||[]).map(c=>'<article class="closing-event"><span class="eyebrow">閉店のお知らせ ／ '+esc((c.lot||'?')+'番地')+'</span><h3>'+esc(c.name)+'</h3><p>'+esc(c.reason)+'ため営業終了。口コミの閲覧はできます。</p></article>'),
  ...(r.openings||[]).map(o=>'<article class="opening-event"><span class="eyebrow">'+(o.comeback?'突然の営業再開':'NEW OPEN')+' ／ '+esc((o.lot||'?')+'番地')+'</span><h3>'+(o.comeback?'🏢 ':'🎉 ')+esc(o.name)+'</h3><p>'+esc(o.notice)+'</p><p>次の出張から選べます。</p></article>')].join("");
  const changes=(r.affected||[]).map(x=>'<div class="linked-change"><strong>'+esc(dshop(x.id).name)+'</strong><p>'+esc(x.reason||"同じ月に届いたほかの口コミが影響しました。")+'</p><p>'+esc(x.after.summary)+'</p><div class="linked-compare"><div><small>前</small>'+storefront(x.before)+'</div><div><small>後</small>'+storefront(x.after)+'</div></div></div>').join("");
- return '<section class="box result-top"><span class="eyebrow">'+esc(E.MONTHS[y.month-1])+'に投稿した口コミ</span><h2 class="result-title">'+(y.reply?"口コミへの返信が届きました。":"口コミを投稿しました。")+'</h2><div class="feed-card user-review"><div class="meta">あなた　／　'+esc(d.name)+'　／　'+esc("★".repeat(y.star))+'　'+esc(dgenre(y.genre).name)+'</div><p class="quote">'+esc(y.text)+'</p></div>'+
- (y.reply?'<div class="owner-reply '+(d.id==="ramen"?"ramen-argument":"")+'"><span class="name">'+esc(d.owner)+'　店主より</span><p>「'+esc(y.reply)+'」</p></div>':'')+exchange+'</section>'+viralNotice+
+ return '<section class="box town-intro"><span class="eyebrow">'+(game.month>=12?"1年後の商店街":esc(E.MONTHS[game.month])+"の商店街")+'</span><h2>あれから、商店街はどうなった？</h2><p>'+esc(E.MONTHS[y.month-1])+'の口コミと、街の人たちの行動を経た現在の様子です。</p></section>'+viralNotice+
  (lifecycleNotice?'<section class="lifecycle-events" aria-label="商店街のお知らせ">'+lifecycleNotice+'</section>':"")+'<section class="box evolution-box '+(evolved?"has-evolution":closedNow?"has-closure":"no-evolution")+'">'+burst+'<div class="result-heading"><span class="eyebrow">投稿から1か月後</span><h2>'+headline+'</h2><p class="section-intro">'+esc(d.name)+'の今月の様子</p></div>'+
  '<div class="transformation-kicker">'+(closedNow?"閉店のお知らせ":evolved?"✨ 店の様子が変わった！":"今月の店頭")+'</div><div class="result-views"><div><small>投稿前</small>'+storefront(r.before)+'</div><div class="'+(evolved?"after-spotlight":"")+'"><small>1か月後</small>'+storefront(r.after)+'</div></div>'+
  '<div class="result-note">'+esc(r.transition)+'</div>'+(causeHint?'<p class="cause-hint">'+esc(causeHint)+'</p>':'')+
  '<p class="section-intro result-metrics">'+esc(r.after.population)+' ／ '+esc(r.after.business)+'</p></section>'+
  ((r.affected||[]).length?'<section class="box ripple-box"><h2>ほかのお店にも動きが！</h2><p class="section-intro">同じ月の口コミや経営状況によって、別のお店にも動きがありました。</p>'+changes+'</section>':"")+
- '<section class="box"><h2>まちの反応</h2>'+
+ '<section class="box town-conclusion"><h2>今月の商店街</h2>'+
  (r.neighbor?'<div class="feed-card"><div class="meta">客足の変化</div><p class="body">'+esc(r.neighbor)+'</p></div>':"")+
- '<p class="monthly-npc-count">今月のほかのお客さまの口コミ：'+thisMonth.length+'件</p>'+
- thisMonth.slice(0,5).map(n=>'<div class="feed-card"><div class="meta">'+esc(n.by)+'　／　'+esc(dshop(n.id).name)+'　★'+n.star+'</div><p class="body">'+esc(n.text)+'</p>'+replySnippet(n.id,n.reply,dshop(n.id).owner+"からの返信")+'</div>').join("")+
- (thisMonth.length>5?'<p class="section-intro">ほか'+(thisMonth.length-5)+'件は各店舗の口コミ欄に掲載されています。</p>':"")+
  (r.sns?'<div class="feed-card"><div class="meta">つぶやき広場</div><p class="body">'+esc(r.sns.text)+'</p></div>':"")+
- (!thisMonth.length&&!r.sns&&!r.neighbor?'<p class="section-intro">今月はいつもどおりの商店街でした。</p>':"")+
- '<button type="button" class="primary next-month" data-next>'+(game.month>=12?"1年後の商店街を見る":"翌月の商店街を見に行く　→")+'</button></section>';
+ (!r.neighbor&&!r.sns?'<p class="section-intro">新しい話題がない月も、街は営業を続けています。</p>':"")+
+ '<p class="section-intro">ほかのお客さんの口コミは、次の商店街画面・各店舗・履歴から確認できます。</p>'+
+ '<button type="button" class="primary next-month" data-continue>'+(game.month>=12?"1年後の結末を見る":"次のランチ先を探す　→")+'</button></section>';
 }
+
 function finalPage(){
  const end=E.finish(game);
  return '<section class="box result-top"><span class="eyebrow">出張12回目のあと ／ 3月</span><h2 class="result-title">'+esc(end.title)+'</h2><p>'+esc(end.description)+'</p><p>あなたが書いた12件の口コミ。その間に、お店も客も少しずつ変わりました。</p></section>'+
@@ -191,32 +205,37 @@ function guide(){
  '<button type="button" class="secondary" data-restart>最初から遊び直す</button></section>';
 }
 function render(){
- const showingResult=tab==="street"&&game.view==="result";
- const month=showingResult?Math.max(0,game.month-1):Math.min(game.month,11);
- document.getElementById("monthText").textContent=game.month===12&&!showingResult?"1年後":E.MONTHS[month];
- document.getElementById("monthCaption").textContent=game.month===12?"12 / 12 件 投稿済み":game.view==="result"?"今回の投稿が完了":"次の口コミ "+(game.month+1)+" / 12 件目";
+ const showingReview=tab==="street"&&game.view==="review";
+ const month=showingReview?Math.max(0,game.month-1):Math.min(game.month,11);
+ document.getElementById("monthText").textContent=game.month===12&&!showingReview?"1年後":E.MONTHS[month];
+ document.getElementById("monthCaption").textContent=showingReview?"今回の投稿が完了":game.view==="result"?"商店街の変化を確認":game.month===12?"12 / 12 件 投稿済み":"次の口コミ "+(game.month+1)+" / 12 件目";
  document.getElementById("monthProgress").innerHTML=Array.from({length:12},(_,i)=>'<span class="'+(i<game.month?"done":i===game.month?"current":"")+'" aria-hidden="true"></span>').join("");
  document.querySelectorAll(".tabs button").forEach(b=>{const active=b.dataset.tab===tab;b.classList.toggle("active",active);if(active)b.setAttribute("aria-current","page");else b.removeAttribute("aria-current")});
  if(selectedId&&!game.shops[selectedId])selectedId=null;
- root.innerHTML=onboarding?tutorial():(notification?'<p class="note" role="status">'+esc(notification)+'</p>':"")+(tab==="history"?history():tab==="guide"?guide():game.view==="final"?finalPage():game.view==="result"?result():street());
+ root.innerHTML=onboarding?tutorial():(notification?'<p class="note" role="status">'+esc(notification)+'</p>':"")+(tab==="history"?history():tab==="guide"?guide():game.view==="final"?finalPage():game.view==="review"?reviewThread():game.view==="result"?townReport():street())+(tab==="street"&&game.view==="map"&&dineModal?dineDialog():"");
+ document.body.classList.toggle("modal-open",!onboarding&&tab==="street"&&game.view==="map"&&dineModal);
 }
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&dineModal){dineModal=false;dinedId=null;render();document.querySelector("[data-dine]")?.focus();}});
 document.addEventListener("click",e=>{
  const btn=e.target.closest("button");if(!btn)return;
  if(btn.hasAttribute("data-restart")){
   if(!window.confirm("現在のセーブ記録を消して、4月から最初に戻りますか？ この操作は取り消せません。"))return;
-  game=newGame();onboarding=true;selectedId=null;dinedId=null;selectedStar=null;selectedGenre=null;tab="street";notification="";
+  game=newGame();onboarding=true;selectedId=null;dinedId=null;selectedStar=null;selectedGenre=null;dineModal=false;tab="street";notification="";
   save();render();scrollTop();return;
  }
  if(btn.hasAttribute("data-begin")){onboarding=false;game.introSeen=true;save();render();scrollTop();return;}
  if(onboarding)return;
  if(btn.dataset.counter){try{game=E.counter(game,btn.dataset.counter);save();render();document.getElementById("exchangeArea")?.scrollIntoView({behavior:"smooth",block:"center"});}catch(err){notification="この返信には、もう追記できません。";render();}return;}
- if(btn.dataset.tab){tab=btn.dataset.tab;notification="";render();scrollTop();return;}
- if(btn.dataset.shop){selectedId=btn.dataset.shop;dinedId=null;selectedStar=null;selectedGenre=null;tab="street";render();if(window.innerWidth<760){setTimeout(()=>document.getElementById("shopDetail")?.scrollIntoView({behavior:"smooth",block:"start"}),0)}return;}
- if(btn.dataset.dine){dinedId=btn.dataset.dine;selectedStar=null;selectedGenre=null;render();setTimeout(()=>document.querySelector("#shopDetail .form-title")?.scrollIntoView({behavior:"smooth",block:"start"}),0);return;}
+ if(btn.dataset.tab){dineModal=false;tab=btn.dataset.tab;notification="";render();scrollTop();return;}
+ if(btn.dataset.shop){selectedId=btn.dataset.shop;dinedId=null;selectedStar=null;selectedGenre=null;dineModal=false;tab="street";render();if(window.innerWidth<760){setTimeout(()=>document.getElementById("shopDetail")?.scrollIntoView({behavior:"smooth",block:"start"}),0)}return;}
+ if(btn.dataset.dine){dinedId=btn.dataset.dine;selectedStar=null;selectedGenre=null;dineModal=true;render();root.querySelector(".dine-dialog")?.focus();return;}
+ if(btn.hasAttribute("data-modal-close")){dineModal=false;dinedId=null;render();document.querySelector("[data-dine]")?.focus();return;}
  if(btn.dataset.star){selectedStar=Number(btn.dataset.star);render();return;}
  if(btn.dataset.genre){selectedGenre=btn.dataset.genre;render();return;}
- if(btn.hasAttribute("data-post")){if(dinedId!==selectedId||selectedStar===null||selectedGenre===null)return;try{game=E.advance(game,{id:selectedId,star:selectedStar,genre:selectedGenre});notification="";save();render();scrollTop()}catch(err){notification="投稿できませんでした。店舗を選び直してください。";render()}return;}
- if(btn.hasAttribute("data-next")){game.view=game.month>=12?"final":"map";tab="street";selectedId=null;dinedId=null;selectedStar=null;selectedGenre=null;save();render();scrollTop();return;}
+ if(btn.hasAttribute("data-post")){if(!dineModal||dinedId!==selectedId||selectedStar===null||selectedGenre===null)return;try{game=E.advance(game,{id:selectedId,star:selectedStar,genre:selectedGenre});dineModal=false;notification="";save();render();scrollTop()}catch(err){notification="投稿できませんでした。店舗を選び直してください。";render()}return;}
+ if(btn.hasAttribute("data-decline")){if(game.view==="review"&&game.last?.review.reply&&!game.last.exchange){game.last.declined=true;save();render();}return;}
+ if(btn.hasAttribute("data-next")){if(game.view!=="review")return;game.view="result";tab="street";save();render();scrollTop();return;}
+ if(btn.hasAttribute("data-continue")){if(game.view!=="result")return;game.view=game.month>=12?"final":"map";tab="street";selectedId=null;dinedId=null;selectedStar=null;selectedGenre=null;dineModal=false;save();render();scrollTop();return;}
 
 });
 render();
