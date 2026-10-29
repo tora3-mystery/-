@@ -1,0 +1,48 @@
+{
+  "id": "S8",
+  "title": "履修登録を完了してください。（仮）",
+  "version": "0.1.1",
+  "updated_at_jst": "2026-10-29 13:11 JST",
+  "phase": "Phase 3 prototype / Phase 4 static audit in progress",
+  "scope": "1年目前期・後期の2学期。全8学期・キャンパス移動・卒業判定は未実装",
+  "ai_audit": {
+    "source_structure": "PASS: balanced brackets, all referenced DOM IDs exist",
+    "schedule_reachability": "PASS: 3 faculties × 3 activities × 2 terms × 100 generated offerings = 1800/1800 have at least one course combination reaching 10 credits without timetable conflict",
+    "grade_and_score_simulation": "NOT EXECUTED: browser execution not yet tested",
+    "save_resume": "CODE IMPLEMENTED, NOT BROWSER VERIFIED",
+    "known_limitations": [
+      "Current test covers 2 terms, not an 8-term graduation route",
+      "Lottery and passing are stochastic and may cause academic setbacks",
+      "The source-level scheduling audit is not a real browser test"
+    ]
+  },
+  "browser_qa": {
+    "performed": false,
+    "platforms": [],
+    "status": "pending",
+    "notes": "GitHub commit and static analysis are not browser operation validation."
+  },
+  "human_review": {
+    "performed": false,
+    "target_version": "0.1.1",
+    "focus": [
+      "smartphone timetable readability",
+      "tap-to-select usability",
+      "result presentation tempo and excitement",
+      "choice variety and level of difficulty"
+    ]
+  },
+  "assets": {
+    "status": "temporary CSS-only visuals",
+    "work_required": false
+  },
+  "next": {
+    "owner": "human reviewer + S8 chat",
+    "actions": [
+      "play both terms on smartphone and report issues",
+      "verify actual GitHub Pages load, button operation, saving and restarting",
+      "adjust tempo, score, and presentation based on review"
+    ]
+  },
+  "main_index_untouched": true
+}
