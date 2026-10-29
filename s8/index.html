@@ -14,9 +14,10 @@
 <script defer src="./year-skills.js"></script>
 <script defer src="./lunch-ux.js"></script>
 <script defer src="./registration-flow.js"></script>
+<script defer src="./registration-flow.js"></script>
 </head>
 <body>
-<header class="site-header"><div class="head-inner"><div><div class="eyebrow">短編UIゲーム実験室 · S8 / α</div><h1>履修登録を完了してください。</h1><div class="meta">v0.6.3 · 2026/10/29 18:21 JST</div></div><div class="header-actions"><button id="sound-toggle" class="back sound-toggle" title="効果音の切替">♪ 音ON</button><a href="../" class="back">ゲーム一覧</a></div></div></header>
+<header class="site-header"><div class="head-inner"><div><div class="eyebrow">短編UIゲーム実験室 · S8 / α</div><h1>履修登録を完了してください。</h1><div class="meta">v0.7.0 · 2026/10/29 19:00 JST</div></div><div class="header-actions"><button id="sound-toggle" class="back sound-toggle" title="効果音の切替">♪ 音ON</button><a href="../" class="back">ゲーム一覧</a></div></div></header>
 <main class="shell">
 <section id="intro" class="card intro">
 <div class="stamp">学務システム / 試作版</div><h2>4年間の始まりは、時間割から。</h2>
@@ -30,8 +31,8 @@
 </section>
 <section id="game" class="hidden">
 <div class="dashboard card"><div><div class="eyebrow" id="semester-label">1年前期</div><div class="dash-sub" id="faculty-label"></div><div class="dash-sub" id="activity-schedule"></div></div>
-<div class="stats"><div><small>取得単位</small><b id="total-credits">0</b></div><div><small>累計SCORE</small><b id="total-score">0</b></div><div><small>今期の登録</small><b id="current-credits">0単位</b></div></div></div>
-<div id="goal-banner" class="goal-banner card" aria-live="polite"><div class="goal-banner-row"><div><div id="goal-banner-title" class="goal-banner-title">🎯 進級ノルマ</div><div id="goal-banner-amount" class="goal-banner-amount">あと16単位</div></div><div id="goal-banner-details" class="goal-banner-details">確定0 / 必要16単位</div></div><div class="goal-banner-track"><div id="goal-banner-progress"></div></div></div>
+<div class="stats"><div><small>取得単位（必修＋選択）</small><b id="total-credits">0</b></div><div><small>累計SCORE</small><b id="total-score">0</b></div><div><small>今期の登録</small><b id="current-credits">0単位</b></div></div></div>
+<div id="goal-banner" class="goal-banner card" aria-live="polite"><div class="goal-banner-row"><div><div id="goal-banner-title" class="goal-banner-title">🎯 選択科目の必須単位数</div><div id="goal-banner-amount" class="goal-banner-amount">あと16単位</div></div><div id="goal-banner-details" class="goal-banner-details">確定0 / 必要16単位</div></div><div class="goal-banner-track"><div id="goal-banner-progress"></div></div></div>
 <div class="main-col"><section class="timetable card"><div class="section-head"><h2>時間割</h2><div id="legend"><span class="legend-item"><i class="legend-dot required"></i>★必修</span><span class="legend-item"><i class="legend-dot optional"></i>選択</span><span class="legend-item"><i class="legend-dot annual"></i>通年</span><span class="legend-item"><i class="legend-dot activity"></i>活動</span><span class="legend-item"><i class="legend-dot travel"></i>移動</span></div></div><div class="hint" id="schedule-hint">空きマスをタップすると、その時間の候補科目が表示されます。</div><p class="lunch-hint">2限と3限の間には1時間の昼休み。昼休み中ならキャンパス移動で授業コマを消費せず、3限は単位取得率が+6ポイント。</p>
 <div class="grid-wrap"><div id="timetable-grid" class="time-grid" aria-label="週間時間割"></div></div>
 <div id="summary-line" class="summary-line"></div><div id="risk-indicator" class="risk-indicator" aria-live="polite"></div><div id="academic-bonus-hint" class="life-events hidden"></div><div id="skill-summary" class="life-events hidden"></div><div id="campus-summary" class="campus-summary"></div><div id="life-events" class="life-events"></div><div id="year-stage-goal" class="year-stage-goal"></div><div id="retake-warning" class="retake-warning hidden" aria-live="polite"></div><div id="mandatory-panel" class="mandatory-panel"></div><div id="yearlong-panel" class="yearlong-panel"></div>
