@@ -3,9 +3,9 @@
   "projectId": "R1",
   "title": "口コミへの返信をご確認ください。（仮）",
   "nickname": "くちへん（仮）",
-  "version": "0.3.2-alpha",
-  "updatedAtJST": "2026-10-29T05:59:02+09:00",
-  "phase": "Phase 4：α0.3.2 独立ロジック・保存互換監査済、試作公開（人間レビュー中）",
+  "version": "0.4.0-alpha",
+  "updatedAtJST": "2026-10-29T13:08:23+09:00",
+  "phase": "Phase 4：初回チュートリアル・派手な進化演出・店主との応酬を実装。AI状態遷移・模擬DOM監査済、α公開、人間レビュー継続",
   "repository": "tora3-mystery/short-ui-games",
   "scope": "r1/",
   "assetStatus": "CSS仮店舗とルート別30商品ビジュアル（絵文字＋商品札）。実写素材なし、画像Work未投入。",
@@ -14,65 +14,65 @@
     "months": 12,
     "reviewOptions": "星1〜5 × 商品・味／接客／価格／雰囲気／個性",
     "evolution": "3店舗×5ジャンル×2極性＝30主要進化方向、0〜4段階。岩城の3度目以降の硬麺批判への返信と「超硬麺専門店」への進化を一致させた。",
-    "extras": "店主返信、投稿者別の店舗進化要因、関連店舗の変化、他者口コミ、SNS、14種の結末、口コミ履歴、旧α版セーブ継続、保存・再開",
+    "extras": "初回チュートリアル、月次店主返信、根拠を伝える／軽く言い返すの1回追記、店主の再返信、応酬履歴とストレス・新規客への影響、CSS進化バースト演出、他の客のレビュー、SNS、14エンディング、localStorage保存",
     "spillovers": "他者口コミによる別店舗の進化をbefore/afterで別枠表示。客足の移動は進化と分離表示。"
   },
   "aiAudit": {
-    "status": "PASS（純粋JavaScript V8と模擬DOM）",
-    "version": "0.3.2-alpha",
-    "scenarioCount": 3500,
-    "completedRuns": 3500,
-    "virtualReviews": 42000,
-    "assertions": 259316,
+    "status": "PASS（JavaScript V8の状態遷移・模擬DOM）",
+    "version": "0.4.0-alpha",
+    "simulations": 2500,
+    "simulatedReviews": 30000,
+    "simulatedFollowupReplies": 20000,
+    "checkedDoubleReplyRejections": 20000,
+    "checks": 263764,
     "failures": 0,
-    "independentReviewCauses": 1011,
-    "combinedReviewCauses": 1405,
-    "linkedStoreSteps": 12220,
-    "finaleReachability": 14,
-    "mockedDOM": {
-      "views": [
+    "uiMockAfterHistoryFix": {
+      "viewportAssumptions": [
         320,
         390,
         1080
       ],
-      "checks": 24,
-      "failures": 0
+      "checks": 27,
+      "failures": 0,
+      "flow": "初回チュートリアル→投稿→反論→口コミ履歴→12か月→エンディング",
+      "oldSaveMigration": "α0.3.2→α0.4.0でチュートリアルを出さずに再開"
     },
-    "migration": "0.3.1の硬麺批判履歴とresult画面の安全な読み込みを検証",
-    "limitations": "実ブラウザの画面描画・クリック、スマホ実機・GitHub Pages実操作は未実施。"
+    "limitations": "実ブラウザは未使用。UIテストの幅は模擬DOMの設定のみで、320/390pxの実レイアウトや演出の見栄え、タップや公開ページは未検証。"
   },
   "browserAudit": {
-    "status": "未実施（模擬DOMのみ実施）",
+    "status": "未実施（模擬DOMだけ）",
     "desktop": null,
     "mobile320": null,
     "mobile390": null,
     "publicURLVerified": false
   },
   "humanReview": {
-    "status": "継続中・α0.3.2の最新フィードバック待ち",
-    "targetVersion": "0.3.2-alpha",
+    "status": "進行中・最新版実機評価待ち",
+    "targetVersion": "0.4.0-alpha",
     "focus": [
-      "進化の見た目・頻度",
-      "店主返信の面白さ",
-      "他人のレビューによる変化の因果",
-      "12か月の長さ",
-      "スマホ実機の表示・戻る・保存"
+      "派手な進化演出の印象と過剰さ",
+      "チュートリアルを読めば操作が理解できるか",
+      "店主の反論の面白さ／しつこさ／納得感",
+      "言い返す操作の満足度と頻度",
+      "12か月のプレイテンポ",
+      "スマホ320/390pxでの実表示・スクロール"
     ]
   },
   "knownIssues": [
-    "店舗と商品はCSS・絵文字の仮ビジュアル、本番画像は未制作。",
-    "実ブラウザ・実機での表示・タップ・保存復帰検証は未実施。",
-    "進化の爽快感・店主の個性の最終評価は人間レビュー待ち。",
-    "旧セーブの過去結果に原因記録がない場合は因果を断定せず注記する。"
+    "店舗画像はCSS・絵文字による仮素材で、本番画像は未制作。",
+    "演出はCSSの一時的なバーストと強調表示。実スマホでの見やすさとパフォーマンスは未検証。",
+    "追加応酬はストレスと新規客指標へ影響するが、その月の確定済み店舗外観を遡って改装しない。",
+    "実ブラウザ・実機の表示・保存復帰は未実施。",
+    "人間レビューによる返答の強さ・不快さの調整は今後の課題。"
   ],
-  "nextOwner": "人間：α0.3.2の試遊／作品Chat：人間指摘の整理・改修・再検証",
-  "nextWork": "Gate B後、店舗・店主・商品画像の必要一覧を確定しWorkで一括制作",
-  "index": "INDEXのR1カードをα0.3.2に同期。14作品を維持。他作品への変更なし。",
+  "nextOwner": "人間：α0.4.0初見レビュー／作品Chat：指摘を整理し必要な表現と演出を改修",
+  "nextWork": "Gate B後に店主・店舗・商品画像の差分一覧を固め、大量画像制作をWorkへ発注",
+  "index": "R1カードをα0.4.0に同期。14作品表示と既存作品維持。",
   "publicUrl": "https://tora3-mystery.github.io/short-ui-games/r1/",
   "pending": [
-    "320px・390px実画面で12か月通しプレイ",
-    "旧版保存の実ブラウザ復帰",
-    "人間レビューでの進化テンポ・返信・初見UXの再検証"
+    "スマホ実機のチュートリアル→月次結果の通し試遊",
+    "CSSバーストの実ブラウザ動作・モーション削減設定の確認",
+    "人間レビュー後の返信文面・演出テンポ調整"
   ],
-  "lastStaticCheckedAtJST": "2026-10-29T05:59:02+09:00"
+  "lastStaticCheckedAtJST": "2026-10-29T13:08:23+09:00"
 }
