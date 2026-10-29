@@ -275,3 +275,22 @@ body.modal-open{overflow:hidden}
 .neighborhood-reviews{margin-top:16px}
 @media(max-width:550px){.dine-overlay{padding:8px}.dine-dialog{padding:15px;max-height:95dvh}.counter-buttons{grid-template-columns:1fr}.counter-buttons button{min-height:43px}.dialog-heading h2{font-size:19px}}
 @media(prefers-reduced-motion:reduce){.thread-reveal{animation:none!important}}
+
+
+/* R1 alpha 0.9.2: the global .secondary width:100% was pushing dialog heading into a vertical column. */
+.dine-dialog .dialog-heading{display:grid;grid-template-columns:minmax(0,1fr) 44px;gap:12px;align-items:start;min-width:0}
+.dine-dialog .dialog-heading>div{min-width:0;width:auto;overflow-wrap:anywhere}
+.dine-dialog .dialog-heading h2{white-space:normal;word-break:normal;overflow-wrap:anywhere;line-height:1.42;font-size:clamp(19px,4.5vw,25px)}
+.dine-dialog .dialog-heading .eyebrow{letter-spacing:.045em;line-height:1.5;word-break:normal;overflow-wrap:anywhere;display:block}
+.dine-dialog .dialog-close.secondary{width:44px;max-width:44px;min-width:44px;height:44px;min-height:44px;padding:0;margin:0;flex:none;justify-self:end;align-self:start;display:grid;place-items:center}
+.dine-dialog .observation-panel{border:1px solid #697c83;border-radius:13px;background:#192a35;padding:12px 13px;margin:13px 0 18px}
+.observation-panel>h3{font-size:15px;margin:3px 0 6px;color:#ffdda7}
+.observation-panel>.section-intro{margin:0 0 9px}
+.observation-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.observation-grid article{background:#293847;border:1px solid #506477;border-radius:9px;padding:9px 10px;min-width:0}
+.observation-grid strong{font-size:12px;color:#ffe3b1;display:block;margin-bottom:3px}
+.observation-grid p{font-size:13px;line-height:1.5;margin:0;color:#e5e8e8;overflow-wrap:anywhere}
+.observation-change{font-size:12px;color:#c4e5db;margin:9px 0 0;padding:8px 10px;border-left:3px solid #94c3b5;background:#2b4244}
+.lot-rumor{border-left:3px solid #ab9eb7}
+@media(max-width:550px){.dine-dialog .dialog-heading{grid-template-columns:minmax(0,1fr) 44px}.observation-grid{grid-template-columns:1fr 1fr;gap:6px}.observation-grid article{padding:7px}.observation-grid p{font-size:12px}.observation-panel{padding:10px}.dine-dialog .dialog-heading h2{font-size:19px}}
+@media(max-width:360px){.observation-grid{grid-template-columns:1fr}.dine-dialog .dialog-heading h2{font-size:18px}}

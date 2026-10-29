@@ -1,6 +1,6 @@
 window.R1 = (function makeEngine(){
 "use strict";
-const VERSION="0.9.1-alpha";
+const VERSION="0.9.2-alpha";
 const GENRES=[
 {id:"taste",name:"商品・味",icon:"🍜"},
 {id:"service",name:"接客",icon:"💬"},
@@ -228,6 +228,19 @@ TOPICS.veggie={"taste":"野菜たっぷりプレートの味","service":"店員�
 RESPONSES.veggie={"taste":{"plus":["旬の野菜と相談しながら、味わっていただけてうれしいです。"],"minus":["旬の野菜と相談しながら、味のことですね。仕込みと調理を確かめ直します。"]},"service":{"plus":["旬の野菜と相談しながら、接客にまで目を向けてくださるとは。ありがとうございます。"],"minus":["旬の野菜と相談しながら、案内不足でしたね。待ち時間と注文方法を見直します。"]},"price":{"plus":["旬の野菜と相談しながら、値段に納得していただけて安心しました。"],"minus":["旬の野菜と相談しながら、値段と量の釣り合いが大事ですね。セットと量を考えます。"]},"mood":{"plus":["旬の野菜と相談しながら、昼休みに落ち着けたなら何よりです。"],"minus":["旬の野菜と相談しながら、居心地がよくなかったのですね。席や音を見直します。"]},"identity":{"plus":["旬の野菜と相談しながら、店の個性を面白がってもらえてうれしいです。"],"minus":["旬の野菜と相談しながら、変わった料理が合わなかったでしょうか。定番も残してみます。"]}};
 SPICY_REPLIES.veggie={"taste":{"plus":["旬の野菜と相談しながら、味わっていただけてうれしいです。"],"minus":["旬の野菜と相談しながら、味のことですね。仕込みと調理を確かめ直します。"]},"service":{"plus":["旬の野菜と相談しながら、接客にまで目を向けてくださるとは。ありがとうございます。"],"minus":["旬の野菜と相談しながら、案内不足でしたね。待ち時間と注文方法を見直します。"]},"price":{"plus":["旬の野菜と相談しながら、値段に納得していただけて安心しました。"],"minus":["旬の野菜と相談しながら、値段と量の釣り合いが大事ですね。セットと量を考えます。"]},"mood":{"plus":["旬の野菜と相談しながら、昼休みに落ち着けたなら何よりです。"],"minus":["旬の野菜と相談しながら、居心地がよくなかったのですね。席や音を見直します。"]},"identity":{"plus":["旬の野菜と相談しながら、店の個性を面白がってもらえてうれしいです。"],"minus":["旬の野菜と相談しながら、変わった料理が合わなかったでしょうか。定番も残してみます。"]}};
 PUBLIC_REVIEWS.veggie=[{"by":"近所の会社員","star":5,"genre":"taste","text":"野菜たっぷりプレートを目当てに通っています。","reply":"新しい食べ方を楽しんでもらえて何よりです。","archived":true},{"by":"昼休み中の客","star":2,"genre":"service","text":"混雑時は少し説明が足りなかった。","reply":"野菜は組み合わせで驚くほど変わります。食べごたえにも気を配ります。","archived":true},{"by":"初めて来た人","star":4,"genre":"identity","text":"この店らしい一品があって面白い。","reply":"野菜は組み合わせで驚くほど変わります。新しい食べ方を楽しんでもらえて何よりです。","archived":true}];
+
+// Firsthand observations are neutral sensory cues, not assigned ratings.
+const LUNCH_IMPRESSIONS={"ramen":["硬い麺で小麦の香りがあるが、急いで食べるには手ごわい。","注文は早い。店主は必要以上に話さない。","カウンター中心。常連客は静かに丼に向かっている。","一杯の値段は少し強気。好みが分かれそう。"],"cafe":["厚切りトーストは香ばしく、中はふわり。珈琲は少し苦め。","丁寧に注文を聞いてくれる。混雑時は提供が遅い。","古い木の椅子と窓辺の光。席数は少ない。","セットは妥当。飲み物を追加すると少し高くなる。"],"cake":["クリームは軽く果物の酸味が残る。甘さは控えめ。","新作の説明が熱心で少し長い。","ショーケースが華やか。座れる場所は限られる。","小さめのケーキとしては高め。素材の良さは感じる。"],"curry":["香りが先に広がり、後から辛さが来る。副菜で味が変わる。","辛さの質問には答えるが昼は忙しそう。","スパイスの香りが濃い。隣の席が近い。","副菜込みなら納得、追加トッピングは高くなる。"],"teishoku":["魚の皮は香ばしく身は柔らかい。小鉢は優しい味。","配膳は丁寧だが焼き上がりを待つ。","湯飲みと日替わり札。近所の客が多い。","小鉢付きで手頃。単品の選択肢は少ない。"],"udon":["麺はもっちりして小麦が香る。つゆは濃いめ。","茹で上がりを教えてくれる。注文が重なると待つ。","打ち台が見える。厨房の様子を眺められる。","一杯は手頃。天ぷらの追加で値が張る。"],"soba":["蕎麦の香りが強く、噛むとほろりと切れる。量は控えめ。","説明は細かいが、案内の声は小さめ。","落ち着いた店内。客は黙々と蕎麦をすする。","素材へのこだわりで少し高め。大盛りは別料金。"],"sandwich":["パンはしっとり、具は端まで入る。持ち歩くと崩れやすい。","会計は早いが人気の具は売り切れることもある。","小さなショーケース。店内に食べる席はない。","一個は手頃。昼食には複数買うことになりそう。"],"burger":["パティが香ばしく肉汁が多い。ソースの味が強い。","焼き加減を確認する。注文後の待ち時間は長め。","鉄板の音で賑やか。隣席との会話も聞こえる。","食べごたえはあるが少し贅沢な価格。"],"pasta":["生麺はもちもち。ソースが絡むが食後は重たい。","本日のおすすめを教える。注文は急かさない。","手書きのメニューと小テーブル。席間隔は狭い。","セットなら妥当。飲み物の追加で割高。"],"chinese":["餃子の皮はぱりっとして具の香りが強い。油は多め。","鍋の音に負けない大きな声で注文を取る。","湯気と音で賑やか。昼は相席になることも。","量が多く価格は手頃。少食だと多すぎるかも。"],"bakery":["クロワッサンは層が軽く香ばしい。少しこぼれやすい。","温め直しを勧める。昼過ぎは売り切れが増える。","明るい店先。店内の通路は細い。","小さなパンは手頃。昼食分だと高くなる。"],"fish":["魚の焦げ目が香ばしく身はふっくら。小骨に注意。","魚の種類を教える。焼き時間は少し必要。","厨房から焼き魚の香り。ひとり客が多い。","魚によって値段が変わり、日替わりの楽しみがある。"],"onigiri":["米は粒が立ち塩は控えめ。豚汁は具が多い。","注文を聞いてから握る。急ぐと待ち時間が気になる。","持ち帰り棚と小さなカウンター。簡潔な昼食。","一個は手頃。数を選ぶと定食並みになる。"],"veggie":["野菜の甘みと歯ごたえがある。肉の満足感とは違う。","野菜の産地を説明する。昼は忙しそう。","緑が多く明るい店。器の並べ方も丁寧。","野菜中心としてはやや高め。季節感は魅力。"]};
+function lunchImpressions(state,id){
+ const s=state.shops[id];if(!s||!s.opened||s.closed||!LUNCH_IMPRESSIONS[id])throw Error("shop unavailable");
+ const d=display(s,id),base=LUNCH_IMPRESSIONS[id];
+ const evolved=id!=="ramen"&&d.route.stage>0;
+ const crowd=s.locals>=65||s.visitors>=65?"今日は客が多く、少し慌ただしい。":s.locals<=30?"昼時なのに空席が目立つ。":"昼休みらしい客足。";
+ return {food:base[0],service:base[1],mood:base[2]+" "+crowd,price:base[3],current:d.visual.product,
+  change:evolved?"店頭では現在「"+d.visual.product+"」を前面に出している。"+d.route.label+"。":
+   id==="ramen"&&s.reborn?"建物は巨大になったが、注文した硬麺は以前と同じだった。":""};
+}
+
 const NPC_NAMES=["駅前の会社員","近所の学生","通りがかりの客","常連のひとり","休日の散歩客","子連れの住民","隣町からの来訪者"];
 const REPLY_RATES={
  ramen:[.99,.96,.77],cafe:[.54,.46,.78],cake:[.78,.86,.96],curry:[.59,.47,.74],teishoku:[.42,.49,.70],
@@ -273,7 +286,13 @@ function background(state){
    const neighbors=SHOPS.filter(other=>other.id!==d.id&&state.shops[other.id].opened&&!state.shops[other.id].closed);
    const visitor=neighbors.length&&rand()<.13?neighbors[Math.floor(rand()*neighbors.length)]:null;
    const by=visitor?visitor.owner+"（"+visitor.name+"店主）":NPC_NAMES[Math.floor(rand()*NPC_NAMES.length)];
-   const text=visitor?(star>=4?"同じ商店街で商売をしています。"+d.name+"の"+TOPICS[d.id][genre]+"が良かった。":star<=2?"同業者として気になるところもあります。"+TOPICS[d.id][genre]+"はもう少し工夫がほしい。":"休憩に寄りました。"+TOPICS[d.id][genre]+"は好みが分かれるかもしれません。"):npcText(state,d.id,genre,star,rand);
+   let text=visitor?(star>=4?"同じ商店街で商売をしています。"+d.name+"の"+TOPICS[d.id][genre]+"が良かった。":star<=2?"同業者として気になるところもあります。"+TOPICS[d.id][genre]+"はもう少し工夫がほしい。":"休憩に寄りました。"+TOPICS[d.id][genre]+"は好みが分かれるかもしれません。"):npcText(state,d.id,genre,star,rand);
+   if(s.lot===2&&rand()<.37){
+    const whispers=state.feed.some(x=>x.kind==="rumor")?
+      ["前の店の看板を覚えている。ここはずいぶん入れ替わるらしい。","2番地は店名を覚えたころに看板が変わる、と近所の人が言っていた。"]:
+      ["ここ、数年前は別のお店だったと聞いた。","2番地には、長く続く店が少ないという噂がある。"];
+    text+=" "+whispers[Math.floor(rand()*whispers.length)];
+   }
    const reply=ownerMayReply(state,d.id,star,genre,250+k)?replyFor(state,d.id,star,genre):null;
    if(d.id!=="ramen")s.scores[genre]=clamp(s.scores[genre]+Math.sign(star-3)*2,-25,25);
    s.money=clamp(s.money+(star-3)*.8,-100,160);
@@ -419,7 +438,11 @@ before.feature!==after.feature?`店頭に変化があった：${after.feature}`:
 const affected=SHOPS.filter(d=>d.id!==action.id&&allBefore[d.id].open).map(d=>({id:d.id,before:allBefore[d.id],after:display(next.shops[d.id],d.id),reason:next.shops[d.id].closed?`${d.name}は${next.shops[d.id].closedReason}ため閉店。`:npcs.some(x=>x.id===d.id)?"ほかのお客さまの口コミを受け、店舗が変化した。":"まちの動きを受け、店舗が変化した。"})).filter(x=>viewChanged(x.before,x.after));
 const neighbor=spillover;
 const result={review:rev,transition,before,after,playerAfter,cause,affected,npc,sns,viral,neighbor,closures,openings,npcs,month:next.month};
-next.last=result;next.view="review";next.feed.push({month:next.month,kind:"player",...rev});for(const item of npcs)next.feed.push({kind:"npc",...item});if(sns)next.feed.push({month:next.month,kind:"sns",...sns});if(viral)next.feed.push(viral);for(const e of closures)next.feed.push({kind:"lifecycle",month:next.month,text:e.name+"が"+e.reason+"ため閉店しました。",id:e.id});for(const e of openings)next.feed.push({kind:"lifecycle",month:next.month,text:e.notice,id:e.id});return next;}
+if(closures.some(x=>x.lot===2)||openings.some(x=>x.lot===2)){
+  const msg=closures.some(x=>x.lot===2)?"2番地の店がまた閉まった。閉店の貼り紙が重なる場所だ、と噂する人がいる。":"空いていた2番地に新しい看板が掛かった。『ここは前、何屋だったっけ』と足を止める人がいた。";
+  next.feed.push({kind:"rumor",month:next.month,text:msg});
+ }
+ next.last=result;next.view="review";next.feed.push({month:next.month,kind:"player",...rev});for(const item of npcs)next.feed.push({kind:"npc",...item});if(sns)next.feed.push({month:next.month,kind:"sns",...sns});if(viral)next.feed.push(viral);for(const e of closures)next.feed.push({kind:"lifecycle",month:next.month,text:e.name+"が"+e.reason+"ため閉店しました。",id:e.id});for(const e of openings)next.feed.push({kind:"lifecycle",month:next.month,text:e.notice,id:e.id});return next;}
 function finish(state){if(state.month<12)throw Error("not finished");const ls=SHOPS.filter(d=>state.shops[d.id].opened).map(d=>({d,s:state.shops[d.id]}));const closed=ls.filter(x=>x.s.closed).length;const totalStages=ls.reduce((n,x)=>n+routeFor(x.s).stage,0);const local=ls.reduce((n,x)=>n+x.s.locals,0),vis=ls.reduce((n,x)=>n+x.s.visitors,0);
 let title,description;
 const ramen=state.shops.ramen,cake=state.shops.cake,cafe=state.shops.cafe;
@@ -511,5 +534,5 @@ function counter(state,style){
  next.feed.push({month:next.month,kind:"exchange",id:rev.id,text:playerText,ownerReply:ownerText});
  return next;
 }
-return {VERSION,GENRES,MONTHS,SHOPS,PATHS,TOPICS,createState,routeFor,display,reviewText,replyFor,publicReviews,advance,counter,finish,audit};
+return {VERSION,GENRES,MONTHS,SHOPS,PATHS,TOPICS,createState,routeFor,display,reviewText,replyFor,publicReviews,lunchImpressions,advance,counter,finish,audit};
 })();
