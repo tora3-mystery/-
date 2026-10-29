@@ -96,9 +96,9 @@ function tutorial(){
  return '<section class="tutorial" aria-labelledby="tutorialTitle"><div class="tutorial-hero"><span class="eyebrow">出張先での昼休み</span>'+
  '<h2 id="tutorialTitle">毎月この街に、<br>出張でやって来る。</h2><p>昼休みは1時間。今日はどこに入ろう？ 評判の良い店も、気になる返信をする店もあります。</p></div>'+
  '<div class="business-story"><strong>📍 今月も、この商店街でランチ。</strong><p>まずは口コミを読んで、行くお店を選びましょう。食後はあなたも感想を投稿できます。</p></div>'+
- '<div class="tutorial-steps"><article><strong>① 口コミを読む</strong><p>毎回顔ぶれが違う3店舗の評価と店主からの返信を見比べます。</p></article>'+
+ '<div class="tutorial-steps"><article><strong>① 口コミを読む</strong><p>毎回顔ぶれが違う3店舗の口コミを読み、返信があれば店主の言葉も確かめます。</p></article>'+
  '<article><strong>② お店で食べる</strong><p>行き先を決めます。店によっては食後のおやつを選べます。</p></article>'+
- '<article><strong>③ 感想を投稿する</strong><p>星と話題を選び、返信と翌月のお店の様子を確認します。</p></article></div>'+
+ '<article><strong>③ 感想を投稿する</strong><p>星と話題を選び、翌月の口コミや店の様子を確認します。</p></article></div>'+
  '<div class="tutorial-comparison"><p class="eyebrow">口コミが積み重なった店では……</p><div class="result-views"><div><small>以前の店構え</small>'+storefront(before)+'</div><div class="after-spotlight"><small>後日の店構え</small>'+storefront(after)+'</div></div></div>'+
  '<div class="tutorial-end"><strong>4月から翌3月まで、月に1回・全12回の出張。</strong><p>同じ店を選んでも、違う店を開拓しても自由です。</p><button type="button" class="primary start-game" data-begin>4月の出張へ　→</button></div></section>';
 }
@@ -165,9 +165,9 @@ function history(){
 }
 function guide(){
  return '<section class="box guide-text"><h2>遊び方</h2><p>あなたは毎月この商店街へ出張で来る会社員。昼休みに口コミと返信を読み、店で食べた後に投稿します。4月から翌3月まで全12回です。</p>'+
- '<h3>① 口コミを読んで昼食を決める</h3><p>営業中のお店と過去の口コミ、店主からの返信を読んで、行き先を選びます。食べた後に星1〜5と、商品・味／接客／価格／雰囲気／個性の評価ジャンルを選びます。</p>'+
+ '<h3>① 口コミを読んで昼食を決める</h3><p>営業中のお店と過去の口コミを読み、店主からの返信があれば参考にして行き先を選びます。食べた後に星1〜5と、商品・味／接客／価格／雰囲気／個性の評価ジャンルを選びます。</p>'+
  '<h3>② 返信と変化を見る</h3><p>店主は口コミに感謝したり、反論したり、ときには店の方針そのものを変えます。口コミで客足が減ると閉店するお店もあれば、途中で新しく開店するお店もあります。SNSで評判が広まることもあります。</p>'+
- '<h3>③ 同じ店を再評価する</h3><p>同じ店に何度でも投稿できます。返信に一言返すと店主がさらに返事をすることもあります。星やジャンルを変えると、別の方向に変化することがあります。別のお客さんの声や、架空SNSの話題も時々現れます。</p>'+
+ '<h3>③ 同じ店を再評価する</h3><p>同じ店に何度でも投稿できます。店主から返信が来るかどうかはお店や評価によって異なります。返信が来た場合は一言返すこともできます。星やジャンルを変えると、別の方向に変化することがあります。別のお客さんの声や、架空SNSの話題も時々現れます。</p>'+
  '<h3>④ 一年後を見届ける</h3><p>お店は繁盛することも、衰退することもあります。正解の星の付け方はありません。12回目を終えると、その一年の商店街の姿を見られます。</p>'+
  '<p class="note">このバージョンは試作版です。看板や内装は仮のCSSイラストで表現しています。画面上部のバージョン表示は実装の更新時刻です。</p>'+
  '<button type="button" class="secondary" data-tab="street">商店街に戻る</button>'+
