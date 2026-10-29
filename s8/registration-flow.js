@@ -166,6 +166,18 @@ function reviewRow(c){
  if(chance.adjust){const x=document.createElement("div");x.textContent=chance.guaranteed?"必修予習スキル・各段階の上限調整 "+(chance.adjust>=0?"+":"")+chance.adjust.toFixed(1)+"ポイント":"キャンパス移動・段階別の上限/丸め調整 "+(chance.adjust>=0?"+":"")+chance.adjust.toFixed(1)+"ポイント";details.append(x)}
  const total=document.createElement("b");total.textContent="最終取得率 "+chance.final+"%";details.append(total);
  row.append(details);
+ if(c.type==="required"&&(state.skills||[]).some(sk=>sk.id==="mandatory_master")){
+  const earliest=Math.min(...c.slots),prior=earliest-1;
+  const prep=earliest%5!==0?occupied().get(prior):null;
+  const activated=prep?.type==="study"&&prep.id==="study_"+c.id;
+  const p=document.createElement("p");p.className="review-fixed";
+  p.textContent=activated
+   ?"📖 必修の鬼が発動：直前の予習コマを確保済み（取得率100%）"
+   :earliest%5===0
+    ?"📖 必修の鬼は発動しません：1限は直前に予習コマを置けません。"
+    :"📖 必修の鬼は発動しません：直前のコマが空いていません。";
+  row.append(p)
+ }
  if(c.type!=="required"&&c.type!=="annualCarry"){
   const controls=document.createElement("div");controls.className="review-course-actions";
   const remove=document.createElement("button");remove.type="button";
