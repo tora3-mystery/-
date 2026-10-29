@@ -39,7 +39,7 @@ function shopCard(d){
  const v=E.display(game.shops[d.id],d.id),hist=game.shops[d.id].history.length;
  return '<button type="button" class="shop-card '+(d.id===selectedId?"selected":"")+'" data-shop="'+d.id+'" aria-pressed="'+(d.id===selectedId)+'">'+
  storefront(v)+'<span class="card-copy"><span class="small">'+esc(d.category)+'・'+hist+'件投稿</span><strong>'+esc(d.name)+'</strong>'+
- '<span class="summary">'+esc(v.summary)+'</span><span class="tap">店舗を見る　›</span></span></button>';
+ '<span class="summary">'+esc(v.summary)+'</span>'+(d.id==="ramen"?'<span class="shop-disputes">🔥 反論 '+(game.shops[d.id].disputes||0)+'件</span>':'')+'<span class="tap">店舗を見る　›</span></span></button>';
 }
 function recentFeed(id){const items=game.feed.filter(f=>f.kind==="npc"&&f.id===id).slice(-2).reverse();
  if(!items.length)return '<div class="recent"><h3>ほかのお客さまの声</h3><p>まだ投稿がありません。</p></div>';
@@ -98,17 +98,18 @@ function result(){
  const d=dshop(r.review.id),y=r.review,major=r.before.sign!==r.after.sign||r.before.route.stage!==r.after.route.stage||r.before.route.label!==r.after.route.label||r.before.open!==r.after.open;
  const minor=!major&&(r.before.feature!==r.after.feature||r.before.visual?.product!==r.after.visual?.product),changed=major||minor;
  const otherCause=r.cause==="other",combinedCause=r.cause==="combined",offsetCause=r.cause==="offset",legacyOther=typeof r.cause!=="string"&&r.npc?.id===r.review.id;
- const headline=otherCause?"ほかのお客さまの口コミで変化！":combinedCause?"口コミが重なり、店が変化！":offsetCause?"二つの意見が交差した。":major?"お店の姿が変わった！":minor?"店頭に新しい動きが！":"お店はいつもどおり。";
+ const headline=d.id==="ramen"?"店はそのまま。店主の反論だけが増えた。":otherCause?"ほかのお客さまの口コミで変化！":combinedCause?"口コミが重なり、店が変化！":offsetCause?"二つの意見が交差した。":major?"お店の姿が変わった！":minor?"店頭に新しい動きが！":"お店はいつもどおり。";
  const causeHint=otherCause?"あなたの投稿とは別の口コミが、今回の店舗変化のきっかけです。":combinedCause?"あなたの投稿と、ほかのお客さまの口コミが両方影響しました。":offsetCause?"あなたの口コミへの反応が、同じ月の別の口コミで変わりました。":legacyOther?"この月は同じ店舗にほかのお客さまも口コミを投稿しました。変化の原因は一つとは限りません。":"";
+ const ramenHeat=d.id==="ramen"?'<div class="ramen-heat" role="status">🔥 この店は変わりません。反論は累計 '+(r.after.disputes||0)+' 件。</div>':"";
  const burst=changed?'<div class="evolution-burst" aria-hidden="true">'+Array.from({length:14},(_,i)=>'<span style="--n:'+i+'">✦</span>').join("")+'</div>':"";
  const exchange=r.exchange?
   '<div class="reply-thread" id="exchangeArea"><div class="thread-player"><span>あなたから追記</span><p>'+esc(r.exchange.playerText)+'</p></div><div class="thread-owner"><span>'+esc(d.owner)+'から再返信</span><p>「'+esc(r.exchange.ownerText)+'」</p></div></div>':
   '<div class="counter-choices" id="exchangeArea"><p>この返信に、一言返す？ <small>どちらか1回だけ。返さずに翌月へ進んでもOK。</small></p><div class="counter-buttons"><button type="button" class="secondary" data-counter="evidence">📋 根拠を伝える</button><button type="button" class="secondary sharp" data-counter="quip">💬 軽く言い返す</button></div></div>';
  const changes=(r.affected||[]).map(x=>'<div class="linked-change"><strong>'+esc(dshop(x.id).name)+'</strong><p>'+esc(x.reason||"同じ月に届いたほかの口コミが影響しました。")+'</p><p>'+esc(x.after.summary)+'</p><div class="linked-compare"><div><small>前</small>'+storefront(x.before)+'</div><div><small>後</small>'+storefront(x.after)+'</div></div></div>').join("");
  return '<section class="box result-top"><span class="eyebrow">'+esc(E.MONTHS[y.month-1])+'に投稿した口コミ</span><h2 class="result-title">口コミへの返信が届きました。</h2><div class="feed-card user-review"><div class="meta">あなた　／　'+esc(d.name)+'　／　'+esc("★".repeat(y.star))+'　'+esc(dgenre(y.genre).name)+'</div><p class="quote">'+esc(y.text)+'</p></div>'+
- '<div class="owner-reply"><span class="name">'+esc(d.owner)+'　店主より</span><p>「'+esc(y.reply)+'」</p></div>'+exchange+'</section>'+
+ '<div class="owner-reply '+(d.id==="ramen"?"ramen-argument":"")+'"><span class="name">'+esc(d.owner)+'　店主より</span><p>「'+esc(y.reply)+'」</p></div>'+ramenHeat+exchange+'</section>'+
  '<section class="box evolution-box '+(changed?"has-evolution":"no-evolution")+'">'+burst+'<div class="result-heading"><span class="eyebrow">投稿から1か月後</span><h2>'+headline+'</h2><p class="section-intro">'+esc(d.name)+'の今月の様子</p></div>'+
- '<div class="transformation-kicker">'+(changed?"✨ 店の様子が変わった！":"今月の店頭")+'</div><div class="result-views"><div><small>投稿前</small>'+storefront(r.before)+'</div><div class="'+(changed?"after-spotlight":"")+'"><small>1か月後</small>'+storefront(r.after)+'</div></div>'+
+ '<div class="transformation-kicker">'+(d.id==="ramen"?"🔥 口コミへの反論は止まらない":changed?"✨ 店の様子が変わった！":"今月の店頭")+'</div><div class="result-views"><div><small>投稿前</small>'+storefront(r.before)+'</div><div class="'+(changed?"after-spotlight":"")+'"><small>1か月後</small>'+storefront(r.after)+'</div></div>'+
  '<div class="result-note">'+esc(r.transition)+'</div>'+(causeHint?'<p class="cause-hint">'+esc(causeHint)+'</p>':'')+
  '<p class="section-intro result-metrics">'+esc(r.after.population)+' ／ '+esc(r.after.business)+'</p></section>'+
  ((r.affected||[]).length?'<section class="box ripple-box"><h2>このお店にも変化が！</h2><p class="section-intro">同じ月に届いたほかのお客さまの口コミなどで、近くの店にも動きがありました。</p>'+changes+'</section>':"")+
