@@ -2,10 +2,12 @@
 /* S8 v0.4.0 — student-life and risk balance layer (after game.js and expansion.js) */
 (function(){
 const TARGETS=[16,34,54,72]; // original combined-credit reference; no longer the promotion gate
+// v0.7.1: progressive stricter elective-credit gates: +2/+2/+4/+4 credits.
+// Shared with the promotion banner, year-end fail condition, skill draft and graduation.
 const OPTIONAL_TARGETS={
- humanities:[8,22,38,52],
- economics:[4,18,34,48],
- science:[4,14,30,44]
+ humanities:[10,24,42,56],
+ economics:[6,20,38,52],
+ science:[6,16,34,48]
 };
 window.S8_OPTIONAL_TARGETS=OPTIONAL_TARGETS;
 function electiveCreditCount(){return Math.max(0,Number(state?.electiveCredits)||0)}
