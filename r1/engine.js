@@ -125,7 +125,7 @@ if(action.id!=="ramen")s.scores[action.genre]=clamp(s.scores[action.genre]+delta
 if(action.id==="cake"&&action.genre==="identity"&&action.star>=4)s.scores.identity=clamp(s.scores.identity+2,-25,25);
 if(action.id==="ramen")s.disputes=(s.disputes||0)+1;
 s.money=clamp(s.money+(action.star-3)*5,action.id==="ramen"?1:-100,160);s.locals=clamp(s.locals+(action.star-3)*(action.genre==="price"?3:1.5),0,100);s.visitors=clamp(s.visitors+(action.star-3)*(action.genre==="identity"?3:1.5),0,100);s.stress=clamp(s.stress+(action.star<=2?11:action.star>=4?-3:1)+(action.genre==="service"&&action.star<=2?3:0),0,100);const rev={month:next.month+1,id:action.id,star:action.star,genre:action.genre,text,reply};s.history.push(rev);next.reviews.push(rev);next.month+=1;
-for(const d of SHOPS){const x=next.shops[d.id];if(x.closed)continue;x.money=clamp(x.money-1,-100,160);if(d.id!=="ramen"&&x.money<=0){x.closed=true;x.lastChange="資金が尽きて閉店。";}}
+for(const d of SHOPS){const x=next.shops[d.id];if(x.closed)continue;x.money=clamp(x.money-1,d.id==="ramen"?1:-100,160);if(d.id!=="ramen"&&x.money<=0){x.closed=true;x.lastChange="資金が尽きて閉店。";}}
 let spillover=null;
 if(action.id==="ramen"&&action.star<=2&&(action.genre==="service"||action.genre==="price")){
  const neighbor=next.shops.cafe;if(!neighbor.closed){neighbor.locals=clamp(neighbor.locals+3,0,100);neighbor.money=clamp(neighbor.money+2,-100,160);spillover="麺処いわきから離れた客が喫茶こもれびで昼を過ごすようになった。";}
