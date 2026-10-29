@@ -4,7 +4,7 @@
 const MAIN_CAMPUS="中央キャンパス",SPECIAL_CAMPUS="専門キャンパス";
 const specials=new Set(["program2","statistics2","entre","writingAdv","engineering","engineering2","engineering3","engineering4"]);
 const facultySpecialIds=new Set(Object.values(SPECIALS).flat().map(c=>c.id));
-const advancedIds=new Set(Object.values(ADVANCED).flat().map(c=>c.id));
+const advancedIds=new Set(["seminar_lit","seminar_culture","thesis_lit","seminar_econ","seminar_data","thesis_econ","seminar_sci","seminar_math","thesis_sci"]);
 function needsSpecialty(course,term){
  return term>=4&&(advancedIds.has(course.canonicalId||course.id)||facultySpecialIds.has(course.canonicalId||course.id)||specials.has(course.canonicalId||course.id))
 }
