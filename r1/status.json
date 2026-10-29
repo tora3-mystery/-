@@ -82,7 +82,57 @@
       "dialogScrollAfterSelection": "保持をモックで確認",
       "saveFrom": "0.9.4-alpha"
     },
-    "limits": "Google Pagesのビルド状況はGitHub Actionsで別途確認。公開URLの実ページ表示はWeb取得では確認できなかった。実ブラウザ上の幅・改行・タップ・アニメーションを確認したものではない。"
+    "limits": "Google Pagesのビルド状況はGitHub Actionsで別途確認。公開URLの実ページ表示はWeb取得では確認できなかった。実ブラウザ上の幅・改行・タップ・アニメーションを確認したものではない。",
+    "virtualPlayer": {
+      "version": "0.9.5-alpha",
+      "scope": "6行動方針×300seed＝1,800周・21,600投稿。実ブラウザではなくエンジン状態のAI仮想プレイ指標。",
+      "strategies": [
+        {
+          "name": "口コミ平均で店選び",
+          "avgMajorShopChangesPerRun": 4.7,
+          "avgMonthsWithoutSelectedShopDisplayChange": 2.5,
+          "avgNpcReviewsPerMonth": 3.2,
+          "avgClosuresPerRun": 0
+        },
+        {
+          "name": "高評価中心",
+          "avgMajorShopChangesPerRun": 6,
+          "avgMonthsWithoutSelectedShopDisplayChange": 3.3,
+          "avgNpcReviewsPerMonth": 3.3,
+          "avgClosuresPerRun": 0
+        },
+        {
+          "name": "低評価中心",
+          "avgMajorShopChangesPerRun": 5.7,
+          "avgMonthsWithoutSelectedShopDisplayChange": 4.1,
+          "avgNpcReviewsPerMonth": 2.4,
+          "avgClosuresPerRun": 2.3
+        },
+        {
+          "name": "★3固定",
+          "avgMajorShopChangesPerRun": 2.7,
+          "avgMonthsWithoutSelectedShopDisplayChange": 9.3,
+          "avgNpcReviewsPerMonth": 3.1,
+          "avgClosuresPerRun": 0
+        },
+        {
+          "name": "未訪問店探索",
+          "avgMajorShopChangesPerRun": 4.9,
+          "avgMonthsWithoutSelectedShopDisplayChange": 4.8,
+          "avgNpcReviewsPerMonth": 3.1,
+          "avgClosuresPerRun": 0
+        },
+        {
+          "name": "一店舗集中",
+          "avgMajorShopChangesPerRun": 5.1,
+          "avgMonthsWithoutSelectedShopDisplayChange": 1.9,
+          "avgNpcReviewsPerMonth": 3.1,
+          "avgClosuresPerRun": 0
+        }
+      ],
+      "finding": "★3固定では投稿対象店の表示変化が少なく、1周のうち約9.3か月で大きな表示変化なし。NPC・他店変化は別に発生するため進行不能ではない。人間による面白さ評価を待ち、現時点でバランスは変更しない。",
+      "errors": 0
+    }
   },
   "browserAudit": {
     "status": "未実施：仮想幅320/390/1080での模擬DOMのみ。実ブラウザ・実機操作は未検証。公開ページのHTTP取得も今回の検索方法ではできず。",
@@ -127,7 +177,8 @@
     "店主の再返信文とNPC口コミの人間レビュー",
     "初見プレイの実測所要時間と印象",
     "ルートINDEXのR1表記・版数は企画マスター担当として別途同期",
-    "本番画像と追加ストーリーは仮リリース後の優先度判断"
+    "本番画像と追加ストーリーは仮リリース後の優先度判断",
+    "★3固定・未訪問店探索の単調さを人間プレイで評価"
   ],
   "lastStaticCheckedAtJST": "2026-10-30T00:16:00+09:00",
   "releaseStatus": "仮リリース（試作公開／最終実機QA待ち）。Gate Cの完成認定ではない。"
