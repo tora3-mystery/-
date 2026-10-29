@@ -10,7 +10,7 @@ const dshop=id=>E.SHOPS.find(x=>x.id===id);
 const dgenre=id=>E.GENRES.find(x=>x.id===id);
 function newGame(){const state=E.createState(Date.now()>>>0);state.introSeen=false;return state}
 function load(){
- try{const raw=localStorage.getItem(KEY);if(raw){const s=JSON.parse(raw);if(s.version===E.VERSION){E.audit(s);return s;}if(["0.1.0-alpha","0.2.0-alpha","0.3.0-alpha","0.3.1-alpha","0.3.2-alpha","0.4.0-alpha","0.4.1-alpha","0.5.0-alpha","0.6.0-alpha","0.7.0-alpha","0.8.0-alpha","0.9.0-alpha","0.9.1-alpha"].includes(s.version)){
+ try{const raw=localStorage.getItem(KEY);if(raw){const s=JSON.parse(raw);if(s.version===E.VERSION){E.audit(s);return s;}if(["0.1.0-alpha","0.2.0-alpha","0.3.0-alpha","0.3.1-alpha","0.3.2-alpha","0.4.0-alpha","0.4.1-alpha","0.5.0-alpha","0.6.0-alpha","0.7.0-alpha","0.8.0-alpha","0.9.0-alpha","0.9.1-alpha","0.9.2-alpha"].includes(s.version)){
  if(["0.1.0-alpha","0.2.0-alpha","0.3.0-alpha","0.3.1-alpha","0.3.2-alpha","0.4.0-alpha"].includes(s.version)){
  const ramen=s.shops.ramen;
  ramen.scores=Object.fromEntries(E.GENRES.map(g=>[g.id,0]));
@@ -89,7 +89,7 @@ function dineDialog(){
  return '<div class="dine-overlay"><button type="button" class="dialog-backdrop" data-modal-close aria-label="投稿を取り消してお店に戻る"></button>'+
  '<section class="dine-dialog" role="dialog" aria-modal="true" aria-labelledby="dineTitle" tabindex="-1">'+
  '<div class="dialog-heading"><div><span class="eyebrow">今日のランチを食べ終えました</span><h2 id="dineTitle">'+esc(d.name)+'の口コミ</h2></div><button type="button" class="dialog-close secondary" data-modal-close aria-label="閉じる">×</button></div>'+
- '<section class="observation-panel" aria-label="食後の観察メモ"><span class="eyebrow">食べてみた感想</span><h3>今日の '+esc(notes.current)+' は……</h3><p class="section-intro">あなたが感じたこと。良し悪しの評価は自分で決めてください。</p><div class="observation-grid">'+
+ '<section class="observation-panel" aria-label="食後の観察メモ"><span class="eyebrow">食べてみた感想</span><h3>'+esc(d.name)+'で気づいたこと</h3><p class="section-intro">あなたが感じたこと。良し悪しの評価は自分で決めてください。</p><div class="observation-grid">'+
  [['🍽️ 味・商品',notes.food],['💬 接客',notes.service],['🪑 店の雰囲気',notes.mood],['💰 価格',notes.price]].map(x=>'<article><strong>'+esc(x[0])+'</strong><p>'+esc(x[1])+'</p></article>').join("")+'</div>'+
  (notes.change?'<p class="observation-change">'+esc(notes.change)+'</p>':"")+'</section>'+
  '<div class="label-row"><strong>① 口コミのジャンルを選ぶ</strong><small>どこを評価しますか？</small></div><div class="genres" role="group" aria-label="口コミジャンル">'+genres+'</div>'+
@@ -145,7 +145,7 @@ function reviewThread(){
  }else if(r.declined){
   follow='<div class="reply-absent thread-decision">返信せずにやり取りを終えました。</div>';
  }else if(y.reply){
-  follow='<div class="counter-choices thread-reveal response-options" id="exchangeArea"><p>この返信にどうしますか？</p><div class="counter-buttons"><button type="button" class="secondary" data-counter="evidence">📋 根拠を伝える</button><button type="button" class="secondary no-reply" data-decline>何もしない</button><button type="button" class="secondary sharp" data-counter="quip">💬 軽く言い返す</button></div></div>';
+  follow='<div class="counter-choices thread-reveal response-options" id="exchangeArea"><p>この返信にどうしますか？</p><div class="counter-buttons"><button type="button" class="secondary" data-counter="evidence">🌱 前向きに返信する</button><button type="button" class="secondary no-reply" data-decline>何もしない</button><button type="button" class="secondary sharp" data-counter="quip">💢 強く言い返す</button></div></div>';
  }
  return '<section class="box result-top review-thread-page"><span class="eyebrow">'+esc(E.MONTHS[y.month-1])+' ／ 投稿完了</span><h2 class="result-title">口コミを投稿しました。</h2><div class="feed-card user-review"><div class="meta">あなた　／　'+esc(d.name)+'　／　'+esc("★".repeat(y.star))+'　'+esc(dgenre(y.genre).name)+'</div><p class="quote">'+esc(y.text)+'</p></div>'+
  '<div class="owner-timeline"><h3 class="thread-reveal timeline-title">店主からの返信</h3>'+initial+follow+'</div>'+
