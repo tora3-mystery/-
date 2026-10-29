@@ -17,6 +17,13 @@ const SKILLS=[
  {id:"night_shift",name:"夜型生活の達人",type:"学業・永続",description:"4・5限の取得率 +8ポイント。ただし1限の取得率 -5ポイント。",score:"午後中心の時間割に向く。",repeat:1},
  {id:"weekend_reset",name:"週休の達人",type:"学業・永続",description:"直前の曜日が全休だった時の取得率補正を+5→+10ポイントに強化。月曜日は対象外。",score:"授業の無い日を作る作戦に向く。",repeat:1}
 ];
+// Light subject-specific aptitudes may be selected at matriculation or acquired later.
+SKILLS.push(
+ {id:"aptitude_pc",name:"パソコンが得意",type:"基礎適性・永続",description:"情報・プログラミング系の講義の取得率 +6ポイント。",score:"対象科目だけ、少し有利になる。",repeat:1},
+ {id:"aptitude_math",name:"数学が得意",type:"基礎適性・永続",description:"数学・統計・計量系の講義の取得率 +6ポイント。",score:"対象科目だけ、少し有利になる。",repeat:1},
+ {id:"aptitude_english",name:"英語が得意",type:"基礎適性・永続",description:"英語・英文系の講義の取得率 +6ポイント。",score:"対象科目だけ、少し有利になる。",repeat:1}
+);
+window.S8_SKILL_DEFS=SKILLS;
 const byId=Object.fromEntries(SKILLS.map(x=>[x.id,x]));
 function count(id){return(state?.skills||[]).filter(x=>x.id===id).length}
 function active(id){return count(id)>0}
@@ -25,6 +32,7 @@ function ensure(){
  if(!Array.isArray(state.skills))state.skills=[];
  if(!state.skillOffers||typeof state.skillOffers!=="object")state.skillOffers={};
  if(!state.skillChosenYears||typeof state.skillChosenYears!=="object")state.skillChosenYears={};
+ if(!Number.isFinite(state.skillEverAcquired))state.skillEverAcquired=state.skills.length;
 }
 function skillActiveYear(year){return year<=3&&year>=1}
 function draft(year){
@@ -64,15 +72,27 @@ function displayDraft(){
   const score=document.createElement("div");score.className="skill-score-detail";score.textContent=skill.score;
   button.append(title,subtype,desc,score);button.onclick=()=>choose(id);box.append(button)
  }
- $("year-skill-history").textContent=state.skills.length?"取得済み："+state.skills.map(s=>byId[s.id]?.name||s.id).join(" / "):"今回が最初のスキル取得です。";
+ $("year-skill-history").textContent=state.skills.length?"取得済み："+state.skills.map(s=>byId[s.id]?.name||s.id).join(" / "):"所持スキルなし。";
+ const decline=$("year-skill-decline");
+ if(decline){decline.onclick=()=>declineSkill();decline.textContent="スキルは取らない（己の力で挑む）";}
+
  $("skip-btn").classList.add("hidden");$("next-btn").classList.add("hidden")
+}
+function declineSkill(){
+ if(!pendingDraft()||!state.yearSkillPending||state.appealPending)return;
+ const year=Math.floor(state.semester/2)+1;
+ state.skillChosenYears[String(year)]="none";
+ state.yearSkillPending=false;
+ save();displayDraft();
+ showToast("スキルを取らずに次年度へ。");
+ advance()
 }
 function choose(id){
  if(!pendingDraft()||!state.yearSkillPending||state.appealPending)return;
  const year=Math.floor(state.semester/2)+1;
  if(!draft(year).includes(id))return;
  const skill=byId[id];if(!skill||count(id)>=skill.repeat)return;
- state.skills.push({id,year});
+ state.skills.push({id,year});state.skillEverAcquired=(state.skillEverAcquired||0)+1;
  state.skillChosenYears[String(year)]=id;
  state.yearSkillPending=false;
  save();
@@ -272,6 +292,13 @@ render=function(){
 };
 const originalEnd=renderEnd;
 renderEnd=function(){
+ if(state?.phase==="end"&&!state.noSkillBonusAwarded&&!state.stageFailYear&&!state.cheatDisqualified&&
+ (state.electiveCredits||0)>=window.S8_OPTIONAL_TARGETS[state.faculty][3]&&
+ state.failedRequired.length===0&&!(state.placementFailure||[]).length&&
+ (state.skillEverAcquired||0)===0){
+   state.score+=2000;state.noSkillBonusAwarded=true;save()
+ }
+
  if(!state?.cheatDisqualified){originalEnd();return}
  const container=$("ending-content");container.replaceChildren();
  const head=document.createElement("h2");head.textContent="GAME OVER｜カンニング発覚";
