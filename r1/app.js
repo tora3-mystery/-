@@ -100,7 +100,7 @@ function result(){
  const otherCause=r.cause==="other",combinedCause=r.cause==="combined",offsetCause=r.cause==="offset",legacyOther=typeof r.cause!=="string"&&r.npc?.id===r.review.id;
  const headline=d.id==="ramen"?"店はそのまま。店主の反論だけが増えた。":otherCause?"ほかのお客さまの口コミで変化！":combinedCause?"口コミが重なり、店が変化！":offsetCause?"二つの意見が交差した。":major?"お店の姿が変わった！":minor?"店頭に新しい動きが！":"お店はいつもどおり。";
  const causeHint=otherCause?"あなたの投稿とは別の口コミが、今回の店舗変化のきっかけです。":combinedCause?"あなたの投稿と、ほかのお客さまの口コミが両方影響しました。":offsetCause?"あなたの口コミへの反応が、同じ月の別の口コミで変わりました。":legacyOther?"この月は同じ店舗にほかのお客さまも口コミを投稿しました。変化の原因は一つとは限りません。":"";
- const ramenHeat=d.id==="ramen"?'<div class="ramen-heat" role="status">🔥 この店は変わりません。反論は累計 '+(r.after.disputes||0)+' 件。</div>':"";
+ const ramenHeat=d.id==="ramen"?'<div class="ramen-heat" role="status">🔥 この店は変わりません。反論は累計 '+(game.shops.ramen.disputes||0)+' 件。</div>':"";
  const burst=changed?'<div class="evolution-burst" aria-hidden="true">'+Array.from({length:14},(_,i)=>'<span style="--n:'+i+'">✦</span>').join("")+'</div>':"";
  const exchange=r.exchange?
   '<div class="reply-thread" id="exchangeArea"><div class="thread-player"><span>あなたから追記</span><p>'+esc(r.exchange.playerText)+'</p></div><div class="thread-owner"><span>'+esc(d.owner)+'から再返信</span><p>「'+esc(r.exchange.ownerText)+'」</p></div></div>':
