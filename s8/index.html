@@ -8,34 +8,34 @@
 <script defer src="./game.js"></script>
 </head>
 <body>
-<header class="site-header"><div class="head-inner"><div><div class="eyebrow">短編UIゲーム実験室 · S8 / α</div><h1>履修登録を完了してください。</h1><div class="meta">v0.1.2 · 2026/10/29 13:13 JST</div></div><a href="../" class="back">ゲーム一覧</a></div></header>
+<header class="site-header"><div class="head-inner"><div><div class="eyebrow">短編UIゲーム実験室 · S8 / α</div><h1>履修登録を完了してください。</h1><div class="meta">v0.3.0 · 2026/10/29 13:45 JST</div></div><div class="header-actions"><button id="sound-toggle" class="back sound-toggle" title="効果音の切替">♪ 音ON</button><a href="../" class="back">ゲーム一覧</a></div></div></header>
 <main class="shell">
 <section id="intro" class="card intro">
 <div class="stamp">学務システム / 試作版</div><h2>4年間の始まりは、時間割から。</h2>
-<p>好きな科目を組み合わせて、単位GETの連鎖を狙おう。<strong>今回は1年生の前期・後期、2学期を試せます。</strong></p>
+<p>好きな科目を組み合わせて、単位GETの連鎖を狙おう。<strong>今回は4年間・全8学期をプレイできます。</strong></p>
 <div class="steps"><span>① 科目を選ぶ</span><span>② 空き時間に登録</span><span>③ 成績が連鎖発表！</span></div>
 <h3>学部を選択</h3><div id="faculty-picker" class="choose-grid"></div>
 <h3>放課後の過ごし方</h3><div id="activity-picker" class="choose-grid"></div>
 <label class="seedline">再現用シード <input id="seed-input" type="text" placeholder="空欄ならランダム" inputmode="text" maxlength="30"></label>
 <button id="begin-btn" class="primary big">履修登録を始める</button><button id="resume-btn" class="secondary hidden">前回の続きから</button>
-<div class="smallhint">所要約3〜5分の試作。進行は端末内に自動保存されます。</div>
+<div class="smallhint">1周約8〜12分。進行は端末内に自動保存されます。</div>
 </section>
 <section id="game" class="hidden">
 <div class="dashboard card"><div><div class="eyebrow" id="semester-label">1年前期</div><div class="dash-sub" id="faculty-label"></div></div>
 <div class="stats"><div><small>取得単位</small><b id="total-credits">0</b></div><div><small>累計SCORE</small><b id="total-score">0</b></div><div><small>今期の登録</small><b id="current-credits">0 / 14</b></div></div></div>
-<div class="main-col"><section class="timetable card"><div class="section-head"><h2>時間割</h2><div id="legend">■ 必修　■ 選択　■ 活動</div></div><div class="hint" id="schedule-hint">科目をタップすると必要なコマが点灯します。</div>
+<div class="main-col"><section class="timetable card"><div class="section-head"><h2>時間割</h2><div id="legend">■ 必修　■ 選択　■ 活動</div></div><div class="hint" id="schedule-hint">空きマスをタップすると、その時間の候補科目が表示されます。</div>
 <div class="grid-wrap"><div id="timetable-grid" class="time-grid" aria-label="週間時間割"></div></div>
-<div id="summary-line" class="summary-line"></div>
+<div id="summary-line" class="summary-line"></div><div id="mandatory-panel" class="mandatory-panel"></div><div id="yearlong-panel" class="yearlong-panel"></div>
 <div class="actionbar"><button id="register-btn" class="primary">履修を確定する →</button><button id="clear-btn" class="ghost">選択を全解除</button></div>
 </section>
 <section class="courses card" id="courses-block"><div class="section-head"><h2>科目を選ぶ</h2><div id="available-counter" class="counter"></div></div><div class="filters" id="course-filters">
 <button class="filter active" data-filter="all">すべて</button><button class="filter" data-filter="safe">単位重視</button><button class="filter" data-filter="high">高得点</button><button class="filter" data-filter="fit">登録可能</button></div>
-<div id="course-list" class="course-list"></div></section></div>
-<section id="reveal" class="reveal-overlay hidden" aria-live="polite"><div class="reveal-box"><div class="eyebrow">成績発表 / 学務ポータル</div><h2 id="reveal-title">前期 成績発表</h2><div id="reveal-flash" class="reveal-flash">RESULT</div><div id="reveal-sub" class="reveal-sub">履修科目を照合しています…</div><div id="reveal-combo" class="reveal-combo"></div><div class="reveal-score" id="reveal-score">0 pt</div><div class="reveal-progress"><div id="reveal-bar"></div></div><div id="reveal-log" class="reveal-log"></div><button id="skip-btn" class="secondary">まとめて表示 »</button><button id="next-btn" class="primary hidden">次の学期へ →</button></div></section>
+<input id="course-search" type="search" placeholder="講義名で検索（例：心理・統計・ゼミ）" aria-label="講義名で検索"><div id="course-list" class="course-list"></div></section></div>
+<section id="reveal" class="reveal-overlay hidden" aria-live="polite"><div class="reveal-box"><div class="eyebrow">成績発表 / 学務ポータル</div><h2 id="reveal-title">前期 成績発表</h2><div id="reveal-flash" class="reveal-flash">RESULT</div><div id="reveal-sub" class="reveal-sub">履修科目を照合しています…</div><div id="reveal-combo" class="reveal-combo"></div><div class="reveal-score" id="reveal-score">0 pt</div><div class="reveal-progress"><div id="reveal-bar"></div></div><div id="reveal-log" class="reveal-log"></div><div id="reveal-required" class="reveal-required"></div><button id="skip-btn" class="secondary">まとめて表示 »</button><button id="next-btn" class="primary hidden">次の学期へ →</button></div></section>
 </section>
 <section id="ending" class="card ending hidden"><div class="stamp">1年次リザルト / 2学期プロトタイプ</div><div id="ending-content"></div><button class="primary big" id="retry-btn">別の時間割でもう一度 ↻</button><button class="secondary" id="same-seed-btn">同じシードで再挑戦</button><p class="smallhint">※ 卒業判定・3〜4年次・キャンパス移動は次段階で実装予定。</p></section>
 </main>
-<div id="course-drawer" class="drawer hidden" role="dialog" aria-modal="true" aria-labelledby="drawer-title">
+<div id="slot-picker" class="drawer hidden" role="dialog" aria-modal="true" aria-labelledby="slot-picker-title"><div id="slot-scrim" class="scrim"></div><div class="drawer-body picker-body"><div class="drawer-handle"></div><button class="drawer-close" id="slot-close" aria-label="閉じる">×</button><h2 id="slot-picker-title">この時間の講義</h2><p id="slot-picker-sub" class="smallhint"></p><div id="slot-list" class="slot-list"></div></div></div><div id="course-drawer" class="drawer hidden" role="dialog" aria-modal="true" aria-labelledby="drawer-title">
 <div id="drawer-scrim" class="scrim"></div><div class="drawer-body"><div class="drawer-handle"></div><button class="drawer-close" id="drawer-close" aria-label="閉じる">×</button><div class="drawer-top"><span class="eyebrow" id="drawer-kind"></span><h2 id="drawer-title"></h2><div id="drawer-tags" class="tags"></div></div><div id="drawer-detail" class="drawer-detail"></div><div id="drawer-message" class="drawer-message"></div><button id="drawer-action" class="primary">この科目を登録</button></div></div>
 <div id="toast" class="toast hidden" role="status"></div>
 </body></html>
