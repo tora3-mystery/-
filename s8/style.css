@@ -92,3 +92,27 @@
 .cell.travel .cn{font-size:10px!important;letter-spacing:.03em}
 .legend-dot.travel{background:repeating-linear-gradient(135deg,#493965 0 3px,#ab88bf 3px 6px);border:1px dashed #d3b8f1}
 .campus-summary{font-size:11px;line-height:1.6;color:#dacbff;background:#242b44;border-left:3px solid #a98ada;margin:6px 0 9px;padding:7px 10px;border-radius:4px}
+
+/* S8 v0.6.0 : exam drama, year-level skill draft */
+.cell.slot-unavailable{background:#172032!important;color:#64748b!important;cursor:default!important;opacity:.60}
+.cell.slot-unavailable .cn{color:#71829a}
+.cell.study{background:repeating-linear-gradient(125deg,#45406b,#45406b 5px,#555582 5px,#555582 10px)!important;border:1px solid #a49cff!important;color:#fff!important}
+.cell.study .cn{font-weight:750;font-size:10px!important}
+.semester-special{font-size:22px;font-weight:1000;line-height:1.35;text-align:center;letter-spacing:.07em;border-radius:14px;padding:14px;margin:14px 0;animation:burst .45s ease}
+.semester-special.all-red{background:linear-gradient(125deg,#7c263a,#3d1830);color:#ffe0e2;box-shadow:0 0 35px #d2495d40}
+.semester-special.excellent{background:linear-gradient(125deg,#4f4128,#665028);color:#fff2be;box-shadow:0 0 34px #edc56c55}
+.appeal-panel,.year-skill-panel{background:#1d2b43;border:1px solid #8b9fc5;border-radius:13px;margin:14px 0;padding:15px}
+.appeal-panel h3,.year-skill-panel h3{font-size:19px;margin:6px 0;color:#ffe0a5}
+.appeal-panel p,.year-skill-panel p{font-size:12px;color:#d9e4f6;line-height:1.6}
+.appeal-list,.year-skill-options{display:grid;grid-template-columns:1fr;gap:9px;margin:12px 0}
+.appeal-option,.year-skill-option{display:block;text-align:left;width:100%;border:1px solid #6a89b8;background:#293c5a;border-radius:10px;color:#f7f7fc;padding:12px}
+.appeal-option strong,.year-skill-option strong{display:block;font-size:15px;color:#f8dda4;margin-bottom:4px}
+.appeal-option small,.year-skill-option small{display:block;color:#d3e1f5;font-size:11px;line-height:1.55}
+.year-skill-option .skill-type{display:inline-block;color:#99c8ff;font-size:10px;font-weight:700;margin:4px 0 7px}
+.appeal-option:focus-visible,.year-skill-option:focus-visible{outline:3px solid #ffdc7d}
+.appeal-panel #appeal-close{display:block;width:100%;margin-top:10px}
+.appeal-last{margin:10px 0;font-size:12px;font-weight:700;line-height:1.6}
+.appeal-last.success{color:#bdf9d2}.appeal-last.fail{color:#ffc0cd}
+.skill-score-detail{font-size:11px;color:#f3e0a7;margin:4px 0 10px}
+.skill-study-hint{font-size:11px;color:#dbd0ff;margin:7px 0}
+@media(max-width:760px){.semester-special{font-size:18px;padding:10px}.year-skill-panel,.appeal-panel{padding:11px}.year-skill-option,.appeal-option{padding:10px}}
