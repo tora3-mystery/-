@@ -277,10 +277,10 @@ stepReveal=function(){
  if(r.course.annual&&state.semester%2===0){
   if(r.pass){
    state.currentCombo++;state.maxCombo=Math.max(state.maxCombo,state.currentCombo);
-   r.combo=state.currentCombo;r.earned=100;state.score+=r.earned;state.termScore+=r.earned;
+   r.combo=state.currentCombo;r.earned=0;
    $("reveal-flash").textContent="前期クリア！";$("reveal-flash").className="reveal-flash success";
    $("reveal-combo").textContent=state.currentCombo>=2?state.currentCombo+" COMBO!":"";
-   $("reveal-sub").textContent=r.name+"　通年の単位は後期末に確定";
+   $("reveal-sub").textContent=r.name+"　前期は仮評価・得点と単位は後期末に確定";
    playSound(state.currentCombo>=3?"combo":"success");
   }else{
    state.currentCombo=0;$("reveal-flash").textContent="前期要補講";$("reveal-flash").className="reveal-flash fail";
