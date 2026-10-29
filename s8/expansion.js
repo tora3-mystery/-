@@ -1,12 +1,12 @@
 "use strict";
-/* S8 v0.3.0 — feature layer. Loaded immediately after game.js, no external dependencies. */
+/* S8 v0.3.1 — feature layer. Loaded immediately after game.js, no external dependencies. */
 (function(){
 const SAVE3="s8_save_v030", BEST3="s8_best_v030_", AUDIO3="s8_audio_v030";
 let audio=null, soundOn=true, searchText="", currentSlot=null, finishedSemester=-1;
 try{soundOn=localStorage.getItem(AUDIO3)!=="off"}catch(e){}
 Object.assign(ACTIVITIES,{
  sports:{name:"体育会系（難）",desc:"火5・金5・土3／取得率-7%、学期+1200pt",blocks:["火5","金5","土3"],bonus:1200,modifier:-7},
- combo:{name:"サークル＋バイト（激難）",desc:"月5・水5・火5・木5／取得率-9%、学期+1500pt",blocks:["月5","水5","火5","木5"],bonus:1500,modifier:-9}
+ combo:{name:"サークル＋バイト（激難）",desc:"サークル月5・水5＋バイト火5・木5・土3／週5コマ／取得率-9%、学期+1500pt",blocks:["月5","水5","火5","木5","土3"],bonus:1500,modifier:-9}
 });
 const C=(id,name,credits,diff,method,slotSets,more={})=>base(id,name,credits,diff,method,slotSets,more);
 const EXTRA=[
@@ -89,7 +89,15 @@ const priorStart=start;
 start=function(seed){priorStart(seed);state.version="0.3.0";ensureDefaults();save()};
 resume=function(){
  try{const s=JSON.parse(localStorage.getItem(SAVE3));if(!s||s.version!=="0.3.0"||!FACULTIES[s.faculty]||!ACTIVITIES[s.activity]||s.semester>7)throw Error("incompatible");
- state=s;ensureDefaults();facultyChoice=s.faculty;activityChoice=s.activity;render();
+ state=s;ensureDefaults();facultyChoice=s.faculty;activityChoice=s.activity;
+ // Preserve existing saves but remove elective conflicts introduced by changed activity times.
+ let removed=0;
+ if(state.phase==="registration"){
+  const selected=state.selectedIds.slice();state.selectedIds=[];
+  for(const id of selected){const c=state.offers.find(x=>x.id===id);if(c&&allowed(c).ok)state.selectedIds.push(id);else removed++}
+  if(removed)save();
+ }
+ render();if(removed)showToast("活動時間の更新により"+removed+"科目の登録を解除しました。");
  if(state.phase==="reveal")playReveal();
  }catch(e){showToast("保存データを復元できませんでした。");displayIntro()}
 };
