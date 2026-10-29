@@ -78,7 +78,7 @@ renderGrid=function(target,interactive){
    }else if(isAll(/移動|キャンパス/)){
     labelText="移動不可";
    }else if(isAll(/活動/)){
-    labelText="活動重複";
+    labelText="活動と重なる";
    }else if(isAll(/重複|重な|同じコマ|同じ時間/)){
     labelText="時間重複";
    }else{
