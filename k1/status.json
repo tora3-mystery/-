@@ -1,33 +1,34 @@
 {
   "projectId": "K1",
   "title": "掲示物をご確認ください。（仮）",
-  "version": "α0.8.1",
-  "updatedAtJST": "2026-10-29 22:36 JST",
-  "phase": "Phase 4 — randomized incidents + night contrast; checkpoint QA passed; human review pending",
+  "version": "α0.9.0",
+  "updatedAtJST": "2026-10-30 00:23 JST",
+  "phase": "Phase 4 — new landlord/manager/ally storyline implemented; simulated checkpoint QA passed; human narrative review required",
   "aiAudit": {
-    "logic": "48/48 checkpoint-path simulations (all 47 event IDs); 35/35 selected side-events' opposite actions cause failure; 4 endings accessible; 168070 theoretical combinations NOT exhaustively tested",
-    "ui": "CSS explicit night confirmation/result label text colors; mock DOM for Day1 variants and two camera views; actual phone browser not tested",
-    "bugFixed": "DAY6 E05G safe refusal previously lost necessary technician evidence; fixed and rechecked"
+    "logic": "48/48 checkpoint playthroughs covering 47 event IDs; 35/35 opposite-actions failed as expected; 4 endings reached; 168070 theoretical random combinations NOT exhaustively tested",
+    "narrative": "New owner Arima 401, manager Manabe, ally Sugiura 302, 405 move-out, Fujii goodwill, ghost transfer 401->406 and cheap lease evidence implemented",
+    "ui": "JS parsed; DOM mock checked day4 departure, day5 false guidance, day8 rent proof, conditional front-door images, save and rewind"
   },
   "browserAudit": {
-    "status": "not_run_alpha081",
-    "pagesDeployed": "not_verified",
-    "mobileWidthsToReview": [
+    "status": "not_run_alpha090",
+    "pagesDeployment": "pending",
+    "realPagesDisplay": "not_verified",
+    "phoneSizesToTest": [
       320,
       390,
       428
-    ],
-    "realPlayerUI": "pending"
+    ]
   },
   "humanReview": {
     "lastReviewedVersion": "α0.6.1",
     "pilotImageLook": "user approved three candidate pictures",
-    "latestGame": "α0.8.1 human test pending",
+    "latestGame": "α0.9.0 not yet human-reviewed",
     "openIssues": [
-      "Check night confirmation boxes after color fix on real phone",
-      "Review 2 Day1 candidates for tutorial clarity",
-      "Assess added side-event variation and DAY5 second camera view",
-      "Decide real camera-photo pilot before mass image work"
+      "10-day narrative comprehensibility and emotional ending",
+      "Day5 R04 bait versus old caution clarity",
+      "Night contrast after new text",
+      "Camera face and fear after Work images",
+      "Side incident language/other-floor residents realism"
     ]
   },
   "assets": {
@@ -40,9 +41,12 @@
     "cameraFaces": "temporary SVG; photo portraits not produced",
     "existingGameImages": 11,
     "camera": "SVG mock faces; no actual camera still photographs yet; Work imagery planned pending separate human image check",
-    "fullAssetIntegration": "existing 11 WebP retained"
+    "fullAssetIntegration": "existing 11 WebP retained",
+    "integratedImages": 11,
+    "cameraPortraits": "SVG prototype only; Work 5 of 28 pilot ordered separately, not yet delivered or integrated",
+    "nextWork": "Review five camera still prototypes then produce remaining 23"
   },
-  "nextOwner": "K1 human reviewer / Work image pilot",
-  "nextAction": "Human-play alpha0.8.1, prioritize night text legibility; commission 3 camera-still photo pilot in Work, then rest once visual direction approved.",
+  "nextOwner": "Human reviewer and Work asset pilot; K1 Chat later image integration",
+  "nextAction": "Human-play alpha0.9.0, check story and controls; review Work's five camera stills; prepare final 28 asset mapping",
   "scope": "k1/ only"
 }
