@@ -145,7 +145,7 @@ function reviewThread(){
  }else if(r.declined){
   follow='<div class="reply-absent thread-decision">返信せずにやり取りを終えました。</div>';
  }else if(y.reply){
-  follow='<div class="counter-choices thread-reveal response-options" id="exchangeArea"><p>この返信にどうしますか？</p><div class="counter-buttons"><button type="button" class="secondary" data-counter="evidence">📋 根拠を伝える</button><button type="button" class="secondary no-reply" data-decline>何もしない</button><button type="button" class="secondary sharp" data-counter="quip">💬 軽く言い返す</button></div></div>';
+  follow='<div class="counter-choices thread-reveal response-options" id="exchangeArea"><p>この返信にどうしますか？</p><div class="counter-buttons"><button type="button" class="secondary" data-counter="evidence">🌱 前向きに返信する</button><button type="button" class="secondary no-reply" data-decline>何もしない</button><button type="button" class="secondary sharp" data-counter="quip">💢 強く言い返す</button></div></div>';
  }
  return '<section class="box result-top review-thread-page"><span class="eyebrow">'+esc(E.MONTHS[y.month-1])+' ／ 投稿完了</span><h2 class="result-title">口コミを投稿しました。</h2><div class="feed-card user-review"><div class="meta">あなた　／　'+esc(d.name)+'　／　'+esc("★".repeat(y.star))+'　'+esc(dgenre(y.genre).name)+'</div><p class="quote">'+esc(y.text)+'</p></div>'+
  '<div class="owner-timeline"><h3 class="thread-reveal timeline-title">店主からの返信</h3>'+initial+follow+'</div>'+
