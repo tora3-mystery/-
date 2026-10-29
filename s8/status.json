@@ -1,9 +1,9 @@
 {
   "id": "S8",
   "title": "履修登録を完了してください。（仮）",
-  "version": "0.7.2",
-  "updated_at_jst": "2026/10/29 22:53 JST",
-  "phase": "Phase 4: retake labels, differentiated registration actions, persistent skill discard and zero-skill challenge, aptitude-tag chance effects, difficulty styling and progress warnings. Mock DOM logic and click-path QA performed; human/mobile review pending.",
+  "version": "0.7.3",
+  "updated_at_jst": "2026/10/29 23:03 JST",
+  "phase": "Phase 4: compulsory class timings diversified to mornings and Saturdays, mandatory-master adjacency clarified, false-empty-slot activity collisions explained, and compulsory placement repaired. Mock state regression complete; human/mobile real browser QA pending.",
   "scope": "4 years / 8 terms playable; 3 faculties; 5 extracurricular difficulty setups",
   "features": [
     "tap an unoccupied timetable slot to choose courses that include that period",
@@ -76,7 +76,12 @@
     "v0.7.2: difficulty ★1–5 color coding on course tiles and class list border; required courses retain blue with a colored difficulty keyline",
     "v0.7.2: autumn semester warns if even perfect success of currently registered courses would leave the elective progression quota short; also warns when no buffer remains",
     "v0.7.2: filter labels explicitly state their existing rules—pass rate ≥82%, difficulty ≥4, currently registerable or selected",
-    "v0.7.2 final safety rule: once discarded, a skill ID is excluded from all future annual draft candidate pools, preventing reacquisition even if remaining repeat capacity exists."
+    "v0.7.2 final safety rule: once discarded, a skill ID is excluded from all future annual draft candidate pools, preventing reacquisition even if remaining repeat capacity exists.",
+    "v0.7.3: new compulsory class placements across years 1–4 include first periods and Saturday periods; previously static Monday/Friday second-period dominated. Science two-period compulsory labs keep contiguous period blocks.",
+    "v0.7.3: mandatory_master only grants 100% if the immediately preceding actual lecture period (not lunch) is free for an otherwise required course. No preparation is available before period 1 or between contiguous compulsory classes.",
+    "v0.7.3: registration review explicitly displays mandatory_master active/inactive explanation for each compulsory course.",
+    "v0.7.3: unavailable elective slot caption '別コマで活動' explains a multi-slot course whose OTHER period conflicts with fixed club/sports/job activities; activity periods themselves remain filled with the fixed-activity name.",
+    "v0.7.3: compulsory conflict fallback now searches earlier days when same-day and later-day shifts fail, preventing Saturday mandatory deferrals caused only by no later day."
   ],
   "ai_audit": {
     "structure": "PASS: JS bracket/quote balance; no missing DOM IDs from game.js and expansion.js (124 $ references against 57 HTML IDs)",
@@ -104,12 +109,11 @@
     "score_mechanics_v05": "2 credits → 200 basic points; 4 credits → 400; plus +50 × min(5, combo index-1). Annual spring midterm 0, autumn passed earns 4 credits×100pt. Semester bonuses shown separately.",
     "static_v05": "PASS: game.js, expansion.js, balance.js, polish.js pass JS compilation; HTML DOM IDs for referenced fields present. Legacy hidden search input kept to protect expansion.js init binding.",
     "outstanding": [
-      "Real device-browser QA required: independently verify the final onclick binding actually shows the skill selector on a phone after finishing first-year fall grade results.",
-      "Human playtest elective quota sizes, especially economics/science year-one target of 4 optional credits; targets are derived by subtracting expected cumulative mandatory volume from the old combined threshold.",
-      "Potential historical save migration is an estimate, since pre-v0.7.0 history stored total credits and mandatory result IDs but no standalone elective ledger.",
-      "Risk probability breakdown includes a final cap/rounding/mobility residual after describing core contributors; confirm it is understandable in actual mobile layout.",
-      "Ensure the confirmation modal can be dismissed and class cancellation can lead naturally back to optional selection.",
-      "No changes to root INDEX, managed by project master."
+      "Real mobile/browser display and click QA not run. Check new compulsory morning/Saturday patterns and class detail labels with a human playthrough.",
+      "Existing in-progress saves retain their generated timetable; newly generated timetables use diversified required-period options without relocating old saves.",
+      "The first-period and Saturday mandatory distribution can materially change balance; measure experience and revise chance tuning if players find it unfair.",
+      "A multi-slot elective whose other period overlaps club/job/sports is blocked even when the tapped individual slot is empty; label now explains that situation.",
+      "Root INDEX and other projects were not edited."
     ],
     "v052_static": "PASS: all 5 JavaScript bundles compile and DOM IDs referenced by scripts exist. Source-layer first boot was checked; ADVANCED IIFE private symbol access was corrected.",
     "v052_firstyear_expected_credits": "750 faculty×activity×seed models for each target load: 10 registered credits -> 7.50 expected earned, 14 -> 8.79, 20 -> 7.20, approximately 30 -> 1.69. Static expected-credit analysis, not measured grade outcomes.",
@@ -146,27 +150,26 @@
     "v072_main": "PASS 75 full mock-DOM player runs across 3 faculties x 5 activity types x 5 seeds. 222 registration-review opens, 222 confirmed grade presentations, 75 in-place cancellations, 75 valid candidate replacements, 37 year-end skill decisions (27 no-skill declines + 10 acquisitions); all 75 terminated with no JS exception. No real browser taps conducted.",
     "v072_edge": "PASS 6 focused tests: 1 failure -> (再履修), 2 failures -> (再再履修), math aptitude +6pp on 微積分Ⅰ, skill discard requires second click, skill acquired then permanently discarded still keeps ever-acquired counter, and no-skill graduation bonus +2,000 once (no repeated grant).",
     "v072_static": "PASS all 10 S8 scripts compile; named DOM IDs all present; duplicate script load found and corrected before final. Course tags used for mathematics/computer/English bonuses; challenge skip button is outside three random skill cards. UI lunch/gradient CSS is code-reviewed only, not visually rendered in an actual phone.",
-    "v072_discard_reacquire": "Source review: annual draft eligible filter checks state.discardedSkills and excludes removed skill IDs permanently. Existing saves lacking discardedSkills remain backward-compatible via ||[]."
+    "v072_discard_reacquire": "Source review: annual draft eligible filter checks state.discardedSkills and excludes removed skill IDs permanently. Existing saves lacking discardedSkills remain backward-compatible via ||[].",
+    "v073_placement": "PASS: 1,800 synthetic faculty×activity×seed×semester registration states (3×5×15×8), 731 included first-period compulsory, 685 included Saturday compulsory, 353 had at least one contiguous pair of required slots; zero compulsory/activity clashes, zero deferred required placements and zero JS exceptions. Baseline before fallback had 12 deferred states across 1,440, now zero across 1,800.",
+    "v073_prep": "PASS: direct compulsory-master test with same-day period1+2 compulsory classes: no study period, neither class 100%. Period2+3 compulsory classes: period1 study reserved, period2 100%, period3 below 100%. A standalone period2 compulsory also gains 100% when period1 is free. Lunch interval is not counted as a study period.",
+    "v073_full": "PASS: 60 8-semester scripted mock-DOM runs using actual registration click callbacks and skill choice callbacks; 60 reached ending, 187 registration confirmation screens, 35 annual skill draft interactions, 0 runtime exceptions, 0 deferred compulsory classes, and 0 compulsory/activity overlaps."
   },
   "browser_qa": {
     "performed": false,
     "status": "pending",
     "devices": [],
-    "notes": "Mock DOM script execution and static checks only. Actual iPhone/Android/Chromium visual and touch QA was not performed."
+    "notes": "Script parse and mock-DOM logic simulation only, no live browser/iPhone rendering or touch QA."
   },
   "human_review": {
     "performed": false,
-    "target_version": "0.7.2",
+    "target_version": "0.7.3",
     "requested_checks": [
-      "Inspect the mobile lunch-break band with first columns visible; the label should be visible instead of a blank dashed strip.",
-      "Play two years with a compulsory first and second failure; verify '再履修' then '再再履修' everywhere important, not just grid.",
-      "Open registration confirmation: cancel should remain on screen; swap should show valid candidates only, and disabled when none.",
-      "Pick initial computer/math/English aptitude and compare pass odds for tagged vs untagged subjects; check explanation row.",
-      "Choose no skill on year-end draft and verify advancement; discard existing skill through two-step irreversible confirmation, re-open after resuming.",
-      "Graduate while selecting no skill at admission and all 3 year-end opportunities, confirm one-time +2000-point award.",
-      "Look at diff1–5 classroom colors and mandatory color consistency on a 320–390px phone.",
-      "In autumn, verify warnings for theoretical elective max below or equal to year quota.",
-      "Review filters: high pass odds 82%+, hard diff 4+, registerable includes selected."
+      "See required classes in first-period and Saturday slots across rerolls, including science labs in consecutive blocks.",
+      "Acquire mandatory_master: test period1, consecutive period1+2, period2+3, and isolated period2 mandatory courses. Only classes with an immediately preceding free lecture period get guaranteed 100%.",
+      "Inspect registration-review explanation for the active or inactive mandatory-master modifier.",
+      "On a multi-slot elective blocked by a different period overlapping an extracurricular activity, verify '別コマで活動' explanation; fixed activity cell itself must show its activity label.",
+      "Confirm required lectures still register without activity overlap and year-end credit gates/skill 3-choice work."
     ]
   },
   "assets": {
@@ -174,12 +177,11 @@
     "work_required": false
   },
   "next": {
-    "owner": "S8 dedicated Chat / human reviewer",
+    "owner": "S8 dedicated Chat and human reviewer",
     "actions": [
-      "Human mobile test v0.7.2 for lunch label, replacement dialog, skill handling and difficulty palette.",
-      "Final large-scale audit of all lecture variants, descriptions and rumor texts later, potentially with Work after core design stabilizes.",
-      "If a structural skill is discarded and would conflict with mandatory periods in the current timetable, currently decline the discard and explain; consider next-term deferred discard model after playtest.",
-      "Independent browser QA before release; notify project master and ask permission for root INDEX updates if necessary."
+      "Review newly randomized compulsory timing and overall balance in genuine mobile play.",
+      "Validate post-skill uptake visual and case-specific mandatory-master 100% breakdown.",
+      "Preserve the later large-scale lecture names/reviews and rumors copy-audit for final QA, potentially with Work."
     ]
   },
   "edits": {
