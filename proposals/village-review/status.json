@@ -2,22 +2,27 @@
   "schemaVersion": "1.0",
   "projectId": "V1",
   "title": "この村の評価をお願いします。",
-  "gameVersion": "0.6.29-alpha",
-  "gameUpdatedAtJST": "2026-10-29 01:56 JST",
-  "phase": "Phase 7：本実装・個別QA・試作公開（村民の声拡充済み、顔12点は未納品、v1.0未確定）",
+  "gameVersion": "0.6.30-alpha",
+  "gameUpdatedAtJST": "2026-10-29 10:34 JST",
+  "phase": "Phase 7：本実装・個別QA・試作公開（村民追加12顔・台帳をmainへ統合、V8模擬DOM回帰PASS、実ブラウザ・人間最終レビュー待ち／v1.0未確定）",
   "publicUrl": "https://tora3-mystery.github.io/short-ui-games/proposals/village-review/",
   "source": {
     "repository": "tora3-mystery/short-ui-games",
     "scope": "proposals/village-review/",
-    "mainCommitChecked": "ba0eba10cae55d1fad951242e333f50c762e051c",
+    "mainCommitChecked": "828c3f3a62b4c5f9808b6c86296efbd9fa229542",
     "workAssetBranch": "v1-assets44-20261028",
     "workAssetMergePR": 8,
-    "workAssetMergeCommit": "1ac9b82a17418ad3ba1dbd9f21f880c554a0b0ca"
+    "workAssetMergeCommit": "1ac9b82a17418ad3ba1dbd9f21f880c554a0b0ca",
+    "residentFaceSourceBranch": "v1-resident-faces-20261029",
+    "residentFaceDeliveryCommit": "dc1f04244ec7e1fbfd4956d299a9e486f82fbea3",
+    "residentFaceMergePR": 10,
+    "residentFaceMergeCommit": "119840df95725c46a43d8a89cb63b99de7d7af88",
+    "versionBumpCommit": "48541fd6f7727723cfdd490c1cbf91301b9456be"
   },
   "materials": {
     "existing": 145,
     "workAdded": 44,
-    "logicalAssetsAfterIntegration": 189,
+    "logicalAssetsAfterIntegration": 201,
     "workPng": 44,
     "workWebp": 44,
     "workContactSheets": 3,
@@ -46,16 +51,20 @@
       "existing": 10,
       "plannedAdditional": 12,
       "expectedAfterDelivery": 22,
-      "assetState": "Work新顔12画像は未制作・未保存。表示は既存10画像を使用。",
-      "integrationStatus": "画像の受入処理と話者別選択はコード組込み済み。未納品時の旧画像への自動フォールバック済み。",
+      "assetState": "Work制作PNG12点・WebP12点・台帳・22人コンタクトシートをmain統合済み。Work報告の画素/ハッシュ/40px検品PASS、Chatによる独立画素検査は未実施。",
+      "integrationStatus": "PR #10 mainマージ完了。既存v1AcceptResidentAssetsは納品実台帳を受理し、模擬DOMで新顔12/12到達。公開ブラウザ表示未確認。",
       "expectedPath": "assets/proposals/residents/",
       "expectedManifest": "assets/proposals/residents/asset-list.json",
       "imageSize": "256×256 PNG+WebP、透明背景",
-      "workTask": "新規12人の顔画像制作・検品・asset-list.json・比較シート・専用ブランチ保存（ゲーム本体は変更しない）"
+      "workTask": "完成：新規12人画像24点＋asset-list.json＋22人比較シート、専用ブランチ→PR #10 mainマージ済み",
+      "deliveredAdditional": 12,
+      "workDeliveryFiles": 26,
+      "workRegenerated": 3,
+      "workResizedVisualQa": "Work報告：既存10人＋新12人の22人40px比較確認済み"
     }
   },
   "aiAudit": {
-    "status": "PASS",
+    "status": "PASS（α0.6.30新顔12点統合後の実台帳を用いたV8模擬DOM検証）",
     "level": "Node互換V8・模擬DOM（実ブラウザ試験ではない）",
     "testFiles": [
       "tests/qa_bridge.cjs",
@@ -70,14 +79,30 @@
     "evolutionStage3Verified": 576,
     "addedAssetRouteCases": 44,
     "failingTests": 0,
-    "residentVoices": "16施設の声48件＋村全体の日常の声32件を追加。120村・1440か月の声QAで380種類の村全体の発言、同月2件重複なし、再描画で変化なし、ゲーム乱数消費なし。"
+    "residentVoices": "16施設の声48件＋村全体の日常の声32件を追加。120村・1440か月の声QAで380種類の村全体の発言、同月2件重複なし、再描画で変化なし、ゲーム乱数消費なし。",
+    "integrationRun": {
+      "version": "0.6.30-alpha",
+      "level": "GitHub main実コード＋実台帳3点を使用したV8/模擬DOM。ブラウザ実機試験ではない。",
+      "villages": 160,
+      "reviews": 1920,
+      "allCompleted": true,
+      "distinctVillageVoices": 417,
+      "distinctSpeakers": 35,
+      "duplicateMonthlyVoices": 0,
+      "stableRedrawChecks": 1920,
+      "residentManifestAccepted": true,
+      "incompleteResidentManifestRejected": true,
+      "legacyPortraitFallback": true,
+      "all12PortraitIdsReachable": true,
+      "sourceHtmlGenerated": true
+    }
   },
   "browserAudit": {
-    "latestVersionTested": "0.6.28-alpha",
-    "status": "Workがα0.6.28の代表画像2点について320/390pxブラウザビューポートで確認。α0.6.29の新台詞表示と新顔は実ブラウザ未確認。",
-    "pagesDeployment": "GitHub Actions成功（main 3fc4e0c、run 40725270574）",
-    "publishedUrlRead": "Work報告：最新版ゲームを実ブラウザで320px・390px幅表示。全画像の実ブラウザ確認は未実施。",
-    "realMobileTest": "Workのブラウザビューポート320px・390px相当。スマートフォン実機ではない。",
+    "latestVersionTested": "0.6.28-alpha（新顔の実ブラウザテストは未実施）",
+    "status": "α0.6.30の新顔12点はV8模擬DOMで画像URLを生成・選択できることを確認。実ブラウザでの表示・ロード・操作は未確認。旧α0.6.28の2画像確認を最新の合格と扱わない。",
+    "pagesDeployment": "GitHub Actions Pagesデプロイ success：画像マージ119840d(run 40801166180)、α0.6.30版数更新48541fd(run 40801247703)。QA記録・status更新コミットの配信状態は別途確認。",
+    "publishedUrlRead": "公開GitHub Pages URLをWeb手段から直接取得できなかったため実表示・画像ロード未確認。",
+    "realMobileTest": "最新版α0.6.30のiPhone実機・Safari/Chrome操作未実施。",
     "priorAudits": "旧版のブラウザQAは最新α0.6.28の合格として扱わない",
     "assetSampleImages": [
       "market-small-1.webp",
@@ -86,18 +111,18 @@
     "assetSampleResult": "Work報告：2点とも正常ロード、絵文字代替なし、ラベルとの不自然な重なりなし。"
   },
   "humanReview": {
-    "targetVersion": "0.6.29-alpha",
-    "status": "進行中（α0.6.28のゲーム体験について「かなりいい感じ」、村民の顔の種類・声の種類を改善希望）。最新版α0.6.29の再試遊待ち",
-    "notes": "村民の声の追加提案を受け、α0.6.29で日常32件・施設48件を増やし、既存の状態連動と隠し伏線を維持。新しい村民顔12件はWork未発注／未納品。",
+    "targetVersion": "0.6.30-alpha",
+    "status": "最新版α0.6.30（追加顔12点・声拡充済み）での人間再試遊待ち。α0.6.28で『かなりいい感じ』の評価あり。v1.0 Gate Cは未認定。",
+    "notes": "α0.6.30で追加顔12人を統合。人間は新顔の読み込み・発言との整合、地図、口コミから進化、年末パンフレット、保存再開を最新版で確認する。",
     "required": [
-      "スマートフォンで12か月を完走し、各月の選択・口コミ・進化結果が分かりやすいか",
-      "地図の操作と訪問可能・選択中ラベルが分かりやすいか（320/390px相当）",
-      "進化結果132pxの絵と名称の納得感、海辺専用画像と潮汐演出",
-      "年末パンフレット・エンディングの満足感と説明過多がないか",
-      "保存・再開、ページ遷移、最終進化での画像差分を確認"
+      "新12顔が公開ブラウザで読み込まれるか／既存10顔との画風統一／発言者との違和感／40px縮小の識別性",
+      "スマートフォンで12か月を完走し、口コミ・施設進化・関連施設の変化が分かりやすいか",
+      "地図の操作・訪問可能ラベル・選択中ラベルが320/390pxで分かりやすいか",
+      "進化結果132px・海辺専用画像・潮汐演出・年末パンフレット／特殊エンドの満足感",
+      "保存・再開、リロード、ページ遷移、最終進化を実操作で確認"
     ]
   },
-  "nextOwner": "人間：α0.6.29の追加台詞を再試遊。Work：顔12点の一括素材制作（依頼を受けた場合）。作品Chat：素材統合・回帰・v1.0 Gate C判定",
-  "nextWork": "新規村民顔12点は画像制作Workへ一括依頼予定。完成後、作品Chatが自動顔表示の確認と人間最終レビュー。",
-  "lastQaReport": "QA_ASSET44_INTEGRATION_V0628_20261029.md"
+  "nextOwner": "人間：α0.6.30のスマホ実操作と声・顔・進化・年末パンフレットの評価。村4：実ブラウザ確認可能な環境で画像ロード/操作QA、指摘対応、v1.0 Gate C判定。Work画像制作は完了。",
+  "nextWork": "新規画像制作作業は完了。実ブラウザ・人間試遊とGate Cが残存。画像の再制作は具体的な不備が見つかった場合に限る。",
+  "lastQaReport": "QA_RESIDENT12_INTEGRATION_V0630_20261029.md"
 }
