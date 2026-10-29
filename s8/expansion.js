@@ -251,13 +251,14 @@ renderReveal=function(){
   if(r.course.annual&&logRows[i]){const label=logRows[i].querySelector("b");if(label)label.textContent=r.pass?"前期クリア +"+fmt(r.earned):"前期要補講"}
  }
  const box=$("reveal-required");box.replaceChildren();
- const mand=state.results.filter(r=>r.required);
+ const mand=state.results.filter(r=>r.required||r.course.annual);
  if(!mand.length)return;
  const head=document.createElement("strong");head.textContent="必修・通年の結果";box.append(head);
  for(const r of mand){
   const index=state.results.indexOf(r),done=index<state.revealIndex;
   const tag=document.createElement("span");tag.className="mandatory-tag "+(done?(r.pass?"got":"lost"):"pending");
-  tag.textContent=r.name+"："+(done?(r.pass?"取得":r.lotteryLost?"抽選落ち":"落単"):"発表待ち");
+  const status=done?(r.course.annual&&state.semester%2===0?(r.pass?"前期クリア":"前期要補講"):r.pass?(r.course.annual?"4単位取得":"取得"):r.lotteryLost?"抽選落ち":"落単"):"発表待ち";
+  tag.textContent=r.name+"："+status;
   box.append(tag)
  }
 };
@@ -282,7 +283,7 @@ stepReveal=function(){
   return;
  }
  priorStep();
- if(r.course.type==="annualCarry"&&!r.pass)state.failedRequired=state.failedRequired.filter(c=>c.canonicalId!==r.canonicalId);
+ if(r.course.type==="annualCarry"&&!r.pass){state.failedRequired=state.failedRequired.filter(c=>c.canonicalId!==r.canonicalId);save()}
  playSound(r.pass?(state.currentCombo>=3?"combo":"success"):(r.lotteryLost?"click":"fail"));
 };
 const priorEnd=endReveal;
