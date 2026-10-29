@@ -249,7 +249,7 @@ renderEnd=function(){
  const el=$("ending-content");el.replaceChildren();
  const h=document.createElement("h2");h.textContent=state.stageFailYear+"年次 留年";el.append(h);
  const s=document.createElement("div");s.className="hero-score";s.textContent="進級要件 未達";el.append(s);
- const p=document.createElement("p");p.textContent="累計"+state.credits+"単位 ／ 必要"+TARGETS[state.stageFailYear-1]+"単位。時間割を組み直して再挑戦してください。";el.append(p);
+ const p=document.createElement("p");p.textContent="累計"+state.credits+"単位 ／ 必要"+TARGETS[state.stageFailYear-1]+"単位。進級要件を満たせなかったため、来年度のスキル3択は発生しません。時間割を組み直して再挑戦してください。";el.append(p);
  const details=document.createElement("p");details.className="smallhint";details.textContent="SCORE "+fmt(state.score)+" pt · 学生生活："+FACULTIES[state.faculty].name+" × "+ACTIVITIES[state.activity].name;el.append(details);
 };
 const oldRetry=$("retry-btn").onclick;
