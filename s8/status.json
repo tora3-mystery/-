@@ -1,9 +1,9 @@
 {
   "id": "S8",
   "title": "履修登録を完了してください。（仮）",
-  "version": "0.7.4",
-  "updated_at_jst": "2026/10/29 23:20 JST",
-  "phase": "Phase 4: full content and course-setting audit completed at v0.7.4. Revised compulsory rumors/reviews, credit/scoring display accuracy, science lab naming, annual grade labels and meta-heavy copy. Source/mock DOM QA passed; browser QA and independent human review pending.",
+  "version": "0.7.5",
+  "updated_at_jst": "2026/10/29 23:56 JST",
+  "phase": "Phase 4: final Chat-side code/course audit of logic, aptitude tags, lottery-adjusted probability display and content consistency complete. Static and mock-DOM tests passed; human difficulty assessment and independent real smartphone/browser QA remain before v1.0.",
   "scope": "4 years / 8 terms playable; 3 faculties; 5 extracurricular difficulty setups",
   "features": [
     "tap an unoccupied timetable slot to choose courses that include that period",
@@ -86,7 +86,12 @@
     "v0.7.4 copy: revise 11 underinformative common-elective / advanced-seminar messages; align physics lab I/II and specialist lab I/II naming.",
     "v0.7.4 consistency: remove stale 72-credit gate and inflexible retake schedule text; distinguish annual interim grades from definitively earned credits; score details now distinguish base/streak/skill points.",
     "v0.7.4 style: change '履修解禁' and other unnecessarily gamey course/administrative copy to natural academic portal instructions, while retaining user-facing explicit game mechanics.",
-    "v0.7.4 audit report in s8/AUDIT-v0.7.4.md. No changes outside s8/"
+    "v0.7.4 audit report in s8/AUDIT-v0.7.4.md. No changes outside s8/",
+    "v0.7.5: correct PC false-positive aptitude tags caused by matching 'it'/'ai' in English course IDs; derive PC/math/English from actual course names and repair legacy saved tags at use time.",
+    "v0.7.5: explicitly add +6pp per independently matching aptitude (PC+math gives +12pp on tagged lectures, cap 98%). Registration chance breakdown lists each owned aptitude category.",
+    "v0.7.5: calculate and show course lottery-adjusted final credit probability, multiplying offer allocation chance by conditional grade pass rate in course list, application review and substitution options; high-success filter now uses the final probability.",
+    "v0.7.5: itemize campus travel penalty in review rather than vague residual attribution; clarify the final displayed probability is the grade lottery input when course allocation succeeded.",
+    "v0.7.5: s8/AUDIT-v0.7.5.md records full Chat-side audit and unresolved balance/browser/human QA topics."
   ],
   "ai_audit": {
     "structure": "PASS: JS bracket/quote balance; no missing DOM IDs from game.js and expansion.js (124 $ references against 57 HTML IDs)",
@@ -114,11 +119,12 @@
     "score_mechanics_v05": "2 credits → 200 basic points; 4 credits → 400; plus +50 × min(5, combo index-1). Annual spring midterm 0, autumn passed earns 4 credits×100pt. Semester bonuses shown separately.",
     "static_v05": "PASS: game.js, expansion.js, balance.js, polish.js pass JS compilation; HTML DOM IDs for referenced fields present. Legacy hidden search input kept to protect expansion.js init binding.",
     "outstanding": [
-      "Actual Chrome/Safari/iPhone/Android visual and interaction QA not performed.",
-      "Prerequisite realism: sequential required lectures, for example 微積分II, can be assigned even when I was failed. This is an existing game-design concession and was not silently changed in a copy audit.",
-      "Optional/common lecture rumor/net copy generally has one unique version per definition; these may recur in later years. Prioritize second variants in final polish if actual play confirms repetition.",
-      "Some early v0.1 legacy function bodies retain old strings, but all relevant active displays are overridden by later layers. Refactoring deferred to avoid regression.",
-      "Complete independent human review of readability, subject naming and probability explanation across all three faculties; user previously had positive human feedback on earlier v0.7.3 gameplay."
+      "Human playtest v0.7.5 mandatory before balancing or v1.0; crude AI strategies graduated only 1/360 while forced-all-pass schedule reachability was 120/120. Do not infer actual human success probability.",
+      "Independent actual smartphone browser QA (320px and 390px), review modal, course replacement/cancellation, chance and skill UI, save/resume and performance, not executed.",
+      "Prerequisite modeling for required course sequences such as 微積分Ⅰ/Ⅱ is a design decision; don't silently change core scheduling rule.",
+      "Optional elective rumor/net descriptions mostly have one text variant; additional variants are final polish priority if human repeat play is repetitive.",
+      "Probability review includes truthful cap/rounding residual; an exact mathematical line-by-line derivation would require refactor of all chance decorators.",
+      "No changes outside s8/. Root INDEX belongs to project master."
     ],
     "v052_static": "PASS: all 5 JavaScript bundles compile and DOM IDs referenced by scripts exist. Source-layer first boot was checked; ADVANCED IIFE private symbol access was corrected.",
     "v052_firstyear_expected_credits": "750 faculty×activity×seed models for each target load: 10 registered credits -> 7.50 expected earned, 14 -> 8.79, 20 -> 7.20, approximately 30 -> 1.69. Static expected-credit analysis, not measured grade outcomes.",
@@ -164,24 +170,31 @@
     "v074_realism": "FIXED science lab name sequence, 11 terse elective/advanced-seminar comments, inaccurate legacy 72-credit/fixed-time descriptions, inaccurate early-year ALL-PASS when annual credits are provisional, and misleading streak-only score breakdown. Remaining prerequisite modeling issue documented in audit file.",
     "v074_odds": "PASS 240 pre-final course review formula spot-checks: 235/240 within 2pp of the sum of displayed major contributions; maximum residual 8pp, no 10pp+ residual. Final chance remains authoritative and residual labeled neutrally; a full stage-by-stage derivation is pending.",
     "v074_rerun": "PASS 90 updated mock-DOM simulated game runs completed; 314 registration confirmations, 71 annual skill choices, zero runtime errors and zero missing mandatory quote fields. Prior 150-run audit checked 501 semesters, 106 annual skill choices, no duplicate course ID in a semester, no missing required quote.",
-    "v074_audit_file": "s8/AUDIT-v0.7.4.md"
+    "v074_audit_file": "s8/AUDIT-v0.7.4.md",
+    "v075_inventory": "PASS: 105 unique course IDs across 109 definitions, 3 faculties x 8 semester offers, 10 prerequisite-gated courses, 6 lottery-based courses. No invalid credits, difficulty or assessment method.",
+    "v075_skill_tags": "PASS: corrected tags: PC 10, math 13, English 3. Reproduction on writing/literature IDs confirms false PC tags are cleared. Math and PC both applied to Data Analysis (example probability +12pp for 3 faculties); line-item review bonus matches.",
+    "v075_lottery": "PASS: allocation probability and conditional grade pass probability correctly multiplied in review and replacement candidates. Simulated review screen for 映画と社会 showed 60% allocation x 70% grade pass = 42% final, matching calculation. Safe filter uses final chance.",
+    "v075_normal_runs": "PASS 360 mock-DOM normal-random simulated runs: 3 faculties x 5 extracurricular types x 3 schedule strategies x 8 seeds; 1251 registration steps, 270 year-end draft interactions, no runtime errors, no required/club overlap, no invalid odds. One graduation in 360 under these fixed nonoptimal strategies: serious human difficulty follow-up required (not an empirical human graduation rate).",
+    "v075_feasibility": "PASS 120 artificial all-pass 4-year scenarios (3 faculties x 5 activities x 8 seeds): all 120 hit yearly quotas and graduated. Proves specific viable schedules exist when grades all pass, not that real random play is fairly balanced.",
+    "v075_postfix_regression": "PASS final 90 mock-DOM callback runs after tag/lottery fixes: 90/90 ended, 339 registration screens, 82 skill selection interactions, 0 runtime errors; after additive skill patch, 3 targeted faculty cases produced +6/+6/+12pp correctly. All ten JS modules parse.",
+    "v075_audit_file": "s8/AUDIT-v0.7.5.md"
   },
   "browser_qa": {
     "performed": false,
     "status": "pending",
     "devices": [],
-    "notes": "Static source review and mock DOM/logic simulation. No genuine browser visual, touch, or GitHub Pages live interaction QA executed for 0.7.4."
+    "notes": "GitHub source inspection, synthetic JavaScript simulations and mocked DOM callbacks only. No real Chrome/Safari/mobile browser check or Pages screenshot verification performed for v0.7.5."
   },
   "human_review": {
     "performed": false,
-    "target_version": "0.7.4",
+    "target_version": "0.7.5",
     "requested_checks": [
-      "Compare mandatory lecture rumors/net comments across humanities, economics and science; verify course-specific and natural Japanese.",
-      "Test annual elective spring ALL-PASS banner; it must explicitly say provisional interim success and no final credit until fall.",
-      "Confirm course result breakdown distinguishes base, consecutive pass and score-boost skill points.",
-      "Check re-enrolled compulsory lecture times are not described as always fixed and graduation gate describes elective quota plus all mandatory earned.",
-      "Inspect science labs I/II and specialty I/II in first and second year without old naming in a new run.",
-      "Assess repeated common-elective description quality after multiple playthroughs; decide if a second variant is needed."
+      "Play actual 4-year game under current quotas; assess whether difficulty is too hard vs intentional retry play (normal AI fixed schedule won 1/360, artificial all-pass 120/120).",
+      "Select PC/math aptitude; confirm off-topic subjects no longer get PC and dual-tag courses get cumulative +12pp when both skills obtained.",
+      "Check lottery-affected course list and registration modal distinguish allocation chances and conditional grade pass probabilities.",
+      "Review course name/rumor appropriateness across 3 faculties, especially recurring elective comments.",
+      "Check mobile width 320px/390px for overflow and long descriptions, full-year skills, registration modal and irreversible discard.",
+      "Verify save/reload during registration review, grade reveal, annual skill choice, final graduation and cheating disqualification."
     ]
   },
   "assets": {
@@ -191,10 +204,10 @@
   "next": {
     "owner": "S8 dedicated Chat / human reviewer",
     "actions": [
-      "Human review v0.7.4 across 3 faculty archetypes, especially mandatory wording and course topical accuracy.",
-      "Do an independent real-browser/mobile QA before final release; AI simulated logic QA does not replace this.",
-      "During final polish, optionally prepare further 73 elective review variants, if repeated comments materially weaken replayability.",
-      "Do not change prerequisite logic or root index without master agreement."
+      "Execute human playtest and decide if current elective quotas are too severe; do not auto-adjust based on simulated rates alone.",
+      "Run independent real-browser/phone QA before gate C and mark only actually tested paths.",
+      "Later consider alternate elective rumor variants and whether hard mandatory course prerequisites should be enforced.",
+      "Notify master of v0.7.5 and keep root INDEX untouched."
     ]
   },
   "edits": {
