@@ -53,7 +53,8 @@ function displayDraft(){
  panel.classList.toggle("hidden",!show);
  if(!show)return;
  const year=Math.floor(state.semester/2)+1,choices=draft(year);
- $("year-skill-title").textContent=year+"年次が終了！ 来年度に持ち込むスキルを選択";
+ $("year-skill-title").textContent=year+"年次CLEAR！ 来年度のスキルを1つ選択";
+ panel.scrollTop=0;
  const box=$("year-skill-options");box.replaceChildren();
  for(const id of choices){
   const skill=byId[id],button=document.createElement("button");button.className="year-skill-option";button.dataset.skill=id;
@@ -207,6 +208,17 @@ endReveal=function(){
  state.score-=deduction;state.termScore-=deduction;
  if(h){h.score-=deduction;h.skillScoreAdjustment=-deduction}
  save();renderReveal()
+};
+const beforeAnnualDraft=endReveal;
+endReveal=function(){
+ const complete=!!state&&state.phase==="reveal"&&state.revealIndex===state.results.length;
+ beforeAnnualDraft();
+ if(!complete||!state||state.phase!=="reveal")return;
+ if(pendingDraft()&&!state.yearSkillPending){
+  state.yearSkillPending=true;
+  draft(Math.floor(state.semester/2)+1);
+  save();renderReveal();
+ }
 };
 const originalReveal=renderReveal;
 renderReveal=function(){
