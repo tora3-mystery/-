@@ -1,6 +1,6 @@
 window.R1 = (function makeEngine(){
 "use strict";
-const VERSION="0.9.3-alpha";
+const VERSION="0.9.4-alpha";
 const GENRES=[
 {id:"taste",name:"商品・味",icon:"🍜"},
 {id:"service",name:"接客",icon:"💬"},
@@ -122,7 +122,7 @@ const positive=last?last.star>=4:route.polarity==="plus",poster=currentGenre?POS
 const repeated=last?s.history.filter(h=>h.genre===currentGenre&&Math.sign(h.star-3)===Math.sign(last.star-3)).length:0;
 const feature=last?poster+(repeated>=2?"（第"+repeated+"回の見直し）":""):route.stage?"改装を準備中":"本日も営業中";
 const summary=s.closed?"シャッターが下り、閉店のお知らせが貼られている。":route.stage===0?"昔ながらの店構えで営業中。":route.stage===1?`「${info}」に向けて小さな改装を始めた。`:route.stage===2?`「${info}」へ看板を掛け替えた。`:route.stage===3?`「${info}」に合わせて内装と商品を変更した。`:`「${info}」として店の営業形態が定着した。`;
-return {id,base,route:{...route,label:info},phase,sign,sign2:route.stage===1?info+"へ":route.stage>=3?info+"・"+phase:"",feature,visual,open:!s.closed,summary,population:s.locals>=65?"地元客で賑わう":s.visitors>=65?"初めての客が目立つ":s.locals<=30?"常連が減っている":"いつもの客足",business:s.money>=100?"繁盛":s.money>=40?"営業中":s.money>0?"経営が厳しい":"閉店"};}
+return {id,base,route:{...route,label:info},phase,sign,sign2:route.stage===1?info+"へ":route.stage>=3?info+"・"+phase:"",feature,visual,open:!s.closed,summary,population:s.locals>=65?"地元客で賑わう":s.visitors>=65?"初めての客が目立つ":s.locals<=30?"常連が減っている":"いつもの客足",business:s.closed?"閉店":s.money>=100?"繁盛":s.money>=40?"営業中":"経営が厳しい"};}
 function reviewText(state,id,star,genre){const s=state.shops[id];if(!s||!GENRES.some(g=>g.id===genre)||!Number.isInteger(star)||star<1||star>5)throw Error("invalid review");const topic=TOPICS[id][genre];const revisit=s.history.length>0?"以前にも来ました。 ":"";if(s.closed||!s.opened)throw Error("closed or unopened store");const current=display(s,id);const changed=current.route.stage>0?`今の「${current.route.label}」という方向性も踏まえると、`:"";const texts={1:`${topic}にはかなり不満があります。改善してほしいです。`,2:`${topic}は気になる点がありました。もう少し工夫があるとうれしい。`,3:`${topic}は良い点も気になる点もありました。今後に期待します。`,4:`${topic}は良かったです。この良さが続くといいと思います。`,5:`${topic}がとても良かったです。ぜひこの方向を極めてほしい。`};return revisit+changed+texts[star];}
 const PUBLIC_REVIEWS={"ramen":[{"by":"近隣の会社員","star":1,"genre":"taste","text":"麺が硬すぎて食べづらい。","reply":"硬麺だと看板に書いています。柔らかい麺は別のお店へどうぞ。","archived":true},{"by":"麺好き","star":5,"genre":"taste","text":"これくらいの硬さが欲しかった。","reply":"分かってもらえたようですが、明日も同じものを出します。","archived":true},{"by":"出張中の客","star":2,"genre":"service","text":"店主の返事がとにかく強い。","reply":"書いたことには返信します。それの何が問題でしょう。","archived":true}],"cafe":[{"by":"近所の読書好き","star":5,"genre":"mood","text":"長居しても急かされない。","reply":"いつでもお好きな本を持っていらしてくださいね。","archived":true},{"by":"急いでいる人","star":2,"genre":"service","text":"話しかけられて時間を使った。","reply":"失礼しました。次はお声がけを控えます。","archived":true},{"by":"常連","star":4,"genre":"taste","text":"ブレンドが毎回おいしい。","reply":"豆を少し替えているのに、よく気づかれましたね。","archived":true}],"cake":[{"by":"スイーツ好き","star":5,"genre":"identity","text":"新作ケーキの見た目が独創的！","reply":"ありがとうございます！ 次はもっと驚くものを作ります！","archived":true},{"by":"近所の母親","star":2,"genre":"taste","text":"少し甘さが強すぎた。","reply":"悔しい……次の試作で別の甘さを試します！","archived":true},{"by":"お祝い帰りの客","star":4,"genre":"service","text":"ギフトの相談が丁寧だった。","reply":"記念日のお手伝いができてうれしいです！","archived":true}],"curry":[{"by":"出張の営業職","star":4,"genre":"taste","text":"午後も元気が出るスパイス感。","reply":"ありがとうございます。次は香りの違いもぜひ。","archived":true},{"by":"近隣の会社員","star":2,"genre":"price","text":"ちょっと量が少ないかな。","reply":"なるほど、満腹感ですね。セット内容を考えます。","archived":true},{"by":"辛党の客","star":5,"genre":"identity","text":"週替わりが面白い。","reply":"次は香りの組み合わせも試してみます。","archived":true}]};
 PUBLIC_REVIEWS.teishoku=[{"by":"近くの職員","star":5,"genre":"taste","text":"焼き魚と小鉢の味が優しい。","reply":"ありがとうございます。明日も焼きたてを出しますね。","archived":true},{"by":"急いでいる人","star":2,"genre":"service","text":"注文後、少し待ちました。","reply":"お昼のお時間を使わせてしまいましたね。動線を見直します。","archived":true},{"by":"常連の女性","star":4,"genre":"identity","text":"季節で副菜が変わるのが楽しみ。","reply":"旬を見つけたら、また小鉢にしますね。","archived":true}];
@@ -502,8 +502,8 @@ const cakePraise=cake.history.filter(h=>h.genre==="identity"&&h.star>=4).length;
 if(state.ramenReborn&&!ramen.closed){title="看板だけでは収まりません。";description="一度閉じた麺処いわきが、二か月後に巨大な本店で帰ってきた。変わらないのは麺の硬さだった。";}
 else if(ramen.closed&&state.ramenFinalSilent){title="最後の返信";description="最後まで同じ麺を出した店のシャッターが下りた。最後の口コミだけ、店主からの返事がない。";}
 else if(loyal){title="いつものでよろしいですか。";description="一年の出張で同じラーメン屋に通い続けた。看板も硬麺も変わらないが、店主はあなたの注文だけ覚えていた。";}
-else if(closed>=1){title="シャッターのある通り";description="一年で閉まった店もある。隣の店には、新しい看板が掛かった。";}
-else if(ls.filter(x=>x.s.money<40).length>=2){title="踏ん張る商店街";description="値段も商品も見直した。売上が安定したとは言えないが、灯りは消えていない。";}
+else if(closed>=1){title="シャッターのある通り";description="一年で閉まった店もある。営業を続ける店もあれば、空いた場所を眺める人もいる。";}
+else if(ls.filter(x=>x.s.money<40).length>=2){title="踏ん張る商店街";description="客足が安定しない店もある。それでも店主たちは明日の仕込みを続けている。";}
 else if((state.viralCount||0)>=2&&ramen.history.filter(h=>h.star<=2).length>=3){title="返信欄が名物の商店街";description="店主の返信がネットで繰り返し話題になった。麺処いわきの味は変わらず、街に新しい客が訪れている。";}
 else if((ramen.disputes||0)>=6&&ramen.history.filter(h=>h.star<=2).length>=3){title="論争の絶えない商店街";description="一年じゅう口コミで言い争った麺処いわき。看板も麺も変わらず、返信だけが積み重なった。";}
 else if(cake.opened&&cakePraise>=3&&cakeRoute.genre==="identity"&&cakeRoute.polarity==="plus"&&cakeRoute.stage>=3){title="新作が止まらない商店街";description="褒められるたび新商品が並ぶ。洋菓子店のショーケースは、もう昨年の面影がない。";}
@@ -555,14 +555,23 @@ function counter(state,style){
  (negative?`返信は読みましたが、まだ納得できません。${topic}への不満は残っています。`:positive?`評価したのは${topic}です。他の部分まで満点と言ったわけではありません。`:`星3という評価を軽く見ないでください。気になる点はまだあります。`);
  let ownerText;
  if(rev.id==="ramen"){
-  if(style==="evidence")ownerText=negative?"お気持ちは読みました。でも茹で時間は1秒も変えません。反論は以上です。":"お返事は読みました。次回も同じ一杯を出しますから、ご自身で確かめてください。";
-  else ownerText=negative?"星が何個だろうと、麺の硬さは変えません。返信が欲しいなら何度でもどうぞ。":"星を減らしていただいて結構。私のレシピはそのままです。";
+  if(style==="evidence"){
+   ownerText=genre==="taste"||genre==="identity"?"お気持ちは読みました。でも麺の硬さは変えません。":
+    genre==="price"?"お気持ちは読みました。ただ、値段は変えません。":
+    genre==="service"?"お気持ちは読みました。接客の必要なことはしています。":
+    "お気持ちは読みました。店内は私のやり方で続けます。";
+  }else{
+   ownerText=genre==="taste"||genre==="identity"?"星が何個だろうと、麺の硬さは変えません。":
+    genre==="price"?"星が何個だろうと、値段は変えません。":
+    genre==="service"?"お客さまの星で、私の口数は変えません。":
+    "席が気に入らなければ、ほかのお店へどうぞ。";
+  }
  }else if(rev.id==="cafe"){
   ownerText=style==="evidence"?"そういうことでしたか。書き言葉では、細かい温度が伝わらないものですね。参考にします。":"あら、言い合いになるつもりはなかったのに。次は店で一杯飲みながら、どうでしょう。";
  }else if(rev.id==="cake"){
   ownerText=style==="evidence"?"なるほど、そういう意味だったんですね！ 次の試作メモに書き足しました。":"すみません、熱くなってしまいました！ でも次の商品、もう考えています。";
  }else if(rev.id==="curry"){
-  ownerText=style==="evidence"?"分かりました。辛さや量を、もう一度確かめてみます。":"こちらも熱くなりそうです。お客さんの一言はスパイスですね。";
+  ownerText=style==="evidence"?`分かりました。${topic}について、もう一度確かめてみます。`:"こちらも熱くなりそうです。お客さんの一言はスパイスですね。";
  }else if(COUNTER_PERSONALITY[rev.id]){
   ownerText=COUNTER_PERSONALITY[rev.id][style];
  }else{
