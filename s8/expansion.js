@@ -116,6 +116,7 @@ passChance=function(c){let p=priorPassChance(c);if(c.type==="annualCarry")p+=c.m
 createOffers=function(){
  ensureDefaults();
  const term=state.semester,year=Math.floor(term/2)+1,half=term%2;
+ state.placementFailure=[];
  const mandatoryDefs=term<2?MUST[state.faculty][term]:UPPER[state.faculty][term-2];
  const current=mandatoryDefs.map(c=>courseMaterialize(c,term,true));
  const carry=half===1?state.annualCourses.map(a=>({...a.course,id:"carry_"+a.id,canonicalId:a.id,type:"annualCarry",term,midtermOk:a.midtermOk})): [];
@@ -190,7 +191,7 @@ createOffers=function(){
   }
   const eligible=placements.filter(slots=>slots.length===old.length&&new Set(slots).size===slots.length&&slots.every(p=>!occupied.has(p)));
   eligible.sort((a,b)=>{
-   const score=x=>x.reduce((n,p)=>n+(activities.has(p)?40:0)+Math.abs(p-old[x.indexOf(p)]||0)*.05,0);
+   const score=x=>x.reduce((n,p,i)=>n+(activities.has(p)?40:0)+Math.abs(p-old[i])*0.05,0);
    return score(a)-score(b)
   });
   const chosen=eligible[0];if(!chosen)return null;
@@ -245,8 +246,7 @@ createOffers=function(){
   }
  }
  state.shiftedRequired=adjusted;
- if(term===6)state.placementFailure=[];
- if(term===7&&deferred.length&&year===4)state.placementFailure=[...new Set((state.placementFailure||[]))];
+ state.placementFailure=[...new Set(state.placementFailure)];
  state.deferredRequired=deferred;
  // Electives never include discretionary retake: compulsory backlogs are automatically placed.
  state.offers=fixed.concat(carry,optional);
