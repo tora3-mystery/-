@@ -1,9 +1,9 @@
 {
   "id": "S8",
   "title": "履修登録を完了してください。（仮）",
-  "version": "0.7.5",
-  "updated_at_jst": "2026/10/29 23:56 JST",
-  "phase": "Phase 4: final Chat-side code/course audit of logic, aptitude tags, lottery-adjusted probability display and content consistency complete. Static and mock-DOM tests passed; human difficulty assessment and independent real smartphone/browser QA remain before v1.0.",
+  "version": "1.0",
+  "updated_at_jst": "2026/10/30 00:11 JST",
+  "phase": "Phase 7: v1.0 テストプレイ中（試作からテストプレイ公開へ移行、完成認定Gate Cは未通過）。Chatロジック・データ・文章監査完了。最新版の人間レビューと実ブラウザ／スマホQAが残存。",
   "scope": "4 years / 8 terms playable; 3 faculties; 5 extracurricular difficulty setups",
   "features": [
     "tap an unoccupied timetable slot to choose courses that include that period",
@@ -91,7 +91,8 @@
     "v0.7.5: explicitly add +6pp per independently matching aptitude (PC+math gives +12pp on tagged lectures, cap 98%). Registration chance breakdown lists each owned aptitude category.",
     "v0.7.5: calculate and show course lottery-adjusted final credit probability, multiplying offer allocation chance by conditional grade pass rate in course list, application review and substitution options; high-success filter now uses the final probability.",
     "v0.7.5: itemize campus travel penalty in review rather than vague residual attribution; clarify the final displayed probability is the grade lottery input when course allocation succeeded.",
-    "v0.7.5: s8/AUDIT-v0.7.5.md records full Chat-side audit and unresolved balance/browser/human QA topics."
+    "v0.7.5: s8/AUDIT-v0.7.5.md records full Chat-side audit and unresolved balance/browser/human QA topics.",
+    "v1.0 (2026-10-30): promote audited v0.7.5 gameplay to test-play release, preserving rules, probability balance and course database. Update S8 UI and root INDEX status without modifying other game cards. No independent actual browser/mobile test has been performed."
   ],
   "ai_audit": {
     "structure": "PASS: JS bracket/quote balance; no missing DOM IDs from game.js and expansion.js (124 $ references against 57 HTML IDs)",
@@ -177,17 +178,18 @@
     "v075_normal_runs": "PASS 360 mock-DOM normal-random simulated runs: 3 faculties x 5 extracurricular types x 3 schedule strategies x 8 seeds; 1251 registration steps, 270 year-end draft interactions, no runtime errors, no required/club overlap, no invalid odds. One graduation in 360 under these fixed nonoptimal strategies: serious human difficulty follow-up required (not an empirical human graduation rate).",
     "v075_feasibility": "PASS 120 artificial all-pass 4-year scenarios (3 faculties x 5 activities x 8 seeds): all 120 hit yearly quotas and graduated. Proves specific viable schedules exist when grades all pass, not that real random play is fairly balanced.",
     "v075_postfix_regression": "PASS final 90 mock-DOM callback runs after tag/lottery fixes: 90/90 ended, 339 registration screens, 82 skill selection interactions, 0 runtime errors; after additive skill patch, 3 targeted faculty cases produced +6/+6/+12pp correctly. All ten JS modules parse.",
-    "v075_audit_file": "s8/AUDIT-v0.7.5.md"
+    "v075_audit_file": "s8/AUDIT-v0.7.5.md",
+    "v100_release_check": "v1.0 is a release-state/version-only update of the previously audited v0.7.5 logic. Earlier script and mock DOM audits remain valid for unchanged logic. Only HTML label, README, status.json and root INDEX were changed; test-play label does not mean Gate C was passed."
   },
   "browser_qa": {
     "performed": false,
     "status": "pending",
     "devices": [],
-    "notes": "GitHub source inspection, synthetic JavaScript simulations and mocked DOM callbacks only. No real Chrome/Safari/mobile browser check or Pages screenshot verification performed for v0.7.5."
+    "notes": "最新版v1.0の実ブラウザ・スマホ画面および操作確認は未実施。旧版のコード構文・モックDOM検証と区別する。"
   },
   "human_review": {
     "performed": false,
-    "target_version": "0.7.5",
+    "target_version": "1.0",
     "requested_checks": [
       "Play actual 4-year game under current quotas; assess whether difficulty is too hard vs intentional retry play (normal AI fixed schedule won 1/360, artificial all-pass 120/120).",
       "Select PC/math aptitude; confirm off-topic subjects no longer get PC and dual-tag courses get cumulative +12pp when both skills obtained.",
@@ -195,24 +197,35 @@
       "Review course name/rumor appropriateness across 3 faculties, especially recurring elective comments.",
       "Check mobile width 320px/390px for overflow and long descriptions, full-year skills, registration modal and irreversible discard.",
       "Verify save/reload during registration review, grade reveal, annual skill choice, final graduation and cheating disqualification."
-    ]
+    ],
+    "status": "最新v1.0は未検証（テストプレイ中）",
+    "previous_version_feedback": "過去版についてユーザーから全体的に良好との感想あり。最終v1.0の最新条件・難易度については再評価が必要。"
   },
   "assets": {
     "status": "CSS and Web Audio synthesis only; no external image/music assets",
     "work_required": false
   },
   "next": {
-    "owner": "S8 dedicated Chat / human reviewer",
+    "owner": "人間テストプレイヤー → S8専用Chat",
     "actions": [
-      "Execute human playtest and decide if current elective quotas are too severe; do not auto-adjust based on simulated rates alone.",
-      "Run independent real-browser/phone QA before gate C and mark only actually tested paths.",
-      "Later consider alternate elective rumor variants and whether hard mandatory course prerequisites should be enforced.",
-      "Notify master of v0.7.5 and keep root INDEX untouched."
+      "v1.0を実際にプレイし、学部別進級ノルマと8学期の難易度、面白さ、所要時間を評価",
+      "スキル、抽選科目、必修の鬼、再履修、講義取消・差替え、進級・卒業・失敗時の画面を確認",
+      "スマホの実ブラウザで320/390px相当の画面幅、スクロール、保存・再開、ポップアップを確認",
+      "重大指摘を修正し、最新版の人間再検証と独立QAを終えてから正式完成（Gate C）を判定"
     ]
   },
   "edits": {
-    "allowed": "s8/ only",
-    "main_index_changed": false,
+    "allowed": "s8/ and root index.html (explicit user approval for v1.0 test-play listing)",
+    "main_index_changed": true,
     "other_games_changed": false
-  }
+  },
+  "public_status": "テストプレイ中",
+  "release_label": "v1.0・テストプレイ中",
+  "release_decision": "User approved v1.0 test-play status, including root INDEX, on 2026-10-30 JST. Not a v1.0 final-completion claim.",
+  "release_files": [
+    "s8/index.html",
+    "s8/README.md",
+    "s8/status.json",
+    "index.html"
+  ]
 }
