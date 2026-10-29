@@ -117,7 +117,7 @@ function replyFor(state,id,star,genre){
   return msg;
  }
  const arr=RESPONSES[id][genre][band==="neutral"?"plus":band];
- let msg=band==="neutral"?["評価が分かれた点、参考にいたします。","どちらとも言い切れないご感想も、大切に読みます。","次に来られたとき、違いを感じていただけるといいですね。"][SHOPS.findIndex(x=>x.id===id)]:arr[Math.floor(rnd()*arr.length)];
+ let msg=band==="neutral"?["評価が分かれた点、参考にいたします。","どちらとも言い切れないご感想も、大切に読みます。","次に来られたとき、違いを感じていただけるといいですね。","良いところも気になるところもある、という評価ですね。次の一皿の参考にします。"][SHOPS.findIndex(x=>x.id===id)]:arr[Math.floor(rnd()*arr.length)];
  if(band!=="neutral"&&sameGenre>=1){const edge=SPICY_REPLIES[id][genre][band];msg=edge[Math.floor(rnd()*edge.length)];}
  if(n&&s.history[n-1].genre===genre)msg="前回も同じ点を見てくださっていましたね。"+msg;
  else if(n>0&&n%3===0)msg="何度も足を運んでくださっていることは覚えています。"+msg;
@@ -195,16 +195,17 @@ else if(totalStages<=2){title="いつもの商店街";description="大きな改�
 else if(totalStages>=3&&local>vis*1.9&&vis<=100){title="常連のいる商店街";description="外からは静かに見える。でも、ここに来る理由を知っている人は多い。";}
 else if(ls.filter(x=>routeFor(x.s).genre==="identity"&&routeFor(x.s).stage>=2).length>=2){title="個性の競演する通り";description="三軒三様、引かないこだわりが並ぶ。看板だけで好みが分かれそうだ。";}
 else if(ls.filter(x=>routeFor(x.s).genre==="price"&&routeFor(x.s).stage>=2).length>=2){title="値札が話題の商店街";description="値段を見直した店が増えた。高いか安いかより、その理由が街の話題になった。";}
-else if(ls.filter(x=>routeFor(x.s).genre==="taste"&&routeFor(x.s).stage>=2).length>=2){title="味が変わった商店街";description="麺処いわきは頑なに同じ味。喫茶店と洋菓子店は、新しい味を試し続けている。";}
+else if(ls.filter(x=>routeFor(x.s).genre==="taste"&&routeFor(x.s).stage>=2).length>=2){title="味が変わった商店街";description="麺処いわきは変わらないまま、喫茶店・洋菓子店・カレー店では新しい味が生まれた。";}
 else if(totalStages>=4){title="それぞれ違う商店街";description="進んだ方向はばらばら。それでも店主たちは、ここで商売を続けている。";}
 else{title="少し変わった商店街";description="一年で何もかもが変わったわけではない。入口の看板は少し違って見える。";}
 const shops=ls.map(({d,s})=>{const view=display(s,d.id),count=s.history.length,last=s.history[count-1],ownerLine=s.closed?
-(d.id==="ramen"?"「鍋の火は止めました。それでも麺の話は、まだ終わっていません。」":d.id==="cafe"?"「この椅子に座っていた人のことは、忘れないと思います。」":"「最後のお菓子だけは、ちゃんと焼き上げました。」"):
+(d.id==="ramen"?"「鍋の火は止めました。それでも麺の話は、まだ終わっていません。」":d.id==="cafe"?"「この椅子に座っていた人のことは、忘れないと思います。」":d.id==="cake"?"「最後のお菓子だけは、ちゃんと焼き上げました。」":"「最後の一皿も、丁寧に仕上げました。」"):
 count===0?"「口コミはいただきませんでしたが、今日も店を開けています。」":
 d.id==="ramen"?"「星をいくつ付けようと自由です。でも麺も値段も、一年前から変えていません。」":view.route.stage===0?"「新しい看板はありません。けれど、毎日のお客さまはいます。」":
 d.id==="ramen"?`「${view.visual.product}を看板にしました。納得できない方もいるでしょう。でも味は見てください。」`:
 d.id==="cafe"?`「${view.visual.product}を始めました。昔からのお客さまも、新しい方も歓迎ですよ。」`:
-`「${view.visual.product}が人気です！ ただ、来年はまた違うものを作るかもしれません。」`;
+d.id==="cake"?`「${view.visual.product}が人気です！ ただ、来年はまた違うものを作るかもしれません。」`:
+`「${view.visual.product}、今月のおすすめでした。次の出張でもぜひ寄ってください。」`;
 return {id:d.id,name:d.name,owner:d.owner,sign:view.sign,icon:d.icon,stage:view.route.stage,route:view.route.label,closed:s.closed,ownerLine,product:view.visual.product,description:s.closed?`${d.owner}の店は閉まった。最後の口コミも、店先の貼り紙も残っている。`:view.route.stage?`${view.route.label}として営業中。${view.population}。`:`以前と変わらない看板で営業中。${view.population}。`,reviews:count};});
 return {title,description,shops};}
 function audit(state){if(!state||state.schema!==1||!Array.isArray(state.reviews)||state.month!==state.reviews.length||!state.shops)throw Error("invalid save");if(state.month<0||state.month>12)throw Error("invalid month");for(const d of SHOPS){const s=state.shops[d.id];if(!s||!s.scores||!Array.isArray(s.history)||!Number.isFinite(s.money))throw Error("invalid shop");for(const g of GENRES)if(!Number.isFinite(s.scores[g.id]))throw Error("invalid scores");}return true;}
