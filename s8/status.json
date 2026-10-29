@@ -1,8 +1,8 @@
 {
   "id": "S8",
   "title": "履修登録を完了してください。（仮）",
-  "version": "0.3.0",
-  "updated_at_jst": "2026-10-29 13:33 JST",
+  "version": "0.3.1",
+  "updated_at_jst": "2026-10-29 13:42 JST",
   "phase": "Phase 3 prototype expanded to eight semesters / Phase 4 structural audit",
   "scope": "4 years / 8 terms playable; 3 faculties; 5 extracurricular difficulty setups",
   "features": [
@@ -11,7 +11,8 @@
     "full-year courses occupy same period over 2 terms: interim spring result, 4 credits only at autumn final",
     "grade history shows mandatory pass/fail/retake and yearlong outcomes",
     "synthesized sound effects with persistent on/off switch",
-    "8 term score, graduation decision at 72 credits and all compulsory courses, saved progress and separate personal best"
+    "8 term score, graduation decision at 72 credits and all compulsory courses, saved progress and separate personal best",
+    "v0.3.1: tutor job blocks Mon 4/5 and Fri 5 (3 periods); club+job blocks Mon 5, Tue 5, Wed 5, Thu 5, Sat 3 (5 periods)"
   ],
   "ai_audit": {
     "structure": "PASS: JS bracket/quote balance; no missing DOM IDs from game.js and expansion.js (124 $ references against 57 HTML IDs)",
@@ -23,7 +24,8 @@
       "A model showing the existence of a 10-credit schedule does not verify a complete 8-semester graduation path",
       "The latest source has not completed browser event testing",
       "Synthetic note/chord effects may vary by browser, mute and iOS audio settings"
-    ]
+    ],
+    "activity_timetable_revision": "Schedule occupancy changed; rerun 8-term placement tests with 5 activity modes; inspect no overlap with mandatory courses."
   },
   "browser_qa": {
     "performed": false,
@@ -50,6 +52,7 @@
   "next": {
     "owner": "S8 dedicated chat + human review",
     "actions": [
+      "Verify old registration saves clear newly conflicting electives without erasing completed terms",
       "Test actual page load and major interactions in real browser",
       "Run expanded runtime QA for annual, save/resume, grading, difficult activity choices",
       "Balance eight-term score, graduation odds and tempo",
