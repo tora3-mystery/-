@@ -68,6 +68,7 @@ function riskDetails(c){
  add("学年が上がった負担",-Math.floor(state.semester/2)*4);
  add("通年科目の中間評価",c.type==="annualCarry"?(c.midtermOk?9:-10):0);
  add("卒業旅行の影響",state.travelEvent?.active&&state.semester===7?-(state.travelEvent.penalty||0):0);
+ add("キャンパス間移動",-((window.S8_MOBILITY_PENALTY?.(c))||0));
  add("課外活動の直前",c.slots.some(p=>p%5<4&&blocks.has(p+1))?4:0);
  const present=new Set([...lectureSlots,...blocks]);
  let gap=0;
