@@ -1,7 +1,7 @@
 "use strict";
 /* S8 v0.3.1 — feature layer. Loaded immediately after game.js, no external dependencies. */
 (function(){
-const SAVE3="s8_save_v030", BEST3="s8_best_v030_", AUDIO3="s8_audio_v030";
+const SAVE3="s8_save_v030", BEST3="s8_best_v040_", AUDIO3="s8_audio_v030";
 let audio=null, soundOn=true, searchText="", currentSlot=null, finishedSemester=-1;
 try{soundOn=localStorage.getItem(AUDIO3)!=="off"}catch(e){}
 Object.assign(ACTIVITIES,{
