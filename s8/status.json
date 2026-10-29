@@ -1,9 +1,9 @@
 {
   "id": "S8",
   "title": "履修登録を完了してください。（仮）",
-  "version": "0.4.0",
-  "updated_at_jst": "2026-10-29 14:05 JST",
-  "phase": "Phase 3 expanded 8-term alpha / Phase 4 logic simulation completed, browser QA pending",
+  "version": "0.5.0",
+  "updated_at_jst": "2026-10-29 14:30 JST",
+  "phase": "Phase 3 / 4: 8-semester prototype, logic and UI source audit passed; mobile browser QA pending",
   "scope": "4 years / 8 terms playable; 3 faculties; 5 extracurricular difficulty setups",
   "features": [
     "tap an unoccupied timetable slot to choose courses that include that period",
@@ -18,7 +18,17 @@
     "v0.4.0: course completion chance weighs first period, Saturday, adjacent-period front course, weekly occupied blocks and year-level skipping",
     "v0.4.0: simplified score = 100 points per credit plus 50 per combo tier capped at +250; activity and perfect bonuses normalized",
     "v0.4.0: yearly credit thresholds of 16, 34, 54, 72 and stop at years 1-3 when the threshold is missed",
-    "v0.4.0: 4th-year spring recruiting disruption forces 2-3 enrolled courses to fail with an alert before grade reveal"
+    "v0.4.0: 4th-year spring recruiting disruption forces 2-3 enrolled courses to fail with an alert before grade reveal",
+    "v0.5.0: no score/combo language in tutorial, clearer deterministic-seed instructions",
+    "v0.5.0: smartphone scroll to page start on begin, resume and next term; semester text 'year, first/second semester' instead of /8",
+    "v0.5.0: full legend with required ★, electives, yearlong and extracurricular timetable colors",
+    "v0.5.0: remove opaque class/credit/occupied period count; natural-language registration summary",
+    "v0.5.0: sort course lists by availability, success odds up/down, weekday, credits or difficulty; hide obsolete search",
+    "v0.5.0: remove 14-credit hard limit, all open non-overlapping periods are registrable; severe crowding reduces all class success odds",
+    "v0.5.0: per-course score arithmetic: 100pt per earned credit plus capped additive combo; perfect and activity semester bonus explicitly broken down",
+    "v0.5.0: annual course interim results award no credits or points until autumn final",
+    "v0.5.0: extracurricular blocks increase by +1 weekly in year 2 and +2 in years 3-4; block placement deterministic per seed",
+    "v0.5.0: 4th-year autumn 45% seeded chance for a graduation trip (all class pass chances -18 percentage points); pre-grade event notice"
   ],
   "ai_audit": {
     "structure": "PASS: JS bracket/quote balance; no missing DOM IDs from game.js and expansion.js (124 $ references against 57 HTML IDs)",
@@ -41,25 +51,37 @@
       34,
       54,
       72
+    ],
+    "runtime_simulation_v05": "PASS: 300 simulated logic playthroughs (3 faculties × 5 activities × 20 seeds), using mock DOM/automatic elective strategy. 151 reached final term, 149 failed earlier year requirements, 0 runtime errors, 0 registration deadlocks (registration <10 credits), 0 mandatory/activity collisions, 1874 semester instances registered >14 credits, activity block counts correct. Among 151 final-term plays 57 were graduation trip events and UI pending flag was set 57 times. These are not full real-browser UI tests.",
+    "score_mechanics_v05": "2 credits → 200 basic points; 4 credits → 400; plus +50 × min(5, combo index-1). Annual spring midterm 0, autumn passed earns 4 credits×100pt. Semester bonuses shown separately.",
+    "static_v05": "PASS: game.js, expansion.js, balance.js, polish.js pass JS compilation; HTML DOM IDs for referenced fields present. Legacy hidden search input kept to protect expansion.js init binding.",
+    "outstanding": [
+      "No actual iOS/Android touch rendering test",
+      "Scrollbar and focus behavior tested in logic only; mobile visual check needed",
+      "Save/resume compatibility of midsemester pre-v0.5 scores, 4th-year travel pending and yearlong courses needs real browser QA",
+      "Course selection stress test under many simultaneous courses in browser pending",
+      "The automated chooser is not a human user and does not establish an appropriate difficulty or difficulty curve",
+      "The root index page remains under the master and has not been updated to S8 v0.5.0"
     ]
   },
   "browser_qa": {
     "performed": false,
     "status": "pending",
     "devices": [],
-    "notes": "The 225 logical simulations used a stub DOM and did not operate an actual browser."
+    "notes": "Simulated DOM runs only. Actual smartphone scroll, color, overlay, sound and sort interactions are not browser-verified."
   },
   "human_review": {
     "performed": false,
-    "target_version": "0.4.0",
+    "target_version": "0.5.0",
     "requested_checks": [
-      "Seed replay consistency with same choices and different choices",
-      "Faculty × activity student life summary legibility",
-      "Semester-randomized activity schedules with fixed block counts",
-      "Pass chance under morning, Saturday, consecutive courses and overload",
-      "Yearly stage-goal fairness across activity modes",
-      "Sudden recruiting event in fourth-year spring",
-      "8-term completion rate and pace"
+      "Mobile begin button scrolls to the semester header",
+      "Legend colors and stars match timetable",
+      "Sort changes ordering and choice list remains usable",
+      "Registration allows >14 credits, yet overloaded timetable sharply depresses success probability",
+      "Scores and combo bonus formulas read correctly in the result",
+      "Activities grow in years 2–4 without blocking mandatory classes",
+      "Travel event in year 4 fall plays, but not every seed",
+      "Yearlong midterm yields no score or credits, final autumn does"
     ]
   },
   "assets": {
@@ -67,12 +89,12 @@
     "work_required": false
   },
   "next": {
-    "owner": "S8 chat and human playtest",
+    "owner": "S8 dedicated chat / human review",
     "actions": [
-      "Perform real browser QA on mobile for sound, job-hunt overlay, saved games and course filtering",
-      "Observe human playtime and 8-term graduation success rates",
-      "Tune year-credit gates and career shock to be challenging but coherent",
-      "Ask project master to refresh homepage S8 card from alpha 0.3.1 to alpha 0.4.0"
+      "Verify render and tap behavior on iOS real browser",
+      "Tune crowding penalty and progression success odds from human playtesting",
+      "Verify resume after intro, midterm, grade reveal and travel event",
+      "Notify project master of v0.5.0 for root INDEX card revision"
     ]
   },
   "edits": {
