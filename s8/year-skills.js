@@ -122,7 +122,8 @@ getActivityBlocks=function(){
  }else if(state.activity==="job"){
   if(raises)kept=kept.slice(0,Math.max(0,kept.length-raises));
  }else if(state.activity==="club"&&retire){
-  kept=kept.slice(2)
+  // Club retirement cancels the club itself, including its later-year extra meetings.
+  kept=[]
  }
  return kept
 };
