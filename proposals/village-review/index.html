@@ -140,7 +140,7 @@ header{display:flex;gap:16px;justify-content:space-between;align-items:center;pa
 </head>
 <body>
 <div class="shell">
-<header><div><div class="kicker">短編UIゲーム実験室 / α TEST</div><div class="brand">この村の評価をお願いします。</div><div class="sub">V1｜この村の評価をお願いします。・v0.6.29 α ｜ 更新：2026-10-29 01:56 JST</div></div><div class="actions"><button id="helpBtn" class="btn" type="button">あそびかた</button><button id="soundBtn" class="btn sound" type="button" aria-pressed="false">♪ OFF</button><button id="resetBtn" class="btn" type="button">新しい村</button></div></header>
+<header><div><div class="kicker">短編UIゲーム実験室 / α TEST</div><div class="brand">この村の評価をお願いします。</div><div class="sub">V1｜この村の評価をお願いします。・v0.6.30 α ｜ 更新：2026-10-29 10:34 JST</div></div><div class="actions"><button id="helpBtn" class="btn" type="button">あそびかた</button><button id="soundBtn" class="btn sound" type="button" aria-pressed="false">♪ OFF</button><button id="resetBtn" class="btn" type="button">新しい村</button></div></header>
 <main class="layout">
 <section class="panel"><div class="pad"><div class="villageHeader"><div><div class="kicker" id="period">2027年4月</div><div class="villageName" id="villageName">読み込み中...</div></div></div><div class="metadata" id="profile"></div><div id="arrivalNote" class="arrivalNote"></div><div class="stats" id="stats"></div><div id="map" class="map" aria-label="村の地図"></div><div class="mapLegend"><span>紫ラベル：今月訪問可</span><span>紫枠：選択中</span><span>灰色：閉業</span></div><div class="news" id="news"></div><div class="residentVoices" id="residentVoices"></div><div class="smallHeading">村の歩み</div><div id="history" class="history"></div><details class="reviewArchive"><summary>あなたの口コミ一覧（<span id="reviewCount">0</span>／12件）</summary><div id="reviewArchiveList"></div></details></div></section>
 <section class="panel"><div class="sideTop"><div class="villageHeader"><div><div class="smallHeading" style="margin:0">今月の訪問先</div><div class="sectionTitle" id="monthTitle"></div></div><div id="monthCount" class="yearCount"></div></div><div class="progress"><span id="progressBar" style="width:0"></span></div><div class="tiny" style="margin-top:6px" id="candidatesNote"></div></div><div class="pad" id="detail"></div></section>
@@ -148,7 +148,7 @@ header{display:flex;gap:16px;justify-content:space-between;align-items:center;pa
 </div><div id="overlay" class="overlay" role="presentation"><div class="modal" id="modal" role="dialog" aria-modal="true" aria-label="ゲームの案内"></div></div>
 <script>
 (function(){'use strict';
-const VERSION='0.6.29-alpha';const STORE='village-review-prototype-v010';
+const VERSION='0.6.30-alpha';const STORE='village-review-prototype-v010';
 const $=id=>document.getElementById(id);
 const V1_ART={ready:false,byId:new Map(),reason:'not loaded'};
 /* Optional resident portraits: an absent roster does not affect the base game's 145 images. */
