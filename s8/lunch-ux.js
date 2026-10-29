@@ -1,7 +1,7 @@
 "use strict";
 /* S8 v0.6.2 — visual midday break, lunch transfer, third-period ease and annual goal summary. */
 (function(){
-const GOALS=[16,34,54,72];
+const GOALS=[16,34,54,72]; // backward-compatible reference only
 const oldRenderGrid=renderGrid;
 renderGrid=function(target,interactive){
  oldRenderGrid(target,interactive);
@@ -64,19 +64,19 @@ render=function(){
  const panel=$("goal-banner");
  if(!panel||!state||state.phase==="end"){if(panel)panel.classList.add("hidden");return}
  panel.classList.remove("hidden");
- const y=Math.floor(state.semester/2)+1,required=GOALS[y-1],needed=Math.max(0,required-state.credits);
+ const y=Math.floor(state.semester/2)+1,required=window.S8_OPTIONAL_TARGETS[state.faculty][y-1],earned=state.electiveCredits||0,needed=Math.max(0,required-earned);
  const heading=$("goal-banner-title"),amount=$("goal-banner-amount"),details=$("goal-banner-details");
- heading.textContent=y===4?"🎓 卒業ノルマ":"🎯 "+y+"年次の進級ノルマ";
+ heading.textContent=y===4?"🎓 卒業までの選択科目ノルマ":"🎯 "+y+"年次の選択科目ノルマ";
  amount.textContent=needed>0?"あと "+needed+" 単位":"単位ノルマ達成！";
  const requiredIds=new Set();
  if(y===4){
   for(const c of state.failedRequired||[])if(!state.passedIds.includes(c.canonicalId))requiredIds.add(c.canonicalId);
   for(const c of state.offers||[])if(c.type==="required"&&!state.passedIds.includes(c.canonicalId))requiredIds.add(c.canonicalId);
  }
- details.textContent="確定 "+state.credits+" / 必要 "+required+"単位　｜　今期登録分は成績確定後に加算"+(y===4?"　｜　未取得必修 "+requiredIds.size+"科目（今期・再履修）":"");
+ details.textContent="選択取得 "+earned+" / 必要 "+required+"単位　｜　必修は別枠・卒業までに全取得"+(y===4?"　｜　未取得必修 "+requiredIds.size+"科目（今期・再履修）":"");
  panel.classList.toggle("goal-met",needed===0&&!(y===4&&requiredIds.size));
  panel.classList.toggle("goal-critical",state.semester%2===1&&needed>0)
  const bar=$("goal-banner-progress");
- if(bar)bar.style.width=Math.max(0,Math.min(100,state.credits/required*100))+"%";
+ if(bar)bar.style.width=Math.max(0,Math.min(100,earned/required*100))+"%";
 };
 })();
