@@ -16,7 +16,7 @@
   ],
   "ai_audit": {
     "structure": "PASS: JS bracket/quote balance; no missing DOM IDs from game.js and expansion.js (124 $ references against 57 HTML IDs)",
-    "placement_model": "PASS: 12,000 static term/subject/activity/seed combinations can reach 10 credits; model excludes earned-prerequisite constraints and carried courses, so this is not an exhaustive route proof",
+    "placement_model": "PASS: 3 faculties × 5 activity setups × 8 terms × 100 generated schedules (12,000 total) all reached the 10-credit registration threshold with no mandatory/activity collisions. Static matching model does not cover prerequisite gating, annual carry or actual browser behavior.",
     "audio": "Implementation only; sound not verified on real device",
     "state_save_resume": "Implementation only; 8-term save and recovery not verified in real browser",
     "simulation": "8-term probabilistic graduation score distribution not measured",
@@ -25,7 +25,7 @@
       "The latest source has not completed browser event testing",
       "Synthetic note/chord effects may vary by browser, mute and iOS audio settings"
     ],
-    "activity_timetable_revision": "Schedule occupancy changed; rerun 8-term placement tests with 5 activity modes; inspect no overlap with mandatory courses."
+    "activity_timetable_revision": "PASS: tutoring occupies Mon4, Mon5, Fri5 (3 distinct periods); club+job occupies Mon5, Tue5, Wed5, Thu5, Sat3 (5 distinct periods), no overlaps."
   },
   "browser_qa": {
     "performed": false,
