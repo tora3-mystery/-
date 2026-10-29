@@ -98,12 +98,52 @@ function riskDetails(c){
  if(count("weekend_reset"))add("週休の達人",c.slots.some(p=>Math.floor(p/5)>0&&![...busy].some(t=>Math.floor(t/5)===Math.floor(p/5)-1))?5:0);
  add("カンニングによる取得率上昇",skills.some(x=>x.id==="cheating"&&x.year+1===Math.floor(state.semester/2)+1)?50:0);
  add("3限の昼休み明け",c.slots.some(p=>p%5===2)?6:0);
+ // Base aptitude skill, selected at admission or acquired in an annual draft.
+ if((c.aptitudeTags||[]).some(tag=>skills.some(sk=>sk.id===tag)))add("得意分野（パソコン・数学・英語）",6);
  const final=passChance(c);
  // The real chance function also uses staged rounding, movement penalties,
  // 5–98% caps and potentially the 100% compulsory study skill.
  const expected=Math.round(base+breakdown.reduce((a,x)=>a+x.n,0));
  const adjust=final-expected;
  return {base,breakdown,final,adjust,guaranteed:final===100,probabilityCap:final===98};
+}
+function reviewAlternatives(current){
+ if(!state||state.phase!=="registration")return[];
+ const original=state.selectedIds.slice();
+ state.selectedIds=original.filter(id=>id!==current.id);
+ try{
+  return state.offers.filter(c=>c.type!=="required"&&c.type!=="annualCarry"&&c.id!==current.id&&!state.selectedIds.includes(c.id)&&allowed(c).ok)
+   .sort((a,b)=>passChance(b)-passChance(a))
+ }finally{state.selectedIds=original}
+}
+function closeReplacement(){
+ const box=$id("review-replacements");if(box){box.replaceChildren();box.classList.add("hidden")}
+}
+function openReplacement(currentId){
+ const current=state?.offers?.find(c=>c.id===currentId),box=$id("review-replacements");
+ if(!current||!box||!state.reviewOpen)return;
+ const candidates=reviewAlternatives(current);if(!candidates.length)return;
+ box.replaceChildren();
+ const wrap=document.createElement("div");wrap.className="review-replacement-body";
+ const heading=document.createElement("h3");heading.textContent="「"+current.name+"」の代わりに登録する講義";
+ const detail=document.createElement("p");detail.textContent="時間割・前提条件を満たす候補のみ表示。選ぶと元の講義を解除し、この画面の確率を再計算します。";
+ wrap.append(heading,detail);
+ for(const c of candidates){
+  const b=document.createElement("button");b.type="button";b.className="review-alternative";
+  b.textContent=c.name+"｜"+c.credits+"単位｜難度★"+c.diff+"｜取得見込 "+passChance(c)+"%";
+  b.onclick=()=>{
+   const before=state.selectedIds.slice();
+   state.selectedIds=before.filter(id=>id!==currentId);
+   if(!allowed(c).ok){state.selectedIds=before;closeReplacement();renderReview();return}
+   state.selectedIds.push(c.id);
+   closeReplacement();save();renderReview();
+   showToast("「"+current.name+"」を「"+c.name+"」に変更しました。")
+  };
+  wrap.append(b)
+ }
+ const close=document.createElement("button");close.type="button";close.className="secondary";
+ close.textContent="変更せずに戻る";close.onclick=closeReplacement;wrap.append(close);
+ box.append(wrap);box.classList.remove("hidden");box.scrollTop=0
 }
 function reviewRow(c){
  const chance=riskDetails(c);
@@ -122,14 +162,21 @@ function reviewRow(c){
  const total=document.createElement("b");total.textContent="最終取得率 "+chance.final+"%";details.append(total);
  row.append(details);
  if(c.type!=="required"&&c.type!=="annualCarry"){
-  const remove=document.createElement("button");remove.className="review-replace";remove.textContent="この講義を取り消す・別の講義に変える";
+  const controls=document.createElement("div");controls.className="review-course-actions";
+  const remove=document.createElement("button");remove.type="button";
+  remove.className="review-replace";remove.textContent="この講義を取り消す";
   remove.onclick=()=>{
    state.selectedIds=state.selectedIds.filter(id=>id!==c.id);
-   closeReview();save();render();
-   const list=$id("courses-block");
-   if(list&&list.scrollIntoView)list.scrollIntoView({behavior:"smooth",block:"start"});
-   showToast("「"+c.name+"」を解除しました。別の講義を選べます。")
-  };row.append(remove)
+   save();renderReview(); // Remain on the same confirmation screen.
+   showToast("「"+c.name+"」を取り消しました。")
+  };
+  const swap=document.createElement("button");swap.type="button";
+  swap.className="review-replace";swap.textContent="別の講義に変える";
+  const alternatives=reviewAlternatives(c);
+  swap.disabled=alternatives.length===0;
+  swap.title=alternatives.length?"登録可能な講義を表示":"時間割・前提条件を満たす差替え候補はありません";
+  swap.onclick=()=>openReplacement(c.id);
+  controls.append(remove,swap);row.append(controls)
  }else{
   const fixed=document.createElement("small");fixed.className="review-fixed";fixed.textContent="必修・通年継続は登録解除できません。";row.append(fixed)
  }
@@ -143,10 +190,11 @@ function renderReview(){
  const courses=allRegistered();
  const year=Math.floor(state.semester/2)+1,need=optionalTarget(year),registered=courses.filter(c=>c.type!=="required"&&c.type!=="annualCarry").reduce((a,c)=>a+c.credits,0);
  $id("review-totals").textContent="選択科目取得済み "+state.electiveCredits+" / "+need+"単位（今期申請中 "+registered+"単位）｜ 計"+courses.length+"科目・"+creditLoad()+"単位を申請。必修は別枠・卒業までに全取得が必要。"+((state.skills||[]).some(x=>x.id==="cheating"&&x.year+1===year)?"　⚠ カンニング実行中：科目ごとに10%の発覚リスクがあり、発覚するとGAME OVER。":"");
+ closeReplacement();
  const list=$id("review-courses");list.replaceChildren();for(const c of courses)list.append(reviewRow(c));
  panel.scrollTop=0
 }
-function closeReview(){if(state){state.reviewOpen=false;save()}$id("registration-review").classList.add("hidden")}
+function closeReview(){closeReplacement();if(state){state.reviewOpen=false;save()}$id("registration-review").classList.add("hidden")}
 function openReview(){if(!state||state.phase!=="registration")return;syncElectives();state.reviewOpen=true;save();renderReview()}
 $id("register-btn").onclick=openReview;
 $id("review-edit").onclick=()=>{closeReview();render()};
