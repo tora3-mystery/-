@@ -244,6 +244,7 @@ renderReveal=function(){
  priorReveal();
  if(!state||state.phase!=="reveal")return;
  $("reveal-title").textContent=termName(state.semester)+" 成績発表";
+ $("next-btn").textContent=state.semester<7?"次の学期へ →":"4年間の結果を見る →";
  const logRows=$("reveal-log").querySelectorAll(".reveal-row");
  if(state.semester%2===0)for(let i=0;i<state.revealIndex;i++){
   const r=state.results[i];
