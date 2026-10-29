@@ -107,8 +107,8 @@ $("total-credits").textContent=state.credits;$("total-score").textContent=fmt(st
 $("current-credits").textContent=creditLoad()+" / 14";
 $("schedule-hint").textContent=state.failedRequired.length?"未取得必修："+state.failedRequired.map(c=>c.name).join("、")+"（再履修は選択科目から）":"必修は青。科目をタップすると占有マスを一度に確認できます。";
 $("summary-line").textContent="登録 "+allRegistered().length+"科目／"+creditLoad()+"単位　·　目安：10単位以上で履修確定";
-$("register-btn").disabled=creditLoad()<10||state.phase!=="registration";
-$("register-btn").textContent=creditLoad()<10?"あと"+(10-creditLoad())+"単位で確定可能":"履修を確定する →";
+$("register-btn").disabled=state.phase!=="registration";
+$("register-btn").textContent="履修を確定する →";
 $("clear-btn").disabled=state.selectedIds.length===0;
 renderGrid($("timetable-grid"),true);renderCourses();
 $("reveal").classList.toggle("hidden",state.phase!=="reveal");if(state.phase==="reveal")renderReveal();
@@ -138,7 +138,7 @@ $("drawer-action").disabled=mandatory||(!selected&&!d.status.ok);$("drawer-actio
 $("drawer-action").onclick=()=>{if(mandatory)return;if(selected){state.selectedIds=state.selectedIds.filter(x=>x!==id);showToast("履修を解除しました")}else{const res=allowed(c);if(!res.ok){showToast(res.reason);return}state.selectedIds.push(id);showToast(c.slots.length>1?"セット科目を"+c.slots.length+"コマ登録！":"時間割に登録！")}save();closeDrawer();render()};
 $("course-drawer").classList.remove("hidden");renderGrid($("timetable-grid"),true)}
 function showToast(msg){const e=$("toast");e.textContent=msg;e.classList.remove("hidden");clearTimeout(toastTimer);toastTimer=setTimeout(()=>e.classList.add("hidden"),1700)}
-function beginReveal(){if(creditLoad()<10)return;state.results=[];state.revealIndex=0;state.termScore=0;state.currentCombo=0;
+function beginReveal(){state.results=[];state.revealIndex=0;state.termScore=0;state.currentCombo=0;
 const ordered=allRegistered().slice().sort((a,b)=>Math.min(...a.slots)-Math.min(...b.slots));
 for(const c of ordered){const lotteryLost=!!c.lottery&&rand()*100>=c.lottery;const pass=!lotteryLost&&rand()*100<passChance(c);state.results.push({id:c.id,name:c.name,pass,lotteryLost,credits:c.credits,required:c.type==="required"||c.type==="retake",canonicalId:c.canonicalId,course:c,earned:0,combo:0})}
 state.phase="reveal";save();render();playReveal()}
