@@ -1,8 +1,8 @@
 {
   "id": "S8",
   "title": "履修登録を完了してください。（仮）",
-  "version": "0.1.1",
-  "updated_at_jst": "2026-10-29 13:11 JST",
+  "version": "0.1.2",
+  "updated_at_jst": "2026-10-29 13:13 JST",
   "phase": "Phase 3 prototype / Phase 4 static audit in progress",
   "scope": "1年目前期・後期の2学期。全8学期・キャンパス移動・卒業判定は未実装",
   "ai_audit": {
@@ -14,7 +14,8 @@
       "Current test covers 2 terms, not an 8-term graduation route",
       "Lottery and passing are stochastic and may cause academic setbacks",
       "The source-level scheduling audit is not a real browser test"
-    ]
+    ],
+    "score_model": "7,200 simulated two-term strategy runs across 3 faculties, 3 activities, 4 strategies, 200 seeds. Strategic score differentiation observed; job bonus increased from 400 to 800 and fatigue penalty reduced from 4% to 2% to improve competitiveness. Simplified model, not live game execution."
   },
   "browser_qa": {
     "performed": false,
