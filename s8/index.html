@@ -9,9 +9,10 @@
 <script defer src="./expansion.js"></script>
 <script defer src="./balance.js"></script>
 <script defer src="./polish.js"></script>
+<script defer src="./campus.js"></script>
 </head>
 <body>
-<header class="site-header"><div class="head-inner"><div><div class="eyebrow">短編UIゲーム実験室 · S8 / α</div><h1>履修登録を完了してください。</h1><div class="meta">v0.5.1 · 2026/10/29 15:35 JST</div></div><div class="header-actions"><button id="sound-toggle" class="back sound-toggle" title="効果音の切替">♪ 音ON</button><a href="../" class="back">ゲーム一覧</a></div></div></header>
+<header class="site-header"><div class="head-inner"><div><div class="eyebrow">短編UIゲーム実験室 · S8 / α</div><h1>履修登録を完了してください。</h1><div class="meta">v0.5.2 · 2026/10/29 15:47 JST</div></div><div class="header-actions"><button id="sound-toggle" class="back sound-toggle" title="効果音の切替">♪ 音ON</button><a href="../" class="back">ゲーム一覧</a></div></div></header>
 <main class="shell">
 <section id="intro" class="card intro">
 <div class="stamp">学務システム / 試作版</div><h2>4年間の始まりは、時間割から。</h2>
@@ -26,9 +27,9 @@
 <section id="game" class="hidden">
 <div class="dashboard card"><div><div class="eyebrow" id="semester-label">1年前期</div><div class="dash-sub" id="faculty-label"></div><div class="dash-sub" id="activity-schedule"></div></div>
 <div class="stats"><div><small>取得単位</small><b id="total-credits">0</b></div><div><small>累計SCORE</small><b id="total-score">0</b></div><div><small>今期の登録</small><b id="current-credits">0単位</b></div></div></div>
-<div class="main-col"><section class="timetable card"><div class="section-head"><h2>時間割</h2><div id="legend"><span class="legend-item"><i class="legend-dot required"></i>★必修</span><span class="legend-item"><i class="legend-dot optional"></i>選択</span><span class="legend-item"><i class="legend-dot annual"></i>通年</span><span class="legend-item"><i class="legend-dot activity"></i>活動</span></div></div><div class="hint" id="schedule-hint">空きマスをタップすると、その時間の候補科目が表示されます。</div>
+<div class="main-col"><section class="timetable card"><div class="section-head"><h2>時間割</h2><div id="legend"><span class="legend-item"><i class="legend-dot required"></i>★必修</span><span class="legend-item"><i class="legend-dot optional"></i>選択</span><span class="legend-item"><i class="legend-dot annual"></i>通年</span><span class="legend-item"><i class="legend-dot activity"></i>活動</span><span class="legend-item"><i class="legend-dot travel"></i>移動</span></div></div><div class="hint" id="schedule-hint">空きマスをタップすると、その時間の候補科目が表示されます。</div>
 <div class="grid-wrap"><div id="timetable-grid" class="time-grid" aria-label="週間時間割"></div></div>
-<div id="summary-line" class="summary-line"></div><div id="risk-indicator" class="risk-indicator" aria-live="polite"></div><div id="life-events" class="life-events"></div><div id="year-stage-goal" class="year-stage-goal"></div><div id="retake-warning" class="retake-warning hidden" aria-live="polite"></div><div id="mandatory-panel" class="mandatory-panel"></div><div id="yearlong-panel" class="yearlong-panel"></div>
+<div id="summary-line" class="summary-line"></div><div id="risk-indicator" class="risk-indicator" aria-live="polite"></div><div id="campus-summary" class="campus-summary"></div><div id="life-events" class="life-events"></div><div id="year-stage-goal" class="year-stage-goal"></div><div id="retake-warning" class="retake-warning hidden" aria-live="polite"></div><div id="mandatory-panel" class="mandatory-panel"></div><div id="yearlong-panel" class="yearlong-panel"></div>
 <div class="actionbar"><button id="register-btn" class="primary">履修を確定する →</button><button id="clear-btn" class="ghost">選択を全解除</button></div>
 </section>
 <section class="courses card" id="courses-block"><div class="section-head"><h2>科目を選ぶ</h2><div id="available-counter" class="counter"></div></div><div class="filters" id="course-filters">
