@@ -219,7 +219,7 @@ before.feature!==after.feature?`店頭に変化があった：${after.feature}`:
 const affected=SHOPS.filter(d=>d.id!==action.id&&allBefore[d.id].open).map(d=>({id:d.id,before:allBefore[d.id],after:display(next.shops[d.id],d.id),reason:next.shops[d.id].closed?`${d.name}は${next.shops[d.id].closedReason}ため閉店。`:npc?.id===d.id?`${npc.by}の口コミを受け、店舗が変化した。`:"まちの動きを受け、店舗が変化した。"})).filter(x=>viewChanged(x.before,x.after));
 const neighbor=spillover;
 const result={review:rev,transition,before,after,playerAfter,cause,affected,npc,sns,viral,neighbor,closures,openings,month:next.month};
-next.last=result;next.view="result";next.feed.push({month:next.month,kind:"player",...rev});if(npc)next.feed.push({month:next.month,kind:"npc",...npc});if(sns)next.feed.push({month:next.month,kind:"sns",...sns});if(viral)next.feed.push(viral);return next;}
+next.last=result;next.view="result";next.feed.push({month:next.month,kind:"player",...rev});if(npc)next.feed.push({month:next.month,kind:"npc",...npc});if(sns)next.feed.push({month:next.month,kind:"sns",...sns});if(viral)next.feed.push(viral);for(const e of closures)next.feed.push({kind:"lifecycle",month:next.month,text:e.name+"が"+e.reason+"ため閉店しました。",id:e.id});for(const e of openings)next.feed.push({kind:"lifecycle",month:next.month,text:e.notice,id:e.id});return next;}
 function finish(state){if(state.month<12)throw Error("not finished");const ls=SHOPS.filter(d=>state.shops[d.id].opened).map(d=>({d,s:state.shops[d.id]}));const closed=ls.filter(x=>x.s.closed).length;const totalStages=ls.reduce((n,x)=>n+routeFor(x.s).stage,0);const local=ls.reduce((n,x)=>n+x.s.locals,0),vis=ls.reduce((n,x)=>n+x.s.visitors,0);
 let title,description;
 const ramen=state.shops.ramen,cake=state.shops.cake,cafe=state.shops.cafe;
