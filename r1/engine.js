@@ -241,9 +241,9 @@ function lunchImpressions(state,id){
  if(id!=="ramen"&&stage>0&&genre){
   const label=stage===1?"試し始めた":"現在の看板になった";
   if(genre==="taste"){
-   food="「"+current+"」を"+(stage===1?"試食した。":"注文した。")+
-    (positive?"味や素材の組み合わせを以前より前面に出している。香りや食感に特徴がある。":
-     "味付けや選び方を見直したようだ。以前の味を知る客には違いが感じられそう。");
+   food="店は「"+current+"」を打ち出している。実際に味わうと、"+
+    (positive?"以前より素材や香りの特徴をはっきり出している。好みは分かれそう。":
+     "味付けや選び方を見直した印象。以前の味を知る客には変化が伝わりそう。");
   }else if(genre==="service"){
    service=positive?"今は「"+route+"」を掲げている。以前より客とのやりとりに時間を使っている。":
     "注文や受け取りが「"+current+"」中心になった。以前よりやり取りが少なく、手早く済む。";
@@ -251,10 +251,10 @@ function lunchImpressions(state,id){
    price=positive?"「"+current+"」が目立つ。以前より量や組み合わせのお得感を打ち出している。":
     "価格や量の選択肢を見直し、「"+current+"」を案内している。注文前に内容を確かめたくなる。";
   }else if(genre==="mood"){
-   mood=positive?"「"+route+"」の方向に席と内装が変わった。落ち着いて過ごす時間を重視している。":
-    "今は「"+route+"」を目指す店内。昔の席の使い方とは違い、短い昼休みに寄りやすそう。";
+   mood=positive?"「"+route+"」の方向に席と内装が変わった。店が目指す過ごし方が以前よりはっきりしている。":
+    "今は「"+route+"」を目指す店内。昔の席の使い方とは違い、人との距離感も変わった。";
   }else if(genre==="identity"){
-   food="「"+current+"」が今の主役。"+(positive?"店独自の工夫を強く打ち出していて、好みが分かれそう。":"以前の奇抜さより、親しみやすい方向に寄せている印象。");
+   food=base[0]+" 店が打ち出しているのは「"+current+"」。"+(positive?"従来より個性を前に出している。好き嫌いが分かれそう。":"以前の路線を見直し、親しみやすい方向に寄せた印象。");
    mood+=" 入口では「"+route+"」の看板が目に入る。";
   }
   if(stage===1){
@@ -280,7 +280,7 @@ function lunchImpressions(state,id){
  return {food,service,mood,price,current,
   change:id!=="ramen"&&stage>0?
    "現在の店頭：「"+route+"」／"+(stage===1?"改装準備":stage===2?"新看板":stage===3?"店内も改装":"営業形態が定着")+
-    "。商品は「"+current+"」。":
+    "。"+(genre==="service"?"接客・注文の特徴":genre==="mood"?"客席・店内の特徴":genre==="price"?"価格・セットの特徴":genre==="identity"?"店のこだわり": "味・商品の特徴")+"は「"+current+"」。":
    id==="ramen"&&s.reborn?"店舗だけが大きくなった。麺の硬さは開業時のまま。":""};
 }
 
@@ -552,7 +552,7 @@ function counter(state,style){
  const topic=TOPICS[rev.id][genre],shop=SHOPS.find(d=>d.id===rev.id);
  const playerText=style==="evidence"?
  (negative?`お返事ありがとうございます。${topic}で気になったところが、少しでも良くなるとうれしいです。`:positive?`お返事ありがとうございます。${topic}の良さを、これからも大切にしてほしいです。`:`お返事ありがとうございます。${topic}には良いところもあったので、また利用したいです。`):
- (negative?"そんなに言い返す前に、まず口コミの星を見てもらえます？":positive?"褒めたのに反撃されるとは。星を減らした方がいいんですか？":"星3にここまで返事が来るとは思いませんでした。");
+ (negative?`返信は読みましたが、まだ納得できません。${topic}への不満は残っています。`:positive?`評価したのは${topic}です。他の部分まで満点と言ったわけではありません。`:`星3という評価を軽く見ないでください。気になる点はまだあります。`);
  let ownerText;
  if(rev.id==="ramen"){
   if(style==="evidence")ownerText=negative?"お気持ちは読みました。でも茹で時間は1秒も変えません。反論は以上です。":"お返事は読みました。次回も同じ一杯を出しますから、ご自身で確かめてください。";
