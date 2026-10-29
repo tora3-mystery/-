@@ -11,7 +11,7 @@ function scrollToBeginning(){
  else setTimeout(move,40);
 }
 const oldStart=start;
-start=function(...args){oldStart(...args);scrollToBeginning()};
+start=function(...args){oldStart(...args);if(state){state.balanceVersion="0.5.0";save()}scrollToBeginning()};
 const oldResume=resume;
 resume=function(...args){oldResume(...args);if(state)scrollToBeginning()};
 function termLabel(){return (Math.floor(state.semester/2)+1)+"年生 "+(state.semester%2===0?"前期":"後期")}
