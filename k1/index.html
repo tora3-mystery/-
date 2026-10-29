@@ -67,7 +67,7 @@ h2{font-size:17px;line-height:1.4;margin:0 0 8px}h3{font-size:14px;margin:0 0 8p
 </style>
 </head>
 <body><main class="app">
-<header class="mast"><div><div class="sub">短編UIゲーム実験室｜K1 プロトタイプ</div><h1>掲示物をご確認ください。</h1><div class="meta"><b>K1 α0.9.0</b> ｜ 2026-10-30 00:23 JST更新</div></div><a class="home" href="../index.html">作品一覧へ</a></header>
+<header class="mast"><div><div class="sub">短編UIゲーム実験室｜K1 プロトタイプ</div><h1>掲示物をご確認ください。</h1><div class="meta"><b>K1 α0.10.0</b> ｜ 2026-10-30 01:29 JST更新</div></div><a class="home" href="../index.html">作品一覧へ</a></header>
 <section id="intro" class="panel intro">
 <div class="sub">白波レジデンス・406号室</div><h2>掲示物をご確認ください。</h2>
 <p class="lede">あなたは白波レジデンス406号室で一人暮らしをする会社員です。</p><p>相場より安かった家賃に惹かれて越して3か月。仕事帰り、毎日エントランスの掲示板を確認しています。4階には空室が目立ちますが、管理人は「たまたまですよ」と言うばかりです。最近、掲示物の貼り替えが増えてきました。</p>
@@ -88,9 +88,9 @@ h2{font-size:17px;line-height:1.4;margin:0 0 8px}h3{font-size:14px;margin:0 0 8p
 <script>
 (function(){
 'use strict';
-var KEY='short-ui-k1-alpha090';
+var KEY='short-ui-k1-alpha0100';
 var BASE=[
-['R01','管理人室の受付','管理人室の通常受付は9時から17時までです。時間外のご用件は指定窓口へお願いいたします。','管理事務所'],
+['R01','管理人室の受付と夜間の防犯','管理人室の通常受付は9時から17時までです。時間外は指定窓口へ。近隣では夜間の強引な勧誘や訪問先の間違いが報告されています。予定のない訪問者には、安易に玄関を開けないでください。','管理事務所'],
 ['R02','夜間の訪問について','21時以降、管理事務所および委託業者が訪問する場合は、原則として事前に案内を配布します。','管理事務所'],
 ['R03','住戸内点検のご案内','室内への立入点検が必要な場合、対象住戸へ日付・担当者を記載した個別案内を配布します。','管理事務所'],
 ['R04','不審な呼出しについて','心当たりのない夜間の訪問・呼出しには応答せず、翌朝、管理人室までお知らせください。','管理事務所'],
@@ -134,7 +134,7 @@ var EXTRA=[
 {day:5,id:'N05',title:'夜間設備点検の予告',body:'4階の一部住戸で夜間の設備確認を行う予定です。対象となる住戸には別途ご案内します。',issuer:'管理事務所'},
 {day:5,id:'N05A',title:'転居扱いのご連絡',body:'402号室の居住者について、夜間の照会後、本人の申出を確認できないまま「不在」として処理しました。現在調査中です。',issuer:'管理事務所'},
 {day:5,id:'N05B',title:'掲示物の適正利用',body:'住民の個人的な注意書きは、管理側の確認後に掲示してください。無断掲示分は撤去します。',issuer:'管理事務所'},
-{day:5,id:'N05C',title:'検証用の仮登録名',body:'名簿の動作確認には「森本 透」を使用しました。実在する居住者の氏名ではありません。居住者本人との照合には使用しないでください。',issuer:'管理人室'},
+{day:5,id:'N05C',title:'以前の募集情報の取り扱い',body:'数か月前の募集チラシに記載された条件は、現在の募集を意味しません。入居中の契約は有効です。',issuer:'管理人室'},
 {day:5,id:'N05D',title:'4階の情報保護',body:'土曜日までに名簿情報を第三者へ送った402号室が、日曜日の掲示では「不在」とされています。氏名の回答は慎重にお願いします。',issuer:'外部サポート窓口'},
 {day:6,id:'N06',title:'夜間設備点検へのご協力',body:'管理番号 A-406。対象住戸へ23時台にご連絡する場合があります。インターホンには必ずご対応ください。お問い合わせは点検終了後に承ります。',issuer:'管理事務所'},
 {day:6,id:'N06A',title:'深夜の確認は特例です',body:'これまでの「21時以降の訪問」については、今週の4階臨時点検に限り特例を適用します。',issuer:'管理事務所'},
@@ -180,7 +180,7 @@ EXTRA=EXTRA.concat([
  {day:5,id:'N05S',title:'送信記録の確認',body:'個人情報に関わる問い合わせについて、外部サポート窓口の書面窓口を利用できます。',issuer:'外部サポート窓口'},
  {day:5,id:'N05T',title:'来週の掲示作業',body:'一部の古い掲示を順次撤去します。掲示の変更にご留意ください。',issuer:'管理事務所'},
  {day:9,id:'N09A',title:'昨日の点検について',body:'臨時設備点検は終了しました。来訪記録の確認は管理側が一括して実施します。',issuer:'管理事務所'},
- {day:9,id:'N09B',title:'事故記録に関する意見受付',body:'過去の事故と点検記録について、管理側とは別に外部サポート窓口で書面を受け付けます。締切は明日です。',issuer:'外部サポート窓口'},
+ {day:9,id:'N09B',title:'夜間の指示変更に関する意見受付',body:'所有者や管理人室による夜間の指示変更について、外部サポート窓口で書面を受け付けます。締切は明日です。',issuer:'外部サポート窓口'},
  {day:9,id:'N09C',title:'407号室前の壁面確認',body:'407号室前の壁に残る水染みについて、清掃会社から作業完了の報告がありました。確認作業を終了します。',issuer:'管理事務所'},
  {day:9,id:'N09D',title:'4階の連絡',body:'今夜は4階の設備訪問を予定しておりません。',issuer:'管理事務所'},
  {day:9,id:'N09E',title:'貼り替え作業',body:'管理人室では昨日の掲示の一部を貼り替えました。古い紙は掲示板から撤去します。',issuer:'管理人室'}
@@ -199,6 +199,12 @@ EXTRA=EXTRA.concat([
  {day:9,id:'K09',title:'405号室の郵便物',body:'退去済みの405号室へ差出人のない封筒が届きました。今後の扱いは管理人室で確認します。',issuer:'管理人室'}
 ]);
 REVISION.R04={day:5,body:'以前の「不審な夜間呼出しには応答しない」という注意は、本日より4階の音声確認に限り変更します。呼出しの相手を映像で確認したうえ、音声で応答してください。扉は開けなくて構いません。'};
+/* 404 is a deliberate red herring; the residents are ordinary people. */
+EXTRA.push(
+ {day:3,id:'K404A',title:'404号室付近の深夜騒音',body:'404号室前で夜遅くに箱を運ぶ音がすると苦情がありました。住人への直接の注意はご遠慮ください。',issuer:'管理人室'},
+ {day:6,id:'K404B',title:'404号室前の置き荷物',body:'夜間に404号室の前で長い箱を見かけたとの報告がありました。通行を妨げないようお声がけをしています。',issuer:'管理人室'},
+ {day:9,id:'K404C',title:'404号室の荷物について',body:'夜勤で使う機材とお子さんの工作用品の搬入でした。廊下には置かず室内で保管するようお願いしました。',issuer:'管理人室'}
+);
 function retiredIds(day){var ids=new Set();for(var d=2;d<=day;d++)(RETIRED[d]||[]).forEach(function(id){ids.add(id);});return ids;}
 function noticeChangeCounts(day){if(day<=1)return {added:0,removed:0,revised:0};return {added:EXTRA.filter(function(x){return x.day===day;}).length+BASE.filter(function(n){return basePostedDay(n[0])===day;}).length,removed:(RETIRED[day]||[]).length,revised:Object.keys(REVISION).filter(function(id){return REVISION[id].day===day;}).length};}
 var EVENTS={
@@ -221,7 +227,7 @@ var EVENTS={
 ],
 6:[
 {id:'E07',time:'23:37',title:'臨時の夜間点検',scene:'管理担当者から「特例です。設備を確認するので玄関を開けてください」。',monitor:'管理番号A-406を示すが、406号室宛ての個別案内は届いていない。',hint:'撤去された点検ルール'},
-{id:'E08',time:'23:54',title:'居住者名簿の照合',scene:'管理人室の居住者名簿確認画面が届いた。「照会に使用する氏名をひとつ送信してください。無回答の場合は406号室の登録名で処理します」。退去したはずの405号室では、今夜も室内の電灯が点いている。',monitor:'名簿には401号室・有馬（所有者）、405号室・退去済、406号室・水野凪、407号室・空室とある。回答先は管理人室。',hint:'仮登録名『森本 透』と、実在の住人情報'}
+{id:'E08',time:'23:18',title:'401号室の有馬',scene:'深夜に有馬が訪ねてくる。「建物の所有者です。少し話せませんか。玄関先で結構です」。',monitor:'401号室の有馬。所有者だという資料はあるが、訪問の予告はない。',hint:'所有者と、深夜の訪問規則'}
 ],
 7:[{id:'E09',time:'19:10',title:'管理人室からの最終通知',scene:'管理人・真鍋から「本件は有馬オーナーの指示で対応を終了します」と連絡が来た。外部サポート窓口への申立ての締切は今夜19時30分。掲示の写しと届いた手紙を提出するか、何も送らないか。',monitor:'提出先は管理人室とは別の外部サポート窓口。送信できるのは、旧掲示、杉浦の証言、正規点検控え、格安募集の控えなど。',hint:'掲示の改訂、杉浦の証言、406号室の募集条件'}]
 };
@@ -304,10 +310,12 @@ SIDE_POOL[6].push(
  {id:'E07H',time:'23:40',title:'室内感知器の受信確認',scene:'406号室の備付け端末が「共用設備からの信号を受信。室内の確認ボタンを押してください」と表示する。',monitor:'備付け端末上の表示で、外部の訪問者や情報送信は伴わない。',hint:'室内端末と外部訪問の違い'}
 );
 
+var DAY3_TENANT={id:'E10',time:'19:06',title:'405号室の長谷川',scene:'405号室の長谷川が訪ねてくる。「明日引っ越します。少し話を聞いてください」。目の下に濃い隈がある。',monitor:'退去案内にある405号室の住人。引越しの書類を持ち、何度も廊下を振り返る。',hint:'405号室の退去予定'};
+SIDE_POOL[2].push({id:'E02L',time:'01:17',title:'知らない言葉の訪問者',scene:'真夜中、見知らぬ男性が聞き慣れない言葉で早口に話しかけてくる。スマホの地図をカメラに向けるが、何を伝えたいのか分からない。',monitor:'見知らぬ男性が困った様子で地図を見せている。夜間の訪問予定はない。',hint:'予定外の深夜訪問'});
 var DAY_SCHEDULE={
  1:[{early:1}],
  2:[{early:2}],
- 3:[{pool:2}],
+ 3:[DAY3_TENANT,{pool:2}],
  4:[{pool:3}],
  5:[EVENTS[3][1]],
  6:[EVENTS[4][0],{pool:4}],
@@ -346,11 +354,11 @@ var post=[
 {day:1,id:'delivery',name:'配送に関するお知らせ',text:['E01A','E01C'].includes(earlyEntry(1).id)?'406号室・水野凪様。月曜日19:00〜21:00に時間指定のお荷物を配達します。伝票番号と受取人をお確かめください。青空運輸お客様窓口。':'406号室宛ての荷物は配達日が変更されました。変更前：月曜日19:00〜21:00／変更後：火曜日19:00〜21:00。月曜夜の配達予定はありません。配送会社お客様窓口。'},
 {day:2,id:'urgentCheck',name:'火曜日の設備管理について',text:['E02','E02A'].includes(earlyEntry(2).id)?'406号室の非常呼出装置に不安定な反応が見つかりました。本日19時10分〜19時25分に東洋設備・大野が現地確認します。作業と立会いをその場でお願いします。問い合わせ窓口の受付は19時までです。':'本日の406号室への設備訪問はありません。変更後の訪問日・担当者は個別通知でご案内します。管理人室の夜間巡回は予定していません。'},
 {day:3,id:'redelivery',name:'別便の再配達のお知らせ',text:'別便の荷物（伝票番号WX-204）は前回不在のためお渡しできませんでした。本日、水曜日19時〜21時に再配達します。送付先406号室。配送会社お客様窓口。'},
-{day:4,id:'letter',name:'302号室・杉浦からの手紙',text:'「406号室の新しい方へ。407号室の高瀬奈津美さんは3年前に設備事故で亡くなりました。その後、4階から住人が次々と出ていきました。今夜の掲示は昔の注意書きと違います。管理人の真鍋さんには、この手紙を渡さないでください。302号室・杉浦」'},
+{day:4,id:'letter',name:'302号室・杉浦からの手紙',text:'「406号室の方へ。407号室の高瀬奈津美さんは3年前に設備事故で亡くなりました。その後4階から住人が次々と出ていきました。最近の掲示は昔の注意書きと違います。夜間の指示が変わっても、すぐに従わないでください。管理人の真鍋さんには渡さないで。302号室・杉浦」'},
 {day:6,id:'old',name:'藤井が残した旧掲示のコピー',text:'「夜間、相手を確認できない呼出しに返事をしないこと。扉を開けないこと」。余白には元管理人・藤井の筆跡で「高瀬さんの事故のあと、この注意を掲示した。有馬さんは信じず、私を辞めさせた。現管理人の案内と違えば、住人を守る方を選んでほしい」とある。'},
 {day:6,id:'inspection',name:'本日の個別点検案内',text:'406号室の設備確認。20:00〜20:30。担当：東洋設備・大野。日付と管理番号の記載あり。'},
 
-{day:8,id:'report',name:'406号室の募集条件の写し',text:'「406号室・特別家賃割引」。周辺相場のほぼ半額で募集開始。杉浦が入手した管理人室向けの募集控えには、有馬の指示として「401号室の夜間呼出しが止まるまで、406号室の入居募集を優先。入居後は音声応答の手順を繰り返し案内すること」とある。差出人の欄は真鍋。',requiresTrust:true},
+{day:8,id:'report',name:'杉浦が保存した過去の募集チラシ',text:'杉浦が保存していた、主人公が入居する前の賃貸募集チラシの写し。403号室と405号室は通常家賃だったのに、406号室だけ「特別割引・家賃約半額」。割引開始時期は、401号室の有馬が夜間の呼出しに悩まされ始めた頃と重なる。この募集は水野の契約時に終了している。',requiresTrust:true},
 {day:9,id:'quietmail',name:'差出人のない封筒',text:'差出人欄は空白なのに、宛名だけがあなたの筆跡に似ている。中には古い集合ポストの写真が一枚。406号室の投函口だけが内側から開いている。裏返すと小さな字で「ここを開けたとき、誰が家にいた？」と書かれている。',strange:true,rare:true},
 {day:9,id:'afterword',name:'302号室・杉浦からの追伸',text:'「藤井さんは住人を守ろうとして、有馬さんと喧嘩して辞めました。有馬さんも今では夜中の声に悩まされているようです。あなたまで同じ目に遭わないでください。声には返事をしないで」。封筒には小さな水染みがある。',requiresTrust:true},
 {day:10,id:'chair',name:'入居者保護の申立て案内',text:'管理人室や所有者からの不当な指示について、外部サポート窓口が書面を受け付けます。住民の手紙、旧掲示、賃料の募集条件、正規点検の控えを添付できます。'}
@@ -367,14 +375,13 @@ return (where==='post'?post:door).filter(function(i){return i.day<=state.day&&!(
 function eventNow(){return getEvents(state.day)[state.index];}
 function inquiryTarget(e){var m={E01:'配送会社のお客様窓口',E02:'管理側の時間外窓口',E02B:'管理側の時間外窓口',E02C:'配送会社の確認窓口',E02D:'管理側の時間外窓口',E02E:'外部サポート窓口の書面受付',E02F:'防火設備の時間外コールセンター',E03B:'警報連動の受付',E03C:'管理側の一斉配信窓口',E03D:'外部サポート窓口の連絡受付',E03E:'設備警報の時間外窓口',E03F:'警報連動の受付',E03:'管理側の時間外窓口',E04:'管理側の受付窓口',E05:'設備点検会社の受付窓口',E05C:'設備点検会社の受付窓口',E05D:'東洋設備の受付窓口',E05E:'管理側の書類受付',E05F:'東洋設備の受付窓口',E06:'管理側の受付窓口',E06B:'外部サポート窓口の書面受付',E06C:'外部サポート窓口の書面受付',E06D:'外部サポート窓口',E06E:'管理側の書類受付',E06F:'外部サポート窓口の認証窓口',E07:'管理側の時間外窓口',E07C:'管理側の時間外窓口',E07D:'管理側の受付窓口',E07E:'外部サポート窓口',E07F:'設備警報の時間外窓口',E08:'管理側の入居者窓口',E09:'外部サポート窓口'};return m[e.id]||'指定窓口';}
 function actionPreview(e,c){
- if(c==='no'){if(e.id==='E09')return '外部サポート窓口へ異議申立てを出さず、締切まで何もしません。';if(e.id==='E02B')return '止水弁の操作を見送り、警報を放置します。';if(e.id==='E02F')return '防火扉の閉鎖を見送りします。';if(e.id==='E02E')return '確認書への異議を出さず、期限経過まで何もしません。';if(e.id==='E02C')return '到着した荷物を受け取りません。';if(['E03B','E03F','E06F'].includes(e.id))return '必要な項目を送らず、確認期限まで対応しません。';if(['E06B','E06C'].includes(e.id))return '訂正後の件数を回答せず、外部サポート窓口への申し出を保留します。';if(e.id==='E08')return '名簿照会には回答せず、登録されている406号室の居住者名で処理されます。';return '今回の訪問・要求には応じません。';}
- var detail={E01A:'事前案内に合った荷物を受け取ります。',E01C:'書留を受け取ります。',E02:'東洋設備・大野の設備確認に立ち会います。',E02A:'大野の再点検に立ち会います。',E02E:'外部サポート窓口へ異議申立てを送ります。',E03D:'外部サポート窓口の独立窓口へ申請内容を送ります。',E05D:'東洋設備の正規窓口へ返答して控えを受け取ります。',E06D:'外部サポート窓口に手元の資料を送ります。',E07E:'外部サポート窓口の独立窓口へ旧点検履歴を提出します。',E03E:'室内装置の試験終了を確定します。',E07F:'室内端末の確認ボタンを押します。',E05E:'点検控えを管理側へ返送します。',E06E:'管理側による訂正撤回へ同意します。',E02B:'玄関収納の緊急止水弁を閉じます。',E02F:'防火扉を閉じる操作をします。',E02E:'管理側の一方的な同意扱いを止めるため、外部サポート窓口へ異議を送信します。',E02C:'配送業者から荷物を受け取ります。',E02D:'407号室の鍵を預かるために玄関を開けます。',E03B:'選択した項目を本人確認窓口に送ります。',E06B:'選択した件数を外部サポート窓口の臨時受付へ送信します。',E08:'選択した氏名を管理側の名簿照会へ送ります。',E09:'杉浦の証言・藤井の旧掲示・点検控え・406号室の募集条件を外部サポート窓口へ提出します。'};
+ if(c==='no'){if(e.id==='E09')return '外部サポート窓口へ異議申立てを出さず、締切まで何もしません。';if(e.id==='E02B')return '止水弁の操作を見送り、警報を放置します。';if(e.id==='E02F')return '防火扉の閉鎖を見送りします。';if(e.id==='E02E')return '確認書への異議を出さず、期限経過まで何もしません。';if(e.id==='E02C')return '到着した荷物を受け取りません。';if(['E03B','E03F','E06F'].includes(e.id))return '必要な項目を送らず、確認期限まで対応しません。';if(['E06B','E06C'].includes(e.id))return '訂正後の件数を回答せず、外部サポート窓口への申し出を保留します。';if(e.id==='E08')return '有馬の夜間訪問を見送ります。玄関は開けません。';return '今回の訪問・要求には応じません。';}
+ var detail={E01A:'事前案内に合った荷物を受け取ります。',E01C:'書留を受け取ります。',E02:'東洋設備・大野の設備確認に立ち会います。',E02A:'大野の再点検に立ち会います。',E02E:'外部サポート窓口へ異議申立てを送ります。',E03D:'外部サポート窓口の独立窓口へ申請内容を送ります。',E05D:'東洋設備の正規窓口へ返答して控えを受け取ります。',E06D:'外部サポート窓口に手元の資料を送ります。',E07E:'外部サポート窓口の独立窓口へ旧点検履歴を提出します。',E03E:'室内装置の試験終了を確定します。',E07F:'室内端末の確認ボタンを押します。',E05E:'点検控えを管理側へ返送します。',E06E:'管理側による訂正撤回へ同意します。',E02B:'玄関収納の緊急止水弁を閉じます。',E02F:'防火扉を閉じる操作をします。',E02E:'管理側の一方的な同意扱いを止めるため、外部サポート窓口へ異議を送信します。',E02C:'配送業者から荷物を受け取ります。',E02D:'407号室の鍵を預かるために玄関を開けます。',E03B:'選択した項目を本人確認窓口に送ります。',E06B:'選択した件数を外部サポート窓口の臨時受付へ送信します。',E08:'有馬を玄関から招き入れて話します。',E09:'杉浦の証言・藤井の旧掲示・点検控え・406号室の募集条件を外部サポート窓口へ提出します。'};
  return detail[e.id]||'訪問者の要求に応じます。玄関を開けるよう求められた場合は開き、呼出しの場合は通話を開始します。';
 }
 function responseForm(e){
  if(['E03B','E03F','E06F'].includes(e.id)){return '<p><b>送信する項目を選択</b></p>'+[{id:'name',t:'氏名（水野 凪）'},{id:'room',t:'部屋番号（406号室）'},{id:'phone',t:'電話番号'},{id:'birth',t:'生年月日'}].map(function(x){return '<label class="answer-line"><input type="checkbox" data-reply-field="'+x.id+'" '+(reply.fields.includes(x.id)?'checked':'')+'> '+x.t+'</label>';}).join('');}
  if(['E06B','E06C'].includes(e.id)){return '<p><b>訂正後の件数</b></p>'+['16','18','20'].map(function(x){return '<label class="answer-line"><input type="radio" name="replyCount" data-reply-number="'+x+'" '+(reply.number===x?'checked':'')+'> '+x+'件</label>';}).join('');}
- if(e.id==='E08'){return '<p><b>照合する氏名</b></p>'+[{id:'水野 凪',label:'水野 凪（406号室）'},{id:'杉浦',label:'杉浦（405号室）'},{id:'高瀬 奈津美',label:'高瀬 奈津美（407号室・過去の居住者）'},{id:'森本 透',label:'森本 透（照合に出てきた名称）'}].map(function(x){return '<label class="answer-line"><input type="radio" name="replyPerson" data-reply-person="'+esc(x.id)+'" '+(reply.person===x.id?'checked':'')+'> '+esc(x.label)+'</label>';}).join('');}
  return '';
 }
 function drawingHtml(){var target=state.day>=7?(state.hauntTarget==='406'?'406':'405'):state.day>=5?'405':'407',px={'405':189,'406':288,'407':387}[target];return '<figure style="margin:12px 0"><svg class="kid-art" role="img" aria-label="子どもが描いた4階の廊下。'+esc(target)+'号室の前に黒い人のようなものがいる。" viewBox="0 0 480 225" xmlns="http://www.w3.org/2000/svg"><rect width="480" height="225" fill="#fff9e8"/><path d="M25 55 L455 54 M25 165 L452 169" stroke="#87b3c9" stroke-width="5" stroke-linecap="round" fill="none"/><path d="M48 76V162h77V76ZM148 76V162h77V76ZM248 76V162h77V76ZM348 76V162h77V76Z" stroke="#a47d55" stroke-width="6" fill="#fff5d9" stroke-linejoin="round"/><g fill="#77664f" font-size="18" font-family="sans-serif"><text x="68" y="105">404</text><text x="168" y="105">405</text><text x="268" y="105">406</text><text x="368" y="105">407</text></g><g fill="#c9aa6a"><circle cx="114" cy="131" r="4"/><circle cx="214" cy="131" r="4"/><circle cx="314" cy="131" r="4"/><circle cx="414" cy="131" r="4"/></g><g fill="#39404b" stroke="#333843" stroke-linecap="round"><ellipse cx="'+px+'" cy="119" rx="11" ry="14"/><path d="M'+(px-11)+' 132Q'+px+' 123 '+(px+11)+' 132L'+(px+17)+' 181H'+(px-17)+'Z" stroke-width="3"/></g><path d="M38 200 Q89 185 126 199T210 201T310 200T446 201" stroke="#95b270" stroke-width="4" fill="none"/><text x="25" y="34" font-family="sans-serif" font-size="17" fill="#5b8199">ぼくのマンション</text></svg><figcaption class="tiny">404号室のお子さんの絵。4階の廊下が描かれている。'+(state.day>=7?'以前の絵と、人影の位置が違うように見える。':'')+'</figcaption></figure>';}
@@ -440,6 +447,12 @@ function resultFor(e,c,extra){
   var f=(extraData.fields||[]).slice().sort().join(',');
   if(c!=='yes'||f!=='name,room')fail('登録できなかった連絡先','本人確認の掲示では、氏名と部屋番号の2項目のみを求めていた。',c==='yes'?'余計な情報または不足した情報が送られた。認証画面には「連携対象外」と表示された。':'回答期限が過ぎ、警報連動の解除通知が届いた。');
   else msg='「氏名・406号室」の2項目で照合が完了した。電話番号を伝える必要はなかった。';
+ }else if(e.id==='E10'){
+ if(c==='yes'){state.trust++;msg='長谷川は廊下に立ったまま話す。「夜中に何度も呼ばれるんです。管理人は信じてくれません。明日引っ越します」。最後に言った。「302号室の杉浦さんから手紙が来るはずです。明日のポストは絶対に見てください」。';}
+ else fail('聞かなかった隣人','405号室の退去を控えた長谷川は相談したがっていた。','長谷川は去り、翌朝405号室は空になった。');
+ }else if(e.id==='E02L'){
+ if(c==='no')msg='扉を開けずにいると男性は去った。翌朝、隣の建物への道を間違えた滞在者と分かった。';
+ else fail('深夜の見知らぬ訪問','相手が困っている様子でも、深夜の予定外訪問だった。','ドアを開けると男性は驚いて後ずさった。廊下の奥から別の足音が聞こえた。');
  }else if(e.id==='E03'){
   if(c==='yes'){state.hauntTarget='406';msg='「はい」と答えると、映像が途切れた。扉の向こうで三度のノックが繰り返された。';}
   else{msg=c==='verify'?'時間外窓口では予定を確認できなかった。インターホンの呼出しは止んだ。':'返答せずにいると、廊下は静かになった。';if(c==='verify')state.alert++;}
@@ -447,33 +460,33 @@ function resultFor(e,c,extra){
   if(c==='no'){state.trust++;msg='「これは杉浦さんから届いた私宛ての手紙です」と断った。真鍋は一瞬黙り、「有馬さんには私から説明します」とだけ言った。';}
   else fail('回収された警告','杉浦の手紙には真鍋に渡さないよう書かれていた。','真鍋が封筒を受け取ると、翌朝の掲示には「入居者に説明済」とだけ書かれた。杉浦への連絡もつかない。');
  }else if(e.id==='E05'){
-  if(c==='yes'){add('technician');msg='設備業者の大野は配線を確認して控えを渡した。「昔の事故の点検票に、うちが到着する前の時刻が書かれているそうです」。それ以上は話そうとしなかった。';}
+  if(c==='yes'){add('technician');msg='設備業者の大野は配線を確認して控えを渡した。「インターホンの呼出し履歴は、正常な設備なら残りますよ」。最後に407号室の方向を見た。';}
   else fail('見送った正規点検','個別の点検通知と担当者名・時間は一致していた。',c==='verify'?'問い合わせを続けるうちに作業時間は終わった。正式な実施控えを得られなくなった。':'設備業者は帰っていった。後から必要と分かった点検控えは、もう取得できなかった。');
  }else if(e.id==='E05C'){
-  if(c==='yes'){add('technician');msg='大野は室内を点検し、控えを置いた。「407号室の事故の翌朝も、うちが呼ばれたそうです。時間の記録は残っています」。';}
+  if(c==='yes'){add('technician');msg='大野は室内を点検し、控えを置いた。「夜中に鳴るという相談は、前にもありました。機器を調べても異常は出ていません」。';}
   else fail('点検を受けなかった部屋','点検日時と担当者名が個別案内と一致していた。',c==='verify'?'確認の返答が来たとき、点検員はもう別の階へ移っていた。':'点検予定の時刻は過ぎた。実施控えは空欄のままだった。');
  }else if(e.id==='E05D'){
-  if(c==='yes'){add('technician');msg='東洋設備の受付は担当者と時刻を確認して控えを送ってきた。「2023年の407号室への出動履歴も、照会があれば出せます」。';}
+  if(c==='yes'){add('technician');msg='東洋設備の受付は担当者と時刻を確認して控えを送ってきた。「今回の訪問は正規の点検です。それ以外の訪問は手配していません」。';}
   else fail('消された点検控え','実施控えの送り主を確かめる必要があった。',c==='yes'?'差出人を見ずに承認した。管理側の手元には「点検不要」と記載された。':'返信の期限を過ぎ、点検控えの発行は保留された。');
  }else if(e.id==='E05E'){
-  if(c==='no'){add('technician');msg='実施控えは手元に残した。用紙の隅には、2023年の事故に関する照会番号が記載されている。真鍋からの催促はそれきりだった。';}
+  if(c==='no'){add('technician');msg='実施控えは手元に残した。用紙の隅には、管理人室が受け付けていない夜間呼出しの問い合わせ先が記載されている。真鍋からの催促はそれきりだった。';}
   else fail('控えの行方','実施控えは管理側と別の窓口へ提出できる資料だった。',c==='yes'?'控えを返送すると、管理側の画面には「保管なし」と表示された。':'保管先を問い合わせると、真鍋は「こちらへお持ちください」と答えた。');
  }else if(e.id==='E05F'){
-  if(c==='yes'){add('technician');msg='大野から点検控えを受け取った。「407号室の件なら、うちが最初に現場へ着いた時刻も記録されているはずです」。';}
+  if(c==='yes'){add('technician');msg='大野から点検控えを受け取った。「夜間の呼出しが機器の故障なら、ここに記録が残るはずなんですが」。';}
   else fail('未発行の点検控え','個別の点検案内と担当者の氏名は一致していた。',c==='verify'?'照会を終える頃には、点検員は帰っていた。':'大野は名刺だけを郵便受けに残して帰った。');
  
  }else if(e.id==='E05G'){
   if(c==='no'){add('technician');msg='代理と名乗る男を帰した数分後、案内どおりの担当者・大野が訪ねてきた。本人確認のあと正規点検を受け、控えを手元に保存した。大野は「代理を立てた記録はありません」と首をかしげた。';}
   else fail('記録にない代理人','当日の点検案内には正規の担当者名が載っていた。','男は室内に入ると写真を一枚だけ撮った。翌朝、点検履歴には「406号室に人影なし」と残った。');
  }else if(e.id==='E05H'){
-  if(c==='yes'){add('technician');msg='大野から点検控えを受け取り、手元に保存した。控えの裏に古い事故番号が薄く印字されている。';}
+  if(c==='yes'){add('technician');msg='大野から点検控えを受け取り、手元に保存した。控えには今回の点検時刻と担当者名が記載されている。';}
   else fail('受け取られなかった控え','正規の点検会社からの控えは、外部サポート窓口提出用に保存できる。','交付期限が過ぎ、明朝には「控え発行なし」と表示されていた。');
 }else if(e.id==='E06'){
   if(c==='yes'){state.trust++;add('testimony');msg='杉浦は玄関の外から小声で話した。「高瀬さんが亡くなってから、4階の住人は次々に引っ越しました。405号室の長谷川さんも今週出ていきました。藤井さんは住民を守る注意書きを作り、有馬さんと対立して辞めたんです」。杉浦は続けた。「有馬さんも少し前から401号室の呼出しに悩まされています。真鍋さんはオーナーに逆らえないんです」。';}
   else fail('届かなかった警告','302号室の杉浦は元管理人・藤井の事情を知る協力者だった。','杉浦は「そうですか」と去った。翌朝、302号室の投函口には「配達停止」の紙が貼られていた。');
  }else if(e.id==='E06B'){
   if(c==='yes'&&extraData.number==='18'){state.recordValidated=true;msg='訂正後の件数「18件」で照合が通った。古い掲示はすでに撤去されている。';}
-  else fail('訂正されていた件数','水曜日の16件は木曜日に18件へ訂正されていた。正しい件数が必要だった。',c==='yes'?'送った件数は照合に一致しなかった。申立ての受付は保留された。':'確認期限が過ぎ、事故記録と照合する機会を失った。');
+  else fail('訂正されていた件数','水曜日の16件は木曜日に18件へ訂正されていた。正しい件数が必要だった。',c==='yes'?'送った件数は照合に一致しなかった。申立ての受付は保留された。':'確認期限が過ぎ、旧掲示と照合する機会を失った。');
  }else if(e.id==='E06C'){
   if(c==='yes'&&extraData.number==='18'){state.recordValidated=true;msg='旧掲示の訂正内容と照合が済んだ。外部サポート窓口に受付票が残った。';}
   else fail('一致しない記録','訂正紙はすでに撤去されていた。',c==='yes'?'送られた数字の欄に赤い訂正線が引かれた。':'受付時間が過ぎた。訂正したはずの掲示は見当たらない。');
@@ -490,7 +503,7 @@ function resultFor(e,c,extra){
  
  }else if(e.id==='E06G'){
   if(c==='no'){state.recordValidated=true;msg='廃棄には応じなかった。控えがまだ手元にあることを確かめ、封筒を閉じた。';}
-  else fail('処分された記録','古い掲示と点検控えは隠蔽を確かめる資料だった。','紙を破ったはずなのに、音だけが廊下に残った。');
+  else fail('処分された記録','古い掲示と点検控えは、夜間の指示が変えられた経緯を確かめる資料だった。','紙を破ったはずなのに、音だけが廊下に残った。');
  }else if(e.id==='E06H'){
   if(c==='yes'){state.recordValidated=true;msg='外部サポート窓口の受付票が発行され、点検控えの受領記録が残った。';}
   else fail('確定されない受領記録','外部サポート窓口の独立した受付へ資料を送る必要があった。','未確定の受付票は白紙に戻った。');
@@ -502,7 +515,7 @@ function resultFor(e,c,extra){
   else fail('番号の付いた訪問者','管理番号だけでは訪問の正当性は判断できなかった。',c==='yes'?'男が室内を見渡して言った。「406号室も調査終了です」。':'受付に伝えた氏名が、閉じたはずの扉の向こうから聞こえた。');
  }else if(e.id==='E07D'){
   if(c==='no')msg='旧掲示の控えは渡さなかった。真鍋から再び催促が来ることはなかった。';
-  else fail('戻らなかった旧掲示','旧掲示は管理側とは別に、405号室から渡されたものだった。',c==='yes'?'渡した紙の文字が一行ずつ消えた。':'提出先を問い合わせると、真鍋はすぐに部屋番号を復唱した。');
+  else fail('戻らなかった旧掲示','旧掲示は管理人室とは別に、302号室の杉浦から届いたものだった。',c==='yes'?'渡した紙の文字が一行ずつ消えた。':'提出先を問い合わせると、真鍋はすぐに部屋番号を復唱した。');
  }else if(e.id==='E07E'){
   if(c==='yes')msg='外部サポート窓口の独立した窓口が旧点検履歴を受け付けた。管理側に情報は渡らなかった。';
   else fail('消された点検履歴','案内は外部サポート窓口の独立した窓口からだった。',c==='yes'?'承認先が管理側へ切り替わった。受理の表示はすぐ消えた。':'回答期限を過ぎると、提出済みの点検履歴が閲覧できなくなった。');
@@ -517,8 +530,8 @@ function resultFor(e,c,extra){
   if(c==='yes')msg='室内端末の確認ボタンを押した。警告は消えたが、廊下から三度だけ乾いた音がした。';
   else fail('未確認の受信信号','室内端末の操作と外部への応答は別だった。','画面に「406号室　確認できず」と表示されたまま夜が明けた。');
 }else if(e.id==='E08'){
-  if(c==='yes'&&extraData.person==='森本 透'){msg='仮登録名で照会すると「該当住戸なし」と表示された。406号室の記録は書き換わらない。401号室の有馬の名前も残っている。';}
-  else fail('名前を答えた部屋','前日の掲示では、氏名を回答した住民が翌日から「不在」扱いになったと知らせていた。実在しない仮登録名が唯一の抜け道だった。',c==='yes'?'送信した氏名が名簿から消えた。翌朝、その人の部屋は空室として掲示された。':'回答を放置すると、登録されていた406号室の居住者名で処理された。翌朝、あなたの部屋は空室として掲示された。');
+ if(c==='no')msg=state.hauntTarget==='406'?'有馬は穏やかに「お元気そうで」と言い、そのまま去った。':'有馬は疲れた声で「少しだけでも」と繰り返し、やがて去った。';
+ else fail('開けてしまった玄関','所有者でも深夜の予告なし訪問に応じる必要はない。','有馬がドアの隙間に靴を差し入れ、真鍋が後ろから書類を押し込んできた。廊下の奥で三度ノックがした。');
  }else if(e.id==='E09'){
   if(c==='yes'){
    if(canExpose()){state.exposed=true;msg='杉浦の警告、藤井の旧掲示、点検控え、406号室の不自然な募集条件を添えて外部サポート窓口に送信した。受付番号が表示され、真鍋の管理人室にも通知が届いた。';}
@@ -572,28 +585,28 @@ function ending(){
  }
  return '<div class="ending"><div class="tiny" style="color:#b5c0c2">白波レジデンス｜10日間の記録</div><h2>THE END</h2><div class="endingname">'+esc(name)+'</div>'+paragraphs.map(function(p){return '<p>'+esc(p)+'</p>';}).join('')+'</div><div class="btnrow"><button class="btn primary" data-restartday="1">1日目からやり直す</button><button class="btn secondary" data-showrewind="1">日付を選ぶ</button></div>';
 }
-var CAMERA_VISITORS=['E01','E01A','E02','E02A','E02G','E02H','E02I','E02C','E02D','E03','E05','E05C','E05F','E05G','E06','E07'];
+var CAMERA_VISITORS=['E01','E01A','E02','E02A','E02G','E02H','E02I','E02C','E02D','E02L','E10','E03','E05','E05C','E05F','E05G','E06','E07','E08'];
 function isCameraEvent(e){return CAMERA_VISITORS.includes(e.id);}
 function cameraHtml(e){
- var type=e.id==='E03'?'empty':e.id==='E06'?'female':['E01','E01A','E01C','E02C'].includes(e.id)?'courier':['E02','E02A','E05','E05C','E05F'].includes(e.id)?'worker':'unknown';
+ var type=e.id==='E03'?'empty':['E06','E10'].includes(e.id)?'female':['E01','E01A','E01C','E02C'].includes(e.id)?'courier':['E02','E02A','E05','E05C','E05F'].includes(e.id)?'worker':'unknown';
  var face=type==='empty'?'':('<g transform="translate(320 0)"><path d="M-104 356L-91 255Q-73 235 -30 233H30Q83 237 95 260L105 356Z" fill="#5b696b"/><ellipse cy="164" rx="52" ry="71" fill="#99a5a0"/><path d="M-52 148Q-64 96 -19 89Q38 65 53 133L40 126Q4 118 -19 124Z" fill="#26353a"/><path d="M-29 164h18M13 164h18" stroke="#20343a" stroke-width="5"/><circle cx="-20" cy="175" r="4" fill="#14262c"/><circle cx="20" cy="175" r="4" fill="#14262c"/><path d="M0 179l-7 22 11 3M-16 223q16 5 32 0" stroke="#526568" stroke-width="3" fill="none"/>'+
  (type==='female'?'<path d="M-44 126Q-69 152 -63 254L-36 262V165Z M45 132Q67 157 60 258L36 263V160Z" fill="#29363d"/>':'')+
  (type==='courier'?'<path d="M-58 120Q0 82 55 120" stroke="#536e7a" stroke-width="13" fill="none"/>':'')+
  (type==='worker'?'<rect x="-73" y="275" width="35" height="20" fill="#bbc7bc"/><path d="M-68 284h27" stroke="#637377"/>':'')+
  '</g>');
- var label=type==='empty'?(cameraLookCount>=2?'玄関前は無人。映像の下端に、室内側にあるはずの玄関マットが一瞬映った。':'玄関前は無人。呼出音だけが続いている。'):type==='female'?'女性の顔が映る。':type==='worker'?'作業服の人物がこちらを見ている。':type==='courier'?'配達員の顔が確認できる。':'訪問者の顔は見えるが、所属は映像だけでは分からない。';
+ var label=e.id==='E08'?(state.hauntTarget==='406'?'有馬は不自然なほど元気そうだ。':'有馬はひどく疲れた顔をしている。'):e.id==='E02L'?'男性が地図をカメラに見せている。':type==='empty'?(cameraLookCount>=2?'玄関前は無人。映像の下端に、室内側にあるはずの玄関マットが一瞬映った。':'玄関前は無人。呼出音だけが続いている。'):type==='female'?'女性の顔が映る。':type==='worker'?'作業服の人物がこちらを見ている。':type==='courier'?'配達員の顔が確認できる。':'訪問者の顔は見えるが、所属は映像だけでは分からない。';
  return '<div class="door-camera"><div class="camera-head"><span>406 / CAMERA</span><span>● LIVE</span></div><svg role="img" aria-label="'+label+'" viewBox="0 0 640 360"><rect width="640" height="360" fill="#35474e"/><path d="M90 0v360M550 0v360M90 310h460" stroke="#75888b" stroke-width="12"/>'+face+'<g opacity=".2" stroke="#d3dfe0"><path d="M0 30h640M0 90h640M0 150h640M0 210h640M0 270h640M0 330h640"/></g><path d="M20 20h50M20 20v40M620 20h-50M620 20v40M20 340h50M20 340v-40M620 340h-50M620 340v-40" stroke="#b7cac9" fill="none" stroke-width="2"/></svg><div class="camera-foot">'+label+'</div></div>';
 }
 function renderNight(){var n=el('nightPanel');n.classList.toggle('hidden',state.phase!=='night'||state.ended);if(state.phase!=='night'||state.ended)return;
 if(state.day===9){n.innerHTML='<div class="over">9日目｜夜</div><h2>何も起こらない夜</h2><div class="scenario">訪問も呼出しもない。廊下で誰かが紙を剥がす音がする。杉浦の『あの夜をなかったことにしたくない』という声が頭から離れない。407号室のあった方角は、今夜も暗い。</div><button class="btn primary" data-quietnext="1">翌日へ進む</button>';return;}
-var e=eventNow();var shownTime=e.time+(Number(e.time.slice(0,2))<5?'（翌'+weekday(state.day+1)+'曜日）':'');var h='<div class="over">'+state.day+'日目｜'+esc(shownTime)+'｜'+(state.index+1)+' / '+getEvents(state.day).length+'</div><h2>'+esc(e.title)+'</h2><div class="scenario">'+esc(e.scene)+'</div>';
+var e=eventNow();var shownTime=e.time+(Number(e.time.slice(0,2))<5?'（翌'+weekday(state.day+1)+'曜日）':'');var h='<div class="over">'+state.day+'日目｜'+esc(shownTime)+'｜'+(state.index+1)+' / '+getEvents(state.day).length+'</div><h2>'+esc(e.title)+'</h2><div class="scenario">'+esc(e.id==='E08'?(state.hauntTarget==='406'?'401号室の有馬が、妙に穏やかな声で訪ねてくる。「最近、お変わりはありませんか。一度顔を見ておきたくて。玄関を開けてもらえませんか」。':'401号室の有馬が、疲れた声で訪ねてくる。「管理人が説明できていないようで。どうしても今夜お話ししたい。玄関を開けてもらえませんか」。'):e.scene)+'</div>';
 if(state.resultPending){h+='<div class="result"><b>その夜の記録</b><p>'+esc(state.result)+'</p></div><button class="btn primary" data-next="1">次へ進む</button>';}
 else{var withCamera=isCameraEvent(e);h+='<div class="btnrow"><button class="btn secondary" data-monitor="1">'+(monitor?(withCamera?'カメラを切る':'確認を閉じる'):(withCamera?'カメラをつける':'状況を確認する'))+'</button></div>';
-if(monitor){if(withCamera)h+=cameraHtml(e);h+='<div class="monitor">'+esc(e.monitor)+'</div>';}
+if(monitor){if(withCamera)h+=cameraHtml(e);h+='<div class="monitor">'+esc(e.id==='E08'?(state.hauntTarget==='406'?'有馬は妙に元気だ。建物の所有者だと確認できるが、深夜の訪問予定はない。':'有馬は立つのもつらそうだ。建物の所有者だと確認できるが、訪問予定はない。'):e.monitor)+'</div>';}
 
 if(pendingChoice){
 var choiceName=pendingChoice==='yes'?'対応する':'見送る';
-var form=pendingChoice==='yes'?responseForm(e):'';var complete=pendingChoice!=='yes'||['E03B','E03F','E06F'].includes(e.id)&&reply.fields.length>0||['E06B','E06C'].includes(e.id)&&!!reply.number||e.id==='E08'&&!!reply.person||!['E03B','E03F','E06B','E06C','E06F','E08'].includes(e.id);h+='<div class="confirm-choice"><h3>この対応で確定しますか？</h3><strong>'+choiceName+'</strong><p>'+esc(actionPreview(e,pendingChoice))+'</p>'+form+'<div class="btnrow"><button class="btn secondary" data-cancel-choice="1">選び直す</button><button class="btn primary" data-confirm-choice="1" '+(complete?'':'disabled')+'>'+'この対応で確定する'+'</button></div></div>';
+var form=pendingChoice==='yes'?responseForm(e):'';var complete=pendingChoice!=='yes'||['E03B','E03F','E06F'].includes(e.id)&&reply.fields.length>0||['E06B','E06C'].includes(e.id)&&!!reply.number||!['E03B','E03F','E06B','E06C','E06F'].includes(e.id);h+='<div class="confirm-choice"><h3>この対応で確定しますか？</h3><strong>'+choiceName+'</strong><p>'+esc(actionPreview(e,pendingChoice))+'</p>'+form+'<div class="btnrow"><button class="btn secondary" data-cancel-choice="1">選び直す</button><button class="btn primary" data-confirm-choice="1" '+(complete?'':'disabled')+'>'+'この対応で確定する'+'</button></div></div>';
 }else{
 h+='<p class="caption">掲示や郵便物を思い出し、応じるか見送るかを決めてください。カメラ確認では判断は確定しません。</p><div class="btnrow"><button class="btn primary" data-judge="yes">対応する</button><button class="btn" data-judge="no">見送る</button></div>';
 }}
@@ -657,17 +670,17 @@ el('leavePanel').classList.toggle('hidden',state.phase!=='morning'||state.ended)
 var inEntry=state.locationStage==='entry';el('morningTitle').textContent=inEntry?'帰宅時｜ポスト・4階の玄関':'帰宅時｜エントランス';el('morningCaption').textContent=inEntry?'ポストの封筒はタップすると開封できます。読まなかった郵便物は明日も残ります。':'掲示の内容を覚えて、ポストと4階の玄関へ進んでください。';el('toEntry').classList.toggle('hidden',inEntry);el('toNight').classList.toggle('hidden',!inEntry);el('leaveText').textContent=inEntry?'ポストと玄関前の確認は済みましたか？ 夜は廊下と掲示板を見直せません。':'掲示板を離れ、郵便受けを確認して4階へ向かいます。';
 el('morningText').textContent=([
 '',
-'月曜日。仕事から帰る。家賃が妙に安かった406号室。管理人の真鍋は「空室が続いていたので」と言った。掲示板には紙が一枚だけある。',
+'月曜日。仕事から帰る。家賃が妙に安かった406号室。真鍋は「空室が続いていたので」と言った。駅裏の通りでは、夜間の強引な勧誘や訪問先の間違いも聞く。掲示板には防犯のお知らせが一枚だけある。',
 '火曜日。掲示板の前で405号室の長谷川が立ち止まる。「夜中にまた鳴ったんです」と管理人へ訴えている。真鍋は聞こえないふりをした。',
-'水曜日。405号室に引越しの段ボールが積まれている。掲示板の紙は昨日より増えていた。3階の住人が何かを書き残している。',
-'木曜日。405号室の表札が外されていた。ポストには302号室の杉浦から手紙が入っている。掲示物はまた何枚か剥がされた。',
+'水曜日。405号室に引越しの段ボールが積まれている。404号室の前にも用途の分からない大きな箱がある。掲示板には405号室の退去予定が貼られている。',
+'木曜日。405号室の表札が外されていた。昨日、長谷川が言った「明日のポストは絶対に見て」を思い出す。ポストへ必ず寄るつもりで掲示板を離れた。',
 '金曜日。4階の空室が増えたことを知らせる掲示が貼られている。真鍋が改訂した夜間呼出しの注意書きが、昨日とは違う。',
 '土曜日。昨夜の呼出しが夢だったか分からない。真鍋は302号室からの手紙を回収しようとしている。',
 '日曜日。掲示には「有馬オーナーからの指示」という言葉が増えた。302号室の杉浦が、どうしても伝えたいことがあるらしい。',
-'月曜日。杉浦から聞いた藤井の話が頭を離れない。401号室の有馬と、406号室の格安募集は関係しているのだろうか。',
-'火曜日。今夜は訪問の予定がない。空室の405号室にだけ、また封筒が届いている。階段の足音が途中で止まった。',
+'月曜日。杉浦から聞いた藤井の話が頭を離れない。今日は、杉浦が保存していた入居前の募集チラシをポストで確認しよう。',
+'火曜日。404号室の住人が段ボールを運んでいた。夜勤明けの家族が使う道具と、子どもの工作用品だという。怪しく見えたのは生活時間が違うからだった。空室の405号室にはまた封筒が届いている。',
 '水曜日。真鍋から「対応完了」の通知が来た。手元にある掲示と郵便物を、外部窓口へ送るなら今日までだ。'
-])[state.day]+(state.day>=6?(state.hauntTarget==='406'?' 401号室は急に静かになったらしい。代わりに自分の玄関で、昨夜から見覚えのない跡が増えている。':' 401号室では今も呼出しが続いているようだ。真鍋の顔色はさらに悪くなっている。'):'')+(state.day>=7&&state.alert>=2?' 管理側から、あなたの問い合わせについて確認したいという連絡も入っている。':'');
+])[state.day]+(state.day===4&&state.history.some(function(x){return x.id==='E02L';})?' 昨夜の聞き慣れない言葉の訪問者は、隣の建物への道を間違えた滞在者だったと回覧で分かった。':'')+(state.day>=6?(state.hauntTarget==='406'?' 401号室は急に静かになったらしい。代わりに自分の玄関で、昨夜から見覚えのない跡が増えている。':' 401号室では今も呼出しが続いているようだ。真鍋の顔色はさらに悪くなっている。'):'')+(state.day>=7&&state.alert>=2?' 管理側から、あなたの問い合わせについて確認したいという連絡も入っている。':'');
 var rp=el('rewindPanel');if(!rp.classList.contains('hidden'))renderRewind();
 renderNight();renderTab();
 }

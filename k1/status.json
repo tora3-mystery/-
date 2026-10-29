@@ -1,17 +1,16 @@
 {
   "projectId": "K1",
   "title": "掲示物をご確認ください。（仮）",
-  "version": "α0.9.0",
-  "updatedAtJST": "2026-10-30 00:23 JST",
-  "phase": "Phase 4 — new landlord/manager/ally storyline implemented; simulated checkpoint QA passed; human narrative review required",
+  "version": "α0.10.0",
+  "updatedAtJST": "2026-10-30 01:29 JST",
+  "phase": "Phase 4 — approved 404 red herring + owner encounter implemented; 49-event AI checks passed; human trial pending",
   "aiAudit": {
-    "logic": "48/48 checkpoint playthroughs covering 47 event IDs; 35/35 opposite-actions failed as expected; 4 endings reached; 168070 theoretical random combinations NOT exhaustively tested",
-    "narrative": "New owner Arima 401, manager Manabe, ally Sugiura 302, 405 move-out, Fujii goodwill, ghost transfer 401->406 and cheap lease evidence implemented",
-    "ui": "JS parsed; DOM mock checked day4 departure, day5 false guidance, day8 rent proof, conditional front-door images, save and rewind"
+    "logic": "49/49 successful checkpoint paths with all 49 event IDs, 13 judgments; 36/36 opposite action side paths failed; fixed E10 and E08 wrong actions failed; four ending states reachable; 192080 theoretical random combinations not fully enumerated",
+    "story": "DAY3 Hasegawa 405 fixed visit, day3 foreign-language nighttime visitor, DAY8 Arima 401 visit replaces fictitious registry, historical rental flyer, 404 false suspicion, neighborhood night caution"
   },
   "browserAudit": {
-    "status": "not_run_alpha090",
-    "pagesDeployment": "pending",
+    "status": "not_run_alpha0100",
+    "pagesDeployment": "awaiting commit",
     "realPagesDisplay": "not_verified",
     "phoneSizesToTest": [
       320,
@@ -22,13 +21,14 @@
   "humanReview": {
     "lastReviewedVersion": "α0.6.1",
     "pilotImageLook": "user approved three candidate pictures",
-    "latestGame": "α0.9.0 not yet human-reviewed",
+    "latestGame": "α0.10.0 human play not yet reviewed",
     "openIssues": [
-      "10-day narrative comprehensibility and emotional ending",
-      "Day5 R04 bait versus old caution clarity",
-      "Night contrast after new text",
-      "Camera face and fear after Work images",
-      "Side incident language/other-floor residents realism"
+      "DAY3 two nightly decisions impact on play time",
+      "DAY8 owner scene and cause for gameover plausibility",
+      "404 red herring fair reveal",
+      "Unfamiliar-language nighttime caller emotional effect vs explanatory follow-up",
+      "Camera fish-eye fixed viewpoint and mismatch with corridor photos",
+      "Real-phone text contrast and scrolling"
     ]
   },
   "assets": {
@@ -38,15 +38,17 @@
     "sourceBranch": "k1-visual-phase2-20261029",
     "remainingCandidates": 0,
     "nextProduction": "none until human review",
-    "cameraFaces": "temporary SVG; photo portraits not produced",
+    "cameraFaces": "SVG temporary; no production intercom stills integrated",
     "existingGameImages": 11,
     "camera": "SVG mock faces; no actual camera still photographs yet; Work imagery planned pending separate human image check",
     "fullAssetIntegration": "existing 11 WebP retained",
     "integratedImages": 11,
     "cameraPortraits": "SVG prototype only; Work 5 of 28 pilot ordered separately, not yet delivered or integrated",
-    "nextWork": "Review five camera still prototypes then produce remaining 23"
+    "nextWork": "Review five camera still prototypes then produce remaining 23",
+    "upcoming": "Work pilot 5 images delivered on k1-camera-scenario-pilot-20261030 branch, not merged",
+    "cameraViewpointIssue": "The pilot uses corridor-oriented perspective; rework to fixed wide-angle door-intercom view before producing remaining 23"
   },
-  "nextOwner": "Human reviewer and Work asset pilot; K1 Chat later image integration",
-  "nextAction": "Human-play alpha0.9.0, check story and controls; review Work's five camera stills; prepare final 28 asset mapping",
+  "nextOwner": "K1 human reviewer / Work camera-perspective revision / K1 Chat image integration",
+  "nextAction": "Review alpha0.10.0 game scenario and DAY3/DAY8 UX, inspect 5 Work stills for door-camera placement and fish-eye perspective; then deliver revised pilot and remaining 23",
   "scope": "k1/ only"
 }
