@@ -130,7 +130,12 @@ function openReplacement(currentId){
  wrap.append(heading,detail);
  for(const c of candidates){
   const b=document.createElement("button");b.type="button";b.className="review-alternative";
-  b.textContent=c.name+"｜"+c.credits+"単位｜難度★"+c.diff+"｜取得見込 "+passChance(c)+"%";
+  // Preview odds for the post-swap schedule, not the old course still selected.
+  const previous=state.selectedIds.slice();
+  state.selectedIds=previous.filter(id=>id!==currentId);
+  let newChance;
+  try{newChance=passChance(c)}finally{state.selectedIds=previous}
+  b.textContent=c.name+"｜"+c.credits+"単位｜難度★"+c.diff+"｜取得見込 "+newChance+"%";
   b.onclick=()=>{
    const before=state.selectedIds.slice();
    state.selectedIds=before.filter(id=>id!==currentId);
