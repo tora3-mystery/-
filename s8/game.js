@@ -1,7 +1,7 @@
 "use strict";
-/* S8 timetable puzzle alpha v0.1.0. Framework-free, deterministic seed, no external assets. */
+/* S8 timetable puzzle alpha v0.1.2. Framework-free, deterministic seed, no external assets. */
 const $ = id => document.getElementById(id);
-const STORE = "s8_save_v010", BEST = "s8_best_v010_";
+const STORE = "s8_save_v012", BEST = "s8_best_v012_";
 const DAYS = ["月","火","水","木","金","土"];
 const FACULTIES = {
   humanities:{name:"文学系",desc:"自由度◎・レポート科目が豊富",risk:2},
@@ -11,7 +11,7 @@ const FACULTIES = {
 const ACTIVITIES = {
   none:{name:"学業専念",desc:"拘束なし／全科目の取得率+5%",blocks:[],bonus:0,modifier:5},
   club:{name:"音楽サークル",desc:"月5・水5を使用／レポート系+4%＆今期+250pt",blocks:["月5","水5"],bonus:250,modifier:0},
-  job:{name:"塾講師バイト",desc:"火5・木5を使用／学期+400pt、取得率-4%",blocks:["火5","木5"],bonus:400,modifier:-4}
+  job:{name:"塾講師バイト",desc:"火5・木5を使用／学期+800pt、取得率-2%",blocks:["火5","木5"],bonus:800,modifier:-2}
 };
 let state=null, facultyChoice="economics", activityChoice="none", filterChoice="all", focused=null, revealTimer=null, toastTimer=null;
 const base=(id,name,credits,diff,method,slotSets,more={})=>({id,name,credits,diff,method,slotSets,...more});
@@ -99,8 +99,8 @@ for(const [key,v] of Object.entries(FACULTIES)){const b=document.createElement("
 for(const [key,v] of Object.entries(ACTIVITIES)){const b=document.createElement("button");b.className="choose"+(key===activityChoice?" active":"");b.innerHTML="<b>"+v.name+"</b><small>"+v.desc+"</small>";b.onclick=()=>{activityChoice=key;displayIntro()};ap.append(b)}
 $("resume-btn").classList.toggle("hidden",!hasSaved())}
 function hasSaved(){try{return !!localStorage.getItem(STORE)}catch(e){return false}}
-function start(sameSeed){const seed=sameSeed||$("seed-input").value.trim()||String(Math.floor(Math.random()*1e9));state={version:"0.1.0",faculty:facultyChoice,activity:activityChoice,seed,rng:hashSeed(seed),semester:0,phase:"registration",offers:[],selectedIds:[],results:[],revealIndex:0,credits:0,score:0,termScore:0,passedIds:[],failedRequired:[],currentCombo:0,maxCombo:0,perfectTerms:0,history:[]};createOffers();render()}
-function resume(){try{const s=JSON.parse(localStorage.getItem(STORE));if(!s||s.version!=="0.1.0"||!FACULTIES[s.faculty]||!ACTIVITIES[s.activity]||s.semester>1)throw Error("incompatible");state=s;render();if(state.phase==="reveal")playReveal()}catch(e){showToast("保存データを復元できませんでした。");localStorage.removeItem(STORE);displayIntro()}}
+function start(sameSeed){const seed=sameSeed||$("seed-input").value.trim()||String(Math.floor(Math.random()*1e9));state={version:"0.1.2",faculty:facultyChoice,activity:activityChoice,seed,rng:hashSeed(seed),semester:0,phase:"registration",offers:[],selectedIds:[],results:[],revealIndex:0,credits:0,score:0,termScore:0,passedIds:[],failedRequired:[],currentCombo:0,maxCombo:0,perfectTerms:0,history:[]};createOffers();render()}
+function resume(){try{const s=JSON.parse(localStorage.getItem(STORE));if(!s||s.version!=="0.1.2"||!FACULTIES[s.faculty]||!ACTIVITIES[s.activity]||s.semester>1)throw Error("incompatible");state=s;render();if(state.phase==="reveal")playReveal()}catch(e){showToast("保存データを復元できませんでした。");localStorage.removeItem(STORE);displayIntro()}}
 function render(){if(!state)return;$("intro").classList.add("hidden");$("game").classList.toggle("hidden",state.phase==="end");$("ending").classList.toggle("hidden",state.phase!=="end");if(state.phase==="end"){renderEnd();return}
 $("semester-label").textContent="1年"+(state.semester===0?"前期":"後期")+" / 2学期試作";$("faculty-label").textContent=FACULTIES[state.faculty].name+" · "+ACTIVITIES[state.activity].name+" · SEED "+state.seed;
 $("total-credits").textContent=state.credits;$("total-score").textContent=fmt(state.score);
@@ -153,7 +153,7 @@ if(r.lotteryLost){$("reveal-flash").textContent="抽選落ち";$("reveal-flash")
 else if(r.pass){state.currentCombo++;state.maxCombo=Math.max(state.maxCombo,state.currentCombo);r.combo=state.currentCombo;r.earned=points(r.course,r.combo);state.score+=r.earned;state.termScore+=r.earned;state.credits+=r.credits;if(!state.passedIds.includes(r.canonicalId))state.passedIds.push(r.canonicalId);if(r.required)state.failedRequired=state.failedRequired.filter(f=>f.canonicalId!==r.canonicalId);$("reveal-flash").textContent="単位GET！";$("reveal-flash").className="reveal-flash success";$("reveal-combo").textContent=state.currentCombo>=2?state.currentCombo+" COMBO! ×"+(1+Math.min(9,state.currentCombo-1)*.2).toFixed(1):"";$("reveal-sub").textContent=r.name+"　+"+fmt(r.earned)+" pt";}
 else{state.currentCombo=0;if(r.required&&!state.failedRequired.some(x=>x.canonicalId===r.canonicalId))state.failedRequired.push(r.course);$("reveal-flash").textContent="落単！";$("reveal-flash").className="reveal-flash fail";$("reveal-combo").textContent="COMBO BREAK";$("reveal-sub").textContent=r.name+"　再挑戦を検討しよう。"}
 const fx=$("reveal-flash");fx.classList.remove("burst");void fx.offsetWidth;fx.classList.add("burst");state.revealIndex++;save();renderReveal();if(state.revealIndex===state.results.length)endReveal()}
-function endReveal(){if(!state||state.phase!=="reveal"||state.revealIndex!==state.results.length)return;clearTimeout(revealTimer);if(!state.history.some(x=>x.term===state.semester)){const passes=state.results.filter(x=>x.pass);const perfect=state.results.every(x=>x.pass);let bonus=0;if(perfect){bonus+=650;state.perfectTerms++}if(state.activity==="club"&&passes.length>=3)bonus+=250;if(state.activity==="job"&&passes.reduce((n,x)=>n+x.credits,0)>=6)bonus+=400;state.score+=bonus;state.termScore+=bonus;state.history.push({term:state.semester,passes:passes.length,total:state.results.length,credits:passes.reduce((n,x)=>n+x.credits,0),score:state.termScore,perfect,bonus});$("reveal-flash").textContent=perfect?"PERFECT SEMESTER!":"RESULT COMPLETE";$("reveal-flash").className="reveal-flash "+(perfect?"success":"");$("reveal-sub").textContent=passes.length+"/"+state.results.length+"科目取得 · "+(bonus?"学期ボーナス +"+fmt(bonus)+" pt":"成績確定");$("reveal-combo").textContent=perfect?"ALL CLEAR!":"MAX COMBO "+state.maxCombo;save()}
+function endReveal(){if(!state||state.phase!=="reveal"||state.revealIndex!==state.results.length)return;clearTimeout(revealTimer);if(!state.history.some(x=>x.term===state.semester)){const passes=state.results.filter(x=>x.pass);const perfect=state.results.every(x=>x.pass);let bonus=0;if(perfect){bonus+=650;state.perfectTerms++}if(state.activity==="club"&&passes.length>=3)bonus+=250;if(state.activity==="job"&&passes.reduce((n,x)=>n+x.credits,0)>=6)bonus+=800;state.score+=bonus;state.termScore+=bonus;state.history.push({term:state.semester,passes:passes.length,total:state.results.length,credits:passes.reduce((n,x)=>n+x.credits,0),score:state.termScore,perfect,bonus});$("reveal-flash").textContent=perfect?"PERFECT SEMESTER!":"RESULT COMPLETE";$("reveal-flash").className="reveal-flash "+(perfect?"success":"");$("reveal-sub").textContent=passes.length+"/"+state.results.length+"科目取得 · "+(bonus?"学期ボーナス +"+fmt(bonus)+" pt":"成績確定");$("reveal-combo").textContent=perfect?"ALL CLEAR!":"MAX COMBO "+state.maxCombo;save()}
 renderReveal();}
 function revealAll(){clearTimeout(revealTimer);while(state.phase==="reveal"&&state.revealIndex<state.results.length)stepReveal();endReveal()}
 function advance(){clearTimeout(revealTimer);if(state.phase!=="reveal"||state.revealIndex<state.results.length)return;if(state.semester===0){state.semester=1;createOffers();render();window.scrollTo(0,0)}else{state.phase="end";save();render();window.scrollTo(0,0)}}
