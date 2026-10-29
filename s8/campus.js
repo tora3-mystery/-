@@ -73,6 +73,12 @@ allowed=function(c){
  for(const [p]of movement.travel)if(activity.has(p))return{ok:false,reason:"移動時間と課外活動が重なります。"};
  return{ok:true,reason:campusOf(c)===SPECIAL_CAMPUS?"専門キャンパスの講義。移動のコマも確保されます。":"時間割に登録できます。"}
 };
+// Shared with the registration review so travel penalties are shown explicitly.
+window.S8_MOBILITY_PENALTY=function(c){
+ if(!state||!c)return 0;
+ const classes=allRegistered().filter(x=>x.id!==c.id).concat(c);
+ return Math.min(12,movements(classes).travel.size*2)
+};
 const oldChance=passChance;
 passChance=function(c){
  const normal=oldChance(c);
