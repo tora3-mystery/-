@@ -75,7 +75,8 @@
     "v0.7.2: no-skill-from-admission-to-graduation success awards +2,000 points once; records ever acquired irrespective of later discards",
     "v0.7.2: difficulty ★1–5 color coding on course tiles and class list border; required courses retain blue with a colored difficulty keyline",
     "v0.7.2: autumn semester warns if even perfect success of currently registered courses would leave the elective progression quota short; also warns when no buffer remains",
-    "v0.7.2: filter labels explicitly state their existing rules—pass rate ≥82%, difficulty ≥4, currently registerable or selected"
+    "v0.7.2: filter labels explicitly state their existing rules—pass rate ≥82%, difficulty ≥4, currently registerable or selected",
+    "v0.7.2 final safety rule: once discarded, a skill ID is excluded from all future annual draft candidate pools, preventing reacquisition even if remaining repeat capacity exists."
   ],
   "ai_audit": {
     "structure": "PASS: JS bracket/quote balance; no missing DOM IDs from game.js and expansion.js (124 $ references against 57 HTML IDs)",
@@ -144,7 +145,8 @@
     "v071_scope": "Updated only s8/balance.js threshold source and metadata/README/index version; s8/lunch-ux.js year progress, s8/year-skills.js draft gate, s8/registration-flow.js preview and s8/expansion.js graduation consume window.S8_OPTIONAL_TARGETS dynamically, so no duplicate number to drift.",
     "v072_main": "PASS 75 full mock-DOM player runs across 3 faculties x 5 activity types x 5 seeds. 222 registration-review opens, 222 confirmed grade presentations, 75 in-place cancellations, 75 valid candidate replacements, 37 year-end skill decisions (27 no-skill declines + 10 acquisitions); all 75 terminated with no JS exception. No real browser taps conducted.",
     "v072_edge": "PASS 6 focused tests: 1 failure -> (再履修), 2 failures -> (再再履修), math aptitude +6pp on 微積分Ⅰ, skill discard requires second click, skill acquired then permanently discarded still keeps ever-acquired counter, and no-skill graduation bonus +2,000 once (no repeated grant).",
-    "v072_static": "PASS all 10 S8 scripts compile; named DOM IDs all present; duplicate script load found and corrected before final. Course tags used for mathematics/computer/English bonuses; challenge skip button is outside three random skill cards. UI lunch/gradient CSS is code-reviewed only, not visually rendered in an actual phone."
+    "v072_static": "PASS all 10 S8 scripts compile; named DOM IDs all present; duplicate script load found and corrected before final. Course tags used for mathematics/computer/English bonuses; challenge skip button is outside three random skill cards. UI lunch/gradient CSS is code-reviewed only, not visually rendered in an actual phone.",
+    "v072_discard_reacquire": "Source review: annual draft eligible filter checks state.discardedSkills and excludes removed skill IDs permanently. Existing saves lacking discardedSkills remain backward-compatible via ||[]."
   },
   "browser_qa": {
     "performed": false,
