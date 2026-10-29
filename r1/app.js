@@ -122,14 +122,15 @@ function result(){
  const causeHint=otherCause?"あなたの投稿とは別の口コミが、今回の店舗変化のきっかけです。":combinedCause?"あなたの投稿と、ほかのお客さまの口コミが両方影響しました。":offsetCause?"あなたの口コミへの反応が、同じ月の別の口コミで変わりました。":legacyOther?"この月は同じ店舗にほかのお客さまも口コミを投稿しました。変化の原因は一つとは限りません。":"";
  const burst=evolved?'<div class="evolution-burst" aria-hidden="true">'+Array.from({length:14},(_,i)=>'<span style="--n:'+i+'">✦</span>').join("")+'</div>':"";
  const viralNotice=r.viral?'<section class="viral-event" role="status"><span class="eyebrow">つぶやき広場で話題に</span><h2>🔥 '+esc(r.viral.label)+'</h2><p>'+esc(r.viral.text)+'</p><small>評判が広まり、昼休みの客足にも変化が出ています。</small></section>':"";
- const exchange=r.exchange?
+ const thisMonth=Array.isArray(r.npcs)?r.npcs:(r.npc?[r.npc]:[]);
+ const exchange=!y.reply?'<p class="reply-absent">店主からの返信はまだありません。</p>':r.exchange?
   '<div class="reply-thread" id="exchangeArea"><div class="thread-player"><span>あなたから追記</span><p>'+esc(r.exchange.playerText)+'</p></div><div class="thread-owner"><span>'+esc(d.owner)+'から再返信</span><p>「'+esc(r.exchange.ownerText)+'」</p></div></div>':
   '<div class="counter-choices" id="exchangeArea"><p>この返信に、一言返す？ <small>どちらか1回だけ。返さずに翌月へ進んでもOK。</small></p><div class="counter-buttons"><button type="button" class="secondary" data-counter="evidence">📋 根拠を伝える</button><button type="button" class="secondary sharp" data-counter="quip">💬 軽く言い返す</button></div></div>';
  const lifecycleNotice=[...(r.closures||[]).map(c=>'<article class="closing-event"><span class="eyebrow">閉店のお知らせ</span><h3>'+esc(c.name)+'</h3><p>'+esc(c.reason)+'ため営業終了。口コミの閲覧はできます。</p></article>'),
  ...(r.openings||[]).map(o=>'<article class="opening-event"><span class="eyebrow">NEW OPEN</span><h3>🎉 '+esc(o.name)+'</h3><p>'+esc(o.notice)+'</p><p>次の出張から選べます。</p></article>')].join("");
  const changes=(r.affected||[]).map(x=>'<div class="linked-change"><strong>'+esc(dshop(x.id).name)+'</strong><p>'+esc(x.reason||"同じ月に届いたほかの口コミが影響しました。")+'</p><p>'+esc(x.after.summary)+'</p><div class="linked-compare"><div><small>前</small>'+storefront(x.before)+'</div><div><small>後</small>'+storefront(x.after)+'</div></div></div>').join("");
- return '<section class="box result-top"><span class="eyebrow">'+esc(E.MONTHS[y.month-1])+'に投稿した口コミ</span><h2 class="result-title">口コミへの返信が届きました。</h2><div class="feed-card user-review"><div class="meta">あなた　／　'+esc(d.name)+'　／　'+esc("★".repeat(y.star))+'　'+esc(dgenre(y.genre).name)+'</div><p class="quote">'+esc(y.text)+'</p></div>'+
- '<div class="owner-reply '+(d.id==="ramen"?"ramen-argument":"")+'"><span class="name">'+esc(d.owner)+'　店主より</span><p>「'+esc(y.reply)+'」</p></div>'+exchange+'</section>'+viralNotice+
+ return '<section class="box result-top"><span class="eyebrow">'+esc(E.MONTHS[y.month-1])+'に投稿した口コミ</span><h2 class="result-title">'+(y.reply?"口コミへの返信が届きました。":"口コミを投稿しました。")+'</h2><div class="feed-card user-review"><div class="meta">あなた　／　'+esc(d.name)+'　／　'+esc("★".repeat(y.star))+'　'+esc(dgenre(y.genre).name)+'</div><p class="quote">'+esc(y.text)+'</p></div>'+
+ (y.reply?'<div class="owner-reply '+(d.id==="ramen"?"ramen-argument":"")+'"><span class="name">'+esc(d.owner)+'　店主より</span><p>「'+esc(y.reply)+'」</p></div>':'')+exchange+'</section>'+viralNotice+
  (lifecycleNotice?'<section class="lifecycle-events" aria-label="商店街のお知らせ">'+lifecycleNotice+'</section>':"")+'<section class="box evolution-box '+(evolved?"has-evolution":closedNow?"has-closure":"no-evolution")+'">'+burst+'<div class="result-heading"><span class="eyebrow">投稿から1か月後</span><h2>'+headline+'</h2><p class="section-intro">'+esc(d.name)+'の今月の様子</p></div>'+
  '<div class="transformation-kicker">'+(closedNow?"閉店のお知らせ":evolved?"✨ 店の様子が変わった！":"今月の店頭")+'</div><div class="result-views"><div><small>投稿前</small>'+storefront(r.before)+'</div><div class="'+(evolved?"after-spotlight":"")+'"><small>1か月後</small>'+storefront(r.after)+'</div></div>'+
  '<div class="result-note">'+esc(r.transition)+'</div>'+(causeHint?'<p class="cause-hint">'+esc(causeHint)+'</p>':'')+
@@ -137,9 +138,11 @@ function result(){
  ((r.affected||[]).length?'<section class="box ripple-box"><h2>ほかのお店にも動きが！</h2><p class="section-intro">同じ月の口コミや経営状況によって、別のお店にも動きがありました。</p>'+changes+'</section>':"")+
  '<section class="box"><h2>まちの反応</h2>'+
  (r.neighbor?'<div class="feed-card"><div class="meta">客足の変化</div><p class="body">'+esc(r.neighbor)+'</p></div>':"")+
- (r.npc?'<div class="feed-card"><div class="meta">'+esc(r.npc.by)+'　／　'+esc(dshop(r.npc.id).name)+'　★'+r.npc.star+'</div><p class="body">'+esc(r.npc.text)+'</p><div class="reply"><strong>'+esc(dshop(r.npc.id).owner)+'の返信</strong><p>「'+esc(r.npc.reply||"ご意見ありがとうございます。")+'」</p></div></div>':"")+
+ '<p class="monthly-npc-count">今月のほかのお客さまの口コミ：'+thisMonth.length+'件</p>'+
+ thisMonth.slice(0,5).map(n=>'<div class="feed-card"><div class="meta">'+esc(n.by)+'　／　'+esc(dshop(n.id).name)+'　★'+n.star+'</div><p class="body">'+esc(n.text)+'</p>'+replySnippet(n.id,n.reply,dshop(n.id).owner+"からの返信")+'</div>').join("")+
+ (thisMonth.length>5?'<p class="section-intro">ほか'+(thisMonth.length-5)+'件は各店舗の口コミ欄に掲載されています。</p>':"")+
  (r.sns?'<div class="feed-card"><div class="meta">つぶやき広場</div><p class="body">'+esc(r.sns.text)+'</p></div>':"")+
- (!r.npc&&!r.sns&&!r.neighbor?'<p class="section-intro">今月はいつもどおりの商店街でした。</p>':"")+
+ (!thisMonth.length&&!r.sns&&!r.neighbor?'<p class="section-intro">今月はいつもどおりの商店街でした。</p>':"")+
  '<button type="button" class="primary next-month" data-next>'+(game.month>=12?"1年後の商店街を見る":"翌月の商店街を見に行く　→")+'</button></section>';
 }
 function finalPage(){
