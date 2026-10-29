@@ -120,3 +120,16 @@
 @media(prefers-reduced-motion:reduce){.evolution-burst{display:none}.evolution-box .after-spotlight .storefront,.tutorial-comparison .after-spotlight .storefront{animation:none}.evolution-box .after-spotlight:after{content:"変更後"}}
 
 .history-exchange{margin-top:9px;border-left:3px solid #d6b983;background:#182b36;border-radius:6px;padding:8px 11px}.history-exchange p{font-size:12px;margin:5px 0}.history-exchange strong{color:#f2d0a1}
+
+/* R1 α0.4.1: visible restart and an argumentative, non-evolving ramen proprietor. */
+.header-controls{display:flex;gap:10px;align-items:center;justify-content:flex-end;flex-wrap:wrap}
+.top-restart{background:#34394b;border:1px solid #e2c188;border-radius:9px;color:#ffedcc;font-size:12px;font-weight:800;padding:7px 11px;white-space:nowrap;min-height:38px}
+.top-restart:hover,.top-restart:focus-visible{background:#5a4850}
+.shop-disputes{display:inline-block;color:#ffc69f;font-size:12px;font-weight:900;background:#593b38;border:1px solid #b77a6b;border-radius:7px;padding:2px 7px;margin-top:5px}
+.owner-reply.ramen-argument{position:relative;border:2px solid #f0a06f;background:linear-gradient(135deg,#512e34,#352d38 76%);box-shadow:0 6px 26px #dc73463b}
+.owner-reply.ramen-argument:before{content:"🔥 反論中";display:inline-block;background:#f4aa75;color:#382121;border-radius:4px;font-size:11px;letter-spacing:.04em;padding:2px 8px;font-weight:900;margin:0 0 8px}
+.owner-reply.ramen-argument p{color:#fff0df;font-weight:700}
+.ramen-heat{border:1px solid #dd9a7e;background:#48353b;border-radius:9px;color:#ffdbbf;font-size:13px;font-weight:800;padding:9px 13px;margin-top:10px}
+.storefront.ramen .store-merch{border-color:#8c7a6e}
+@media(max-width:760px){.header-controls{flex:1;justify-content:space-between}.top-restart{min-height:42px}.app-head{gap:9px}}
+@media(max-width:380px){.top-restart{font-size:11px;padding:7px 9px}.header-controls .edition{font-size:10px}}
