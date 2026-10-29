@@ -255,7 +255,7 @@ function lunchImpressions(state,id){
     "今は「"+route+"」を目指す店内。昔の席の使い方とは違い、人との距離感も変わった。";
   }else if(genre==="identity"){
    food=base[0]+" 店が打ち出しているのは「"+current+"」。"+(positive?"従来より個性を前に出している。好き嫌いが分かれそう。":"以前の路線を見直し、親しみやすい方向に寄せた印象。");
-   mood+=" 入口では「"+route+"」の看板が目に入る。";
+   mood="入口の看板から内装まで「"+route+"」を意識した作り。"+(positive?"店の個性を楽しむ客が目立つ。":"以前より親しみやすさを重視している。");
   }
   if(stage===1){
    const prelude="今は「"+route+"」へ向けて小さな変更を試している段階。";
