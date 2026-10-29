@@ -445,7 +445,7 @@ advance=function(){
  }else{state.phase="end";save();render();window.scrollTo(0,0);playSound("final")}
 };
 renderEnd=function(){
- const condition=state.credits>=72&&state.failedRequired.length===0&&!(state.placementFailure||[]).length;
+ const condition=(state.electiveCredits||0)>=window.S8_OPTIONAL_TARGETS[state.faculty][3]&&state.failedRequired.length===0&&!(state.placementFailure||[]).length;
  if(condition&&!state.graduationApplied){state.score+=3000;state.graduationApplied=true;save()}
  const bestKey=BEST3+state.faculty+"_"+state.activity;let best=0;
  try{best=Number(localStorage.getItem(bestKey))||0}catch(e){}
@@ -455,7 +455,7 @@ renderEnd=function(){
  const area=$("ending-content");area.replaceChildren();
  const heading=document.createElement("h2");heading.textContent=condition?(isRecord?"🎓 卒業！ NEW HIGH SCORE!":"🎓 卒業おめでとう！"):"GAME OVER｜卒業要件未達";area.append(heading);
  const score=document.createElement("div");score.className="hero-score";score.textContent=fmt(state.score)+" pt";area.append(score);
- const msg=document.createElement("p");msg.textContent=(condition?"🎓 卒業認定（+3000pt）":"卒業不可：4年終了時点で必修未取得、配置不能、または単位不足")+"　·　総合評価 "+grade+"　·　"+FACULTIES[state.faculty].name;area.append(msg);
+ const msg=document.createElement("p");msg.textContent=(condition?"🎓 卒業認定（+3000pt）":"卒業不可：4年終了時点で必修未取得、配置不能、または選択科目の必要単位不足")+"　·　総合評価 "+grade+"　·　"+FACULTIES[state.faculty].name;area.append(msg);
  const wrap=document.createElement("div");wrap.className="ending-stats";
  for(const [label,value] of [["取得単位",state.credits+"単位"],["最大コンボ",state.maxCombo+" COMBO"],["PERFECT学期",state.perfectTerms+" / 8"],["自己ベスト",fmt(Math.max(best,state.score))+" pt"]]){const d=document.createElement("div"),small=document.createElement("small"),b=document.createElement("b");small.textContent=label;b.textContent=value;d.append(small,b);wrap.append(d)}area.append(wrap);
  const history=document.createElement("div");history.className="history-list";
