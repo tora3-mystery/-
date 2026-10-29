@@ -156,3 +156,8 @@
 @media(max-width:760px){.goal-banner{padding:10px 12px}.goal-banner-details{text-align:left;min-width:100%;font-size:11px}
 .time-grid .lunch-break{font-size:9px;padding:2px 3px}.lunch-hint{font-size:10px}
 .year-skill-panel:not(.hidden){padding-left:15px!important;padding-right:15px!important}}
+
+/* Smaller grade-summary timetable also preserves the lunch row. */
+.time-grid.mini-grid{grid-template-rows:18px repeat(2,35px) 22px repeat(3,35px)}
+.time-grid.mini-grid .lunch-break{height:22px;min-height:0;font-size:8px;padding:2px;letter-spacing:0}
+@media(max-width:760px){.time-grid.mini-grid{grid-template-rows:17px repeat(2,34px) 20px repeat(3,34px)}.time-grid.mini-grid .lunch-break{height:20px;font-size:7px}}
