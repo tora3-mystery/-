@@ -29,9 +29,14 @@ function seededNumber(label){
  return ()=>{v=(Math.imul(v,1664525)+1013904223)>>>0;return v/4294967296}
 }
 function shuffled(list,rng){const a=list.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(rng()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+const HIGH_REQUIRED={
+ humanities:[[["月2"]],[["金2"]],[["月2"]],[["金2"]],[["月2"]],[["金2"]]],
+ economics:[[["月2"]],[["金2"]],[["月2"]],[["金2"]],[["月2"]],[["金2"]]],
+ science:[[["月2"],["水3","水4"]],[["金2"],["水3","水4"]],[["月2"]],[["金2"]],[["月2"]],[["金2"]]]
+};
 function mandatorySlots(term){
- const defs=term<2?MUST[state.faculty][term]:UPPER[state.faculty][term-2];
- return defs.flatMap(c=>c.slotSets[0].map(indexOfTime))
+ if(term<2)return MUST[state.faculty][term].flatMap(c=>c.slotSets[0].map(indexOfTime));
+ return HIGH_REQUIRED[state.faculty][term-2].flatMap(slots=>slots.map(indexOfTime))
 }
 function generateActivity(term){
  const name=state.activity,forbidden=new Set(mandatorySlots(term));
@@ -64,7 +69,6 @@ function generateActivity(term){
  // All models have feasible candidates in the currently defined academic timetable.
  return (valid||[]).map(indexOfTime)
 }
-const oldGetActivityBlocks=getActivityBlocks;
 getActivityBlocks=function(){
  if(!state)return[];
  if(!state.activitySlotsByTerm)state.activitySlotsByTerm={};
@@ -77,9 +81,6 @@ getActivityBlocks=function(){
 const previousStart=start;
 start=function(seed){
  previousStart(seed);
- state.activitySlotsByTerm={};
- // The initial term was created by the expanded engine. Recreate using the new random schedule.
- createOffers();
  state.balanceVersion="0.4.0";
  save();render();
 };
@@ -245,7 +246,6 @@ const oldRetry=$("retry-btn").onclick;
 $("retry-btn").onclick=()=>{try{localStorage.removeItem("s8_save_v030")}catch(e){}oldRetry()};
 const oldSameSeed=$("same-seed-btn").onclick;
 $("same-seed-btn").onclick=()=>{state.stageFailYear=null;oldSameSeed()};
-const oldStageRegister=$("register-btn").onclick;
 $("register-btn").onclick=()=>beginReveal();
 $("next-btn").onclick=()=>advance();
 $("resume-btn").onclick=()=>resume();
