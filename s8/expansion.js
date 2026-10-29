@@ -117,23 +117,36 @@ createOffers=function(){
  ensureDefaults();
  const term=state.semester,year=Math.floor(term/2)+1,half=term%2;
  const mandatoryDefs=term<2?MUST[state.faculty][term]:UPPER[state.faculty][term-2];
- const must=mandatoryDefs.map(c=>courseMaterialize(c,term,true));
+ const current=mandatoryDefs.map(c=>courseMaterialize(c,term,true));
  const carry=half===1?state.annualCourses.map(a=>({...a.course,id:"carry_"+a.id,canonicalId:a.id,type:"annualCarry",term,midtermOk:a.midtermOk})): [];
  const pool=(half===0?WEEK_1:WEEK_2).concat(EXTRA,SPECIALS[state.faculty],ADVANCED[state.faculty].filter(c=>!c.yearMin||year>=c.yearMin),half===0?ANNUAL[state.faculty]:[]);
  const optional=pool.filter(c=>!state.passedIds.includes(c.id)&&!state.annualCourses.some(a=>a.id===c.id)).map(c=>courseMaterialize(c,term));
  for(const c of optional)if(c.prereq)c.prereqName=prereqLabels[c.prereq]||c.prereq;
- const blocked=new Set(must.concat(carry).flatMap(c=>c.slots).concat(getActivityBlocks()));
- for(const f of state.failedRequired){
-  if(must.some(c=>c.canonicalId===f.canonicalId))continue;
-  const places=[];
-  for(let d=0;d<6;d++)for(let p=0;p<5;p++){
-   const q=d*5+p;if(blocked.has(q))continue;
-   if(f.slots.length>1){if(p<4&&!blocked.has(q+1))places.push([q,q+1])}
-   else places.push([q]);
-  }
-  if(places.length)optional.unshift({...f,id:"retry_"+f.canonicalId,type:"retake",slots:pick(places),term,rumor:"再履修のチャンス。",net:"今度こそ単位GETを狙おう。"});
+ // Failing a mandatory course reserves its *original* period in the same semester next year.
+ // Older backlogs have priority; a new compulsory course with a timetable clash is deferred.
+ const occupied=new Set(carry.flatMap(c=>c.slots)),fixed=[],deferred=[];
+ const addFixed=c=>{if(c.slots.some(p=>occupied.has(p)))return false;fixed.push(c);c.slots.forEach(p=>occupied.add(p));return true};
+ const backlogs=state.failedRequired.slice().filter(f=>!state.passedIds.includes(f.canonicalId));
+ backlogs.sort((a,b)=>(a.firstFailedTerm??a.failedTerm??a.term??0)-(b.firstFailedTerm??b.failedTerm??b.term??0));
+ for(const f of backlogs){
+  const original=f.firstFailedTerm??f.failedTerm??f.term??0;
+  const eligible=f.retryEligibleTerm??original+2;
+  if(term<eligible||term%2!==original%2)continue;
+  const baseName=f.name.replace(/^【再履修】/,"");
+  const next={...f,id:"retry_"+f.canonicalId,name:baseName,type:"required",term,slots:f.slots.slice(),canonicalId:f.canonicalId,retake:true,firstFailedTerm:original,rumor:"この時間に再履修が固定されています。",net:"落とすと翌年度の同じ学期・同じコマで再び必修になります。"};
+  if(!addFixed(next))deferred.push("【再履修】"+baseName+"：他の固定授業と衝突し、次年度へ繰越");
  }
- state.offers=must.concat(carry,optional);
+ for(const c of current){
+  if(state.passedIds.includes(c.canonicalId))continue;
+  if(!addFixed(c)){
+   const old=state.failedRequired.find(f=>f.canonicalId===c.canonicalId);
+   if(!old)state.failedRequired.push({...c,firstFailedTerm:term,failedTerm:term,retryEligibleTerm:term+2,deferred:true});
+   deferred.push("新しい必修「"+c.name+"」：再履修と重なるため翌年度へ繰越");
+  }
+ }
+ state.deferredRequired=deferred;
+ // Electives never include discretionary retake: compulsory backlogs are automatically placed.
+ state.offers=fixed.concat(carry,optional);
  state.selectedIds=[];state.results=[];state.revealIndex=0;state.termScore=0;state.currentCombo=0;state.phase="registration";save()
 };
 function termName(n){return (Math.floor(n/2)+1)+"年"+(n%2?"後期":"前期")}
