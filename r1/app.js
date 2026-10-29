@@ -10,12 +10,14 @@ const dshop=id=>E.SHOPS.find(x=>x.id===id);
 const dgenre=id=>E.GENRES.find(x=>x.id===id);
 function newGame(){const state=E.createState(Date.now()>>>0);state.introSeen=false;return state}
 function load(){
- try{const raw=localStorage.getItem(KEY);if(raw){const s=JSON.parse(raw);E.audit(s);if(s.version===E.VERSION)return s;if(["0.1.0-alpha","0.2.0-alpha","0.3.0-alpha","0.3.1-alpha","0.3.2-alpha"].includes(s.version)){
+ try{const raw=localStorage.getItem(KEY);if(raw){const s=JSON.parse(raw);E.audit(s);if(s.version===E.VERSION)return s;if(["0.1.0-alpha","0.2.0-alpha","0.3.0-alpha","0.3.1-alpha","0.3.2-alpha","0.4.0-alpha"].includes(s.version)){
  const ramen=s.shops.ramen;
- if(ramen.history.filter(h=>h.genre==="taste"&&h.star<=2).length>=3){
-  ramen.hardening=true;
-  ramen.scores.identity=Math.min(25,Math.max(ramen.scores.identity,Math.abs(ramen.scores.taste)+2));
- }
+ ramen.scores=Object.fromEntries(E.GENRES.map(g=>[g.id,0]));
+ ramen.hardening=false;ramen.stage=0;ramen.route=null;ramen.closed=false;
+ ramen.money=Math.max(1,ramen.money);
+ ramen.disputes=ramen.history.length+ramen.history.filter(h=>h.exchange).length;
+ ramen.lastChange="看板も硬麺も変わらず営業中。";
+ if(s.view==="result"&&s.last?.review.id==="ramen")s.view="map";
  s.version=E.VERSION;return s;
 }}}
  catch(err){console.warn("R1 save reset:",err)}
@@ -68,25 +70,25 @@ function detail(id){
  (last?'<div class="recent"><h3>前回あなたに届いた返信</h3><p><strong>'+esc(d.owner)+'</strong>：「'+esc(last.reply)+'」</p></div>':'')+recentFeed(id)+'</section>';
 }
 function tutorial(){
- const base=E.createState(101),before=E.display(base.shops.ramen,"ramen");
- base.shops.ramen.scores.identity=16;
- base.shops.ramen.history=[{id:"ramen",genre:"identity",star:5,month:1}];
- const after=E.display(base.shops.ramen,"ramen");
+ const base=E.createState(101),before=E.display(base.shops.cake,"cake");
+ base.shops.cake.scores.identity=16;
+ base.shops.cake.history=[{id:"cake",genre:"identity",star:5,month:1}];
+ const after=E.display(base.shops.cake,"cake");
  return '<section class="tutorial" aria-labelledby="tutorialTitle">'+
  '<div class="tutorial-hero"><span class="eyebrow">まちかどレビュー ／ ご利用前に</span>'+
  '<h2 id="tutorialTitle">この商店街、<br>口コミで変わります。</h2>'+
  '<p>ラーメン屋、喫茶店、洋菓子店。あなたの感想に、店主は感謝するかもしれないし、言い返してくるかもしれません。</p></div>'+
- '<div class="tutorial-comparison"><p class="eyebrow">たとえば、あるラーメン屋</p><div class="result-views"><div><small>最初は普通の店</small>'+storefront(before)+'</div><div class="after-spotlight"><small>口コミを重ねると……</small>'+storefront(after)+'</div></div></div>'+
+ '<div class="tutorial-comparison"><p class="eyebrow">たとえば、ある洋菓子店</p><div class="result-views"><div><small>最初は普通の店</small>'+storefront(before)+'</div><div class="after-spotlight"><small>口コミを重ねると……</small>'+storefront(after)+'</div></div></div>'+
  '<div class="tutorial-steps"><article><strong>① お店を選ぶ</strong><p>3店舗のどこに口コミを書くか決めます。</p></article>'+
  '<article><strong>② 星とジャンルを選ぶ</strong><p>★1〜5と「味・接客・価格・雰囲気・個性」を組み合わせ、投稿文を確認します。</p></article>'+
- '<article><strong>③ 返信と変化を見る</strong><p>店主から返信が来ます。言い返すことも可能。次の月には、店や商品が変わっているかもしれません。</p></article></div>'+
+ '<article><strong>③ 返信と変化を見る</strong><p>店主から返信が来ます。言い返すことも可能。喫茶店と洋菓子店は進化しますが、ラーメン屋は頑として変わりません。</p></article></div>'+
  '<div class="tutorial-end"><strong>期間は4月から翌3月まで。月に1件、合計12件。</strong>'+
  '<p>ほかのお客さんの口コミも店に影響します。正解はありません。1年後の商店街を見届けてください。</p>'+
  '<button type="button" class="primary start-game" data-begin>商店街へ行く　→</button><p class="tiny">進行状況は端末に保存されます。操作はいつでも「あそび方」から確認できます。</p></div></section>';
 }
 function street(){
  const all=E.SHOPS.map(shopCard).join("");
- const lastMonth=game.month>0?'<p class="section-intro">前回の投稿は '+esc(E.MONTHS[game.month-1])+'。お店の看板や雰囲気を見比べてみましょう。</p>':'<p class="section-intro">気になるお店を選んで、最初の口コミを投稿してください。</p>';
+ const lastMonth=game.month>0?'<p class="section-intro">前回の投稿は '+esc(E.MONTHS[game.month-1])+'。お店の看板や雰囲気を見比べてみましょう。</p>':'<p class="section-intro">気になるお店を選んで、最初の口コミを投稿してください。ラーメン屋は反論ばかりで、店の姿は変わりません。</p>';
  const feed=game.feed.filter(x=>x.kind==="sns").slice(-3).reverse();
  return '<div class="layout"><div><h2 class="section-title">商店街を歩く</h2>'+lastMonth+'<div class="street-list">'+all+'</div>'+
  '<section class="feed-list"><h2>まちの話題</h2>'+(feed.length?feed.map(f=>'<div class="feed-card"><div class="meta">つぶやき広場　／　'+esc(E.MONTHS[f.month-1])+'</div><p class="body">'+esc(f.text)+'</p></div>').join(""):'<p class="section-intro">大きな話題はまだありません。口コミや店の変化が注目されることもあります。</p>')+'</section></div>'+detail(selectedId)+'</div>';
@@ -133,7 +135,7 @@ function history(){
 function guide(){
  return '<section class="box guide-text"><h2>遊び方</h2><p>あなたは「まちかどレビュー」を使う一般客です。3つのお店から1店を選び、毎月1件の口コミを投稿します。4月から翌3月まで、全部で12回です。</p>'+
  '<h3>① 星とジャンルを選ぶ</h3><p>星1〜5で評価を、商品・味／接客／価格／雰囲気／個性からコメントの対象を選びます。投稿する文章は、そのときの店の状況に合わせて表示されます。</p>'+
- '<h3>② 返信と変化を見る</h3><p>店主は口コミに感謝したり、反論したり、ときには店の方針そのものを変えます。一度の投稿で看板が変わることも、メニューの一部だけ変わることもあります。動かない店もあります。</p>'+
+ '<h3>② 返信と変化を見る</h3><p>店主は口コミに感謝したり、反論したり、ときには店の方針そのものを変えます。喫茶店と洋菓子店は看板やメニューが変わります。一方、麺処いわきはどれほど口コミが届いても店を変えません。</p>'+
  '<h3>③ 同じ店を再評価する</h3><p>同じ店に何度でも投稿できます。返信に一言返すと店主がさらに返事をすることもあります。星やジャンルを変えると、別の方向に変化することがあります。別のお客さんの声や、架空SNSの話題も時々現れます。</p>'+
  '<h3>④ 一年後を見届ける</h3><p>お店は繁盛することも、衰退することもあります。正解の星の付け方はありません。12回目を終えると、その一年の商店街の姿を見られます。</p>'+
  '<p class="note">このバージョンは試作版です。看板や内装は仮のCSSイラストで表現しています。画面上部のバージョン表示は実装の更新時刻です。</p>'+
@@ -152,6 +154,11 @@ function render(){
 }
 document.addEventListener("click",e=>{
  const btn=e.target.closest("button");if(!btn)return;
+ if(btn.hasAttribute("data-restart")){
+  if(!window.confirm("現在のセーブ記録を消して、4月から最初に戻りますか？ この操作は取り消せません。"))return;
+  game=newGame();onboarding=true;selectedId="ramen";selectedStar=null;selectedGenre=null;tab="street";notification="";
+  save();render();scrollTop();return;
+ }
  if(btn.hasAttribute("data-begin")){onboarding=false;game.introSeen=true;save();render();scrollTop();return;}
  if(onboarding)return;
  if(btn.dataset.counter){try{game=E.counter(game,btn.dataset.counter);save();render();document.getElementById("exchangeArea")?.scrollIntoView({behavior:"smooth",block:"center"});}catch(err){notification="この返信には、もう追記できません。";render();}return;}
@@ -161,7 +168,7 @@ document.addEventListener("click",e=>{
  if(btn.dataset.genre){selectedGenre=btn.dataset.genre;render();return;}
  if(btn.hasAttribute("data-post")){if(selectedStar===null||selectedGenre===null)return;try{game=E.advance(game,{id:selectedId,star:selectedStar,genre:selectedGenre});notification="";save();render();scrollTop()}catch(err){notification="投稿できませんでした。店舗を選び直してください。";render()}return;}
  if(btn.hasAttribute("data-next")){game.view=game.month>=12?"final":"map";tab="street";selectedStar=null;selectedGenre=null;save();render();scrollTop();return;}
- if(btn.hasAttribute("data-restart")){if(!window.confirm("これまでの12か月の記録を消して、新しく始めますか？"))return;game=newGame();onboarding=true;selectedId="ramen";selectedStar=null;selectedGenre=null;tab="street";notification="";save();render();scrollTop();return;}
+
 });
 render();
 })();
