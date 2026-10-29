@@ -82,3 +82,7 @@
 @media(max-width:760px){#legend{gap:3px 6px}.legend-item{font-size:9px}.legend-dot{width:9px;height:9px}#course-sort{max-width:230px}.reveal-breakdown{font-size:11px;padding:7px 8px}.reveal-log .reveal-row{display:grid;gap:2px}.reveal-log .reveal-row b{text-align:left}}
 
 .cell.annual{background:#6c522e;border-color:#e9b96a}.cell.annual .cn{color:#fff3cc}
+
+/* S8 v0.5.1: compulsory retakes create accumulating timetable pressure */
+.retake-warning{font-size:12px;font-weight:750;line-height:1.65;border-radius:10px;border:1px solid #e7a76c;background:#513629;color:#ffdfbd;padding:10px 12px;margin:8px 0;box-shadow:inset 4px 0 #f7c26c}
+@media(max-width:760px){.retake-warning{font-size:11px;padding:8px 10px}}
