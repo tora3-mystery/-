@@ -129,7 +129,7 @@ render=function(){
  $("current-credits").textContent=creditLoad()+"単位";
  const reg=allRegistered(),must=reg.filter(c=>c.type==="required"||c.type==="annualCarry").length;
  $("summary-line").textContent="今期の履修：必修・通年"+must+"科目＋選択"+(reg.length-must)+"科目（合計"+creditLoad()+"単位）。連続授業と過密な日程はすべての科目の取得率に影響します。";
- $("schedule-hint").textContent="★必修は自動登録。落とした必修は翌年度の同じ時間に復活します。連続講義・週3〜4コマの過密日は落単しやすくなります。";
+ $("schedule-hint").textContent="★必修を落とすと翌年度の同じ時間に自動再履修。新しい必修と重なれば新しい方が後のコマに移動。連続授業・過密履修に注意。";
  const yr=Math.floor(state.semester/2)+1,plus=EXTRA_BY_YEAR[yr-1],activity=ACT_COUNTS[state.activity];
  let ev=$("life-events");
  if(ev){
@@ -139,9 +139,9 @@ render=function(){
  const warnings=$("retake-warning");
  if(warnings){
   const lock=state.offers.filter(c=>c.retake);
-  const deferred=state.deferredRequired||[];
-  warnings.textContent=lock.length||deferred.length?"⚠ 今期の再履修必修："+(lock.length?lock.map(c=>c.name+"（前年と同じ時間に固定）").join("・"):"なし")+(deferred.length?" ／ 必修の履修繰越："+deferred.join("・"):""):"";
-  warnings.classList.toggle("hidden",!lock.length&&!deferred.length);
+  const deferred=state.deferredRequired||[],shifted=state.shiftedRequired||[];
+  warnings.textContent=lock.length||deferred.length||shifted.length?"⚠ 今期の再履修必修："+(lock.length?lock.map(c=>c.name+"（前年と同じ時間に固定）").join("・"):"なし")+(shifted.length?" ／ 新しい必修の時限変更："+shifted.join("・"):"")+(deferred.length?" ／ 空き不足による繰越："+deferred.join("・"):""):"";
+  warnings.classList.toggle("hidden",!lock.length&&!deferred.length&&!shifted.length);
  }
  const r=$("register-btn");
  if(creditLoad()>=10){r.disabled=state.phase!=="registration";r.textContent="今期の履修を確定する →"}
