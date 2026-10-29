@@ -29,9 +29,12 @@ function movements(courses){
   for(let i=0;i<lessons.length;i++){
    const now=lessons[i],next=lessons[i+1],p=now.slot;
    if(next&&now.campus!==next.campus){
+    // The one-hour lunch break after second period absorbs travel to third period.
+    if(p%5===1&&next.slot>p)continue;
     if(next.slot===p+1){issues.push("adjacent-campuses "+p+"->"+next.slot);continue}
     if(p%5<4)travel.set(p+1,{from:now.campus,to:next.campus});
    }else if(!next&&now.campus!==MAIN_CAMPUS&&p%5<4){
+    if(p%5===1)continue; // lunch includes the trip home or to the main campus
     travel.set(p+1,{from:now.campus,to:MAIN_CAMPUS});
    }
   }
@@ -101,7 +104,7 @@ render=function(){
   if(state.semester<4){label.textContent="授業は原則、中央キャンパスで行われます。";}
   else{
    const trips=asTravelCourses().travel.size;
-   label.textContent="🏫 3年生以降は中央・専門の2キャンパス。キャンパスが変わる日は移動時間が必要です。今期の移動："+trips+"コマ";
+   label.textContent="🏫 3年生以降は2キャンパス。昼休み（2限と3限の間）は1時間あるため、移動時間を吸収できます。授業コマを使う移動："+trips+"コマ";
   }
  }
 };
