@@ -10,7 +10,7 @@ const dshop=id=>E.SHOPS.find(x=>x.id===id);
 const dgenre=id=>E.GENRES.find(x=>x.id===id);
 function newGame(){const state=E.createState(Date.now()>>>0);state.introSeen=false;return state}
 function load(){
- try{const raw=localStorage.getItem(KEY);if(raw){const s=JSON.parse(raw);if(s.version===E.VERSION){E.audit(s);return s;}if(["0.1.0-alpha","0.2.0-alpha","0.3.0-alpha","0.3.1-alpha","0.3.2-alpha","0.4.0-alpha","0.4.1-alpha","0.5.0-alpha","0.6.0-alpha"].includes(s.version)){
+ try{const raw=localStorage.getItem(KEY);if(raw){const s=JSON.parse(raw);if(s.version===E.VERSION){E.audit(s);return s;}if(["0.1.0-alpha","0.2.0-alpha","0.3.0-alpha","0.3.1-alpha","0.3.2-alpha","0.4.0-alpha","0.4.1-alpha","0.5.0-alpha","0.6.0-alpha","0.7.0-alpha"].includes(s.version)){
  if(["0.1.0-alpha","0.2.0-alpha","0.3.0-alpha","0.3.1-alpha","0.3.2-alpha","0.4.0-alpha"].includes(s.version)){
  const ramen=s.shops.ramen;
  ramen.scores=Object.fromEntries(E.GENRES.map(g=>[g.id,0]));
@@ -48,15 +48,20 @@ function storefront(v){
  '<span class="stage-tag">'+esc(closed?"CLOSED":stage===0?"営業中":stage===1?"店頭改装":stage===2?"新看板":stage===3?"新装":"大改装")+'</span></div>';
 }
 function shopCard(d){
- const v=E.display(game.shops[d.id],d.id),pub=E.publicReviews(game,d.id),rating=(pub.reduce((t,x)=>t+x.star,0)/pub.length).toFixed(1);
+ const v=E.display(game.shops[d.id],d.id),pub=E.publicReviews(game,d.id),rating=pub.length?(pub.reduce((t,x)=>t+x.star,0)/pub.length).toFixed(1):null;
  return '<button type="button" class="shop-card '+(d.id===selectedId?"selected":"")+(game.shops[d.id].closed?" closed-card":"")+'" data-shop="'+d.id+'" aria-pressed="'+(d.id===selectedId)+'">'+
- storefront(v)+'<span class="card-copy"><span class="small">'+esc(d.category)+' ／ '+(game.shops[d.id].closed?"閉店":("★"+rating+"（"+pub.length+"件）"))+'</span><strong>'+esc(d.name)+'</strong>'+
+ storefront(v)+'<span class="card-copy"><span class="small">'+esc(d.category)+' ／ '+(game.shops[d.id].closed?"閉店":(rating?("★"+rating+"（"+pub.length+"件）"):"口コミなし"))+'</span><strong>'+esc(d.name)+'</strong>'+
  '<span class="summary">'+esc(v.summary)+'</span><span class="tap">口コミを確認する　›</span></span></button>';
 }
+function replySnippet(id,reply,fromOwner="店主からの返信"){
+ return reply?'<div class="reply"><strong>'+esc(fromOwner)+'</strong><p>「'+esc(reply)+'」</p></div>':'<div class="reply-absent">店主からの返信はまだありません。</div>';
+}
 function recentFeed(id){
- const items=E.publicReviews(game,id).slice().reverse();
- return '<section class="public-reviews" aria-label="来店者の口コミ"><h3>過去の口コミと店主からの返信</h3><p class="section-intro">行く前に、ほかのお客さまの感想を確認できます。</p>'+
- items.map(f=>'<article class="public-review"><div class="meta">'+esc(f.by)+'　'+esc("★".repeat(f.star))+' ／ '+esc(dgenre(f.genre).name)+(f.archived?(game.shops[id].openedMonth>0?'　プレオープンの口コミ':'　以前の投稿'):f.month?'　'+esc(E.MONTHS[f.month-1]):'')+'</div><p>'+esc(f.text)+'</p><div class="reply"><strong>店主からの返信</strong><p>「'+esc(f.reply||"ご意見ありがとうございます。")+'」</p></div></article>').join("")+'</section>';
+ const all=E.publicReviews(game,id),items=all.slice(-12).reverse();
+ return '<section class="public-reviews" aria-label="来店者の口コミ"><h3>お客さまの口コミ（'+all.length+'件）</h3><p class="section-intro">毎月口コミが増える店も、増えない店もあります。店主から返信がないこともあります。</p>'+
+ (items.length?items.map(f=>'<article class="public-review"><div class="meta">'+esc(f.by)+'　'+esc("★".repeat(f.star))+' ／ '+esc(dgenre(f.genre).name)+(f.archived?'　以前の投稿':f.month?'　'+esc(E.MONTHS[f.month-1]):'')+'</div><p>'+esc(f.text)+'</p>'+
+ replySnippet(id,f.reply)+'</article>').join(""):'<p class="no-shop-reviews">オープンしたばかりで、口コミはまだありません。</p>')+
+ (all.length>items.length?'<p class="section-intro">直近'+items.length+'件を表示しています。</p>':"")+'</section>';
 }
 function reviewForm(id){
  const d=dshop(id),s=game.shops[id],v=E.display(s,id);
@@ -82,7 +87,7 @@ function detail(id){
  '<div class="shop-meta">'+pill(v.closed?"bad":"good",v.business)+pill("",v.population)+(v.route.label?pill("",v.route.label):pill("","創業時の看板"))+'</div>'+
  '<div class="owner-box"><span class="owner-icon" aria-hidden="true">'+esc(d.icon)+'</span><div><strong>店主：'+esc(d.owner)+'（'+d.age+'）</strong><p>'+esc(d.description)+'</p></div></div>'+
  '<div class="note">'+esc(v.summary)+'</div>'+recentFeed(id)+
- (last?'<div class="recent"><h3>前回あなたに届いた返信</h3><p><strong>'+esc(d.owner)+'</strong>：「'+esc(last.reply)+'」</p></div>':'')+reviewForm(id)+'</section>';
+ (last?'<div class="recent"><h3>あなたの前回の投稿</h3>'+replySnippet(id,last.reply,d.owner+'からの返信')+'</div>':'')+reviewForm(id)+'</section>';
 }
 function tutorial(){
  const preview=E.SHOPS.find(d=>d.id!=="ramen"&&game.shops[d.id].opened),base=E.createState(game.seed);base.shops[preview.id].opened=true;base.shops[preview.id].openedMonth=0;const before=E.display(base.shops[preview.id],preview.id);
