@@ -460,15 +460,19 @@ return {title,description,shops};}
 function audit(state){
  if(!state||state.schema!==1||!Array.isArray(state.reviews)||state.month!==state.reviews.length||!state.shops)throw Error("invalid save");
  if(state.month<0||state.month>12)throw Error("invalid month");
- let available=0,opened=0;
+ let available=0,opened=0;const activeLots=new Set();
  for(const d of SHOPS){
   const x=state.shops[d.id];
   if(!x||!x.scores||!Array.isArray(x.history)||!Number.isFinite(x.money)||typeof x.opened!=="boolean")throw Error("invalid shop");
-  if(x.opened){opened++;if(!x.closed)available++;}
+  if(x.opened){
+   opened++;
+   if(!Number.isInteger(x.lot)||x.lot<1||x.lot>5)throw Error("invalid lot");
+   if(!x.closed){if(activeLots.has(x.lot))throw Error("duplicate active lot");activeLots.add(x.lot);available++;}
+  }
   if(!x.opened&&(x.closed||x.history.length))throw Error("future shop invalid");
   for(const g of GENRES)if(!Number.isFinite(x.scores[g.id]))throw Error("invalid scores");
  }
- if(opened>5||available===0||!state.shops.ramen.opened||state.shops.ramen.openedMonth!==0)throw Error("invalid operating shops");
+ if(opened>5||available===0||!state.shops.ramen.opened||state.shops.ramen.openedMonth!==0||state.shops.ramen.lot!==1)throw Error("invalid operating shops");
  return true;
 }
 function counter(state,style){
