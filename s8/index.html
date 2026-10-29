@@ -14,6 +14,7 @@
 <script defer src="./year-skills.js"></script>
 <script defer src="./lunch-ux.js"></script>
 <script defer src="./registration-flow.js"></script>
+<script defer src="./quality-updates.js"></script>
 
 </head>
 <body>
@@ -25,7 +26,12 @@
 <div class="steps"><span>① 科目を選ぶ</span><span>② 空き時間に登録</span><span>③ 成績発表で単位を確認</span></div>
 <h3>学部を選択</h3><div id="faculty-picker" class="choose-grid"></div>
 <h3>放課後の過ごし方</h3><div id="activity-picker" class="choose-grid"></div><div id="student-profile" class="student-profile" aria-live="polite"></div>
-<p class="smallhint seed-help"><strong>同じ時間割でもう一度試すには？</strong> 下の欄に好きな文字（例：<code>TORA123</code>）を入力してください。同じシード・同じ学部と活動なら講義と活動の時間割を再現できます。成績まで同じにするには履修する科目と操作順も同じにしてください。<strong>初回は空欄でOK。</strong></p><label class="seedline">再現用シード <input id="seed-input" type="text" placeholder="空欄ならランダム" inputmode="text" maxlength="30"></label>
+<p class="smallhint seed-help"><strong>同じ時間割でもう一度試すには？</strong> 下の欄に好きな文字（例：<code>TORA123</code>）を入力してください。同じシード・同じ学部と活動なら講義と活動の時間割を再現できます。成績まで同じにするには履修する科目と操作順も同じにしてください。<strong>初回は空欄でOK。</strong></p><fieldset class="aptitude-select"><legend>入学時の小さな得意分野（1つだけ／選ばなくてもOK）</legend>
+<label><input type="radio" name="start-aptitude" value="" checked> なし</label>
+<label><input type="radio" name="start-aptitude" value="aptitude_pc"> 💻 パソコン +6pt</label>
+<label><input type="radio" name="start-aptitude" value="aptitude_math"> 📐 数学 +6pt</label>
+<label><input type="radio" name="start-aptitude" value="aptitude_english"> 🔤 英語 +6pt</label></fieldset>
+<label class="seedline">再現用シード <input id="seed-input" type="text" placeholder="空欄ならランダム" inputmode="text" maxlength="30"></label>
 <button id="begin-btn" class="primary big">履修登録を始める</button><button id="resume-btn" class="secondary hidden">前回の続きから</button>
 <div class="smallhint">学年ごとの選択科目ノルマを達成して進級しよう。必修科目の単位は卒業までにすべて取得しよう。1〜3年の年度末にはランダムな3つのスキルから1つを選択。取ったスキルは重なって学生生活に影響します。必修を落とすと翌年度の時間割が埋まり、4年生の終わりに未取得必修があるとゲームオーバー。進行は自動保存されます。</div>
 </section>
@@ -33,24 +39,24 @@
 <div class="dashboard card"><div><div class="eyebrow" id="semester-label">1年前期</div><div class="dash-sub" id="faculty-label"></div><div class="dash-sub" id="activity-schedule"></div></div>
 <div class="stats"><div><small>取得単位（必修＋選択）</small><b id="total-credits">0</b></div><div><small>累計SCORE</small><b id="total-score">0</b></div><div><small>今期の登録</small><b id="current-credits">0単位</b></div></div></div>
 <div id="goal-banner" class="goal-banner card" aria-live="polite"><div class="goal-banner-row"><div><div id="goal-banner-title" class="goal-banner-title">🎯 選択科目の必須単位数</div><div id="goal-banner-amount" class="goal-banner-amount">あと16単位</div></div><div id="goal-banner-details" class="goal-banner-details">確定0 / 必要16単位</div></div><div class="goal-banner-track"><div id="goal-banner-progress"></div></div></div>
-<div class="main-col"><section class="timetable card"><div class="section-head"><h2>時間割</h2><div id="legend"><span class="legend-item"><i class="legend-dot required"></i>★必修</span><span class="legend-item"><i class="legend-dot optional"></i>選択</span><span class="legend-item"><i class="legend-dot annual"></i>通年</span><span class="legend-item"><i class="legend-dot activity"></i>活動</span><span class="legend-item"><i class="legend-dot travel"></i>移動</span></div></div><div class="hint" id="schedule-hint">空きマスをタップすると、その時間の候補科目が表示されます。</div><p class="lunch-hint">2限と3限の間には1時間の昼休み。昼休み中ならキャンパス移動で授業コマを消費せず、3限は単位取得率が+6ポイント。</p>
+<div class="main-col"><section class="timetable card"><div class="section-head"><h2>時間割</h2><div id="legend"><span class="legend-item"><i class="legend-dot required"></i>★必修</span><span class="legend-item"><i class="legend-dot optional"></i>選択</span><span class="legend-item"><i class="legend-dot annual"></i>通年</span><span class="legend-item"><i class="legend-dot activity"></i>活動</span><span class="legend-item"><i class="legend-dot travel"></i>移動</span></div></div><div class="difficulty-note">色の目安：<span>★1 簡単</span> → <span>★3 標準</span> → <span>★5 難しい</span>（★必修の青表示は維持）</div><div class="hint" id="schedule-hint">空きマスをタップすると、その時間の候補科目が表示されます。</div><p class="lunch-hint">2限と3限の間には1時間の昼休み。昼休み中ならキャンパス移動で授業コマを消費せず、3限は単位取得率が+6ポイント。</p>
 <div class="grid-wrap"><div id="timetable-grid" class="time-grid" aria-label="週間時間割"></div></div>
 <div id="summary-line" class="summary-line"></div><div id="risk-indicator" class="risk-indicator" aria-live="polite"></div><div id="academic-bonus-hint" class="life-events hidden"></div><div id="skill-summary" class="life-events hidden"></div><div id="campus-summary" class="campus-summary"></div><div id="life-events" class="life-events"></div><div id="year-stage-goal" class="year-stage-goal"></div><div id="retake-warning" class="retake-warning hidden" aria-live="polite"></div><div id="mandatory-panel" class="mandatory-panel"></div><div id="yearlong-panel" class="yearlong-panel"></div>
 <div class="actionbar"><button id="register-btn" class="primary">申請内容を確認する →</button><button id="clear-btn" class="ghost">選択を全解除</button></div>
 </section>
 <section class="courses card" id="courses-block"><div class="section-head"><h2>科目を選ぶ</h2><div id="available-counter" class="counter"></div></div><div class="filters" id="course-filters">
-<button class="filter active" data-filter="all">すべて</button><button class="filter" data-filter="safe">単位重視</button><button class="filter" data-filter="high">難しい科目</button><button class="filter" data-filter="fit">登録可能</button></div>
+<button class="filter active" data-filter="all">すべて</button><button class="filter" data-filter="safe">高取得率（82%以上）</button><button class="filter" data-filter="high">高難度（★4以上）</button><button class="filter" data-filter="fit">登録可能（選択済含む）</button></div>
 <label class="sort-label">講義の並び替え<select id="course-sort"><option value="available">登録可能な講義を先に</option><option value="chance">単位取得率が高い順</option><option value="risk">単位取得率が低い順</option><option value="weekday">曜日・時限順</option><option value="credits">取得単位の多い順</option><option value="difficulty">難易度の高い順</option></select></label><input id="course-search" class="hidden" type="search" aria-hidden="true" tabindex="-1"><div id="course-list" class="course-list"></div></section></div>
 <section id="registration-review" class="registration-review hidden" role="dialog" aria-modal="true" aria-labelledby="review-heading">
 <div class="registration-review-box">
 <div class="eyebrow">学務システム / 最終確認</div><h2 id="review-heading">この時間割で履修申請しますか？</h2>
 <p class="smallhint">ここに表示する取得率は現在の時間割で計算した値です。確定後に成績抽選を行います。変更する場合は戻れます。</p>
 <div id="review-totals" class="review-totals"></div>
-<div id="review-courses" class="review-courses"></div>
+<div id="review-courses" class="review-courses"></div><div id="review-replacements" class="review-replacements hidden" role="dialog" aria-modal="true" aria-label="変更可能な講義一覧"></div>
 <div class="review-actions"><button id="review-edit" class="secondary">← 時間割に戻って変更</button><button id="review-submit" class="primary">この内容で申請して成績発表へ →</button></div></div></section>
 <section id="reveal" class="reveal-overlay hidden" aria-live="polite"><div class="reveal-box"><div class="eyebrow">成績発表 / 学務ポータル</div><h2 id="reveal-title">前期 成績発表</h2><div id="trip-event" class="jobhunt-event trip-event hidden"><div class="jobhunt-siren">4年後期 / 学生生活イベント</div><h3>卒業旅行の誘い</h3><p id="trip-event-description"></p><button id="trip-event-continue" class="primary">成績を確認する →</button></div><div id="jobhunt-event" class="jobhunt-event hidden"><div class="jobhunt-siren">緊急通知 / 4年前期</div><h3>突然の就職活動！</h3><p id="jobhunt-description"></p><button id="jobhunt-continue" class="primary">成績を確認する →</button></div><div id="reveal-flash" class="reveal-flash">RESULT</div><div id="reveal-sub" class="reveal-sub">履修科目を照合しています…</div><div id="reveal-combo" class="reveal-combo"></div><div class="reveal-score" id="reveal-score">0 pt</div><div id="reveal-breakdown" class="reveal-breakdown" aria-live="polite"></div><div class="reveal-progress"><div id="reveal-bar"></div></div><div id="reveal-log" class="reveal-log"></div><div id="reveal-required" class="reveal-required"></div><div id="semester-special" class="semester-special hidden" role="status"></div><div id="year-stage-result" class="year-stage-result hidden"></div><div id="cheat-alert" class="cheat-alert hidden" role="alert"></div>
 <div id="appeal-panel" class="appeal-panel hidden"><div class="eyebrow">4年生限定 / 成績再審査</div><h3>教授に頼み込む</h3><p id="appeal-note"></p><div id="appeal-list" class="appeal-list"></div><div id="appeal-last" class="appeal-last" role="status"></div><button id="appeal-close" class="secondary">頼み込みを終えて次へ</button></div>
-<div id="year-skill-panel" class="year-skill-panel hidden" aria-live="polite"><div class="eyebrow">年間成績確定 / スキル取得</div><h3 id="year-skill-title">次の学生生活を選ぶ</h3><p>年度末の成績を確認した後で、候補がランダムに3つ表示されます。1つを選んで次年度へ。スキルは積み重なります。</p><div id="year-skill-options" class="year-skill-options"></div><p id="year-skill-history" class="smallhint"></p></div><button id="skip-btn" class="secondary">まとめて表示 »</button><button id="next-btn" class="primary hidden">次の学期へ →</button></div></section>
+<div id="year-skill-panel" class="year-skill-panel hidden" aria-live="polite"><div class="eyebrow">年間成績確定 / スキル取得</div><h3 id="year-skill-title">次の学生生活を選ぶ</h3><p>年度末の成績を確認した後で、候補がランダムに3つ表示されます。1つを選んで次年度へ。スキルは積み重なります。</p><div id="year-skill-options" class="year-skill-options"></div><button id="year-skill-decline" class="secondary year-skill-decline">スキルは取らない（己の力で挑む）</button><p id="year-skill-history" class="smallhint"></p></div><button id="skip-btn" class="secondary">まとめて表示 »</button><button id="next-btn" class="primary hidden">次の学期へ →</button></div></section>
 </section>
 <section id="ending" class="card ending hidden"><div class="stamp">卒業判定 / 4年間・8学期</div><div id="ending-content"></div><button class="primary big" id="retry-btn">別の時間割でもう一度 ↻</button><button class="secondary" id="same-seed-btn">同じシードで再挑戦</button><p class="smallhint">※ ゲーム独自の進級条件：学部別の「選択科目の必要単位」を達成。卒業条件：4年次の選択科目ノルマ達成＋全必修取得。必修が1科目でも残ればGAME OVERです。</p></section>
 </main>
