@@ -1,31 +1,33 @@
 {
   "projectId": "K1",
   "title": "掲示物をご確認ください。（仮）",
-  "version": "α0.8.0",
-  "updatedAtJST": "2026-10-29 19:28 JST",
-  "phase": "Phase 3/4 — binary judgment, visitor camera prototype, early-day randomization; human review pending",
+  "version": "α0.8.1",
+  "updatedAtJST": "2026-10-29 22:36 JST",
+  "phase": "Phase 4 — randomized incidents + night contrast; checkpoint QA passed; human review pending",
   "aiAudit": {
-    "logic": "3125/3125 tested late-pool routes covering all 25 early combinations, 20/20 early correct/wrong action tests; four endings tested; full 78125 theoretical routes not exhaustively tested",
-    "ui": "JS compiled, mock DOM checked dark night, camera, no verify button, optional eerie letter, mailbox persistence/rewind"
+    "logic": "48/48 checkpoint-path simulations (all 47 event IDs); 35/35 selected side-events' opposite actions cause failure; 4 endings accessible; 168070 theoretical combinations NOT exhaustively tested",
+    "ui": "CSS explicit night confirmation/result label text colors; mock DOM for Day1 variants and two camera views; actual phone browser not tested",
+    "bugFixed": "DAY6 E05G safe refusal previously lost necessary technician evidence; fixed and rechecked"
   },
   "browserAudit": {
-    "status": "not_run_for_alpha080",
-    "livePagesCheck": "not_verified",
-    "smartphoneWidths": [
+    "status": "not_run_alpha081",
+    "pagesDeployed": "not_verified",
+    "mobileWidthsToReview": [
       320,
       390,
       428
-    ]
+    ],
+    "realPlayerUI": "pending"
   },
   "humanReview": {
     "lastReviewedVersion": "α0.6.1",
     "pilotImageLook": "user approved three candidate pictures",
-    "latestGame": "α0.8.0 not yet human-reviewed",
+    "latestGame": "α0.8.1 human test pending",
     "openIssues": [
-      "How disturbing is SVG camera and empty-camera case?",
-      "Is the night UI readable on phone?",
-      "Are early visitor/mailing clues understandable?",
-      "Is rare mail effective rather than clichéd?"
+      "Check night confirmation boxes after color fix on real phone",
+      "Review 2 Day1 candidates for tutorial clarity",
+      "Assess added side-event variation and DAY5 second camera view",
+      "Decide real camera-photo pilot before mass image work"
     ]
   },
   "assets": {
@@ -36,9 +38,11 @@
     "remainingCandidates": 0,
     "nextProduction": "none until human review",
     "cameraFaces": "temporary SVG; photo portraits not produced",
-    "existingGameImages": 11
+    "existingGameImages": 11,
+    "camera": "SVG mock faces; no actual camera still photographs yet; Work imagery planned pending separate human image check",
+    "fullAssetIntegration": "existing 11 WebP retained"
   },
-  "nextOwner": "Human tester / K1 Chat",
-  "nextAction": "Play alpha0.8.0, assess camera fear, dark UI, random early visitors; decide if Work photos are justified",
+  "nextOwner": "K1 human reviewer / Work image pilot",
+  "nextAction": "Human-play alpha0.8.1, prioritize night text legibility; commission 3 camera-still photo pilot in Work, then rest once visual direction approved.",
   "scope": "k1/ only"
 }
