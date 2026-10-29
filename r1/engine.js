@@ -176,6 +176,7 @@ function settleAndClose(state){
 function openNewShops(state){
  const operating=SHOPS.filter(d=>state.shops[d.id].opened&&!state.shops[d.id].closed).length;
  if(operating>=5||state.month>=12)return [];
+ if(state.shops.teishoku.opened)return [];
  const first=state.shops.curry.opened?"teishoku":"curry",start=first==="curry"?3:7;
  if(state.month<start)return [];
  const rng=random((state.seed+state.month*4007+(first==="curry"?197:911))>>>0);
