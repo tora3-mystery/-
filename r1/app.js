@@ -85,7 +85,7 @@ function detail(id){
  (last?'<div class="recent"><h3>前回あなたに届いた返信</h3><p><strong>'+esc(d.owner)+'</strong>：「'+esc(last.reply)+'」</p></div>':'')+reviewForm(id)+'</section>';
 }
 function tutorial(){
- const preview=E.SHOPS.find(d=>d.id!=="ramen"&&game.shops[d.id].opened),base=E.createState(game.seed),before=E.display(base.shops[preview.id],preview.id);
+ const preview=E.SHOPS.find(d=>d.id!=="ramen"&&game.shops[d.id].opened),base=E.createState(game.seed);base.shops[preview.id].opened=true;base.shops[preview.id].openedMonth=0;const before=E.display(base.shops[preview.id],preview.id);
  base.shops[preview.id].scores.identity=16;base.shops[preview.id].history=[{id:preview.id,genre:"identity",star:5,month:1}];
  const after=E.display(base.shops[preview.id],preview.id);
  return '<section class="tutorial" aria-labelledby="tutorialTitle"><div class="tutorial-hero"><span class="eyebrow">出張先での昼休み</span>'+
