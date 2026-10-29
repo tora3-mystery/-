@@ -38,7 +38,7 @@ function mandatorySlots(term){
  const current=term<2?MUST[state.faculty][term].flatMap(c=>c.slotSets[0].map(indexOfTime)):HIGH_REQUIRED[state.faculty][term-2].flatMap(slots=>slots.map(indexOfTime));
  const returns=(state.failedRequired||[]).filter(f=>{
   const first=f.firstFailedTerm??f.failedTerm??f.term??0;
-  return term>=(f.retryEligibleTerm??first+2)&&term%2===first%2;
+  return (term===7&&first<7)||(term>=(f.retryEligibleTerm??first+2)&&term%2===first%2);
  }).flatMap(f=>f.slots);
  return [...new Set(current.concat(returns))];
 }
