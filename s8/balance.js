@@ -182,9 +182,15 @@ function injectMandatoryResult(){
  const box=$("year-stage-result");if(!box)return;
  box.classList.add("hidden");
  if(!state||state.phase!=="reveal"||state.revealIndex<state.results.length||state.semester%2===0)return;
- const yr=Math.floor(state.semester/2)+1,goal=TARGETS[yr-1],ok=state.credits>=goal;
+ const yr=Math.floor(state.semester/2)+1,goal=TARGETS[yr-1];
+ const missing=(state.failedRequired||[]).filter(x=>!state.passedIds.includes(x.canonicalId));
+ const missingPlacement=(state.placementFailure||[]).length;
+ const passedCredits=state.credits>=goal;
+ const ok=passedCredits&&(yr<4||(missing.length===0&&missingPlacement===0));
  box.className="year-stage-result "+(ok?"cleared":"failed");
- box.textContent=(ok?"🎓 "+yr+"年次CLEAR！":"⚠ "+yr+"年次の進級要件不足")+"　累計"+state.credits+" / "+goal+"単位"+(!ok&&yr<4?"　このまま進むと留年判定。":"");
+ box.textContent=yr===4
+  ?(ok?"🎓 卒業条件達成！":"❌ GAME OVER｜卒業要件未達")+"　累計"+state.credits+" / "+goal+"単位　未取得必修"+missing.length+"科目"+(missingPlacement?"　必修配置不能"+missingPlacement+"件":"")
+  :(ok?"🎓 "+yr+"年次CLEAR！":"⚠ "+yr+"年次の進級要件不足")+"　累計"+state.credits+" / "+goal+"単位"+(!ok?"　このまま進むと留年判定。":"");
 };
 const previousRenderReveal=renderReveal;
 renderReveal=function(){
