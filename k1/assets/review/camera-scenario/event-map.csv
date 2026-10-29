@@ -1,0 +1,20 @@
+﻿eventId,DAY,イベント,人物・外見,状態,カメラ表示条件・分岐,画像ファイル,共用・備考
+E01,DAY1,予定外の宅配,匿名の男性・無地の濃色上着、無地小包,通常,カメラ確認時,k1/assets/camera/people/courier-unplanned.webp,単独
+E01A,DAY1,予定どおりの配達,青空運輸の配達員（無地の淡青制服、小包）,通常,カメラ確認時。予定通知と照合,k1/assets/camera/people/courier-planned.webp,E02Cと共用
+E02,DAY2,呼出装置の緊急確認,東洋設備・大野（紺の作業服、工具ケース）,通常,カメラ確認時。点検案内と照合,k1/assets/camera/people/ono-normal.webp,"E02A,E05,E05C,E05Fと共用"
+E02A,DAY2,呼出装置の再点検,大野,通常,カメラ確認時,k1/assets/camera/people/ono-normal.webp,"E02,E05,E05C,E05Fと共用"
+E02G,DAY2,夜の管理人,無名の時間外管理担当（仮外見）,通常,カメラ確認時。夜間訪問予定なし,k1/assets/camera/people/after-hours-management.webp,"E02I,E07と共用"
+E02H,DAY2,別会社の修理担当,会社不一致の作業員（仮外見）,通常,カメラ確認時。名札／通知不一致はHTML文で示す,k1/assets/camera/people/impostor-technician.webp,E05Gと共用
+E02I,DAY2,訪問受付の代行,無名の時間外管理担当（仮外見）,通常,カメラ確認時。事前案内なし,k1/assets/camera/people/after-hours-management.webp,"E02G,E07と共用"
+E02C,DAY3,配達日の変更,予定配達員（無地の淡青制服、小包）,通常,カメラ確認時。再配達通知と照合,k1/assets/camera/people/courier-planned.webp,E01Aと共用
+E02D,DAY3,空室の鍵の確認,匿名の男性、無地の封筒を差し出す,通常,カメラ確認時。封筒の部屋番号はHTML文で示す,k1/assets/camera/people/key-envelope-visitor.webp,単独
+E02L,DAY3,知らない言葉の訪問者,匿名の道に迷った男性、スマホの抽象地図,通常,カメラ確認時。人種を危険性と結びつけない,k1/assets/camera/people/unfamiliar-map-visitor.webp,単独
+E10,DAY3,405号室の長谷川,長谷川（女性の仮外見、疲労と振り返る視線）,通常,カメラ確認時、退去案内と照合,k1/assets/camera/people/hasegawa-day3.webp,単独
+E03,DAY5,02:14のインターホン,無人。2回目の確認のみ室内マットが外の画面端に現れる,通常／再確認差分,初回: empty/normal.webp。カメラ2回目: empty/0214-second-look.webp,k1/assets/camera/empty/normal.webp; k1/assets/camera/empty/0214-second-look.webp,2状態
+E05,DAY6,本日の個別点検,大野,通常,カメラ確認時。個別案内に一致,k1/assets/camera/people/ono-normal.webp,"E02,E02A,E05C,E05Fと共用"
+E05C,DAY6,点検員の入室確認,大野,通常,カメラ確認時,k1/assets/camera/people/ono-normal.webp,"E02,E02A,E05,E05Fと共用"
+E05F,DAY6,点検結果の受取り,大野,通常,カメラ確認時,k1/assets/camera/people/ono-normal.webp,"E02,E02A,E05,E05Cと共用"
+E05G,DAY6,名簿にない代理点検員,会社不一致の作業員（仮外見）,通常,カメラ確認時。大野の代理と称する,k1/assets/camera/people/impostor-technician.webp,E02Hと共用
+E06,DAY7,302号室の杉浦,杉浦（50代後半の女性、手紙と旧掲示の写し）,通常,カメラ確認時。ポストの手紙と照合,k1/assets/camera/people/sugiura-day6.webp,単独
+E07,DAY7,臨時の夜間点検,無名の時間外管理担当（仮外見）,通常,カメラ確認時。個別案内なし,k1/assets/camera/people/after-hours-management.webp,"E02G,E02Iと共用"
+E08,DAY8,401号室の有馬,有馬（60歳前後、同一コート）,分岐2状態,hauntTarget=401: fatigued / hauntTarget=406: rested,k1/assets/camera/people/arima-fatigued.webp; k1/assets/camera/people/arima-rested.webp,2状態
