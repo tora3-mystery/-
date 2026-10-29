@@ -142,7 +142,7 @@ function renderReview(){
  if(!show)return;
  const courses=allRegistered();
  const year=Math.floor(state.semester/2)+1,need=optionalTarget(year),registered=courses.filter(c=>c.type!=="required"&&c.type!=="annualCarry").reduce((a,c)=>a+c.credits,0);
- $id("review-totals").textContent="選択科目取得済み "+state.electiveCredits+" / "+need+"単位（今期申請中 "+registered+"単位）｜ 計"+courses.length+"科目・"+creditLoad()+"単位を申請";
+ $id("review-totals").textContent="選択科目取得済み "+state.electiveCredits+" / "+need+"単位（今期申請中 "+registered+"単位）｜ 計"+courses.length+"科目・"+creditLoad()+"単位を申請。必修は別枠・卒業までに全取得が必要。"+((state.skills||[]).some(x=>x.id==="cheating"&&x.year+1===year)?"　⚠ カンニング実行中：科目ごとに10%の発覚リスクがあり、発覚するとGAME OVER。":"");
  const list=$id("review-courses");list.replaceChildren();for(const c of courses)list.append(reviewRow(c));
  panel.scrollTop=0
 }
