@@ -1,0 +1,45 @@
+﻿group_id,event_id,members,result,visual_assessment,review_sheet
+E01-A,E01,P003 P019 P051,合格,実画像を横並び・100px相当で目視。顔型・髪・眼鏡・表情に識別できる差がある。,reviews/event_groups_01.jpg
+E01-B,E01,P010 P020,合格,実画像を横並び・100px相当で目視。顔型・髪・眼鏡・表情に識別できる差がある。,reviews/event_groups_01.jpg
+E01-C,E01,P017 P014,合格,実画像を横並び・100px相当で目視。顔型・髪・眼鏡・表情に識別できる差がある。,reviews/event_groups_01.jpg
+E01-D,E01,P021 P052,合格,実画像を横並び・100px相当で目視。顔型・髪・眼鏡・表情に識別できる差がある。,reviews/event_groups_01.jpg
+E01-E,E01,P023 P053,合格,実画像を横並び・100px相当で目視。顔型・髪・眼鏡・表情に識別できる差がある。,reviews/event_groups_02.jpg
+E02-A,E02,P040 P004 P091,合格,実画像を横並び・100px相当で目視。顔型・髪・眼鏡・表情に識別できる差がある。,reviews/event_groups_02.jpg
+E02-B,E02,P041 P079,合格,実画像を横並び・100px相当で目視。顔型・髪・眼鏡・表情に識別できる差がある。,reviews/event_groups_02.jpg
+E02-C,E02,P042 P078,合格,実画像を横並び・100px相当で目視。顔型・髪・眼鏡・表情に識別できる差がある。,reviews/event_groups_02.jpg
+E02-D,E02,P043 P082 P083,合格,実画像を横並び・100px相当で目視。顔型・髪・眼鏡・表情に識別できる差がある。,reviews/event_groups_03.jpg
+E03-A,E03,P002 P006 P092 P030,合格,実画像を横並び・100px相当で目視。顔型・髪・眼鏡・表情に識別できる差がある。,reviews/event_groups_03.jpg
+E03-B,E03,P008 P025 P057 P058,合格,実画像を横並び・100px相当で目視。顔型・髪・眼鏡・表情に識別できる差がある。,reviews/event_groups_03.jpg
+E03-C,E03,P026 P027 P061 P062 P063,合格,実画像を横並び・100px相当で目視。顔型・髪・眼鏡・表情に識別できる差がある。,reviews/event_groups_03.jpg
+E04-A,E04,P005 P031 P015,要注意だが許容,P005とP015は帽子と近い撮影角度が共通。顔の幅・目元で区別可能。,reviews/event_groups_04.jpg
+E04-B,E04,P009 P032 P070,要注意だが許容,P009とP070は暗い短髪で小表示の第一印象が近い。輪郭・表情で区別可能。,reviews/event_groups_04.jpg
+E04-C,E04,P033 P068 P069,合格,実画像を横並び・100px相当で目視。顔型・髪・眼鏡・表情に識別できる差がある。,reviews/event_groups_04.jpg
+E04-D,E04,P034 P064 P065,合格,実画像を横並び・100px相当で目視。顔型・髪・眼鏡・表情に識別できる差がある。,reviews/event_groups_04.jpg
+E05-A,E05,P001 P011 P013 P075,合格,実画像を横並び・100px相当で目視。顔型・髪・眼鏡・表情に識別できる差がある。,reviews/event_groups_05.jpg
+E05-B,E05,P012 P036 P072 P076,合格,実画像を横並び・100px相当で目視。顔型・髪・眼鏡・表情に識別できる差がある。,reviews/event_groups_05.jpg
+E05-C,E05,P037 P038 P071 P077,合格,実画像を横並び・100px相当で目視。顔型・髪・眼鏡・表情に識別できる差がある。,reviews/event_groups_05.jpg
+E06-A,E06,P003 P019 P054,合格,実画像を横並び・100px相当で目視。顔型・髪・眼鏡・表情に識別できる差がある。,reviews/event_groups_05.jpg
+E06-B,E06,P007 P024,合格,実画像を横並び・100px相当で目視。顔型・髪・眼鏡・表情に識別できる差がある。,reviews/event_groups_06.jpg
+E06-C,E06,P010 P020,合格,実画像を横並び・100px相当で目視。顔型・髪・眼鏡・表情に識別できる差がある。,reviews/event_groups_06.jpg
+E06-D,E06,P017 P056,合格,実画像を横並び・100px相当で目視。顔型・髪・眼鏡・表情に識別できる差がある。,reviews/event_groups_06.jpg
+E06-E,E06,P022 P055,合格,実画像を横並び・100px相当で目視。顔型・髪・眼鏡・表情に識別できる差がある。,reviews/event_groups_06.jpg
+E07-A,E07,P018 P048 P093 P088 P089,合格,実画像を横並び・100px相当で目視。顔型・髪・眼鏡・表情に識別できる差がある。,reviews/event_groups_07.jpg
+E07-B,E07,P009 P045 P050 P090,合格,実画像を横並び・100px相当で目視。顔型・髪・眼鏡・表情に識別できる差がある。,reviews/event_groups_07.jpg
+E07-C,E07,P046 P047 P084 P085,合格,実画像を横並び・100px相当で目視。顔型・髪・眼鏡・表情に識別できる差がある。,reviews/event_groups_07.jpg
+E08-A,E08,P040 P004 P094,合格,実画像を横並び・100px相当で目視。顔型・髪・眼鏡・表情に識別できる差がある。,reviews/event_groups_07.jpg
+E08-B,E08,P041 P080,合格,実画像を横並び・100px相当で目視。顔型・髪・眼鏡・表情に識別できる差がある。,reviews/event_groups_08.jpg
+E08-C,E08,P042 P081,合格,実画像を横並び・100px相当で目視。顔型・髪・眼鏡・表情に識別できる差がある。,reviews/event_groups_08.jpg
+E08-D,E08,P043 P044,合格,実画像を横並び・100px相当で目視。顔型・髪・眼鏡・表情に識別できる差がある。,reviews/event_groups_08.jpg
+E09-A,E09,P002 P008 P059,要注意だが許容,P002とP008は細い輪郭・暗髪の整った顔で近い。重要人物の変更は本Workの範囲外。,reviews/event_groups_08.jpg
+E09-B,E09,P006 P029 P060,合格,実画像を横並び・100px相当で目視。顔型・髪・眼鏡・表情に識別できる差がある。,reviews/event_groups_09.jpg
+E09-C,E09,P026 P028,要注意だが許容,P026とP028は眼鏡が共通。P026は丸めの顔、P028は面長で別人と判別可能。,reviews/event_groups_09.jpg
+E10-A,E10,P001 P011 P095,合格,実画像を横並び・100px相当で目視。顔型・髪・眼鏡・表情に識別できる差がある。,reviews/event_groups_09.jpg
+E10-B,E10,P012 P036 P074,合格,実画像を横並び・100px相当で目視。顔型・髪・眼鏡・表情に識別できる差がある。,reviews/event_groups_09.jpg
+E10-C,E10,P039 P073,合格,実画像を横並び・100px相当で目視。顔型・髪・眼鏡・表情に識別できる差がある。,reviews/event_groups_10.jpg
+E11-A,E11,P005 P031 P016,合格,実画像を横並び・100px相当で目視。顔型・髪・眼鏡・表情に識別できる差がある。,reviews/event_groups_10.jpg
+E11-B,E11,P007 P066,合格,実画像を横並び・100px相当で目視。顔型・髪・眼鏡・表情に識別できる差がある。,reviews/event_groups_10.jpg
+E11-C,E11,P009 P035,合格,実画像を横並び・100px相当で目視。顔型・髪・眼鏡・表情に識別できる差がある。,reviews/event_groups_10.jpg
+E11-D,E11,P033 P067,合格,実画像を横並び・100px相当で目視。顔型・髪・眼鏡・表情に識別できる差がある。,reviews/event_groups_11.jpg
+E12-A,E12,P018 P045 P096,要注意だが許容,P045とP096は細身・暗髪・横向き構図が近い。鼻・頬・髪の分け方で区別可能。,reviews/event_groups_11.jpg
+E12-B,E12,P048 P086 P049,合格,実画像を横並び・100px相当で目視。顔型・髪・眼鏡・表情に識別できる差がある。,reviews/event_groups_11.jpg
+E12-C,E12,P046 P047 P087,合格,実画像を横並び・100px相当で目視。顔型・髪・眼鏡・表情に識別できる差がある。,reviews/event_groups_11.jpg
