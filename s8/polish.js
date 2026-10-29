@@ -136,8 +136,9 @@ function scoreDetails(r){
  if(!r)return "";
  if(r.course.annual&&state.semester%2===0)return r.name+"：通年前期の"+(r.pass?"中間評価クリア":"要補講")+"。得点・単位は後期末に判定（今期は0pt）";
  if(!r.pass)return r.name+"：獲得0pt"+(r.jobHunt?"（就職活動による欠席）":"");
- const basic=r.credits*100,combo=Math.max(0,r.earned-basic);
- return r.name+"："+r.credits+"単位×100pt="+fmt(basic)+"pt"+(combo?" ＋ 連続取得ボーナス"+fmt(combo)+"pt":"")+" ＝ "+fmt(r.earned)+"pt";
+ const basic=r.credits*100,combo=Math.min(5,Math.max(0,(r.combo||1)-1))*50;
+ const skill=Math.max(0,r.earned-basic-combo);
+ return r.name+"：基本"+fmt(basic)+"pt"+(combo?"＋連続取得"+fmt(combo)+"pt":"")+(skill?"＋スキル加点"+fmt(skill)+"pt":"")+"＝"+fmt(r.earned)+"pt";
 }
 const priorRender=render;
 render=function(){
@@ -148,19 +149,20 @@ render=function(){
  $("current-credits").textContent=creditLoad()+"単位";
  const reg=allRegistered(),must=reg.filter(c=>c.type==="required"||c.type==="annualCarry").length;
  $("summary-line").textContent="今期の履修：必修・通年"+must+"科目＋選択"+(reg.length-must)+"科目（合計"+creditLoad()+"単位）。連続授業と過密な日程はすべての科目の取得率に影響します。";
- $("schedule-hint").textContent="★必修を落とすと翌年度の同じ時間に自動再履修。新しい必修と重なれば新しい方が後のコマに移動。昼休みを挟む2・3限は連続ペナルティなし。空きコマを挟むと戻りにくくなります。";
+ $("schedule-hint").textContent="★必修を落とすと原則として翌年度の同じ学期に再履修。活動や他の必修と重なる場合は時限を調整します。2・3限は昼休みで区切られ、空きコマ後は出席しづらくなります。";
  const yr=Math.floor(state.semester/2)+1,plus=EXTRA_BY_YEAR[yr-1],activity=ACT_COUNTS[state.activity];
  let ev=$("life-events");
  if(ev){
-  ev.textContent=state.activity==="none"?"今期は勉強に専念。":yr>1?"学生生活が忙しくなった！ "+yr+"年生は授業以外の活動が週"+(activity+plus)+"コマ（1年生より+"+plus+"コマ）。":"今期の活動は週"+activity+"コマ。";
+  const actualActivity=getActivityBlocks().length;
+  ev.textContent=actualActivity?"今期の課外活動は週"+actualActivity+"コマ。"+(yr>1?"学年とともに活動の組み方も変わっています。":""):"今期は授業に集中できる時間が多そうです。";
   if(state.travelEvent?.active&&state.semester===7)ev.textContent+="　🏖️ 卒業旅行の予定：今期の単位取得率−18ポイント。";
  }
- if(state.semester===7)$("schedule-hint").textContent="卒業前の最終学期。必修を1科目でも落とすと、累計72単位に届いていてもGAME OVERになります。";
+ if(state.semester===7)$("schedule-hint").textContent="卒業前の最終学期。選択科目の必要単位を満たし、必修もすべて取得しなければ卒業できません。";
  const warnings=$("retake-warning");
  if(warnings){
   const lock=state.offers.filter(c=>c.retake);
   const deferred=state.deferredRequired||[],shifted=state.shiftedRequired||[];
-  warnings.textContent=lock.length||deferred.length||shifted.length?"⚠ 今期の再履修必修："+(lock.length?lock.map(c=>c.name+"（"+(state.semester===7&&c.firstFailedTerm===6?"卒業前の特別再履修":c.movedMandatory?"時限を変更して再履修":"元の曜日・時限に固定")+"）").join("・"):"なし")+(shifted.length?" ／ 新しい必修の時限変更："+shifted.join("・"):"")+(deferred.length?" ／ 空き不足による繰越："+deferred.join("・"):""):"";
+  warnings.textContent=lock.length||deferred.length||shifted.length?"⚠ 必修の再履修・時限調整："+(lock.length?lock.map(c=>c.name+"（"+(state.semester===7&&c.firstFailedTerm===6?"卒業前の特別再履修":c.movedMandatory?"時限を変更して再履修":"元の曜日・時限に配置")+"）").join("・"):"なし")+(shifted.length?" ／ 新しい必修の時限変更："+shifted.join("・"):"")+(deferred.length?" ／ 空き不足による繰越："+deferred.join("・"):""):"";
   warnings.classList.toggle("hidden",!lock.length&&!deferred.length&&!shifted.length);
  }
  const r=$("register-btn");
@@ -219,12 +221,15 @@ renderReveal=function(){
  const details=$("reveal-breakdown");
  const h=state.history.find(x=>x.term===state.semester);
  if(latest)details.textContent=scoreDetails(latest)+(h&&num===state.results.length&&h.bonus?" ／ 学期ボーナス +"+fmt(h.bonus)+"pt"+(h.perfect?"（PERFECT +350pt":"（")+(h.perfect&&h.bonus>350?"、活動 +"+fmt(h.bonus-350)+"pt":"")+")":"");
- else details.textContent="1単位につき100pt。取得が続くと追加ボーナス（最大250pt）。";
+ else details.textContent="取得単位×100pt。合格が続くと連続取得ボーナス（最大250pt）。一部スキルは得点にも影響します。";
  // Show transparent point breakdown in the course-by-course result log.
  const rows=$("reveal-log").querySelectorAll(".reveal-row");
  for(let i=0;i<num&&i<rows.length;i++){
   const r=state.results[i],b=rows[i].querySelector("b");
-  if(b&&r.pass&&!(r.course.annual&&state.semester%2===0))b.textContent="+"+fmt(r.earned)+"pt（"+r.credits+"単位＋連続"+Math.max(0,r.earned-r.credits*100)+"pt）";
+  if(b&&r.pass&&!(r.course.annual&&state.semester%2===0)){
+  const base=r.credits*100,streak=Math.min(5,Math.max(0,(r.combo||1)-1))*50,skill=Math.max(0,r.earned-base-streak);
+  b.textContent="+"+fmt(r.earned)+"pt（基本"+fmt(base)+"＋連続"+fmt(streak)+(skill?"＋スキル"+fmt(skill):"")+"）";
+ }
  }
  const trip=$("trip-event");
  const pending=Boolean(state.tripPending&&state.semester===7);
