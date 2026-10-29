@@ -1,6 +1,6 @@
 window.R1 = (function makeEngine(){
 "use strict";
-const VERSION="0.8.0-alpha";
+const VERSION="0.9.0-alpha";
 const GENRES=[
 {id:"taste",name:"商品・味",icon:"🍜"},
 {id:"service",name:"接客",icon:"💬"},
@@ -93,22 +93,23 @@ function createState(seed=20261029){
  const candidates=SHOPS.filter(d=>d.id!=="ramen"&&!POOL_SPECIAL[d.id]).map(d=>d.id);
  for(let i=candidates.length-1;i>0;i--){const j=Math.floor(rng()*(i+1));[candidates[i],candidates[j]]=[candidates[j],candidates[i]];}
  const first=new Set(["ramen",...candidates.slice(0,2)]);
+ const initialLots=new Map([["ramen",1],[candidates[0],2],[candidates[1],3]]);
  const shops={};
  for(const d of SHOPS)shops[d.id]={
   scores:Object.fromEntries(GENRES.map(x=>[x.id,0])),money:70,locals:55,visitors:28,stress:15,stage:0,route:null,closed:false,hardening:false,disputes:0,
-  history:[],lastChange:"昔ながらの店構えで営業中。",opened:first.has(d.id),openedMonth:first.has(d.id)?0:null,slowMonths:0,closedReason:null
+  history:[],lastChange:"昔ながらの店構えで営業中。",opened:first.has(d.id),openedMonth:first.has(d.id)?0:null,slowMonths:0,closedReason:null,lot:initialLots.get(d.id)||null,reborn:false
  };
- return {schema:1,version:VERSION,seed,month:0,shops,reviews:[],feed:[],last:null,viralCount:0,lastViralMonth:-10,view:"map",started:true};
+ return {schema:1,version:VERSION,seed,month:0,shops,reviews:[],feed:[],last:null,viralCount:0,lastViralMonth:-10,view:"map",started:true,ramenReturnMonth:null,ramenFinalSilent:false,ramenReborn:false};
 }
 function random(seed){let x=(seed>>>0)||1234567;return ()=>{x=(1664525*x+1013904223)>>>0;return x/4294967296};}
 function routeFor(s){let k=null,best=0,pol=null;for(const g of GENRES){const score=s.scores[g.id],abs=Math.abs(score);if(abs>best||(abs===best&&g.id==="identity"&&s.hardening&&score>0)){best=abs;k=g.id;pol=score>0?"plus":"minus";}}if(!k||best<1)return {genre:null,polarity:null,stage:0,label:null,score:best};const stage=best>=15?4:best>=9?3:best>=4?2:1;return {genre:k,polarity:pol,stage,label:null,score:best};}
 function display(s,id){
  if(!s.opened){const base=SHOPS.find(x=>x.id===id);return {id,base,route:{genre:null,polarity:null,stage:0,label:null},phase:"",sign:"空き店舗",sign2:"",feature:"新しいお店を準備中",visual:{icon:"🏬",product:"空きテナント",tagline:"出店者募集中",variety:0},open:false,summary:"まだ営業していない。",population:"準備中",business:"未開店"};}
  if(id==="ramen"){
-  const base=SHOPS.find(x=>x.id===id);
-  return {id,base,route:{genre:null,polarity:null,stage:0,label:null,score:0},phase:"",sign:base.name,sign2:"",
-   feature:"看板も硬麺も変わらず営業中",visual:{icon:base.icon,product:base.product,tagline:"麺の硬さは変えません",variety:0},
-   open:!s.closed,summary:s.closed?"客足が減り、硬麺は変えないままシャッターを下ろした。":"店主は今日も口コミに反論中。看板も商品も、開店当時のまま。",
+  const base=SHOPS.find(x=>x.id===id),reborn=!!s.reborn;
+  return {id,base,route:{genre:null,polarity:null,stage:0,label:null,score:0},phase:reborn?"拡張本店":"",sign:reborn?"麺処いわき 巨大本店":base.name,sign2:reborn?"店舗だけ拡大しました":"",
+   feature:reborn?"巨大な建物。硬麺は従来どおり":"看板も硬麺も変わらず営業中",visual:{icon:reborn?"🏢":base.icon,product:base.product,tagline:reborn?"建物だけが大きくなりました":"麺の硬さは変えません",variety:reborn?4:0},
+   open:!s.closed,summary:s.closed?"客足が減り、硬麺は変えないままシャッターを下ろした。":reborn?"閉店したはずの店が巨大な本店として戻ってきた。麺の硬さだけは以前と同じ。":"看板も商品も開店当時のまま。",
    population:s.locals>=65?"地元客で賑わう":s.visitors>=65?"話題を聞いた客が増えた":s.locals<=30?"常連が減っている":"いつもの客足",
    business:s.closed?"閉店":s.money>=100?"繁盛":s.money>=40?"営業中":"経営が厳しい",disputes:s.disputes||0};
  }
@@ -303,17 +304,17 @@ function settleAndClose(state){
  for(const d of available){
   const s=state.shops[d.id];
   const customerFootfall=s.locals*.7+s.visitors*.3+(d.id==="ramen"?9:0);
-  s.slowMonths=customerFootfall<39?(s.slowMonths||0)+1:0;
-  s.money=clamp(s.money-1+(customerFootfall-45)*.16,-100,160);
+  s.slowMonths=customerFootfall<(s.lot===2?43:39)?(s.slowMonths||0)+1:0;
+  s.money=clamp(s.money-(s.lot===2?1.6:1)+(customerFootfall-45)*.16,-100,160);
  }
- const threatened=available.filter(d=>state.shops[d.id].money<=0||state.shops[d.id].slowMonths>=3)
+ const threatened=available.filter(d=>state.shops[d.id].money<=0||state.shops[d.id].slowMonths>=(state.shops[d.id].lot===2?2:3))
  .sort((a,b)=>state.shops[a.id].money-state.shops[b.id].money);
  const closures=[];let remaining=available.length;
  for(const d of threatened){
   if(remaining<=1||closures.length>=1)break;
   const s=state.shops[d.id],cause=s.money<=0?"経営資金が尽きた":"客足の少ない月が続いた";
   s.closed=true;s.closedReason=cause;s.lastChange=cause+"ため閉店。";
-  closures.push({id:d.id,name:d.name,reason:cause,month:state.month});
+  closures.push({id:d.id,name:d.name,reason:cause,month:state.month,lot:s.lot});
   remaining--;
  }
  return closures;
@@ -328,6 +329,26 @@ function eligibleNewShops(state){
   return !flag||(flag==="vacancy"&&vacancy)||(flag==="budget"&&lowPrice>=2)||(flag==="individuality"&&admiredIdentity>=2);
  });
 }
+const LINKED_OPENINGS={
+ ramen:["udon","chinese"],cafe:["bakery","sandwich"],cake:["bakery","cafe"],
+ curry:["teishoku","veggie"],teishoku:["fish","onigiri"],udon:["soba"],soba:["udon"],
+ sandwich:["bakery"],burger:["sandwich"],pasta:["bakery"],chinese:["teishoku"],
+ bakery:["cafe"],fish:["teishoku"],onigiri:["teishoku"],veggie:["curry"]
+};
+function possibleRelation(state,candidate){
+ return SHOPS.find(d=>d.id!==candidate&&state.shops[d.id].opened&&!state.shops[d.id].closed&&
+  (LINKED_OPENINGS[d.id]||[]).includes(candidate)&&
+  state.reviews.filter(r=>r.id===d.id&&r.star>=4).length>=1)||null;
+}
+function specialRamenReturn(state){
+ const ramen=state.shops.ramen;
+ if(!ramen.closed||state.ramenReturnMonth!==state.month||state.ramenReborn)return [];
+ ramen.closed=false;ramen.closedReason=null;ramen.reborn=true;
+ ramen.money=105;ramen.locals=67;ramen.visitors=88;ramen.slowMonths=0;
+ state.ramenReborn=true;
+ return [{id:"ramen",name:"麺処いわき 巨大本店",month:state.month,lot:1,comeback:true,
+ notice:"閉店から二か月。同じ土地に、以前の何倍も大きな建物が現れた。『硬麺は変えません』の看板だけが残っている。"}];
+}
 function openNewShops(state){
  const ever=SHOPS.filter(d=>state.shops[d.id].opened).length;
  const operating=SHOPS.filter(d=>state.shops[d.id].opened&&!state.shops[d.id].closed).length;
@@ -340,11 +361,16 @@ function openNewShops(state){
  const eligible=eligibleNewShops(state);
  if(!eligible.length)return [];
  // Rumor-based shops become more likely once their conditions are satisfied.
- const weighted=eligible.flatMap(d=>Array(POOL_SPECIAL[d.id]?3:1).fill(d));
+ const weighted=eligible.flatMap(d=>Array((POOL_SPECIAL[d.id]?3:1)+(possibleRelation(state,d.id)?4:0)).fill(d));
  const d=weighted[Math.floor(rng()*weighted.length)];
- const target=state.shops[d.id];
+ const target=state.shops[d.id],relation=possibleRelation(state,d.id);
+ const occupied=new Set(SHOPS.filter(x=>state.shops[x.id].opened&&!state.shops[x.id].closed).map(x=>state.shops[x.id].lot));
+ const emptyLots=SHOPS.filter(x=>x.id!=="ramen"&&state.shops[x.id].opened&&state.shops[x.id].closed&&state.shops[x.id].lot&&!occupied.has(state.shops[x.id].lot)).map(x=>state.shops[x.id].lot);
+ const lot=emptyLots.length?Math.min(...emptyLots):Math.min(5,1+Math.max(...[...occupied,0]));
+ target.lot=lot;
  target.opened=true;target.openedMonth=state.month;target.money=72;target.locals=49;target.visitors=32;target.slowMonths=0;
- return [{id:d.id,name:d.name,category:d.category,month:state.month,notice:d.name+"がオープンしました。昼休みの選択肢が一つ増えました。"}];
+ return [{id:d.id,name:d.name,category:d.category,month:state.month,lot,
+ relatedTo:relation?.id||null,notice:relation?d.name+"が"+relation.name+"の評判を聞いて出店。ランチの選択肢が増えました。":d.name+"が"+lot+"番地にオープンしました。昼休みの選択肢が一つ増えました。"}];
 }
 function advance(state,action){if(state.month>=12)throw Error("finished");if(!action||!state.shops[action.id]||!GENRES.some(x=>x.id===action.genre)||!Number.isInteger(action.star)||action.star<1||action.star>5)throw Error("invalid action");const next=copy(state),s=next.shops[action.id];if(s.closed)throw Error("closed store");const allBefore=Object.fromEntries(SHOPS.map(d=>[d.id,display(next.shops[d.id],d.id)])),before=allBefore[action.id],text=reviewText(next,action.id,action.star,action.genre),reply=replyFor(next,action.id,action.star,action.genre);const delta=(action.star-3)*2;
 if(action.id!=="ramen")s.scores[action.genre]=clamp(s.scores[action.genre]+delta,-25,25);
