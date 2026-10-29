@@ -1,7 +1,15 @@
 "use strict";
 /* S8 v0.4.0 — student-life and risk balance layer (after game.js and expansion.js) */
 (function(){
-const TARGETS=[16,34,54,72];
+const TARGETS=[16,34,54,72]; // original combined-credit reference; no longer the promotion gate
+const OPTIONAL_TARGETS={
+ humanities:[8,22,38,52],
+ economics:[4,18,34,48],
+ science:[4,14,30,44]
+};
+window.S8_OPTIONAL_TARGETS=OPTIONAL_TARGETS;
+function electiveCreditCount(){return Math.max(0,Number(state?.electiveCredits)||0)}
+function electiveTarget(year){return OPTIONAL_TARGETS[state.faculty][year-1]}
 const OVERVIEW={
  humanities:["じっくりレポートに向き合う文学部生活","授業の自由度は高いが、毎期の提出物が勝負。"],
  economics:["数字と経営を学ぶ、バランス型の学生生活","必修と選択を組み合わせ、安定した進級を狙う。"],
@@ -151,9 +159,9 @@ render=function(){
  previousRender();
  if(!state||state.phase==="end")return;
  const year=Math.floor(state.semester/2)+1;
- const goal=TARGETS[year-1],delta=Math.max(0,goal-state.credits);
+ const goal=electiveTarget(year),delta=Math.max(0,goal-electiveCreditCount());
  const stage=$("year-stage-goal");
- stage.textContent="🎓 "+year+"年次の進級ライン：累計"+goal+"単位 ／ 現在"+state.credits+"単位 ／ あと"+delta+"単位";
+ stage.textContent="🎯 選択科目の進級必要単位：累計"+goal+"単位 ／ 取得済み"+electiveCreditCount()+"単位 ／ あと"+delta+"単位　※必修は別に卒業までに取得";
  stage.classList.toggle("danger",state.semester%2===1&&delta>14);
  const days=getActivityBlocks().map(readable);
  $("activity-schedule").textContent=days.length?"今期の活動："+days.join("・")+" （"+days.length+"コマ）":"活動なし・学業優先";
@@ -182,15 +190,15 @@ function injectMandatoryResult(){
  const box=$("year-stage-result");if(!box)return;
  box.classList.add("hidden");
  if(!state||state.phase!=="reveal"||state.revealIndex<state.results.length||state.semester%2===0)return;
- const yr=Math.floor(state.semester/2)+1,goal=TARGETS[yr-1];
+ const yr=Math.floor(state.semester/2)+1,goal=electiveTarget(yr),obtained=electiveCreditCount();
  const missing=(state.failedRequired||[]).filter(x=>!state.passedIds.includes(x.canonicalId));
  const missingPlacement=(state.placementFailure||[]).length;
- const passedCredits=state.credits>=goal;
+ const passedCredits=obtained>=goal;
  const ok=passedCredits&&(yr<4||(missing.length===0&&missingPlacement===0));
  box.className="year-stage-result "+(ok?"cleared":"failed");
  box.textContent=yr===4
-  ?(ok?"🎓 卒業条件達成！":"❌ GAME OVER｜卒業要件未達")+"　累計"+state.credits+" / "+goal+"単位　未取得必修"+missing.length+"科目"+(missingPlacement?"　必修配置不能"+missingPlacement+"件":"")
-  :(ok?"🎓 "+yr+"年次CLEAR！":"⚠ "+yr+"年次の進級要件不足")+"　累計"+state.credits+" / "+goal+"単位"+(!ok?"　このまま進むと留年判定。":"");
+  ?(ok?"🎓 卒業条件達成！":"❌ GAME OVER｜卒業要件未達")+"　選択科目"+obtained+" / "+goal+"単位　未取得必修"+missing.length+"科目"+(missingPlacement?"　必修配置不能"+missingPlacement+"件":"")
+  :(ok?"🎓 "+yr+"年次CLEAR！":"⚠ "+yr+"年次の進級要件不足")+"　選択科目"+obtained+" / "+goal+"単位"+(!ok?"　このまま進むと留年判定。":"");
 };
 const previousRenderReveal=renderReveal;
 renderReveal=function(){
@@ -238,7 +246,7 @@ const oldAdvance=advance;
 advance=function(){
  if(!state||state.phase!=="reveal"||state.revealIndex<state.results.length)return;
  const year=Math.floor(state.semester/2)+1;
- if(state.semester%2===1&&state.semester<7&&state.credits<TARGETS[year-1]){
+ if(state.semester%2===1&&state.semester<7&&electiveCreditCount()<electiveTarget(year)){
   clearTimeout(revealTimer);state.stageFailYear=year;state.phase="end";save();render();window.scrollTo(0,0);return
  }
  oldAdvance()
@@ -249,7 +257,7 @@ renderEnd=function(){
  const el=$("ending-content");el.replaceChildren();
  const h=document.createElement("h2");h.textContent=state.stageFailYear+"年次 留年";el.append(h);
  const s=document.createElement("div");s.className="hero-score";s.textContent="進級要件 未達";el.append(s);
- const p=document.createElement("p");p.textContent="累計"+state.credits+"単位 ／ 必要"+TARGETS[state.stageFailYear-1]+"単位。進級要件を満たせなかったため、来年度のスキル3択は発生しません。時間割を組み直して再挑戦してください。";el.append(p);
+ const p=document.createElement("p");p.textContent="選択科目："+electiveCreditCount()+" / 必要"+electiveTarget(state.stageFailYear)+"単位。選択科目の単位数不足で進級できず、来年度のスキル3択は発生しません。必修科目は卒業までに全取得が必要です。";el.append(p);
  const details=document.createElement("p");details.className="smallhint";details.textContent="SCORE "+fmt(state.score)+" pt · 学生生活："+FACULTIES[state.faculty].name+" × "+ACTIVITIES[state.activity].name;el.append(details);
 };
 const oldRetry=$("retry-btn").onclick;
