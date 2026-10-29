@@ -1,9 +1,9 @@
 {
   "id": "S8",
   "title": "履修登録を完了してください。（仮）",
-  "version": "0.5.2",
-  "updated_at_jst": "2026-10-29 15:47 JST",
-  "phase": "Phase 4: updated retake and campus mobility prototype; source compilation and mock-DOM simulation complete; real browser QA pending",
+  "version": "0.5.3",
+  "updated_at_jst": "2026/10/29 16:02 JST",
+  "phase": "Phase 4: compulsory graduation rule and last-chance placements audited with mock DOM; real iOS browser pending",
   "scope": "4 years / 8 terms playable; 3 faculties; 5 extracurricular difficulty setups",
   "features": [
     "tap an unoccupied timetable slot to choose courses that include that period",
@@ -34,7 +34,10 @@
     "v0.5.2: from year 3, elective seminars / specialist lectures use another campus and switching requires one timetable slot of movement, displayed in lavender",
     "v0.5.2: same-campus consecutive lessons do not require intermediate travel, no travel slot after fifth period",
     "v0.5.2: consecutive lecture pairs penalize both classes, heavy teaching days and high total occupied slots penalize all courses",
-    "v0.5.2: removed artificial 10-credit minimum for registration to prevent mandatory-backlog deadlock"
+    "v0.5.2: removed artificial 10-credit minimum for registration to prevent mandatory-backlog deadlock",
+    "v0.5.3: graduation requires >=72 credits and zero failed compulsory courses; otherwise explicit GAME OVER (even with new high score)",
+    "v0.5.3: year-four spring mandatory failures receive a final automatic retake in fourth-year autumn",
+    "v0.5.3: fourth-year mandatory schedule clashes relocate current mandatory and, where necessary, extracurricular periods; no silent postponement beyond graduation"
   ],
   "ai_audit": {
     "structure": "PASS: JS bracket/quote balance; no missing DOM IDs from game.js and expansion.js (124 $ references against 57 HTML IDs)",
@@ -62,35 +65,37 @@
     "score_mechanics_v05": "2 credits → 200 basic points; 4 credits → 400; plus +50 × min(5, combo index-1). Annual spring midterm 0, autumn passed earns 4 credits×100pt. Semester bonuses shown separately.",
     "static_v05": "PASS: game.js, expansion.js, balance.js, polish.js pass JS compilation; HTML DOM IDs for referenced fields present. Legacy hidden search input kept to protect expansion.js init binding.",
     "outstanding": [
-      "Critical: actual smartphone visual/interaction QA not yet performed; campus transition and compulsory shift must be checked in mobile browser",
-      "Gameplay balance: 23/150 automated heuristic runs made it to year 4 completion under harsh current penalties; high-activity paths may need rebalance",
-      "Mobility note: full external-campus realism and campus-to-campus travel logistics simplified to one period, and movements past fifth period not modeled",
-      "Resume upgrade from v0.5 to new campus mapping needs real-browser check",
-      "Specialist-campus colors and slot reservations verified in logic, not in real iOS/Android rendering",
-      "INDEX under project master not modified."
+      "Real smartphone/browser interaction and final-year GAME OVER visual QA have not been performed.",
+      "Gameplay difficulty is very punishing: 6/300 modeled strategies graduated; calibrate via human review rather than treat as measured completion rate.",
+      "The physically impossible mandatory occupancy fallback exists for corrupted or pathological data and results in GAME OVER, not silent rollover.",
+      "Saved sessions already mid-way through fourth-year autumn before v0.5.3 may not have the special rescue lesson in their existing offers; restart or advance into a newly generated term to see current scheduling.",
+      "Other departments and root INDEX unchanged."
     ],
     "v052_static": "PASS: all 5 JavaScript bundles compile and DOM IDs referenced by scripts exist. Source-layer first boot was checked; ADVANCED IIFE private symbol access was corrected.",
     "v052_firstyear_expected_credits": "750 faculty×activity×seed models for each target load: 10 registered credits -> 7.50 expected earned, 14 -> 8.79, 20 -> 7.20, approximately 30 -> 1.69. Static expected-credit analysis, not measured grade outcomes.",
     "v052_mandatory": "PASS: 15 faculty×activity fixed-retake probes: all 15 repeated failed mandatory courses in the original slots next academic year. New-lectures shift to later slots; none overlapped activities or fixed classes.",
     "v052_runtime": "PASS with balance caveat: 150 complete-path mock-DOM runs (3 faculties × 5 activities × 10 seeded scenarios): 151 automatic required time changes, 257 registered backlog retakes, 41 visible travel periods, 0 travel overlaps, 0 execution errors. Of the 150 runs, 23 reached the end and 127 failed yearly stage requirements. Five terms had <10 available/selected credits; the prior artificial minimum was removed and grade reveal proceeded. Outcomes are highly punishing, especially for activity-heavy students, and require human difficulty review.",
-    "v052_campus": "In-term campus movement marks an available period immediately after the last lesson before a campus switch, or after the last specialist-campus lesson when it fits; adjacent cross-campus classes cannot register; no movement after fifth period."
+    "v052_campus": "In-term campus movement marks an available period immediately after the last lesson before a campus switch, or after the last specialist-campus lesson when it fits; adjacent cross-campus classes cannot register; no movement after fifth period.",
+    "v053_runtime": "PASS: 300 simulated complete playthroughs across three faculties/five activities/20 seeds. 54 reached fourth-year final results, of which six graduated, 44 failed with compulsory courses outstanding and four failed on credits alone. 342 shifted compulsory placements, 57 last-chance spring-failure retakes, zero mandatory overlaps, zero activity overlaps, zero placement deferrals, zero execution errors. Difficulty is severe; this is not human testing.",
+    "v053_targeted": "PASS: 15/15 faculty×activity seeded fourth-year-spring-failure fixtures rescheduled a mandatory retake in fourth-year autumn; 15/15 compulsory-missing conditions displayed GAME OVER at >=72 credits; 15/15 credits-plus-all-compulsories conditions displayed graduation; stress case with 30 periods forced an explicit placement failure and GAME OVER.",
+    "v053_static": "PASS: all five JS source files parse; referenced HTML IDs resolve in source; grade reveal year-4 CLEAR now checks compulsory backlog and placement failure."
   },
   "browser_qa": {
     "performed": false,
     "status": "pending",
     "devices": [],
-    "notes": "All checks are static JS compilation and mock DOM simulations; no actual website tap/visual QA."
+    "notes": "Mock DOM simulation and JS compile only; no smartphone browser test."
   },
   "human_review": {
     "performed": false,
-    "target_version": "0.5.2",
+    "target_version": "0.5.3",
     "requested_checks": [
-      "Fail a first-year required course; in second year first term verify original day/period is automatically taken",
-      "Observe whether new mandatory is shifted later, not deferred, on clashing slot",
-      "Elect upper-year specialty-campus course and verify movement block appears and cannot be overwritten",
-      "Try back-to-back courses and many filled lessons; chance should drop across all courses",
-      "Try low-credit registration and verify no progress deadlock",
-      "Evaluate activity-heavy difficulty and real graduation success"
+      "Fail first-term compulsory and observe auto-retake on next year's same period",
+      "Fail fourth-year spring compulsory; in autumn verify last-chance retake appears",
+      "Verify compulsory backlog results in GAME OVER despite >72 earned credits",
+      "Verify all compulsory passes plus >=72 credits produces a genuine graduation",
+      "Check shifted compulsory and activity blocks for collisions",
+      "Judge completion odds and difficulty with actual human play"
     ]
   },
   "assets": {
@@ -98,12 +103,12 @@
     "work_required": false
   },
   "next": {
-    "owner": "S8 dedicated chat and human reviewer",
+    "owner": "S8 dedicated Chat and human reviewer",
     "actions": [
-      "Do real iOS browser QA for shifted required, movement display and interaction",
-      "Tune stage requirements/grade probabilities with human playtest; heavy activity completion is very rare",
-      "Review save/resume across v0.5.0->0.5.2 and persisted retakes",
-      "Notify index master to display S8 v0.5.2"
+      "Run actual mobile-browser first-time and final-semester QA",
+      "Measure human graduation rates before rebalancing harsh completion risk",
+      "Verify resume compatibility with mid-fourth-year saves and semester migration",
+      "Inform index master S8 is now v0.5.3"
     ]
   },
   "edits": {
