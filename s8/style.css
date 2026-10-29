@@ -86,3 +86,9 @@
 /* S8 v0.5.1: compulsory retakes create accumulating timetable pressure */
 .retake-warning{font-size:12px;font-weight:750;line-height:1.65;border-radius:10px;border:1px solid #e7a76c;background:#513629;color:#ffdfbd;padding:10px 12px;margin:8px 0;box-shadow:inset 4px 0 #f7c26c}
 @media(max-width:760px){.retake-warning{font-size:11px;padding:8px 10px}}
+
+/* v0.5.2: physical movement between main and specialty campuses */
+.cell.travel{background:linear-gradient(135deg,#493965,#614e77)!important;border:2px dashed #cabaff!important;color:#f0e5ff!important}
+.cell.travel .cn{font-size:10px!important;letter-spacing:.03em}
+.legend-dot.travel{background:repeating-linear-gradient(135deg,#493965 0 3px,#ab88bf 3px 6px);border:1px dashed #d3b8f1}
+.campus-summary{font-size:11px;line-height:1.6;color:#dacbff;background:#242b44;border-left:3px solid #a98ada;margin:6px 0 9px;padding:7px 10px;border-radius:4px}
