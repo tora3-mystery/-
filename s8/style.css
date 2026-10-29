@@ -122,3 +122,7 @@
 .year-skill-panel .year-skill-options .year-skill-option:hover,.appeal-option:hover{border-color:#f4d091;background:#354765}
 .year-skill-panel .skill-score-detail{font-size:11px;margin:7px 0 2px;color:#f5ddb5}
 @media(max-width:760px){.cheat-alert{padding:10px 11px;font-size:12px}}
+
+/* S8 v0.6.1: readable reasons for unavailable timetable periods */
+.cell.slot-unavailable .cn{font-size:9px!important;line-height:1.28!important;font-weight:700!important;color:#93a7c4!important;overflow-wrap:anywhere}
+@media(max-width:760px){.cell.slot-unavailable .cn{font-size:8px!important;line-height:1.25!important}}
