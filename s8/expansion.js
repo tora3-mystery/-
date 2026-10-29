@@ -154,6 +154,12 @@ createOffers=function(){
      if(positions.every(x=>!used.has(x))){assigned=positions;break}
     }
    }
+   // A Saturday or late-week required lecture sometimes has no free later day.
+   // Explore earlier weekdays before declaring this compulsory class unplaceable.
+   for(let d=0;d<day&&!assigned;d++)for(let p=0;p+span<5;p++){
+    const positions=relative.map(v=>d*5+p+v);
+    if(positions.every(x=>!used.has(x))){assigned=positions;break}
+   }
    if(!assigned)return null;
    assigned.forEach(x=>{chosen.push(x);used.add(x)})
   }
