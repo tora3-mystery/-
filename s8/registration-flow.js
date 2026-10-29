@@ -163,8 +163,8 @@ function reviewRow(c){
  for(const part of chance.breakdown){
   const x=document.createElement("div");x.textContent=part.name+" "+(part.n>0?"+":"")+part.n.toFixed(1)+"ポイント";details.append(x)
  }
- if(chance.adjust){const x=document.createElement("div");x.textContent=chance.guaranteed?"必修予習スキル・各段階の上限調整 "+(chance.adjust>=0?"+":"")+chance.adjust.toFixed(1)+"ポイント":"キャンパス移動・段階別の上限/丸め調整 "+(chance.adjust>=0?"+":"")+chance.adjust.toFixed(1)+"ポイント";details.append(x)}
- const total=document.createElement("b");total.textContent="最終取得率 "+chance.final+"%";details.append(total);
+ if(chance.adjust){const x=document.createElement("div");x.textContent=chance.guaranteed?"必修予習の100%保証・補正の適用順 "+(chance.adjust>=0?"+":"")+chance.adjust.toFixed(1)+"ポイント":"その他の補正・上限・丸めによる差分 "+(chance.adjust>=0?"+":"")+chance.adjust.toFixed(1)+"ポイント";details.append(x)}
+ const total=document.createElement("b");total.textContent="最終取得率 "+chance.final+"%（この数値を成績抽選に使用）";details.append(total);
  row.append(details);
  if(c.type==="required"&&(state.skills||[]).some(sk=>sk.id==="mandatory_master")){
   const earliest=Math.min(...c.slots),prior=earliest-1;
