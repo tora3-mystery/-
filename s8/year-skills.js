@@ -196,11 +196,27 @@ beginReveal=function(){
   }
  }
 };
+const beforeSkillEnd=endReveal;
+endReveal=function(){
+ const first=Boolean(state?.phase==="reveal"&&state.revealIndex===state.results.length&&!state.history.some(h=>h.term===state.semester));
+ beforeSkillEnd();
+ if(!first||!active("club_retire")||!state||state.phase!=="reveal")return;
+ // Retirement opens club periods but loses a modest score every term.
+ const deduction=Math.min(120,state.score),h=state.history.find(x=>x.term===state.semester);
+ state.score-=deduction;state.termScore-=deduction;
+ if(h){h.score-=deduction;h.skillScoreAdjustment=-deduction}
+ save();renderReveal()
+};
 const originalReveal=renderReveal;
 renderReveal=function(){
  originalReveal();
  if(!state||state.phase!=="reveal")return;
  const cheat=$("cheat-alert"),done=state.revealIndex===state.results.length;
+ const h=state.history.find(x=>x.term===state.semester);
+ if(done&&h?.skillScoreAdjustment<0){
+  const d=$("reveal-breakdown");
+  if(d&&!d.textContent.includes("サークル引退"))d.textContent+=" ／ サークル引退："+fmt(h.skillScoreAdjustment)+"pt"
+ }
  const detected=done&&state.cheatCaughtTerm===state.semester;
  cheat.classList.toggle("hidden",!detected);
  if(detected){
