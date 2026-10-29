@@ -69,8 +69,8 @@ const UPPER={
  [C("biz_strategy","戦略と政策",2,4,"試験",[["月2"],["月1"],["土3"],["火3"]])],[C("review_econ","総合演習",2,4,"レポート",[["金2"],["金1"],["土1"],["木3"]])]
  ],
  science:[
- [C("engineering","工学数理",2,5,"試験",[["月2"],["月1"],["土2"],["火3"]]),C("sci_experiment3","物理実験Ⅲ",2,4,"実験",[["水3","水4"],["月2","月3"],["土2","土3"],["金1","金2"]])],
- [C("engineering2","情報数理",2,5,"試験",[["金2"],["金1"],["土3"],["木3"]]),C("sci_experiment4","化学実験Ⅳ",2,5,"実験",[["水3","水4"],["月2","月3"],["土2","土3"],["金1","金2"]])],
+ [C("engineering","工学数理",2,5,"試験",[["月2"],["月1"],["土2"],["火3"]]),C("sci_experiment3","専門実験Ⅰ（物理）",2,4,"実験",[["水3","水4"],["月2","月3"],["土2","土3"],["金1","金2"]])],
+ [C("engineering2","情報数理",2,5,"試験",[["金2"],["金1"],["土3"],["木3"]]),C("sci_experiment4","専門実験Ⅱ（化学）",2,5,"実験",[["水3","水4"],["月2","月3"],["土2","土3"],["金1","金2"]])],
  [C("engineering3","専門計算",2,5,"試験",[["月2"],["月1"],["土1"],["火3"]])],[C("engineering4","先端解析",2,5,"試験",[["金2"],["金1"],["土2"],["木3"]])],
  [C("sci_project","卒研準備",2,4,"課題",[["月2"],["月1"],["土3"],["火3"]])],[C("sci_report","技術報告",2,4,"レポート",[["金2"],["金1"],["土1"],["木3"]])]
  ]
@@ -222,7 +222,7 @@ createOffers=function(){
   const eligible=f.retryEligibleTerm??original+2;
   if(!(term===7&&original<7)&&(term<eligible||term%2!==original%2))continue;
   const baseName=f.name.replace(/^【再履修】/,"");
-  const next={...f,id:"retry_"+f.canonicalId,name:baseName,type:"required",term,slots:f.slots.slice(),canonicalId:f.canonicalId,retake:true,firstFailedTerm:original,rumor:"この時間に再履修が固定されています。",net:"落とすと翌年度の同じ学期・同じコマで再び必修になります。"};
+  const next={...f,id:"retry_"+f.canonicalId,name:baseName,type:"required",term,slots:f.slots.slice(),canonicalId:f.canonicalId,retake:true,firstFailedTerm:original,rumor:"この時間に再履修が固定されています。",net:"再履修でも未取得なら卒業要件が残る。ほかの講義と重なる場合は時限を調整することがある。"};
   if(!addFixed(next)){
    const shifted=shiftedSlots(next.slots)||emergencySlots(next);
    if(shifted){
