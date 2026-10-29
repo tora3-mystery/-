@@ -122,10 +122,41 @@ createOffers=function(){
  const pool=(half===0?WEEK_1:WEEK_2).concat(EXTRA,SPECIALS[state.faculty],ADVANCED[state.faculty].filter(c=>!c.yearMin||year>=c.yearMin),half===0?ANNUAL[state.faculty]:[]);
  const optional=pool.filter(c=>!state.passedIds.includes(c.id)&&!state.annualCourses.some(a=>a.id===c.id)).map(c=>courseMaterialize(c,term));
  for(const c of optional)if(c.prereq)c.prereqName=prereqLabels[c.prereq]||c.prereq;
- // Failing a mandatory course reserves its *original* period in the same semester next year.
- // Older backlogs have priority; a new compulsory course with a timetable clash is deferred.
- const occupied=new Set(carry.flatMap(c=>c.slots)),fixed=[],deferred=[];
- const addFixed=c=>{if(c.slots.some(p=>occupied.has(p)))return false;fixed.push(c);c.slots.forEach(p=>occupied.add(p));return true};
+ // Mandatory repeats have first priority at their original weekday and period.
+ // When a new mandatory conflicts, exceptionally move that new class to a later period.
+ const activities=new Set(getActivityBlocks());
+ const occupied=new Set(carry.flatMap(c=>c.slots)),fixed=[],deferred=[],adjusted=[];
+ const addFixed=c=>{
+  if(c.slots.some(p=>occupied.has(p)||activities.has(p)))return false;
+  fixed.push(c);c.slots.forEach(p=>occupied.add(p));return true
+ };
+ const shiftedSlots=original=>{
+  const shape=original.slice(),maxPeriod=Math.max(...shape.map(p=>p%5));
+  // First keep every teaching day and course structure, shifting all periods equally.
+  for(let offset=1;offset<=4-maxPeriod;offset++){
+   const translated=shape.map(p=>p+offset);
+   if(translated.every((p,i)=>Math.floor(p/5)===Math.floor(shape[i]/5)&&!occupied.has(p)&&!activities.has(p)))return translated
+  }
+  // If different days or a block ending in 5th period prevents a simple shift,
+  // move each day-block independently, preferring the same day and then later days.
+  const groups=new Map();
+  for(const p of shape){const d=Math.floor(p/5);if(!groups.has(d))groups.set(d,[]);groups.get(d).push(p%5)}
+  const chosen=[],used=new Set([...occupied,...activities]);
+  for(const [day,periods] of groups){
+   periods.sort((a,b)=>a-b);
+   let assigned=null;
+   const relative=periods.map(p=>p-periods[0]),span=Math.max(...relative);
+   for(let d=day;d<6&&!assigned;d++){
+    for(let p=(d===day?periods[0]+1:0);p+span<5;p++){
+     const positions=relative.map(v=>d*5+p+v);
+     if(positions.every(x=>!used.has(x))){assigned=positions;break}
+    }
+   }
+   if(!assigned)return null;
+   assigned.forEach(x=>{chosen.push(x);used.add(x)})
+  }
+  return chosen
+ };
  const backlogs=state.failedRequired.slice().filter(f=>!state.passedIds.includes(f.canonicalId));
  backlogs.sort((a,b)=>(a.firstFailedTerm??a.failedTerm??a.term??0)-(b.firstFailedTerm??b.failedTerm??b.term??0));
  for(const f of backlogs){
@@ -138,12 +169,20 @@ createOffers=function(){
  }
  for(const c of current){
   if(state.passedIds.includes(c.canonicalId))continue;
-  if(!addFixed(c)){
+  if(addFixed(c))continue;
+  const original=c.slots.slice(),shift=shiftedSlots(original);
+  if(shift){
+   c.slots=shift;c.movedMandatory=true;c.originalSlots=original;
+   if(!addFixed(c))throw Error("mandatory shift did not resolve collision");
+   adjusted.push(c.name+"："+original.map(p=>DAYS[Math.floor(p/5)]+(p%5+1)).join("・")+"→"+shift.map(p=>DAYS[Math.floor(p/5)]+(p%5+1)).join("・"));
+  }else{
+   // Only in a physically full timetable: preserve the unmet requirement to avoid losing graduation obligations.
    const old=state.failedRequired.find(f=>f.canonicalId===c.canonicalId);
    if(!old)state.failedRequired.push({...c,firstFailedTerm:term,failedTerm:term,retryEligibleTerm:term+2,deferred:true});
-   deferred.push("新しい必修「"+c.name+"」：再履修と重なるため翌年度へ繰越");
+   deferred.push("新しい必修「"+c.name+"」：空きがなく繰越（例外）");
   }
  }
+ state.shiftedRequired=adjusted;
  state.deferredRequired=deferred;
  // Electives never include discretionary retake: compulsory backlogs are automatically placed.
  state.offers=fixed.concat(carry,optional);
