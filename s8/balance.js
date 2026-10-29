@@ -197,7 +197,7 @@ renderReveal=function(){
 };
 const oldBegin=beginReveal;
 beginReveal=function(){
- if(creditLoad()<10)return;
+ 
  oldBegin();
  if(state.semester!==6)return;
  clearTimeout(revealTimer);
