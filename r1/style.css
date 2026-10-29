@@ -165,3 +165,26 @@
 @keyframes viral-appear{0%{opacity:.15;transform:translateY(8px) scale(.97)}100%{opacity:1;transform:none}}
 @media(max-width:760px){.travel-head{padding:14px}.public-review{padding:10px}.public-review>p{font-size:13px}.public-review .reply p{font-size:12px}.business-story{padding:12px}.viral-event{padding:14px}}
 @media(prefers-reduced-motion:reduce){.viral-event{animation:none}}
+
+/* R1 alpha 0.6: the shopping street gains and loses tenants. */
+.storefront.teishoku{background:linear-gradient(#597065 0 29%,#c1c8ae 29% 100%)}
+.storefront.teishoku:before{background:repeating-linear-gradient(90deg,#8fafa0 0 18px,#efe4c3 18px 35px)}
+.storefront.teishoku .sign{background:#426052;color:#fff3d9;border-color:#b1ccaa}
+.shop-count{font-size:12px;color:#dde5df;margin:4px 0 11px;font-weight:700}
+.shop-card.closed-card{opacity:.75;border-color:#717480;background:#242634}
+.shop-card.closed-card:hover{opacity:1}.shop-card.closed-card .tap{color:#a7c5ce}
+.shop-announcement{border-radius:13px;margin:10px 0 12px;padding:11px 14px}
+.shop-announcement strong{font-size:15px;display:block}
+.shop-announcement p{font-size:12px;margin:6px 0 0;line-height:1.5}
+.shop-announcement.new,.opening-event{border:2px solid #efd28f;background:linear-gradient(115deg,#354f4a,#233b43);box-shadow:0 8px 26px #e9c77129}
+.shop-announcement.ended,.closing-event{border:2px solid #b3acb1;background:linear-gradient(115deg,#484047,#292d3b)}
+.lifecycle-events{display:grid;gap:12px;margin:12px 0 18px}
+.lifecycle-events article{padding:16px;border-radius:14px}
+.lifecycle-events h3{font-size:clamp(19px,5vw,27px);line-height:1.4;margin:7px 0;color:#f9e1b7}
+.lifecycle-events p{font-size:13px;line-height:1.6;margin:8px 0;color:#e0e7e3}
+.lifecycle-events .opening-event{animation:open-shimmer .7s ease-out both}
+.evolution-box.has-closure{border:2px solid #8d9199;background:linear-gradient(130deg,#292b35,#20232b)}
+.evolution-box.has-closure .transformation-kicker{background:linear-gradient(90deg,#636068,#30323d);border-color:#c0bdc6}
+@keyframes open-shimmer{0%{opacity:.3;transform:translateY(9px) scale(.97)}100%{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){.lifecycle-events .opening-event{animation:none}}
+@media(max-width:380px){.shop-announcement{padding:10px}.lifecycle-events article{padding:13px}}
