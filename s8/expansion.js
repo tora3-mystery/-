@@ -324,7 +324,7 @@ function openSlot(pos){
   list.append(b);
  }
  if(!matches.length){const p=document.createElement("p");p.className="smallhint";p.textContent="このコマを含む候補はありません。";list.append(p)}
- $("slot-picker").classList.remove("hidden")
+ $("slot-picker").classList.remove("hidden");const body=$("slot-picker").querySelector(".picker-body");if(body)body.scrollTop=0;const reset=()=>{const e=$("slot-picker").querySelector(".picker-body");if(e)e.scrollTop=0};if(window.requestAnimationFrame)window.requestAnimationFrame(reset)
 }
 function closeSlot(){currentSlot=null;$("slot-picker").classList.add("hidden")}
 const previousOpenCourse=openCourse;
