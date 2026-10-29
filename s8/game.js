@@ -11,7 +11,7 @@ const FACULTIES = {
 const ACTIVITIES = {
   none:{name:"学業専念",desc:"拘束なし／全科目の取得率+5%",blocks:[],bonus:0,modifier:5},
   club:{name:"音楽サークル",desc:"月5・水5を使用／レポート系+4%＆今期+250pt",blocks:["月5","水5"],bonus:250,modifier:0},
-  job:{name:"塾講師バイト",desc:"火5・木5を使用／学期+800pt、取得率-2%",blocks:["火5","木5"],bonus:800,modifier:-2}
+  job:{name:"塾講師バイト",desc:"月4・月5・金5／週3コマ／学期+800pt、取得率-2%",blocks:["月4","月5","金5"],bonus:800,modifier:-2}
 };
 let state=null, facultyChoice="economics", activityChoice="none", filterChoice="all", focused=null, revealTimer=null, toastTimer=null;
 const base=(id,name,credits,diff,method,slotSets,more={})=>({id,name,credits,diff,method,slotSets,...more});
