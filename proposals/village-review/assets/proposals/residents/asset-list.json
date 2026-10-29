@@ -1,0 +1,141 @@
+{
+  "category": "resident-portraits",
+  "count": 12,
+  "files": [
+    {
+      "id": "resident-young-woman",
+      "png": "resident-young-woman.png",
+      "webp": "resident-young-woman.webp",
+      "width": 256,
+      "height": 256,
+      "pngSha256": "db3ed91db1e8ad71093086ae1a788f9e13ad93cc7672fa4d0fd41b03b266b3bf",
+      "webpSha256": "bbac0b53d382c1f61e42576c6e7ae95821486eb4f0f00ebdf96202e3773cfa52",
+      "pngBytes": 86466,
+      "webpBytes": 19896
+    },
+    {
+      "id": "resident-young-man",
+      "png": "resident-young-man.png",
+      "webp": "resident-young-man.webp",
+      "width": 256,
+      "height": 256,
+      "pngSha256": "2b1b2b8c8694abf12b70685035d1c029421630d1476510ddd83c998186e6ad66",
+      "webpSha256": "fc53eb6426754c2298cb303c182d56bd814bd17e14529edfc5916e7eb6dbb9d0",
+      "pngBytes": 81466,
+      "webpBytes": 17724
+    },
+    {
+      "id": "resident-middle-woman",
+      "png": "resident-middle-woman.png",
+      "webp": "resident-middle-woman.webp",
+      "width": 256,
+      "height": 256,
+      "pngSha256": "453dc665c2756a23aa737d5a291c5e98be2e14dab14569be1b0e51405b725483",
+      "webpSha256": "46cfb117e88a739713ad5040be00c4b366cd00420a1191961fa5de5a887b4c5f",
+      "pngBytes": 87053,
+      "webpBytes": 19448
+    },
+    {
+      "id": "resident-middle-man",
+      "png": "resident-middle-man.png",
+      "webp": "resident-middle-man.webp",
+      "width": 256,
+      "height": 256,
+      "pngSha256": "97a3e1b8ff52eb2cd76852b76afcda4fdef0ad30dbde957a9ffd1006e979098d",
+      "webpSha256": "e9ad666f3a6d9664a635db1600436dad3028a009c7413b3694b2a5fb3087f6fe",
+      "pngBytes": 92530,
+      "webpBytes": 21466
+    },
+    {
+      "id": "resident-senior-woman",
+      "png": "resident-senior-woman.png",
+      "webp": "resident-senior-woman.webp",
+      "width": 256,
+      "height": 256,
+      "pngSha256": "9ebfe0bf63bed43113ab42584cda4626f3c4f15b9eeaf211358f98bc7b77d58e",
+      "webpSha256": "2bfb752a1939554f48a882d82b6f971f6232e1bb4ee432542054cbb8295448cf",
+      "pngBytes": 89159,
+      "webpBytes": 20718
+    },
+    {
+      "id": "resident-senior-man",
+      "png": "resident-senior-man.png",
+      "webp": "resident-senior-man.webp",
+      "width": 256,
+      "height": 256,
+      "pngSha256": "4c8b281c4d220d5e445c07d58841ddf9bddff0b6780dd7bf479d2806d04cabb2",
+      "webpSha256": "b88444a4668def6625ef33e1e338d0d0b444e7540947ce8866cab0de7ab523c1",
+      "pngBytes": 88345,
+      "webpBytes": 20364
+    },
+    {
+      "id": "resident-student",
+      "png": "resident-student.png",
+      "webp": "resident-student.webp",
+      "width": 256,
+      "height": 256,
+      "pngSha256": "c86993a7d9c7a0155586f8e29eaa1ef1f7c11cf39b553eab395d8d680cd8ae05",
+      "webpSha256": "232155205a3346ac5a4656f39fd3a5e49641952d4121455c4db2f8dd5b397742",
+      "pngBytes": 82124,
+      "webpBytes": 19684
+    },
+    {
+      "id": "resident-worker",
+      "png": "resident-worker.png",
+      "webp": "resident-worker.webp",
+      "width": 256,
+      "height": 256,
+      "pngSha256": "ec54b482df51bd2d00f5e3c0d7e32855c0872b1791e822d3db39a1515769bca4",
+      "webpSha256": "8c5c6483fb23c8da815f5b22a6c56cea7139fe617d29f65afca720ab4ec2e8f4",
+      "pngBytes": 95035,
+      "webpBytes": 21572
+    },
+    {
+      "id": "resident-carpenter",
+      "png": "resident-carpenter.png",
+      "webp": "resident-carpenter.webp",
+      "width": 256,
+      "height": 256,
+      "pngSha256": "b3b076e307ce834331ac83c0b2724230a208e73e119801f605dfe08ad6a21567",
+      "webpSha256": "8f58592a2a9f2e4182b2aed35e8334416e32651b0d2e3f63495b03f64facbbb8",
+      "pngBytes": 95289,
+      "webpBytes": 21530
+    },
+    {
+      "id": "resident-festival",
+      "png": "resident-festival.png",
+      "webp": "resident-festival.webp",
+      "width": 256,
+      "height": 256,
+      "pngSha256": "bd3689af3c961b7bb825215bdf7919a09869f37eda7c0b9e4f7d41fed24d7eaa",
+      "webpSha256": "3e40ed30545cc56cc96482dcbc52198ee114a7c3c915343fd940864764ed12a8",
+      "pngBytes": 94631,
+      "webpBytes": 21450
+    },
+    {
+      "id": "resident-walker",
+      "png": "resident-walker.png",
+      "webp": "resident-walker.webp",
+      "width": 256,
+      "height": 256,
+      "pngSha256": "455f4cd023717915546470e35d855bd1654ce6a760d064b9e73cce8484310ac8",
+      "webpSha256": "c70f22b87a1db383abdd3fde67a091e412e9ddf90b485f00c997d6c4e2d5bc20",
+      "pngBytes": 90415,
+      "webpBytes": 20432
+    },
+    {
+      "id": "resident-shopper",
+      "png": "resident-shopper.png",
+      "webp": "resident-shopper.webp",
+      "width": 256,
+      "height": 256,
+      "pngSha256": "40918b1316c40aba5f0a3642ac5118c601a177ce3ddacce9318a6e838ee58e03",
+      "webpSha256": "450c7a651a6430c3d17c94a9513e9e41c3f8e6920eba00eaa2adcf4d994e1b95",
+      "pngBytes": 90422,
+      "webpBytes": 20442
+    }
+  ],
+  "contactSheet": "contact-sheet-residents.png",
+  "contactSheetSha256": "8de88e8f23cd82640c13cbdf611e8acc474f4ed782d9fec32df3b871d990155f",
+  "contactSheetBytes": 775160
+}
