@@ -2,6 +2,24 @@
 /* S8 v0.6.0 — semester grading, stage presentation and final-year petitions */
 (function(){
 const REST_BONUS=5,REPEAT_BONUS=4,HONOR_BONUS=6;
+function playGradeSound(type){
+ try{
+  if(localStorage.getItem("s8_audio_v030")==="off")return;
+  const Context=window.AudioContext||window.webkitAudioContext;
+  if(!Context)return;
+  const ctx=new Context();
+  const notes=type==="perfect"?[523,659,784,1046]:type==="success"?[580,800]:[330,235];
+  notes.forEach((note,i)=>{
+   const begin=ctx.currentTime+i*.09,osc=ctx.createOscillator(),gain=ctx.createGain();
+   osc.type=type==="fail"?"triangle":"sine";osc.frequency.value=note;
+   gain.gain.setValueAtTime(.0001,begin);
+   gain.gain.exponentialRampToValueAtTime(.04,begin+.02);
+   gain.gain.exponentialRampToValueAtTime(.0001,begin+.17);
+   osc.connect(gain);gain.connect(ctx.destination);osc.start(begin);osc.stop(begin+.18)
+  });
+  setTimeout(()=>ctx.close().catch(()=>{}),900)
+ }catch(e){}
+}
 const unlockById={
  stats:["データ分析演習","多変量解析"],
  program:["AI活用演習","Web制作入門","実践プログラミング"],
@@ -141,10 +159,10 @@ function attemptPetition(id){
   if(h){h.passes++;h.credits+=r.credits;h.score+=r.earned;h.required?.filter(x=>x.id===r.canonicalId).forEach(x=>x.status="教授の救済で取得")}
   $("appeal-last").textContent="🎓 "+r.name+"：教授が認めてくれた！ "+r.credits+"単位取得";
   $("appeal-last").className="appeal-last success";
-  playSound("success")
+  playGradeSound("success")
  }else{
   $("appeal-last").textContent="✕ "+r.name+"：お願いしたが、成績は変わらなかった。";
-  $("appeal-last").className="appeal-last fail";playSound("fail")
+  $("appeal-last").className="appeal-last fail";playGradeSound("fail")
  }
  save();renderReveal();renderAppeal()
 }
@@ -173,10 +191,10 @@ endReveal=function(){
   if(state.results.every(r=>r.pass)){
    state.honorAwardedTerm=state.semester;
    if(state.semester<7)state.honorBoostTerm=state.semester+1;
-   playSound("perfect")
+   playGradeSound("perfect")
   }else if(state.results.every(r=>!r.pass)){
    state.allRedTerm=state.semester;
-   playSound("fail")
+   playGradeSound("fail")
   }
   if(state.semester>=6&&appealCandidates().length&&state.appealClosedTerm!==state.semester){
    state.appealPending=true;clearTimeout(revealTimer)
