@@ -101,7 +101,7 @@ function petitionChance(r){
  return Math.max(10,Math.min(52,Math.round(p)))
 }
 function appealCandidates(){
- return state.results.filter(r=>!r.pass&&!r.lotteryLost&&!r.course.annual&&!state.appealResults?.[r.id])
+ return state.results.filter(r=>!r.pass&&!r.lotteryLost&&!(r.course.annual&&state.semester%2===0)&&!state.appealResults?.[r.id])
 }
 function renderAppeal(){
  const panel=$("appeal-panel");if(!panel)return;
