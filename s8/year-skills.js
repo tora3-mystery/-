@@ -284,6 +284,12 @@ resume=function(){
  if(!state)return;
  ensure();
  if(state.phase==="reveal"){
+  // Recover a completed year-end reveal saved by an older version before the draft opened.
+  if(pendingDraft()&&!state.yearSkillPending){
+   state.yearSkillPending=true;
+   draft(Math.floor(state.semester/2)+1);
+   save()
+  }
   if(state.yearSkillPending||state.cheatCaughtTerm===state.semester){
    clearTimeout(revealTimer);
    renderReveal()
