@@ -294,7 +294,7 @@ renderCourses=function(){
 };
 const priorBegin=beginReveal;
 beginReveal=function(){
- if(creditLoad()<10)return;
+ 
  if(state.semester%2===0){
   state.annualCourses=allRegistered().filter(c=>c.annual&&c.type!=="annualCarry").map(c=>({id:c.canonicalId,course:c,midtermOk:false}));
  }
