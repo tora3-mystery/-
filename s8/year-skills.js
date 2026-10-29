@@ -45,7 +45,7 @@ function draft(year){
  state.skillOffers[k]=picks;save();return picks
 }
 function isSchoolYearEnd(){return state?.phase==="reveal"&&state.semester<7&&state.semester%2===1&&state.revealIndex===state.results.length}
-function eligibleForDraft(){return isSchoolYearEnd()&&state.credits>=[16,34,54][Math.floor(state.semester/2)]&&!state.cheatCaughtYear}
+function eligibleForDraft(){return isSchoolYearEnd()&&(state.electiveCredits||0)>=window.S8_OPTIONAL_TARGETS[state.faculty][Math.floor(state.semester/2)]&&!state.cheatCaughtYear}
 function pendingDraft(){const y=Math.floor(state.semester/2)+1;return eligibleForDraft()&&!state.skillChosenYears?.[String(y)]}
 function displayDraft(){
  const panel=$("year-skill-panel");if(!panel)return;
@@ -297,4 +297,7 @@ resume=function(){
  }
 };
 $("resume-btn").onclick=resume;
+// The original next button was assigned before this module wrapped advance().
+// Bind the final dispatcher, otherwise users skip the annual skill selector.
+$("next-btn").onclick=()=>advance();
 })();
