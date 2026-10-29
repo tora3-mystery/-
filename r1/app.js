@@ -10,7 +10,7 @@ const dshop=id=>E.SHOPS.find(x=>x.id===id);
 const dgenre=id=>E.GENRES.find(x=>x.id===id);
 function newGame(){const state=E.createState(Date.now()>>>0);state.introSeen=false;return state}
 function load(){
- try{const raw=localStorage.getItem(KEY);if(raw){const s=JSON.parse(raw);if(s.version===E.VERSION){E.audit(s);return s;}if(["0.1.0-alpha","0.2.0-alpha","0.3.0-alpha","0.3.1-alpha","0.3.2-alpha","0.4.0-alpha","0.4.1-alpha"].includes(s.version)){
+ try{const raw=localStorage.getItem(KEY);if(raw){const s=JSON.parse(raw);if(s.version===E.VERSION){E.audit(s);return s;}if(["0.1.0-alpha","0.2.0-alpha","0.3.0-alpha","0.3.1-alpha","0.3.2-alpha","0.4.0-alpha","0.4.1-alpha","0.5.0-alpha"].includes(s.version)){
  const ramen=s.shops.ramen;
  ramen.scores=Object.fromEntries(E.GENRES.map(g=>[g.id,0]));
  ramen.hardening=false;ramen.stage=0;ramen.route=null;ramen.closed=false;
@@ -21,6 +21,8 @@ function load(){
  if(!s.shops.curry)s.shops.curry=E.createState(s.seed).shops.curry;
  if(!Number.isFinite(s.viralCount))s.viralCount=0;
  if(!Number.isFinite(s.lastViralMonth))s.lastViralMonth=-10;
+ if(!s.shops.teishoku)s.shops.teishoku=E.createState(s.seed).shops.teishoku;
+ for(const d of E.SHOPS){const x=s.shops[d.id];if(typeof x.opened!=="boolean")x.opened=d.id!=="teishoku";if(x.opened&&x.openedMonth==null)x.openedMonth=0;if(!x.opened)x.openedMonth=null;if(!Number.isFinite(x.slowMonths))x.slowMonths=0;if(!("closedReason" in x))x.closedReason=x.closed?"閉店":null;}
  s.version=E.VERSION;E.audit(s);return s;
 }}}
  catch(err){console.warn("R1 save reset:",err)}
@@ -40,14 +42,14 @@ function storefront(v){
 }
 function shopCard(d){
  const v=E.display(game.shops[d.id],d.id),pub=E.publicReviews(game,d.id),rating=(pub.reduce((t,x)=>t+x.star,0)/pub.length).toFixed(1);
- return '<button type="button" class="shop-card '+(d.id===selectedId?"selected":"")+'" data-shop="'+d.id+'" aria-pressed="'+(d.id===selectedId)+'">'+
- storefront(v)+'<span class="card-copy"><span class="small">'+esc(d.category)+' ／ ★'+rating+'（'+pub.length+'件）</span><strong>'+esc(d.name)+'</strong>'+
+ return '<button type="button" class="shop-card '+(d.id===selectedId?"selected":"")+(game.shops[d.id].closed?" closed-card":"")+'" data-shop="'+d.id+'" aria-pressed="'+(d.id===selectedId)+'">'+
+ storefront(v)+'<span class="card-copy"><span class="small">'+esc(d.category)+' ／ '+(game.shops[d.id].closed?"閉店":("★"+rating+"（"+pub.length+"件）"))+'</span><strong>'+esc(d.name)+'</strong>'+
  '<span class="summary">'+esc(v.summary)+'</span><span class="tap">口コミを確認する　›</span></span></button>';
 }
 function recentFeed(id){
  const items=E.publicReviews(game,id).slice().reverse();
  return '<section class="public-reviews" aria-label="来店者の口コミ"><h3>過去の口コミと店主からの返信</h3><p class="section-intro">行く前に、ほかのお客さまの感想を確認できます。</p>'+
- items.map(f=>'<article class="public-review"><div class="meta">'+esc(f.by)+'　'+esc("★".repeat(f.star))+' ／ '+esc(dgenre(f.genre).name)+(f.archived?'　以前の投稿':f.month?'　'+esc(E.MONTHS[f.month-1]):'')+'</div><p>'+esc(f.text)+'</p><div class="reply"><strong>店主からの返信</strong><p>「'+esc(f.reply||"ご意見ありがとうございます。")+'」</p></div></article>').join("")+'</section>';
+ items.map(f=>'<article class="public-review"><div class="meta">'+esc(f.by)+'　'+esc("★".repeat(f.star))+' ／ '+esc(dgenre(f.genre).name)+(f.archived?(game.shops[id].openedMonth>0?'　プレオープンの口コミ':'　以前の投稿'):f.month?'　'+esc(E.MONTHS[f.month-1]):'')+'</div><p>'+esc(f.text)+'</p><div class="reply"><strong>店主からの返信</strong><p>「'+esc(f.reply||"ご意見ありがとうございます。")+'」</p></div></article>').join("")+'</section>';
 }
 function reviewForm(id){
  const d=dshop(id),s=game.shops[id],v=E.display(s,id);
@@ -82,17 +84,21 @@ function tutorial(){
  return '<section class="tutorial" aria-labelledby="tutorialTitle"><div class="tutorial-hero"><span class="eyebrow">出張先での昼休み</span>'+
  '<h2 id="tutorialTitle">毎月この街に、<br>出張でやって来る。</h2><p>昼休みは1時間。今日はどこに入ろう？ 評判の良い店も、気になる返信をする店もあります。</p></div>'+
  '<div class="business-story"><strong>📍 今月も、この商店街でランチ。</strong><p>まずは口コミを読んで、行くお店を選びましょう。食後はあなたも感想を投稿できます。</p></div>'+
- '<div class="tutorial-steps"><article><strong>① 口コミを読む</strong><p>'+E.SHOPS.length+'店舗の評価と店主からの返信を見比べます。</p></article>'+
+ '<div class="tutorial-steps"><article><strong>① 口コミを読む</strong><p>営業中の3店舗の評価と店主からの返信を見比べます。</p></article>'+
  '<article><strong>② お店で食べる</strong><p>行き先を決めます。洋菓子店では食後のおやつを選べます。</p></article>'+
  '<article><strong>③ 感想を投稿する</strong><p>星と話題を選び、返信と翌月のお店の様子を確認します。</p></article></div>'+
  '<div class="tutorial-comparison"><p class="eyebrow">口コミが積み重なった店では……</p><div class="result-views"><div><small>以前の店構え</small>'+storefront(before)+'</div><div class="after-spotlight"><small>後日の店構え</small>'+storefront(after)+'</div></div></div>'+
  '<div class="tutorial-end"><strong>4月から翌3月まで、月に1回・全12回の出張。</strong><p>同じ店を選んでも、違う店を開拓しても自由です。</p><button type="button" class="primary start-game" data-begin>4月の出張へ　→</button></div></section>';
 }
 function street(){
- const all=E.SHOPS.map(shopCard).join(""),feed=game.feed.filter(x=>x.kind==="sns"||x.kind==="viral").slice(-4).reverse();
+ const listed=E.SHOPS.filter(x=>game.shops[x.id].opened),all=listed.map(shopCard).join(""),openCount=listed.filter(x=>!game.shops[x.id].closed).length;
+ const feed=game.feed.filter(x=>x.kind==="sns"||x.kind==="viral"||x.kind==="lifecycle").slice(-5).reverse();
+ const changes=game.last&&game.last.month===game.month?
+ [...(game.last.openings||[]).map(x=>'<div class="shop-announcement new"><strong>🎉 NEW OPEN　'+esc(x.name)+'</strong><p>'+esc(x.notice)+'</p></div>'),
+ ...(game.last.closures||[]).map(x=>'<div class="shop-announcement ended"><strong>閉店のお知らせ　'+esc(x.name)+'</strong><p>'+esc(x.reason)+'ため営業終了。以前の口コミは引き続き確認できます。</p></div>')].join(""):"";
  return '<div class="layout"><div><section class="travel-head"><span class="eyebrow">'+esc(E.MONTHS[Math.min(game.month,11)])+' ／ 出張先の昼休み</span><h2>今日のランチ、どこにしよう？</h2><p>口コミを読んで店を選び、食べた後で評価しましょう。</p></section>'+
- '<div class="street-list">'+all+'</div><section class="feed-list"><h2>商店街の話題</h2>'+
- (feed.length?feed.map(f=>'<div class="feed-card '+(f.kind==="viral"?"viral-list":"")+'"><div class="meta">つぶやき広場 ／ '+esc(E.MONTHS[f.month-1])+'</div><p class="body">'+esc(f.text)+'</p></div>').join(""):'<p class="section-intro">今日も昼休みの商店街。店の評判を見てみましょう。</p>')+'</section></div>'+
+ '<p class="shop-count">本日の営業店舗：'+openCount+'店</p>'+changes+'<div class="street-list">'+all+'</div><section class="feed-list"><h2>商店街の話題</h2>'+
+ (feed.length?feed.map(f=>'<div class="feed-card '+(f.kind==="viral"?"viral-list":"")+'"><div class="meta">'+esc(f.kind==="lifecycle"?"商店街のお知らせ":"つぶやき広場")+' ／ '+esc(E.MONTHS[f.month-1])+'</div><p class="body">'+esc(f.text)+'</p></div>').join(""):'<p class="section-intro">今日も昼休みの商店街。店の評判を見てみましょう。</p>')+'</section></div>'+
  (selectedId?detail(selectedId):'<aside class="panel choice-placeholder"><h2>口コミからお店を選ぶ</h2><p>お店のカードを選ぶと、過去の口コミと店主の返信を確認できます。</p></aside>')+'</div>';
 }
 function result(){
