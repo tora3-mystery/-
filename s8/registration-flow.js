@@ -99,7 +99,7 @@ function riskDetails(c){
  add("カンニングによる取得率上昇",skills.some(x=>x.id==="cheating"&&x.year+1===Math.floor(state.semester/2)+1)?50:0);
  add("3限の昼休み明け",c.slots.some(p=>p%5===2)?6:0);
  // Base aptitude skill, selected at admission or acquired in an annual draft.
- if((c.aptitudeTags||[]).some(tag=>skills.some(sk=>sk.id===tag)))add("得意分野（パソコン・数学・英語）",6);
+ if((window.S8_SUBJECT_TAGS?.(c)||c.aptitudeTags||[]).some(tag=>skills.some(sk=>sk.id===tag)))add("得意分野（パソコン・数学・英語）",6);
  const final=passChance(c);
  // The real chance function also uses staged rounding, movement penalties,
  // 5–98% caps and potentially the 100% compulsory study skill.
@@ -135,7 +135,8 @@ function openReplacement(currentId){
   state.selectedIds=previous.filter(id=>id!==currentId);
   let newChance;
   try{newChance=passChance(c)}finally{state.selectedIds=previous}
-  b.textContent=c.name+"｜"+c.credits+"単位｜難度★"+c.diff+"｜取得見込 "+newChance+"%";
+  const overallChance=c.lottery?Math.round(c.lottery*newChance/100):newChance;
+  b.textContent=c.name+"｜"+c.credits+"単位｜難度★"+c.diff+"｜単位取得見込 "+overallChance+"%"+(c.lottery?"（抽選"+c.lottery+"%込み）":"");
   b.onclick=()=>{
    const before=state.selectedIds.slice();
    state.selectedIds=before.filter(id=>id!==currentId);
@@ -155,7 +156,9 @@ function reviewRow(c){
  const row=document.createElement("div");row.className="review-course";
  const head=document.createElement("div");head.className="review-course-heading";
  const title=document.createElement("strong");title.textContent=(c.type==="required"?"★必修 ":"")+c.name+"（"+c.credits+"単位）";
- const pct=document.createElement("span");pct.className="review-percent"+(chance.final<45?" low":"");pct.textContent="取得見込 "+chance.final+"%";
+ const pct=document.createElement("span");pct.className="review-percent"+(chance.final<45?" low":"");const lottery=Number.isFinite(c.lottery)?c.lottery:null;
+ const overall=lottery===null?chance.final:Math.round(lottery*chance.final/100);
+ pct.textContent="単位取得見込 "+overall+"%"+(lottery===null?"":"（抽選込み）");
  head.append(title,pct);row.append(head);
  const details=document.createElement("details");details.className="review-breakdown";
  const summary=document.createElement("summary");summary.textContent="取得率の計算内訳を見る";details.append(summary);
@@ -164,7 +167,15 @@ function reviewRow(c){
   const x=document.createElement("div");x.textContent=part.name+" "+(part.n>0?"+":"")+part.n.toFixed(1)+"ポイント";details.append(x)
  }
  if(chance.adjust){const x=document.createElement("div");x.textContent=chance.guaranteed?"必修予習の100%保証・補正の適用順 "+(chance.adjust>=0?"+":"")+chance.adjust.toFixed(1)+"ポイント":"その他の補正・上限・丸めによる差分 "+(chance.adjust>=0?"+":"")+chance.adjust.toFixed(1)+"ポイント";details.append(x)}
- const total=document.createElement("b");total.textContent="最終取得率 "+chance.final+"%（この数値を成績抽選に使用）";details.append(total);
+ if(lottery!==null){
+  const select=document.createElement("div");
+  select.textContent="履修抽選の当選率 "+lottery+"%（当選した場合のみ成績を判定）";
+  details.append(select)
+ }
+ const total=document.createElement("b");
+ total.textContent=lottery===null?"最終取得率 "+chance.final+"%（この数値を成績抽選に使用）":
+ "当選後の単位取得率 "+chance.final+"% × 履修当選率 "+lottery+"% ＝ 最終取得見込 約"+overall+"%";
+ details.append(total);
  row.append(details);
  if(c.type==="required"&&(state.skills||[]).some(sk=>sk.id==="mandatory_master")){
   const earliest=Math.min(...c.slots),prior=earliest-1;
