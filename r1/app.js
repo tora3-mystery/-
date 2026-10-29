@@ -188,7 +188,7 @@ function history(){
  if(!game.reviews.length)return '<section class="box"><h2>口コミ履歴</h2><p>まだ口コミはありません。ランチ先を選んで感想を書くと、ここに残ります。</p></section>';
  return '<section class="box"><h2>あなたの口コミ履歴</h2><p class="section-intro">投稿済み：'+game.reviews.length+' / 12件。出張先のランチ記録です。</p><div class="timeline">'+[...game.reviews].reverse().map(f=>
  '<article class="history-card"><div class="tiny">'+esc(E.MONTHS[f.month-1])+' ／ '+esc(dshop(f.id).name)+' ／ '+esc(dgenre(f.genre).name)+'</div><h3>'+esc("★".repeat(f.star))+'</h3><p>'+esc(f.text)+'</p>'+replySnippet(f.id,f.reply,dshop(f.id).owner+"からの返信")+
- (f.exchange?'<div class="history-exchange"><p><strong>あなたの追記</strong>　'+esc(f.exchange.playerText)+'</p><p><strong>'+esc(dshop(f.id).owner)+'の再返信</strong>　'+esc(f.exchange.ownerText)+'</p></div>':"")+'</article>').join("")+'</div></section>'+
+ (f.exchange?'<div class="history-exchange"><p><strong>あなたの追記</strong>　'+esc(f.exchange.playerText)+'</p>'+(f.exchange.ownerText?'<p><strong>'+esc(dshop(f.id).owner)+'の再返信</strong>　'+esc(f.exchange.ownerText)+'</p>':'<p>店主から追加の返信はありません。</p>')+'</div>':"")+'</article>').join("")+'</div></section>'+
  '<section class="box"><h2>ほかのお客さんの口コミ・街の話題</h2>'+
  [...game.feed].reverse().filter(f=>f.kind==="npc"||f.kind==="sns"||f.kind==="viral"||f.kind==="lifecycle").map(f=>
  '<div class="feed-card '+(f.kind==="viral"?"viral-list":"")+'"><div class="meta">'+esc(E.MONTHS[f.month-1])+' ／ '+esc(f.kind==="lifecycle"?"商店街のお知らせ":f.kind==="sns"||f.kind==="viral"?"つぶやき広場":f.by+"・"+dshop(f.id).name)+'</div><p class="body">'+esc(f.text)+'</p>'+
@@ -197,7 +197,7 @@ function history(){
 function guide(){
  return '<section class="box guide-text"><h2>遊び方</h2><p>あなたは毎月この商店街へ出張で来る会社員。昼休みに口コミと返信を読み、店で食べた後に投稿します。4月から翌3月まで全12回です。</p>'+
  '<h3>① 口コミを読んで昼食を決める</h3><p>営業中のお店と過去の口コミを読み、店主からの返信があれば参考にして行き先を選びます。食べた後にポップアップから、①評価ジャンル、②星1〜5の順に選びます。</p>'+
- '<h3>② 返信と変化を見る</h3><p>店主は口コミに感謝したり、反論したり、ときには店の方針そのものを変えます。口コミで客足が減ると閉店するお店もあれば、途中で新しく開店するお店もあります。SNSで評判が広まることもあります。</p>'+
+ '<h3>② 投稿後のやり取りを確認する</h3><p>店主は口コミに感謝したり、反論したり、ときには返信をしないこともあります。確認後「翌月へ」で街の変化を見ます。口コミで客足が減ると閉店するお店もあれば、途中で新しく開店するお店もあります。SNSで評判が広まることもあります。</p>'+
  '<h3>③ 同じ店を再評価する</h3><p>同じ店に何度でも投稿できます。店主から返信が来るかどうかはお店や評価によって異なります。返信が来た場合は一言返すか、返信しないかを選べます。星やジャンルを変えると、別の方向に変化することがあります。別のお客さんの声や、架空SNSの話題も時々現れます。</p>'+
  '<h3>④ 一年後を見届ける</h3><p>お店は繁盛することも、衰退することもあります。正解の星の付け方はありません。12回目を終えると、その一年の商店街の姿を見られます。</p>'+
  '<p class="note">このバージョンは試作版です。看板や内装は仮のCSSイラストで表現しています。画面上部のバージョン表示は実装の更新時刻です。</p>'+
@@ -215,7 +215,19 @@ function render(){
  root.innerHTML=onboarding?tutorial():(notification?'<p class="note" role="status">'+esc(notification)+'</p>':"")+(tab==="history"?history():tab==="guide"?guide():game.view==="final"?finalPage():game.view==="review"?reviewThread():game.view==="result"?townReport():street())+(tab==="street"&&game.view==="map"&&dineModal?dineDialog():"");
  document.body.classList.toggle("modal-open",!onboarding&&tab==="street"&&game.view==="map"&&dineModal);
 }
-document.addEventListener("keydown",e=>{if(e.key==="Escape"&&dineModal){dineModal=false;dinedId=null;render();document.querySelector("[data-dine]")?.focus();}});
+document.addEventListener("keydown",e=>{
+ if(!dineModal)return;
+ if(e.key==="Escape"){dineModal=false;dinedId=null;render();document.querySelector("[data-dine]")?.focus();return;}
+ if(e.key==="Tab"){
+  const modal=root.querySelector(".dine-dialog");
+  if(!modal)return;
+  const focusable=Array.from(modal.querySelectorAll("button:not([disabled])"));
+  if(!focusable.length)return;
+  const first=focusable[0],last=focusable[focusable.length-1];
+  if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}
+  else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}
+ }
+});
 document.addEventListener("click",e=>{
  const btn=e.target.closest("button");if(!btn)return;
  if(btn.hasAttribute("data-restart")){
@@ -230,8 +242,8 @@ document.addEventListener("click",e=>{
  if(btn.dataset.shop){selectedId=btn.dataset.shop;dinedId=null;selectedStar=null;selectedGenre=null;dineModal=false;tab="street";render();if(window.innerWidth<760){setTimeout(()=>document.getElementById("shopDetail")?.scrollIntoView({behavior:"smooth",block:"start"}),0)}return;}
  if(btn.dataset.dine){dinedId=btn.dataset.dine;selectedStar=null;selectedGenre=null;dineModal=true;render();root.querySelector(".dine-dialog")?.focus();return;}
  if(btn.hasAttribute("data-modal-close")){dineModal=false;dinedId=null;render();document.querySelector("[data-dine]")?.focus();return;}
- if(btn.dataset.star){selectedStar=Number(btn.dataset.star);render();return;}
- if(btn.dataset.genre){selectedGenre=btn.dataset.genre;render();return;}
+ if(btn.dataset.star){selectedStar=Number(btn.dataset.star);render();root.querySelector('[data-star="'+selectedStar+'"]')?.focus();return;}
+ if(btn.dataset.genre){selectedGenre=btn.dataset.genre;render();root.querySelector('[data-genre="'+selectedGenre+'"]')?.focus();return;}
  if(btn.hasAttribute("data-post")){if(!dineModal||dinedId!==selectedId||selectedStar===null||selectedGenre===null)return;try{game=E.advance(game,{id:selectedId,star:selectedStar,genre:selectedGenre});dineModal=false;notification="";save();render();scrollTop()}catch(err){notification="投稿できませんでした。店舗を選び直してください。";render()}return;}
  if(btn.hasAttribute("data-decline")){if(game.view==="review"&&game.last?.review.reply&&!game.last.exchange){game.last.declined=true;save();render();}return;}
  if(btn.hasAttribute("data-next")){if(game.view!=="review")return;game.view="result";tab="street";save();render();scrollTop();return;}
