@@ -1,52 +1,42 @@
 {
   "projectId": "K1",
   "title": "掲示物をご確認ください。（仮）",
-  "version": "α0.7.0",
-  "updatedAtJST": "2026-10-29 10:41 JST",
-  "phase": "Phase 3/4 — 10-day gameplay with sequential return route and opened-mail evidence; human review pending",
+  "version": "α0.7.1",
+  "updatedAtJST": "2026-10-29 19:01 JST",
+  "phase": "Phase 3/4 — 11 images integrated with state-based visuals; human review pending",
   "aiAudit": {
-    "logic": "3125/3125 combinations successful with evidence mail opened; DAY2 yes survives and no/verify GAME OVER; all-unread run fails final evidence test",
-    "ui": "JS compiled; mock DOM verifies sequential board→mailbox/hallway→home, click-to-open letters, unread accumulation 1→2→3, day rewind restores read states"
+    "logic": "3125/3125 complete good-action route simulations; 4/4 story endings reached",
+    "ui": "JS syntax + DOM mock: board wear/day8, hallway wet/day10, cumulative door layers/day6+9+10, monitored intercom idle/call & night corridor, night privacy"
   },
   "browserAudit": {
-    "status": "not_run_for_alpha070",
-    "viewports": [
+    "status": "not_run_for_alpha071",
+    "livePagesCheck": "not verified",
+    "actualWebPDisplay": "not verified",
+    "mobileWidths": [
       320,
       390,
       428
-    ],
-    "noticeCounts": [
-      1,
-      5,
-      20,
-      38
-    ],
-    "cases": 12,
-    "horizontalOverflow": 0,
-    "testEnvironment": "Chromium with same CSS and placeholder image fixture; not production page",
-    "livePagesCheck": "not verified",
-    "genuineImagesInBrowser": "not verified",
-    "fullGameInteraction": "not run",
-    "note": "Previous responsive fixture checks belong to alpha0.6.2; current mail+door route not tested on real browser"
+    ]
   },
   "humanReview": {
     "lastReviewedVersion": "α0.6.1",
     "pilotImageLook": "user approved three candidate pictures",
-    "latestGame": "α0.7.0 awaiting human testing",
+    "latestGame": "α0.7.1 not reviewed by human",
     "openIssues": [
-      "Check mailbox/hallway stage comprehension and phone scroll",
-      "Evaluate immediate GAME OVER on DAY2 for verification or ignoring real emergency",
-      "Verify day8 evidence from opened post is discoverable"
+      "Verify small visual differences at mobile sizes",
+      "Check monitor in-image daylight vs night narrative",
+      "Check last-day board readability and vertical scrolling"
     ]
   },
   "assets": {
-    "status": "3 pilot assets imported to main and referenced in UI",
-    "baseImages": 3,
+    "status": "Integrated: 3 originals + 8 phase2 assets",
+    "count": 11,
     "manifest": "k1/assets/manifest.csv",
-    "remainingCandidates": 8,
-    "productionStatus": "Approved to commission 8 assets via Work prompt; not yet generated"
+    "sourceBranch": "k1-visual-phase2-20261029",
+    "remainingCandidates": 0,
+    "nextProduction": "none until human review"
   },
-  "nextOwner": "Human tester / K1 Chat; Work separately for assets",
-  "nextAction": "Test alpha0.7.0 on mobile. In parallel, Work may generate remaining 8 visuals on a dedicated branch, modifying only k1/assets and not game code.",
+  "nextOwner": "K1 human reviewer and Chat",
+  "nextAction": "Play alpha0.7.1 on phone; inspect day6/8/9/10 differences, night-monitor photos, and report visual mismatches",
   "scope": "k1/ only"
 }
