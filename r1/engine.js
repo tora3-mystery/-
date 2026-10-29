@@ -1,6 +1,6 @@
 window.R1 = (function makeEngine(){
 "use strict";
-const VERSION="0.9.4-alpha";
+const VERSION="0.9.5-alpha";
 const GENRES=[
 {id:"taste",name:"商品・味",icon:"🍜"},
 {id:"service",name:"接客",icon:"💬"},
@@ -303,10 +303,11 @@ for(const [id,comments] of Object.entries(PUBLIC_REVIEWS))
 function npcText(state,id,genre,star,rnd){
  const shop=SHOPS.find(x=>x.id===id),view=display(state.shops[id],id),topic=TOPICS[id][genre];
  const hasEvolution=view.route.stage>0&&id!=="ramen";
- const discussesEvolution=hasEvolution&&(view.route.genre===genre||rnd()<.22);
+ const discussesEvolution=hasEvolution&&view.route.genre===genre;
  const what=genre==="service"?"注文と接客":genre==="mood"?"店内の雰囲気":genre==="price"?"値段と量":`「${view.visual.product}」`;
  if(discussesEvolution){
-  if(star<=2)return [`前のほうが良かった。最近変わった${what}は自分に合わない。`,`改装前の${shop.product}が好きだった。今の${what}は少し残念。`][Math.floor(rnd()*2)];
+  if(star<=2){const old=genre==="service"?"以前の注文方法":genre==="price"?"以前の値付け":genre==="mood"?"以前の客席":genre==="identity"?"以前の店の個性":`改装前の${shop.product}`;
+   return [`前のほうが良かった。最近変わった${what}は自分に合わない。`,`${old}が好きだった。今の${what}は少し残念。`][Math.floor(rnd()*2)];}
   if(star>=4)return [`最近の${what}は良い。以前より通いたくなった。`,`変わったと聞いて来店。${what}が気に入った。`][Math.floor(rnd()*2)];
   return `最近${what}が変わった。前とは違うけれど、まだ評価は迷っている。`;
  }
