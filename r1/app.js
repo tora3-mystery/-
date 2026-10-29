@@ -4,13 +4,13 @@ const E=window.R1;
 if(!E){document.getElementById("gameRoot").textContent="ゲームの読み込みに失敗しました。ページを再読込してください。";return}
 const KEY="r1-machikado-v1";
 const root=document.getElementById("gameRoot");
-let game,selectedId=null,dinedId=null,selectedStar=null,selectedGenre=null,tab="street",notification="";
+let game,selectedId=null,dinedId=null,selectedStar=null,selectedGenre=null,dineModal=false,tab="street",notification="";
 const esc=x=>String(x==null?"":x).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const dshop=id=>E.SHOPS.find(x=>x.id===id);
 const dgenre=id=>E.GENRES.find(x=>x.id===id);
 function newGame(){const state=E.createState(Date.now()>>>0);state.introSeen=false;return state}
 function load(){
- try{const raw=localStorage.getItem(KEY);if(raw){const s=JSON.parse(raw);if(s.version===E.VERSION){E.audit(s);return s;}if(["0.1.0-alpha","0.2.0-alpha","0.3.0-alpha","0.3.1-alpha","0.3.2-alpha","0.4.0-alpha","0.4.1-alpha","0.5.0-alpha","0.6.0-alpha","0.7.0-alpha","0.8.0-alpha"].includes(s.version)){
+ try{const raw=localStorage.getItem(KEY);if(raw){const s=JSON.parse(raw);if(s.version===E.VERSION){E.audit(s);return s;}if(["0.1.0-alpha","0.2.0-alpha","0.3.0-alpha","0.3.1-alpha","0.3.2-alpha","0.4.0-alpha","0.4.1-alpha","0.5.0-alpha","0.6.0-alpha","0.7.0-alpha","0.8.0-alpha","0.9.0-alpha"].includes(s.version)){
  if(["0.1.0-alpha","0.2.0-alpha","0.3.0-alpha","0.3.1-alpha","0.3.2-alpha","0.4.0-alpha"].includes(s.version)){
  const ramen=s.shops.ramen;
  ramen.scores=Object.fromEntries(E.GENRES.map(g=>[g.id,0]));
@@ -75,21 +75,25 @@ function recentFeed(id){
  (all.length>items.length?'<p class="section-intro">直近'+items.length+'件を表示しています。</p>':"")+'</section>';
 }
 function reviewForm(id){
- const d=dshop(id),s=game.shops[id],v=E.display(s,id);
- if(s.closed)return '<div class="note">現在、この店は閉店しています。別のお店を選んでください。</div>';
- if(dinedId!==id)return '<div class="dine-cta"><p>口コミを読んで、今日のお店を決めましたか？</p><button type="button" class="primary" data-dine="'+id+'">'+(id==="cake"?"食後のおやつを買う":"この店でランチを食べる")+'　→</button></div>';
- const stars=Array.from({length:5},(_,i)=>i+1).map(x=>'<button type="button" class="star '+(selectedStar===x?"selected":"")+'" data-star="'+x+'" aria-label="星'+x+'" aria-pressed="'+(selectedStar===x)+'">★'+x+'</button>').join("");
+ if(game.shops[id].closed)return '<div class="note">現在、この店は閉店しています。別のお店を選んでください。</div>';
+ return '<div class="dine-cta"><p>口コミを読んで、今日のお店を決めましたか？</p><button type="button" class="primary" data-dine="'+id+'">'+(id==="cake"?"食後のおやつを買う":"この店でランチを食べる")+'　→</button></div>';
+}
+function dineDialog(){
+ if(!dineModal||!selectedId||game.shops[selectedId].closed)return "";
+ const id=selectedId,d=dshop(id);
  const genres=E.GENRES.map(g=>'<button type="button" class="genre '+(selectedGenre===g.id?"selected":"")+'" data-genre="'+g.id+'" aria-pressed="'+(selectedGenre===g.id)+'">'+g.icon+' '+esc(g.name)+'</button>').join("");
- const valid=selectedStar!==null&&selectedGenre!==null;let preview="";
- if(valid){try{preview=E.reviewText(game,id,selectedStar,selectedGenre)}catch(err){preview="投稿文を作成できませんでした。"}}
- return '<div class="form-title">来店後の口コミを投稿する</div>'+
- '<div class="label-row"><strong>① 星を選ぶ</strong><small>悪い ★1 ─ ★5 良い</small></div>'+
- '<div class="stars" role="group" aria-label="星評価">'+stars+'</div>'+
- '<div class="label-row"><strong>② 口コミのジャンルを選ぶ</strong><small>評価の観点</small></div>'+
- '<div class="genres" role="group" aria-label="口コミジャンル">'+genres+'</div>'+
- '<div class="preview"><span class="kicker">投稿前のプレビュー'+(valid?'　★'+selectedStar+' ／ '+esc(dgenre(selectedGenre).name):'')+'</span><p>'+esc(valid?preview:"星とジャンルを選ぶと、口コミ文が表示されます。")+'</p></div>'+
- '<button type="button" class="primary" data-post '+(valid?"":"disabled")+'>'+esc(E.MONTHS[game.month])+'の口コミを投稿する</button>'+
- '<div class="note">星とジャンルの組み合わせが、店主の返信や店の方向性に影響します。投稿は月に1回です。</div>';
+ const stars=Array.from({length:5},(_,i)=>i+1).map(x=>'<button type="button" class="star '+(selectedStar===x?"selected":"")+'" data-star="'+x+'" aria-label="星'+x+'" aria-pressed="'+(selectedStar===x)+'">★'+x+'</button>').join("");
+ const valid=selectedGenre!==null&&selectedStar!==null;
+ let preview="";
+ if(valid){try{preview=E.reviewText(game,id,selectedStar,selectedGenre)}catch(err){preview="口コミの作成に失敗しました。"}}
+ return '<div class="dine-overlay"><button type="button" class="dialog-backdrop" data-modal-close aria-label="投稿を取り消してお店に戻る"></button>'+
+ '<section class="dine-dialog" role="dialog" aria-modal="true" aria-labelledby="dineTitle" tabindex="-1">'+
+ '<div class="dialog-heading"><div><span class="eyebrow">今日のランチを食べ終えました</span><h2 id="dineTitle">'+esc(d.name)+'の口コミ</h2></div><button type="button" class="dialog-close secondary" data-modal-close aria-label="閉じる">×</button></div>'+
+ '<div class="label-row"><strong>① 口コミのジャンルを選ぶ</strong><small>どこを評価しますか？</small></div><div class="genres" role="group" aria-label="口コミジャンル">'+genres+'</div>'+
+ '<div class="label-row"><strong>② 星の数を選ぶ</strong><small>悪い ★1 ─ ★5 良い</small></div><div class="stars" role="group" aria-label="星評価">'+stars+'</div>'+
+ '<div class="preview"><span class="kicker">投稿前のプレビュー'+(valid?'　★'+selectedStar+' ／ '+esc(dgenre(selectedGenre).name):'')+'</span><p>'+esc(valid?preview:"ジャンルと星の数を選ぶと、投稿内容を確認できます。")+'</p></div>'+
+ '<button type="button" class="primary dialog-post" data-post '+(valid?"":"disabled")+'>'+esc(E.MONTHS[game.month])+'の口コミを投稿する</button>'+
+ '<p class="note">投稿後は店主からの返信を確認できます。投稿内容は取り消せません。</p></section></div>';
 }
 function detail(id){
  const d=dshop(id),s=game.shops[id],v=E.display(s,id);
@@ -109,19 +113,21 @@ function tutorial(){
  '<div class="business-story"><strong>📍 今月も、この商店街でランチ。</strong><p>まずは口コミを読んで、行くお店を選びましょう。食後はあなたも感想を投稿できます。</p></div>'+
  '<div class="tutorial-steps"><article><strong>① 口コミを読む</strong><p>毎回顔ぶれが違う3店舗の口コミを読み、返信があれば店主の言葉も確かめます。</p></article>'+
  '<article><strong>② お店で食べる</strong><p>行き先を決めます。店によっては食後のおやつを選べます。</p></article>'+
- '<article><strong>③ 感想を投稿する</strong><p>星と話題を選び、翌月の口コミや店の様子を確認します。</p></article></div>'+
+ '<article><strong>③ 返信を確認する</strong><p>ジャンルと星を選んで投稿。店主に返すか決めてから、翌月の街の変化を見ます。</p></article></div>'+
  '<div class="tutorial-comparison"><p class="eyebrow">口コミが積み重なった店では……</p><div class="result-views"><div><small>以前の店構え</small>'+storefront(before)+'</div><div class="after-spotlight"><small>後日の店構え</small>'+storefront(after)+'</div></div></div>'+
  '<div class="tutorial-end"><strong>4月から翌3月まで、月に1回・全12回の出張。</strong><p>同じ店を選んでも、違う店を開拓しても自由です。</p><button type="button" class="primary start-game" data-begin>4月の出張へ　→</button></div></section>';
 }
 function street(){
  const listed=E.SHOPS.filter(x=>game.shops[x.id].opened),all=listed.map(shopCard).join(""),openCount=listed.filter(x=>!game.shops[x.id].closed).length;
  const feed=game.feed.filter(x=>x.kind==="sns"||x.kind==="viral"||x.kind==="lifecycle").slice(-5).reverse();
+ const recentNpcs=game.last&&game.last.month===game.month?(game.last.npcs||[]):[];
  const changes=game.last&&game.last.month===game.month?
  [...(game.last.openings||[]).map(x=>'<div class="shop-announcement new"><strong>'+(x.comeback?'🏢 おかえりなさい':'🎉 NEW OPEN')+'　'+esc(x.name)+'</strong><p>'+esc(x.notice)+'</p></div>'),
  ...(game.last.closures||[]).map(x=>'<div class="shop-announcement ended"><strong>閉店のお知らせ　'+esc(x.name)+'（'+esc((x.lot||"?")+'番地')+'）</strong><p>'+esc(x.reason)+'ため営業終了。以前の口コミは引き続き確認できます。</p></div>')].join(""):"";
  return '<div class="layout"><div><section class="travel-head"><span class="eyebrow">'+esc(E.MONTHS[Math.min(game.month,11)])+' ／ 出張先の昼休み</span><h2>今日のランチ、どこにしよう？</h2><p>口コミを読んで店を選び、食べた後で評価しましょう。</p></section>'+
  '<p class="shop-count">本日の営業店舗：'+openCount+'店</p>'+changes+'<div class="street-list">'+all+'</div><section class="feed-list"><h2>商店街の話題</h2>'+
- (feed.length?feed.map(f=>'<div class="feed-card '+(f.kind==="viral"?"viral-list":"")+'"><div class="meta">'+esc(f.kind==="lifecycle"?"商店街のお知らせ":"つぶやき広場")+' ／ '+esc(E.MONTHS[f.month-1])+'</div><p class="body">'+esc(f.text)+'</p></div>').join(""):'<p class="section-intro">今日も昼休みの商店街。店の評判を見てみましょう。</p>')+'</section></div>'+
+ (feed.length?feed.map(f=>'<div class="feed-card '+(f.kind==="viral"?"viral-list":"")+'"><div class="meta">'+esc(f.kind==="lifecycle"?"商店街のお知らせ":"つぶやき広場")+' ／ '+esc(E.MONTHS[f.month-1])+'</div><p class="body">'+esc(f.text)+'</p></div>').join(""):'<p class="section-intro">今日も昼休みの商店街。店の評判を見てみましょう。</p>')+'</section>'+
+ (recentNpcs.length?'<section class="feed-list neighborhood-reviews"><h2>まちの反応・ほかのお客さんの口コミ</h2><p class="section-intro">先月届いた'+recentNpcs.length+'件のうち、最大8件を表示。全件は各店舗と履歴でも確認できます。</p>'+recentNpcs.slice(0,8).map(n=>'<article class="feed-card"><div class="meta">'+esc(n.by)+' ／ '+esc(dshop(n.id).name)+'　★'+n.star+'</div><p class="body">'+esc(n.text)+'</p>'+replySnippet(n.id,n.reply,dshop(n.id).owner+"からの返信")+'</article>').join("")+'</section>':"")+'</div>'+
  (selectedId?detail(selectedId):'<aside class="panel choice-placeholder"><h2>口コミからお店を選ぶ</h2><p>お店のカードを選ぶと、過去の口コミと店主の返信を確認できます。</p></aside>')+'</div>';
 }
 function result(){
@@ -176,9 +182,9 @@ function history(){
 }
 function guide(){
  return '<section class="box guide-text"><h2>遊び方</h2><p>あなたは毎月この商店街へ出張で来る会社員。昼休みに口コミと返信を読み、店で食べた後に投稿します。4月から翌3月まで全12回です。</p>'+
- '<h3>① 口コミを読んで昼食を決める</h3><p>営業中のお店と過去の口コミを読み、店主からの返信があれば参考にして行き先を選びます。食べた後に星1〜5と、商品・味／接客／価格／雰囲気／個性の評価ジャンルを選びます。</p>'+
+ '<h3>① 口コミを読んで昼食を決める</h3><p>営業中のお店と過去の口コミを読み、店主からの返信があれば参考にして行き先を選びます。食べた後にポップアップから、①評価ジャンル、②星1〜5の順に選びます。</p>'+
  '<h3>② 返信と変化を見る</h3><p>店主は口コミに感謝したり、反論したり、ときには店の方針そのものを変えます。口コミで客足が減ると閉店するお店もあれば、途中で新しく開店するお店もあります。SNSで評判が広まることもあります。</p>'+
- '<h3>③ 同じ店を再評価する</h3><p>同じ店に何度でも投稿できます。店主から返信が来るかどうかはお店や評価によって異なります。返信が来た場合は一言返すこともできます。星やジャンルを変えると、別の方向に変化することがあります。別のお客さんの声や、架空SNSの話題も時々現れます。</p>'+
+ '<h3>③ 同じ店を再評価する</h3><p>同じ店に何度でも投稿できます。店主から返信が来るかどうかはお店や評価によって異なります。返信が来た場合は一言返すか、返信しないかを選べます。星やジャンルを変えると、別の方向に変化することがあります。別のお客さんの声や、架空SNSの話題も時々現れます。</p>'+
  '<h3>④ 一年後を見届ける</h3><p>お店は繁盛することも、衰退することもあります。正解の星の付け方はありません。12回目を終えると、その一年の商店街の姿を見られます。</p>'+
  '<p class="note">このバージョンは試作版です。看板や内装は仮のCSSイラストで表現しています。画面上部のバージョン表示は実装の更新時刻です。</p>'+
  '<button type="button" class="secondary" data-tab="street">商店街に戻る</button>'+
