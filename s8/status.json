@@ -1,49 +1,64 @@
 {
   "id": "S8",
   "title": "履修登録を完了してください。（仮）",
-  "version": "0.1.2",
-  "updated_at_jst": "2026-10-29 13:13 JST",
-  "phase": "Phase 3 prototype / Phase 4 static audit in progress",
-  "scope": "1年目前期・後期の2学期。全8学期・キャンパス移動・卒業判定は未実装",
+  "version": "0.3.0",
+  "updated_at_jst": "2026-10-29 13:45 JST",
+  "phase": "Phase 3 prototype expanded to eight semesters / Phase 4 structural audit",
+  "scope": "4 years / 8 terms playable; 3 faculties; 5 extracurricular difficulty setups",
+  "features": [
+    "tap an unoccupied timetable slot to choose courses that include that period",
+    "24 additional general course definitions plus advanced faculty seminars and research",
+    "full-year courses occupy same period over 2 terms: interim spring result, 4 credits only at autumn final",
+    "grade history shows mandatory pass/fail/retake and yearlong outcomes",
+    "synthesized sound effects with persistent on/off switch",
+    "8 term score, graduation decision at 72 credits and all compulsory courses, saved progress and separate personal best"
+  ],
   "ai_audit": {
-    "source_structure": "PASS: balanced brackets, all referenced DOM IDs exist",
-    "schedule_reachability": "PASS: 3 faculties × 3 activities × 2 terms × 100 generated offerings = 1800/1800 have at least one course combination reaching 10 credits without timetable conflict",
-    "grade_and_score_simulation": "NOT EXECUTED: browser execution not yet tested",
-    "save_resume": "CODE IMPLEMENTED, NOT BROWSER VERIFIED",
-    "known_limitations": [
-      "Current test covers 2 terms, not an 8-term graduation route",
-      "Lottery and passing are stochastic and may cause academic setbacks",
-      "The source-level scheduling audit is not a real browser test"
-    ],
-    "score_model": "7,200 simulated two-term strategy runs across 3 faculties, 3 activities, 4 strategies, 200 seeds. Strategic score differentiation observed; job bonus increased from 400 to 800 and fatigue penalty reduced from 4% to 2% to improve competitiveness. Simplified model, not live game execution."
+    "structure": "PASS: JS bracket/quote balance; no missing DOM IDs from game.js and expansion.js (124 $ references against 57 HTML IDs)",
+    "placement_model": "PASS: 12,000 static term/subject/activity/seed combinations can reach 10 credits; model excludes earned-prerequisite constraints and carried courses, so this is not an exhaustive route proof",
+    "audio": "Implementation only; sound not verified on real device",
+    "state_save_resume": "Implementation only; 8-term save and recovery not verified in real browser",
+    "simulation": "8-term probabilistic graduation score distribution not measured",
+    "caveats": [
+      "A model showing the existence of a 10-credit schedule does not verify a complete 8-semester graduation path",
+      "The latest source has not completed browser event testing",
+      "Synthetic note/chord effects may vary by browser, mute and iOS audio settings"
+    ]
   },
   "browser_qa": {
     "performed": false,
-    "platforms": [],
     "status": "pending",
-    "notes": "GitHub commit and static analysis are not browser operation validation."
+    "devices": [],
+    "notes": "No browser interaction or Pages visual operation test performed"
   },
   "human_review": {
     "performed": false,
-    "target_version": "0.1.1",
-    "focus": [
-      "smartphone timetable readability",
-      "tap-to-select usability",
-      "result presentation tempo and excitement",
-      "choice variety and level of difficulty"
+    "target_version": "0.3.0",
+    "requested_checks": [
+      "Tap free slots and choose from matching candidates",
+      "Check mandatory outcome clarity during grade reveal and after next term",
+      "Check spring/autumn continuity of annual courses",
+      "Try sports club and club+job difficulty setups",
+      "Test sound effects and mute",
+      "Evaluate 8-semester pace and course variety"
     ]
   },
   "assets": {
-    "status": "temporary CSS-only visuals",
+    "status": "CSS and Web Audio synthesis only; no external image/music assets",
     "work_required": false
   },
   "next": {
-    "owner": "human reviewer + S8 chat",
+    "owner": "S8 dedicated chat + human review",
     "actions": [
-      "play both terms on smartphone and report issues",
-      "verify actual GitHub Pages load, button operation, saving and restarting",
-      "adjust tempo, score, and presentation based on review"
+      "Test actual page load and major interactions in real browser",
+      "Run expanded runtime QA for annual, save/resume, grading, difficult activity choices",
+      "Balance eight-term score, graduation odds and tempo",
+      "Consider campus transition only after gameplay review"
     ]
   },
-  "main_index_untouched": true
+  "edits": {
+    "allowed": "s8/ only",
+    "main_index_changed": false,
+    "other_games_changed": false
+  }
 }
