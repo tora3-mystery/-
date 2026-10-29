@@ -136,7 +136,7 @@ $("drawer-message").textContent=mandatory?"必修科目は解除できません�
 $("drawer-message").className="drawer-message"+(!d.status.ok&&!mandatory&&!selected?" error":"");
 $("drawer-action").disabled=mandatory||(!selected&&!d.status.ok);$("drawer-action").textContent=mandatory?"必修は自動登録":selected?"この科目を解除":"この科目を登録 →";
 $("drawer-action").onclick=()=>{if(mandatory)return;if(selected){state.selectedIds=state.selectedIds.filter(x=>x!==id);showToast("履修を解除しました")}else{const res=allowed(c);if(!res.ok){showToast(res.reason);return}state.selectedIds.push(id);showToast(c.slots.length>1?"セット科目を"+c.slots.length+"コマ登録！":"時間割に登録！")}save();closeDrawer();render()};
-$("course-drawer").classList.remove("hidden");renderGrid($("timetable-grid"),true)}
+$("course-drawer").classList.remove("hidden");const drawerBody=$("course-drawer").querySelector(".drawer-body");if(drawerBody)drawerBody.scrollTop=0;renderGrid($("timetable-grid"),true)}
 function showToast(msg){const e=$("toast");e.textContent=msg;e.classList.remove("hidden");clearTimeout(toastTimer);toastTimer=setTimeout(()=>e.classList.add("hidden"),1700)}
 function beginReveal(){state.results=[];state.revealIndex=0;state.termScore=0;state.currentCombo=0;
 const ordered=allRegistered().slice().sort((a,b)=>Math.min(...a.slots)-Math.min(...b.slots));
