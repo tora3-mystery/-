@@ -5,7 +5,7 @@
   "updatedAtJST": "2026-10-30 23:29 JST",
   "phase": "Phase 7 — UX corrections applied; source-specific photos and current browser QA pending",
   "aiAudit": {
-    "logic": "JS tests: E10 refuse safe; 7 random-day retries yield different event IDs and save snapshot; fixed days 5,9,10 unchanged; DAY5 confirmation gated by camera, and no-response leads to mandatory second camera and optional third; E02E gate requires incoming notification view. Current 49-event regression NOT rerun.",
+    "logic": "JS tests: E10 refuse safe; 7 random-day retries yield different event IDs and save snapshot; fixed days 5,9,10 unchanged; DAY5 confirmation gated by camera, and no-response leads to mandatory second camera and optional third; E02E gate requires incoming notification view. Current 49-event regression NOT rerun. Later minor correction: DAY5 follow-up forced only if fewer than 2 camera activations before decline; 1/2/3 prior activations tested.",
     "story": "E10 no longer arbitrary death and DAY4 intro conditional. E02E explicitly management email; camera not falsely shown for remote notices. Night source inspection required before making choice."
   },
   "browserAudit": {
@@ -22,7 +22,8 @@
       "random retry including two events on DAY3",
       "E03 second/third visit UI",
       "inspection persistence across reload",
-      "remote event visual readability"
+      "remote event visual readability",
+      "DAY5 after >=2 pre-decision views does not require redundant check"
     ]
   },
   "humanReview": {
@@ -50,6 +51,6 @@
     "sourceScreens": "Non-intercom inspections have HTML visual screens; dedicated new background images not yet produced"
   },
   "nextOwner": "K1 Chat / Work screen image production / K1 human reviewer",
-  "nextAction": "Produce and integrate a small coherent pack of phone/mail/room device photographs via Work; run full 49-event and real-browser checks on alpha0.14.1.",
+  "nextAction": "Human-test 49-source-gated alpha0.14.1, DAY5 one-look and multi-look refuse paths; order dedicated imagery for 30 remote/device incidents.",
   "scope": "k1/ only"
 }
