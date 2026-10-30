@@ -86,7 +86,7 @@ h2{font-size:17px;line-height:1.4;margin:0 0 8px}h3{font-size:14px;margin:0 0 8p
 </style>
 </head>
 <body><main class="app">
-<header class="mast"><div><div class="sub">短編UIゲーム実験室｜K1 プロトタイプ</div><h1>掲示物をご確認ください。</h1><div class="meta"><b>K1 α0.14.1</b> ｜ 2026-10-30 23:28 JST更新</div></div><a class="home" href="../index.html">作品一覧へ</a></header>
+<header class="mast"><div><div class="sub">短編UIゲーム実験室｜K1 プロトタイプ</div><h1>掲示物をご確認ください。</h1><div class="meta"><b>K1 α0.14.1</b> ｜ 2026-10-30 23:29 JST更新</div></div><a class="home" href="../index.html">作品一覧へ</a></header>
 <section id="intro" class="panel intro">
 <div class="sub">白波レジデンス・406号室</div><h2>掲示物をご確認ください。</h2>
 <p class="lede">あなたは白波レジデンス406号室で一人暮らしをする会社員です。</p><p>相場より安かった家賃に惹かれて越して3か月。仕事帰り、毎日エントランスの掲示板を確認しています。4階には空室が目立ちますが、管理人は「たまたまですよ」と言うばかりです。最近、掲示物の貼り替えが増えてきました。</p>
@@ -563,7 +563,7 @@ function resultFor(e,c,extra){
 }
 function answer(c,extra){
  if(state.resultPending||state.ended||state.phase!=='night'||!['yes','no'].includes(c)||!hasInspectedEvent())return;
- var e=eventNow();pendingChoice=null;state.result=resultFor(e,c,extra||copy(reply));state.resultPending=!state.failure;state.afterCameraSeen=false;state.day5FollowupStage=e.id==='E03'&&c==='no'?0:-1;
+ var e=eventNow();pendingChoice=null;state.result=resultFor(e,c,extra||copy(reply));state.resultPending=!state.failure;state.afterCameraSeen=false;state.day5FollowupStage=e.id==='E03'&&c==='no'&&cameraLookCount<2?0:-1;
  if(state.failure){state.ended=true;state.phase='fail';}
  monitor=false;save();render();scrollToTop();
 }
