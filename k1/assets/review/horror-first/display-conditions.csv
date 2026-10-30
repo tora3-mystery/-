@@ -1,0 +1,12 @@
+asset,event_id,show_when,baseline_asset,visual_change
+k1/assets/camera/empty/0214-third-look.webp,E03,"only on third camera activation",k1/assets/camera/empty/normal.webp,"near-lens face on far-right edge"
+k1/assets/camera/people/arima-aftermath-401.webp,E08,"after Arima leaves and target remains 401",k1/assets/camera/empty/normal.webp,"distant figure at corridor end"
+k1/assets/camera/people/arima-aftermath-406.webp,E08,"after Arima leaves and target has moved to 406",k1/assets/camera/empty/normal.webp,"close face enters from lower-right edge"
+k1/assets/camera/people/after-hours-management-second.webp,"E02G,E02I","second camera inspection",k1/assets/camera/people/after-hours-management.webp,"inverted reflection above visitor"
+k1/assets/camera/people/key-envelope-visitor-second.webp,E02D,"second camera inspection after visitor leaves",k1/assets/camera/empty/normal.webp,"hand remains at slightly open door edge"
+k1/assets/camera/people/impostor-technician-second.webp,E05G,"second camera inspection after visitor leaves",k1/assets/camera/empty/normal.webp,"distant figure remains"
+k1/assets/camera/people/after-hours-empty-figure.webp,E07,"second inspection after visitor disappears",k1/assets/camera/empty/normal.webp,"tall figure now stands in corridor"
+k1/assets/camera/people/hasegawa-day3-second.webp,E10,"second camera inspection while Hasegawa is present",k1/assets/camera/people/hasegawa-day3.webp,"partial face at far-right doorway; Hasegawa unchanged"
+k1/assets/camera/people/sugiura-day6-second.webp,E06,"second camera inspection after Sugiura leaves",k1/assets/camera/empty/normal.webp,"ceiling reflection remains"
+k1/assets/ending/haunt-401.webp,ending401,"ending reached with target still 401",k1/assets/camera/empty/normal.webp,"distant silhouette at corridor end"
+k1/assets/ending/haunt-406.webp,ending406,"ending reached after target moves to 406",k1/assets/camera/empty/normal.webp,"face close to lens"
