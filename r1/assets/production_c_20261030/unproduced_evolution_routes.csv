@@ -1,0 +1,113 @@
+﻿shop_id,shop_name,owner_name,genre,polarity,route_name,image_path,status
+cafe,喫茶こもれび,紺野 千草,taste,plus,自家焙煎の名店,,not_produced
+cafe,喫茶こもれび,紺野 千草,taste,minus,メニュー全面刷新喫茶,,not_produced
+cafe,喫茶こもれび,紺野 千草,service,plus,会話を楽しむ喫茶,,not_produced
+cafe,喫茶こもれび,紺野 千草,service,minus,注文セルフ喫茶,,not_produced
+cafe,喫茶こもれび,紺野 千草,price,plus,お値打ちブレンド喫茶,,not_produced
+cafe,喫茶こもれび,紺野 千草,price,minus,価格改定の喫茶,,not_produced
+cafe,喫茶こもれび,紺野 千草,mood,minus,交流カフェ,,not_produced
+cafe,喫茶こもれび,紺野 千草,identity,plus,昭和純喫茶,,not_produced
+cake,パティスリー・リボン,安西 美波,taste,plus,至高の一品専門店,,not_produced
+cake,パティスリー・リボン,安西 美波,taste,minus,レシピ再出発工房,,not_produced
+cake,パティスリー・リボン,安西 美波,service,plus,お祝い相談の洋菓子店,,not_produced
+cake,パティスリー・リボン,安西 美波,price,plus,お値段以上の洋菓子店,,not_produced
+cake,パティスリー・リボン,安西 美波,price,minus,手頃なおやつ工房,,not_produced
+cake,パティスリー・リボン,安西 美波,mood,minus,気軽な街角菓子店,,not_produced
+cake,パティスリー・リボン,安西 美波,identity,plus,奇抜な新作工房,,not_produced
+cake,パティスリー・リボン,安西 美波,identity,minus,定番ケーキの店,,not_produced
+curry,カレー食堂こはく,杉浦 奏,taste,plus,香りを極めたカレー店,,not_produced
+curry,カレー食堂こはく,杉浦 奏,taste,minus,辛さ選べるカレー店,,not_produced
+curry,カレー食堂こはく,杉浦 奏,service,plus,注文相談のカレー店,,not_produced
+curry,カレー食堂こはく,杉浦 奏,service,minus,セルフ式カレー食堂,,not_produced
+curry,カレー食堂こはく,杉浦 奏,price,plus,満腹セット食堂,,not_produced
+curry,カレー食堂こはく,杉浦 奏,price,minus,小皿カレー専門店,,not_produced
+curry,カレー食堂こはく,杉浦 奏,mood,plus,ゆったりスパイス食堂,,not_produced
+curry,カレー食堂こはく,杉浦 奏,identity,minus,王道カレー食堂,,not_produced
+teishoku,定食屋つむぎ,田辺 芽衣,taste,plus,小鉢が主役の定食屋,,not_produced
+teishoku,定食屋つむぎ,田辺 芽衣,taste,minus,味付け選べる定食屋,,not_produced
+teishoku,定食屋つむぎ,田辺 芽衣,service,plus,おかえり定食屋,,not_produced
+teishoku,定食屋つむぎ,田辺 芽衣,service,minus,注文セルフの定食屋,,not_produced
+teishoku,定食屋つむぎ,田辺 芽衣,price,plus,満腹おかわり食堂,,not_produced
+teishoku,定食屋つむぎ,田辺 芽衣,mood,minus,すばやい昼食処,,not_produced
+teishoku,定食屋つむぎ,田辺 芽衣,identity,plus,季節の小鉢研究所,,not_produced
+teishoku,定食屋つむぎ,田辺 芽衣,identity,minus,昔ながらの定食屋,,not_produced
+udon,手打ちうどん ひなた,小沢 修平,taste,minus,ゆで時間選択うどんの店,,not_produced
+udon,手打ちうどん ひなた,小沢 修平,service,plus,麺の食べ方相談の店,,not_produced
+udon,手打ちうどん ひなた,小沢 修平,price,plus,天ぷら満腹うどんの店,,not_produced
+udon,手打ちうどん ひなた,小沢 修平,price,minus,小盛りうどんの店,,not_produced
+udon,手打ちうどん ひなた,小沢 修平,mood,plus,うどんと読書席の店,,not_produced
+udon,手打ちうどん ひなた,小沢 修平,mood,minus,立ち寄りカウンターの店,,not_produced
+udon,手打ちうどん ひなた,小沢 修平,identity,plus,変わり種つけ汁の店,,not_produced
+udon,手打ちうどん ひなた,小沢 修平,identity,minus,釜あげ一筋の店,,not_produced
+soba,蕎麦処 みかづき,岸本 純,taste,plus,挽きたて十割の店,,not_produced
+soba,蕎麦処 みかづき,岸本 純,taste,minus,つゆの濃さ選択の店,,not_produced
+soba,蕎麦処 みかづき,岸本 純,service,plus,蕎麦談義席の店,,not_produced
+soba,蕎麦処 みかづき,岸本 純,service,minus,券売機そばの店,,not_produced
+soba,蕎麦処 みかづき,岸本 純,price,plus,天せいろセットの店,,not_produced
+soba,蕎麦処 みかづき,岸本 純,mood,minus,さっと立ち寄る蕎麦の店,,not_produced
+soba,蕎麦処 みかづき,岸本 純,identity,plus,旬の新そばの店,,not_produced
+soba,蕎麦処 みかづき,岸本 純,identity,minus,昔ながらの二八の店,,not_produced
+sandwich,サンドイッチ はこぶね,戸倉 恵理,taste,plus,季節の具材サンドの店,,not_produced
+sandwich,サンドイッチ はこぶね,戸倉 恵理,taste,minus,好みの具材サンドの店,,not_produced
+sandwich,サンドイッチ はこぶね,戸倉 恵理,service,plus,注文相談サンドの店,,not_produced
+sandwich,サンドイッチ はこぶね,戸倉 恵理,price,plus,具だくさんセットの店,,not_produced
+sandwich,サンドイッチ はこぶね,戸倉 恵理,price,minus,ハーフサンドの店,,not_produced
+sandwich,サンドイッチ はこぶね,戸倉 恵理,mood,minus,持ち帰り窓口の店,,not_produced
+sandwich,サンドイッチ はこぶね,戸倉 恵理,identity,plus,実験サンドの店,,not_produced
+sandwich,サンドイッチ はこぶね,戸倉 恵理,identity,minus,定番たまごサンドの店,,not_produced
+burger,グリル・ビー,比嘉 響,taste,plus,熟成パティバーガーの店,,not_produced
+burger,グリル・ビー,比嘉 響,taste,minus,ソース選択バーガーの店,,not_produced
+burger,グリル・ビー,比嘉 響,service,plus,焼き方相談の店,,not_produced
+burger,グリル・ビー,比嘉 響,price,plus,ポテト盛りセットの店,,not_produced
+burger,グリル・ビー,比嘉 響,price,minus,ミニバーガーの店,,not_produced
+burger,グリル・ビー,比嘉 響,mood,minus,ファストカウンターの店,,not_produced
+burger,グリル・ビー,比嘉 響,identity,plus,月替わり創作バーガーの店,,not_produced
+burger,グリル・ビー,比嘉 響,identity,minus,王道チーズバーガーの店,,not_produced
+pasta,生パスタノート,三田 綾,taste,plus,特製もっちり生麺の店,,not_produced
+pasta,生パスタノート,三田 綾,taste,minus,ソース選択パスタの店,,not_produced
+pasta,生パスタノート,三田 綾,service,plus,レシピ相談の店,,not_produced
+pasta,生パスタノート,三田 綾,service,minus,セルフ注文パスタの店,,not_produced
+pasta,生パスタノート,三田 綾,price,plus,大盛りセットの店,,not_produced
+pasta,生パスタノート,三田 綾,mood,plus,落ち着くカウンターの店,,not_produced
+pasta,生パスタノート,三田 綾,mood,minus,短時間ランチ席の店,,not_produced
+pasta,生パスタノート,三田 綾,identity,minus,定番ミートソースの店,,not_produced
+chinese,中華料理 ひばり,久住 芳夫,taste,plus,火力自慢の中華の店,,not_produced
+chinese,中華料理 ひばり,久住 芳夫,taste,minus,味付け選択中華の店,,not_produced
+chinese,中華料理 ひばり,久住 芳夫,service,plus,おかず相談の町中華の店,,not_produced
+chinese,中華料理 ひばり,久住 芳夫,price,plus,大盛り中華定食の店,,not_produced
+chinese,中華料理 ひばり,久住 芳夫,price,minus,小皿中華の店,,not_produced
+chinese,中華料理 ひばり,久住 芳夫,mood,minus,おひとり席の店,,not_produced
+chinese,中華料理 ひばり,久住 芳夫,identity,plus,新作中華実験場の店,,not_produced
+chinese,中華料理 ひばり,久住 芳夫,identity,minus,王道餃子と炒飯の店,,not_produced
+bakery,パン工房 芽吹き,野添 春,taste,plus,発酵バターのパンの店,,not_produced
+bakery,パン工房 芽吹き,野添 春,taste,minus,焼き加減選択パンの店,,not_produced
+bakery,パン工房 芽吹き,野添 春,service,plus,パン相談窓口の店,,not_produced
+bakery,パン工房 芽吹き,野添 春,price,plus,朝昼お得セットの店,,not_produced
+bakery,パン工房 芽吹き,野添 春,price,minus,ミニ惣菜パンの店,,not_produced
+bakery,パン工房 芽吹き,野添 春,mood,minus,持ち帰り専用棚の店,,not_produced
+bakery,パン工房 芽吹き,野添 春,identity,plus,実験酵母のパンの店,,not_produced
+bakery,パン工房 芽吹き,野添 春,identity,minus,昔ながらの食パンの店,,not_produced
+fish,焼き魚食堂 みなと,河口 和香,taste,minus,焼き加減選択魚定食の店,,not_produced
+fish,焼き魚食堂 みなと,河口 和香,service,plus,魚の食べ方相談の店,,not_produced
+fish,焼き魚食堂 みなと,河口 和香,service,minus,食券焼き魚の店,,not_produced
+fish,焼き魚食堂 みなと,河口 和香,price,plus,魚と小鉢満腹定食の店,,not_produced
+fish,焼き魚食堂 みなと,河口 和香,mood,plus,港の食堂席の店,,not_produced
+fish,焼き魚食堂 みなと,河口 和香,mood,minus,一人魚定食席の店,,not_produced
+fish,焼き魚食堂 みなと,河口 和香,identity,plus,旬魚日替わり研究所の店,,not_produced
+fish,焼き魚食堂 みなと,河口 和香,identity,minus,塩焼き一本の店,,not_produced
+onigiri,おむすび まる,丸山 詩乃,taste,minus,塩加減選べるむすびの店,,not_produced
+onigiri,おむすび まる,丸山 詩乃,service,plus,具材相談おむすびの店,,not_produced
+onigiri,おむすび まる,丸山 詩乃,service,minus,会計セルフの店,,not_produced
+onigiri,おむすび まる,丸山 詩乃,price,plus,具だくさんセットの店,,not_produced
+onigiri,おむすび まる,丸山 詩乃,price,minus,百円むすびの店,,not_produced
+onigiri,おむすび まる,丸山 詩乃,mood,plus,おむすび休憩席の店,,not_produced
+onigiri,おむすび まる,丸山 詩乃,identity,plus,創作具材おむすびの店,,not_produced
+onigiri,おむすび まる,丸山 詩乃,identity,minus,塩むすび専門の店,,not_produced
+veggie,野菜食堂 さざなみ,塩谷 あさひ,taste,plus,彩り野菜プレートの店,,not_produced
+veggie,野菜食堂 さざなみ,塩谷 あさひ,taste,minus,味付け選択サラダの店,,not_produced
+veggie,野菜食堂 さざなみ,塩谷 あさひ,service,plus,献立相談の野菜店の店,,not_produced
+veggie,野菜食堂 さざなみ,塩谷 あさひ,service,minus,セルフサラダの店,,not_produced
+veggie,野菜食堂 さざなみ,塩谷 あさひ,price,plus,野菜満腹プレートの店,,not_produced
+veggie,野菜食堂 さざなみ,塩谷 あさひ,mood,minus,野菜ランチカウンターの店,,not_produced
+veggie,野菜食堂 さざなみ,塩谷 あさひ,identity,plus,旬野菜の実験皿の店,,not_produced
+veggie,野菜食堂 さざなみ,塩谷 あさひ,identity,minus,定番野菜スープの店,,not_produced
