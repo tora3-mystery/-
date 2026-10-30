@@ -1058,7 +1058,7 @@ check('after-week private photo and anonymous Zitter accounts cannot be disclose
  s.click('leave-group');s.click('ask-group-contacts');
  assert.ok(!s.state.photoRequests.includes('P021'));
  assert.ok(!s.state.photoFollows.includes('P021'));
- const anonymous=newPlayer();anonymous.click('skip');anonymous.click('next-day');
+ const anonymous=newPlayer();
  visit(anonymous,'E02','E02-A');anonymous.click('leave-group');anonymous.click('ask-group-contacts');
  assert.ok(!anonymous.state.zitterFollows.includes('P040'));
 });
