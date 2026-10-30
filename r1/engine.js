@@ -1,6 +1,6 @@
 window.R1 = (function makeEngine(){
 "use strict";
-const VERSION="0.9.6-alpha";
+const VERSION="0.9.7-alpha";
 const GENRES=[
 {id:"taste",name:"商品・味",icon:"🍜"},
 {id:"service",name:"接客",icon:"💬"},
@@ -134,6 +134,22 @@ const RAMEN_ARGUMENTS={
  mood:{minus:["店内が狭い？ 寝泊まりする場所ではありません。麺が冷める前にどうぞ。","椅子の数より、丼の中を見てほしいですね。内装を変えるつもりはありません。"],neutral:["雰囲気は星3ですか。ここは観光施設ではないんですよ。"],plus:["落ち着く？ では静かに食べてください。店内は今のままです。","居心地より麺です。椅子を褒めても席は増やしません。"]},
  identity:{minus:["こだわりを捨てたら、私が作る意味がありません。店を変える気はありません。","普通の店にしてほしい？ 普通のお店は他にもたくさんあります。"],neutral:["個性が星3。平均点に合わせるつもりは、最初からありません。"],plus:["唯一無二ですか。それでも、明日も同じラーメンを出します。","褒められて変わったら、それはこだわりではなく迎合でしょう。"]}
 };
+const NEUTRAL_REPLIES={
+ cafe:["良かったところと気になったところ、両方あったんですね。無理に褒めなくても大丈夫ですよ。","星の真ん中も大切なご意見です。急がず、少しずつ見直していきますね。"],
+ cake:["良くも悪くも、というのが一番悔しいかもしれません。次の試作で変えてみます！","星の真ん中だって大事な評価です。次は一つ驚かせたいです！"],
+ curry:["好みの境目だったんですね。次の仕込みで少し配合を試してみます。","星3ですか。まだ工夫できるところがあるということですね。"],
+ teishoku:["気に入ったところもあったようで、ほっとしました。次の小鉢を考えてみますね。","毎日食べられるようにしたいので、どちらの感想も大切にします。"],
+ udon:["良いところと気になるところ、両方ですか。釜の前で考えてみます。","星の数だけでは分からない部分もあります。打ち方を見直してみます。"],
+ soba:["評価は真ん中ですか。蕎麦は細部で印象が変わりますからね。","良くも悪くもない、が案外難しい。粉と向き合い直します。"],
+ sandwich:["気になるところもありましたか。具材の組み合わせを考え直してみます。","星3、受け取りました。次も手に取りたいサンドを作れるよう工夫します。"],
+ burger:["真ん中か。鉄板で焼いた結果として、しっかり受け止めます。","もう一度選んでもらえるかが大事ですね。火加減から見直します。"],
+ pasta:["良かったところと迷ったところ、どちらもレシピ帳に残しておきます。","星3ですね。次の仕込みで試せることがありそうです。"],
+ chinese:["星3か、なるほどな！ 次はもっと満足して帰ってもらいたいね。","うまいだけじゃ足りないか。よし、鍋を振りながら考えるよ。"],
+ bakery:["お好みが分かれたんですね。焼き上がりを少し変えてみます。","良かったところを残して、気になるところは次の窯で確かめます。"],
+ fish:["真ん中の星、受け取りました。仕入れた魚ごとに違いが出ますからね。","また食べたいと思ってもらえるように、焼き加減を整えます。"],
+ onigiri:["星3ですね。毎日のご飯として、飽きずに通える店にしたいです。","気になるところもあったんですね。明日の炊き上がりから見てみます。"],
+ veggie:["良いところと物足りないところ、どちらもありましたか。野菜の組み合わせを考えます。","星の真ん中も一つの答えですね。次の旬を取り入れて工夫します。"]
+};
 function replyFor(state,id,star,genre){
  const s=state.shops[id],positive=star>3,negative=star<3,band=positive?"plus":negative?"minus":"neutral";
  const n=s.history.length,sameGenre=s.history.filter(h=>h.genre===genre).length;
@@ -146,8 +162,8 @@ function replyFor(state,id,star,genre){
   if((s.disputes||0)>=5)msg="これで何度目の口コミですか。"+msg;
   return msg;
  }
- const arr=RESPONSES[id][genre][band==="neutral"?"plus":band];
- let msg=band==="neutral"?["評価が分かれた点、参考にいたします。","どちらとも言い切れないご感想も、大切に読みます。","次に来られたとき、違いを感じていただけるといいですね。","良いところも気になるところもある、という評価ですね。次の一皿の参考にします。"][SHOPS.findIndex(x=>x.id===id)]||"良いところも気になるところもあるのですね。次の仕込みの参考にします。":arr[Math.floor(rnd()*arr.length)];
+ const arr=band==="neutral"?NEUTRAL_REPLIES[id]:RESPONSES[id][genre][band];
+ let msg=arr[Math.floor(rnd()*arr.length)];
  if(band!=="neutral"&&sameGenre>=1){const edge=SPICY_REPLIES[id][genre][band];msg=edge[Math.floor(rnd()*edge.length)];}
  if(n&&s.history[n-1].genre===genre)msg="前回も同じ点を見てくださっていましたね。"+msg;
  else if(n>0&&n%3===0)msg="何度も足を運んでくださっていることは覚えています。"+msg;
@@ -311,15 +327,24 @@ function npcText(state,id,genre,star,rnd){
  const discussesEvolution=hasEvolution&&view.route.genre===genre;
  const what=genre==="service"?"注文と接客":genre==="mood"?"店内の雰囲気":genre==="price"?"値段と量":`「${view.visual.product}」`;
  if(discussesEvolution){
-  if(star<=2){const old=genre==="service"?"以前の注文方法":genre==="price"?"以前の値付け":genre==="mood"?"以前の客席":genre==="identity"?"以前の店の個性":`改装前の${shop.product}`;
-   return [`前のほうが良かった。最近変わった${what}は自分に合わない。`,`${old}が好きだった。今の${what}は少し残念。`][Math.floor(rnd()*2)];}
-  if(star>=4)return [`最近の${what}は良い。以前より通いたくなった。`,`変わったと聞いて来店。${what}が気に入った。`][Math.floor(rnd()*2)];
-  return `最近${what}が変わった。前とは違うけれど、まだ評価は迷っている。`;
+  if(star<=2){
+   const old=genre==="service"?"以前の注文方法":genre==="price"?"以前の値付け":genre==="mood"?"以前の客席":genre==="identity"?"以前の店の個性":`改装前の${shop.product}`;
+   const samples=[`前のほうが良かった。最近変わった${what}は自分に合わない。`,`${old}が好きだった。今の${what}は少し残念。`,`改装したと聞いて来たけれど、${what}は以前のほうが好きだった。`,`変化を期待した分、今の${what}には少しがっかり。`];
+   return samples[Math.floor(rnd()*samples.length)];
+  }
+  if(star>=4){
+   const samples=[`最近の${what}は良い。以前より通いたくなった。`,`変わったと聞いて来店。${what}が気に入った。`,`前と違う${what}が新鮮。改装して良かったと思う。`,`新しい${what}を試したら、また来る理由が増えた。`];
+   return samples[Math.floor(rnd()*samples.length)];
+  }
+  const samples=[`最近${what}が変わった。前とは違うけれど、まだ評価は迷っている。`,`新しくなった${what}は悪くない。ただ、前の良さもあったと思う。`,`改装後の${what}を試した。もう何回か来て判断したい。`];
+  // Keep the gameplay RNG stream unchanged: evolved ★3 reviews previously drew no RNG.
+  const textRng=random(((state.seed>>>0)^Math.imul(state.month+17,0x9e3779b1)^Math.imul(SHOPS.findIndex(d=>d.id===id)+1,0x85ebca6b)^Math.imul(GENRES.findIndex(g=>g.id===genre)+1,0xc2b2ae35))>>>0);
+  return samples[Math.floor(textRng()*samples.length)];
  }
  const samples=star<=2?
- [`${topic}が期待と少し違った。次は別のものを頼むか迷う。`,`${topic}は好みではなかった。評判を見ていたので残念。`]:
- star===3?[`${topic}は良い点も気になる点もあった。`,`${topic}は普通。また来るかは少し考える。`]:
- [`${topic}が気に入った。また昼休みに寄りたい。`,`${topic}が思っていたより良かった。`];
+ [`${topic}が期待と少し違った。次は別のものを頼むか迷う。`,`${topic}は好みではなかった。評判を見ていたので残念。`,`気になっていた${topic}。自分にはあまり合わなかった。`,`期待して来た分、${topic}は少し残念だった。`]:
+ star===3?[`${topic}は良い点も気になる点もあった。`,`${topic}は普通。また来るかは少し考える。`,`${topic}は悪くないけれど、決め手には欠ける。`,`${topic}については、もう一度来てから判断したい。`]:
+ [`${topic}が気に入った。また昼休みに寄りたい。`,`${topic}が思っていたより良かった。`,`${topic}が良い。近くに来たらまた立ち寄りたい。`,`初めて来たけれど、${topic}の印象が残った。`];
  return samples[Math.floor(rnd()*samples.length)];
 }
 function background(state){
