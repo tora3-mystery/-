@@ -337,7 +337,9 @@ function npcText(state,id,genre,star,rnd){
    return samples[Math.floor(rnd()*samples.length)];
   }
   const samples=[`最近${what}が変わった。前とは違うけれど、まだ評価は迷っている。`,`新しくなった${what}は悪くない。ただ、前の良さもあったと思う。`,`改装後の${what}を試した。もう何回か来て判断したい。`];
-  return samples[Math.floor(rnd()*samples.length)];
+  // Keep the gameplay RNG stream unchanged: evolved ★3 reviews previously drew no RNG.
+  const textRng=random(((state.seed>>>0)^Math.imul(state.month+17,0x9e3779b1)^Math.imul(SHOPS.findIndex(d=>d.id===id)+1,0x85ebca6b)^Math.imul(GENRES.findIndex(g=>g.id===genre)+1,0xc2b2ae35))>>>0);
+  return samples[Math.floor(textRng()*samples.length)];
  }
  const samples=star<=2?
  [`${topic}が期待と少し違った。次は別のものを頼むか迷う。`,`${topic}は好みではなかった。評判を見ていたので残念。`,`気になっていた${topic}。自分にはあまり合わなかった。`,`期待して来た分、${topic}は少し残念だった。`]:
