@@ -1,15 +1,15 @@
 {
   "projectId": "K1",
   "title": "掲示物をご確認ください。（仮）",
-  "version": "α0.15.1-preview",
-  "updatedAtJST": "2026-10-31 00:09 JST",
-  "phase": "Phase 5/7 — DAY3 streamlined UI preview, awaiting three-door corridor asset and human acceptance",
+  "version": "α0.16.0-preview",
+  "updatedAtJST": "2026-10-31 00:56 JST",
+  "phase": "Phase 6/7 — Step A three-door art integrated, new camera remake pending",
   "aiAudit": {
-    "logic": "DAY3 JS mock passed: single hallway visual, mail x3, no separate 406-door image, E10 camera first, recheck photo without OFF, yes/no after viewing, no-choice survival, preview no writes, standard day1 save. Other days and 49-event full regression not rerun.",
-    "story": "Fixed DAY3 E10 content unchanged. Camera OFF removed only from new DAY3 modal; DAY5 revisit gameplay still uses previous UI."
+    "logic": "DAY3/4/9 isolated preview JS tests and regular DAY3/4/9(401) image conditions; DAY9(406) old composite and DAY6(406) mark maintained. Full 49-event regression not rerun.",
+    "story": "DAY3 moving, DAY4 405 vacancy, DAY9 404 ordinary family goods represented in corresponding matched photographs. No event answer or timeline changes."
   },
   "browserAudit": {
-    "status": "not_run_alpha0151_preview",
+    "status": "not_run_alpha0160",
     "pagesDeployment": "not_verified",
     "realPagesDisplay": "not_verified",
     "phoneSizesToTest": [
@@ -18,19 +18,20 @@
       428
     ],
     "nextChecks": [
-      "DAY3 single hall photo spatial meaning",
-      "intercom recheck after no OFF",
-      "mail details fit phone",
-      "other days unchanged"
+      "preview photo load DAY3/4/9",
+      "room labels aligned",
+      "E10 modal after DAY3 preview",
+      "DAY9 406 photo contrast",
+      "intercom match with new 3-door architecture"
     ]
   },
   "humanReview": {
-    "lastReviewedVersion": "α0.15.0-preview comments",
-    "currentReviewVersion": "α0.15.1-preview",
+    "lastReviewedVersion": "α0.15.1-preview",
+    "currentReviewVersion": "α0.16.0-preview",
     "pending": [
-      "approve single photo layout after Work delivers proper 3-door perspective",
-      "approve DAY3 camera no-OFF UI",
-      "approve horizontal door panel usability"
+      "assess three-door photo scene at 390px",
+      "DAY4 and DAY9 photo clarity",
+      "camera remake spatial consistency"
     ]
   },
   "assets": {
@@ -43,13 +44,21 @@
     "manifest": "k1/assets/manifest.csv",
     "eventMap": "k1/assets/review/remaining7-20261030/display-conditions.csv",
     "remainingImageProduction": "None currently required, except title image and eventual launch promotional image handled separately after game UI final.",
-    "integratedTotal": 42,
+    "integratedTotal": 45,
     "sourceScreens": "Non-intercom inspections have HTML visual screens; dedicated new background images not yet produced",
     "day3Corridor": "old four-door photo remains temporary; dedicated three-door asset not yet delivered",
     "nextImages": "After DAY3 prototype approval: photo 404/405/406 with 405 moving boxes, 404 mystery boxes, posted moving notice, plus remaining event-based assets",
-    "newCorridorImageRequirements": "Left-right 404 / 405 / 406, 404 mysterious boxes, 405 moving boxes and move-out notice, 406 entrance normal, same perspective for all 10 days."
+    "newCorridorImageRequirements": "Left-right 404 / 405 / 406, 404 mysterious boxes, 405 moving boxes and move-out notice, 406 entrance normal, same perspective for all 10 days.",
+    "threeDoorPilot": {
+      "status": "integrated",
+      "sourceBranch": "k1-three-door-pilot-20261031",
+      "sourceCommit": "c734117193d475b854b684b597f9b24bfef2cbd7",
+      "photos": 3
+    },
+    "remainingHallway": 6,
+    "remakeCamera": "24 planned, not yet delivered"
   },
-  "nextOwner": "Work reference-pilot images / K1 human review / K1 Chat integration",
-  "nextAction": "Work prepare DAY3 three-door base and later day4/day9 variations, K1 Chat integrate once human approves, then expand to all days and night events.",
+  "nextOwner": "Work new fixed intercom imagery / K1 Chat / Human preview",
+  "nextAction": "Human review three-door DAY3/4/9 preview; Work remakes camera photos matched to new architecture; K1 Chat integrates and checks event mappings.",
   "scope": "k1/ only"
 }
