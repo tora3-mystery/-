@@ -44,7 +44,7 @@ h2{font-size:17px;line-height:1.4;margin:0 0 8px}h3{font-size:14px;margin:0 0 8p
 .scene-figure .scene-stack>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center center}
 .scene-stack .scene-overlay{pointer-events:none}
 .door-camera{background:#111b20;padding:11px;border:2px solid #5b6f77;border-radius:9px;max-width:525px;margin:12px auto 4px}
-.door-camera svg{width:100%;height:auto;display:block;background:#202b30;border:1px solid #46585f}
+.door-camera img{width:100%;height:auto;display:block;aspect-ratio:16/9;object-fit:cover;background:#202b30;border:1px solid #46585f}
 .camera-head{display:flex;justify-content:space-between;gap:5px;color:#c3d2d3;font-size:10px;letter-spacing:.1em;margin-bottom:5px}
 .camera-foot{font-size:12px;color:#dce8e6;margin-top:9px;line-height:1.6}
 .mail-paper.strange{background:linear-gradient(155deg,#e0e0d3 0%,#fcf8ed 48%,#c6d0c7 100%);border-color:#9badab}
@@ -58,7 +58,7 @@ h2{font-size:17px;line-height:1.4;margin:0 0 8px}h3{font-size:14px;margin:0 0 8p
 .meter{border-top:1px solid #d7dbd9;padding-top:10px;margin-top:10px}.monitor{background:#1f272c;color:#e6ecef;border-radius:8px;padding:15px;white-space:pre-line;font-size:13px}
 .history{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}.history .btn{min-width:0;padding:10px 2px;font-size:12px}
 .result{border:1px solid #c7c4b7;background:#f0eee7;color:#26343c;padding:14px;border-radius:9px;margin:12px 0}
-.ending{background:#232a2d;color:#eff1f1;text-align:center;padding:35px 22px;border-radius:11px}.ending h2{font-size:32px;letter-spacing:.15em}.ending .endingname{font-size:22px;margin:15px 0}.ending p{max-width:540px;margin:10px auto}
+.ending{background:#232a2d;color:#eff1f1;text-align:center;padding:35px 22px;border-radius:11px}.ending-visual{display:block;width:100%;max-width:580px;height:auto;aspect-ratio:16/9;object-fit:cover;border:1px solid #5d7075;border-radius:7px;margin:16px auto 5px}.ending h2{font-size:32px;letter-spacing:.15em}.ending .endingname{font-size:22px;margin:15px 0}.ending p{max-width:540px;margin:10px auto}
 .tag{display:inline-block;border:1px solid #aeb9bd;padding:1px 6px;color:#697477;border-radius:4px;font-size:10px;margin-left:5px}
 .caption{color:var(--muted);font-size:11px;margin-top:9px}.confirm-choice{background:#eef1ef;color:#26343c;border:1px solid #9caeb4;border-radius:9px;padding:14px;margin-top:14px}.kid-art{display:block;width:100%;max-width:520px;height:auto;background:#fdfaf4;border:1px solid #ddd1b9;margin:12px auto}.answer-line{display:flex;gap:10px;align-items:center;padding:10px;margin:7px 0;background:#fff;color:#26343c;border:1px solid #d5dcda;border-radius:8px;font-weight:600;cursor:pointer}.answer-line input{height:19px;width:19px;flex-shrink:0;accent-color:#354e59}.confirm-choice .btn:disabled{opacity:.45}
 .hidden{display:none!important}
@@ -67,7 +67,7 @@ h2{font-size:17px;line-height:1.4;margin:0 0 8px}h3{font-size:14px;margin:0 0 8p
 </style>
 </head>
 <body><main class="app">
-<header class="mast"><div><div class="sub">短編UIゲーム実験室｜K1 プロトタイプ</div><h1>掲示物をご確認ください。</h1><div class="meta"><b>K1 α0.10.0</b> ｜ 2026-10-30 01:29 JST更新</div></div><a class="home" href="../index.html">作品一覧へ</a></header>
+<header class="mast"><div><div class="sub">短編UIゲーム実験室｜K1 プロトタイプ</div><h1>掲示物をご確認ください。</h1><div class="meta"><b>K1 α0.11.0</b> ｜ 2026-10-30 10:56 JST更新</div></div><a class="home" href="../index.html">作品一覧へ</a></header>
 <section id="intro" class="panel intro">
 <div class="sub">白波レジデンス・406号室</div><h2>掲示物をご確認ください。</h2>
 <p class="lede">あなたは白波レジデンス406号室で一人暮らしをする会社員です。</p><p>相場より安かった家賃に惹かれて越して3か月。仕事帰り、毎日エントランスの掲示板を確認しています。4階には空室が目立ちますが、管理人は「たまたまですよ」と言うばかりです。最近、掲示物の貼り替えが増えてきました。</p>
@@ -261,14 +261,14 @@ SIDE_POOL[4]=[
 SIDE_POOL[5]=[
  EVENTS[5][1],
  {id:'E06C',time:'21:11',title:'記録の再照合',scene:'外部サポート窓口の文書受付から「訂正後の4階呼出し件数を回答してください」と届いた。',monitor:'送付先は外部サポート窓口の文書受付。水曜の数値は木曜に訂正され、その訂正紙もすでに撤去されている。',hint:'以前の数値訂正'},
- {id:'E06D',time:'21:16',title:'書面の提出先確認',scene:'外部サポート窓口から「405号室の手紙と旧掲示の控えは、管理側ではなく当方へ提出してください」と独立窓口の案内が届く。',monitor:'差出人は外部サポート窓口で、掲示されていた独立窓口の連絡先と一致する。',hint:'外部サポート窓口の提出先'},
+ {id:'E06D',time:'21:16',title:'書面の提出先確認',scene:'外部サポート窓口から「302号室・杉浦から届いた警告の手紙と旧掲示の控えは、管理側ではなく当方へ提出してください」と独立窓口の案内が届く。',monitor:'差出人は外部サポート窓口で、掲示されていた独立窓口の連絡先と一致する。',hint:'外部サポート窓口の提出先'},
  {id:'E06E',time:'21:22',title:'訂正文書の撤回依頼',scene:'「呼出記録の訂正はなかったことにしてください」と管理側から通知が届く。「ご理解の場合は対応してください」。',monitor:'水曜日の件数と木曜日の訂正文書は同じ管理側が掲示したものだ。訂正の撤回を承認する理由は書かれていない。',hint:'訂正の取り扱い'},
  {id:'E06F',time:'21:20',title:'記録照合の本人認証',scene:'外部サポート窓口の文書受付で「氏名と部屋番号のみを送信し、資料の受付を完了してください」と表示された。',monitor:'受付先は外部サポート窓口。個人の連絡先や生年月日を求める項目もあるが、必須とは書かれていない。',hint:'本人確認の入力項目'}
 ];
 SIDE_POOL[6]=[
  EVENTS[6][0],
  {id:'E07C',time:'23:37',title:'特例点検の再通知',scene:'管理側から「正式な管理番号があります。室内に入れてください」と連絡が来た。',monitor:'管理番号は掲示と同じ。しかし個別の点検案内は届いていない。',hint:'撤去された立入点検の規則'},
- {id:'E07D',time:'23:39',title:'旧掲示の回収',scene:'「旧掲示をお持ちであれば、管理事務所へ提出してください」と連絡が来た。',monitor:'連絡元は管理側の真鍋。旧掲示の記録は405号室が渡したものと同じ内容だ。',hint:'以前の掲示と住民の警告'},
+ {id:'E07D',time:'23:39',title:'旧掲示の回収',scene:'「旧掲示をお持ちであれば、管理事務所へ提出してください」と連絡が来た。',monitor:'連絡元は管理側の真鍋。旧掲示の内容は302号室・杉浦から届いた写しと一致する。',hint:'以前の掲示と住民の警告'},
  {id:'E07E',time:'23:34',title:'点検履歴の独立照会',scene:'外部サポート窓口の独立した提出窓口から「旧点検履歴の書面を受け付けます。提出しますか」と案内が届いた。',monitor:'連絡先は外部サポート窓口の掲示と一致する。提出済みの証言と点検控えを照合する目的だ。',hint:'管理側と外部サポート窓口の区別'},
  {id:'E07F',time:'23:36',title:'共用部の異常信号',scene:'自室端末が「4階の共用部感知器に異常。室内の確認ボタンで受信を確定してください」と通知する。',monitor:'画面は入居時からある室内端末。遠隔の訪問者や音声応答ではなく、端末内の確認ボタンだ。',hint:'室内設備の操作と訪問の違い'}
 ];
@@ -583,19 +583,56 @@ function ending(){
    '「確認しました」。その声は、いつの間にか自分のものになっていた。'
   ];
  }
- return '<div class="ending"><div class="tiny" style="color:#b5c0c2">白波レジデンス｜10日間の記録</div><h2>THE END</h2><div class="endingname">'+esc(name)+'</div>'+paragraphs.map(function(p){return '<p>'+esc(p)+'</p>';}).join('')+'</div><div class="btnrow"><button class="btn primary" data-restartday="1">1日目からやり直す</button><button class="btn secondary" data-showrewind="1">日付を選ぶ</button></div>';
+ return '<div class="ending"><div class="tiny" style="color:#b5c0c2">白波レジデンス｜10日間の記録</div><h2>THE END</h2><div class="endingname">'+esc(name)+'</div>'+paragraphs.map(function(p){return '<p>'+esc(p)+'</p>';}).join('')+endingVisualHtml()+'</div><div class="btnrow"><button class="btn primary" data-restartday="1">1日目からやり直す</button><button class="btn secondary" data-showrewind="1">日付を選ぶ</button></div>';
 }
 var CAMERA_VISITORS=['E01','E01A','E02','E02A','E02G','E02H','E02I','E02C','E02D','E02L','E10','E03','E05','E05C','E05F','E05G','E06','E07','E08'];
 function isCameraEvent(e){return CAMERA_VISITORS.includes(e.id);}
+/* All file references below exist in the imported camera bundle. */
+var CAMERA_STILL_BY_EVENT={
+ E01:'people/courier-unplanned.webp',E01A:'people/courier-planned.webp',
+ E02:'people/ono-normal.webp',E02A:'people/ono-normal.webp',
+ E02G:'people/after-hours-management.webp',E02H:'people/impostor-technician.webp',
+ E02I:'people/after-hours-management.webp',E02C:'people/courier-planned.webp',
+ E02D:'people/key-envelope-visitor.webp',E02L:'people/unfamiliar-map-visitor.webp',
+ E10:'people/hasegawa-day3.webp',E03:'empty/normal.webp',
+ E05:'people/ono-normal.webp',E05C:'people/ono-normal.webp',
+ E05F:'people/ono-normal.webp',E05G:'people/impostor-technician.webp',
+ E06:'people/sugiura-day6.webp',E07:'people/after-hours-management.webp'
+};
+/* Work's additional horror stills must be added here only after delivery.
+   E03 can add look 3; E08 can add branches {401:{2:...},406:{2:...}}. */
+var CAMERA_RECHECK_BY_EVENT={E03:{2:'empty/0214-second-look.webp'}};
+var ENDING_VISUALS_BY_TARGET={};
+function cameraRecheckSource(e){
+ var options=CAMERA_RECHECK_BY_EVENT[e.id]||{};
+ if(e.id==='E08')options=options[state.hauntTarget]||{};
+ for(var n=cameraLookCount;n>=2;n--)if(typeof options[n]==='string')return options[n];
+ return null;
+}
+function cameraSource(e){
+ var photo=cameraRecheckSource(e);
+ if(photo)return photo;
+ if(e.id==='E08')return state.hauntTarget==='406'?'people/arima-rested.webp':'people/arima-fatigued.webp';
+ return CAMERA_STILL_BY_EVENT[e.id]||null;
+}
 function cameraHtml(e){
- var type=e.id==='E03'?'empty':['E06','E10'].includes(e.id)?'female':['E01','E01A','E01C','E02C'].includes(e.id)?'courier':['E02','E02A','E05','E05C','E05F'].includes(e.id)?'worker':'unknown';
- var face=type==='empty'?'':('<g transform="translate(320 0)"><path d="M-104 356L-91 255Q-73 235 -30 233H30Q83 237 95 260L105 356Z" fill="#5b696b"/><ellipse cy="164" rx="52" ry="71" fill="#99a5a0"/><path d="M-52 148Q-64 96 -19 89Q38 65 53 133L40 126Q4 118 -19 124Z" fill="#26353a"/><path d="M-29 164h18M13 164h18" stroke="#20343a" stroke-width="5"/><circle cx="-20" cy="175" r="4" fill="#14262c"/><circle cx="20" cy="175" r="4" fill="#14262c"/><path d="M0 179l-7 22 11 3M-16 223q16 5 32 0" stroke="#526568" stroke-width="3" fill="none"/>'+
- (type==='female'?'<path d="M-44 126Q-69 152 -63 254L-36 262V165Z M45 132Q67 157 60 258L36 263V160Z" fill="#29363d"/>':'')+
- (type==='courier'?'<path d="M-58 120Q0 82 55 120" stroke="#536e7a" stroke-width="13" fill="none"/>':'')+
- (type==='worker'?'<rect x="-73" y="275" width="35" height="20" fill="#bbc7bc"/><path d="M-68 284h27" stroke="#637377"/>':'')+
- '</g>');
- var label=e.id==='E08'?(state.hauntTarget==='406'?'有馬は不自然なほど元気そうだ。':'有馬はひどく疲れた顔をしている。'):e.id==='E02L'?'男性が地図をカメラに見せている。':type==='empty'?(cameraLookCount>=2?'玄関前は無人。映像の下端に、室内側にあるはずの玄関マットが一瞬映った。':'玄関前は無人。呼出音だけが続いている。'):type==='female'?'女性の顔が映る。':type==='worker'?'作業服の人物がこちらを見ている。':type==='courier'?'配達員の顔が確認できる。':'訪問者の顔は見えるが、所属は映像だけでは分からない。';
- return '<div class="door-camera"><div class="camera-head"><span>406 / CAMERA</span><span>● LIVE</span></div><svg role="img" aria-label="'+label+'" viewBox="0 0 640 360"><rect width="640" height="360" fill="#35474e"/><path d="M90 0v360M550 0v360M90 310h460" stroke="#75888b" stroke-width="12"/>'+face+'<g opacity=".2" stroke="#d3dfe0"><path d="M0 30h640M0 90h640M0 150h640M0 210h640M0 270h640M0 330h640"/></g><path d="M20 20h50M20 20v40M620 20h-50M620 20v40M20 340h50M20 340v-40M620 340h-50M620 340v-40" stroke="#b7cac9" fill="none" stroke-width="2"/></svg><div class="camera-foot">'+label+'</div></div>';
+ var photo=cameraSource(e);
+ if(!photo)return '';
+ var label=e.id==='E08'?(state.hauntTarget==='406'?'有馬は不自然なほど元気そうだ。':'有馬はひどく疲れた顔をしている。')
+ :e.id==='E03'?(cameraLookCount>=2?'玄関前は無人。映像の下端に、室内側にあるはずの玄関マットが一瞬映った。':'玄関前は無人。呼出音だけが続いている。')
+ :e.id==='E02L'?'男性が地図をカメラに見せている。'
+ :e.id==='E10'?'405号室の長谷川が廊下を気にしながら立っている。'
+ :e.id==='E06'?'302号室の杉浦が古い掲示のコピーを持っている。'
+ :['E02','E02A','E05','E05C','E05F'].includes(e.id)?'東洋設備の大野が作業服で立っている。'
+ :['E02H','E05G'].includes(e.id)?'別会社の作業服を着た人物が映っている。'
+ :['E01','E01A','E02C'].includes(e.id)?'訪問者が荷物を手にしている。'
+ :e.id==='E02D'?'訪問者が封筒を差し出している。'
+ :'訪問者が立っている。所属は映像だけでは分からない。';
+ return '<div class="door-camera"><div class="camera-head"><span>406 / CAMERA</span><span>● LIVE</span></div><img src="./assets/camera/'+photo+'" alt="'+esc(label)+'" width="1280" height="720" decoding="async"><div class="camera-foot">'+esc(label)+'</div></div>';
+}
+function endingVisualHtml(){
+ var file=ENDING_VISUALS_BY_TARGET[state.hauntTarget];
+ return file?'<img class="ending-visual" src="./assets/ending/'+file+'" alt="最後に映った玄関の様子" width="1280" height="720" decoding="async">':'';
 }
 function renderNight(){var n=el('nightPanel');n.classList.toggle('hidden',state.phase!=='night'||state.ended);if(state.phase!=='night'||state.ended)return;
 if(state.day===9){n.innerHTML='<div class="over">9日目｜夜</div><h2>何も起こらない夜</h2><div class="scenario">訪問も呼出しもない。廊下で誰かが紙を剥がす音がする。杉浦の『あの夜をなかったことにしたくない』という声が頭から離れない。407号室のあった方角は、今夜も暗い。</div><button class="btn primary" data-quietnext="1">翌日へ進む</button>';return;}

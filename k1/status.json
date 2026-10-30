@@ -1,54 +1,54 @@
 {
   "projectId": "K1",
   "title": "掲示物をご確認ください。（仮）",
-  "version": "α0.10.0",
-  "updatedAtJST": "2026-10-30 01:29 JST",
-  "phase": "Phase 4 — approved 404 red herring + owner encounter implemented; 49-event AI checks passed; human trial pending",
+  "version": "α0.11.0",
+  "updatedAtJST": "2026-10-30 10:56 JST",
+  "phase": "Phase 6 — 13 camera stills integrated, 11 additional horror stills pending delivery",
   "aiAudit": {
-    "logic": "49/49 successful checkpoint paths with all 49 event IDs, 13 judgments; 36/36 opposite action side paths failed; fixed E10 and E08 wrong actions failed; four ending states reachable; 192080 theoretical random combinations not fully enumerated",
-    "story": "DAY3 Hasegawa 405 fixed visit, day3 foreign-language nighttime visitor, DAY8 Arima 401 visit replaces fictitious registry, historical rental flyer, 404 false suspicion, neighborhood night caution"
+    "logic": "α0.11.0: JS compile, 19 camera mapping, 13 images, E03 repeat look, E08 2 target states, four endings, 49 event definitions checked. α0.10.0 prior: 49 successful and 36 incorrect paths, not rerun.",
+    "story": "Fixed E06D/E07D old sender references to 302 Sugiura."
   },
   "browserAudit": {
-    "status": "not_run_alpha0100",
-    "pagesDeployment": "awaiting commit",
+    "status": "not_run_alpha0110",
+    "pagesDeployment": "not_verified",
     "realPagesDisplay": "not_verified",
     "phoneSizesToTest": [
       320,
       390,
       428
+    ],
+    "nextChecks": [
+      "camera still loading",
+      "E03 second look",
+      "E08 2 branches",
+      "save/rewind",
+      "ending display"
     ]
   },
   "humanReview": {
     "lastReviewedVersion": "α0.6.1",
-    "pilotImageLook": "user approved three candidate pictures",
-    "latestGame": "α0.10.0 human play not yet reviewed",
+    "cameraAssetPreview": "User provisionally accepted the 13 camera images; some compositing feel",
+    "latestGame": "α0.11.0 not yet human-reviewed",
     "openIssues": [
-      "DAY3 two nightly decisions impact on play time",
-      "DAY8 owner scene and cause for gameover plausibility",
-      "404 red herring fair reveal",
-      "Unfamiliar-language nighttime caller emotional effect vs explanatory follow-up",
-      "Camera fish-eye fixed viewpoint and mismatch with corridor photos",
-      "Real-phone text contrast and scrolling"
+      "11 horror stills pending",
+      "actual phone view and contrast",
+      "DAY3 pacing",
+      "DAY8 plausibility"
     ]
   },
   "assets": {
-    "status": "Integrated: 3 originals + 8 phase2 assets",
-    "count": 11,
+    "status": "existing 11 plus 13 camera images integrated, additional 11 horror images pending",
+    "existingImages": 11,
+    "cameraStills": 13,
+    "totalIntegrated": 24,
+    "cameraEventCount": 19,
     "manifest": "k1/assets/manifest.csv",
-    "sourceBranch": "k1-visual-phase2-20261029",
-    "remainingCandidates": 0,
-    "nextProduction": "none until human review",
-    "cameraFaces": "SVG temporary; no production intercom stills integrated",
-    "existingGameImages": 11,
-    "camera": "SVG mock faces; no actual camera still photographs yet; Work imagery planned pending separate human image check",
-    "fullAssetIntegration": "existing 11 WebP retained",
-    "integratedImages": 11,
-    "cameraPortraits": "SVG prototype only; Work 5 of 28 pilot ordered separately, not yet delivered or integrated",
-    "nextWork": "Review five camera still prototypes then produce remaining 23",
-    "upcoming": "Work pilot 5 images delivered on k1-camera-scenario-pilot-20261030 branch, not merged",
-    "cameraViewpointIssue": "The pilot uses corridor-oriented perspective; rework to fixed wide-angle door-intercom view before producing remaining 23"
+    "eventMap": "k1/assets/review/camera-scenario/event-map.csv",
+    "sourceBranch": "k1-camera-scenario-main-20261030",
+    "sourceCommit": "f80b2eea52137020f32610a74f881debe8f99813",
+    "additionalStillsPlanned": 11
   },
-  "nextOwner": "K1 human reviewer / Work camera-perspective revision / K1 Chat image integration",
-  "nextAction": "Review alpha0.10.0 game scenario and DAY3/DAY8 UX, inspect 5 Work stills for door-camera placement and fish-eye perspective; then deliver revised pilot and remaining 23",
+  "nextOwner": "Work horror stills / K1 Chat post-delivery integration and QA",
+  "nextAction": "Receive additional 11 images, verify filename/event correspondence, register repeat look and ending variants, browser and human testing.",
   "scope": "k1/ only"
 }
