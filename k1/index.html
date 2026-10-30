@@ -85,7 +85,7 @@ h2{font-size:17px;line-height:1.4;margin:0 0 8px}h3{font-size:14px;margin:0 0 8p
 </style>
 </head>
 <body><main class="app">
-<header class="mast"><div><div class="sub">短編UIゲーム実験室｜K1 プロトタイプ</div><h1>掲示物をご確認ください。</h1><div class="meta"><b>K1 α0.13.0</b> ｜ 2026-10-30 19:07 JST更新</div></div><a class="home" href="../index.html">作品一覧へ</a></header>
+<header class="mast"><div><div class="sub">短編UIゲーム実験室｜K1 プロトタイプ</div><h1>掲示物をご確認ください。</h1><div class="meta"><b>K1 α0.14.0</b> ｜ 2026-10-30 23:30 JST更新</div></div><a class="home" href="../index.html">作品一覧へ</a></header>
 <section id="intro" class="panel intro">
 <div class="sub">白波レジデンス・406号室</div><h2>掲示物をご確認ください。</h2>
 <p class="lede">あなたは白波レジデンス406号室で一人暮らしをする会社員です。</p><p>相場より安かった家賃に惹かれて越して3か月。仕事帰り、毎日エントランスの掲示板を確認しています。4階には空室が目立ちますが、管理人は「たまたまですよ」と言うばかりです。最近、掲示物の貼り替えが増えてきました。</p>
@@ -94,7 +94,7 @@ h2{font-size:17px;line-height:1.4;margin:0 0 8px}h3{font-size:14px;margin:0 0 8p
 </section>
 <div id="game" class="hidden">
 <section class="panel status"><div><strong id="dayLabel"></strong><div class="hint" id="phaseLabel"></div></div><div class="btnrow"><button class="btn secondary" id="showRewind">日付からやり直す</button><button class="btn secondary" id="showIntro">説明</button></div></section>
-<section id="rewindPanel" class="panel hidden"><h2>何日目からやり直しますか</h2><p class="tiny">指定日の帰宅時（掲示を確認する前）へ戻ります。以降の判断・証拠・出来事は、その時点から再計算されます。</p><div id="days" class="history"></div><p class="tiny">※未来の分岐にジャンプすることはできません。</p></section>
+<section id="rewindPanel" class="panel hidden"><h2>何日目からやり直しますか</h2><p class="tiny">指定日の帰宅時（掲示を確認する前）へ戻ります。抽選の出来事は前回と変わります。決まっている物語の出来事は変わりません。以降の判断・証拠は再計算されます。</p><div id="days" class="history"></div><p class="tiny">※未来の分岐にジャンプすることはできません。</p></section>
 <section id="endingPanel" class="panel hidden"></section>
 <section id="nightPanel" class="panel event hidden"></section>
 <section id="morningPanel" class="panel hidden"><h2 id="morningTitle">帰宅時｜エントランス</h2><p id="morningText"></p><p class="caption" id="morningCaption">掲示を確認してから郵便受けと4階の玄関へ進みます。</p></section>
@@ -256,7 +256,7 @@ var SIDE_POOL={
   EVENTS[2][1],
   {id:'E02C',time:'19:48',title:'配達日の変更',scene:'宅配便です。「再配達のご依頼があったお荷物です。406号室の水野さんですね」。',monitor:'制服の配達員。送り状には406号室とある。再配達日時を知らせる通知がポストに届いている。',hint:'水曜日の再配達通知'},
   {id:'E02D',time:'21:08',title:'空室の鍵の確認',scene:'「407号室の鍵を預かってください。玄関先までお願いします」と知らない男が呼びかけている。',monitor:'男は封筒に407と書いて差し出す。407号室は空室と掲示されていた。',hint:'空室の案内と夜間訪問の規則'},
-  {id:'E02E',time:'20:41',title:'委任確認のお知らせ',scene:'管理側から「本日21時までに異議がなければ同意済みとして扱います」と届いた。外部サポート窓口への異議申立てを送信しますか。',monitor:'送付元は管理側の連絡窓口。書類の送付先として「外部サポート窓口」と「管理側」が記載されている。',hint:'外部サポート窓口への意見窓口と当日掲示'},
+  {id:'E02E',time:'20:41',title:'委任確認のお知らせ',scene:'管理側からスマートフォンにメールが届いた。「本日21時までに異議がなければ同意済みとして扱います」。異議を出すなら、メールに記載された外部サポート窓口へ自分で送信する必要がある。',monitor:'差出人は管理側のメール。返信先の管理側と、別組織である外部サポート窓口の二つが載っている。これは玄関への訪問ではない。',hint:'外部サポート窓口への意見窓口と当日掲示'},
   {id:'E02F',time:'21:36',title:'共用部の防火扉',scene:'廊下の防火扉が開いたままになり、警報器が鳴っている。「4階担当住戸は防火扉の閉鎖を確認してください」と表示された。',monitor:'炎や煙は見えない。扉の前に物が挟まっている。端末に閉鎖操作の表示がある。',hint:'防火扉の警報時の手順'}
  ]
 };
@@ -467,7 +467,7 @@ function resultFor(e,c,extra){
   else msg='「氏名・406号室」の2項目で照合が完了した。電話番号を伝える必要はなかった。';
  }else if(e.id==='E10'){
  if(c==='yes'){state.trust++;msg='長谷川は廊下に立ったまま話す。「夜中に何度も呼ばれるんです。管理人は信じてくれません。明日引っ越します」。長谷川はインターホンを振り返る。「カメラ、つけ直したことあります？　最初は誰も映っていなかったのに、切ってから見ると、同じ廊下なのに何かが違って……。私、怖くて何度も見てしまったんです」。最後に言った。「302号室の杉浦さんから手紙が来るはずです。明日のポストは絶対に見てください」。';}
- else fail('聞かなかった隣人','405号室の退去を控えた長谷川は相談したがっていた。','長谷川は去り、翌朝405号室は空になった。');
+ else msg='長谷川の話を聞かずにいると、相手はやがて去った。翌朝、405号室は空になった。何を伝えたかったのだろう。';
  }else if(e.id==='E02L'){
  if(c==='no')msg='扉を開けずにいると男性は去った。翌朝、隣の建物への道を間違えた滞在者と分かった。';
  else fail('深夜の見知らぬ訪問','相手が困っている様子でも、深夜の予定外訪問だった。','ドアを開けると男性は驚いて後ずさった。廊下の奥から別の足音が聞こえた。');
@@ -754,13 +754,13 @@ if(n){h+='<div class="detail"><div class="issuer">'+esc(n.id)+'｜'+esc(n.issuer
   if(state.day>=10&&state.hauntTarget==='406')h+='<img class="scene-overlay" src="./assets/door/drops.webp" alt="" aria-hidden="true" width="1080" height="1440" loading="lazy" decoding="async">';
   h+='</div><figcaption>406号室玄関</figcaption></figure></div>';
   if(state.day>=3&&state.day<=6){
-   h+='<details class="hall-inspect"><summary>404号室側の荷物をもう一度見る</summary><img src="./assets/hallway/404-boxes-night.webp" alt="夜の404号室前に並んだ長い箱、機材ケース、小箱" width="1080" height="1440" loading="lazy" decoding="async"><p>帰宅時、404号室側に置かれていた荷物。何が入っているかは分からない。</p></details>';
+   h+='<details class="hall-inspect"><summary>404号室前の荷物を確認する</summary><img src="./assets/hallway/404-boxes-night.webp" alt="夜の404号室前に並んだ長い箱、機材ケース、小箱" width="1080" height="1440" loading="lazy" decoding="async"><p>帰宅時、404号室側に置かれていた荷物。何が入っているかは分からない。</p></details>';
   }
   if(state.day>=9){
    h+='<details class="hall-inspect"><summary>404号室の荷物の正体を確かめる</summary><div class="hall-photo-compare"><figure><img src="./assets/hallway/404-boxes-night.webp" alt="先日404号室前に置かれていた閉じた箱" width="1080" height="1440" loading="lazy" decoding="async"><figcaption>先日の荷物</figcaption></figure><figure><img src="./assets/hallway/404-boxes-explained.webp" alt="同じ箱の中にある夜勤の機材と子どもの工作用品" width="1080" height="1440" loading="lazy" decoding="async"><figcaption>夜勤の機材と工作用品</figcaption></figure></div><p>怪しく見えたのは、搬入する時間帯が遅かったためだった。</p></details>';
   }
   if(state.day>=4){
-   h+='<details class="hall-inspect"><summary>405号室の表札跡を詳しく見る</summary><img src="./assets/hallway/405-vacated.webp" alt="退去した405号室の表札が取り外され、小さな擦り跡が残っている" width="1080" height="1440" loading="lazy" decoding="async"></details>';
+   h+='<p class="caption">405号室は退去済み。表札が外されたことが廊下の写真から分かる。</p>';
   }
   h+='<div class="listing">';
   items('door').forEach(function(i){h+='<div class="record"><strong>'+esc(i.name)+'</strong><p>'+esc(i.text)+'</p></div>';});
@@ -785,20 +785,36 @@ el('morningText').textContent=([
 '月曜日。仕事から帰る。家賃が妙に安かった406号室。真鍋は「空室が続いていたので」と言った。駅裏の通りでは、夜間の強引な勧誘や訪問先の間違いも聞く。掲示板には防犯のお知らせが一枚だけある。',
 '火曜日。掲示板の前で405号室の長谷川が立ち止まる。「夜中にまた鳴ったんです」と管理人へ訴えている。真鍋は聞こえないふりをした。',
 '水曜日。405号室に引越しの段ボールが積まれている。404号室の前にも用途の分からない大きな箱がある。掲示板には405号室の退去予定が貼られている。',
-'木曜日。405号室の表札が外されていた。昨日、長谷川が言った「明日のポストは絶対に見て」を思い出す。ポストへ必ず寄るつもりで掲示板を離れた。',
+'木曜日。405号室の表札が外されていた。ポストを確認してから帰ることにした。',
 '金曜日。4階の空室が増えたことを知らせる掲示が貼られている。真鍋が改訂した夜間呼出しの注意書きが、昨日とは違う。',
 '土曜日。昨夜の呼出しが夢だったか分からない。真鍋は302号室からの手紙を回収しようとしている。',
 '日曜日。掲示には「有馬オーナーからの指示」という言葉が増えた。302号室の杉浦が、どうしても伝えたいことがあるらしい。',
 '月曜日。杉浦から聞いた藤井の話が頭を離れない。今日は、杉浦が保存していた入居前の募集チラシをポストで確認しよう。',
 '火曜日。404号室の住人が段ボールを運んでいた。夜勤明けの家族が使う道具と、子どもの工作用品だという。怪しく見えたのは生活時間が違うからだった。空室の405号室にはまた封筒が届いている。',
 '水曜日。真鍋から「対応完了」の通知が来た。手元にある掲示と郵便物を、外部窓口へ送るなら今日までだ。'
-])[state.day]+(state.day===4&&state.history.some(function(x){return x.id==='E02L';})?' 昨夜の聞き慣れない言葉の訪問者は、隣の建物への道を間違えた滞在者だったと回覧で分かった。':'')+(state.day>=6?(state.hauntTarget==='406'?' 401号室は急に静かになったらしい。代わりに自分の玄関で、昨夜から見覚えのない跡が増えている。':' 401号室では今も呼出しが続いているようだ。真鍋の顔色はさらに悪くなっている。'):'')+(state.day>=7&&state.alert>=2?' 管理側から、あなたの問い合わせについて確認したいという連絡も入っている。':'');
+])[state.day]+(state.day===4?(state.history.some(function(x){return x.id==='E10'&&x.choice==='yes';})?' 昨夜、長谷川は「明日のポストは絶対に見て」と言っていた。':state.history.some(function(x){return x.id==='E10'&&x.choice==='no';})?' 昨夜、長谷川の話を聞かなかった。':''):'')+(state.day===4&&state.history.some(function(x){return x.id==='E02L';})?' 昨夜の聞き慣れない言葉の訪問者は、隣の建物への道を間違えた滞在者だったと回覧で分かった。':'')+(state.day>=6?(state.hauntTarget==='406'?' 401号室は急に静かになったらしい。代わりに自分の玄関で、昨夜から見覚えのない跡が増えている。':' 401号室では今も呼出しが続いているようだ。真鍋の顔色はさらに悪くなっている。'):'')+(state.day>=7&&state.alert>=2?' 管理側から、あなたの問い合わせについて確認したいという連絡も入っている。':'');
 var rp=el('rewindPanel');if(!rp.classList.contains('hidden'))renderRewind();
 renderNight();renderTab();
 }
 function renderRewind(){var h='';for(var d=1;d<=10;d++){h+='<button class="btn" '+(d>state.day?'disabled':'data-restartday="'+d+'"')+'>'+d+'日目'+(d===state.day?'（現在）':'')+'</button>';}el('days').innerHTML=h;}
 function start(){state=initial();state.started=true;selectedMail=null;pendingChoice=null;reply={fields:[],number:'',person:''};snapshot();save();render();scrollToTop();}
-function rewind(day){day=Number(day);if(!state.snapshots[day]||day>state.day)return;var old=state.snapshots;var snap=copy(old[day]);snap.snapshots={};Object.keys(old).forEach(function(k){if(Number(k)<=day)snap.snapshots[k]=old[k];});state=snap;state.afterCameraSeen=false;if(state.day>=7&&!state.drawingTarget)state.drawingTarget=firstDrawingTarget(state.history);state.started=true;tab='board';selected=null;selectedMail=null;monitor=false;pendingChoice=null;reply={fields:[],number:'',person:''};el('rewindPanel').classList.add('hidden');save();render();scrollToTop();}
+function rerollIncident(day,oldId){
+ var slot=(DAY_SCHEDULE[day]||[]).find(function(x){return x.pool||x.early;});
+ if(!slot)return;
+ var pool=slot.early?EARLY_POOL[day]:SIDE_POOL[slot.pool];
+ var choices=pool.filter(function(x){return x.id!==oldId;});
+ if(choices.length)state.sideChoices[day]=choices[Math.floor(Math.random()*choices.length)].id;
+}
+function rewind(day){
+ day=Number(day);if(!state.snapshots[day]||day>state.day)return;
+ var old=state.snapshots,previous=state.sideChoices&&state.sideChoices[day]||old[day].sideChoices&&old[day].sideChoices[day];
+ var snap=copy(old[day]);snap.snapshots={};
+ Object.keys(old).forEach(function(k){if(Number(k)<=day)snap.snapshots[k]=old[k];});
+ state=snap;if(previous)rerollIncident(day,previous);
+ state.afterCameraSeen=false;if(state.day>=7&&!state.drawingTarget)state.drawingTarget=firstDrawingTarget(state.history);
+ state.started=true;tab='board';selected=null;selectedMail=null;monitor=false;cameraLookCount=0;pendingChoice=null;reply={fields:[],number:'',person:''};
+ snapshot();el('rewindPanel').classList.add('hidden');save();render();scrollToTop();
+}
 function goEntry(){if(state.phase!=='morning'||state.ended||state.locationStage!=='board')return;state.locationStage='entry';selectedMail=null;save();render();scrollToTop();}
 function openMail(id){if(state.phase!=='morning'||state.ended||state.locationStage!=='entry')return;var i=items('post').find(function(item){return item.id===id;});if(!i)return;selectedMail=id;if(!state.mailRead.includes(id)){state.mailRead.push(id);add(id);}save();renderTab();}
 function beginNight(){if(state.phase!=='morning'||state.ended||state.locationStage!=='entry')return;state.phase='night';cameraLookCount=0;monitor=false;pendingChoice=null;reply={fields:[],number:'',person:''};tab='board';selected=null;save();render();scrollToTop();}
