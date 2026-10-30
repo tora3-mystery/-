@@ -1,15 +1,15 @@
 {
   "projectId": "K1",
   "title": "掲示物をご確認ください。（仮）",
-  "version": "α0.14.1",
-  "updatedAtJST": "2026-10-30 23:29 JST",
-  "phase": "Phase 7 — UX corrections applied; source-specific photos and current browser QA pending",
+  "version": "α0.15.0-preview",
+  "updatedAtJST": "2026-10-30 23:50 JST",
+  "phase": "Phase 5/7 — DAY3 new UI prototype for human acceptance; full-game UI and asset redesign not yet started",
   "aiAudit": {
-    "logic": "JS tests: E10 refuse safe; 7 random-day retries yield different event IDs and save snapshot; fixed days 5,9,10 unchanged; DAY5 confirmation gated by camera, and no-response leads to mandatory second camera and optional third; E02E gate requires incoming notification view. Current 49-event regression NOT rerun. Later minor correction: DAY5 follow-up forced only if fewer than 2 camera activations before decline; 1/2/3 prior activations tested.",
-    "story": "E10 no longer arbitrary death and DAY4 intro conditional. E02E explicitly management email; camera not falsely shown for remote notices. Night source inspection required before making choice."
+    "logic": "DAY3 preview JS simulated: direct query, three unread envelopes, open mail, no localStorage writes, transition confirmation, E10 at 19:06, camera-gated choice, refusal still safe. No 49-event full regression in this change.",
+    "story": "DAY3 fixed visitor E10 unchanged. Day3 UI only; nonvisit 30 events not rewritten as visits."
   },
   "browserAudit": {
-    "status": "not_run_alpha0141",
+    "status": "not_run_alpha0150_preview",
     "pagesDeployment": "not_verified",
     "realPagesDisplay": "not_verified",
     "phoneSizesToTest": [
@@ -18,23 +18,22 @@
       428
     ],
     "nextChecks": [
-      "all 49-event inspection gates",
-      "random retry including two events on DAY3",
-      "E03 second/third visit UI",
-      "inspection persistence across reload",
-      "remote event visual readability",
-      "DAY5 after >=2 pre-decision views does not require redundant check"
+      "open ?preview=day3 and confirm entry screenshot",
+      "3 envelopes open/close",
+      "room numbers match intended 3 doors",
+      "night transition and camera dialog on phone",
+      "second DAY3 incident retains old UI",
+      "normal save unaffected"
     ]
   },
   "humanReview": {
-    "lastReviewedVersion": "α0.13.0 user spot checks",
-    "latestGame": "α0.14.1 not yet human-reviewed",
-    "openIssues": [
-      "all confirmation contexts should eventually have dedicated images",
-      "DAY5 mandatory second-camera timing",
-      "status preservation/reload",
-      "404 DAY3 initial wording",
-      "corridor photo usefulness"
+    "lastReviewedVersion": "α0.14.1 partial human notes",
+    "currentReviewVersion": "α0.15.0-preview",
+    "pending": [
+      "approve mailbox/hallway unified layout",
+      "approve two modal stages for night event",
+      "approve actual 3-door corridor photo spec",
+      "approve expansion to all 49 events"
     ]
   },
   "assets": {
@@ -48,9 +47,11 @@
     "eventMap": "k1/assets/review/remaining7-20261030/display-conditions.csv",
     "remainingImageProduction": "None currently required, except title image and eventual launch promotional image handled separately after game UI final.",
     "integratedTotal": 42,
-    "sourceScreens": "Non-intercom inspections have HTML visual screens; dedicated new background images not yet produced"
+    "sourceScreens": "Non-intercom inspections have HTML visual screens; dedicated new background images not yet produced",
+    "day3Corridor": "provisional existing 404-boxes-night and 406 door/base; new 3-door photo not produced",
+    "nextImages": "After DAY3 prototype approval: photo 404/405/406 with 405 moving boxes, 404 mystery boxes, posted moving notice, plus remaining event-based assets"
   },
-  "nextOwner": "K1 Chat / Work screen image production / K1 human reviewer",
-  "nextAction": "Human-test 49-source-gated alpha0.14.1, DAY5 one-look and multi-look refuse paths; order dedicated imagery for 30 remote/device incidents.",
+  "nextOwner": "Human DAY3 preview / K1 dedicated Chat",
+  "nextAction": "Human test ?preview=day3; revise single-day UX, then audit all 49 events and commission new unified camera/event photos.",
   "scope": "k1/ only"
 }
