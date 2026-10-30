@@ -639,7 +639,7 @@ function handle(act,id){
     S.personalIntroduced[id]=true;
   }
   if(!S.interacted.includes(id))S.interacted.push(id);
-  const bystander=Dialogue.thirdParty(id,S.group,S,type==='talk'&&Routes.get(S.group,id)?'producer':type);
+  const bystander=Dialogue.thirdParty(id,S.group,S,type==='talk'&&Routes.get(S.group,id)?'talk-producer':type);
   if(bystander?.selfIntroduced){
     S.personalIntroduced[bystander.pid]=true;
     if(!S.introduced.includes(bystander.pid))S.introduced.push(bystander.pid);
