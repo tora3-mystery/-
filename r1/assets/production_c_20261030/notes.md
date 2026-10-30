@@ -2,7 +2,7 @@
 
 ## 正本・参照
 
-- GitHub main: `b8cd1f258850b15db192981c2b6877f310086cd6`（R1 v0.9.6-alpha）
+- GitHub main: `6fc3ab075025e5615d825b1ce36f45b96424c978`（R1 v0.9.7-alpha）
 - 必読: `r1/engine.js`, `r1/app.js`, `r1/index.html`, `r1/status.json`, `r1/QA_PREART_V096.md`
 - 採用画風C: branch `r1-style-trials-20261030`, commit `7f7b57973236b491ea89300bff28dea17ebb6dc4`
 - 画風Cの基準画像と評価資料を読み取り参照。既存比較素材は変更しない。
