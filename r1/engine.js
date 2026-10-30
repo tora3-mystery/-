@@ -1,6 +1,6 @@
 window.R1 = (function makeEngine(){
 "use strict";
-const VERSION="0.9.7-alpha";
+const VERSION="0.9.8-alpha";
 const GENRES=[
 {id:"taste",name:"商品・味",icon:"🍜"},
 {id:"service",name:"接客",icon:"💬"},
@@ -387,11 +387,12 @@ function controversy(state,review){
  const ramen=state.shops.ramen,prior=ramen.history.filter(h=>h.star<=2).length;
  if(prior<2||state.month-(state.lastViralMonth??-10)<3)return null;
  const rand=random((state.seed+state.month*7531+Math.floor(ramen.stress)*11)>>>0);
- if(rand()>.74)return null;
+ const forceBuzz=prior>=3&&state.reviews.filter(r=>r.id==="ramen"&&r.star<=2&&r.exchange?.style==="quip").length>=2;
+ if(rand()>.74&&!forceBuzz)return null;
  const label=(state.viralCount||0)%2===0?"返信欄が燃えている":"反論が名物になった";
  const text=label==="返信欄が燃えている"?
  "麺処いわきの返信がスクリーンショットで広まり、賛否両論の書き込みが殺到。店主は返信を続けている。":
- "今度は『どんな口コミにも必ず反論するラーメン屋』として話題に。確認しに来る客も増えている。";
+ "今度は『どんな口コミにも必ず反論するラーメン屋』として話題に。言い合いながらも硬い麺を認める客がいて、閉店したら惜しいという声まで出ている。";
  ramen.visitors=clamp(ramen.visitors+12,0,100);ramen.stress=clamp(ramen.stress+18,0,100);
  const cafe=state.shops.cafe;if(cafe.opened&&!cafe.closed)cafe.visitors=clamp(cafe.visitors+3,0,100);
  const curry=state.shops.curry;if(curry?.opened&&!curry.closed)curry.visitors=clamp(curry.visitors+3,0,100);
@@ -495,9 +496,16 @@ const closures=settleAndClose(next);
    else{
      npcs.push({by:"最後に来た客",id:"ramen",star:3,genre:"identity",text:"いつもの硬い麺だった。また来たい。",reply:null,month:next.month,finalSilence:true});
    }
-   const eligibleFinal=next.month<=10&&(next.viralCount||0)>=1&&next.shops.ramen.history.filter(h=>h.star<=2).length>=3;
+   const lowReviews=next.shops.ramen.history.filter(h=>h.star<=2).length;
+   const eligibleFinal=next.month<=10&&(next.viralCount||0)>=1&&lowReviews>=3;
+   const firstViral=next.feed.find(e=>e.kind==="viral")?.month;
+   // Deliberate comeback: public controversy, sharp arguments, later praise and early closure.
+   // Preserve the original low-probability comeback route as an alternative.
+   const heated=next.reviews.filter(r=>r.id==="ramen"&&r.star<=2&&r.exchange?.style==="quip").length;
+   const laterSupport=firstViral!=null&&next.reviews.some(r=>r.id==="ramen"&&r.star>=4&&r.month>firstViral);
+   const earnedReturn=eligibleFinal&&(next.viralCount||0)>=2&&lowReviews>=5&&heated>=3&&laterSupport;
    const rare=random(((next.seed>>>0)^Math.imul(next.month,0x9e3779b1)^0x51f72b0a)>>>0);
-   if(eligibleFinal&&rare()<.065)next.ramenReturnMonth=next.month+2;
+   if(eligibleFinal&&(earnedReturn||rare()<.065))next.ramenReturnMonth=next.month+2;
  }
  const returns=specialRamenReturn(next);
  const openings=[...returns,...openNewShops(next)];
