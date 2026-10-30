@@ -1000,4 +1000,112 @@ check('beta-only DTM scene consistently centers sound design rather than publish
  assert.match(dataScope.window.S6_BETA_ROUTES.get('E02-A','P004').text,/ボカロ曲の音作り/);
 });
 
+
+check('talking naturally reveals the same optional producer trails formerly behind a question menu',()=>{
+ const s=newPlayer();s.click('attend','E02');s.click('join-group','E02-A');s.click('leave-flash');
+ assert.doesNotMatch(s.html,/質問する/);
+ s.click('action-menu','talk');s.click('act-target','P040');
+ assert.equal(s.state.phase,'group');
+ assert.match(s.state.groupLog['E02-A'][0].text,/底なしサイダー/);
+ assert.ok(s.state.groupLog['E02-A'][0].reply,'someone else joins the sound discussion');
+ assert.ok(s.state.profileEvidence.some(x=>x.topic==='production'));
+ assert.equal(s.state.routeVisits.length,1);
+ s.click('action-menu','talk');s.click('act-target','P040');
+ assert.equal(s.state.routeVisits.length,1);
+ assert.doesNotMatch(s.state.groupLog['E02-A'][1].text,/底なしサイダー/);
+});
+check('repeated listening has distinct text each time, within three action limit',()=>{
+ const s=newPlayer();visit(s,'E01','E01-C');
+ for(let n=0;n<3;n++)s.click('listen-group');
+ const log=s.state.groupLog['E01-C'];assert.equal(log.length,3);
+ assert.equal(new Set(log.map(x=>x.text)).size,3);
+ s.click('leave-group');assert.equal(s.state.phase,'contact-prompt');
+});
+check('SNS sightings respect public, approved-private, and anonymous accounts',()=>{
+ const s=newPlayer();s.click('skip');
+ s.click('night-sns','Photogram');
+ assert.ok(s.state.seen.includes('P001'));
+ assert.ok(!s.state.seen.includes('P040'));
+ assert.ok(Object.values(s.state.onlineAccounts).some(x=>x.handle===dataScope.window.S6_BETA_SOCIAL.accounts.find(a=>a.person_id==='P040'&&a.platform==='Photogram').handle));
+ s.click('open-notebook');assert.match(s.html,/SNSで見かけたアカウント/);
+ s.click('back-from-notebook');s.click('back-night');s.click('night-sns','Zitter');
+ assert.ok(!Object.values(s.state.onlineAccounts).some(x=>x.handle===dataScope.window.S6_BETA_SOCIAL.accounts.find(a=>a.person_id==='P004'&&a.platform==='Zitter').handle));
+ assert.doesNotMatch(s.html,/手帳：人物/);
+});
+check('every one of 44 groups offers an all-member exchange regardless of direct talk',()=>{
+ let processed=0,active=0;
+ const dates=['2026-04-06','2026-04-07','2026-04-08','2026-04-09','2026-04-10'];
+ for(const event of D.events)for(const g of D.groups.filter(x=>x.event_id===event.event_id)){
+  const s=newPlayer();for(let i=0;i<dates.indexOf(event.date);i++){s.click('skip');s.click('next-day')}
+  visit(s,event.event_id,g.group_id);
+  s.click('leave-group');assert.equal(s.state.phase,'contact-prompt');
+  assert.match(s.html,/全員に連絡先を聞く/);
+  s.click('ask-group-contacts');assert.equal(s.state.phase,'contact-result');
+  const rows=s.state.groupContacts[g.group_id];
+  assert.equal(rows.length,D.members.filter(x=>x.group_id===g.group_id).length);
+  assert.equal(new Set(rows.map(x=>x.pid)).size,rows.length);
+  active+=rows.reduce((n,row)=>n+Number(row.results.some(x=>/交換|翌日|明日|フォロー/.test(x))),0);
+  const contactCount=s.state.contacts.length,photoCount=s.state.photoFollows.length;
+  s.click('ask-group-contacts');assert.equal(s.state.contacts.length,contactCount);
+  assert.equal(s.state.photoFollows.length,photoCount);
+  s.click('finish-group');assert.equal(s.state.phase,'venue');
+  processed++;
+ }
+ assert.equal(processed,44);assert.ok(active>20,active);
+});
+check('after-week private photo and anonymous Zitter accounts cannot be disclosed by contact prompt',()=>{
+ const s=newPlayer();visit(s,'E01','E01-D');
+ s.click('leave-group');s.click('ask-group-contacts');
+ assert.ok(!s.state.photoRequests.includes('P021'));
+ assert.ok(!s.state.photoFollows.includes('P021'));
+ const anonymous=newPlayer();anonymous.click('skip');anonymous.click('next-day');
+ visit(anonymous,'E02','E02-A');anonymous.click('leave-group');anonymous.click('ask-group-contacts');
+ assert.ok(!anonymous.state.zitterFollows.includes('P040'));
+});
+check('public Zitter contacts are shown on the Zitter screen and no new posts are invented',()=>{
+ const s=newPlayer();visit(s,'E01','E01-A');s.click('leave-group');s.click('ask-group-contacts');
+ assert.ok(s.state.zitterFollows.includes('P019'));
+ s.click('finish-group');s.click('finish-venue');
+ s.click('night-sns','Zitter');
+ assert.match(s.html,/交換したZitterアカウント/);
+ assert.match(s.html,/手帳：/);
+ const count=dataScope.window.S6_BETA_POST_ACTIVITY.at('P019','Zitter','2026-04-06').count;
+ assert.equal(count,D.posts.filter(p=>p.author_id==='P019'&&p.platform==='Zitter'&&p.published_at.slice(0,10)<='2026-04-06').length);
+});
+check('new UI multi-week seeded trials finish across all seven weekend choices',()=>{
+ const dates=['2026-04-06','2026-04-07','2026-04-08','2026-04-09','2026-04-10'],camps=['L','Z','J','K','W','F','N'];
+ for(let n=0;n<80;n++){
+  const s=newPlayer();
+  for(let day=0;day<5;day++){
+   const es=D.events.filter(e=>e.date===dates[day]);
+   if((n+day)%13===0)s.click('skip');
+   else{
+    const e=es[(n+day)%es.length];
+    s.click('attend',e.event_id);
+    const gs=D.groups.filter(g=>g.event_id===e.event_id);
+    for(const g of gs.slice(0,3)){
+     s.click('join-group',g.group_id);s.click('leave-flash');
+     const ids=D.members.filter(m=>m.group_id===g.group_id).map(m=>m.person_id);
+     for(let i=0;i<3;i++){
+      if((n+i+day)%3===0)s.click('listen-group');
+      else {s.click('action-menu','talk');assert.equal(s.state.phase,'choose');s.click('act-target',ids[i%ids.length]);}
+      assert.equal(s.state.phase,'group');
+     }
+     s.click('leave-group');assert.equal(s.state.phase,'contact-prompt');
+     if((n+day)%2===0){s.click('ask-group-contacts');assert.equal(s.state.phase,'contact-result')}
+     s.click('finish-group');assert.equal(s.state.phase,'venue');
+    }
+    s.click('finish-venue');
+   }
+   assert.equal(s.state.phase,'night');
+   for(const network of ['Photogram','Zitter']){s.click('night-sns',network);assert.equal(s.state.phase,'sns');s.click('back-night')}
+   s.click('next-day');
+  }
+  assert.equal(s.state.phase,'camp');
+  const camp=camps[n%camps.length];s.click('choose-camp',camp);
+  s.click(camp==='K'?'meet-producer':'finish-other');
+  assert.equal(s.state.phase,'end');assert.match(s.html,/THE END/);
+ }
+});
+
 console.log(JSON.stringify({passed:total,failed:failures}));if(failures)process.exitCode=1;
