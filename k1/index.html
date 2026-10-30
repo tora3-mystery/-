@@ -61,13 +61,31 @@ h2{font-size:17px;line-height:1.4;margin:0 0 8px}h3{font-size:14px;margin:0 0 8p
 .ending{background:#232a2d;color:#eff1f1;text-align:center;padding:35px 22px;border-radius:11px}.ending-visual{display:block;width:100%;max-width:580px;height:auto;aspect-ratio:16/9;object-fit:cover;border:1px solid #5d7075;border-radius:7px;margin:16px auto 5px}.ending h2{font-size:32px;letter-spacing:.15em}.ending .endingname{font-size:22px;margin:15px 0}.ending p{max-width:540px;margin:10px auto}
 .tag{display:inline-block;border:1px solid #aeb9bd;padding:1px 6px;color:#697477;border-radius:4px;font-size:10px;margin-left:5px}
 .caption{color:var(--muted);font-size:11px;margin-top:9px}.confirm-choice{background:#eef1ef;color:#26343c;border:1px solid #9caeb4;border-radius:9px;padding:14px;margin-top:14px}.kid-art{display:block;width:100%;max-width:520px;height:auto;background:#fdfaf4;border:1px solid #ddd1b9;margin:12px auto}.answer-line{display:flex;gap:10px;align-items:center;padding:10px;margin:7px 0;background:#fff;color:#26343c;border:1px solid #d5dcda;border-radius:8px;font-weight:600;cursor:pointer}.answer-line input{height:19px;width:19px;flex-shrink:0;accent-color:#354e59}.confirm-choice .btn:disabled{opacity:.45}
+
+/* Source images never contain readable rental details; this HTML overlay is authoritative. */
+.mail-evidence-img{display:block;width:100%;max-width:520px;height:auto;margin:12px auto 5px;border:1px solid #c9c2b2;border-radius:5px}
+.rental-flyer{position:relative;width:100%;max-width:420px;margin:12px auto}
+.rental-flyer>img{width:100%;height:auto;display:block;border:1px solid #b4a999}
+.flyer-field{position:absolute;left:63%;width:28.5%;display:grid;gap:2px;padding:3px;background:#fcfcf5c2;color:#28292a;border-radius:2px;text-align:left;font-size:clamp(9px,2.2vw,12px);line-height:1.26;overflow-wrap:anywhere}
+.flyer-field b{display:block;font-size:1.08em}
+.flyer-one{top:15%}.flyer-two{top:43%}.flyer-three{top:72%}
+.flyer-three{border:1px solid #9f5a50;background:#fffcf2e8}
+.flyer-desc{font-size:11px;color:#556167}
+.hall-inspect{margin:11px 0;border:1px solid #cbd1cd;border-radius:7px;padding:9px;background:#f6f7f3}
+.hall-inspect summary{cursor:pointer;font-weight:700;color:#334a50;padding:4px 2px}
+.hall-inspect img{display:block;width:100%;max-width:540px;height:auto;max-height:610px;object-fit:contain;margin:10px auto 6px;border-radius:5px}
+.hall-inspect figcaption,.hall-inspect p{font-size:12px;color:#515c60}
+.hall-photo-compare{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.hall-photo-compare figure{margin:0;min-width:0}
+.hall-photo-compare img{width:100%;height:auto;max-height:none}
+.over-illustration{width:100%;max-width:580px;height:auto;display:block;aspect-ratio:16/9;object-fit:cover;border-radius:7px;margin:14px auto 6px;border:1px solid #5d7075}
 .hidden{display:none!important}
 @media(max-width:700px){.notice-summary{grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;padding:7px;border-width:6px}.paper{min-height:79px;padding:7px 5px}.paper b{font-size:11px}.scene-figure img{height:174px}.scene-stack{height:174px}.night-sight img{height:112px}.scene-grid{gap:7px}.app{padding:9px 10px 56px}.panel{padding:13px}.mast h1{font-size:19px}}
 @media(max-width:390px){.notice-summary{grid-template-columns:repeat(3,minmax(0,1fr))}.history{grid-template-columns:repeat(4,1fr)}.tabs{gap:3px}.tab{font-size:12px}.scene-figure img{height:148px}.scene-stack{height:148px}.night-sight img{height:102px}.scene-figure figcaption{padding:5px 6px;font-size:10px}.mast h1{font-size:17px}.mast .home{font-size:10px}}
 </style>
 </head>
 <body><main class="app">
-<header class="mast"><div><div class="sub">短編UIゲーム実験室｜K1 プロトタイプ</div><h1>掲示物をご確認ください。</h1><div class="meta"><b>K1 α0.12.0</b> ｜ 2026-10-30 13:56 JST更新</div></div><a class="home" href="../index.html">作品一覧へ</a></header>
+<header class="mast"><div><div class="sub">短編UIゲーム実験室｜K1 プロトタイプ</div><h1>掲示物をご確認ください。</h1><div class="meta"><b>K1 α0.13.0</b> ｜ 2026-10-30 19:07 JST更新</div></div><a class="home" href="../index.html">作品一覧へ</a></header>
 <section id="intro" class="panel intro">
 <div class="sub">白波レジデンス・406号室</div><h2>掲示物をご確認ください。</h2>
 <p class="lede">あなたは白波レジデンス406号室で一人暮らしをする会社員です。</p><p>相場より安かった家賃に惹かれて越して3か月。仕事帰り、毎日エントランスの掲示板を確認しています。4階には空室が目立ちますが、管理人は「たまたまですよ」と言うばかりです。最近、掲示物の貼り替えが増えてきました。</p>
@@ -552,7 +570,11 @@ function advanceQuiet(){if(state.phase!=='night'||state.day!==9||state.ended)ret
 function advance(){if(!state.resultPending)return;pendingChoice=null;cameraLookCount=0;monitor=false;state.resultPending=false;state.afterCameraSeen=false;state.result='';state.index++;if(state.index>=getEvents(state.day).length){if(state.day===10){state.ended=true;state.phase='end';}else{state.day++;state.index=0;state.phase='morning';if(state.day===7)state.drawingTarget=state.hauntTarget;snapshot();}}save();render();scrollToTop();}
 function scrollToTop(){try{window.scrollTo({top:0,behavior:'instant'});}catch(e){window.scrollTo(0,0);}}
 function ending(){
- if(state.failure){return '<div class="ending"><div class="tiny" style="color:#b5c0c2">406号室｜'+state.day+'日目</div><h2>GAME OVER</h2><div class="endingname">'+esc(state.failure.reason)+'</div><p>'+esc(state.result)+'</p></div><div class="btnrow"><button class="btn primary" data-restartday="'+state.day+'">同じ日の帰宅時からやり直す</button><button class="btn secondary" data-showrewind="1">別の日を選ぶ</button></div>';}
+ if(state.failure){
+ var last=state.history.length?state.history[state.history.length-1]:null;
+ var gameOverPhoto=last&&last.id==='E07G'&&last.choice==='yes'?'e07g-unfamiliar-shoes.webp':last&&last.id==='E08'&&last.choice==='yes'?'e08-door-gap.webp':null;
+ var photoHtml=gameOverPhoto?'<img class="over-illustration" src="./assets/gameover/'+gameOverPhoto+'" width="1280" height="720" decoding="async" alt="'+(last.id==='E07G'?'自室玄関に増えていた見覚えのない靴':'扉の隙間に差し入れられた靴と、外にいる二人')+'">':'';
+ return '<div class="ending"><div class="tiny" style="color:#b5c0c2">406号室｜'+state.day+'日目</div><h2>GAME OVER</h2><div class="endingname">'+esc(state.failure.reason)+'</div><p>'+esc(state.result)+'</p>'+photoHtml+'</div><div class="btnrow"><button class="btn primary" data-restartday="'+state.day+'">同じ日の帰宅時からやり直す</button><button class="btn secondary" data-showrewind="1">別の日を選ぶ</button></div>';}
  var name,paragraphs,transferred=state.hauntTarget==='406';
  if(state.exposed&&!transferred){
   name='記録は残りました';
@@ -705,11 +727,25 @@ if(n){h+='<div class="detail"><div class="issuer">'+esc(n.id)+'｜'+esc(n.issuer
     h+='<button class="mail-envelope '+(isUnread?'unread':'')+'" data-mail="'+esc(i.id)+'" aria-expanded="'+(active&&active.id===i.id?'true':'false')+'"><span class="mail-icon" aria-hidden="true">'+(isUnread?'✉':'▣')+'</span><span class="mail-contents"><strong>'+esc(i.name)+'</strong><span class="tiny">投函：'+weekday(i.day)+'曜日・'+i.day+'日目</span></span><span class="mail-status">'+(isUnread?'未開封':'開封済')+'</span></button>';
    });
    h+='</div>';
-   if(active){h+='<article class="mail-paper'+(active.strange?' strange':'')+'"><div class="tiny">投函日：'+weekday(active.day)+'曜日（'+active.day+'日目）</div><h4>'+esc(active.name)+'</h4><p'+(active.strange?' class="letter-warning"':'')+'>'+esc(active.text)+'</p></article>';}
+   if(active){
+ h+='<article class="mail-paper'+(active.strange?' strange':'')+'"><div class="tiny">投函日：'+weekday(active.day)+'曜日（'+active.day+'日目）</div><h4>'+esc(active.name)+'</h4><p'+(active.strange?' class="letter-warning"':'')+'>'+esc(active.text)+'</p>';
+ if(active.id==='quietmail'){
+  h+='<figure><img class="mail-evidence-img" src="./assets/mail/quietmail-postbox.webp" alt="古い集合ポストの一つだけ、投函口が内側からわずかに開いている写真" width="1200" height="900" loading="lazy" decoding="async"><figcaption class="flyer-desc">同封されていた写真。何の説明もない。</figcaption></figure>';
+ }
+ if(active.id==='report'){
+  h+='<p class="flyer-desc">水野が入居する前の募集資料。掲載はすでに終了している。</p>';
+  h+='<div class="rental-flyer" role="group" aria-label="過去の募集チラシ。403号室と405号室は通常賃料、406号室だけ相場の約半額。">';
+  h+='<img src="./assets/mail/406-old-listing.webp" alt="文字が消えた古い賃貸募集チラシ。右側の空欄に募集内容が重ねて表示される。" width="900" height="1200" loading="lazy" decoding="async">';
+  h+='<span class="flyer-field flyer-one"><b>403号室</b>通常賃料</span>';
+  h+='<span class="flyer-field flyer-two"><b>405号室</b>通常賃料</span>';
+  h+='<span class="flyer-field flyer-three"><b>406号室</b>特別割引・相場の約半額</span></div>';
+ }
+ h+='</article>';
+}
   }
   h+='</div><div class="entry-photo-title"><h3>4階・406号室の玄関前</h3><p class="tiny">エレベーターを降りて、自分の部屋へ歩く。</p></div>';
   h+='<div class="scene-grid" aria-label="4階の共用廊下と406号室玄関">';
-  h+='<figure class="scene-figure"><div class="scene-stack"><img src="./assets/hallway/day.webp" alt="4階の共用廊下。404〜407号室の扉が並ぶ。" width="1080" height="1440" loading="lazy" decoding="async">';
+  h+='<figure class="scene-figure"><div class="scene-stack"><img src="./assets/hallway/'+(state.day>=4?'405-vacated.webp':'day.webp')+'" alt="'+(state.day>=4?'405号室の表札が外された4階の共用廊下。':'4階の共用廊下。404〜407号室の扉が並ぶ。')+'" width="1080" height="1440" loading="lazy" decoding="async">';
   if(state.day>=10)h+='<img class="scene-overlay" src="./assets/hallway/wet.webp" alt="" aria-hidden="true" width="1080" height="1440" loading="lazy" decoding="async">';
   h+='</div><figcaption>4階共用廊下</figcaption></figure>';
   h+='<figure class="scene-figure"><div class="scene-stack"><img src="./assets/door/base.webp" alt="406号室の玄関とインターホン" width="1080" height="1440" loading="lazy" decoding="async">';
@@ -717,6 +753,15 @@ if(n){h+='<div class="detail"><div class="issuer">'+esc(n.id)+'｜'+esc(n.issuer
   if(state.day>=9&&state.hauntTarget==='406')h+='<img class="scene-overlay" src="./assets/door/sticker.webp" alt="" aria-hidden="true" width="1080" height="1440" loading="lazy" decoding="async">';
   if(state.day>=10&&state.hauntTarget==='406')h+='<img class="scene-overlay" src="./assets/door/drops.webp" alt="" aria-hidden="true" width="1080" height="1440" loading="lazy" decoding="async">';
   h+='</div><figcaption>406号室玄関</figcaption></figure></div>';
+  if(state.day>=3&&state.day<=6){
+   h+='<details class="hall-inspect"><summary>404号室側の荷物をもう一度見る</summary><img src="./assets/hallway/404-boxes-night.webp" alt="夜の404号室前に並んだ長い箱、機材ケース、小箱" width="1080" height="1440" loading="lazy" decoding="async"><p>帰宅時、404号室側に置かれていた荷物。何が入っているかは分からない。</p></details>';
+  }
+  if(state.day>=9){
+   h+='<details class="hall-inspect"><summary>404号室の荷物の正体を確かめる</summary><div class="hall-photo-compare"><figure><img src="./assets/hallway/404-boxes-night.webp" alt="先日404号室前に置かれていた閉じた箱" width="1080" height="1440" loading="lazy" decoding="async"><figcaption>先日の荷物</figcaption></figure><figure><img src="./assets/hallway/404-boxes-explained.webp" alt="同じ箱の中にある夜勤の機材と子どもの工作用品" width="1080" height="1440" loading="lazy" decoding="async"><figcaption>夜勤の機材と工作用品</figcaption></figure></div><p>怪しく見えたのは、搬入する時間帯が遅かったためだった。</p></details>';
+  }
+  if(state.day>=4){
+   h+='<details class="hall-inspect"><summary>405号室の表札跡を詳しく見る</summary><img src="./assets/hallway/405-vacated.webp" alt="退去した405号室の表札が取り外され、小さな擦り跡が残っている" width="1080" height="1440" loading="lazy" decoding="async"></details>';
+  }
   h+='<div class="listing">';
   items('door').forEach(function(i){h+='<div class="record"><strong>'+esc(i.name)+'</strong><p>'+esc(i.text)+'</p></div>';});
   h+='</div>';

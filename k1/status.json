@@ -1,15 +1,15 @@
 {
   "projectId": "K1",
   "title": "掲示物をご確認ください。（仮）",
-  "version": "α0.12.0",
-  "updatedAtJST": "2026-10-30 13:56 JST",
-  "phase": "Phase 7 — new horror images integrated; real-browser and human QA pending",
+  "version": "α0.13.0",
+  "updatedAtJST": "2026-10-30 19:07 JST",
+  "phase": "Phase 7 — all planned base imagery integrated (42 WebP); browser and human QA pending",
   "aiAudit": {
-    "logic": "JavaScript compile and deterministic checks: DAY5 ON1-4, 3 pre-choice rechecks, 5 post-choice images incl two landlord branches, four endings, E03 and E08 judgments, UI result reveal, image references and saving compatibility. Prior 49 successful paths and 36 reverse-action paths not rerun.",
-    "story": "DAY3 Hasegawa testimony + DAY4 Sugiura letter motivate camera revisit. E03 monitor narration no longer contradicts the third image. E02D visitor obscured at 407 before post-visit photo."
+    "logic": "α0.13.0 mock JS checks: 404 day3-6 versus day9 reveal, 405 vacancy day4 onward, old listing HTML overlay only after opening mail, rare quietmail only after triggering/opening, E07G/E08-only gameover images, 7 source refs. Prior 49 correct and 36 wrong path checkpoint tests NOT rerun.",
+    "story": "404 is ordinary family, DAY9 reveals regular work and children's craft. Past 406 listing is not a current vacancy. No event logic, choices or haunt transfer altered."
   },
   "browserAudit": {
-    "status": "not_run_alpha0120",
+    "status": "not_run_alpha0130",
     "pagesDeployment": "not_verified",
     "realPagesDisplay": "not_verified",
     "phoneSizesToTest": [
@@ -18,33 +18,36 @@
       428
     ],
     "nextChecks": [
-      "DAY5 ON1-3 in actual browser",
-      "post-visit image tap and save",
-      "new 11 WebP load",
-      "4 endings with photos"
+      "405 sign at small widths",
+      "404 compare details opening",
+      "listing overlay on 320px and 390px",
+      "rare photo after opening mail",
+      "E07G/E08 failure visuals",
+      "saved state / 10-day play"
     ]
   },
   "humanReview": {
     "lastReviewedVersion": "α0.6.1",
-    "imagePreview": "User provisionally accepted newly delivered 11 stills, intensity may be revised later",
-    "latestGame": "α0.12.0 not yet human-played",
-    "openIssues": [
-      "whether motivation encourages third look",
-      "small secondary visual details on phone",
-      "DAY8 after-photo plausibility",
-      "audio jumpscares excluded"
+    "latestGame": "α0.13.0 not yet human-played",
+    "pending": [
+      "404 red herring and reveal feel fair",
+      "gameover fear without jump scare",
+      "older listing annotation size",
+      "DAY5 third-look motivation"
     ]
   },
   "assets": {
-    "status": "Original 11 + fixed-camera 13 + horror-first 11 integrated",
-    "integratedTotal": 35,
-    "sourceBranch": "k1-horror-differences-20261030",
-    "sourceCommit": "2b2e374f62363f30e054da9a3ebcd96cd7522845",
+    "status": "42/42 planned stills integrated, pending any human review requests",
+    "totalIntegrated": 42,
+    "previousIntegrated": 35,
+    "newlyIntegrated": 7,
+    "sourceBranch": "k1-remaining-visuals-20261030",
+    "sourceCommit": "0640a0d86045a92c208e8ee9d15f37fdbfdca5b2",
     "manifest": "k1/assets/manifest.csv",
-    "eventMap": "k1/assets/review/horror-first/display-conditions.csv",
-    "needsFurtherHorrorArt": "Human-review dependent"
+    "eventMap": "k1/assets/review/remaining7-20261030/display-conditions.csv",
+    "remainingImageProduction": "None currently required, except title image and eventual launch promotional image handled separately after game UI final."
   },
-  "nextOwner": "K1 human reviewer / K1 Chat",
-  "nextAction": "Verify latest actual phone display and DAY5 three-look play behavior, follow-up after-visit reveal, four endings and save compatibility.",
+  "nextOwner": "K1 human reviewer / K1 Chat QA",
+  "nextAction": "Play alpha0.13.0 on phone, check 404 DAY9 reveal, DAY8 flyer legibility, rare mail and E07G/E08 GAME OVER, then independent final QA.",
   "scope": "k1/ only"
 }

@@ -1,5 +1,16 @@
-# K1 QA｜現行 α0.12.0／過去版の回帰履歴
+# K1 QA｜現行 α0.13.0／過去版の回帰履歴
 
+
+## α0.13.0｜残存画像7枚の統合（2026-10-30 19:07 JST）
+
+- Workブランチ `k1-remaining-visuals-20261030`（`0640a0d86045a92c208e8ee9d15f37fdbfdca5b2`）の画像7点と素材台帳・比較/縮小シートを現行mainへ統合。元の画像35点と台帳行は維持。合計42点。
+- DAY3〜6の404号室の怪しい荷物、DAY9〜10の同じ箱の正体、DAY4〜10の405号室退去後、DAY8開封済募集資料（HTMLオーバーレイ）、希少DAY9 quietmail写真、E07G/E08該当GAME OVERを追加。
+- 郵便は希少条件の発生・未開封制御を維持。404の比較はDAY9以前には開示せず、怪異の正体としない。失敗画像は最後の失敗イベントID＋行動で限定。
+- JSモックを使った検査：DAY1 original hallway／DAY3 404 mystery only／DAY4-6 vacant 405 and mysterious 404／DAY8 old listing opened and HTML labels／DAY9 404 reveal and strict quietmail rarity／E07G/E08 only relevant gameover photos／7 delivered stills all wired; no new rule logic。素材7件は新規Git blob SHA、台帳42点に一致。**実ブラウザの画像取得・画面操作を含む検査ではない**。
+- 既存の49件の正常経路／36件の逆行動の全再実行は未実施。セーブキー、判定分岐は変更なし。
+- 未実施：GitHub Pagesの実表示・実機320/390/428px・表示の縮小差異・10日間人間プレイ。404の壁/床の微小差異と405表札跡、チラシ上のHTML文字サイズは人間レビュー対象。
+
+---
 
 ## α0.12.0｜ホラー画像11点・再確認動機・退去後カメラ（2026-10-30 13:56 JST）
 
