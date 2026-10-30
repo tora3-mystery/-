@@ -180,7 +180,7 @@ const thirdParty=(targetId,gid,state,action)=>{
  const probability=Math.max(0.10,Math.min(.85,
    .15+trait.initiative*.105+trait.warmth*.045+trait.expressiveness*.045-trait.caution*.08));
  const roll=(((Math.imul(seed^0x9e3779b9,2246822519)>>>0)%1000)/1000);
- if(roll>=probability&&!(action==='talk'&&!state.groupLog?.[gid]?.some(x=>x.reply)))return null;
+ if(roll>=probability&&!(['talk','talk-producer'].includes(action)&&!state.groupLog?.[gid]?.some(x=>x.reply)))return null;
  const yr=Number(people[id].year),targetYear=Number(people[targetId].year);
   const question=D.questions.find(q=>q.group_id===gid&&q.target_id===targetId)?.question||'';
   const aboutIdentity=/自己紹介/.test(question),aboutMusic=/音楽|アーティスト/.test(question);
@@ -189,7 +189,7 @@ const thirdParty=(targetId,gid,state,action)=>{
  const introRoll=(((Math.imul(seed^0x2b992ddf,3266489917)>>>0)%1000)/1000);
  const spontaneousIntro=introEligible&&introRoll<Math.min(.6,.13+trait.expressiveness*.1);
  let words;
- if(action==='producer'){
+ if(action==='producer'||action==='talk-producer'){
   words=yr===1&&targetYear>1?'その曲なら私も聴いたことがあります。':yr===1?'その曲、どこかで聴いたことあるかも。':'その名義の話、気になるよね。';
  }else if(action==='music'){
   words=yr===1&&targetYear>1?'そのパートの話、私も聞いてみたかったです。':yr===1?'それ、私も気になってた。':'その楽器の話、続きが気になるね。';
