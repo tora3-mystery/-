@@ -1,7 +1,7 @@
 (() => {
 'use strict';
 const D=window.S6_DATA, APP=document.getElementById('app'), KEY='s6-vocaloid-beta-060', Dialogue=window.S6_BETA_DIALOGUE, Story=window.S6_BETA_STORY, Music=window.S6_BETA_MUSIC, Routes=window.S6_BETA_ROUTES;
-const VERSION='0.7.3', BUILD='2026-10-28 16:38 JST';
+const VERSION='0.8.0', BUILD='2026-10-31 08:52 JST';
 const WEEK=['月曜 4月6日','火曜 4月7日','水曜 4月8日','木曜 4月9日','金曜 4月10日'];
 const DATES=['2026-04-06','2026-04-07','2026-04-08','2026-04-09','2026-04-10'];
 const people=Object.fromEntries(D.people.map(p=>[p.person_id,p]));
@@ -26,7 +26,7 @@ const arrange=(items,salt)=>items.slice().sort((a,b)=>{
 const date=()=>DATES[Math.min(S.day,4)];
 const initial=()=>({
  schema:1,phase:'title',day:0,selectedEvent:null,group:null,target:null,presentationSeed:Math.floor(Math.random()*1000000000),
- eventHistory:[],seen:[],introduced:[],flash:[],visitedGroups:[],groupVisitHistory:[],groupDone:{},groupLog:{},spokenTo:[],interacted:[],personalIntroduced:{},photoRequests:[],photoFollows:[],affinity:{},relationshipDays:{},dailyAffinity:{},contacts:[],socialLinked:{},socialCandidates:{},selectedSocial:null,
+ eventHistory:[],seen:[],introduced:[],flash:[],visitedGroups:[],groupVisitHistory:[],groupDone:{},groupLog:{},spokenTo:[],interacted:[],personalIntroduced:{},photoRequests:[],photoFollows:[],affinity:{},relationshipDays:{},dailyAffinity:{},contacts:[],socialLinked:{},socialCandidates:{},selectedSocial:null,onlineSeen:{},onlineAccounts:{},onsiteSeen:[],zitterFollows:[],groupContacts:{},
  guesses:{},note:{},clues:[],crossings:{},knownOrg:{},nightChoice:{},viewedPlatforms:{},viewedBoard:{},pendingContacts:[],
  checks:{},currentNotebook:null,camp:'',profileGuess:{},profileEvidence:[],routeVisits:[],musicKnown:{},profileReturn:'night',navStack:[],aliases:{},
  report:'',result:'',savedAt:''
@@ -34,9 +34,9 @@ const initial=()=>({
 let S,hydrationChanged=false;
 try {const raw=JSON.parse(localStorage.getItem(KEY));S=raw&&raw.schema===1?raw:initial()}catch{S=initial()}
 function hydrate(){
- for(const k of ['eventHistory','seen','introduced','flash','visitedGroups','groupVisitHistory','contacts','clues','spokenTo','interacted','pendingContacts','photoRequests','photoFollows','profileEvidence','routeVisits','navStack'])
+ for(const k of ['eventHistory','seen','introduced','flash','visitedGroups','groupVisitHistory','contacts','clues','spokenTo','interacted','pendingContacts','photoRequests','photoFollows','profileEvidence','routeVisits','navStack','onsiteSeen','zitterFollows'])
   if(!Array.isArray(S[k])){S[k]=[];hydrationChanged=true}
- for(const k of ['groupDone','guesses','note','crossings','knownOrg','nightChoice','viewedPlatforms','viewedBoard','groupLog','personalIntroduced','affinity','relationshipDays','dailyAffinity','checks','socialLinked','socialCandidates','profileGuess','musicKnown','aliases'])
+ for(const k of ['groupDone','guesses','note','crossings','knownOrg','nightChoice','viewedPlatforms','viewedBoard','groupLog','personalIntroduced','affinity','relationshipDays','dailyAffinity','checks','socialLinked','socialCandidates','profileGuess','musicKnown','aliases','onlineSeen','onlineAccounts','groupContacts'])
   if(!S[k]||typeof S[k]!=='object'){S[k]={};hydrationChanged=true}
 }
 hydrate();
@@ -56,7 +56,35 @@ const eventName=gid=>gid==='E02-A'?'ボカロ曲の音作り':groups[gid]?.group
 const sourceLabel=(gid,day)=>{const ev=events[groups[gid]?.event_id];return (day||WEEK[S.day])+' ／ '+label(ev?.org_id)+' ／ '+(ev?.title||'新歓')+' ／ '+eventName(gid)};
 function openLayer(phase){if(S.phase===phase)return;S.navStack.push(S.phase);go(phase)}
 function closeLayer(fallback='night'){const next=S.navStack.pop()||fallback;go(next===S.phase?fallback:next)}
-const contactBadge=id=>S.contacts.includes(id)?' ／ TINE交換済':S.pendingContacts.includes(id)?' ／ 申請確認中':'';
+const contactBadge=id=>[
+ S.contacts.includes(id)?'TINE交換済':S.pendingContacts.includes(id)?'TINE確認待ち':'',
+ S.photoFollows.includes(id)?'Photogramフォロー中':S.photoRequests.includes(id)?'Photogram申請中':'',
+ S.zitterFollows.includes(id)?'Zitterフォロー中':''
+].filter(Boolean).map(x=>' ／ '+x).join('');
+const onlineLabel=id=>Object.keys(S.onlineSeen[id]||{}).map(x=>x==='Photogram'?'Photogramで顔を見た':x==='Zitter'?'Zitterで顔を見た':x+'で顔を見た').join('・');
+function recordOnline(platform){
+ if(!['Photogram','Zitter'].includes(platform))return;
+ const visible=D.posts.filter(p=>p.platform===platform&&p.published_at.slice(0,10)<=date()&&
+  (p.visibility==='公開'||(p.visibility==='鍵垢・承認制'&&S.photoFollows.includes(p.author_id))));
+ for(const p of visible){
+   const a=accounts[p.author_id+'|'+platform];
+   if(!a||p.visibility==='匿名表示')continue;
+   const key=platform+'|'+a.handle;
+   S.onlineAccounts[key]={platform,handle:a.handle,name:a.display_name,seenAt:date(),face:a.avatar_kind==='face'};
+   if(a.avatar_kind==='face'){
+     if(!S.seen.includes(p.author_id))S.seen.push(p.author_id);
+     (S.onlineSeen[p.author_id]??={})[platform]={handle:a.handle,name:a.display_name,seenAt:date()};
+   }
+ }
+}
+function saveRouteClue(id,reply){
+ const node=Routes.get(S.group,id);if(!node)return;
+ const ev=events[groups[S.group].event_id],key=S.group+'|'+id;
+ if(!S.routeVisits.some(x=>x.key===key))S.routeVisits.push({key,pid:id,hall:label(ev.org_id)+' ／ '+ev.title+' ／ '+eventName(S.group),date:'2026年4月'+(S.day+6)+'日（'+WEEK[S.day].slice(0,2)+'）',text:reply,route:node.route});
+ for(const [topic,value,source] of node.facts||[])
+  if(!S.profileEvidence.some(x=>x.pid===id&&x.topic===topic&&x.value===value))
+   S.profileEvidence.push({pid:id,topic,value,source,visitKey:key,recordedAt:sourceLabel(S.group,'2026年4月'+(S.day+6)+'日（'+WEEK[S.day].slice(0,2)+'）')});
+}
 // Per-person contact develops gradually, with at most two meaningful exchanges per day.
 const recordConversation=(id,action)=>{
  const today=date(),key=id+'|'+today,used=Math.max(0,Number(S.dailyAffinity[key])||0);
@@ -396,7 +424,7 @@ function handle(act,id){
   if(S.phase!=='day'||!events[id]||events[id].date!==date())return;
   S.selectedEvent=id;S.eventHistory.push(id);S.visitedGroups=[];S.group=null;
   // The event hall offers face recognition but no free name reveal.
-  for(const pid of byEvent(id)){if(!S.seen.includes(pid))S.seen.push(pid);
+  for(const pid of byEvent(id)){if(!S.seen.includes(pid))S.seen.push(pid);if(!S.onsiteSeen.includes(pid))S.onsiteSeen.push(pid);
    if(D.members.some(m=>m.person_id===pid&&events[m.event_id].org_id!==events[id].org_id&&S.eventHistory.includes(m.event_id)))S.crossings[pid]=true;
   }
   go('venue');break;
@@ -580,7 +608,7 @@ function handle(act,id){
  }
  case 'night-sns':{
  if(S.phase!=='night'||!['TINE','Photogram','Zitter'].includes(id))return;
- S.viewedPlatforms[date()]=unique([...(S.viewedPlatforms[date()]||[]),id]);S.snsPlatform=id;go('sns');break;
+ S.viewedPlatforms[date()]=unique([...(S.viewedPlatforms[date()]||[]),id]);S.snsPlatform=id;recordOnline(id);go('sns');break;
 }
  case 'account-match':{
   if(S.phase!=='sns')return;
