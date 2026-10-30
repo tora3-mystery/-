@@ -180,7 +180,7 @@ const thirdParty=(targetId,gid,state,action)=>{
  const probability=Math.max(0.10,Math.min(.85,
    .15+trait.initiative*.105+trait.warmth*.045+trait.expressiveness*.045-trait.caution*.08));
  const roll=(((Math.imul(seed^0x9e3779b9,2246822519)>>>0)%1000)/1000);
- if(roll>=probability)return null;
+ if(roll>=probability&&!(action==='talk'&&!state.groupLog?.[gid]?.some(x=>x.reply)))return null;
  const yr=Number(people[id].year),targetYear=Number(people[targetId].year);
   const question=D.questions.find(q=>q.group_id===gid&&q.target_id===targetId)?.question||'';
   const aboutIdentity=/自己紹介/.test(question),aboutMusic=/音楽|アーティスト/.test(question);
