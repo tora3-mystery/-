@@ -1,15 +1,15 @@
 {
   "projectId": "K1",
   "title": "掲示物をご確認ください。（仮）",
-  "version": "α0.11.0",
-  "updatedAtJST": "2026-10-30 10:56 JST",
-  "phase": "Phase 6 — 13 camera stills integrated, 11 additional horror stills pending delivery",
+  "version": "α0.12.0",
+  "updatedAtJST": "2026-10-30 13:56 JST",
+  "phase": "Phase 7 — new horror images integrated; real-browser and human QA pending",
   "aiAudit": {
-    "logic": "α0.11.0: JS compile, 19 camera mapping, 13 images, E03 repeat look, E08 2 target states, four endings, 49 event definitions checked. α0.10.0 prior: 49 successful and 36 incorrect paths, not rerun.",
-    "story": "Fixed E06D/E07D old sender references to 302 Sugiura."
+    "logic": "JavaScript compile and deterministic checks: DAY5 ON1-4, 3 pre-choice rechecks, 5 post-choice images incl two landlord branches, four endings, E03 and E08 judgments, UI result reveal, image references and saving compatibility. Prior 49 successful paths and 36 reverse-action paths not rerun.",
+    "story": "DAY3 Hasegawa testimony + DAY4 Sugiura letter motivate camera revisit. E03 monitor narration no longer contradicts the third image. E02D visitor obscured at 407 before post-visit photo."
   },
   "browserAudit": {
-    "status": "not_run_alpha0110",
+    "status": "not_run_alpha0120",
     "pagesDeployment": "not_verified",
     "realPagesDisplay": "not_verified",
     "phoneSizesToTest": [
@@ -18,37 +18,33 @@
       428
     ],
     "nextChecks": [
-      "camera still loading",
-      "E03 second look",
-      "E08 2 branches",
-      "save/rewind",
-      "ending display"
+      "DAY5 ON1-3 in actual browser",
+      "post-visit image tap and save",
+      "new 11 WebP load",
+      "4 endings with photos"
     ]
   },
   "humanReview": {
     "lastReviewedVersion": "α0.6.1",
-    "cameraAssetPreview": "User provisionally accepted the 13 camera images; some compositing feel",
-    "latestGame": "α0.11.0 not yet human-reviewed",
+    "imagePreview": "User provisionally accepted newly delivered 11 stills, intensity may be revised later",
+    "latestGame": "α0.12.0 not yet human-played",
     "openIssues": [
-      "11 horror stills pending",
-      "actual phone view and contrast",
-      "DAY3 pacing",
-      "DAY8 plausibility"
+      "whether motivation encourages third look",
+      "small secondary visual details on phone",
+      "DAY8 after-photo plausibility",
+      "audio jumpscares excluded"
     ]
   },
   "assets": {
-    "status": "existing 11 plus 13 camera images integrated, additional 11 horror images pending",
-    "existingImages": 11,
-    "cameraStills": 13,
-    "totalIntegrated": 24,
-    "cameraEventCount": 19,
+    "status": "Original 11 + fixed-camera 13 + horror-first 11 integrated",
+    "integratedTotal": 35,
+    "sourceBranch": "k1-horror-differences-20261030",
+    "sourceCommit": "2b2e374f62363f30e054da9a3ebcd96cd7522845",
     "manifest": "k1/assets/manifest.csv",
-    "eventMap": "k1/assets/review/camera-scenario/event-map.csv",
-    "sourceBranch": "k1-camera-scenario-main-20261030",
-    "sourceCommit": "f80b2eea52137020f32610a74f881debe8f99813",
-    "additionalStillsPlanned": 11
+    "eventMap": "k1/assets/review/horror-first/display-conditions.csv",
+    "needsFurtherHorrorArt": "Human-review dependent"
   },
-  "nextOwner": "Work horror stills / K1 Chat post-delivery integration and QA",
-  "nextAction": "Receive additional 11 images, verify filename/event correspondence, register repeat look and ending variants, browser and human testing.",
+  "nextOwner": "K1 human reviewer / K1 Chat",
+  "nextAction": "Verify latest actual phone display and DAY5 three-look play behavior, follow-up after-visit reveal, four endings and save compatibility.",
   "scope": "k1/ only"
 }

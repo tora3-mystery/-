@@ -1,5 +1,16 @@
-# K1 QA｜現行 α0.11.0／過去版の回帰履歴
+# K1 QA｜現行 α0.12.0／過去版の回帰履歴
 
+
+## α0.12.0｜ホラー画像11点・再確認動機・退去後カメラ（2026-10-30 13:56 JST）
+
+- Workブランチ `k1-horror-differences-20261030` (`2b2e374f62363f30e054da9a3ebcd96cd7522845`) から画像11枚、台帳と検品資料計19ファイルを統合し、従来24枚を維持。
+- DAY3長谷川の「カメラをつけ直すと違う映像」の証言、DAY4杉浦の警告、DAY5マットが「さっきはなかった」説明で自主的再確認の理由を構成。
+- E03はON1通常、ON2マット、ON3顔。E02G/E02I/E10は2回目ONで異変。他5件E02D/E05G/E06/E07/E08は判断後、任意ボタンによって訪問者が去った後の写真を表示。E08は標的401/406で分岐。
+- 4通常エンディングに標的別画像を表示。新規保存フラグ`afterCameraSeen`は旧セーブに存在しなくてもfalseに初期化し、セーブキーを維持。音ジャンプスケアなし。
+- 今回のJS機能試験：19 camera events／DAY5 1/2/3/4 camera states／3 repeat-on events／post-decision images incl two Arima branches／4 endings with 401/406 art／critical branching invariant／post-decision photo control／save compatibility／all 11 Work images referenced。なお、旧版の49正常経路・36逆操作の全件再実行は本版では行っていない。
+- 未実施：実ブラウザ320/390/428pxでの実操作、画像ダウンロード、Pages公開版表示、保存復帰と巻戻し、人間初見の怖さの実測。
+
+---
 
 ## α0.11.0｜固定カメラ13枚統合とホラー再確認準備（2026-10-30 10:56 JST）
 

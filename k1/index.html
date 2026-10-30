@@ -67,7 +67,7 @@ h2{font-size:17px;line-height:1.4;margin:0 0 8px}h3{font-size:14px;margin:0 0 8p
 </style>
 </head>
 <body><main class="app">
-<header class="mast"><div><div class="sub">短編UIゲーム実験室｜K1 プロトタイプ</div><h1>掲示物をご確認ください。</h1><div class="meta"><b>K1 α0.11.0</b> ｜ 2026-10-30 10:56 JST更新</div></div><a class="home" href="../index.html">作品一覧へ</a></header>
+<header class="mast"><div><div class="sub">短編UIゲーム実験室｜K1 プロトタイプ</div><h1>掲示物をご確認ください。</h1><div class="meta"><b>K1 α0.12.0</b> ｜ 2026-10-30 13:56 JST更新</div></div><a class="home" href="../index.html">作品一覧へ</a></header>
 <section id="intro" class="panel intro">
 <div class="sub">白波レジデンス・406号室</div><h2>掲示物をご確認ください。</h2>
 <p class="lede">あなたは白波レジデンス406号室で一人暮らしをする会社員です。</p><p>相場より安かった家賃に惹かれて越して3か月。仕事帰り、毎日エントランスの掲示板を確認しています。4階には空室が目立ちますが、管理人は「たまたまですよ」と言うばかりです。最近、掲示物の貼り替えが増えてきました。</p>
@@ -215,7 +215,7 @@ var EVENTS={
 ],
 3:[
 {id:'E03B',time:'20:26',title:'警報連動の再認証',scene:'入居者用の認証画面に「木曜日20時30分までに必要な項目を送信してください」と表示された。',monitor:'外部サポート窓口が配った認証のお知らせと差出人が一致している。画面では送信する項目を自分で指定できる。',hint:'本人確認に答える項目'},
-{id:'E03',time:'02:14',title:'インターホン',scene:'午前2時14分。インターホンが鳴る。「……助けて」と女の声。画面には誰もいない。廊下から、トン、トン。……トン。と三度のノックが聞こえる。',monitor:'廊下には誰も映らない。画面の隅で、401号室を示すランプが短く点滅している。声は『返事をして』と繰り返した。',hint:'古い夜間呼出しの注意書きと、今日の改訂掲示'}
+{id:'E03',time:'02:14',title:'インターホン',scene:'午前2時14分。インターホンが鳴る。「……助けて」と女の声。廊下から、トン、トン。……トン。と三度のノックが聞こえる。カメラの映像は、自分で確認するしかない。',monitor:'画面の隅で401号室を示すランプが短く点滅している。声は『返事をして』と繰り返した。カメラを見るだけなら、音声で応答することにはならない。',hint:'古い夜間呼出しの注意書きと、今日の改訂掲示'}
 ],
 4:[
 {id:'E04',time:'19:21',title:'警告の手紙を返してください',scene:'現管理人・真鍋から電話が来た。「302号室の杉浦さんが配った警告の手紙を、管理人室にお渡しください。有馬オーナーからの指示です」。',monitor:'電話の相手は管理人室の真鍋。掲示では住民間の警告文の回収を求めているが、杉浦の封筒には『管理人には渡さないで』とある。',hint:'杉浦の警告の手紙'},
@@ -334,13 +334,13 @@ function getEvents(day){
   return candidates.find(function(e){return e.id===chosen;})||candidates[0];
  });
 }
-function initial(){return{started:false,day:1,index:0,phase:'morning',failure:null,hauntTarget:'401',evidence:[],alert:0,trust:0,exposed:false,consent:false,seal:false,letterTaken:false,drawingTarget:null,recordValidated:false,sideChoices:{},locationStage:'board',mailRead:[],history:[],result:'',resultPending:false,ended:false,snapshots:{}};}
+function initial(){return{started:false,day:1,index:0,phase:'morning',failure:null,hauntTarget:'401',evidence:[],alert:0,trust:0,exposed:false,consent:false,seal:false,letterTaken:false,drawingTarget:null,recordValidated:false,sideChoices:{},locationStage:'board',mailRead:[],history:[],result:'',resultPending:false,afterCameraSeen:false,ended:false,snapshots:{}};}
 function copy(x){return JSON.parse(JSON.stringify(x));}
 var state=initial(),tab='board',selected=null,selectedMail=null,monitor=false,cameraLookCount=0,pendingChoice=null,reply={fields:[],number:'',person:''};
 var WEEKDAYS=['月','火','水','木','金','土','日'];
 function weekday(day){return WEEKDAYS[(day-1)%7];}
 function snapshot(){getEvents(state.day);state.locationStage='board';selectedMail=null;var s=copy(state);delete s.snapshots;s.result='';s.resultPending=false;s.phase='morning';state.snapshots[state.day]=s;}
-function load(){try{var v=JSON.parse(localStorage.getItem(KEY));if(v&&v.day>=1&&v.day<=10&&v.snapshots&&typeof v.started==='boolean'){state=v;if(state.failure===undefined)state.failure=null;if(state.day>=7&&!state.drawingTarget)state.drawingTarget=firstDrawingTarget(state.history);}}catch(e){}}
+function load(){try{var v=JSON.parse(localStorage.getItem(KEY));if(v&&v.day>=1&&v.day<=10&&v.snapshots&&typeof v.started==='boolean'){state=v;if(state.failure===undefined)state.failure=null;if(state.afterCameraSeen===undefined)state.afterCameraSeen=false;if(state.day>=7&&!state.drawingTarget)state.drawingTarget=firstDrawingTarget(state.history);}}catch(e){}}
 function firstDrawingTarget(history){var h=history.find(function(x){return x.id==='E03';});return h&&h.choice==='yes'?'406':'401';}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(state));}catch(e){}}
 function has(id){return state.evidence.indexOf(id)>=0;}
@@ -354,7 +354,7 @@ var post=[
 {day:1,id:'delivery',name:'配送に関するお知らせ',text:['E01A','E01C'].includes(earlyEntry(1).id)?'406号室・水野凪様。月曜日19:00〜21:00に時間指定のお荷物を配達します。伝票番号と受取人をお確かめください。青空運輸お客様窓口。':'406号室宛ての荷物は配達日が変更されました。変更前：月曜日19:00〜21:00／変更後：火曜日19:00〜21:00。月曜夜の配達予定はありません。配送会社お客様窓口。'},
 {day:2,id:'urgentCheck',name:'火曜日の設備管理について',text:['E02','E02A'].includes(earlyEntry(2).id)?'406号室の非常呼出装置に不安定な反応が見つかりました。本日19時10分〜19時25分に東洋設備・大野が現地確認します。作業と立会いをその場でお願いします。問い合わせ窓口の受付は19時までです。':'本日の406号室への設備訪問はありません。変更後の訪問日・担当者は個別通知でご案内します。管理人室の夜間巡回は予定していません。'},
 {day:3,id:'redelivery',name:'別便の再配達のお知らせ',text:'別便の荷物（伝票番号WX-204）は前回不在のためお渡しできませんでした。本日、水曜日19時〜21時に再配達します。送付先406号室。配送会社お客様窓口。'},
-{day:4,id:'letter',name:'302号室・杉浦からの手紙',text:'「406号室の方へ。407号室の高瀬奈津美さんは3年前に設備事故で亡くなりました。その後4階から住人が次々と出ていきました。最近の掲示は昔の注意書きと違います。夜間の指示が変わっても、すぐに従わないでください。管理人の真鍋さんには渡さないで。302号室・杉浦」'},
+{day:4,id:'letter',name:'302号室・杉浦からの手紙',text:'「406号室の方へ。407号室の高瀬奈津美さんは3年前に設備事故で亡くなりました。その後4階から住人が次々と出ていきました。最近の掲示は昔の注意書きと違います。夜間の指示が変わっても、すぐに従わないでください。夜に呼ばれても、すぐ返事をしないで。カメラに誰もいなくても、一度切って見直してください。映像が変わっていたら、声には答えず、もう一度だけ確かめて。管理人の真鍋さんには渡さないで。302号室・杉浦」'},
 {day:6,id:'old',name:'藤井が残した旧掲示のコピー',text:'「夜間、相手を確認できない呼出しに返事をしないこと。扉を開けないこと」。余白には元管理人・藤井の筆跡で「高瀬さんの事故のあと、この注意を掲示した。有馬さんは信じず、私を辞めさせた。現管理人の案内と違えば、住人を守る方を選んでほしい」とある。'},
 {day:6,id:'inspection',name:'本日の個別点検案内',text:'406号室の設備確認。20:00〜20:30。担当：東洋設備・大野。日付と管理番号の記載あり。'},
 
@@ -408,7 +408,7 @@ function resultFor(e,c,extra){
   if(c==='yes')msg='荷物を受け取った。送り状には、今日の再配達案内に記載された番号と同じものが印字されている。';
   else fail('受取人のいない部屋','今日の再配達予定と、受取拒否に関する案内があった。',c==='verify'?'配送会社へ電話している間に、玄関先の配達員は去った。端末には「受取人不在」とだけ残った。':'配達員は手元の端末を見た。「住んでいない、ということで」。玄関の表札が一瞬だけ薄く見えた。');
  }else if(e.id==='E02D'){
-  if(c==='no')msg='封筒を受け取らずにいると、男は407号室の前で誰かを待ち始めた。';
+  if(c==='no')msg='封筒を受け取らずにいると、男は407号室へ歩いていき、扉の陰に隠れるように姿を消した。';
   else fail('空室の鍵','407号室は空室とされていた。',c==='verify'?'電話先の真鍋は静かに言った。「407号室の鍵を持った方と話していますね」。翌朝、406号室の表札には鍵の絵が描かれていた。':'封筒は薄く、鍵の形がない。男が笑って言った。「その部屋の名義で登録します」。');
  }else if(e.id==='E02E'){
   if(c==='yes')msg='外部サポート窓口の書面窓口へ異議申立てを送り、自動受付票が届いた。管理側への同意は記録されなかった。';
@@ -448,7 +448,7 @@ function resultFor(e,c,extra){
   if(c!=='yes'||f!=='name,room')fail('登録できなかった連絡先','本人確認の掲示では、氏名と部屋番号の2項目のみを求めていた。',c==='yes'?'余計な情報または不足した情報が送られた。認証画面には「連携対象外」と表示された。':'回答期限が過ぎ、警報連動の解除通知が届いた。');
   else msg='「氏名・406号室」の2項目で照合が完了した。電話番号を伝える必要はなかった。';
  }else if(e.id==='E10'){
- if(c==='yes'){state.trust++;msg='長谷川は廊下に立ったまま話す。「夜中に何度も呼ばれるんです。管理人は信じてくれません。明日引っ越します」。最後に言った。「302号室の杉浦さんから手紙が来るはずです。明日のポストは絶対に見てください」。';}
+ if(c==='yes'){state.trust++;msg='長谷川は廊下に立ったまま話す。「夜中に何度も呼ばれるんです。管理人は信じてくれません。明日引っ越します」。長谷川はインターホンを振り返る。「カメラ、つけ直したことあります？　最初は誰も映っていなかったのに、切ってから見ると、同じ廊下なのに何かが違って……。私、怖くて何度も見てしまったんです」。最後に言った。「302号室の杉浦さんから手紙が来るはずです。明日のポストは絶対に見てください」。';}
  else fail('聞かなかった隣人','405号室の退去を控えた長谷川は相談したがっていた。','長谷川は去り、翌朝405号室は空になった。');
  }else if(e.id==='E02L'){
  if(c==='no')msg='扉を開けずにいると男性は去った。翌朝、隣の建物への道を間違えた滞在者と分かった。';
@@ -544,12 +544,12 @@ function resultFor(e,c,extra){
 }
 function answer(c,extra){
  if(state.resultPending||state.ended||state.phase!=='night'||!['yes','no'].includes(c))return;
- var e=eventNow();pendingChoice=null;state.result=resultFor(e,c,extra||copy(reply));state.resultPending=!state.failure;
+ var e=eventNow();pendingChoice=null;state.result=resultFor(e,c,extra||copy(reply));state.resultPending=!state.failure;state.afterCameraSeen=false;
  if(state.failure){state.ended=true;state.phase='fail';}
  monitor=false;save();render();scrollToTop();
 }
 function advanceQuiet(){if(state.phase!=='night'||state.day!==9||state.ended)return;state.day=10;state.index=0;state.phase='morning';snapshot();save();render();scrollToTop();}
-function advance(){if(!state.resultPending)return;pendingChoice=null;cameraLookCount=0;monitor=false;state.resultPending=false;state.result='';state.index++;if(state.index>=getEvents(state.day).length){if(state.day===10){state.ended=true;state.phase='end';}else{state.day++;state.index=0;state.phase='morning';if(state.day===7)state.drawingTarget=state.hauntTarget;snapshot();}}save();render();scrollToTop();}
+function advance(){if(!state.resultPending)return;pendingChoice=null;cameraLookCount=0;monitor=false;state.resultPending=false;state.afterCameraSeen=false;state.result='';state.index++;if(state.index>=getEvents(state.day).length){if(state.day===10){state.ended=true;state.phase='end';}else{state.day++;state.index=0;state.phase='morning';if(state.day===7)state.drawingTarget=state.hauntTarget;snapshot();}}save();render();scrollToTop();}
 function scrollToTop(){try{window.scrollTo({top:0,behavior:'instant'});}catch(e){window.scrollTo(0,0);}}
 function ending(){
  if(state.failure){return '<div class="ending"><div class="tiny" style="color:#b5c0c2">406号室｜'+state.day+'日目</div><h2>GAME OVER</h2><div class="endingname">'+esc(state.failure.reason)+'</div><p>'+esc(state.result)+'</p></div><div class="btnrow"><button class="btn primary" data-restartday="'+state.day+'">同じ日の帰宅時からやり直す</button><button class="btn secondary" data-showrewind="1">別の日を選ぶ</button></div>';}
@@ -601,8 +601,30 @@ var CAMERA_STILL_BY_EVENT={
 };
 /* Work's additional horror stills must be added here only after delivery.
    E03 can add look 3; E08 can add branches {401:{2:...},406:{2:...}}. */
-var CAMERA_RECHECK_BY_EVENT={E03:{2:'empty/0214-second-look.webp'}};
-var ENDING_VISUALS_BY_TARGET={};
+var CAMERA_RECHECK_BY_EVENT={
+ E03:{2:'empty/0214-second-look.webp',3:'empty/0214-third-look.webp'},
+ E02G:{2:'people/after-hours-management-second.webp'},
+ E02I:{2:'people/after-hours-management-second.webp'},
+ E10:{2:'people/hasegawa-day3-second.webp'}
+};
+var AFTER_CAMERA_BY_EVENT={
+ E02D:'people/key-envelope-visitor-second.webp',
+ E05G:'people/impostor-technician-second.webp',
+ E06:'people/sugiura-day6-second.webp',
+ E07:'people/after-hours-empty-figure.webp',
+ E08:{401:'people/arima-aftermath-401.webp',406:'people/arima-aftermath-406.webp'}
+};
+var ENDING_VISUALS_BY_TARGET={401:'haunt-401.webp',406:'haunt-406.webp'};
+function afterCameraSource(e){
+ var spec=AFTER_CAMERA_BY_EVENT[e.id];
+ return !spec?null:typeof spec==='string'?spec:spec[state.hauntTarget]||null;
+}
+function cameraAfterHtml(e,photo){
+ var label=e.id==='E08'?'有馬が帰った後の玄関カメラ。廊下はさっきと違って見える。'
+ :e.id==='E02D'?'407号室側の廊下。訪問者の姿はない。'
+ :e.id==='E06'?'杉浦が去った後の廊下。':'訪問者が去った後の廊下。';
+ return '<div class="door-camera"><div class="camera-head"><span>406 / CAMERA</span><span>● LIVE</span></div><img src="./assets/camera/'+photo+'" alt="'+esc(label)+'" width="1280" height="720" decoding="async"><div class="camera-foot">'+esc(label)+'</div></div>';
+}
 function cameraRecheckSource(e){
  var options=CAMERA_RECHECK_BY_EVENT[e.id]||{};
  if(e.id==='E08')options=options[state.hauntTarget]||{};
@@ -619,7 +641,7 @@ function cameraHtml(e){
  var photo=cameraSource(e);
  if(!photo)return '';
  var label=e.id==='E08'?(state.hauntTarget==='406'?'有馬は不自然なほど元気そうだ。':'有馬はひどく疲れた顔をしている。')
- :e.id==='E03'?(cameraLookCount>=2?'玄関前は無人。映像の下端に、室内側にあるはずの玄関マットが一瞬映った。':'玄関前は無人。呼出音だけが続いている。')
+ :e.id==='E03'?(cameraLookCount>=3?'玄関前は無人のはずだった。レンズのすぐ端に、見知らぬ顔が映っている。':cameraLookCount===2?'さっきの映像にはなかった玄関マットが下端に映っている。室内に置いたはずのものだ。':'玄関前は無人。呼出音だけが続いている。')
  :e.id==='E02L'?'男性が地図をカメラに見せている。'
  :e.id==='E10'?'405号室の長谷川が廊下を気にしながら立っている。'
  :e.id==='E06'?'302号室の杉浦が古い掲示のコピーを持っている。'
@@ -637,7 +659,15 @@ function endingVisualHtml(){
 function renderNight(){var n=el('nightPanel');n.classList.toggle('hidden',state.phase!=='night'||state.ended);if(state.phase!=='night'||state.ended)return;
 if(state.day===9){n.innerHTML='<div class="over">9日目｜夜</div><h2>何も起こらない夜</h2><div class="scenario">訪問も呼出しもない。廊下で誰かが紙を剥がす音がする。杉浦の『あの夜をなかったことにしたくない』という声が頭から離れない。407号室のあった方角は、今夜も暗い。</div><button class="btn primary" data-quietnext="1">翌日へ進む</button>';return;}
 var e=eventNow();var shownTime=e.time+(Number(e.time.slice(0,2))<5?'（翌'+weekday(state.day+1)+'曜日）':'');var h='<div class="over">'+state.day+'日目｜'+esc(shownTime)+'｜'+(state.index+1)+' / '+getEvents(state.day).length+'</div><h2>'+esc(e.title)+'</h2><div class="scenario">'+esc(e.id==='E08'?(state.hauntTarget==='406'?'401号室の有馬が、妙に穏やかな声で訪ねてくる。「最近、お変わりはありませんか。一度顔を見ておきたくて。玄関を開けてもらえませんか」。':'401号室の有馬が、疲れた声で訪ねてくる。「管理人が説明できていないようで。どうしても今夜お話ししたい。玄関を開けてもらえませんか」。'):e.scene)+'</div>';
-if(state.resultPending){h+='<div class="result"><b>その夜の記録</b><p>'+esc(state.result)+'</p></div><button class="btn primary" data-next="1">次へ進む</button>';}
+if(state.resultPending){
+ h+='<div class="result"><b>その夜の記録</b><p>'+esc(state.result)+'</p></div>';
+ var photoAfter=afterCameraSource(e);
+ if(photoAfter){
+  h+='<div class="btnrow"><button class="btn secondary" data-after-camera="1">'+(state.afterCameraSeen?'カメラを閉じる':'立ち去った後のカメラを確認する')+'</button></div>';
+  if(state.afterCameraSeen)h+=cameraAfterHtml(e,photoAfter);
+ }
+ h+='<button class="btn primary" data-next="1">次へ進む</button>';
+}
 else{var withCamera=isCameraEvent(e);h+='<div class="btnrow"><button class="btn secondary" data-monitor="1">'+(monitor?(withCamera?'カメラを切る':'確認を閉じる'):(withCamera?'カメラをつける':'状況を確認する'))+'</button></div>';
 if(monitor){if(withCamera)h+=cameraHtml(e);h+='<div class="monitor">'+esc(e.id==='E08'?(state.hauntTarget==='406'?'有馬は妙に元気だ。建物の所有者だと確認できるが、深夜の訪問予定はない。':'有馬は立つのもつらそうだ。建物の所有者だと確認できるが、訪問予定はない。'):e.monitor)+'</div>';}
 
@@ -723,7 +753,7 @@ renderNight();renderTab();
 }
 function renderRewind(){var h='';for(var d=1;d<=10;d++){h+='<button class="btn" '+(d>state.day?'disabled':'data-restartday="'+d+'"')+'>'+d+'日目'+(d===state.day?'（現在）':'')+'</button>';}el('days').innerHTML=h;}
 function start(){state=initial();state.started=true;selectedMail=null;pendingChoice=null;reply={fields:[],number:'',person:''};snapshot();save();render();scrollToTop();}
-function rewind(day){day=Number(day);if(!state.snapshots[day]||day>state.day)return;var old=state.snapshots;var snap=copy(old[day]);snap.snapshots={};Object.keys(old).forEach(function(k){if(Number(k)<=day)snap.snapshots[k]=old[k];});state=snap;if(state.day>=7&&!state.drawingTarget)state.drawingTarget=firstDrawingTarget(state.history);state.started=true;tab='board';selected=null;selectedMail=null;monitor=false;pendingChoice=null;reply={fields:[],number:'',person:''};el('rewindPanel').classList.add('hidden');save();render();scrollToTop();}
+function rewind(day){day=Number(day);if(!state.snapshots[day]||day>state.day)return;var old=state.snapshots;var snap=copy(old[day]);snap.snapshots={};Object.keys(old).forEach(function(k){if(Number(k)<=day)snap.snapshots[k]=old[k];});state=snap;state.afterCameraSeen=false;if(state.day>=7&&!state.drawingTarget)state.drawingTarget=firstDrawingTarget(state.history);state.started=true;tab='board';selected=null;selectedMail=null;monitor=false;pendingChoice=null;reply={fields:[],number:'',person:''};el('rewindPanel').classList.add('hidden');save();render();scrollToTop();}
 function goEntry(){if(state.phase!=='morning'||state.ended||state.locationStage!=='board')return;state.locationStage='entry';selectedMail=null;save();render();scrollToTop();}
 function openMail(id){if(state.phase!=='morning'||state.ended||state.locationStage!=='entry')return;var i=items('post').find(function(item){return item.id===id;});if(!i)return;selectedMail=id;if(!state.mailRead.includes(id)){state.mailRead.push(id);add(id);}save();renderTab();}
 function beginNight(){if(state.phase!=='morning'||state.ended||state.locationStage!=='entry')return;state.phase='night';cameraLookCount=0;monitor=false;pendingChoice=null;reply={fields:[],number:'',person:''};tab='board';selected=null;save();render();scrollToTop();}
@@ -740,6 +770,7 @@ if(b.dataset.tab){if(state.phase!=='morning'||state.ended||state.locationStage!=
 if(b.dataset.gotab){if(state.phase!=='morning'||state.ended||state.locationStage!=='board')return;tab=b.dataset.gotab;renderTab();el('tabPanel').scrollIntoView({block:'start'});return;}
 if(b.dataset.notice){if(state.phase!=='morning'||state.ended||state.locationStage!=='board')return;selected=b.dataset.notice;renderTab();var detail=el('tabPanel').querySelector('.detail');if(detail)detail.scrollIntoView({block:'nearest'});return;}
 if(b.dataset.mail){openMail(b.dataset.mail);return;}
+if(b.dataset.afterCamera){if(state.phase==='night'&&state.resultPending&&!state.ended&&afterCameraSource(eventNow())){state.afterCameraSeen=!state.afterCameraSeen;save();renderNight();}return;}
 if(b.dataset.monitor){monitor=!monitor;if(monitor&&state.phase==='night'&&!state.ended&&isCameraEvent(eventNow()))cameraLookCount++;renderNight();return;}
 if(b.dataset.judge){if(state.phase!=='night'||state.resultPending||state.ended||!['yes','no'].includes(b.dataset.judge))return;pendingChoice=b.dataset.judge;reply={fields:[],number:'',person:''};renderNight();return;}
 if(b.dataset.cancelChoice){pendingChoice=null;renderNight();return;}
