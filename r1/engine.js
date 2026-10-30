@@ -1,6 +1,6 @@
 window.R1 = (function makeEngine(){
 "use strict";
-const VERSION="0.9.8-alpha";
+const VERSION="0.9.9-alpha";
 const GENRES=[
 {id:"taste",name:"商品・味",icon:"🍜"},
 {id:"service",name:"接客",icon:"💬"},
@@ -367,7 +367,7 @@ function background(state){
     const quickYear=state.month<=4;
     const number=tenantOrdinal===6?"6":String(tenantOrdinal);
     const whispers=quickYear?
-      ["この一年で"+number+"店舗目だって聞いた。本当なら、入れ替わりが早すぎる。","ここはまた違う店。二番地の前の看板、もう思い出せない。"]:
+      ["去年から数えて"+number+"店舗目だって聞いた。本当なら、入れ替わりが早すぎる。","ここはまた違う店。二番地の前の看板、もう思い出せない。"]:
       ["二番地は開店と閉店の貼り紙がよく入れ替わる。","ここはもう"+number+"軒目らしい。店主が変わるたびに、前の店の話をする人がいる。"];
     text+=" "+whispers[Math.floor(rand()*whispers.length)];
    }
