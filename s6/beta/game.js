@@ -114,6 +114,8 @@ const site=()=>{
  case 'flash':return firstIntroductions();
  case 'venue':return venue();
  case 'group':return group();
+ case 'contact-prompt':return contactPrompt();
+ case 'contact-result':return contactResult();
  case 'choose':return chooseAction();
  case 'night':return night();
  case 'sns':return sns();
@@ -175,12 +177,64 @@ function group(){
  return '<div class="eyebrow">'+esc(label(events[g.event_id].org_id))+' / '+esc(eventName(g.group_id))+'</div><h2>輪の会話</h2>'+
  '<p>'+esc(Dialogue.sceneActivity(g.group_id))+'</p>'+(Dialogue.sceneMode(S.group)==='performance'?'<p class="dim">演奏がひと区切りつき、音が止んだところで短い会話が始まる。</p>':'')+
  '<div class="chat-thread">'+chats+'</div>'+
- '<p class="status">あと '+remaining+' 回行動できます</p>'+
- (remaining?'<div class="paper"><h3>この輪でどう過ごす？</h3><p class="dim">誰と何を話すか決めましょう。交流はこの輪で3回まで。</p>'+
- '<div class="actions">'+btn('話しかける','action-menu','talk')+btn('質問する','action-menu','question')+
- btn('SNS・連絡先を聞く','action-menu','social')+btn('聞き耳を立てる','listen-group','','ghost')+'</div></div>':
- '<div class="notice">この輪では十分に話した。次の輪へ移れます。</div>')+
- '<div class="actions">'+btn('会場のほかの輪へ戻る','back-venue','','ghost')+'</div>';
+ '<div id="group-action-zone"><p class="status">交流 '+log.length+' / 3回'+(remaining?'（あと'+remaining+'回）':'（交流済み）')+'</p>'+
+ (remaining?'<div class="paper"><h3>この輪でどう過ごす？</h3><p class="dim">好きな人に話しかけたり、周りの音を聴いたりできます。最大3回まで。</p>'+
+ '<div class="actions">'+btn('話しかける','action-menu','talk')+btn('聞き耳を立てる','listen-group','','ghost')+'</div></div>':
+ '<div class="notice">この輪での交流は3回終わりました。連絡先は離れるときに聞けます。</div>')+
+ '<div class="actions">'+btn('輪から離れる','leave-group','','ghost')+'</div></div>';
+}
+function contactPrompt(){
+ const ids=byGroup(S.group),g=groups[S.group];
+ return '<div class="eyebrow">'+esc(eventName(g.group_id))+'</div><h2>連絡先を聞きますか？</h2>'+
+ '<p>輪を離れる前に、ここにいる全員へ聞けます。教えてくれるSNSや返事のタイミングは人によって違います。交換しなくても大丈夫です。</p>'+
+ '<div class="person-list">'+ids.map(id=>'<div class="person-card">'+portrait(id)+
+ '<div><strong>'+esc(displayName(id))+'</strong><p class="dim">'+esc(relationship(id))+'</p></div></div>').join('')+'</div>'+
+ '<div class="actions">'+btn('全員に連絡先を聞く','ask-group-contacts')+btn('聞かずに輪を離れる','finish-group','','ghost')+'</div>';
+}
+function contactResult(){
+ const rows=S.groupContacts[S.group]||[];
+ return '<div class="eyebrow">'+esc(eventName(S.group))+'</div><h2>連絡先の返事</h2>'+
+ '<p>全員に一度ずつ声をかけました。公開していないアカウントを勝手に特定することはできません。</p>'+
+ '<div class="person-list">'+rows.map(row=>'<div class="person-card">'+portrait(row.pid)+
+ '<div><strong>'+esc(displayName(row.pid))+'</strong><p class="dim">'+row.results.map(x=>esc(x)).join(' ／ ')+'</p></div></div>').join('')+'</div>'+
+ '<div class="actions">'+btn('輪を離れる','finish-group')+'</div>';
+}
+function exchangeGroupContacts(){
+ if(S.groupContacts[S.group])return;
+ S.groupContacts[S.group]=byGroup(S.group).map(pid=>{
+  const p=window.S6_BETA_PROFILES.people[pid],rules=D.contactChannels.filter(r=>r.group_id===S.group&&r.person_id===pid);
+  const rule=platform=>rules.find(r=>r.platform===platform);
+  const results=[],num=Number(pid.slice(1));
+  const t=accounts[pid+'|TINE'],pr=accounts[pid+'|Photogram'],z=accounts[pid+'|Zitter'];
+  const known=S.interacted.includes(pid),warm=p.warmth,guard=p.caution;
+  // Personality and existing channel rules, not the card shuffle seed, determine disclosures.
+  const mayTine=!!(t&&rule('TINE'))&&(guard<=2||known&&guard<=3)&&!(p.snsTone==='active'&&num%3===1);
+  const mayPhoto=!!(pr&&rule('Photogram'))&&(p.snsTone!=='private'||known);
+  const mayZitter=!!z&&z.visibility==='公開'&&(p.snsTone==='active'||(warm>=3&&guard<=2));
+  if(mayTine){
+    if(S.contacts.includes(pid))results.push('TINE：交換済み');
+    else if(S.pendingContacts.includes(pid))results.push('TINE：確認待ち');
+    else{
+      const reply=Dialogue.contact(pid,S.group,S);
+      if(reply.result==='accept'){S.contacts.push(pid);results.push('TINE：交換');}
+      else if(reply.result==='pending'){S.pendingContacts.push(pid);results.push('TINE：明日確認');}
+      else results.push('TINE：また今度');
+    }
+  }
+  if(mayPhoto){
+    const policy=rule('Photogram').approval_policy;
+    if(S.photoFollows.includes(pid))results.push('Photogram：フォロー済み');
+    else if(S.photoRequests.includes(pid))results.push('Photogram：承認待ち');
+    else if(policy==='immediate'){S.photoFollows.push(pid);results.push('Photogram：交換');}
+    else if(policy==='next_day'){S.photoRequests.push(pid);results.push('Photogram：翌日承認');}
+  }
+  if(mayZitter){
+    if(!S.zitterFollows.includes(pid))S.zitterFollows.push(pid);
+    results.push('Zitter：交換');
+  }
+  if(!results.length)results.push(guard>=3?'「ごめん、まだ会ったばかりだから」':'「今はSNSは交換していないんだ」');
+  return {pid,results};
+ });
 }
 function chooseAction(){
  const mode=S.mode,questionMode=mode==='question';
@@ -582,6 +636,9 @@ function handle(act,id){
   if(fact&&!S.clues.includes(fact))S.clues.push(fact);
   go('group');break;
  }
+ case 'leave-group':if(S.phase==='group')go(S.groupContacts[S.group]?'contact-result':'contact-prompt');break;
+ case 'ask-group-contacts':if(S.phase==='contact-prompt'){exchangeGroupContacts();go('contact-result')}break;
+ case 'finish-group':if(['contact-prompt','contact-result'].includes(S.phase))go('venue');break;
  case 'back-venue':go('venue');break;
  case 'finish-venue':if(S.phase==='venue')go('night');break;
  case 'open-notebook':if(S.phase==='notebook'||S.phase==='identity')return;openLayer('notebook');break;
