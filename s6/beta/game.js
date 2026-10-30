@@ -520,6 +520,16 @@ function handle(act,id){
     const knownBefore=S.spokenTo.includes(id)||S.interacted.includes(id);
     recordConversation(id,'talk');
     reply=Dialogue.talk(id,S.group,S,knownBefore);
+    const route=Routes.get(S.group,id);
+    const earlier=(S.groupLog[S.group]||[]).some(x=>x.pid===id&&x.routeHint);
+    if(route&&!earlier){
+      reply.text+=' 余白ラムネの曲の話になると、「'+route.text+'」と返ってきた。';
+      saveRouteClue(id,route.text);
+    }else if(!route&&!S.musicKnown[id]){
+      const skill=Music.people[id],mains=Music.columns.filter(k=>skill?.skills[k]==='◎').map(k=>MUSIC_LABELS[k]);
+      if(mains.length)reply.text+=' 普段は'+mains.join('と')+'が中心なんだ。';
+      S.musicKnown[id]=true;
+    }
     if(!S.spokenTo.includes(id))S.spokenTo.push(id);
   }else if(type==='question'||type==='affiliation'){
     reply=Dialogue.answer(id,S.group,type==='affiliation'?'affiliation':'question');
@@ -618,18 +628,19 @@ function handle(act,id){
     S.personalIntroduced[id]=true;
   }
   if(!S.interacted.includes(id))S.interacted.push(id);
-  const bystander=Dialogue.thirdParty(id,S.group,S,type);
+  const bystander=Dialogue.thirdParty(id,S.group,S,type==='talk'&&Routes.get(S.group,id)?'producer':type);
   if(bystander?.selfIntroduced){
     S.personalIntroduced[bystander.pid]=true;
     if(!S.introduced.includes(bystander.pid))S.introduced.push(bystander.pid);
   }
-  (S.groupLog[S.group]??=[]).push({pid:id,type:kind,questionKey,text:reply.text,reply:bystander});
+  (S.groupLog[S.group]??=[]).push({pid:id,type:kind,questionKey,routeHint:type==='talk'&&!!Routes.get(S.group,id),text:reply.text,reply:bystander});
   S.groupDone[S.group]=reply.text;
   S.report='';go('group');break;
  }
  case 'listen-group':{
   if(S.phase!=='group'||(S.groupLog[S.group]||[]).length>=3)return;
-  const msg=Dialogue.listenText(S.group);
+  const previous=(S.groupLog[S.group]||[]).filter(x=>x.type==='聞き耳').length;
+   const msg=previous===0?Dialogue.listenText(S.group):previous===1?'もう一度耳を澄ます。周囲の人たちは、さっきの演奏で気になった音について話し続けている。':'最後にしばらく聴く。別の輪から演奏の音が重なり、会場の雰囲気が変わった。';
   (S.groupLog[S.group]??=[]).push({pid:null,type:'聞き耳',text:msg});
   S.groupDone[S.group]=msg;
   const fact=actions[S.group]?.trigger_fact_id;
