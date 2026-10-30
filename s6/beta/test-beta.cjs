@@ -68,17 +68,24 @@ check('freshman peers show highlighted photo and identity hint without permanent
  assert.match(s.html,/同期の新入生/);assert.match(s.html,/peer-highlight/);assert.match(s.html,/高橋健/);
  s.click('leave-flash');assert.match(s.html,/同級生/);assert.doesNotMatch(s.html,/高橋健/);
 });
-check('the actions offer three attempts per group',()=>{
+check('three direct actions stay available, and group departure opens the separate contact choice',()=>{
  const s=newPlayer();visit(s,'E01','E01-A');
- for(const q of ['話しかける','質問する','SNS・連絡先を聞く','聞き耳を立てる'])assert.ok(s.html.includes(q));
- s.click('action-menu','talk');s.click('act-target','P003');assert.match(s.html,/受付にいると/);assert.doesNotMatch(s.html,/と声をかけてくれた/);
- s.click('action-menu','question');assert.match(s.html,/担当しているパート/);
- s.click('ask-affiliation','P003');assert.equal(s.state.knownOrg.P003,'L');
- assert.equal(s.state.groupLog['E01-A'].length,2);
- s.click('action-menu','contact');assert.equal(s.state.phase,'choose');
- s.click('act-target','P019');assert.equal(s.state.groupLog['E01-A'].length,3);
+ assert.match(s.html,/交流 0 \/ 3回/);
+ for(const text of ['話しかける','聞き耳を立てる','輪から離れる'])assert.match(s.html,new RegExp(text));
+ assert.doesNotMatch(s.html,/data-id="question"|data-id="social"/);
+ s.click('action-menu','talk');s.click('act-target','P003');
+ assert.equal(s.state.phase,'group');assert.match(s.html,/交流 1 \/ 3回/);
+ assert.ok(s.state.groupLog['E01-A'][0].reply,'another participant must join the conversation');
+ s.click('action-menu','talk');s.click('act-target','P019');
+ assert.match(s.html,/交流 2 \/ 3回/);
+ s.click('listen-group');assert.match(s.html,/交流 3 \/ 3回/);
+ assert.equal(s.state.groupLog['E01-A'].length,3);
  s.click('action-menu','talk');assert.equal(s.state.phase,'group');
+ s.click('leave-group');assert.equal(s.state.phase,'contact-prompt');
+ assert.match(s.html,/連絡先を聞きますか/);
+ s.click('finish-group');assert.equal(s.state.phase,'venue');
 });
+
 check('all 44 group activities can be entered and listened to three times',()=>{
  let total=0;const dates=['2026-04-06','2026-04-07','2026-04-08','2026-04-09','2026-04-10'];
  for(const e of D.events)for(const g of D.groups.filter(x=>x.event_id===e.event_id)){
@@ -348,13 +355,17 @@ check('Photogram requires a face-to-face follow request, independently from TINE
  yes.click('back-night');yes.click('next-day');yes.click('skip');yes.click('night-sns','Photogram');
  assert.ok(yes.state.photoFollows.includes('P003'));assert.ok(yes.html.includes(a.handle));
 });
-check('public SNS portrait can be compared even when the real author has never been met',()=>{
- const s=newPlayer();visit(s,'E01','E01-A');s.click('back-venue');s.click('finish-venue');s.click('night-sns','Photogram');
+check('public face photos appear in notebook without a manual matching game',()=>{
+ const s=newPlayer();visit(s,'E01','E01-A');s.click('back-venue');s.click('finish-venue');
  assert.ok(!s.state.seen.includes('P001'));
- assert.match(s.html,/data-id="S02"/);
- s.click('account-match','S02');assert.equal(s.state.phase,'sns-match');
- assert.match(s.html,/正誤は自動判定されません/);
+ s.click('night-sns','Photogram');
+ assert.ok(s.state.seen.includes('P001'));
+ assert.ok(s.state.onlineSeen.P001.Photogram);
+ assert.doesNotMatch(s.html,/顔を見比べる|紐付けメモを見直す/);
+ s.click('open-notebook');assert.match(s.html,/Photogramで顔を見た/);
+ assert.match(s.html,/本名・所属は未照合/);
 });
+
 check('direct face-match actions cannot bypass locked or future post privacy',()=>{
  const s=newPlayer();visit(s,'E01','E01-A');s.click('back-venue');s.click('finish-venue');s.click('night-sns','Photogram');
  s.click('account-match','S01');assert.equal(s.state.phase,'sns');
@@ -458,19 +469,20 @@ check('interpersonal addresses honor grade and remain stable for each pair',()=>
  assert.equal(B.addressFor('P014','P013'),B.addressFor('P014','P013'));
  assert.ok(!B.addressFor('P014','P013').includes('先輩'));
 });
-check('probabilistic secondary dialogue includes silence, comments and voluntary introductions',()=>{
+check('secondary dialogue joins spoken exchanges but may stay quiet in other situations',()=>{
  const E=dataScope.window.S6_BETA_DIALOGUE;
  const state={personalIntroduced:{},groupLog:{},interacted:[],spokenTo:[]};
  let silent=0,talked=0,introduced=0;
  for(let seed=0;seed<300;seed++){
-  const reply=E.thirdParty('P014','E01-C',{...state,presentationSeed:seed},'talk');
-  if(!reply)silent++;
-  else {talked++;if(reply.selfIntroduced){introduced++;assert.match(reply.text,/です/)}}
+  const reply=E.thirdParty('P014','E01-C',{...state,presentationSeed:seed},'producer');
+  if(!reply)silent++;else{talked++;if(reply.selfIntroduced){introduced++;assert.match(reply.text,/です/)}}
+  assert.ok(E.thirdParty('P014','E01-C',{...state,presentationSeed:seed},'talk'));
  }
  assert.ok(silent>0&&talked>0&&introduced>0);
  assert.deepEqual(E.thirdParty('P014','E01-C',{...state,presentationSeed:23},'talk'),
  E.thirdParty('P014','E01-C',{...state,presentationSeed:23},'talk'));
 });
+
 check('personal name flags from old beta saves survive reload without invented affinity',()=>{
  const cache=new Map(),s=makeSession(cache);
  for(const a of ['start','show-campus','show-intro','begin'])s.click(a);
@@ -944,21 +956,20 @@ check('asking identical question twice gives different response and no repeat cl
  t.click('action-menu','question');t.click('act-target','P003');t.click('action-menu','question');t.click('act-target','P003');
  assert.match(t.state.groupLog['E01-A'][1].text,/さっき話した通り/);
 });
-check('one SNS action requests TINE and Photogram under independent policies',()=>{
+check('all-member exit exchange preserves independent TINE Photogram and Zitter outcomes',()=>{
  const s=newPlayer();visit(s,'E01','E01-A');
- assert.match(s.html,/SNS・連絡先を聞く/);
- assert.doesNotMatch(s.html,/data-act="action-menu" data-id="photo"/);
- s.click('action-menu','social');assert.equal(s.state.phase,'choose');
- s.click('act-target','P003');
+ s.click('leave-group');assert.equal(s.state.phase,'contact-prompt');
+ s.click('ask-group-contacts');assert.equal(s.state.phase,'contact-result');
+ assert.equal(s.state.groupContacts['E01-A'].length,3);
  assert.ok(s.state.contacts.includes('P003'));
  assert.ok(s.state.photoRequests.includes('P003'));
  assert.ok(!s.state.photoFollows.includes('P003'));
- assert.match(s.state.groupLog['E01-A'][0].text,/TINE/);
- assert.match(s.state.groupLog['E01-A'][0].text,/Photogram/);
- s.click('back-venue');s.click('finish-venue');s.click('next-day');
- assert.ok(s.state.photoFollows.includes('P003'));
+ assert.ok(s.state.photoFollows.includes('P019'));
+ assert.ok(s.state.zitterFollows.includes('P019'));
+ assert.ok(!s.state.contacts.includes('P019'),'public-SNS preference differs from TINE');
+ s.click('finish-group');assert.equal(s.state.phase,'venue');
+ s.click('finish-venue');s.click('next-day');assert.ok(s.state.photoFollows.includes('P003'));
 });
-
 
 check('renamed identities appear in SNS after a personally established link, not in unknown accounts',()=>{
  const s=newPlayer();visit(s,'E01','E01-A');
