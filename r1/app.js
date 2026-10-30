@@ -10,7 +10,7 @@ const dshop=id=>E.SHOPS.find(x=>x.id===id);
 const dgenre=id=>E.GENRES.find(x=>x.id===id);
 function newGame(){const state=E.createState(Date.now()>>>0);state.introSeen=false;return state}
 function load(){
- try{const raw=localStorage.getItem(KEY);if(raw){const s=JSON.parse(raw);if(s.version===E.VERSION){E.audit(s);return s;}if(["0.1.0-alpha","0.2.0-alpha","0.3.0-alpha","0.3.1-alpha","0.3.2-alpha","0.4.0-alpha","0.4.1-alpha","0.5.0-alpha","0.6.0-alpha","0.7.0-alpha","0.8.0-alpha","0.9.0-alpha","0.9.1-alpha","0.9.2-alpha","0.9.3-alpha","0.9.4-alpha","0.9.5-alpha","0.9.6-alpha"].includes(s.version)){
+ try{const raw=localStorage.getItem(KEY);if(raw){const s=JSON.parse(raw);if(s.version===E.VERSION){E.audit(s);return s;}if(["0.1.0-alpha","0.2.0-alpha","0.3.0-alpha","0.3.1-alpha","0.3.2-alpha","0.4.0-alpha","0.4.1-alpha","0.5.0-alpha","0.6.0-alpha","0.7.0-alpha","0.8.0-alpha","0.9.0-alpha","0.9.1-alpha","0.9.2-alpha","0.9.3-alpha","0.9.4-alpha","0.9.5-alpha","0.9.6-alpha","0.9.7-alpha"].includes(s.version)){
  if(["0.1.0-alpha","0.2.0-alpha","0.3.0-alpha","0.3.1-alpha","0.3.2-alpha","0.4.0-alpha"].includes(s.version)){
  const ramen=s.shops.ramen;
  ramen.scores=Object.fromEntries(E.GENRES.map(g=>[g.id,0]));
@@ -50,14 +50,37 @@ function save(){try{localStorage.setItem(KEY,JSON.stringify(game))}catch(err){co
 game=load();let onboarding=game.introSeen===false;save();
 function scrollTop(){window.scrollTo({top:0,behavior:"auto"})}
 function pill(tone,text){return '<span class="chip '+(tone||"")+'">'+esc(text)+'</span>'}
+const ART_ROOT="./assets/production_c_20261030/";
+const STAGE4_ART=new Set(["bakery_mood_plus","bakery_service_minus","burger_mood_plus","burger_service_minus","cafe_identity_minus","cafe_mood_plus","cake_mood_plus","cake_service_minus","chinese_mood_plus","chinese_service_minus","curry_identity_plus","curry_mood_minus","fish_price_minus","fish_taste_plus","onigiri_mood_minus","onigiri_taste_plus","pasta_identity_plus","pasta_price_minus","sandwich_mood_plus","sandwich_service_minus","soba_mood_plus","soba_price_minus","teishoku_mood_plus","teishoku_price_minus","udon_service_minus","udon_taste_plus","veggie_mood_plus","veggie_price_minus"]);
+const ownerArt=id=>ART_ROOT+"owners/"+id+".webp";
+const foodArt=id=>ART_ROOT+"items/"+id+".webp";
+function storefrontArt(v){
+ const id=v.base.id,route=v.route||{};
+ if(id==="ramen"&&!v.open)return ART_ROOT+"special/ramen_closed.webp";
+ if(id==="ramen"&&v.open&&v.phase==="拡張本店")return ART_ROOT+"special/ramen_giant.webp";
+ const routeKey=[id,route.genre,route.polarity].join("_");
+ if(v.open&&route.stage===4&&STAGE4_ART.has(routeKey))return ART_ROOT+"evolutions/"+routeKey+"_stage4.webp";
+ return ART_ROOT+"shops/"+id+"_base.webp";
+}
+function storyClue(id){
+ if(id==="ramen")return game.viralCount>=1?
+ "商店街の噂：「あの店は口コミで言い合うほど注目される。反論を面白がる人も、硬い麺だけは認める人もいるらしい。閉めても惜しむ客はいるんじゃないか」":
+ "商店街の噂：「愛想はよくないけれど、何度も来るお客の注文だけは黙って覚えているそうだよ」";
+ if(id==="cafe")return "窓際の小さな札には「静かに本を読みたい方へ」。店主は、落ち着けたという感想を大切にしているらしい。";
+ if(id==="cake")return "新作棚のそばに「面白いと思ったお菓子を教えてください」と手書きのメモがある。";
+ return "";
+}
 function storefront(v){
  const stage=v.route.stage,closed=!v.open,visual=v.visual||{icon:v.base.icon,product:v.base.product,tagline:"いつもの味",variety:0};
  const featureLabel={taste:"味・メニュー",service:"注文・接客",price:"価格・セット",mood:"店内・客席",identity:"店のこだわり"}[v.route.genre]||"看板の商品";
- const merchandise=closed?"":'<div class="store-merch"><span class="merch-icon" aria-hidden="true">'+esc(visual.icon)+'</span><span class="merch-label"><strong>'+esc(visual.product)+'</strong><span>'+esc(stage>0?featureLabel:"看板の商品")+'</span></span></div>';
+ const artwork=storefrontArt(v),covered=stage===4&&STAGE4_ART.has([v.base.id,v.route.genre,v.route.polarity].join("_"));
+ const merch=closed?"":'<div class="store-merch"><span class="merch-icon" aria-hidden="true">'+esc(visual.icon)+'</span><span class="merch-label"><strong>'+esc(visual.product)+'</strong><span>'+esc(stage>0?featureLabel:"看板の商品")+'</span></span></div>';
  const feature=(!closed&&stage>0)?'<div class="store-feature">'+esc(v.feature)+'</div>':"";
- return '<div class="storefront '+esc(v.base.palette)+' stage-'+stage+" route-"+(v.route.genre||"base")+" dir-"+(v.route.polarity||"none")+(closed?" closed":"")+(v.phase==="拡張本店"?" ramen-giant":"")+'" role="img" aria-label="'+esc(v.base.name+"。"+v.summary+" "+(v.feature||""))+'">'+
- '<div class="sign">'+esc(closed?"閉店しました":v.sign)+'</div>'+merchandise+feature+
- '<span class="stage-tag">'+esc(closed?"CLOSED":stage===0?"営業中":stage===1?"店頭改装":stage===2?"新看板":stage===3?"新装":"大改装")+'</span></div>';
+ const classname="storefront has-art "+esc(v.base.palette)+" stage-"+stage+" route-"+(v.route.genre||"base")+" dir-"+(v.route.polarity||"none")+(closed?" closed":"")+(v.phase==="拡張本店"?" ramen-giant":"")+(covered?" illustrated-evolution":stage>0?" text-evolution":"");
+ return '<div class="'+classname+'" role="img" aria-label="'+esc(v.base.name+"。"+v.summary+" "+(v.feature||""))+'">'+
+  '<img class="storefront-picture" src="'+esc(artwork)+'" alt="" loading="lazy" decoding="async">'+
+  '<div class="sign">'+esc(closed?"閉店しました":v.sign)+'</div>'+merch+feature+
+  '<span class="stage-tag">'+esc(closed?"CLOSED":stage===0?"営業中":stage===1?"店頭改装":stage===2?"新看板":stage===3?"新装":"大改装")+'</span></div>';
 }
 function shopCard(d){
  const v=E.display(game.shops[d.id],d.id),pub=E.publicReviews(game,d.id),mine=game.reviews.filter(x=>x.id===d.id),all=[...pub,...mine],rating=all.length?(all.reduce((t,x)=>t+x.star,0)/all.length).toFixed(1):null;
@@ -104,7 +127,9 @@ function detail(id){
  const last=s.history.length?s.history[s.history.length-1]:null;
  return '<section class="panel" id="shopDetail"><div class="detail-header"><div><span class="eyebrow">お店のページ</span><h2>'+esc(d.name)+'</h2><p class="subtitle">'+esc(d.category)+' ／ '+(v.route.stage>0?'店頭の注目：':'')+esc(v.visual?v.visual.product:d.product)+'</p></div><span class="summary-badge">'+esc(v.business)+'</span></div>'+
  '<div class="shop-meta">'+pill('',(s.lot||'?')+'番地')+pill(v.closed?"bad":"good",v.business)+pill("",v.population)+(v.route.label?pill("",v.route.label):pill("","創業時の看板"))+'</div>'+
- '<div class="owner-box"><span class="owner-icon" aria-hidden="true">'+esc(d.icon)+'</span><div><strong>店主：'+esc(d.owner)+'（'+d.age+'）</strong><p>'+esc(d.description)+'</p></div></div>'+
+ '<div class="owner-box"><img class="owner-portrait" src="'+esc(ownerArt(id))+'" alt="'+esc(d.owner)+'のイラスト" loading="lazy" decoding="async"><div><strong>店主：'+esc(d.owner)+'（'+d.age+'）</strong><p>'+esc(d.description)+'</p></div></div>'+
+ '<div class="featured-item"><img src="'+esc(foodArt(id))+'" alt="'+esc(d.product)+'のイラスト" loading="lazy" decoding="async"><div><strong>'+esc(v.route.stage>0?"開業時の看板メニュー":"看板の商品")+'</strong><p>'+esc(d.product)+'</p>'+(v.route.stage>0?'<small>現在の店頭：'+esc(v.visual.product)+'</small>':"")+'</div></div>'+
+ (storyClue(id)?'<p class="shop-clue">'+esc(storyClue(id))+'</p>':"")+
  '<div class="note">'+esc(v.summary)+'</div>'+recentFeed(id)+
  (last?'<div class="recent"><h3>あなたの前回の投稿</h3>'+replySnippet(id,last.reply,d.owner+'からの返信')+'</div>':'')+reviewForm(id)+'</section>';
 }
@@ -124,12 +149,15 @@ function tutorial(){
 function street(){
  const listed=E.SHOPS.filter(x=>game.shops[x.id].opened),all=listed.map(shopCard).join(""),openCount=listed.filter(x=>!game.shops[x.id].closed).length;
  const feed=game.feed.filter(x=>x.kind==="sns"||x.kind==="viral"||x.kind==="lifecycle"||x.kind==="rumor").slice(-5).reverse();
+ const lot2Vacant=E.SHOPS.some(d=>game.shops[d.id].opened&&game.shops[d.id].closed&&game.shops[d.id].lot===2)&&
+  !E.SHOPS.some(d=>game.shops[d.id].opened&&!game.shops[d.id].closed&&game.shops[d.id].lot===2);
+ const vacantCard=lot2Vacant?'<aside class="lot-vacancy"><img src="'+ART_ROOT+'special/lot2_vacant.webp" alt="看板の跡が残る2番地の空き店舗" loading="lazy" decoding="async"><p>2番地には、前の店の看板跡だけが残っている。</p></aside>':"";
  const recentNpcs=game.last&&game.last.month===game.month?(game.last.npcs||[]):[];
  const changes=game.last&&game.last.month===game.month?
  [...(game.last.openings||[]).map(x=>'<div class="shop-announcement new"><strong>'+(x.comeback?'🏢 おかえりなさい':'🎉 NEW OPEN')+'　'+esc(x.name)+'</strong><p>'+esc(x.notice)+'</p></div>'),
  ...(game.last.closures||[]).map(x=>'<div class="shop-announcement ended"><strong>閉店のお知らせ　'+esc(x.name)+'（'+esc((x.lot||"?")+'番地')+'）</strong><p>'+esc(x.reason)+'ため営業終了。以前の口コミは引き続き確認できます。</p></div>')].join(""):"";
  return '<div class="layout"><div><section class="travel-head"><span class="eyebrow">'+esc(E.MONTHS[Math.min(game.month,11)])+' ／ 出張先の昼休み</span><h2>今日のランチ、どこにしよう？</h2><p>口コミを読んで店を選び、食べた後で評価しましょう。</p></section>'+
- '<p class="shop-count">本日の営業店舗：'+openCount+'店</p>'+changes+'<div class="street-list">'+all+'</div><section class="feed-list"><h2>商店街の話題</h2>'+
+ '<p class="shop-count">本日の営業店舗：'+openCount+'店</p>'+vacantCard+changes+'<div class="street-list">'+all+'</div><section class="feed-list"><h2>商店街の話題</h2>'+
  (feed.length?feed.map(f=>'<div class="feed-card '+(f.kind==="viral"?"viral-list":f.kind==="rumor"?"lot-rumor":"")+'"><div class="meta">'+esc(f.kind==="lifecycle"?"商店街のお知らせ":f.kind==="rumor"?"商店街の噂":"つぶやき広場")+' ／ '+esc(E.MONTHS[f.month-1])+'</div><p class="body">'+esc(f.text)+'</p></div>').join(""):'<p class="section-intro">今日も昼休みの商店街。店の評判を見てみましょう。</p>')+'</section>'+
  (recentNpcs.length?'<section class="feed-list neighborhood-reviews"><h2>まちの反応・ほかのお客さんの口コミ</h2><p class="section-intro">先月届いた'+recentNpcs.length+'件のうち、最大8件を表示。全件は各店舗と履歴でも確認できます。</p>'+recentNpcs.slice(0,8).map(n=>'<article class="feed-card"><div class="meta">'+esc(n.by)+' ／ '+esc(dshop(n.id).name)+'　★'+n.star+'</div><p class="body">'+esc(n.text)+'</p>'+replySnippet(n.id,n.reply,dshop(n.id).owner+"からの返信")+'</article>').join("")+'</section>':"")+'</div>'+
  (selectedId?detail(selectedId):'<aside class="panel choice-placeholder"><h2>口コミからお店を選ぶ</h2><p>お店のカードを選ぶと、過去の口コミと店主の返信を確認できます。</p></aside>')+'</div>';
