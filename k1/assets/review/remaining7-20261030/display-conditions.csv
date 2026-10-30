@@ -1,0 +1,8 @@
+﻿ファイル名,イベントID,用途,表示条件,実装上の注意
+k1/assets/hallway/405-vacated.webp,DAY4,DAY4・405号室退去後,DAY4以降の405退去が確定した廊下観察,405の表札を外し壁に小さな擦り跡
+k1/assets/hallway/404-boxes-night.webp,DAY3-6,404号室の不審な荷物,DAY3〜DAY6の404ミスリード場面,左端404に閉じた長箱・黒い機材ケース・小箱
+k1/assets/hallway/404-boxes-explained.webp,DAY9,404号室の普通の家族と荷物の真相,DAY9の404ミスリード回収時,同じ長箱・黒ケース・小箱を開き夜勤機材と子どもの工作を示す
+k1/assets/mail/quietmail-postbox.webp,quietmail,差出人不明郵便の集合ポスト写真,DAY9 quietmail成立時のみ。常時表示しない,単一の投函口だけが内側からわずかに開く
+k1/assets/mail/406-old-listing.webp,DAY8,入居前の406号室募集チラシ,DAY8の過去の賃貸募集証拠。現在募集中として扱わない,403・405通常賃料と406半額の情報はHTMLで重ねる
+k1/assets/gameover/e07g-unfamiliar-shoes.webp,E07G,GAME OVER・増えた靴,DAY8ランダムイベントE07G失敗時のみ,室内玄関に見覚えのない暗色靴が一足増える
+k1/assets/gameover/e08-door-gap.webp,E08,GAME OVER・有馬を招き入れた玄関,DAY8固定イベントE08で有馬を入れた失敗時のみ,有馬の靴が扉を塞ぎ背後の真鍋が白紙書類を持つ
