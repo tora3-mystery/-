@@ -1,7 +1,7 @@
 {
   "schema": 1,
-  "asOf": "2026-10-29 19:25 JST／Gitツリー差分同期。変更3作品（K1/P1/V1）を更新。QA再実行・実ブラウザ操作なし。",
-  "baseCommit": "49474c456a7f7b81dd653bb5e762a218be581c56",
+  "asOf": "2026-10-30 19:13 JST／Gitツリー差分同期。K1・R1・S8を更新／登録、最新16作品の進捗を記録。QA再実行・実ブラウザ操作なし。",
+  "baseCommit": "524647c730287d3c2552b9037a184ec7f4be11e9",
   "progressMeaning": "バーは到達した工程の位置（Phase番号/8）を示す目安。完成率、レビュー合格率ではない。進捗は資料上の暫定推定を含む。",
   "limitations": "変更3作品のHTML・status.json・README/QA・素材記録を照合。変更なし11作品はGit差分のみ。R1/S8は今回の指定対象外。人間の最新版受入、実ブラウザ操作、Workの現稼働は推測しない。",
   "projects": [
@@ -123,6 +123,49 @@
         ],
         "verification": "進化44/44のWork独立検品PASS、顔12点はWorkの画素・ハッシュ・40px検品PASS。α0.6.30の実ブラウザ全件ロード未確認",
         "workActivity": "進化44点と顔12点は納品・統合済。現Work稼働は不明"
+      }
+    },
+    {
+      "humanVersion": "",
+      "humanDate": null,
+      "browserVersion": null,
+      "id": "R1",
+      "title": "口コミへの返信をご確認ください。（仮）",
+      "path": "r1/",
+      "version": "α0.9.9",
+      "phase": 7,
+      "stage": "本番画像76点統合・人間レビュー前",
+      "logic": "α0.9.9：画風C本番画像76点の表示先照合、15店舗・140進化ルート・45初期口コミの整合を監査。模擬DOMの12か月進行、5,000周・追加分岐検証でエラー0。全18種エンディング到達の試験記録あり",
+      "browser": "画像パスは台帳と一致。最新版のChromium・スマホ実表示とGitHub Pagesでの画像HTTP取得・操作は未確認",
+      "human": "α0.9.9の初見プレイと画風Cのゲーム内見え方・隠しエンドの推理可能性は未確認",
+      "assets": "本番画風Cの外観15＋店主15＋料理15＋特殊3＋最終段階進化28＝WebP76点がmainに保存・r1/app.jsへ統合済。未制作の進化112ルート等には基本画像を使用",
+      "owner": "人間→R1 Chat",
+      "next": "α0.9.9を12か月通しで試遊。店舗画像・店主・料理・段階4進化・2番地の空き店舗・店主返信・隠し結末、保存再開を実ブラウザで確認",
+      "work": "本番画像76点をWorkで制作済。追加制作より人間評価・実ブラウザQAを優先",
+      "sourceFile": "r1/index.html",
+      "sourceSha": "13cbf7b4525e02c589cc1cff760a5015f7664e87",
+      "lastCheckedAt": "2026-10-30T19:13:06+09:00",
+      "lastCheckedCommit": "5ebca767bc",
+      "verificationScope": "r1/status.json・QA_PREHUMAN_V099.md・QA_VISUAL_V098.md・r1/index.html・制作画像台帳を照合。監査記録を参照し今回のロジック/実ブラウザ再試験なし",
+      "humanEvidence": "r1/status.json: α0.9.9の人間レビュー未実施。過去の方針承認を最新版の受入として扱わない",
+      "blockers": "画像の実ロード・320/390px視認性・12か月操作・隠し結末への納得感は人間テストと実ブラウザQA待ち",
+      "releaseStatus": "α0.9.9試作ソースはmain反映。正式公開・Gate Cの承認は未確認",
+      "evidence": [
+        "r1/index.html",
+        "r1/status.json",
+        "r1/QA_PREHUMAN_V099.md",
+        "r1/QA_VISUAL_V098.md",
+        "r1/assets/production_c_20261030/asset_manifest.csv"
+      ],
+      "priority": 2,
+      "priorityReason": "本番画像と総合監査まで完了し、実際のプレイ品質・表示の検証が次のボトルネック",
+      "logicVersion": "α0.9.9",
+      "assetStatus": {
+        "githubSaved": 76,
+        "gameIntegrated": 76,
+        "format": "WebP",
+        "verification": "制作台帳と表示ルート照合PASS。実ブラウザ画像読込・画面目視未実施",
+        "workActivity": "本番C画像制作・統合済。追加Work未要請"
       }
     },
     {
@@ -439,65 +482,108 @@
       "evidence": []
     },
     {
+      "humanVersion": "",
+      "humanDate": null,
+      "browserVersion": null,
+      "id": "S8",
+      "title": "履修登録を完了してください。（仮）",
+      "path": "s8/",
+      "version": "v1.0",
+      "phase": 7,
+      "stage": "テストプレイ中・最新版の人間評価待ち",
+      "logic": "v1.0：講義105固有ID・17スキル・講義別確率・進級条件・科目表示などをChat側で最終監査。360周回の進行模擬でJS例外0。通常戦略では卒業が難しいため人間による難度評価が必要",
+      "browser": "v1.0の実ブラウザ・スマホ操作・公開GitHub Pages上での表示確認は未実施（QA記録の模擬DOMは実画面試験ではない）",
+      "human": "以前の難度評価を踏まえ修正。v1.0テスト公開後の初見プレイ承認は未記録",
+      "assets": "時間割・講義・学年スキルのUI主体。まとまった画像制作要件なし",
+      "owner": "人間→S8 Chat",
+      "next": "v1.0で文学・経済経営・理工と活動条件を変えて8学期通し試遊。科目選択・確率内訳・抽選・学年進行・卒業難度・モバイルスクロール・保存再開を確認",
+      "work": "現時点で画像制作より初見ゲームプレイ・必要に応じた独立QAを優先",
+      "sourceFile": "s8/index.html",
+      "sourceSha": "b47a630b59d3b549a80648b19ff0317381c18f04",
+      "lastCheckedAt": "2026-10-30T19:13:06+09:00",
+      "lastCheckedCommit": "efd2b03d45",
+      "verificationScope": "s8/status.json・README.md・AUDIT-v0.7.5.md・s8/index.htmlを照合。公開実表示・ロジック再実行なし",
+      "humanEvidence": "s8/status.json: v1.0はテストプレイ公開版でありGate C未通過",
+      "blockers": "v1.0の学部別難度・進行UX・実ブラウザ320/390px・8学期の人間完走・保存再開が未確認",
+      "releaseStatus": "v1.0テストプレイ版がmain反映。正式完成認定ではない",
+      "evidence": [
+        "s8/index.html",
+        "s8/status.json",
+        "s8/README.md",
+        "s8/AUDIT-v0.7.5.md"
+      ],
+      "priority": 2,
+      "priorityReason": "Chat側の最終監査完了。初見プレイで難度と説明の納得感を評価する工程",
+      "logicVersion": "v1.0",
+      "assetStatus": {
+        "githubSaved": 0,
+        "gameIntegrated": 0,
+        "verification": "専用の大量画像制作要件なし",
+        "workActivity": "画像Workの必要性低"
+      }
+    },
+    {
       "id": "K1",
       "title": "掲示物をご確認ください。（仮）",
       "path": "k1/",
-      "version": "α0.7.1",
-      "phase": 5,
-      "stage": "画像11点統合済・人間レビュー待ち",
-      "logic": "α0.7.1：3,125/3,125経路と4結末到達、画像11点の状態連動DOMモックPASS（既存QA記録）。今回の再実行なし",
-      "browser": "α0.7.1の実WebPロード・320/390/428px実画面・GitHub Pages実操作は未確認",
-      "human": "旧版への具体的指摘と代表画像3点の画風承認記録あり。α0.7.1のゲーム・追加8画像は未レビュー",
+      "version": "α0.13.0",
+      "phase": 7,
+      "stage": "α試作公開・画像42点統合／人間レビュー前",
+      "logic": "α0.13.0：404号室のDAY3〜6ミスリード・DAY9真相、405号室DAY4以降の退去、DAY8開封資料、希少DAY9郵便、E07G/E08のGAME OVER画像の表示条件をJS模擬環境で照合。過去の正常49経路・逆行動36経路は最新版で再実行していない",
+      "browser": "α0.13.0の実ブラウザ・GitHub Pages実操作・WebP画像全件ロード・320/390/428px目視は未実施",
+      "human": "α0.6.1への指摘を反映。α0.13.0の10日通し試遊および新画像の受入は未実施",
       "humanVersion": "",
-      "assets": "基準3点＋追加8点のWebP計11点をmain統合・状態連動コード組込済。実ブラウザ表示未確認",
-      "owner": "人間→Chat",
-      "next": "α0.7.1をスマホで通し試遊。DAY6/8/9/10の画像差分、夜のインターホン画面の昼夜整合、掲示板の可読性・スクロール、封筒開封、保存再開を確認",
-      "work": "画像11点の統合済。追加画像制作は具体的な不備が見つかるまで不要",
+      "assets": "予定の情景・カメラ・GAME OVER画像計42 WebPをmain保存・ゲームへ統合済。DAY9の404ミスリード回収等の表示条件を模擬確認。実ブラウザ画像読込は未検証",
+      "owner": "人間→K1 Chat",
+      "next": "α0.13.0をスマホ320/390/428pxで10日間通し試遊。DAY3〜9の404/405画像、DAY8募集チラシ、希少郵便、E07G/E08 GAME OVER、保存再開と不穏演出を確認",
+      "work": "予定画像42点の制作・GitHub保存・ゲーム統合済。追加Workは人間レビューで具体的な不備が出た場合のみ",
       "sourceFile": "k1/index.html",
-      "sourceSha": "4002fd7fe973ea3c594f1fcbdd16c3954c74d76c",
-      "lastCheckedAt": "2026-10-29T19:25:58+09:00",
-      "lastCheckedCommit": "24a916f182c5e1fee0dd3f4db4afb3ed9f26700c",
-      "verificationScope": "HTML・status.json・QA.md・素材台帳の記録を照合。既存QAの再実行・実ブラウザ試験は未実施",
+      "sourceSha": "2f4a271e6deb375fe7af3b655de94bc9951a1b63",
+      "lastCheckedAt": "2026-10-30T19:13:06+09:00",
+      "lastCheckedCommit": "1963b2c77babad1bdc535b1d9576ebd805743b50",
+      "verificationScope": "k1/status.json・k1/QA.md・k1/index.htmlと追加画像コミットを照合。既存の模擬JS検証を参照、今回の独立再実行・実ブラウザ操作なし",
       "humanDate": null,
-      "humanEvidence": "QA.md/status.jsonに旧版の人間指摘と代表3画像の画風承認あり。α0.7.1最新版の人間受入記録なし",
-      "blockers": "実画像ロード、スマホ画面重畳・スクロール、GitHub Pages操作、最新人間レビュー未確認。インターホン画面内の昼夜整合は要目視",
-      "releaseStatus": "α0.7.1試作ソースはmain反映。公開ページ実操作は未確認",
+      "humanEvidence": "status.json: 最終人間レビューはα0.6.1。α0.13.0での初見・通し確認記録なし",
+      "blockers": "実機320/390/428pxでの405表札・404違いの認識・募集チラシ重畳表示・希少写真・GAME OVER演出・10日間の人間評価が未完了",
+      "releaseStatus": "α0.13.0をmainへ反映。GitHub Pagesのデプロイ・実表示・実操作確認は別管理。Gate C未認定",
       "evidence": [
         "k1/index.html",
         "k1/status.json",
         "k1/QA.md",
-        "k1/assets/manifest.csv"
+        "k1/assets/manifest.csv",
+        "k1/assets/review/remaining7-20261030/display-conditions.csv"
       ],
-      "logicVersion": "α0.7.1",
+      "logicVersion": "α0.13.0",
       "browserVersion": null,
       "assetStatus": {
-        "githubSaved": 11,
-        "gameIntegrated": 11,
-        "verification": "状態連動DOMモックPASS。実WebPのブラウザロード・スマホ表示未検証",
-        "workActivity": "11点統合済。現Work稼働は不明"
+        "githubSaved": 42,
+        "gameIntegrated": 42,
+        "format": "WebP",
+        "verification": "画像台帳と状態連動JSモックは既存QAに記録。実WebPのブラウザロードとスマホ視認性は未確認",
+        "workActivity": "予定42点統合完了。追加制作は未要請"
       },
-      "priority": 5,
-      "priorityReason": "シナリオ改稿後の人間テストが仕様確定を左右する。画像制作は後回し"
+      "priority": 3,
+      "priorityReason": "42点統合後の画像表示・ミスリードの公平性を人間レビューで確かめる段階"
     }
   ],
-  "previousBaseCommit": "b815138699f66d22b5e0ea3e8c5156cdf2716616",
+  "previousBaseCommit": "49474c456a7f7b81dd653bb5e762a218be581c56",
   "sync": {
-    "checkedAt": "2026-10-29T19:25:58+09:00",
-    "comparedFrom": "b815138699f66d22b5e0ea3e8c5156cdf2716616",
-    "checkedHead": "49474c456a7f7b81dd653bb5e762a218be581c56",
-    "commits": 203,
+    "checkedAt": "2026-10-30T19:13:06+09:00",
+    "comparedFrom": "49474c456a7f7b81dd653bb5e762a218be581c56",
+    "checkedHead": "524647c730287d3c2552b9037a184ec7f4be11e9",
+    "commits": 103,
     "changedProjects": [
       "K1",
-      "P1",
-      "V1"
+      "R1",
+      "S8"
     ],
     "updatedProjects": [
       "K1",
-      "P1",
-      "V1"
+      "R1",
+      "S8"
     ],
-    "method": "前回基準からHEADまで203コミット・189ファイルの差分。変更3作品の本体・status.json・QA/README・素材統合を照合。変更なし11作品は詳細再監査なし。",
-    "statusJson": "変更3作品のstatus.jsonを確認。人間・AI・ブラウザの各検証と素材の制作・統合を区別。",
+    "method": "旧baseCommitからmain HEADまでの差分（K1/R1/S8とINDEX、ダッシュボードデータ）を確認。3作品のstatus.json・QA・本体・素材台帳を参照。変更がない既存13作品は再監査せずデータを保持",
+    "statusJson": "K1、R1、S8のstatus.jsonを照合。ロジック、実ブラウザ、人間レビューおよび画像の制作・統合を区別",
     "humanReviewPolicy": "旧版の指摘や素材了承は記録するが、最新版の実プレイ承認は証拠がなければ未実施扱い。",
     "browserReviewPolicy": "モックDOM・素材検品・旧版ブラウザQA・Pagesデプロイ成功を最新版の実操作合格と混同しない。",
     "workActivityPolicy": "GitHub保存・統合・素材検品記録のみ反映し、Work現稼働を推測しない。",
@@ -507,10 +593,12 @@
       "S6": "64f6d8249b6c5c722b014cc9189380454098b6a7",
       "V1": "48541fd6f7727723cfdd490c1cbf91301b9456be",
       "N1": "41dee4c21be82de1d8982c48a40713f0bbb2ce1d",
-      "K1": "24a916f182c5e1fee0dd3f4db4afb3ed9f26700c",
-      "P1": "ba0eba10cae55d1fad951242e333f50c762e051c"
+      "K1": "1963b2c77babad1bdc535b1d9576ebd805743b50",
+      "P1": "ba0eba10cae55d1fad951242e333f50c762e051c",
+      "R1": "5ebca767bc",
+      "S8": "efd2b03d45"
     },
-    "releaseGateNote": "F1 v1.0はfeature-complete candidateでありGate C承認とは区別。",
-    "displayVerification": "GitHub Pagesの実ブラウザ操作は今回未実施。"
+    "releaseGateNote": "C1のみ正式公開として維持。F1 v1.0は正式認定未確認、S8 v1.0はテストプレイ中、K1/R1はα版",
+    "displayVerification": "ルートindex.htmlは最新版の作品情報に更新済み。公開GitHub Pagesの実ブラウザ操作は未実施"
   }
 }
