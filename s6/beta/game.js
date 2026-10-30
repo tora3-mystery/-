@@ -467,7 +467,10 @@ function draw(){
  if(S.phase==='identity'&&S.guesses[S.currentNotebook]?.name){
   const n=document.getElementById('guessName'),o=document.getElementById('guessOrg');if(n)n.value=S.guesses[S.currentNotebook].name;if(o)o.value=S.guesses[S.currentNotebook].org||'';
  }
- window.scrollTo({top:0,behavior:'instant'});
+ if(S.phase==='group'&&(S.groupLog[S.group]||[]).length){
+  const anchor=document.getElementById('group-action-zone');
+  if(anchor?.scrollIntoView)anchor.scrollIntoView({block:'nearest',behavior:'instant'});
+ }else window.scrollTo({top:0,behavior:'instant'});
 }
 function go(phase){S.phase=phase;remember();draw()}
 function handle(act,id){
