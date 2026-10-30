@@ -82,13 +82,11 @@ h2{font-size:17px;line-height:1.4;margin:0 0 8px}h3{font-size:14px;margin:0 0 8p
 .source-screen{margin:12px auto;max-width:525px;background:#1c2930;border:2px solid #61747b;border-radius:10px;padding:12px;color:#e4eaea}.source-sheet{background:#f5f7f4;border-radius:6px;padding:15px 13px;color:#25343c;min-height:142px}.source-type{font-size:11px;border-bottom:1px solid #c3caca;padding-bottom:8px;margin-bottom:10px;color:#57676e;font-weight:750}.source-title{font-size:14px;font-weight:750;margin-bottom:8px}.source-message{white-space:pre-line;line-height:1.65;font-size:12px}.source-caption{font-size:11px;color:#d5dfe0;margin-top:8px}
 
 .d3-layout{display:grid;gap:20px}.d3-layout h2{border-bottom:1px solid #cbd2cf;padding-bottom:8px}
-.d3-image{height:370px;position:relative;overflow:hidden;border-radius:8px;background:#1d292f}
-.d3-image>img{display:block;width:150%;max-width:none;height:100%;object-fit:cover;object-position:center}
+.d3-image{position:relative;overflow:hidden;border-radius:8px;background:#1d292f;aspect-ratio:16/10;max-height:500px}
+.d3-image>img{display:block;width:100%;height:100%;object-fit:cover;object-position:center}
 .d3-tag{position:absolute;bottom:10px;color:white;background:#15252ee8;border-radius:5px;padding:4px 6px;font-weight:750;font-size:12px}
 .d3-404{left:34%}.d3-405{left:54%}.d3-406{left:78%}
 .d3-notice{position:absolute;top:12px;left:10px;color:#252b2c;background:#fff7e8e8;border:1px solid #a79d87;padding:6px;font-size:11px;line-height:1.5}
-.d3-door{display:flex;gap:12px;align-items:center;background:#f6f7f3;padding:10px;font-size:12px;font-weight:700}
-.d3-door img{width:100px;height:100px;object-fit:cover;border-radius:5px}
 .d3-overlay{position:fixed;inset:0;z-index:81;background:#101a21e9;display:flex;align-items:center;justify-content:center;padding:12px;overflow:auto}
 .d3-card{width:min(100%,580px);max-height:calc(100dvh - 24px);overflow:auto;background:#f7f7f4;color:#243239;padding:18px;border-radius:12px;box-shadow:0 12px 45px #0008}
 .d3-time{font-size:45px;font-weight:850;letter-spacing:.04em;line-height:1.3;margin-bottom:10px}
@@ -98,14 +96,14 @@ h2{font-size:17px;line-height:1.4;margin:0 0 8px}h3{font-size:14px;margin:0 0 8p
 body.night-mode #nightPanel.d3-night{position:fixed;inset:0;z-index:70;margin:0;border:0;border-radius:0;box-shadow:none;background:#101a21e9;padding:12px;display:flex!important;align-items:center;justify-content:center;overflow:auto}
 body.night-mode #nightPanel.d3-night .d3-card .result{color:#243239}
 body.night-mode #nightPanel.d3-night .d3-card .btn:not(.primary){background:#e5e9e8;color:#23323a}
-@media(max-width:390px){.d3-image{height:295px}.d3-tag{font-size:10px;padding:2px 4px}.d3-card{padding:12px}.d3-time{font-size:36px}}
+@media(max-width:390px){.d3-tag{font-size:10px;padding:2px 4px}.d3-card{padding:12px}.d3-time{font-size:36px}}
 .hidden{display:none!important}
 @media(max-width:700px){.notice-summary{grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;padding:7px;border-width:6px}.paper{min-height:79px;padding:7px 5px}.paper b{font-size:11px}.scene-figure img{height:174px}.scene-stack{height:174px}.night-sight img{height:112px}.scene-grid{gap:7px}.app{padding:9px 10px 56px}.panel{padding:13px}.mast h1{font-size:19px}}
 @media(max-width:390px){.notice-summary{grid-template-columns:repeat(3,minmax(0,1fr))}.history{grid-template-columns:repeat(4,1fr)}.tabs{gap:3px}.tab{font-size:12px}.scene-figure img{height:148px}.scene-stack{height:148px}.night-sight img{height:102px}.scene-figure figcaption{padding:5px 6px;font-size:10px}.mast h1{font-size:17px}.mast .home{font-size:10px}}
 </style>
 </head>
 <body><main class="app">
-<header class="mast"><div><div class="sub">短編UIゲーム実験室｜K1 プロトタイプ</div><h1>掲示物をご確認ください。</h1><div class="meta"><b>K1 α0.15.0-preview</b> ｜ 2026-10-30 23:50 JST更新</div></div><a class="home" href="../index.html">作品一覧へ</a></header>
+<header class="mast"><div><div class="sub">短編UIゲーム実験室｜K1 プロトタイプ</div><h1>掲示物をご確認ください。</h1><div class="meta"><b>K1 α0.15.1-preview</b> ｜ 2026-10-31 00:08 JST更新</div></div><a class="home" href="../index.html">作品一覧へ</a></header>
 <section id="intro" class="panel intro">
 <div class="sub">白波レジデンス・406号室</div><h2>掲示物をご確認ください。</h2>
 <p class="lede">あなたは白波レジデンス406号室で一人暮らしをする会社員です。</p><p>相場より安かった家賃に惹かれて越して3か月。仕事帰り、毎日エントランスの掲示板を確認しています。4階には空室が目立ちますが、管理人は「たまたまですよ」と言うばかりです。最近、掲示物の貼り替えが増えてきました。</p>
@@ -907,7 +905,7 @@ function renderD3Entry(){
  h+='<img src="./assets/hallway/404-boxes-night.webp" width="1080" height="1440" alt="4階の廊下。404号室の前に箱が置かれている。">';
  h+='<span class="d3-tag d3-404">404号室</span><span class="d3-tag d3-405">405号室</span><span class="d3-tag d3-406">406号室</span>';
  h+='<span class="d3-notice">405号室<br>退去予定<br>木曜日</span></div>';
- h+='<div class="d3-door"><img src="./assets/door/base.webp" width="1080" height="1440" alt="406号室の玄関扉、ドアノブ、表札、インターホン"><span>406号室の玄関</span></div></section></div>';
+ h+='</section></div>';
  el('tabPanel').innerHTML=h;
 }
 var d3BaseTab=renderTab;renderTab=function(){
@@ -927,7 +925,7 @@ function renderD3Night(e,n){
    h+='<p>「明日、ここを出ていくんです。少しだけ、話を聞いてもらえませんか」</p><p><b>長谷川の話を聞きますか？</b></p>';
    if(pendingChoice)h+='<div class="confirm-choice"><h3>この対応で確定しますか？</h3><strong>'+(pendingChoice==='yes'?'対応する':'見送る')+'</strong><p>'+esc(actionPreview(e,pendingChoice))+'</p><div class="btnrow"><button class="btn secondary" data-cancel-choice="1">選び直す</button><button class="btn primary" data-confirm-choice="1">この対応で確定する</button></div></div>';
    else h+='<div class="btnrow"><button class="btn primary" data-judge="yes">対応する</button><button class="btn secondary" data-judge="no">見送る</button></div>';
-   h+='<p class="small-note">掲示や郵便物を思い出し、応じるか見送るかを決めてください。カメラ確認では判断は確定しません。</p><button class="btn secondary" data-monitor="1">カメラを切る</button></div>';
+   h+='<p class="small-note">掲示や郵便物を思い出し、応じるか見送るかを決めてください。カメラ確認では判断は確定しません。</p><div class="btnrow"><button class="btn secondary" data-d3recheck="1">映像をもう一度確認する</button></div></div>';
   }
  }
  n.innerHTML=h+'</div>';
@@ -951,6 +949,13 @@ document.addEventListener('click',function(ev){
  }
  if(b.dataset.d3confirm){ev.stopImmediatePropagation();el('d3Transition').classList.add('hidden');beginNight();return;}
  if(b.dataset.d3back){ev.stopImmediatePropagation();el('d3Transition').classList.add('hidden');return;}
+ if(b.dataset.d3recheck&&state.day===3&&state.phase==='night'&&state.index===0&&!state.ended&&!state.resultPending&&monitor){
+  ev.stopImmediatePropagation();
+  cameraLookCount++;
+  state.lastCameraCount=cameraLookCount;
+  save();
+  renderNight();return;
+ }
 },true);
 
 load();render();
