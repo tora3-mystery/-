@@ -64,10 +64,6 @@ const contactBadge=id=>[
 const onlineLabel=id=>Object.keys(S.onlineSeen[id]||{}).map(x=>x==='Photogram'?'Photogramで顔を見た':x==='Zitter'?'Zitterで顔を見た':x+'で顔を見た').join('・');
 function recordOnline(platform){
  if(!['Photogram','Zitter'].includes(platform))return;
-  const zitterFollowing=platform==='Zitter'?unique(S.zitterFollows).filter(pid=>accounts[pid+'|Zitter']?.visibility==='公開'):[];
- const zitterStatus=platform==='Zitter'&&zitterFollowing.length?
-  '<div class="paper"><h3>交換したZitterアカウント '+zitterFollowing.length+'人</h3>'+
-  zitterFollowing.map(pid=>{const a=accounts[pid+'|Zitter'];return '<p class="dim">手帳：'+esc(displayName(pid))+' ／ '+esc(a.display_name)+' @'+esc(a.handle)+'</p>';}).join('')+'</div>':'';
 const visible=D.posts.filter(p=>p.platform===platform&&p.published_at.slice(0,10)<=date()&&
   (p.visibility==='公開'||(p.visibility==='鍵垢・承認制'&&S.photoFollows.includes(p.author_id))));
  for(const p of visible){
@@ -271,6 +267,11 @@ function night(){
 }
 function sns(){
  const platform=S.snsPlatform;
+  const zitterFollowing=platform==='Zitter'?unique(S.zitterFollows).filter(pid=>accounts[pid+'|Zitter']?.visibility==='公開'):[];
+ const zitterStatus=platform==='Zitter'&&zitterFollowing.length?
+  '<div class="paper"><h3>交換したZitterアカウント '+zitterFollowing.length+'人</h3>'+
+  zitterFollowing.map(pid=>{const a=accounts[pid+'|Zitter'];return '<p class="dim">手帳：'+esc(displayName(pid))+' ／ '+esc(a.display_name)+' @'+esc(a.handle)+'</p>';}).join('')+'</div>':'';
+
  const tineContacts=platform==='TINE'?unique(S.contacts).filter(id=>!!people[id]&&!!accounts[id+'|TINE']):[];
  const tineMessages=tineContacts.length?'<div class="paper"><h3>交換済みの連絡先</h3><p class="dim">連絡先の交換と、ネット上の活動名義は別の話。</p>'+
   tineContacts.map(id=>{
