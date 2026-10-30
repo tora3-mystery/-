@@ -64,7 +64,11 @@ const contactBadge=id=>[
 const onlineLabel=id=>Object.keys(S.onlineSeen[id]||{}).map(x=>x==='Photogram'?'Photogramで顔を見た':x==='Zitter'?'Zitterで顔を見た':x+'で顔を見た').join('・');
 function recordOnline(platform){
  if(!['Photogram','Zitter'].includes(platform))return;
- const visible=D.posts.filter(p=>p.platform===platform&&p.published_at.slice(0,10)<=date()&&
+  const zitterFollowing=platform==='Zitter'?unique(S.zitterFollows).filter(pid=>accounts[pid+'|Zitter']?.visibility==='公開'):[];
+ const zitterStatus=platform==='Zitter'&&zitterFollowing.length?
+  '<div class="paper"><h3>交換したZitterアカウント '+zitterFollowing.length+'人</h3>'+
+  zitterFollowing.map(pid=>{const a=accounts[pid+'|Zitter'];return '<p class="dim">手帳：'+esc(displayName(pid))+' ／ '+esc(a.display_name)+' @'+esc(a.handle)+'</p>';}).join('')+'</div>':'';
+const visible=D.posts.filter(p=>p.platform===platform&&p.published_at.slice(0,10)<=date()&&
   (p.visibility==='公開'||(p.visibility==='鍵垢・承認制'&&S.photoFollows.includes(p.author_id))));
  for(const p of visible){
    const a=accounts[p.author_id+'|'+platform];
@@ -287,7 +291,7 @@ function sns(){
  ((p.visibility==='グループ参加者'||p.visibility==='主人公との個別')&&S.contacts.includes(p.author_id))));
  return '<div class="eyebrow">SNS / '+esc(platform)+'</div><h2>タイムライン</h2>'+
  '<p class="dim">写真を出している人も、出していない人もいる。名前の似たアカウントが同じ人とは限らない。</p>'+
- (S.report?'<div class="notice">'+esc(S.report)+'</div>':'')+tineMessages+photoStatus+
+ (S.report?'<div class="notice">'+esc(S.report)+'</div>':'')+tineMessages+photoStatus+zitterStatus+
  (visible.length?visible.map(p=>{
   const a=accounts[p.author_id+'|'+platform];
   const anonymous=p.visibility==='匿名表示';
@@ -296,7 +300,7 @@ function sns(){
   const activity=PostActivity.at(p.author_id,platform,date());
   return '<div class="social">'+avatar+'<div><strong>'+esc(anonymous?'匿名アカウント':a?.display_name||'不明')+'</strong>'+
   '<div class="dim">'+(anonymous?'':esc('@'+a.handle)+' ／ ')+(anonymous?'':'投稿'+activity.count+'件 ／ ')+esc(p.published_at)+'</div><p>'+esc(Story.posts[p.post_id]||window.S6_BETA_SOCIAL.postTexts[p.post_id]||p.text)+'</p>'+
-  (face?'<p class="dim">'+(S.socialCandidates[p.post_id]?'自分の照合メモ：'+esc(displayName(S.socialCandidates[p.post_id])):'見覚えがある顔かもしれない。')+'</p>'+(S.seen.length?btn(S.socialCandidates[p.post_id]?'紐付けメモを見直す':'顔を見比べる','account-match',p.post_id,'mini'):''):'')+'</div></div>';
+  (face?'<p class="dim">プロフィール写真は人物手帳に記録されています（本名は未確認の場合があります）。</p>':'')+'</div></div>';
  }).join(''):'<p>閲覧できる投稿はありません。</p>')+
  '<div class="actions">'+btn('夜の画面に戻る','back-night','','ghost')+'</div>';
 }
@@ -325,7 +329,8 @@ function notebook(){
  const guess=S.guesses[id],verified=guess?.verified;
  const note=S.note[id]||'';
  return '<div class="person-card">'+portrait(id)+'<div><strong>'+esc(displayName(id))+(verified?' <span class="pill">照合済み</span>':'')+'</strong>'+
- '<p class="dim">'+(verified?'所属：'+esc(label(people[id].primary_org))+(people[id].dual_org?' ／ 他にも所属あり':''):'写真と記憶を照合できます')+'</p>'+
+ '<p class="dim">'+(verified?'所属：'+esc(label(people[id].primary_org))+(people[id].dual_org?' ／ 他にも所属あり':''):'本名・所属は未照合')+'</p>'+
+  '<p class="dim">'+esc(S.onsiteSeen.includes(id)?'会場で見た':'SNSの写真で見た')+(onlineLabel(id)?' ／ '+esc(onlineLabel(id)):'')+'</p>'+
  '<p class="dim">'+esc(relationship(id))+esc(contactBadge(id))+'</p>'+
  ((S.socialLinked[id]||[]).length?'<p class="dim">自分のSNS照合メモ：'+esc(S.socialLinked[id].join('、'))+'</p>':'')+
  (S.knownOrg[id]&&!verified?'<p class="dim">話して聞いた所属：'+esc(label(S.knownOrg[id]))+'</p>':'')+
@@ -334,10 +339,12 @@ function notebook(){
  btn(verified?'記録を見る':canEditNotebook()?'この顔を照合':'顔を見る','open-identity',id,'mini')+'</div></div>';
  }).join('');
  return '<div class="eyebrow">PERSONAL NOTEBOOK</div><h2>顔と名前の手帳</h2>'+
- '<p>今日までに目にした顔 '+known.length+'人。名前と顔の組み合わせは、自分で思い出す必要があります。</p>'+
+ '<p>会場や公開SNSで見た顔 '+known.length+'人。SNSだけで見た人の本名・所属は未確認です。</p>'+
  (canEditNotebook()?'<p class="status">夜の照合・メモ編集は何度でもできます</p>':'<p class="status">昼は閲覧のみ。照合・編集は夜にできます</p>')+
  (S.report?'<div class="notice">'+esc(S.report)+'</div>':'')+
  '<div class="person-list">'+(entries||'<p>まだ誰にも会っていません。</p>')+'</div>'+
+ (Object.values(S.onlineAccounts).some(x=>!x.face)?'<div class="paper"><h3>SNSで見かけたアカウント</h3><p class="dim">顔が出ていないアカウントは、誰のものか自動では特定しません。</p>'+
+ Object.values(S.onlineAccounts).filter(x=>!x.face).map(x=>'<p class="dim">'+esc(x.platform)+' ／ '+esc(x.name)+' @'+esc(x.handle)+' ／ '+esc(x.seenAt)+'</p>').join('')+'</div>':'')+
  btn('余白ラムネのプロフィール','open-producer-profile')+btn('戻る','back-from-notebook','','ghost');
 }
 function identity(){
