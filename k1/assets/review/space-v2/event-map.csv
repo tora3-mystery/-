@@ -1,0 +1,40 @@
+﻿event_id,asset_path,game_time,display_condition,visual_content,qa_status
+E03,camera/space-v2/empty/normal.webp,DAY5 02:14 / first look,unattended first camera check,empty reference; natural night scene,PASS - reused Step0
+E03,camera/space-v2/empty/0214-second-look.webp,DAY5 02:14 / second look,second camera check,same view; floor-level anomaly,PASS
+E03,camera/space-v2/empty/0214-third-look.webp,DAY5 02:14 / third look,third camera check,near-lens partial face/eye,PASS
+E01,camera/space-v2/people/courier-planned.webp,DAY1,planned parcel delivery,ordinary courier at 406,PASS
+E01A,camera/space-v2/people/courier-unplanned.webp,DAY2+,unplanned delivery,ordinary courier; no overt anomaly,PASS
+E02D,camera/space-v2/people/key-envelope-visitor.webp,night event,key envelope visitor appears,"ordinary visitor, envelope",PASS
+E02H,camera/space-v2/people/unfamiliar-map-visitor.webp,night event,map-related visitor appears,paper map; no legible text,PASS
+E02C,camera/space-v2/people/ono-normal.webp,night event,Ono visits,ordinary uniformed resident/staff,PASS
+E02G/E02I,camera/space-v2/people/after-hours-management.webp,night event,after-hours management appears,ordinary management visitor,PASS - reused Step0
+E05G,camera/space-v2/people/impostor-technician.webp,night event,technician appears,plausible technician,PASS
+E10,camera/space-v2/people/hasegawa-day3.webp,DAY3,Hasegawa visits before moving,"fatigued resident, same as existing character reference",PASS - reused Step0
+E06,camera/space-v2/people/sugiura-day6.webp,DAY6,Sugiura visits,ordinary older resident,PASS
+E08,camera/space-v2/people/arima-fatigued.webp,E08 initial,Arima appears fatigued,same coat/face as rested state,PASS
+E08,camera/space-v2/people/arima-rested.webp,E08 later,Arima appears recovered,same coat/face as fatigued state,PASS
+E02D,camera/space-v2/people/key-envelope-visitor-second.webp,second look,after visitor leaves,"empty scene, envelope and faint trace",PASS
+E02G/E02I,camera/space-v2/people/after-hours-management-second.webp,second look,management recheck,same visitor plus ceiling shadow,PASS
+E05G,camera/space-v2/people/impostor-technician-second.webp,second look,after departure,distant anomalous figure,PASS
+E10,camera/space-v2/people/hasegawa-day3-second.webp,second look,Hasegawa recheck,same person with anomalous shadow,PASS
+E06,camera/space-v2/people/sugiura-day6-second.webp,second look / after departure,Sugiura recheck,empty view with faint environmental anomaly,PASS
+E07,camera/space-v2/people/after-hours-empty-figure.webp,after visitor disappears,separate figure remains,empty corridor with distorted-height figure,PASS
+E08,camera/space-v2/people/arima-aftermath-401.webp,after Arima / target 401,after Arima departure,far passage silhouette,PASS
+E08,camera/space-v2/people/arima-aftermath-406.webp,after Arima / target 406,after Arima departure,near-lens anomalous presence,PASS
+ENDING-401,ending/space-v2/haunt-401.webp,ending / target 401,target remains 401,distant corridor presence,PASS
+ENDING-406,ending/space-v2/haunt-406.webp,ending / target 406,target becomes 406,near-camera presence,PASS - code displays standalone
+DAY1-2,hallway/three-door/day01-neutral.webp,DAY1-2,"normal corridor, 405 occupied",three doors; no anomaly,PASS
+DAY3,hallway/three-door/day03-moving.webp,DAY3,approved anchor,405 move boxes; 404 ambiguous equipment,PRESERVED byte-identically
+DAY4+,hallway/three-door/day04-vacated.webp,DAY4 onward,approved anchor,405 vacant,PRESERVED byte-identically
+DAY6-8 / target 401,hallway/three-door/day06-401.webp,DAY6-8,target 401,405 vacant; no 406 mark,PASS
+DAY6-8 / target 406,hallway/three-door/day06-406.webp,DAY6-8,target 406,405 vacant; subtle mark by 406,PASS - mark subtle
+DAY9 / target 401,hallway/three-door/day09-normal-401.webp,DAY9,approved anchor,404 equipment/craft items explained; no 406 sticker,PRESERVED byte-identically
+DAY9 / target 406,hallway/three-door/day09-normal-406.webp,DAY9,target 406,404 items explained; generic check sticker by 406,PASS
+DAY10 / target 401,hallway/three-door/day10-401.webp,DAY10,target 401,subtle floor moisture trail,PASS - subtle
+DAY10 / target 406,hallway/three-door/day10-406.webp,DAY10,target 406,subtle floor water near 406,PASS - subtle
+BOARD,board/space-v2/base.webp,board tab,default background,text left to HTML,PASS - candidate replacement
+BOARD,board/space-v2/worn.webp,DAY8+ board tab,used background,adhesive traces only; content left to HTML,PASS - candidate replacement
+MAIL-QUIET,mail/space-v2/quietmail-postbox.webp,DAY9 conditional,quietmail event only,406 slot anomalous; no readable text,"PASS - conditional, not always displayed"
+MAIL-LISTING,mail/space-v2/406-old-listing.webp,DAY8 evidence,historical rental flyer,layout blanks for HTML data; no legible wording,PASS
+E07G,gameover/space-v2/e07g-unfamiliar-shoes.webp,DAY8 random E07G failure,GAME OVER,interior threshold with unfamiliar shoes,PASS
+E08,gameover/space-v2/e08-door-gap.webp,DAY8 E08 failure,GAME OVER after admitting Arima,door gap and two ordinary men,PASS - confirm character mapping

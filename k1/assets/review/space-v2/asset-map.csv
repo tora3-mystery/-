@@ -1,0 +1,24 @@
+﻿current_or_legacy_path,new_candidate_path,handling
+camera/empty/normal.webp,camera/space-v2/empty/normal.webp,reuse Step0 bytes; update path in K1 Chat
+camera/empty/0214-second-look.webp,camera/space-v2/empty/0214-second-look.webp,new; map E03 second check
+camera/empty/0214-third-look.webp,camera/space-v2/empty/0214-third-look.webp,new; map E03 third check
+camera/people/courier-planned.webp,camera/space-v2/people/courier-planned.webp,new
+camera/people/courier-unplanned.webp,camera/space-v2/people/courier-unplanned.webp,new
+camera/people/key-envelope-visitor.webp,camera/space-v2/people/key-envelope-visitor.webp,new
+camera/people/unfamiliar-map-visitor.webp,camera/space-v2/people/unfamiliar-map-visitor.webp,new
+camera/people/ono-normal.webp,camera/space-v2/people/ono-normal.webp,new
+camera/people/after-hours-management.webp,camera/space-v2/people/after-hours-management.webp,reuse Step0 bytes
+camera/people/impostor-technician.webp,camera/space-v2/people/impostor-technician.webp,new
+camera/people/hasegawa-day3.webp,camera/space-v2/people/hasegawa-day3.webp,reuse Step0 bytes
+camera/people/sugiura-day6.webp,camera/space-v2/people/sugiura-day6.webp,new
+camera/people/arima-fatigued.webp,camera/space-v2/people/arima-fatigued.webp,new
+camera/people/arima-rested.webp,camera/space-v2/people/arima-rested.webp,new
+camera/people/*-second.webp,camera/space-v2/people/*-second.webp,new recheck set
+camera/people/arima-aftermath-401.webp,camera/space-v2/people/arima-aftermath-401.webp,new; distant 401 route
+camera/people/arima-aftermath-406.webp,camera/space-v2/people/arima-aftermath-406.webp,new; near 406 route
+"ending/haunt-{401,406}.webp","ending/space-v2/haunt-{401,406}.webp",new; standalone display code
+hallway/three-door/(approved 3 anchors),same original paths,preserved byte-identically; do not replace
+hallway/three-door/(six day states),hallway/three-door/day*.webp,"new; all alternative full images, not layers"
+board/base.webp and board/worn.webp,"board/space-v2/{base,worn}.webp",new version; old paths preserved
+"mail/{quietmail-postbox,406-old-listing}.webp",mail/space-v2/*.webp,new version; old paths preserved
+"gameover/{e07g-unfamiliar-shoes,e08-door-gap}.webp",gameover/space-v2/*.webp,new version; old paths preserved

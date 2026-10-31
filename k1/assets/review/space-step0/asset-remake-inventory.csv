@@ -1,0 +1,54 @@
+﻿現行素材,現在の参照,分類,次工程,新素材予定パス/対応先,Step0試作,イベント/表示条件,備考
+k1/assets/board/base.webp,使用中,その他の現行シーン,Step2で再制作,k1/assets/board/space-v2/base.webp,,掲示板タブ表示時（将来組込み予定）,
+k1/assets/hallway/day.webp,使用中,旧4扉/斜め廊下,3扉状態画像へ置換,k1/assets/hallway/three-door/承認済み3枚＋残り6枚,,4階共用廊下の観察時（将来組込み予定）,旧画像は保持。404詳細は3扉画像の拡大を基本とし別画像は要確認
+k1/assets/door/base.webp,使用中,旧406単独玄関,3扉状態画像に統合,k1/assets/hallway/three-door/day06-406.webp等,,玄関タブの初期状態（将来組込み予定）,単独玄関画像は不要。印・シール・水滴を3扉差分へ
+k1/assets/board/worn.webp,使用中,その他の現行シーン,Step2で再制作,k1/assets/board/space-v2/worn.webp,,DAY8以降、掲示板タブ表示時。,
+k1/assets/hallway/night.webp,現行index.htmlで参照なし,旧試作,再制作不要・保持,,,夜間イベント時。,削除は別工程
+k1/assets/hallway/wet.webp,使用中,旧4扉/斜め廊下,3扉状態画像へ置換,k1/assets/hallway/three-door/承認済み3枚＋残り6枚,,終盤の廊下異変。day.webpまたはnight.webpと同じサイズで重ねる。,旧画像は保持。404詳細は3扉画像の拡大を基本とし別画像は要確認
+k1/assets/door/mark.webp,使用中,旧406単独玄関,3扉状態画像に統合,k1/assets/hallway/three-door/day06-406.webp等,,DAY6以降。door/base.webpへ重ねる。,単独玄関画像は不要。印・シール・水滴を3扉差分へ
+k1/assets/door/sticker.webp,使用中,旧406単独玄関,3扉状態画像に統合,k1/assets/hallway/three-door/day06-406.webp等,,DAY9以降。markの上に重ねる。,単独玄関画像は不要。印・シール・水滴を3扉差分へ
+k1/assets/door/drops.webp,使用中,旧406単独玄関,3扉状態画像に統合,k1/assets/hallway/three-door/day06-406.webp等,,DAY10。mark・stickerの上に重ねる。,単独玄関画像は不要。印・シール・水滴を3扉差分へ
+k1/assets/intercom/idle.webp,現行index.htmlで参照なし,旧試作,再制作不要・保持,,,夜間判断時の通常状態。,削除は別工程
+k1/assets/intercom/call.webp,現行index.htmlで参照なし,旧試作,再制作不要・保持,,,夜間呼出し中。,削除は別工程
+k1/assets/camera/empty/0214-second-look.webp,使用中,インターホン24枚の一部,Step1で新背景へ再制作,k1/assets/camera/space-v2/empty/0214-second-look.webp,,DAY5 E03 カメラ2回目の確認時のみ,
+k1/assets/camera/empty/normal.webp,使用中,インターホン24枚の一部,Step1で新背景へ再制作,k1/assets/camera/space-v2/empty/normal.webp,k1/assets/camera/space-v2/pilot/empty.webp,DAY5 E03 初回再確認時,
+k1/assets/camera/people/after-hours-management.webp,使用中,インターホン24枚の一部,Step1で新背景へ再制作,k1/assets/camera/space-v2/people/after-hours-management.webp,k1/assets/camera/space-v2/pilot/after-hours-management.webp,DAY2 E02G/E02I; DAY7 E07,既存人物の顔・服装を参照
+k1/assets/camera/people/arima-fatigued.webp,使用中,インターホン24枚の一部,Step1で新背景へ再制作,k1/assets/camera/space-v2/people/arima-fatigued.webp,,DAY8 E08; hauntTarget=401,
+k1/assets/camera/people/arima-rested.webp,使用中,インターホン24枚の一部,Step1で新背景へ再制作,k1/assets/camera/space-v2/people/arima-rested.webp,,DAY8 E08; hauntTarget=406,
+k1/assets/camera/people/courier-planned.webp,使用中,インターホン24枚の一部,Step1で新背景へ再制作,k1/assets/camera/space-v2/people/courier-planned.webp,,DAY1 E01A; DAY3 E02C,
+k1/assets/camera/people/courier-unplanned.webp,使用中,インターホン24枚の一部,Step1で新背景へ再制作,k1/assets/camera/space-v2/people/courier-unplanned.webp,,DAY1 E01,
+k1/assets/camera/people/hasegawa-day3.webp,使用中,インターホン24枚の一部,Step1で新背景へ再制作,k1/assets/camera/space-v2/people/hasegawa-day3.webp,k1/assets/camera/space-v2/pilot/hasegawa-day3.webp,DAY3 E10,既存人物の顔・服装を参照
+k1/assets/camera/people/impostor-technician.webp,使用中,インターホン24枚の一部,Step1で新背景へ再制作,k1/assets/camera/space-v2/people/impostor-technician.webp,,DAY2 E02H; DAY6 E05G,
+k1/assets/camera/people/key-envelope-visitor.webp,使用中,インターホン24枚の一部,Step1で新背景へ再制作,k1/assets/camera/space-v2/people/key-envelope-visitor.webp,,DAY3 E02D,
+k1/assets/camera/people/ono-normal.webp,使用中,インターホン24枚の一部,Step1で新背景へ再制作,k1/assets/camera/space-v2/people/ono-normal.webp,,DAY2 E02/E02A; DAY6 E05/E05C/E05F,
+k1/assets/camera/people/sugiura-day6.webp,使用中,インターホン24枚の一部,Step1で新背景へ再制作,k1/assets/camera/space-v2/people/sugiura-day6.webp,,DAY7 E06,
+k1/assets/camera/people/unfamiliar-map-visitor.webp,使用中,インターホン24枚の一部,Step1で新背景へ再制作,k1/assets/camera/space-v2/people/unfamiliar-map-visitor.webp,,DAY3 E02L,
+k1/assets/camera/empty/0214-third-look.webp,使用中,インターホン24枚の一部,Step1で新背景へ再制作,k1/assets/camera/space-v2/empty/0214-third-look.webp,,DAY5 E03 after third camera activation,
+k1/assets/camera/people/arima-aftermath-401.webp,使用中,インターホン24枚の一部,Step1で新背景へ再制作,k1/assets/camera/space-v2/people/arima-aftermath-401.webp,,DAY8 after Arima departs; target 401,
+k1/assets/camera/people/arima-aftermath-406.webp,使用中,インターホン24枚の一部,Step1で新背景へ再制作,k1/assets/camera/space-v2/people/arima-aftermath-406.webp,,DAY8 after Arima departs; target 406,
+k1/assets/camera/people/after-hours-management-second.webp,使用中,インターホン24枚の一部,Step1で新背景へ再制作,k1/assets/camera/space-v2/people/after-hours-management-second.webp,,Second camera inspection after night staff visit,
+k1/assets/camera/people/key-envelope-visitor-second.webp,使用中,インターホン24枚の一部,Step1で新背景へ再制作,k1/assets/camera/space-v2/people/key-envelope-visitor-second.webp,,Second inspection after key visitor leaves,
+k1/assets/camera/people/impostor-technician-second.webp,使用中,インターホン24枚の一部,Step1で新背景へ再制作,k1/assets/camera/space-v2/people/impostor-technician-second.webp,,Second inspection after impostor leaves,
+k1/assets/camera/people/after-hours-empty-figure.webp,使用中,インターホン24枚の一部,Step1で新背景へ再制作,k1/assets/camera/space-v2/people/after-hours-empty-figure.webp,,Second inspection after temporary night visit,
+k1/assets/camera/people/hasegawa-day3-second.webp,使用中,インターホン24枚の一部,Step1で新背景へ再制作,k1/assets/camera/space-v2/people/hasegawa-day3-second.webp,,Second inspection with Hasegawa present,
+k1/assets/camera/people/sugiura-day6-second.webp,使用中,インターホン24枚の一部,Step1で新背景へ再制作,k1/assets/camera/space-v2/people/sugiura-day6-second.webp,,Second inspection after Sugiura leaves,
+k1/assets/ending/haunt-401.webp,使用中,インターホン24枚の一部,Step1で新背景へ再制作,k1/assets/ending/space-v2/haunt-401.webp,,Ending with target remaining 401,現行はending-visual単独img。カメラ枠か別カットかK1 Chat確認
+k1/assets/ending/haunt-406.webp,使用中,インターホン24枚の一部,Step1で新背景へ再制作,k1/assets/ending/space-v2/haunt-406.webp,,Ending with target moved to 406,現行はending-visual単独img。カメラ枠か別カットかK1 Chat確認
+k1/assets/hallway/405-vacated.webp,使用中,旧4扉/斜め廊下,3扉状態画像へ置換,k1/assets/hallway/three-door/承認済み3枚＋残り6枚,,DAY4以降の405退去が確定した廊下観察,旧画像は保持。404詳細は3扉画像の拡大を基本とし別画像は要確認
+k1/assets/hallway/404-boxes-night.webp,使用中,旧4扉/斜め廊下,3扉状態画像へ置換,k1/assets/hallway/three-door/承認済み3枚＋残り6枚,,DAY3〜DAY6の404ミスリード場面,旧画像は保持。404詳細は3扉画像の拡大を基本とし別画像は要確認
+k1/assets/hallway/404-boxes-explained.webp,使用中,旧4扉/斜め廊下,3扉状態画像へ置換,k1/assets/hallway/three-door/承認済み3枚＋残り6枚,,DAY9の404ミスリード回収時,旧画像は保持。404詳細は3扉画像の拡大を基本とし別画像は要確認
+k1/assets/mail/quietmail-postbox.webp,使用中,その他の現行シーン,Step2で再制作,k1/assets/mail/space-v2/quietmail-postbox.webp,,DAY9 quietmail成立時のみ。常時表示しない,
+k1/assets/mail/406-old-listing.webp,使用中,その他の現行シーン,Step2で再制作,k1/assets/mail/space-v2/406-old-listing.webp,,DAY8の過去の賃貸募集証拠。現在募集中として扱わない,
+k1/assets/gameover/e07g-unfamiliar-shoes.webp,使用中,その他の現行シーン,Step2で再制作,k1/assets/gameover/space-v2/e07g-unfamiliar-shoes.webp,,DAY8ランダムイベントE07G失敗時のみ,
+k1/assets/gameover/e08-door-gap.webp,使用中,その他の現行シーン,Step2で再制作,k1/assets/gameover/space-v2/e08-door-gap.webp,,DAY8固定イベントE08で有馬を入れた失敗時のみ,
+k1/assets/hallway/three-door/day03-moving.webp,使用中,承認済み3扉,そのまま採用,k1/assets/hallway/three-door/day03-moving.webp,,DAY3帰宅時の廊下。404ミスリードと405退去準備。406は通常,画像バイトを変更しない
+k1/assets/hallway/three-door/day04-vacated.webp,使用中,承認済み3扉,そのまま採用,k1/assets/hallway/three-door/day04-vacated.webp,,DAY4以降の405退去済み状態。404の荷物は残り406は通常,画像バイトを変更しない
+k1/assets/hallway/three-door/day09-normal-401.webp,使用中,承認済み3扉,そのまま採用,k1/assets/hallway/three-door/day09-normal-401.webp,,DAY9かつ怪異標的401の分岐。405退去済み・406異常シールなし,画像バイトを変更しない
+（新規状態差分）,今後必要,3扉追加差分,Step2で新規制作,k1/assets/hallway/three-door/day01-neutral.webp,,DAY1-10・標的401/406分岐,承認済み3扉画像と同構図。旧4扉画像は流用しない
+（新規状態差分）,今後必要,3扉追加差分,Step2で新規制作,k1/assets/hallway/three-door/day06-401.webp,,DAY1-10・標的401/406分岐,承認済み3扉画像と同構図。旧4扉画像は流用しない
+（新規状態差分）,今後必要,3扉追加差分,Step2で新規制作,k1/assets/hallway/three-door/day06-406.webp,,DAY1-10・標的401/406分岐,承認済み3扉画像と同構図。旧4扉画像は流用しない
+（新規状態差分）,今後必要,3扉追加差分,Step2で新規制作,k1/assets/hallway/three-door/day09-normal-406.webp,,DAY1-10・標的401/406分岐,承認済み3扉画像と同構図。旧4扉画像は流用しない
+（新規状態差分）,今後必要,3扉追加差分,Step2で新規制作,k1/assets/hallway/three-door/day10-401.webp,,DAY1-10・標的401/406分岐,承認済み3扉画像と同構図。旧4扉画像は流用しない
+（新規状態差分）,今後必要,3扉追加差分,Step2で新規制作,k1/assets/hallway/three-door/day10-406.webp,,DAY1-10・標的401/406分岐,承認済み3扉画像と同構図。旧4扉画像は流用しない
+（条件付き追加）,現行は旧写真で詳細表示,404荷物の詳細,UI要件確認後に制作判断,k1/assets/hallway/three-door/404-boxes-detail.webp,,DAY3-6 / DAY9-10,3扉画像のCSS拡大で足りる場合は不要
+（条件付き追加）,現行は旧写真で詳細表示,404荷物の詳細,UI要件確認後に制作判断,k1/assets/hallway/three-door/404-boxes-explained-detail.webp,,DAY3-6 / DAY9-10,3扉画像のCSS拡大で足りる場合は不要
