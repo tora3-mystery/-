@@ -34,6 +34,14 @@ function makeSession(cache=new Map()){
 const newPlayer=()=>{const s=makeSession();for(const a of ['start','show-campus','show-intro','begin'])s.click(a);return s};
 const skipWeek=()=>{const s=newPlayer();for(let i=0;i<5;i++){s.click('skip');s.click('next-day')}assert.equal(s.state.phase,'camp');return s};
 const visit=(s,e,g)=>{s.click('attend',e);s.click('join-group',g);assert.equal(s.state.phase,'flash');s.click('leave-flash')};
+check('direct talk shows an action separator distinct from passive listening',()=>{
+ const s=newPlayer();visit(s,'E01','E01-A');
+ s.click('action-menu','talk');s.click('act-target','P003');
+ assert.match(s.html,/あなたは人物\d{2}に話しかけた。/);
+ s.click('listen-group');
+ assert.match(s.html,/少し離れたところで、参加者同士の会話が聞こえる。/);
+ assert.equal((s.html.match(/に話しかけた。/g)||[]).length,1);
+});
 check('96 original DB people and portraits, 6 clubs, 12 events, 44 groups',()=>{
  assert.equal(D.people.length,96);assert.equal(D.orgs.length,6);assert.equal(D.events.length,12);assert.equal(D.groups.length,44);
  assert.equal(new Set(D.people.map(x=>x.person_id)).size,96);
