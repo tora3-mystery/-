@@ -1,16 +1,16 @@
 {
   "work_id": "S6",
   "title": "サークルは、星の数ほどありますから。",
-  "version": "0.8.1",
-  "updated_at_jst": "2026-10-31 10:26 JST",
+  "version": "0.8.2",
+  "updated_at_jst": "2026-10-31 11:03 JST",
   "phase": "Phase 5 — human beta review",
   "folder": "s6/beta/",
-  "source_of_truth": "s6/beta/QA_UI_v0.8.1.md",
+  "source_of_truth": "s6/beta/QA_UI_v0.8.2.md",
   "ai_audit": {
     "status": "passed",
-    "tests_passed": 100,
+    "tests_passed": 101,
     "tests_failed": 0,
-    "coverage": "44 group passive dialogues, 2-action cap, proactive contacts under personality and familiarity constraints, contact reaction variety, 180 seeded prior tests and 80 complete five-day flows, SNS consent and privacy, seven weekend outcomes",
+    "coverage": "First-day outgoing contact offers and 400 seeded random comparisons, 44-group passive dialogue and two actions, 180 old seeded scenarios, 80 complete five-day flows, SNS policy, seven weekend choices",
     "method": "JavaScript VM-compatible harness + simulated DOM; not browser"
   },
   "real_browser_audit": {
@@ -19,22 +19,22 @@
   },
   "human_review": {
     "status": "requested_retest",
-    "feedback_source_version": "0.8.0",
-    "target_version": "0.8.1",
+    "feedback_source_version": "0.8.1",
+    "target_version": "0.8.2",
     "verified": false,
-    "notes": "User requested active talk/passive listen, two actions per group, occasional NPC-initiated conversation and contact offers, more varied replies"
+    "notes": "User confirmed orientation week may prompt immediate NPC-initiated contact exchange; removed the multi-day/closeness prerequisite while keeping personality-dependent seeded chance and channel consent policies"
   },
   "assets": {
     "status": "unchanged",
     "notes": "Existing s6 assets and shared DB retained; separate Work replacement assets are not automatically integrated"
   },
   "next_owner": "human reviewer",
-  "next_task": "Play v0.8.1 on mobile: two actions in one circle, eavesdropped member dialogue, unsolicited direct address, contact offer after multi-day friendship, all-person contact exchange, SNS notebook sightings, Friday deduction.",
+  "next_task": "Play v0.8.2 on mobile: day-one no-conversation NPC contact invitation frequency and natural wording, two group actions, member-to-member listening, independent SNS approval, clues and Friday outcome.",
   "modified_scope": [
     "s6/beta/game.js",
     "s6/beta/dialogue-engine.js",
     "s6/beta/test-beta.cjs",
-    "s6/beta/QA_UI_v0.8.1.md",
+    "s6/beta/QA_UI_v0.8.2.md",
     "s6/beta/status.json"
   ],
   "outside_scope_modified": false
