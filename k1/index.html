@@ -726,7 +726,9 @@ if(state.resultPending){
  }
  if(e.id!=='E03'||state.day5FollowupStage!==0)h+='<button class="btn primary" data-next="1">次へ進む</button>';
 }
-else{var withCamera=isCameraEvent(e);h+='<div class="btnrow"><button class="btn secondary" data-monitor="1">'+(monitor?(withCamera?'カメラを切る':'確認を閉じる'):(withCamera?'カメラをつける':'状況を確認する'))+'</button></div>';
+else{var withCamera=isCameraEvent(e);
+ if(!monitor)h+='<div class="btnrow"><button class="btn secondary" data-monitor="1">'+(withCamera?'カメラをつける':'状況を確認する')+'</button></div>';
+ else if(withCamera&&(e.id==='E03'||CAMERA_RECHECK_BY_EVENT[e.id]))h+='<div class="btnrow"><button class="btn secondary" data-camera-recheck="1">映像をもう一度確認する</button></div>';
 if(monitor){h+=withCamera?cameraHtml(e):sourceHtml(e);h+='<div class="monitor">'+esc(e.id==='E08'?(state.hauntTarget==='406'?'有馬は妙に元気だ。建物の所有者だと確認できるが、深夜の訪問予定はない。':'有馬は立つのもつらそうだ。建物の所有者だと確認できるが、訪問予定はない。'):e.monitor)+'</div>';}
 
 if(pendingChoice){
@@ -856,6 +858,11 @@ if(b.dataset.e03Followup){
  }return;
 }
 if(b.dataset.afterCamera){if(state.phase==='night'&&state.resultPending&&!state.ended&&afterCameraSource(eventNow())){state.afterCameraSeen=!state.afterCameraSeen;save();renderNight();}return;}
+if(b.dataset.cameraRecheck){
+ if(state.phase==='night'&&!state.ended&&!state.resultPending&&monitor&&isCameraEvent(eventNow())&&(eventNow().id==='E03'||CAMERA_RECHECK_BY_EVENT[eventNow().id])){
+  cameraLookCount++;state.lastCameraCount=cameraLookCount;save();renderNight();
+ }return;
+}
 if(b.dataset.monitor){
  if(state.phase!=='night'||state.ended||state.resultPending)return;
  monitor=!monitor;
