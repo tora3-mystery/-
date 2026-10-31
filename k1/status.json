@@ -2,23 +2,24 @@
   "projectId": "K1",
   "title": "掲示物をご確認ください。（仮）",
   "version": "α0.17.0-preview",
-  "updatedAtJST": "2026-10-31 09:59 JST",
-  "phase": "Phase 7 — space-v2 asset integration and day1-10 single hallway UI complete; all-event intercom redesign pending",
+  "updatedAtJST": "2026-10-31 10:02 JST",
+  "phase": "Phase 7 — new space-v2 images integrated; event design audit complete, conversion not yet implemented",
   "aiAudit": {
     "status": "partial_pass",
     "version": "α0.17.0-preview",
-    "checks": [
-      "10 days per-target hallway photo selection and image zoom in mocked DOM",
-      "direct DAY3/4/9 preview no-save isolation",
-      "all 19 camera event image refs in space-v2",
-      "E02C courier and E02H impostor mapping corrected vs Work CSV",
-      "E02D corrected out-of-view 407 wording",
-      "JS syntax for camera ON-only and recheck controls"
+    "completed": [
+      "49 event kinds enumerated by actual code: 19 visitor camera and 30 non-camera",
+      "98 yes/no branch smoke checks with necessary test credentials supplied: no throw; 46 exactly one safe answer, 3 two-path narrative cases E03/E09/E10",
+      "Normal 10-day hallway photo placement + magnification in mocked DOM",
+      "DAY3/4/9 previews retain localStorage isolation",
+      "E08 chronology corrected from 23:18 to 23:52 after day8 23:34–23:40 event",
+      "camera-off removed in main nighttime UI; optional recheck supported for selected camera events",
+      "Hasegawa/Sugiura dialogue now matches always-on camera viewing"
     ],
-    "outstanding": [
-      "49-event full positive/negative outcome regression",
-      "day5 full three-look interaction browser QA",
-      "mail evidence image and all four endings in browser"
+    "limitations": [
+      "98-case smoke is not an exhaustive reachable-state or balance simulation",
+      "No graphical browser or physical mobile QA",
+      "30 non-camera events not converted to intercom-first story"
     ]
   },
   "browserAudit": {
@@ -33,13 +34,13 @@
     ]
   },
   "humanReview": {
-    "lastConfirmed": "DAY3 layout direction, three-door pilot imagery and 406-camera angle",
+    "lastConfirmed": "three-door pilot, K1 DAY3 layout direction, correct fixed-camera viewpoint",
     "currentReviewVersion": "α0.17.0-preview",
     "pending": [
-      "DAY3 night camera and second look",
-      "all-day mailbox photo readability",
-      "day6/day9/day10 target-route variants",
-      "all 49 events intercom redesign"
+      "test actual three-door photo, zoom and mailbox on 320/390/428px",
+      "DAY3 night E10 and DAY5 02:14 third look",
+      "review whether nonvisit messages should convert to intercom/retain device exceptions",
+      "49-event final scripted conversion and difficulty"
     ]
   },
   "assets": {
@@ -54,7 +55,7 @@
     "cameraMapCorrection": "Work event-map has known incorrect IDs E02C/E02H; game code mapping is canonical",
     "remainingImageProduction": "To be reevaluated after all-event intercom design; no new artwork auto-requested."
   },
-  "nextOwner": "K1 dedicated Chat (49-event story/UI audit), then human testing",
-  "nextAction": "Review 30 non-camera nighttime events, determine plausible intercom realization preserving all game rules and outcomes, then implement in a separate milestone.",
+  "nextOwner": "K1 Chat: intercom-first scenario/UI redesign; human acceptance before mass rewrite",
+  "nextAction": "Decide mapping for 23 messages/calls and seven equipment alerts; retain 19 visitor events and E03/E09/E10 narrative branching. Then implement shared night modal and run full 49-event / endings regression.",
   "scope": "k1/ only"
 }
