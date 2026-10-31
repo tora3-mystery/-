@@ -1,64 +1,60 @@
 {
   "projectId": "K1",
   "title": "掲示物をご確認ください。（仮）",
-  "version": "α0.16.0-preview",
-  "updatedAtJST": "2026-10-31 00:56 JST",
-  "phase": "Phase 6/7 — Step A three-door art integrated, new camera remake pending",
+  "version": "α0.17.0-preview",
+  "updatedAtJST": "2026-10-31 09:59 JST",
+  "phase": "Phase 7 — space-v2 asset integration and day1-10 single hallway UI complete; all-event intercom redesign pending",
   "aiAudit": {
-    "logic": "DAY3/4/9 isolated preview JS tests and regular DAY3/4/9(401) image conditions; DAY9(406) old composite and DAY6(406) mark maintained. Full 49-event regression not rerun.",
-    "story": "DAY3 moving, DAY4 405 vacancy, DAY9 404 ordinary family goods represented in corresponding matched photographs. No event answer or timeline changes."
+    "status": "partial_pass",
+    "version": "α0.17.0-preview",
+    "checks": [
+      "10 days per-target hallway photo selection and image zoom in mocked DOM",
+      "direct DAY3/4/9 preview no-save isolation",
+      "all 19 camera event image refs in space-v2",
+      "E02C courier and E02H impostor mapping corrected vs Work CSV",
+      "E02D corrected out-of-view 407 wording",
+      "JS syntax for camera ON-only and recheck controls"
+    ],
+    "outstanding": [
+      "49-event full positive/negative outcome regression",
+      "day5 full three-look interaction browser QA",
+      "mail evidence image and all four endings in browser"
+    ]
   },
   "browserAudit": {
-    "status": "not_run_alpha0160",
+    "status": "not_run",
     "pagesDeployment": "not_verified",
     "realPagesDisplay": "not_verified",
+    "realMobileTesting": "not_run",
     "phoneSizesToTest": [
       320,
       390,
       428
-    ],
-    "nextChecks": [
-      "preview photo load DAY3/4/9",
-      "room labels aligned",
-      "E10 modal after DAY3 preview",
-      "DAY9 406 photo contrast",
-      "intercom match with new 3-door architecture"
     ]
   },
   "humanReview": {
-    "lastReviewedVersion": "α0.15.1-preview",
-    "currentReviewVersion": "α0.16.0-preview",
+    "lastConfirmed": "DAY3 layout direction, three-door pilot imagery and 406-camera angle",
+    "currentReviewVersion": "α0.17.0-preview",
     "pending": [
-      "assess three-door photo scene at 390px",
-      "DAY4 and DAY9 photo clarity",
-      "camera remake spatial consistency"
+      "DAY3 night camera and second look",
+      "all-day mailbox photo readability",
+      "day6/day9/day10 target-route variants",
+      "all 49 events intercom redesign"
     ]
   },
   "assets": {
-    "status": "42/42 planned stills integrated, pending any human review requests",
-    "totalIntegrated": 42,
-    "previousIntegrated": 35,
-    "newlyIntegrated": 7,
-    "sourceBranch": "k1-remaining-visuals-20261030",
-    "sourceCommit": "0640a0d86045a92c208e8ee9d15f37fdbfdca5b2",
+    "status": "space-v2 36 candidate stills integrated with original 45; manifest has 81 entries",
+    "totalIntegrated": 81,
+    "previousIntegrated": 45,
+    "newlyIntegrated": 36,
+    "sourceBranch": "k1-space-step0-20261031",
+    "sourceCommit": "1a71864a4cc03f5608420cace114a1951f472345",
     "manifest": "k1/assets/manifest.csv",
-    "eventMap": "k1/assets/review/remaining7-20261030/display-conditions.csv",
-    "remainingImageProduction": "None currently required, except title image and eventual launch promotional image handled separately after game UI final.",
-    "integratedTotal": 45,
-    "sourceScreens": "Non-intercom inspections have HTML visual screens; dedicated new background images not yet produced",
-    "day3Corridor": "old four-door photo remains temporary; dedicated three-door asset not yet delivered",
-    "nextImages": "After DAY3 prototype approval: photo 404/405/406 with 405 moving boxes, 404 mystery boxes, posted moving notice, plus remaining event-based assets",
-    "newCorridorImageRequirements": "Left-right 404 / 405 / 406, 404 mysterious boxes, 405 moving boxes and move-out notice, 406 entrance normal, same perspective for all 10 days.",
-    "threeDoorPilot": {
-      "status": "integrated",
-      "sourceBranch": "k1-three-door-pilot-20261031",
-      "sourceCommit": "c734117193d475b854b684b597f9b24bfef2cbd7",
-      "photos": 3
-    },
-    "remainingHallway": 6,
-    "remakeCamera": "24 planned, not yet delivered"
+    "eventMap": "k1/assets/review/space-v2/event-map.csv",
+    "cameraMapCorrection": "Work event-map has known incorrect IDs E02C/E02H; game code mapping is canonical",
+    "remainingImageProduction": "To be reevaluated after all-event intercom design; no new artwork auto-requested."
   },
-  "nextOwner": "Work new fixed intercom imagery / K1 Chat / Human preview",
-  "nextAction": "Human review three-door DAY3/4/9 preview; Work remakes camera photos matched to new architecture; K1 Chat integrates and checks event mappings.",
+  "nextOwner": "K1 dedicated Chat (49-event story/UI audit), then human testing",
+  "nextAction": "Review 30 non-camera nighttime events, determine plausible intercom realization preserving all game rules and outcomes, then implement in a separate milestone.",
   "scope": "k1/ only"
 }
