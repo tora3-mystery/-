@@ -83,7 +83,10 @@ h2{font-size:17px;line-height:1.4;margin:0 0 8px}h3{font-size:14px;margin:0 0 8p
 
 .d3-layout{display:grid;gap:20px}.d3-layout h2{border-bottom:1px solid #cbd2cf;padding-bottom:8px}
 .d3-image{position:relative;overflow:hidden;border-radius:8px;background:#1d292f;aspect-ratio:16/10;max-height:500px}
-.d3-image>img{display:block;width:100%;height:100%;object-fit:cover;object-position:center}
+.d3-image>img{display:block;width:100%;height:100%;object-fit:contain;object-position:center}
+.d3-zoom-btn{display:block;width:100%;height:100%;padding:0;margin:0;border:0;cursor:zoom-in;background:transparent}
+.d3-zoom-btn img{display:block;width:100%;height:100%;object-fit:contain}
+.hall-zoom-card{width:min(100%,1200px)}.hall-zoom-card>img{display:block;width:100%;height:auto;margin-top:8px}.hall-zoom-card>.btn{display:block;margin-left:auto}
 .d3-tag{position:absolute;bottom:10px;color:white;background:#15252ee8;border-radius:5px;padding:4px 6px;font-weight:750;font-size:12px}
 .d3-404{left:24%;transform:translateX(-50%)}.d3-405{left:50%;transform:translateX(-50%)}.d3-406{left:82%;transform:translateX(-50%)}
 .d3-notice{position:absolute;top:34%;left:65.2%;width:6.7%;min-width:22px;color:#323838;background:#ffffffde;text-align:center;border:1px solid #a8a9a3;padding:1px 2px;font-size:clamp(6px,1.25vw,10px);line-height:1.15;box-sizing:border-box}
@@ -115,6 +118,7 @@ body.night-mode #nightPanel.d3-night .d3-card .btn:not(.primary){background:#e5e
 <section id="rewindPanel" class="panel hidden"><h2>何日目からやり直しますか</h2><p class="tiny">指定日の帰宅時（掲示を確認する前）へ戻ります。抽選の出来事は前回と変わります。決まっている物語の出来事は変わりません。以降の判断・証拠は再計算されます。</p><div id="days" class="history"></div><p class="tiny">※未来の分岐にジャンプすることはできません。</p></section>
 <section id="endingPanel" class="panel hidden"></section>
 <section id="nightPanel" class="panel event hidden"></section>
+<div id="hallZoom" class="d3-overlay hidden" role="dialog" aria-modal="true" aria-label="廊下の拡大写真"><div class="d3-card hall-zoom-card"><button type="button" class="btn secondary" data-hallclose="1">閉じる</button><img id="hallZoomImg" width="1600" height="1000" alt="廊下の拡大写真"></div></div>
 <div id="d3Transition" class="d3-overlay hidden" role="dialog" aria-modal="true" aria-label="夜の始まり"><div class="d3-card"><h2>夜になり、インターホンが鳴る。</h2><p>玄関から呼出し音が聞こえる。</p><div class="btnrow"><button class="btn primary" data-d3confirm="1">呼出しを確認する</button><button class="btn secondary" data-d3back="1">帰宅前に戻る</button></div></div></div>
 <section id="morningPanel" class="panel hidden"><h2 id="morningTitle">帰宅時｜エントランス</h2><p id="morningText"></p><p class="caption" id="morningCaption">掲示を確認してから郵便受けと4階の玄関へ進みます。</p></section>
 <nav id="inspectNav" class="tabs" aria-label="調べる場所"><button class="tab active" data-tab="board">掲示板</button><button class="tab" data-tab="post">ポスト</button><button class="tab" data-tab="door">玄関</button></nav>
@@ -776,12 +780,10 @@ if(n){h+='<div class="detail"><div class="issuer">'+esc(n.id)+'｜'+esc(n.issuer
 }
   }
   h+='</div><div class="entry-photo-title"><h3>4階・406号室の玄関前</h3><p class="tiny">エレベーターを降りて、自分の部屋へ歩く。</p></div>';
-  var photo=state.day<=2?'day01-neutral.webp':state.day===3?'day03-moving.webp':state.day<=5?'day04-vacated.webp':state.day<=8?'day06-'+state.hauntTarget+'.webp':state.day===9?'day09-normal-'+state.hauntTarget+'.webp':'day10-'+state.hauntTarget+'.webp';
-  h+='<figure class="d3-image" aria-label="404・405・406号室の廊下"><img src="./assets/hallway/three-door/'+photo+'" alt="404・405・406号室が並ぶ廊下" width="1600" height="1000" loading="lazy">';
+  var photo=hallwayPhoto();
+  h+='<figure class="d3-image" aria-label="404・405・406号室の廊下"><button type="button" class="d3-zoom-btn" data-hallzoom="1" aria-label="廊下の写真を拡大する"><img src="./assets/hallway/three-door/'+photo+'" alt="404・405・406号室が並ぶ廊下" width="1600" height="1000" loading="lazy"></button>';
   h+='<span class="d3-tag d3-404">404号室</span><span class="d3-tag d3-405">405号室</span><span class="d3-tag d3-406">406号室</span></figure>';
-  h+='<div class="listing">';
-  items('door').forEach(function(i){h+='<div class="record"><strong>'+esc(i.name)+'</strong><p>'+esc(i.text)+'</p></div>';});
-  h+='</div>';
+  /* 玄関前の変化は共通廊下画像へ集約する。 */
  }
  p.innerHTML=h;
 }
@@ -881,6 +883,14 @@ var d3LoadOriginal=load;load=function(){
  snapshot();
  state.locationStage='entry';state.mailRead=[];selectedMail=null;monitor=false;cameraLookCount=0;
 };
+function hallwayPhoto(){
+ if(state.day<=2)return 'day01-neutral.webp';
+ if(state.day===3)return 'day03-moving.webp';
+ if(state.day<=5)return 'day04-vacated.webp';
+ if(state.day<=8)return 'day06-'+state.hauntTarget+'.webp';
+ if(state.day===9)return 'day09-normal-'+state.hauntTarget+'.webp';
+ return 'day10-'+state.hauntTarget+'.webp';
+}
 function renderD3Entry(){
  var mail=items('post').slice().sort(function(a,b){return b.day-a.day;});
  var count=mail.filter(function(x){return !state.mailRead.includes(x.id);}).length;
@@ -891,7 +901,7 @@ function renderD3Entry(){
  if(active)h+='<article class="mail-paper"><div class="tiny">投函日：'+weekday(active.day)+'曜日（'+active.day+'日目）</div><h4>'+esc(active.name)+'</h4><p>'+esc(active.text)+'</p></article>';
  h+='</section><section><h2>廊下の様子</h2><div class="d3-image">';
  var file=state.day===3?'day03-moving.webp':state.day===4?'day04-vacated.webp':'day09-normal-401.webp';
- h+='<img src="./assets/hallway/three-door/'+file+'" width="1600" height="1000" alt="404・405・406号室が左から並ぶ共用廊下">';
+ h+='<button type="button" class="d3-zoom-btn" data-hallzoom="1" aria-label="廊下の写真を拡大する"><img src="./assets/hallway/three-door/'+file+'" width="1600" height="1000" alt="404・405・406号室が左から並ぶ共用廊下"></button>';
  h+='<span class="d3-tag d3-404">404号室</span><span class="d3-tag d3-405">405号室</span><span class="d3-tag d3-406">406号室</span>';
  if(state.day===3)h+='<span class="d3-notice">405<br>退去</span>';
  h+='</div></section></div>';el('tabPanel').innerHTML=h;
@@ -937,6 +947,8 @@ document.addEventListener('click',function(ev){
  }
  if(b.dataset.d3confirm){ev.stopImmediatePropagation();el('d3Transition').classList.add('hidden');beginNight();return;}
  if(b.dataset.d3back){ev.stopImmediatePropagation();el('d3Transition').classList.add('hidden');return;}
+ if(b.dataset.hallzoom&&state.phase==='morning'&&state.locationStage==='entry'){ev.stopImmediatePropagation();el('hallZoomImg').src='./assets/hallway/three-door/'+hallwayPhoto();el('hallZoom').classList.remove('hidden');return;}
+ if(b.dataset.hallclose){ev.stopImmediatePropagation();el('hallZoom').classList.add('hidden');return;}
  if(b.dataset.d3recheck&&state.day===3&&state.phase==='night'&&state.index===0&&!state.ended&&!state.resultPending&&monitor){
   ev.stopImmediatePropagation();
   cameraLookCount++;
