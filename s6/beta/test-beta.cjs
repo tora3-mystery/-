@@ -1145,16 +1145,13 @@ check('an outgoing student may address a listener, but a reserved student does n
  }
  assert.ok(approached>0);
 });
-check('only a familiar outgoing student can voluntarily offer a policy-approved contact',()=>{
+check('an outgoing host may offer a contact on the first day with no previous conversation',()=>{
  const B=dataScope.window.S6_BETA_DIALOGUE,cache=new Map();
  const s=makeSession(cache);for(const act of ['start','show-campus','show-intro','begin'])s.click(act);
  visit(s,'E01','E01-A');
  const state=s.state;
- assert.equal(B.spontaneousContact('P003','E01-A',state),null);
- state.affinity.P003=4;
- state.relationshipDays.P003=['2026-04-06','2026-04-07'];
- state.personalIntroduced.P003=true;
- state.interacted.push('P003');
+ assert.equal(state.affinity.P003,undefined);
+ assert.ok(!state.interacted.includes('P003'));
  let seed=0;
  while(seed<2000&&!B.spontaneousContact('P003','E01-A',{...state,presentationSeed:seed}))seed++;
  assert.ok(seed<2000);
@@ -1165,9 +1162,20 @@ check('only a familiar outgoing student can voluntarily offer a policy-approved 
  assert.equal(t.state.phase,'contact-prompt');
  assert.ok(t.state.groupOffers['E01-A'].some(o=>o.pid==='P003'));
  assert.ok(t.state.contacts.includes('P003'));
+ assert.match(t.html,/新歓のお知らせも送れるし/);
  assert.match(t.html,/向こうからの申し出/);
+ assert.equal(t.state.affinity.P003,undefined,'contact alone does not boost friendship');
  t.click('finish-group');
  assert.ok(makeSession(cache).state.contacts.includes('P003'));
+});
+check('first-day random contact offers favor conversation while preserving personality gates',()=>{
+ const B=dataScope.window.S6_BETA_DIALOGUE;
+ const initial={affinity:{},relationshipDays:{},groupLog:{},personalIntroduced:{},interacted:[]};
+ const baseline=Array.from({length:400},(_,presentationSeed)=>B.spontaneousContact('P003','E01-A',{...initial,presentationSeed})).filter(Boolean).length;
+ const talked=Array.from({length:400},(_,presentationSeed)=>B.spontaneousContact('P003','E01-A',{...initial,presentationSeed,interacted:['P003']})).filter(Boolean).length;
+ assert.ok(baseline>10&&baseline<350);
+ assert.ok(talked>baseline,'speaking to the person should increase the offer rate');
+ for(let seed=0;seed<50;seed++)assert.equal(B.spontaneousContact('P051','E01-A',{...initial,presentationSeed:seed,interacted:['P051']}),null);
 });
 check('contact refusals, approvals, public channels and prior exchanges produce varied replies',()=>{
  const B=dataScope.window.S6_BETA_DIALOGUE;
