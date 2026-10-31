@@ -1,7 +1,7 @@
 (() => {
 'use strict';
 const D=window.S6_DATA, APP=document.getElementById('app'), KEY='s6-vocaloid-beta-060', Dialogue=window.S6_BETA_DIALOGUE, Story=window.S6_BETA_STORY, Music=window.S6_BETA_MUSIC, Routes=window.S6_BETA_ROUTES;
-const VERSION='0.9.0', BUILD='2026-10-31 12:04 JST';
+const VERSION='0.9.1', BUILD='2026-10-31 12:17 JST';
 const WEEK=['月曜 4月6日','火曜 4月7日','水曜 4月8日','木曜 4月9日','金曜 4月10日'];
 const DATES=['2026-04-06','2026-04-07','2026-04-08','2026-04-09','2026-04-10'];
 const people=Object.fromEntries(D.people.map(p=>[p.person_id,p]));
@@ -174,7 +174,8 @@ function group(){
   if(x.overheard?.length)return '<div class="notice">'+esc(x.text)+'</div>'+
    x.overheard.map(l=>speech(l.pid,l.text,l.tag||'輪の会話')).join('')+
    (x.address&&people[x.address.pid]?speech(x.address.pid,x.address.text,x.address.tag||'声をかけられた'):'');
-  const primary=x.pid&&people[x.pid]?speech(x.pid,x.text,x.type):'<div class="notice">'+esc(x.text)+'</div>';
+  const visibleTag=({talk:'会話',question:'質問への返事',affiliation:'所属の話'})[x.type]||x.type;
+  const primary=x.pid&&people[x.pid]?speech(x.pid,x.text,visibleTag):'<div class="notice">'+esc(x.text)+'</div>';
   const actionIntro=x.type==='talk'&&x.pid&&people[x.pid]?'<div class="notice">あなたは'+esc(displayName(x.pid))+'に話しかけた。</div>':'';
   return actionIntro+primary+(x.reply&&people[x.reply.pid]?speech(x.reply.pid,x.reply.text,'輪の反応'):'');
  }).join('');

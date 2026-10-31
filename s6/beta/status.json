@@ -1,26 +1,26 @@
 {
   "work_id": "S6",
   "title": "サークルは、星の数ほどありますから。",
-  "version": "0.9.0",
-  "updated_at_jst": "2026-10-31 12:04 JST",
+  "version": "0.9.1",
+  "updated_at_jst": "2026-10-31 12:17 JST",
   "phase": "Phase 5 — human beta review",
   "folder": "s6/beta/",
-  "source_of_truth": "s6/beta/QA_SCENARIO_v0.9.0.md",
+  "source_of_truth": "s6/beta/QA_SCENARIO_v0.9.1.md",
   "ai_audit": {
     "status": "passed",
-    "tests_passed": 106,
+    "tests_passed": 107,
     "tests_failed": 0,
-    "coverage": "102 prior tests plus 4 targeted scenario/dialogue/portrait checks; all 96 beta image IDs resolved, 44 groups and 88 questions reviewed structurally; 30 contextual answer revisions",
+    "coverage": "102 prior tests plus 5 targeted scenario/dialogue/portrait checks; all 96 beta image IDs resolved, 44 groups and 88 questions reviewed structurally; 30 contextual answer revisions; Japanese visible dialogue labels",
     "method": "Full 106-case suite evaluated in V8 with Node-compatible in-memory harness and simulated DOM; not a browser. Qualitative human scene/photo review outstanding."
   },
   "real_browser_audit": {
-    "status": "pending_deployment_recheck",
-    "notes": "Cloud browser showed v0.8.3 immediately after repo commit; beta index script URLs now use ?v=0900. Retest after Pages propagation; phone performance remains unverified."
+    "status": "partial_pass",
+    "notes": "After Pages deployment, cloud Chrome confirmed β v0.9.0 title, intro, first-day groups, visible portrait images, talk/listen action separators and a dialogue. v0.9.1 language-tag fix needs deployment recheck. Mobile and all 96 image loads not audited."
   },
   "human_review": {
     "status": "requested_retest",
     "feedback_source_version": "0.8.2",
-    "target_version": "0.9.0",
+    "target_version": "0.9.1",
     "verified": false,
     "notes": "Action separators from v0.8.3 carried forward. New scene answers and 96 candidate portraits require live human review before final acceptance."
   },
@@ -39,7 +39,7 @@
     "s6/beta/game.js",
     "s6/beta/test-beta.cjs",
     "s6/beta/status.json",
-    "s6/beta/QA_SCENARIO_v0.9.0.md",
+    "s6/beta/QA_SCENARIO_v0.9.1.md",
     "s6/beta/assets/faces/p001.webp..p096.webp"
   ],
   "outside_scope_modified": false

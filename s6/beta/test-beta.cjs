@@ -1242,4 +1242,15 @@ check('overheard conversation between familiar members stays conversational',()=
  }
  assert.ok(found);
 });
+
+check('visible dialogue tags use Japanese labels for talk and questions',()=>{
+ const s=newPlayer();visit(s,'E01','E01-A');
+ s.click('action-menu','talk');s.click('act-target','P003');
+ assert.match(s.html,/<span class="dim">会話<\/span>/);
+ assert.doesNotMatch(s.html,/<span class="dim">talk<\/span>/);
+ const t=newPlayer();visit(t,'E01','E01-A');
+ t.click('action-menu','question');t.click('act-target','P003');
+ assert.match(t.html,/<span class="dim">質問への返事<\/span>/);
+ assert.doesNotMatch(t.html,/<span class="dim">question<\/span>/);
+});
 console.log(JSON.stringify({passed:total,failed:failures}));if(failures)process.exitCode=1;
