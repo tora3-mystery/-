@@ -269,15 +269,24 @@ const answerTextForListening=q=>plain(Story.questionAnswers[q.group_id+'|'+q.tar
 // Only a close, sociable character may voluntarily offer a shareable channel.
 // Account and consent policies remain authoritative even at high affinity.
 const spontaneousContact=(id,gid,state)=>{
- const c=P.people[id],close=level(state,id),affinity=Number(state.affinity?.[id])||0;
- if(!c||!['familiar','easygoing'].includes(close)||affinity<3||c.initiative<3||c.warmth<3||c.caution>3)return null;
- const chance=Math.min(.85,.24+(c.initiative-3)*.20+(c.warmth-3)*.12-(c.caution-1)*.09+(close==='easygoing'?.14:0));
+ const c=P.people[id],close=level(state,id);
+ // An orientation event is a plausible first-day opportunity to exchange contacts.
+ const talked=!!(state.interacted?.includes(id)||state.spokenTo?.includes(id)||state.personalIntroduced?.[id]);
+ if(!c||c.initiative<3||c.warmth<3||c.caution>3)return null;
+ const host=role(id,gid)==='host';
+ const closenessBoost=close==='easygoing'?.16:close==='familiar'?.11:0;
+ const privatePenalty=c.snsTone==='private'&&!talked?.10:0;
+ const chance=Math.max(.025,Math.min(.82,.09+(c.initiative-3)*.13+(c.warmth-3)*.07-
+  (c.caution-1)*.06+(host?.09:0)+(talked?.18:0)+closenessBoost-privatePenalty));
  if((momentSeed(state,gid+'|spontaneous-contact|'+id)%1000)/1000>=chance)return null;
  const rules=D.contactChannels.filter(r=>r.group_id===gid&&r.person_id===id);
  const tine=rules.find(r=>r.platform==='TINE'),photo=rules.find(r=>r.platform==='Photogram');
  const account=platform=>Social.accounts.find(a=>a.person_id===id&&a.platform===platform);
  const existing=state.contacts?.includes(id)||state.pendingContacts?.includes(id);
- const tag=close==='easygoing'?'また今度も話したいし、':'この前も話せてうれしかったし、';
+ const tag=close==='easygoing'?'また今度も話したいし、':
+  close==='familiar'?'また会ったときにも連絡できるように、':
+  talked?'せっかく話せたし、':
+  host?'新歓のお知らせも送れるし、':'またどこかで話せるといいし、';
  if(tine&&account('TINE')&&!existing&&tine.approval_policy!=='after_week'){
   const pending=tine.approval_policy==='next_day';
   return {pid:id,platform:'TINE',status:pending?'pending':'accept',
