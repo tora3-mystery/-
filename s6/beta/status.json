@@ -14,8 +14,8 @@
     "method": "Full 106-case suite evaluated in V8 with Node-compatible in-memory harness and simulated DOM; not a browser. Qualitative human scene/photo review outstanding."
   },
   "real_browser_audit": {
-    "status": "not_run",
-    "notes": "GitHub Pages, real screen rendering and phone performance not verified"
+    "status": "pending_deployment_recheck",
+    "notes": "Cloud browser showed v0.8.3 immediately after repo commit; beta index script URLs now use ?v=0900. Retest after Pages propagation; phone performance remains unverified."
   },
   "human_review": {
     "status": "requested_retest",
@@ -33,6 +33,7 @@
   "next_owner": "S6 chat and human reviewer",
   "next_task": "Human playtest on mobile: separators, 5-day mystery routes, dialogue naturalness, contact offers, photo recognition; report screenshots/IDs for any issues.",
   "modified_scope": [
+    "s6/beta/index.html",
     "s6/beta/dialogue-engine.js",
     "s6/beta/story-vocaloid.js",
     "s6/beta/game.js",

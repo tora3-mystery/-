@@ -37,7 +37,7 @@
 
 ## 残る品質確認
 
-- **実ブラウザ・実機**：GitHub Pagesの配信状況、読み込み失敗、スマホ縦画面のカード・手帳・SNSの表示、96画像の表示速度は未確認。
+- **実ブラウザ・実機**：リポジトリ反映直後に公開URLを開くと旧β v0.8.3が表示されたため、変更済み3スクリプトに `?v=0900` を付けてキャッシュ更新を明示した。再配信後の読み込み、スマホ縦画面、96画像の表示速度は要確認。
 - **小表示での識別**：画像制作側の目視QAでは44グループ中39件合格・5件注意（E04-A、E04-B、E09-A、E09-C、E12-A）。特にE09-AのP002/P008は初見で見分けられるか確認する。
 - **外見の文章**：共有DBの `appearance` と `visual_description` には候補画像と古い説明の食い違いがある。β UIではこの2項目を表示していないため共有DBを変えなかった。今後それを表示する場合は容姿DBとの再照合が必要。
 - **質的レビュー**：30件以外の58質問、再会時の口調、全5日間の推理導線、各連絡先方針は自動検査のみでは自然さを保証できない。人間が全経路で読む必要がある。
@@ -54,4 +54,4 @@
 
 ## 変更範囲
 
-`s6/beta/dialogue-engine.js`、`s6/beta/story-vocaloid.js`、`s6/beta/game.js`、`s6/beta/test-beta.cjs`、`s6/beta/status.json`、本QA文書、`s6/beta/assets/faces/p001.webp`〜`p096.webp`。
+`s6/beta/index.html`、`s6/beta/dialogue-engine.js`、`s6/beta/story-vocaloid.js`、`s6/beta/game.js`、`s6/beta/test-beta.cjs`、`s6/beta/status.json`、本QA文書、`s6/beta/assets/faces/p001.webp`〜`p096.webp`。
