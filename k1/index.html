@@ -29,8 +29,8 @@ h2{font-size:17px;line-height:1.4;margin:0 0 8px}h3{font-size:14px;margin:0 0 8p
 .btn{border:1px solid #89979c;border-radius:9px;background:#fff;padding:10px 13px;font-weight:700;color:var(--dark);min-height:42px}.btn.primary{background:var(--dark);color:#fff;border-color:var(--dark)}.btn.secondary{background:#edf0ee}.btn.warn{border-color:#a78b87;color:#79473f}
 .btnrow{display:flex;gap:8px;flex-wrap:wrap}.btnrow .btn{flex:1;min-width:115px}
 .status{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between}.status strong{font-size:19px}.status .hint{font-size:12px;color:var(--muted)}
-.notice-summary.worn{background-image:linear-gradient(#2a38331c,#2a38331c),url('./assets/board/worn.webp')}
-.notice-summary{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));align-content:start;gap:7px;min-height:184px;background:linear-gradient(#2a38331c,#2a38331c),url('./assets/board/base.webp') center center/cover no-repeat #9b9386;padding:12px;border:8px solid #776e62;border-radius:8px}
+.notice-summary.worn{background-image:linear-gradient(#2a38331c,#2a38331c),url('./assets/board/space-v2/worn.webp')}
+.notice-summary{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));align-content:start;gap:7px;min-height:184px;background:linear-gradient(#2a38331c,#2a38331c),url('./assets/board/space-v2/base.webp') center center/cover no-repeat #9b9386;padding:12px;border:8px solid #776e62;border-radius:8px}
 .paper{background:#fdfbf3;border:1px solid #d5cfc2;padding:9px 8px;min-height:86px;text-align:left;border-radius:1px;box-shadow:0 2px 2px #3a302433;line-height:1.4;width:100%}
 .paper small{display:block;color:#807c75;font-size:10px;margin-bottom:6px}.paper b{font-size:12px;font-weight:700;word-break:break-word}.paper .stamp{color:#7c7770;font-size:10px;display:block;margin-top:6px}
 .paper:hover{filter:brightness(.97)}.paper:focus-visible{outline-offset:0}.paper.fresh{outline:2px solid #b54b4d;outline-offset:-2px;border:2px solid #b54b4d;box-shadow:0 2px 5px #5c2d2f59;background:#fffdf8}.notice-delta{background:#f0eee8;border:1px solid #d7d2c7;border-radius:7px;padding:8px 10px;font-size:12px;color:#555957}
@@ -44,7 +44,7 @@ h2{font-size:17px;line-height:1.4;margin:0 0 8px}h3{font-size:14px;margin:0 0 8p
 .scene-figure .scene-stack>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center center}
 .scene-stack .scene-overlay{pointer-events:none}
 .door-camera{background:#111b20;padding:11px;border:2px solid #5b6f77;border-radius:9px;max-width:525px;margin:12px auto 4px}
-.door-camera img{width:100%;height:auto;display:block;aspect-ratio:16/9;object-fit:cover;background:#202b30;border:1px solid #46585f}
+.door-camera img{width:100%;height:auto;display:block;aspect-ratio:16/10;object-fit:contain;background:#202b30;border:1px solid #46585f}
 .camera-head{display:flex;justify-content:space-between;gap:5px;color:#c3d2d3;font-size:10px;letter-spacing:.1em;margin-bottom:5px}
 .camera-foot{font-size:12px;color:#dce8e6;margin-top:9px;line-height:1.6}
 .mail-paper.strange{background:linear-gradient(155deg,#e0e0d3 0%,#fcf8ed 48%,#c6d0c7 100%);border-color:#9badab}
@@ -58,7 +58,7 @@ h2{font-size:17px;line-height:1.4;margin:0 0 8px}h3{font-size:14px;margin:0 0 8p
 .meter{border-top:1px solid #d7dbd9;padding-top:10px;margin-top:10px}.monitor{background:#1f272c;color:#e6ecef;border-radius:8px;padding:15px;white-space:pre-line;font-size:13px}
 .history{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}.history .btn{min-width:0;padding:10px 2px;font-size:12px}
 .result{border:1px solid #c7c4b7;background:#f0eee7;color:#26343c;padding:14px;border-radius:9px;margin:12px 0}
-.ending{background:#232a2d;color:#eff1f1;text-align:center;padding:35px 22px;border-radius:11px}.ending-visual{display:block;width:100%;max-width:580px;height:auto;aspect-ratio:16/9;object-fit:cover;border:1px solid #5d7075;border-radius:7px;margin:16px auto 5px}.ending h2{font-size:32px;letter-spacing:.15em}.ending .endingname{font-size:22px;margin:15px 0}.ending p{max-width:540px;margin:10px auto}
+.ending{background:#232a2d;color:#eff1f1;text-align:center;padding:35px 22px;border-radius:11px}.ending-visual{display:block;width:100%;max-width:580px;height:auto;aspect-ratio:16/10;object-fit:contain;border:1px solid #5d7075;border-radius:7px;margin:16px auto 5px}.ending h2{font-size:32px;letter-spacing:.15em}.ending .endingname{font-size:22px;margin:15px 0}.ending p{max-width:540px;margin:10px auto}
 .tag{display:inline-block;border:1px solid #aeb9bd;padding:1px 6px;color:#697477;border-radius:4px;font-size:10px;margin-left:5px}
 .caption{color:var(--muted);font-size:11px;margin-top:9px}.confirm-choice{background:#eef1ef;color:#26343c;border:1px solid #9caeb4;border-radius:9px;padding:14px;margin-top:14px}.kid-art{display:block;width:100%;max-width:520px;height:auto;background:#fdfaf4;border:1px solid #ddd1b9;margin:12px auto}.answer-line{display:flex;gap:10px;align-items:center;padding:10px;margin:7px 0;background:#fff;color:#26343c;border:1px solid #d5dcda;border-radius:8px;font-weight:600;cursor:pointer}.answer-line input{height:19px;width:19px;flex-shrink:0;accent-color:#354e59}.confirm-choice .btn:disabled{opacity:.45}
 
@@ -445,7 +445,7 @@ function resultFor(e,c,extra){
   if(c==='yes')msg='荷物を受け取った。送り状には、今日の再配達案内に記載された番号と同じものが印字されている。';
   else fail('受取人のいない部屋','今日の再配達予定と、受取拒否に関する案内があった。',c==='verify'?'配送会社へ電話している間に、玄関先の配達員は去った。端末には「受取人不在」とだけ残った。':'配達員は手元の端末を見た。「住んでいない、ということで」。玄関の表札が一瞬だけ薄く見えた。');
  }else if(e.id==='E02D'){
-  if(c==='no')msg='封筒を受け取らずにいると、男は407号室へ歩いていき、扉の陰に隠れるように姿を消した。';
+  if(c==='no')msg='封筒を受け取らずにいると、男は立ち去った。足音が廊下の遠くへ消えた。';
   else fail('空室の鍵','407号室は空室とされていた。',c==='verify'?'電話先の真鍋は静かに言った。「407号室の鍵を持った方と話していますね」。翌朝、406号室の表札には鍵の絵が描かれていた。':'封筒は薄く、鍵の形がない。男が笑って言った。「その部屋の名義で登録します」。');
  }else if(e.id==='E02E'){
   if(c==='yes')msg='外部サポート窓口の書面窓口へ異議申立てを送り、自動受付票が届いた。管理側への同意は記録されなかった。';
@@ -592,7 +592,7 @@ function ending(){
  if(state.failure){
  var last=state.history.length?state.history[state.history.length-1]:null;
  var gameOverPhoto=last&&last.id==='E07G'&&last.choice==='yes'?'e07g-unfamiliar-shoes.webp':last&&last.id==='E08'&&last.choice==='yes'?'e08-door-gap.webp':null;
- var photoHtml=gameOverPhoto?'<img class="over-illustration" src="./assets/gameover/'+gameOverPhoto+'" width="1280" height="720" decoding="async" alt="'+(last.id==='E07G'?'自室玄関に増えていた見覚えのない靴':'扉の隙間に差し入れられた靴と、外にいる二人')+'">':'';
+ var photoHtml=gameOverPhoto?'<img class="over-illustration" src="./assets/gameover/space-v2/'+gameOverPhoto+'" width="1280" height="720" decoding="async" alt="'+(last.id==='E07G'?'自室玄関に増えていた見覚えのない靴':'扉の隙間に差し入れられた靴と、外にいる二人')+'">':'';
  return '<div class="ending"><div class="tiny" style="color:#b5c0c2">406号室｜'+state.day+'日目</div><h2>GAME OVER</h2><div class="endingname">'+esc(state.failure.reason)+'</div><p>'+esc(state.result)+'</p>'+photoHtml+'</div><div class="btnrow"><button class="btn primary" data-restartday="'+state.day+'">同じ日の帰宅時からやり直す</button><button class="btn secondary" data-showrewind="1">別の日を選ぶ</button></div>';}
  var name,paragraphs,transferred=state.hauntTarget==='406';
  if(state.exposed&&!transferred){
@@ -662,9 +662,9 @@ function afterCameraSource(e){
 }
 function cameraAfterHtml(e,photo){
  var label=e.id==='E08'?'有馬が帰った後の玄関カメラ。廊下はさっきと違って見える。'
- :e.id==='E02D'?'407号室側の廊下。訪問者の姿はない。'
+ :e.id==='E02D'?'406号室前の廊下。訪問者はもういない。'
  :e.id==='E06'?'杉浦が去った後の廊下。':'訪問者が去った後の廊下。';
- return '<div class="door-camera"><div class="camera-head"><span>406 / CAMERA</span><span>● LIVE</span></div><img src="./assets/camera/'+photo+'" alt="'+esc(label)+'" width="1280" height="720" decoding="async"><div class="camera-foot">'+esc(label)+'</div></div>';
+ return '<div class="door-camera"><div class="camera-head"><span>406 / CAMERA</span><span>● LIVE</span></div><img src="./assets/camera/space-v2/'+photo+'" alt="'+esc(label)+'" width="1280" height="720" decoding="async"><div class="camera-foot">'+esc(label)+'</div></div>';
 }
 function cameraRecheckSource(e){
  var options=CAMERA_RECHECK_BY_EVENT[e.id]||{};
@@ -691,11 +691,11 @@ function cameraHtml(e){
  :['E01','E01A','E02C'].includes(e.id)?'訪問者が荷物を手にしている。'
  :e.id==='E02D'?'訪問者が封筒を差し出している。'
  :'訪問者が立っている。所属は映像だけでは分からない。';
- return '<div class="door-camera"><div class="camera-head"><span>406 / CAMERA</span><span>● LIVE</span></div><img src="./assets/camera/'+photo+'" alt="'+esc(label)+'" width="1280" height="720" decoding="async"><div class="camera-foot">'+esc(label)+'</div></div>';
+ return '<div class="door-camera"><div class="camera-head"><span>406 / CAMERA</span><span>● LIVE</span></div><img src="./assets/camera/space-v2/'+photo+'" alt="'+esc(label)+'" width="1280" height="720" decoding="async"><div class="camera-foot">'+esc(label)+'</div></div>';
 }
 function endingVisualHtml(){
  var file=ENDING_VISUALS_BY_TARGET[state.hauntTarget];
- return file?'<img class="ending-visual" src="./assets/ending/'+file+'" alt="最後に映った玄関の様子" width="1280" height="720" decoding="async">':'';
+ return file?'<img class="ending-visual" src="./assets/ending/space-v2/'+file+'" alt="最後に映った玄関の様子" width="1280" height="720" decoding="async">':'';
 }
 var DEVICE_EVENT_IDS=['E02B','E02F','E02K','E03E','E03H','E07F','E07H'];
 function inspectedKey(){var e=eventNow();return state.day+':'+state.index+':'+(e?e.id:'');}
@@ -762,12 +762,12 @@ if(n){h+='<div class="detail"><div class="issuer">'+esc(n.id)+'｜'+esc(n.issuer
    if(active){
  h+='<article class="mail-paper'+(active.strange?' strange':'')+'"><div class="tiny">投函日：'+weekday(active.day)+'曜日（'+active.day+'日目）</div><h4>'+esc(active.name)+'</h4><p'+(active.strange?' class="letter-warning"':'')+'>'+esc(active.text)+'</p>';
  if(active.id==='quietmail'){
-  h+='<figure><img class="mail-evidence-img" src="./assets/mail/quietmail-postbox.webp" alt="古い集合ポストの一つだけ、投函口が内側からわずかに開いている写真" width="1200" height="900" loading="lazy" decoding="async"><figcaption class="flyer-desc">同封されていた写真。何の説明もない。</figcaption></figure>';
+  h+='<figure><img class="mail-evidence-img" src="./assets/mail/space-v2/quietmail-postbox.webp" alt="古い集合ポストの一つだけ、投函口が内側からわずかに開いている写真" width="1200" height="900" loading="lazy" decoding="async"><figcaption class="flyer-desc">同封されていた写真。何の説明もない。</figcaption></figure>';
  }
  if(active.id==='report'){
   h+='<p class="flyer-desc">水野が入居する前の募集資料。掲載はすでに終了している。</p>';
   h+='<div class="rental-flyer" role="group" aria-label="過去の募集チラシ。403号室と405号室は通常賃料、406号室だけ相場の約半額。">';
-  h+='<img src="./assets/mail/406-old-listing.webp" alt="文字が消えた古い賃貸募集チラシ。右側の空欄に募集内容が重ねて表示される。" width="900" height="1200" loading="lazy" decoding="async">';
+  h+='<img src="./assets/mail/space-v2/406-old-listing.webp" alt="文字が消えた古い賃貸募集チラシ。右側の空欄に募集内容が重ねて表示される。" width="900" height="1200" loading="lazy" decoding="async">';
   h+='<span class="flyer-field flyer-one"><b>403号室</b>通常賃料</span>';
   h+='<span class="flyer-field flyer-two"><b>405号室</b>通常賃料</span>';
   h+='<span class="flyer-field flyer-three"><b>406号室</b>特別割引・相場の約半額</span></div>';
