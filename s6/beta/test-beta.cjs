@@ -68,29 +68,28 @@ check('freshman peers show highlighted photo and identity hint without permanent
  assert.match(s.html,/同期の新入生/);assert.match(s.html,/peer-highlight/);assert.match(s.html,/高橋健/);
  s.click('leave-flash');assert.match(s.html,/同級生/);assert.doesNotMatch(s.html,/高橋健/);
 });
-check('three direct actions stay available, and group departure opens the separate contact choice',()=>{
+check('two direct actions stay available, and group departure opens the separate contact choice',()=>{
  const s=newPlayer();visit(s,'E01','E01-A');
- assert.match(s.html,/交流 0 \/ 3回/);
- for(const text of ['話しかける','聞き耳を立てる','輪から離れる'])assert.match(s.html,new RegExp(text));
+ assert.match(s.html,/交流 0 \/ 2回/);
+ for(const text of ['話しかける','話を聞く','輪から離れる'])assert.match(s.html,new RegExp(text));
  assert.doesNotMatch(s.html,/data-id="question"|data-id="social"/);
  s.click('action-menu','talk');s.click('act-target','P003');
- assert.equal(s.state.phase,'group');assert.match(s.html,/交流 1 \/ 3回/);
+ assert.equal(s.state.phase,'group');assert.match(s.html,/交流 1 \/ 2回/);
  assert.ok(s.state.groupLog['E01-A'][0].reply,'another participant must join the conversation');
- s.click('action-menu','talk');s.click('act-target','P019');
- assert.match(s.html,/交流 2 \/ 3回/);
- s.click('listen-group');assert.match(s.html,/交流 3 \/ 3回/);
- assert.equal(s.state.groupLog['E01-A'].length,3);
+ s.click('listen-group');assert.match(s.html,/交流 2 \/ 2回/);
+ assert.equal(s.state.groupLog['E01-A'].length,2);
  s.click('action-menu','talk');assert.equal(s.state.phase,'group');
+ s.click('listen-group');assert.equal(s.state.groupLog['E01-A'].length,2);
  s.click('leave-group');assert.equal(s.state.phase,'contact-prompt');
  assert.match(s.html,/連絡先を聞きますか/);
  s.click('finish-group');assert.equal(s.state.phase,'venue');
 });
 
-check('all 44 group activities can be entered and listened to three times',()=>{
+check('all 44 group activities can be entered and listened to twice',()=>{
  let total=0;const dates=['2026-04-06','2026-04-07','2026-04-08','2026-04-09','2026-04-10'];
  for(const e of D.events)for(const g of D.groups.filter(x=>x.event_id===e.event_id)){
   const s=newPlayer();for(let i=0;i<dates.indexOf(e.date);i++){s.click('skip');s.click('next-day')}
-  visit(s,e.event_id,g.group_id);s.click('listen-group');s.click('listen-group');s.click('listen-group');assert.equal(s.state.groupLog[g.group_id].length,3);s.click('listen-group');assert.equal(s.state.groupLog[g.group_id].length,3);total++;
+  visit(s,e.event_id,g.group_id);s.click('listen-group');s.click('listen-group');assert.equal(s.state.groupLog[g.group_id].length,2);s.click('listen-group');assert.equal(s.state.groupLog[g.group_id].length,2);total++;
  }
  assert.equal(total,44);
 });
@@ -810,7 +809,7 @@ check('180 seeded five-day runs with three circles and three actions reach coher
      assert.equal(s.state.phase,'flash');
      s.click('leave-flash');
      const members=D.members.filter(m=>m.group_id===g.group_id);
-     for(let turn=0;turn<3;turn++){
+     for(let turn=0;turn<2;turn++){
       const type=actionTypes[(n+day+k+turn)%actionTypes.length];
       if(type==='listen')s.click('listen-group');
       else{
@@ -822,7 +821,7 @@ check('180 seeded five-day runs with three circles and three actions reach coher
       }
       assert.equal(s.state.phase,'group');
      }
-     assert.equal(s.state.groupLog[g.group_id].length,3);
+     assert.equal(s.state.groupLog[g.group_id].length,2);
      s.click('back-venue');
     }
     s.click('finish-venue');
@@ -1014,11 +1013,11 @@ check('talking naturally reveals the same optional producer trails formerly behi
  assert.equal(s.state.routeVisits.length,1);
  assert.doesNotMatch(s.state.groupLog['E02-A'][1].text,/底なしサイダー/);
 });
-check('repeated listening has distinct text each time, within three action limit',()=>{
+check('repeated listening has distinct text each time, within two action limit',()=>{
  const s=newPlayer();visit(s,'E01','E01-C');
- for(let n=0;n<3;n++)s.click('listen-group');
- const log=s.state.groupLog['E01-C'];assert.equal(log.length,3);
- assert.equal(new Set(log.map(x=>x.text)).size,3);
+ for(let n=0;n<2;n++)s.click('listen-group');
+ const log=s.state.groupLog['E01-C'];assert.equal(log.length,2);
+ assert.equal(new Set(log.map(x=>x.text)).size,2);
  s.click('leave-group');assert.equal(s.state.phase,'contact-prompt');
 });
 check('SNS sightings respect public, approved-private, and anonymous accounts',()=>{
@@ -1086,7 +1085,7 @@ check('new UI multi-week seeded trials finish across all seven weekend choices',
     for(const g of gs.slice(0,3)){
      s.click('join-group',g.group_id);s.click('leave-flash');
      const ids=D.members.filter(m=>m.group_id===g.group_id).map(m=>m.person_id);
-     for(let i=0;i<3;i++){
+     for(let i=0;i<2;i++){
       if((n+i+day)%3===0)s.click('listen-group');
       else {s.click('action-menu','talk');assert.equal(s.state.phase,'choose');s.click('act-target',ids[i%ids.length]);}
       assert.equal(s.state.phase,'group');
@@ -1108,4 +1107,80 @@ check('new UI multi-week seeded trials finish across all seven weekend choices',
  }
 });
 
+check('passive listening is an overheard exchange between group members in all 44 scenes',()=>{
+ const B=dataScope.window.S6_BETA_DIALOGUE;
+ for(const g of D.groups){
+  const members=D.members.filter(m=>m.group_id===g.group_id).map(m=>m.person_id);
+  const heard=B.passiveListen(g.group_id,{presentationSeed:31,groupLog:{},personalIntroduced:{}});
+  assert.equal(heard.overheard.length,2);
+  assert.ok(members.includes(heard.overheard[0].pid));
+  assert.ok(members.includes(heard.overheard[1].pid));
+  assert.ok(heard.overheard[0].pid!==heard.overheard[1].pid);
+  assert.ok(heard.overheard.every(x=>x.text.length>=6));
+  assert.deepEqual(heard,B.passiveListen(g.group_id,{presentationSeed:31,groupLog:{},personalIntroduced:{}}));
+ }
+});
+check('passive listening does not create affection or a personal introduction without direct address',()=>{
+ const B=dataScope.window.S6_BETA_DIALOGUE;
+ const s=newPlayer();visit(s,'E01','E01-A');
+ s.click('listen-group');
+ const action=s.state.groupLog['E01-A'][0];
+ assert.equal(action.type,'話を聞く');
+ assert.equal(action.overheard.length,2);
+ assert.match(s.html,/ほかの参加者へ|返事/);
+ assert.equal(Object.keys(s.state.affinity).length,0);
+ if(!action.address)assert.equal(s.state.interacted.length,0);
+ if(action.address?.selfIntroduced)assert.ok(s.state.personalIntroduced[action.address.pid]);
+ assert.ok(D.members.filter(m=>m.group_id==='E01-A').every(m=>B.responseGain(m.person_id,'listen')===0));
+});
+check('an outgoing student may address a listener, but a reserved student does not initiate',()=>{
+ const B=dataScope.window.S6_BETA_DIALOGUE;
+ let approached=0;
+ for(const g of D.groups)for(let seed=0;seed<15;seed++){
+  const heard=B.passiveListen(g.group_id,{presentationSeed:seed,groupLog:{},personalIntroduced:{}});
+  if(!heard.address)continue;
+  approached++;
+  const c=dataScope.window.S6_BETA_PROFILES.people[heard.address.pid];
+  assert.ok(c.initiative>=3&&c.warmth>=3&&c.caution<=3);
+ }
+ assert.ok(approached>0);
+});
+check('only a familiar outgoing student can voluntarily offer a policy-approved contact',()=>{
+ const B=dataScope.window.S6_BETA_DIALOGUE,cache=new Map();
+ const s=makeSession(cache);for(const act of ['start','show-campus','show-intro','begin'])s.click(act);
+ visit(s,'E01','E01-A');
+ const state=s.state;
+ assert.equal(B.spontaneousContact('P003','E01-A',state),null);
+ state.affinity.P003=4;
+ state.relationshipDays.P003=['2026-04-06','2026-04-07'];
+ state.personalIntroduced.P003=true;
+ state.interacted.push('P003');
+ let seed=0;
+ while(seed<2000&&!B.spontaneousContact('P003','E01-A',{...state,presentationSeed:seed}))seed++;
+ assert.ok(seed<2000);
+ state.presentationSeed=seed;
+ cache.set('s6-vocaloid-beta-060',JSON.stringify(state));
+ const t=makeSession(cache);
+ t.click('leave-group');
+ assert.equal(t.state.phase,'contact-prompt');
+ assert.ok(t.state.groupOffers['E01-A'].some(o=>o.pid==='P003'));
+ assert.ok(t.state.contacts.includes('P003'));
+ assert.match(t.html,/向こうからの申し出/);
+ t.click('finish-group');
+ assert.ok(makeSession(cache).state.contacts.includes('P003'));
+});
+check('contact refusals, approvals, public channels and prior exchanges produce varied replies',()=>{
+ const B=dataScope.window.S6_BETA_DIALOGUE;
+ const kinds=['accept','pending','after_week','privacy','no_sns','cautious','public','already'];
+ const responses=new Set();
+ for(const pid of Object.keys(dataScope.window.S6_BETA_PROFILES.people)){
+  for(const kind of kinds)responses.add(B.contactReaction(pid,'E01-A',{presentationSeed:23,affinity:{},relationshipDays:{}},kind));
+ }
+ assert.ok(responses.size>=12);
+ const s=newPlayer();visit(s,'E01','E01-A');
+ s.click('leave-group');s.click('ask-group-contacts');
+ assert.ok(s.state.groupContacts['E01-A'].every(row=>row.results[0].startsWith('「')));
+ assert.ok(s.state.photoRequests.includes('P003'));
+ assert.ok(!s.state.contacts.includes('P019'));
+});
 console.log(JSON.stringify({passed:total,failed:failures}));if(failures)process.exitCode=1;
