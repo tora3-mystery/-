@@ -973,7 +973,7 @@ check('all-member exit exchange preserves independent TINE Photogram and Zitter 
  assert.ok(!s.state.photoFollows.includes('P003'));
  assert.ok(s.state.photoFollows.includes('P019'));
  assert.ok(s.state.zitterFollows.includes('P019'));
- assert.ok(!s.state.contacts.includes('P019'),'public-SNS preference differs from TINE');
+ if(!s.state.groupOffers['E01-A']?.some(o=>o.pid==='P019'))assert.ok(!s.state.contacts.includes('P019'),'public-SNS preference differs from TINE unless P019 offered a contact voluntarily');
  s.click('finish-group');assert.equal(s.state.phase,'venue');
  s.click('finish-venue');s.click('next-day');assert.ok(s.state.photoFollows.includes('P003'));
 });
@@ -1197,6 +1197,49 @@ check('contact refusals, approvals, public channels and prior exchanges produce 
  s.click('leave-group');s.click('ask-group-contacts');
  assert.ok(s.state.groupContacts['E01-A'].every(row=>row.results[0].startsWith('「')));
  assert.ok(s.state.photoRequests.includes('P003'));
- assert.ok(!s.state.contacts.includes('P019'));
+ if(!s.state.groupOffers['E01-A']?.some(o=>o.pid==='P019'))assert.ok(!s.state.contacts.includes('P019'));
+});
+
+check('beta portraits resolve to beta-only assets without changing shared paths',()=>{
+ const s=newPlayer();visit(s,'E01','E01-A');
+ assert.match(s.html,/src="assets\/faces\/p\d{3}\.webp"/);
+ assert.doesNotMatch(s.html,/src="\.\.\/assets\/faces\//);
+ for(const p of D.people)assert.ok(fs.existsSync(path.join(__dirname,p.portrait_path)),'missing beta portrait '+p.person_id);
+});
+check('30 scene-specific answers replace repeated generic wording and match activities',()=>{
+ const B=dataScope.window.S6_BETA_DIALOGUE;
+ const keys=["E01-A|P003","E01-B|P020","E01-C|P017","E02-A|P004","E02-B|P041","E02-C|P078","E02-D|P043","E03-C|P027","E04-A|P005","E04-B|P032","E04-C|P033","E05-B|P036","E05-C|P037","E06-A|P019","E06-B|P007","E06-E|P055","E07-A|P018","E07-B|P045","E07-C|P046","E08-C|P081","E08-D|P043","E09-A|P008","E09-B|P006","E10-B|P036","E10-C|P039","E11-A|P031","E11-B|P007","E12-A|P045","E12-B|P048","E12-C|P047"];
+ for(const key of keys){
+  const [gid,id]=key.split('|');
+  const before=D.questions.find(q=>q.group_id===gid&&q.target_id===id);
+  const after=B.answer(id,gid,'question').text;
+  assert.notEqual(after,before.answer,key);
+  assert.ok(after.length>=28,key);
+  assert.doesNotMatch(after,/今日は.+を中心にやってる/,key);
+ }
+ assert.match(B.answer('P004','E02-A','question').text,/歌声合成/);
+ assert.doesNotMatch(B.answer('P004','E02-A','question').text,/公開範囲/);
+});
+check('producer-route artist questions answer with artists while retaining clues',()=>{
+ const B=dataScope.window.S6_BETA_DIALOGUE;
+ for(const key of ['E05-A|P001','E10-A|P001']){
+  const [gid,id]=key.split('|');
+  assert.match(B.answer(id,gid,'question').text,/羊文学/);
+ }
+ assert.match(B.answer('P004','E08-A','question').text,/DECO\*27/);
+ assert.match(B.answer('P004','E08-A','question').text,/名義/);
+});
+check('overheard conversation between familiar members stays conversational',()=>{
+ const B=dataScope.window.S6_BETA_DIALOGUE;
+ let found=false;
+ for(let seed=0;seed<120;seed++){
+  const h=B.passiveListen('E11-C',{presentationSeed:seed,groupLog:{},personalIntroduced:{}});
+  if(h.overheard[1].pid!=='P009')continue;
+  found=true;
+  assert.match(h.overheard[0].text,/歌とドラムの掛け合い/);
+  assert.doesNotMatch(h.overheard[0].text,/お名前/);
+  assert.match(h.overheard[1].text,/一拍/);
+ }
+ assert.ok(found);
 });
 console.log(JSON.stringify({passed:total,failed:failures}));if(failures)process.exitCode=1;

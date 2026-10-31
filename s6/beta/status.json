@@ -1,40 +1,45 @@
 {
   "work_id": "S6",
   "title": "サークルは、星の数ほどありますから。",
-  "version": "0.8.3",
-  "updated_at_jst": "2026-10-31 11:43 JST",
+  "version": "0.9.0",
+  "updated_at_jst": "2026-10-31 12:04 JST",
   "phase": "Phase 5 — human beta review",
   "folder": "s6/beta/",
-  "source_of_truth": "s6/beta/QA_UI_v0.8.3.md",
+  "source_of_truth": "s6/beta/QA_SCENARIO_v0.9.0.md",
   "ai_audit": {
     "status": "passed",
-    "tests_passed": 102,
+    "tests_passed": 106,
     "tests_failed": 0,
-    "coverage": "Previous 101 scenarios plus a new direct-talk separator test; 44 groups, 132 original scene lines, 88 questions, 96 character profiles and membership reference consistency; 125 first-talk contexts with 100 unique texts",
-    "method": "Full 102-case suite evaluated in V8 with Node-compatible in-memory harness and simulated DOM; not a browser. Structural static audit; qualitative scene/voice review remains."
+    "coverage": "102 prior tests plus 4 targeted scenario/dialogue/portrait checks; all 96 beta image IDs resolved, 44 groups and 88 questions reviewed structurally; 30 contextual answer revisions",
+    "method": "Full 106-case suite evaluated in V8 with Node-compatible in-memory harness and simulated DOM; not a browser. Qualitative human scene/photo review outstanding."
   },
   "real_browser_audit": {
     "status": "not_run",
-    "notes": "Real screen display, mobile scrolling and GitHub Pages actual interaction not verified"
+    "notes": "GitHub Pages, real screen rendering and phone performance not verified"
   },
   "human_review": {
     "status": "requested_retest",
     "feedback_source_version": "0.8.2",
-    "target_version": "0.8.3",
+    "target_version": "0.9.0",
     "verified": false,
-    "notes": "User positively reviewed v0.8.2 but requested a clear 'I spoke to [person]' divider for direct talk, parallel to passive listening. Full v0.8.3 real-device review remains."
+    "notes": "Action separators from v0.8.3 carried forward. New scene answers and 96 candidate portraits require live human review before final acceptance."
   },
   "assets": {
-    "status": "unchanged",
-    "notes": "96-person photo set created; 74 revised candidates remain in separate Work branch, unmerged and not integrated into beta."
+    "status": "beta_integrated_candidate",
+    "count": 96,
+    "location": "s6/beta/assets/faces/",
+    "notes": "16 existing + 5 Phase1 v4 + P094 v4.1 + 74 remaining v2 candidate photos. Shared s6/assets/faces and game-data.js unchanged. Human visual final approval pending."
   },
   "next_owner": "S6 chat and human reviewer",
-  "next_task": "Confirm v0.8.3 active/passive separators on mobile. Complete qualitative scenario-game, character-speech and dialogue-variation review; then select/integrate replacement portraits.",
+  "next_task": "Human playtest on mobile: separators, 5-day mystery routes, dialogue naturalness, contact offers, photo recognition; report screenshots/IDs for any issues.",
   "modified_scope": [
+    "s6/beta/dialogue-engine.js",
+    "s6/beta/story-vocaloid.js",
     "s6/beta/game.js",
     "s6/beta/test-beta.cjs",
-    "s6/beta/QA_UI_v0.8.3.md",
-    "s6/beta/status.json"
+    "s6/beta/status.json",
+    "s6/beta/QA_SCENARIO_v0.9.0.md",
+    "s6/beta/assets/faces/p001.webp..p096.webp"
   ],
   "outside_scope_modified": false
 }

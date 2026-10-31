@@ -20,6 +20,40 @@ const sceneContext={
 const sceneCorrections={"E01-A|P003|1":"演奏する人と聴くだけの人、同じ入口でどう案内しようか？","E03-C|P027|2":"言葉を詰めると、伴奏の余白が消えるんだよね。","E04-A|P031|2":"音を外しても大丈夫。次の小節で戻る合図を出すね。","E04-B|P009|1":"次はギターから入る？　ドラムから入る？","E04-B|P032|2":"低い弦の音を先に出すから、上は自由に遊んで。","E08-D|P044|2":"片方が音を止めると、もう片方のフレーズがはっきり聴こえるね。","E11-A|P016|3":"先輩、さっき間違えたところ、次の小節は意外とうまく合いました。","E11-C|P035|2":"歌の返事を少し遅らせると、ドラムとの掛け合いが面白くなるね。"};
 const listeningCorrections={"E04-B":"ギターの低い弦の音をドラムが追いかけ、次はドラムが先に拍を置く。交代してもテンポは崩れなかった。","E06-C":"ベースが二拍のカウントを取り、歌が重なる。最初は少しずれた入りが、二回目にはそろった。","E07-C":"ベースの短い合図に合わせて、歌声と電子音が一斉に入る。止まるタイミングまでぴたりと重なった。","E11-B":"ギターとサックスが目線を合わせ、フレーズの受け渡しをする。言葉がなくても次の入りが伝わった。","E11-C":"短いドラムのフレーズへ歌声が少し遅れて応える。返事を待つ間も、演奏の一部になっていた。","E12-C":"短いリハーサルを終えると、最後の音の余韻をみんなで確かめた。拍手は一呼吸遅れて起きた。"};
 const importantAnswers={"E01-E":"初めて聴く人が入りやすい曲を最初に置くことかな。でも、知らない曲も一曲は聴いてほしい。","E02-A":"歌声合成の音色と生ギターをどう重ねるかだね。何度も聴いて、曲に合う音を探してる。","E03-B":"作者の意図を確かめてから版を選ぶことかな。声の残し方でも印象が変わるから。","E03-C":"歌詞を詰め込みすぎないことかな。ドラムの間も聴いてもらえるといい。","E05-A":"上手に弾けるかより、安心して一曲聴いて帰れること。無理に歌ってもらわなくていいんだ。","E05-B":"譜面も写真も、記録する前に相手へ確認すること。残したくない人もいるからね。","E06-D":"歌う人が無理なく入れること。ギターが大きすぎたら、こっちで音量を下げるよ。","E06-E":"その場で入会を決めさせないことかな。来週も見学できるって分かると、選びやすいでしょ。","E08-B":"素材を交換しても、元の作者が分かるようにすること。あとで音を直すときにも役立つ。","E08-C":"名義を自分で選べること。匿名にするなら、公開範囲も一緒に決めたいな。","E10-A":"一曲が終わるまで、話を挟まずに聴くこと。弾くのが不安な人もいるから。","E10-B":"撮りたい人の都合より、写る人の意思を優先すること。譜面だけ残す方法もあるよ。","E11-D":"演奏しない人も、耳で次の入りを考えられること。聴く役にも発見があるから。","E12-A":"音量だけじゃなく、帰り道まで確認しておくこと。安心して演奏したいからね。"};
+const contextualAnswers={
+ "E01-A|P003": "ベース担当だよ。今日は受付にいるの。演奏する人も聴くだけの人も、迷わず入れるように案内してるんだ。",
+ "E01-B|P020": "ベースのアンプをちょっと内側に向けてる。前の席だけ音が大きくならない配置を試してるんだ。",
+ "E01-C|P017": "歌い出しのタイミングを比べてるよ！ 同じサビでも一拍ずらすと雰囲気が変わるんだ。",
+ "E02-A|P004": "DTMを担当してる。今は生ギターの録音と歌声合成を重ねて、どちらも埋もれない音量を探しているところ。",
+ "E02-B|P041": "DTM担当！ 同じメロディーでも音色を変えると別の曲みたいになるから、順番に聴いてもらってるんだ。",
+ "E02-C|P078": "短いビートを組み直してる。ギターのカッティングを一個足したら、さっきより跳ねる感じになってさ。",
+ "E02-D|P043": "共同制作の役割をメモしてる。誰が録音して、誰が最後に確認するか、先に決めておきたくて。",
+ "E03-C|P027": "キーボードを弾いてるよ。歌詞の後に少し間を残すように、伴奏を短く切ってみてる。",
+ "E04-A|P005": "ドラムだよ！ 間違えた人が戻れるように、最初の一小節だけはっきり合図してるんだ。",
+ "E04-B|P032": "ギターの低い弦を短く鳴らして、ドラムに次の拍を渡してる。今はどっちが先に入るか試してる。",
+ "E04-C|P033": "最初は手拍子だけだったんだけど、今はそのリズムにキーボードを少し乗せてるよ。誰でも途中から入れるんだ。",
+ "E05-B|P036": "歌を担当してるよ。今日は小編成の譜面を見ながら、写真に写りたくない人の席も相談してるの。",
+ "E05-C|P037": "ギターです。声を重ねる前に、各自がどんな響きを好むか確かめています。同じコードでも弾き方で変わるので。",
+ "E06-A|P019": "次に出る人の順番を確かめてるよ。ドラムを運び込む時間もいるから、転換が慌ただしくならないようにね。",
+ "E06-B|P007": "同じギターでも弦とアンプで音が変わるから、順番に鳴らして聴き比べてるよ。好きな方があったら教えて。",
+ "E06-E|P055": "キーボード担当だよ。今日は見学した人が次にどう参加できるか、客席で話してるの。今日決めなくても大丈夫。",
+ "E07-A|P018": "ギター担当です。ここでは音量と終わる時間を先に確かめてる。周りの人にも気持ちよく聴いてほしいから。",
+ "E07-B|P045": "昔の会場の噂と、今の運営の決まりを分けて話してるんだ。ドラムの音量も、今日はちゃんと測ってるよ！",
+ "E07-C|P046": "短い曲の出だしをそろえてるところ。私の歌が先に入ると伴奏が迷うから、合図を一つ決めたんだ。",
+ "E08-C|P081": "歌を担当しています。今日は、作品を本名で出すか別の名義にするか話しています。本人が選べるのが大事だと思う。",
+ "E08-D|P043": "DTM担当。今は二人で作った短い音を重ねてる。一人ずつの音が消えない組み合わせを試してるところ。",
+ "E09-A|P008": "三音だけのメロディーを出発点にして、ベースの動きで展開を作っています。音を増やしすぎないのが目標です。",
+ "E09-B|P006": "歌詞の一語だけ替えて、歌い心地を確かめてる。鍵盤は少し控えめにして、声の余韻を残したいんだ。",
+ "E10-B|P036": "歌の譜面を見ながら、写真に入っていい人を確かめてるよ。写りたくない人の譜面は別の場所に置こうと思って。",
+ "E10-C|P039": "歌を担当しています。でも今日は演奏しない人の席も作ってるんです。聴いてくれた感想が次の練習に役立つから。",
+ "E11-A|P031": "サックスで短いフレーズを吹いて、次の人に一小節ずつ渡してるよ。初めてでも返事しやすい長さにしてるの。",
+ "E11-B|P007": "テンポは変えずに、目線とギターの一音で次の人へ合図してるよ。言葉を使わなくても伝わるか試してるんだ。",
+ "E12-A|P045": "ドラム担当！ 音量の上限と帰る通路を確認してる。最後まで安全に演奏できてこそのライブだからね。",
+ "E12-B|P048": "ギター担当だよ。撮影していい人を確かめてから、荷物をどの順で運ぶか決めてる。通路は空けときたいし。",
+ "E12-C|P047": "ベースで曲を一度通しています。長い練習はできないので、入りと終わりだけ全員で合わせて確認中です。"
+};
+const passiveExchangeCorrections={"E11-C|P009":{"question":"歌とドラムの掛け合い、次はどうする？","answer":"一拍だけ空けてから叩くよ。歌の返事が来るまで待ってみる。"}};
+const answerForQuestion=q=>plain(Story.questionAnswers[q.group_id+'|'+q.target_id]||contextualAnswers[q.group_id+'|'+q.target_id]||(importantAnswers[q.group_id]&&/今日の活動では何が大事/.test(q.question)?importantAnswers[q.group_id]:q.answer));
 const politeQuestions={"担当しているパートを教えて。":"担当しているパートを教えてもらえますか？","普段はどんな音楽を聴く？":"普段はどんな音楽を聴きますか？","今、この輪では何をしてるの？":"今はどんなことをしているんですか？","自己紹介してもらってもいい？":"お名前を聞いてもいいですか？","好きなアーティストって誰？":"好きなアーティストは誰ですか？","今日の活動では何が大事？":"今日の活動で大切にしていることは何ですか？"};
 const questionText=q=>!q?'所属を尋ねる':Number(people[q.target_id]?.year)>1?(politeQuestions[q.question]||q.question):q.question;
 const sceneActivity=gid=>gid==='E02-A'?'歌声合成と生ギターの音色を重ね、ボカロ曲の試作を聴き比べている。':gid==='E04-B'?'ギターとドラムの入りを交互に試している。':D.groups.find(x=>x.group_id===gid)?.activity||'';
@@ -99,7 +133,7 @@ function talk(id,gid,state,knownBefore){
 }
 function answer(id,gid,kind){
  const p=people[id],q=D.questions.find(x=>x.group_id===gid&&x.target_id===id);
- if(kind==='question'&&q)return {text:plain(Story.questionAnswers[gid+'|'+id]||(importantAnswers[gid]&&/今日の活動では何が大事/.test(q.question)?importantAnswers[gid]:q.answer)),reveals:q.reveals||'',kind:'question'};
+ if(kind==='question'&&q)return {text:answerForQuestion(q),reveals:q.reveals||'',kind:'question'};
  const voice=P.people[id]?.voice||'soft';
  if(p.year==='1'){
   const msg=voice==='reserved'||voice==='precise'?'まだ決めてないんだ。いくつか見比べてる。':
@@ -241,8 +275,10 @@ const passiveListen=(gid,state)=>{
  const respondent=q?.target_id||ids[(seed+used)%ids.length];
  const other=ids.filter(id=>id!==respondent);
  const asker=other[(seed+used)%other.length];
- const ask=q?questionText(q):'さっきのところ、どうだった？';
- const answer=q?answerTextForListening(q):'次はもう少し合わせてみたいね。';
+ const familiar=!!(people[asker]&&people[respondent]&&Number(people[asker].year)>=Number(people[respondent].year));
+ const correction=q?passiveExchangeCorrections[gid+'|'+respondent]:null;
+ const ask=correction?.question||(q?(familiar?q.question:questionText(q)):'さっきのところ、どうだった？');
+ const answer=correction?.answer||(q?answerForQuestion(q):'次はもう少し合わせてみたいね。');
  const intro=used===0?'少し離れたところで、参加者同士の会話が聞こえる。':'そのまま耳を傾けると、別の話題になった。';
  const overheard=[
   {pid:asker,text:addressFor(asker,respondent)+'、'+ask,tag:'ほかの参加者へ'},
@@ -264,8 +300,6 @@ const passiveListen=(gid,state)=>{
  }
  return {intro,overheard,address};
 };
-const answerTextForListening=q=>plain(Story.questionAnswers[q.group_id+'|'+q.target_id]||
- (importantAnswers[q.group_id]&&/今日の活動では何が大事/.test(q.question)?importantAnswers[q.group_id]:q.answer));
 // Only a close, sociable character may voluntarily offer a shareable channel.
 // Account and consent policies remain authoritative even at high affinity.
 const spontaneousContact=(id,gid,state)=>{

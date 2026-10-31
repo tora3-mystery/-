@@ -1,7 +1,7 @@
 (() => {
 'use strict';
 const D=window.S6_DATA, APP=document.getElementById('app'), KEY='s6-vocaloid-beta-060', Dialogue=window.S6_BETA_DIALOGUE, Story=window.S6_BETA_STORY, Music=window.S6_BETA_MUSIC, Routes=window.S6_BETA_ROUTES;
-const VERSION='0.8.3', BUILD='2026-10-31 11:43 JST';
+const VERSION='0.9.0', BUILD='2026-10-31 12:04 JST';
 const WEEK=['月曜 4月6日','火曜 4月7日','水曜 4月8日','木曜 4月9日','金曜 4月10日'];
 const DATES=['2026-04-06','2026-04-07','2026-04-08','2026-04-09','2026-04-10'];
 const people=Object.fromEntries(D.people.map(p=>[p.person_id,p]));
@@ -97,7 +97,7 @@ const recordConversation=(id,action)=>{
 };
 const remember=()=>{S.savedAt=BUILD;localStorage.setItem(KEY,JSON.stringify(S))};
 const btn=(t,a,v='',klass='')=>'<button class="btn '+klass+'" data-act="'+esc(a)+'" '+(v?'data-id="'+esc(v)+'"':'')+'>'+esc(t)+'</button>';
-const portrait=(id,klass='')=>'<img class="portrait '+klass+'" src="../'+esc(people[id].portrait_path)+'" loading="lazy" decoding="async" alt="学生の顔写真">';
+const portrait=(id,klass='')=>'<img class="portrait '+klass+'" src="'+esc(people[id].portrait_path)+'" loading="lazy" decoding="async" alt="学生の顔写真">';
 const campusClub=o=>'<span class="pill">'+esc(o)+'</span>';
 const header=()=>'<header class="top"><div><strong>サークルは、星の数ほどありますから。</strong><small>β v'+VERSION+' ／ '+BUILD+'</small></div><div class="head-actions">'+(S.phase!=='title'&&S.phase!=='intro'?btn('人物手帳','open-notebook','','mini'):'')+btn('保存','save','','mini')+btn('最初から','reset','','mini ghost')+'</div></header>';
 function faceCard(id,sub='',act='',extra=''){
