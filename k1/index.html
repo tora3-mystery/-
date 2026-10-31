@@ -776,30 +776,9 @@ if(n){h+='<div class="detail"><div class="issuer">'+esc(n.id)+'｜'+esc(n.issuer
 }
   }
   h+='</div><div class="entry-photo-title"><h3>4階・406号室の玄関前</h3><p class="tiny">エレベーターを降りて、自分の部屋へ歩く。</p></div>';
-  var threeDoor=state.day===4?'day04-vacated.webp':state.day===9&&state.hauntTarget==='401'?'day09-normal-401.webp':null;
-  if(threeDoor){
-   h+='<figure class="d3-image" aria-label="404・405・406号室の廊下"><img src="./assets/hallway/three-door/'+threeDoor+'" alt="404、405、406号室が左から並ぶ廊下" width="1600" height="1000" loading="lazy">';
-   h+='<span class="d3-tag d3-404">404号室</span><span class="d3-tag d3-405">405号室</span><span class="d3-tag d3-406">406号室</span></figure>';
-  }else{
-  h+='<div class="scene-grid" aria-label="4階の共用廊下と406号室玄関">';
-  h+='<figure class="scene-figure"><div class="scene-stack"><img src="./assets/hallway/'+(state.day>=4?'405-vacated.webp':'day.webp')+'" alt="'+(state.day>=4?'405号室の表札が外された4階の共用廊下。':'4階の共用廊下。404〜407号室の扉が並ぶ。')+'" width="1080" height="1440" loading="lazy" decoding="async">';
-  if(state.day>=10)h+='<img class="scene-overlay" src="./assets/hallway/wet.webp" alt="" aria-hidden="true" width="1080" height="1440" loading="lazy" decoding="async">';
-  h+='</div><figcaption>4階共用廊下</figcaption></figure>';
-  h+='<figure class="scene-figure"><div class="scene-stack"><img src="./assets/door/base.webp" alt="406号室の玄関とインターホン" width="1080" height="1440" loading="lazy" decoding="async">';
-  if(state.day>=6&&state.hauntTarget==='406')h+='<img class="scene-overlay" src="./assets/door/mark.webp" alt="" aria-hidden="true" width="1080" height="1440" loading="lazy" decoding="async">';
-  if(state.day>=9&&state.hauntTarget==='406')h+='<img class="scene-overlay" src="./assets/door/sticker.webp" alt="" aria-hidden="true" width="1080" height="1440" loading="lazy" decoding="async">';
-  if(state.day>=10&&state.hauntTarget==='406')h+='<img class="scene-overlay" src="./assets/door/drops.webp" alt="" aria-hidden="true" width="1080" height="1440" loading="lazy" decoding="async">';
-  h+='</div><figcaption>406号室玄関</figcaption></figure></div>';
-  if(state.day>=3&&state.day<=6){
-   h+='<details class="hall-inspect"><summary>404号室前の荷物を確認する</summary><img src="./assets/hallway/404-boxes-night.webp" alt="夜の404号室前に並んだ長い箱、機材ケース、小箱" width="1080" height="1440" loading="lazy" decoding="async"><p>帰宅時、404号室側に置かれていた荷物。何が入っているかは分からない。</p></details>';
-  }
-  if(state.day>=9){
-   h+='<details class="hall-inspect"><summary>404号室の荷物の正体を確かめる</summary><div class="hall-photo-compare"><figure><img src="./assets/hallway/404-boxes-night.webp" alt="先日404号室前に置かれていた閉じた箱" width="1080" height="1440" loading="lazy" decoding="async"><figcaption>先日の荷物</figcaption></figure><figure><img src="./assets/hallway/404-boxes-explained.webp" alt="同じ箱の中にある夜勤の機材と子どもの工作用品" width="1080" height="1440" loading="lazy" decoding="async"><figcaption>夜勤の機材と工作用品</figcaption></figure></div><p>怪しく見えたのは、搬入する時間帯が遅かったためだった。</p></details>';
-  }
-  if(state.day>=4){
-   h+='<p class="caption">405号室は退去済み。表札が外されたことが廊下の写真から分かる。</p>';
-  }
-  }
+  var photo=state.day<=2?'day01-neutral.webp':state.day===3?'day03-moving.webp':state.day<=5?'day04-vacated.webp':state.day<=8?'day06-'+state.hauntTarget+'.webp':state.day===9?'day09-normal-'+state.hauntTarget+'.webp':'day10-'+state.hauntTarget+'.webp';
+  h+='<figure class="d3-image" aria-label="404・405・406号室の廊下"><img src="./assets/hallway/three-door/'+photo+'" alt="404・405・406号室が並ぶ廊下" width="1600" height="1000" loading="lazy">';
+  h+='<span class="d3-tag d3-404">404号室</span><span class="d3-tag d3-405">405号室</span><span class="d3-tag d3-406">406号室</span></figure>';
   h+='<div class="listing">';
   items('door').forEach(function(i){h+='<div class="record"><strong>'+esc(i.name)+'</strong><p>'+esc(i.text)+'</p></div>';});
   h+='</div>';
