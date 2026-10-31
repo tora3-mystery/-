@@ -225,7 +225,91 @@ const thirdParty=(targetId,gid,state,action)=>{
  return {pid:id,text:[words,nameLine].filter(Boolean).join(' '),type:'輪の反応',
    selfIntroduced:spontaneousIntro};
 };
+// Listening is deliberately passive: an authored question goes between two group members.
+// Only an outgoing character may turn and address the protagonist.
+const momentSeed=(state,key)=>{
+ let n=(Number(state.presentationSeed)||0)>>>0;
+ for(const char of String(key))n=Math.imul(n^char.charCodeAt(0),16777619)>>>0;
+ return n>>>0;
+};
+const passiveListen=(gid,state)=>{
+ const ids=D.members.filter(m=>m.group_id===gid).map(m=>m.person_id);
+ const used=(state.groupLog?.[gid]||[]).filter(x=>x.type==='話を聞く'||x.type==='聞き耳').length;
+ const questions=D.questions.filter(q=>q.group_id===gid&&ids.includes(q.target_id));
+ const seed=momentSeed(state,gid+'|overheard');
+ const q=questions.length?questions[(seed+used)%questions.length]:null;
+ const respondent=q?.target_id||ids[(seed+used)%ids.length];
+ const other=ids.filter(id=>id!==respondent);
+ const asker=other[(seed+used)%other.length];
+ const ask=q?questionText(q):'さっきのところ、どうだった？';
+ const answer=q?answerTextForListening(q):'次はもう少し合わせてみたいね。';
+ const intro=used===0?'少し離れたところで、参加者同士の会話が聞こえる。':'そのまま耳を傾けると、別の話題になった。';
+ const overheard=[
+  {pid:asker,text:addressFor(asker,respondent)+'、'+ask,tag:'ほかの参加者へ'},
+  {pid:respondent,text:answer,tag:'返事'}
+ ];
+ const outgoing=ids.filter(id=>P.people[id]?.initiative>=3&&P.people[id]?.warmth>=3&&P.people[id]?.caution<=3);
+ const addressId=outgoing.length?outgoing[momentSeed(state,gid+'|approach|'+used)%outgoing.length]:null;
+ let address=null;
+ if(addressId){
+  const c=P.people[addressId];
+  const chance=Math.max(.12,Math.min(.50,.08+c.initiative*.065+c.warmth*.035-c.caution*.065));
+  const roll=(momentSeed(state,gid+'|address-roll|'+used)%1000)/1000;
+  if(roll<chance){
+   const already=!!state.personalIntroduced?.[addressId];
+   const greet=already?'さっきもいたよね。楽しめてる？':c.voice==='energetic'?'あ、見学の人だよね！ よかったら近くで聴いていって。':c.voice==='friendly'?'見学に来たんだよね？ 分からないことがあったら聞いてね。':'よかったら、こっちでも話を聞いていって。';
+   const nameLine=already?'':selfIntroduction(addressId,state,'bystander');
+   address={pid:addressId,text:[greet,nameLine].filter(Boolean).join(' '),tag:'向こうから声をかけられた',selfIntroduced:!!nameLine};
+  }
+ }
+ return {intro,overheard,address};
+};
+const answerTextForListening=q=>plain(Story.questionAnswers[q.group_id+'|'+q.target_id]||
+ (importantAnswers[q.group_id]&&/今日の活動では何が大事/.test(q.question)?importantAnswers[q.group_id]:q.answer));
+// Only a close, sociable character may voluntarily offer a shareable channel.
+// Account and consent policies remain authoritative even at high affinity.
+const spontaneousContact=(id,gid,state)=>{
+ const c=P.people[id],close=level(state,id),affinity=Number(state.affinity?.[id])||0;
+ if(!c||!['familiar','easygoing'].includes(close)||affinity<3||c.initiative<3||c.warmth<3||c.caution>3)return null;
+ const chance=Math.min(.85,.24+(c.initiative-3)*.20+(c.warmth-3)*.12-(c.caution-1)*.09+(close==='easygoing'?.14:0));
+ if((momentSeed(state,gid+'|spontaneous-contact|'+id)%1000)/1000>=chance)return null;
+ const rules=D.contactChannels.filter(r=>r.group_id===gid&&r.person_id===id);
+ const tine=rules.find(r=>r.platform==='TINE'),photo=rules.find(r=>r.platform==='Photogram');
+ const account=platform=>Social.accounts.find(a=>a.person_id===id&&a.platform===platform);
+ const existing=state.contacts?.includes(id)||state.pendingContacts?.includes(id);
+ const tag=close==='easygoing'?'また今度も話したいし、':'この前も話せてうれしかったし、';
+ if(tine&&account('TINE')&&!existing&&tine.approval_policy!=='after_week'){
+  const pending=tine.approval_policy==='next_day';
+  return {pid:id,platform:'TINE',status:pending?'pending':'accept',
+   text:tag+(pending?'よかったらTINEの申請を送って。明日確認するね。':'よかったらTINEを交換しない？')};
+ }
+ if(photo&&account('Photogram')&&!state.photoFollows?.includes(id)&&!state.photoRequests?.includes(id)&&photo.approval_policy!=='after_week'){
+  const pending=photo.approval_policy==='next_day';
+  return {pid:id,platform:'Photogram',status:pending?'pending':'accept',
+   text:tag+(pending?'Photogramの申請を送ってくれる？ 明日見ておくね。':'Photogramもつながっておく？')};
+ }
+ const z=account('Zitter');
+ if(z&&z.visibility==='公開'&&c.snsTone==='active'&&!state.zitterFollows?.includes(id))
+  return {pid:id,platform:'Zitter',status:'accept',text:'よかったら公開しているZitterも見てみて。音楽の話を載せてるんだ。'};
+ return null;
+};
+const contactReaction=(id,gid,state,kind)=>{
+ const c=P.people[id],close=level(state,id),voice=c?.voice||'soft';
+ const warm=c?.warmth||2,guard=c?.caution||2,active=c?.initiative>=3;
+ const variants={
+  accept:active&&warm>=3?['いいよ！ また新歓で会えたらうれしいな。','もちろん。イベントの話も送るね。']:guard>=3?['うん、見学の案内なら大丈夫だよ。','必要なときに連絡してね。']:['いいよ、よろしくね。','うん、つながっておこう。'],
+  pending:guard>=3?['申請は受け取るけど、承認は落ち着いてからにするね。','今すぐは見られないから、明日確認するよ。']:['ありがとう！ 明日見ておくね。','通知を見落とすかも。明日まで待っててね。'],
+  after_week:close==='new'?['連絡先は、もう少し顔を合わせてからにしてるんだ。','今週は見学の人に個人アカウントを渡していないんだ。']:['今週の間は申請を受けていないけど、また会場で話そう。','来週以降にまた聞いてくれるとうれしい。'],
+  privacy:guard>=3?['そのアカウントは身内向けにしてるんだ。','公開範囲を分けているから、今は教えないでおくね。']:['個人用は非公開にしてるんだ。','そのSNSは見るだけにしていて。'],
+  no_sns:voice==='precise'||voice==='reserved'?['そのサービスは使っていません。','連絡には別の手段を使っているんだ。']:['そこはやってないんだ、ごめんね。','最近そのSNSは開いてなくて。'],
+  cautious:guard>=4?['まだ会ったばかりだから、今は交換しないでおくね。','個人の連絡先は、もう少し話してからがいいかな。']:['また会えたときに聞いてくれる？','今日はまだ見学だけにしておきたいな。'],
+  public:active?['公開してる方なら見てもらって大丈夫！','公開の投稿なら、よかったら覗いてみて。']:['公開している投稿だけならどうぞ。','見るだけなら、公開アカウントがあるよ。'],
+  already:['あ、もうつながってたね。','前に交換した方で大丈夫だよ。']
+ };
+ const options=variants[kind]||variants.cautious;
+ return options[momentSeed(state,gid+'|contact-tone|'+id+'|'+kind)%options.length];
+};
 const chatAudit=()=>({firstYearLines:D.lines.filter(x=>people[x.speaker_id]?.year==='1').length,
  overridden:Object.keys(P.sceneOverrides).length,allScenes:D.lines.length,profiles:Object.keys(P.people).length});
-window.S6_BETA_DIALOGUE={talk,answer,contact,sceneLine,sceneActivity,listenText,questionText,sceneMode,thirdParty,selfIntroduction,addressFor,level,relationshipLabel,responseGain,snsMessage,role,chatAudit};
+window.S6_BETA_DIALOGUE={talk,answer,contact,sceneLine,sceneActivity,listenText,passiveListen,spontaneousContact,contactReaction,questionText,sceneMode,thirdParty,selfIntroduction,addressFor,level,relationshipLabel,responseGain,snsMessage,role,chatAudit};
 })();
